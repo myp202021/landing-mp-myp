@@ -681,7 +681,7 @@ export default function LandingMP() {
                       required
                       value={formData.nombre}
                       onChange={(e) => setFormData(prev => ({ ...prev, nombre: e.target.value }))}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                       placeholder="Juan Pérez"
                     />
                   </div>
@@ -696,7 +696,7 @@ export default function LandingMP() {
                       required
                       value={formData.empresa}
                       onChange={(e) => setFormData(prev => ({ ...prev, empresa: e.target.value }))}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                       placeholder="Mi Empresa SpA"
                     />
                   </div>
@@ -713,7 +713,7 @@ export default function LandingMP() {
                       required
                       value={formData.email}
                       onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                       placeholder="juan@empresa.cl"
                     />
                   </div>
@@ -728,7 +728,7 @@ export default function LandingMP() {
                       required
                       value={formData.telefono}
                       onChange={(e) => setFormData(prev => ({ ...prev, telefono: e.target.value }))}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                       placeholder="+56 9 1234 5678"
                     />
                   </div>
@@ -744,7 +744,7 @@ export default function LandingMP() {
                     required
                     value={formData.cargo}
                     onChange={(e) => setFormData(prev => ({ ...prev, cargo: e.target.value }))}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                     placeholder="Gerente de Marketing"
                   />
                 </div>
