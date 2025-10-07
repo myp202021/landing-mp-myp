@@ -1,5 +1,5 @@
 /**
- * LANDING PAGE: /predictor
+ * LANDING PAGE: /labs/predictor
  * SEO-optimized landing page para captar búsquedas "Google Ads Chile"
  *
  * Objetivo: Lead magnet gratuito → Agendar llamada con M&P
@@ -7,7 +7,6 @@
 
 'use client'
 
-import type { Metadata } from 'next'
 import Link from 'next/link'
 import { useEffect } from 'react'
 import {
@@ -24,20 +23,7 @@ import {
   Award,
   Users
 } from 'lucide-react'
-import { createMetadata, createSoftwareAppSchema } from '@/lib/metadata'
-
-export const metadata: Metadata = {
-  title: 'Predictor de Performance Google Ads Chile | Gratis | Muller y Pérez',
-  description: 'Calcula GRATIS cuántas conversiones y revenue generarás con Google Ads en Chile. Predicción basada en benchmarks reales 2024. Sin registro.',
-  keywords: 'google ads chile, predictor google ads, calculadora google ads, ROAS estimado, conversiones google ads, agencia google ads chile, marketing digital chile',
-  openGraph: {
-    title: 'Predictor Google Ads Chile - Calcula tu ROAS Gratis',
-    description: 'Descubre cuántas ventas generarás con Google Ads. Predictor profesional calibrado con data real de Chile 2024.',
-    type: 'website',
-    locale: 'es_CL',
-    siteName: 'Muller y Pérez'
-  }
-}
+import { createSoftwareAppSchema } from '@/lib/metadata'
 
 export default function PredictorLanding() {
   useEffect(() => {
