@@ -1,8 +1,9 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { BarChart3, TrendingUp } from 'lucide-react'
+import { createSoftwareAppSchema } from '@/lib/metadata'
 
 interface IndustryData {
   nombre: string
@@ -159,6 +160,26 @@ const industriasData: { [key: string]: IndustryData } = {
 }
 
 export default function RadarIndustrias() {
+  useEffect(() => {
+    document.title = 'Radar de Industrias Chile 2024 - Madurez Digital | M&P Labs'
+
+    const metaDescription = document.querySelector('meta[name="description"]')
+    if (metaDescription) {
+      metaDescription.setAttribute('content', 'Análisis de madurez digital por industria en Chile 2024. Compara Google Ads, ROAS, plataformas digitales, IA y velocidad web por sector.')
+    } else {
+      const meta = document.createElement('meta')
+      meta.name = 'description'
+      meta.content = 'Análisis de madurez digital por industria en Chile 2024. Compara Google Ads, ROAS, plataformas digitales, IA y velocidad web por sector.'
+      document.head.appendChild(meta)
+    }
+  }, [])
+
+  const radarSchema = createSoftwareAppSchema(
+    'Radar de Industrias - Análisis de Madurez Digital Chile',
+    'Herramienta de análisis de madurez digital por industria en Chile 2024. Evalúa 10 sectores clave en Google Ads, competencia, ROAS, plataformas digitales, implementación de IA, velocidad web y Google My Business con recomendaciones estratégicas.',
+    'https://agencia.mulleryperez.cl/labs/radar-industrias'
+  )
+
   const [selectedIndustry, setSelectedIndustry] = useState('tecnologia')
   const currentData = industriasData[selectedIndustry]
 
@@ -194,8 +215,13 @@ export default function RadarIndustrias() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
-      {/* Header */}
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(radarSchema) }}
+      />
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+        {/* Header */}
       <header className="bg-white/80 backdrop-blur-xl border-b border-gray-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <Link href="/labs" className="text-sm font-semibold text-gray-700 hover:text-blue-600 transition-all">
@@ -393,6 +419,7 @@ export default function RadarIndustrias() {
           <p>© 2024 Muller y Pérez · Análisis de Madurez Digital - Chile 2024</p>
         </div>
       </footer>
-    </div>
+      </div>
+    </>
   )
 }

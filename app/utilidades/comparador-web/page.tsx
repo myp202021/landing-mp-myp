@@ -1,10 +1,31 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Gauge, Zap, TrendingUp } from 'lucide-react'
+import { createSoftwareAppSchema } from '@/lib/metadata'
 
 export default function ComparadorWeb() {
+  useEffect(() => {
+    document.title = 'Comparador Velocidad Web - PageSpeed Insights Gratis | M&P'
+
+    const metaDescription = document.querySelector('meta[name="description"]')
+    if (metaDescription) {
+      metaDescription.setAttribute('content', 'Compara la velocidad de tu sitio web vs competencia con Google PageSpeed Insights. Analiza Core Web Vitals: FCP, LCP, CLS y TBT. Herramienta gratuita.')
+    } else {
+      const meta = document.createElement('meta')
+      meta.name = 'description'
+      meta.content = 'Compara la velocidad de tu sitio web vs competencia con Google PageSpeed Insights. Analiza Core Web Vitals: FCP, LCP, CLS y TBT. Herramienta gratuita.'
+      document.head.appendChild(meta)
+    }
+  }, [])
+
+  const comparadorSchema = createSoftwareAppSchema(
+    'Comparador de Velocidad Web - PageSpeed Insights',
+    'Herramienta gratuita para comparar la velocidad de tu sitio web contra la competencia usando Google PageSpeed Insights. Analiza métricas Core Web Vitals: FCP, LCP, CLS y TBT con recomendaciones de optimización.',
+    'https://agencia.mulleryperez.cl/utilidades/comparador-web'
+  )
+
   const [tuSitio, setTuSitio] = useState('')
   const [competencia1, setCompetencia1] = useState('')
   const [competencia2, setCompetencia2] = useState('')
@@ -70,8 +91,13 @@ export default function ComparadorWeb() {
   const puedeAnalizar = tuSitio.trim() !== ''
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
-      {/* Header */}
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(comparadorSchema) }}
+      />
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+        {/* Header */}
       <header className="bg-white/80 backdrop-blur-xl border-b border-gray-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <Link href="/utilidades" className="text-sm font-semibold text-gray-700 hover:text-blue-600 transition-all">
@@ -273,6 +299,7 @@ export default function ComparadorWeb() {
           <p>© 2024 Muller y Pérez · Powered by Google PageSpeed Insights</p>
         </div>
       </footer>
-    </div>
+      </div>
+    </>
   )
 }

@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Calculator, TrendingUp, TrendingDown, AlertCircle, CheckCircle2 } from 'lucide-react'
+import { createSoftwareAppSchema } from '@/lib/metadata'
 
 interface Plataforma {
   id: string
@@ -20,6 +21,26 @@ const plataformasDisponibles: Omit<Plataforma, 'checked' | 'distribucion'>[] = [
 ]
 
 export default function CalculadoraCAC() {
+  useEffect(() => {
+    document.title = 'Calculadora CAC - Costo Adquisición Cliente Gratis | M&P'
+
+    const metaDescription = document.querySelector('meta[name="description"]')
+    if (metaDescription) {
+      metaDescription.setAttribute('content', 'Calcula el CAC (Costo de Adquisición de Cliente) de tus campañas digitales. Compara plataformas, evalúa ROI y optimiza tu inversión publicitaria. Gratis.')
+    } else {
+      const meta = document.createElement('meta')
+      meta.name = 'description'
+      meta.content = 'Calcula el CAC (Costo de Adquisición de Cliente) de tus campañas digitales. Compara plataformas, evalúa ROI y optimiza tu inversión publicitaria. Gratis.'
+      document.head.appendChild(meta)
+    }
+  }, [])
+
+  const cacSchema = createSoftwareAppSchema(
+    'Calculadora CAC - Costo de Adquisición de Cliente',
+    'Herramienta gratuita para calcular el CAC (Costo de Adquisición de Cliente) por plataforma publicitaria. Analiza Google Ads, Meta Ads, TikTok Ads, LinkedIn Ads y Email Marketing. Incluye evaluación de ROI y recomendaciones estratégicas.',
+    'https://agencia.mulleryperez.cl/utilidades/calculadora-cac'
+  )
+
   const [inversion, setInversion] = useState('')
   const [ventas, setVentas] = useState('')
   const [ticketPromedio, setTicketPromedio] = useState('')
@@ -156,8 +177,13 @@ export default function CalculadoraCAC() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
-      {/* Header */}
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(cacSchema) }}
+      />
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+        {/* Header */}
       <header className="bg-white/80 backdrop-blur-xl border-b border-gray-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <Link href="/utilidades" className="text-sm font-semibold text-gray-700 hover:text-blue-600 transition-all">
@@ -369,6 +395,7 @@ export default function CalculadoraCAC() {
           <p>© 2024 Muller y Pérez · Hecho con datos reales</p>
         </div>
       </footer>
-    </div>
+      </div>
+    </>
   )
 }

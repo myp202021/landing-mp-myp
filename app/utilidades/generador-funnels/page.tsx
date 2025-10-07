@@ -1,8 +1,9 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Workflow, ArrowRight, Download, Copy, RefreshCw, CheckCircle2 } from 'lucide-react'
+import { createSoftwareAppSchema } from '@/lib/metadata'
 
 interface FunnelStage {
   etapa: string
@@ -133,6 +134,26 @@ const funnelTemplates: { [key: string]: FunnelTemplate } = {
 }
 
 export default function GeneradorFunnels() {
+  useEffect(() => {
+    document.title = 'Generador de Funnels CRM - Crea tu Embudo de Ventas | M&P'
+
+    const metaDescription = document.querySelector('meta[name="description"]')
+    if (metaDescription) {
+      metaDescription.setAttribute('content', 'Genera funnels de ventas personalizados para tu CRM en 4 pasos. B2B, B2C, e-commerce, WhatsApp, cotizaciones. Exporta en CSV. Herramienta gratuita.')
+    } else {
+      const meta = document.createElement('meta')
+      meta.name = 'description'
+      meta.content = 'Genera funnels de ventas personalizados para tu CRM en 4 pasos. B2B, B2C, e-commerce, WhatsApp, cotizaciones. Exporta en CSV. Herramienta gratuita.'
+      document.head.appendChild(meta)
+    }
+  }, [])
+
+  const funnelSchema = createSoftwareAppSchema(
+    'Generador de Funnels CRM - Embudo de Ventas',
+    'Herramienta gratuita para crear funnels de ventas personalizados para tu sistema CRM. Incluye templates para B2B, B2C, e-commerce, ventas por WhatsApp, cotizaciones y visitas. Exporta en formato CSV con etapas, descripciones y campos requeridos.',
+    'https://agencia.mulleryperez.cl/utilidades/generador-funnels'
+  )
+
   const [step, setStep] = useState(1)
   const [tipoNegocio, setTipoNegocio] = useState('')
   const [tipoCliente, setTipoCliente] = useState('')
@@ -235,8 +256,13 @@ export default function GeneradorFunnels() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-purple-50 to-indigo-50">
-      {/* Header */}
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(funnelSchema) }}
+      />
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-purple-50 to-indigo-50">
+        {/* Header */}
       <header className="bg-white/80 backdrop-blur-xl border-b border-gray-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <Link href="/utilidades" className="text-sm font-semibold text-gray-700 hover:text-purple-600 transition-all">
@@ -614,6 +640,7 @@ export default function GeneradorFunnels() {
           <p>© 2024 Muller y Pérez · Funnels optimizados para tu CRM</p>
         </div>
       </footer>
-    </div>
+      </div>
+    </>
   )
 }

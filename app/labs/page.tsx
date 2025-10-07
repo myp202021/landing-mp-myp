@@ -5,11 +5,35 @@
  * Hub central para todas las herramientas de laboratorio
  */
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import Link from 'next/link'
+import Head from 'next/head'
 import { Sparkles, TrendingUp, Gamepad2, Radar } from 'lucide-react'
+import { createSoftwareAppSchema } from '@/lib/metadata'
 
 export default function MPLabs() {
+  useEffect(() => {
+    // Set document title and meta tags on client side
+    document.title = 'M&P Labs - Herramientas Innovadoras Marketing Digital Chile'
+
+    // Update meta description
+    const metaDescription = document.querySelector('meta[name="description"]')
+    if (metaDescription) {
+      metaDescription.setAttribute('content', 'Herramientas experimentales de marketing digital: Predictor Google Ads, generador de buyer personas y radar de industrias. Gratis en Chile.')
+    } else {
+      const meta = document.createElement('meta')
+      meta.name = 'description'
+      meta.content = 'Herramientas experimentales de marketing digital: Predictor Google Ads, generador de buyer personas y radar de industrias. Gratis en Chile.'
+      document.head.appendChild(meta)
+    }
+  }, [])
+
+  const labsSchema = createSoftwareAppSchema(
+    'M&P Labs - Herramientas de Marketing Digital',
+    'Hub de herramientas experimentales e innovadoras para optimizar campañas de marketing digital: predictor de Google Ads, generador de buyer personas y radar de industrias en Chile.',
+    'https://agencia.mulleryperez.cl/labs'
+  )
+
   const herramientas = [
     {
       nombre: 'Predictor Google Ads',
@@ -38,8 +62,13 @@ export default function MPLabs() {
   ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900">
-      {/* Header */}
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(labsSchema) }}
+      />
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900">
+        {/* Header */}
       <header className="border-b border-white/10 backdrop-blur-xl bg-white/5">
         <div className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
           <Link href="/" className="text-white font-bold text-xl">
@@ -119,6 +148,7 @@ export default function MPLabs() {
           <p>© 2024 Muller y Pérez · M&P Labs</p>
         </div>
       </footer>
-    </div>
+      </div>
+    </>
   )
 }

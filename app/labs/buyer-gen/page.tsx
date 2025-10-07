@@ -1,9 +1,10 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { UserCircle, ArrowRight, Download, MessageCircle, RefreshCw, ChevronDown } from 'lucide-react'
 import { personasDatabase, BasePersona } from './personasData'
+import { createSoftwareAppSchema } from '@/lib/metadata'
 
 interface EnrichedPersona extends BasePersona {
   score: number
@@ -28,6 +29,26 @@ interface FormData {
 const avatars = ['👨‍💼', '👩‍💼', '🧑‍💻', '👨‍🔬', '👩‍🎓', '🧑‍⚕️']
 
 export default function BuyerGen() {
+  useEffect(() => {
+    document.title = 'Buyer Gen - Generador de Buyer Personas Gratis | M&P Labs'
+
+    const metaDescription = document.querySelector('meta[name="description"]')
+    if (metaDescription) {
+      metaDescription.setAttribute('content', 'Crea buyer personas basados en data intelligence en 4 pasos. Herramienta gratuita con estrategias de contenido y KPIs para empresas chilenas.')
+    } else {
+      const meta = document.createElement('meta')
+      meta.name = 'description'
+      meta.content = 'Crea buyer personas basados en data intelligence en 4 pasos. Herramienta gratuita con estrategias de contenido y KPIs para empresas chilenas.'
+      document.head.appendChild(meta)
+    }
+  }, [])
+
+  const buyerGenSchema = createSoftwareAppSchema(
+    'Buyer Gen - Generador de Buyer Personas',
+    'Herramienta gratuita para crear buyer personas detallados basados en data intelligence. Genera perfiles con motivaciones, puntos de dolor, canales recomendados, keywords y estrategias de contenido para tu negocio.',
+    'https://agencia.mulleryperez.cl/labs/buyer-gen'
+  )
+
   const [currentStep, setCurrentStep] = useState(1)
   const [formData, setFormData] = useState<FormData>({
     industry: '',
@@ -222,8 +243,13 @@ export default function BuyerGen() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
-      {/* Header */}
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(buyerGenSchema) }}
+      />
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+        {/* Header */}
       <header className="bg-white/80 backdrop-blur-xl border-b border-gray-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <Link href="/labs" className="text-sm font-semibold text-gray-700 hover:text-blue-600 transition-all">
@@ -651,6 +677,7 @@ export default function BuyerGen() {
           <p>© 2024 Muller y Pérez · Buyer Personas basadas en data intelligence</p>
         </div>
       </footer>
-    </div>
+      </div>
+    </>
   )
 }

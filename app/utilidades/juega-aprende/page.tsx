@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Gamepad2, RefreshCw, Info, X, Check, TrendingUp, MessageCircle } from 'lucide-react'
+import { createSoftwareAppSchema } from '@/lib/metadata'
 
 interface MarketingOption {
   id: string
@@ -263,6 +264,26 @@ const marketingOptions: MarketingOption[] = [
 ]
 
 export default function JuegaAprende() {
+  useEffect(() => {
+    document.title = 'Simulador Marketing Digital - Crea tu Estrategia | M&P'
+
+    const metaDescription = document.querySelector('meta[name="description"]')
+    if (metaDescription) {
+      metaDescription.setAttribute('content', 'Simulador interactivo de estrategias de marketing digital. Aprende jugando con $1.000.000: Google Ads, Meta Ads, SEO, email marketing y más. Gratis.')
+    } else {
+      const meta = document.createElement('meta')
+      meta.name = 'description'
+      meta.content = 'Simulador interactivo de estrategias de marketing digital. Aprende jugando con $1.000.000: Google Ads, Meta Ads, SEO, email marketing y más. Gratis.'
+      document.head.appendChild(meta)
+    }
+  }, [])
+
+  const simuladorSchema = createSoftwareAppSchema(
+    'El Planificador - Simulador de Marketing Digital',
+    'Juego educativo interactivo para crear estrategias de marketing digital con presupuesto de $1.000.000. Explora Google Ads, Meta Ads, remarketing, contenido, email marketing, automatización y más. Recibe diagnóstico con ROI estimado y recomendaciones personalizadas.',
+    'https://agencia.mulleryperez.cl/utilidades/juega-aprende'
+  )
+
   const [remainingBudget, setRemainingBudget] = useState(TOTAL_BUDGET)
   const [selectedOptions, setSelectedOptions] = useState<MarketingOption[]>([])
   const [currentCategory, setCurrentCategory] = useState('all')
@@ -489,8 +510,13 @@ export default function JuegaAprende() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-indigo-50 to-purple-50">
-      {/* Header */}
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(simuladorSchema) }}
+      />
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-indigo-50 to-purple-50">
+        {/* Header */}
       <header className="bg-white/80 backdrop-blur-xl border-b border-gray-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <Link href="/utilidades" className="text-sm font-semibold text-gray-700 hover:text-indigo-600 transition-all">
@@ -828,6 +854,7 @@ export default function JuegaAprende() {
           <p>© 2024 Muller y Pérez · Aprende jugando con estrategias digitales reales</p>
         </div>
       </footer>
-    </div>
+      </div>
+    </>
   )
 }

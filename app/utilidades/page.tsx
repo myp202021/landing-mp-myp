@@ -5,11 +5,32 @@
  * Calculadoras y herramientas de análisis
  */
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import Link from 'next/link'
 import { Calculator, Gauge, GitBranch, Gamepad2 } from 'lucide-react'
+import { createSoftwareAppSchema } from '@/lib/metadata'
 
 export default function Utilidades() {
+  useEffect(() => {
+    document.title = 'Utilidades Marketing Digital - Calculadoras Gratis Chile | M&P'
+
+    const metaDescription = document.querySelector('meta[name="description"]')
+    if (metaDescription) {
+      metaDescription.setAttribute('content', 'Herramientas prácticas de marketing digital: calculadora CAC, comparador de velocidad web, generador de funnels CRM y simulador de estrategias. Gratis.')
+    } else {
+      const meta = document.createElement('meta')
+      meta.name = 'description'
+      meta.content = 'Herramientas prácticas de marketing digital: calculadora CAC, comparador de velocidad web, generador de funnels CRM y simulador de estrategias. Gratis.'
+      document.head.appendChild(meta)
+    }
+  }, [])
+
+  const utilidadesSchema = createSoftwareAppSchema(
+    'Utilidades M&P - Herramientas de Marketing Digital',
+    'Hub de herramientas prácticas para marketing digital: calculadora de CAC (costo de adquisición de cliente), comparador de velocidad web, generador de funnels para CRM y simulador de estrategias de marketing.',
+    'https://agencia.mulleryperez.cl/utilidades'
+  )
+
   const herramientas = [
     {
       nombre: 'Calculadora de CAC',
@@ -42,8 +63,13 @@ export default function Utilidades() {
   ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-      {/* Header */}
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(utilidadesSchema) }}
+      />
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+        {/* Header */}
       <header className="border-b border-white/10 backdrop-blur-xl bg-white/5">
         <div className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
           <Link href="/" className="text-white font-bold text-xl">
@@ -116,6 +142,7 @@ export default function Utilidades() {
           <p>© 2024 Muller y Pérez · Utilidades</p>
         </div>
       </footer>
-    </div>
+      </div>
+    </>
   )
 }
