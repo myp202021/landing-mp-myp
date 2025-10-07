@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Workflow, ArrowRight, Download, Copy, RefreshCw, CheckCircle2 } from 'lucide-react'
-import { createSoftwareAppSchema } from '@/lib/metadata'
+import { createSoftwareAppSchema, addCanonicalLink, createBreadcrumbSchema } from '@/lib/metadata'
 
 interface FunnelStage {
   etapa: string
@@ -146,6 +146,8 @@ export default function GeneradorFunnels() {
       meta.content = 'Genera funnels de ventas personalizados para tu CRM en 4 pasos. B2B, B2C, e-commerce, WhatsApp, cotizaciones. Exporta en CSV. Herramienta gratuita.'
       document.head.appendChild(meta)
     }
+
+    addCanonicalLink('/utilidades/generador-funnels')
   }, [])
 
   const funnelSchema = createSoftwareAppSchema(
@@ -153,6 +155,12 @@ export default function GeneradorFunnels() {
     'Herramienta gratuita para crear funnels de ventas personalizados para tu sistema CRM. Incluye templates para B2B, B2C, e-commerce, ventas por WhatsApp, cotizaciones y visitas. Exporta en formato CSV con etapas, descripciones y campos requeridos.',
     'https://agencia.mulleryperez.cl/utilidades/generador-funnels'
   )
+
+  const breadcrumbSchema = createBreadcrumbSchema([
+    { name: 'Inicio', url: 'https://agencia.mulleryperez.cl' },
+    { name: 'Utilidades', url: 'https://agencia.mulleryperez.cl/utilidades' },
+    { name: 'Generador Funnels', url: 'https://agencia.mulleryperez.cl/utilidades/generador-funnels' }
+  ])
 
   const [step, setStep] = useState(1)
   const [tipoNegocio, setTipoNegocio] = useState('')
@@ -260,6 +268,10 @@ export default function GeneradorFunnels() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(funnelSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-purple-50 to-indigo-50">
         {/* Header */}

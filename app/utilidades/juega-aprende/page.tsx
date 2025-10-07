@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Gamepad2, RefreshCw, Info, X, Check, TrendingUp, MessageCircle } from 'lucide-react'
-import { createSoftwareAppSchema } from '@/lib/metadata'
+import { createSoftwareAppSchema, addCanonicalLink, createBreadcrumbSchema } from '@/lib/metadata'
 
 interface MarketingOption {
   id: string
@@ -276,6 +276,8 @@ export default function JuegaAprende() {
       meta.content = 'Simulador interactivo de estrategias de marketing digital. Aprende jugando con $1.000.000: Google Ads, Meta Ads, SEO, email marketing y más. Gratis.'
       document.head.appendChild(meta)
     }
+
+    addCanonicalLink('/utilidades/juega-aprende')
   }, [])
 
   const simuladorSchema = createSoftwareAppSchema(
@@ -283,6 +285,12 @@ export default function JuegaAprende() {
     'Juego educativo interactivo para crear estrategias de marketing digital con presupuesto de $1.000.000. Explora Google Ads, Meta Ads, remarketing, contenido, email marketing, automatización y más. Recibe diagnóstico con ROI estimado y recomendaciones personalizadas.',
     'https://agencia.mulleryperez.cl/utilidades/juega-aprende'
   )
+
+  const breadcrumbSchema = createBreadcrumbSchema([
+    { name: 'Inicio', url: 'https://agencia.mulleryperez.cl' },
+    { name: 'Utilidades', url: 'https://agencia.mulleryperez.cl/utilidades' },
+    { name: 'Juega y Aprende', url: 'https://agencia.mulleryperez.cl/utilidades/juega-aprende' }
+  ])
 
   const [remainingBudget, setRemainingBudget] = useState(TOTAL_BUDGET)
   const [selectedOptions, setSelectedOptions] = useState<MarketingOption[]>([])
@@ -514,6 +522,10 @@ export default function JuegaAprende() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(simuladorSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-indigo-50 to-purple-50">
         {/* Header */}

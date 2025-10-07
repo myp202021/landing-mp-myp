@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Gauge, Zap, TrendingUp } from 'lucide-react'
-import { createSoftwareAppSchema } from '@/lib/metadata'
+import { createSoftwareAppSchema, addCanonicalLink, createBreadcrumbSchema } from '@/lib/metadata'
 
 export default function ComparadorWeb() {
   useEffect(() => {
@@ -18,6 +18,8 @@ export default function ComparadorWeb() {
       meta.content = 'Compara la velocidad de tu sitio web vs competencia con Google PageSpeed Insights. Analiza Core Web Vitals: FCP, LCP, CLS y TBT. Herramienta gratuita.'
       document.head.appendChild(meta)
     }
+
+    addCanonicalLink('/utilidades/comparador-web')
   }, [])
 
   const comparadorSchema = createSoftwareAppSchema(
@@ -25,6 +27,12 @@ export default function ComparadorWeb() {
     'Herramienta gratuita para comparar la velocidad de tu sitio web contra la competencia usando Google PageSpeed Insights. Analiza métricas Core Web Vitals: FCP, LCP, CLS y TBT con recomendaciones de optimización.',
     'https://agencia.mulleryperez.cl/utilidades/comparador-web'
   )
+
+  const breadcrumbSchema = createBreadcrumbSchema([
+    { name: 'Inicio', url: 'https://agencia.mulleryperez.cl' },
+    { name: 'Utilidades', url: 'https://agencia.mulleryperez.cl/utilidades' },
+    { name: 'Comparador Web', url: 'https://agencia.mulleryperez.cl/utilidades/comparador-web' }
+  ])
 
   const [tuSitio, setTuSitio] = useState('')
   const [competencia1, setCompetencia1] = useState('')
@@ -95,6 +103,10 @@ export default function ComparadorWeb() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(comparadorSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
         {/* Header */}

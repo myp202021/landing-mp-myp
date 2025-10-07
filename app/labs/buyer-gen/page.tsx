@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { UserCircle, ArrowRight, Download, MessageCircle, RefreshCw, ChevronDown } from 'lucide-react'
 import { personasDatabase, BasePersona } from './personasData'
-import { createSoftwareAppSchema } from '@/lib/metadata'
+import { createSoftwareAppSchema, addCanonicalLink, createBreadcrumbSchema } from '@/lib/metadata'
 
 interface EnrichedPersona extends BasePersona {
   score: number
@@ -41,6 +41,8 @@ export default function BuyerGen() {
       meta.content = 'Crea buyer personas basados en data intelligence en 4 pasos. Herramienta gratuita con estrategias de contenido y KPIs para empresas chilenas.'
       document.head.appendChild(meta)
     }
+
+    addCanonicalLink('/labs/buyer-gen')
   }, [])
 
   const buyerGenSchema = createSoftwareAppSchema(
@@ -48,6 +50,12 @@ export default function BuyerGen() {
     'Herramienta gratuita para crear buyer personas detallados basados en data intelligence. Genera perfiles con motivaciones, puntos de dolor, canales recomendados, keywords y estrategias de contenido para tu negocio.',
     'https://agencia.mulleryperez.cl/labs/buyer-gen'
   )
+
+  const breadcrumbSchema = createBreadcrumbSchema([
+    { name: 'Inicio', url: 'https://agencia.mulleryperez.cl' },
+    { name: 'M&P Labs', url: 'https://agencia.mulleryperez.cl/labs' },
+    { name: 'Buyer Gen', url: 'https://agencia.mulleryperez.cl/labs/buyer-gen' }
+  ])
 
   const [currentStep, setCurrentStep] = useState(1)
   const [formData, setFormData] = useState<FormData>({
@@ -247,6 +255,10 @@ export default function BuyerGen() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(buyerGenSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
         {/* Header */}

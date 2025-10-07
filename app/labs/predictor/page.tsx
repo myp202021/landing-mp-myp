@@ -23,11 +23,12 @@ import {
   Award,
   Users
 } from 'lucide-react'
-import { createSoftwareAppSchema } from '@/lib/metadata'
+import { createSoftwareAppSchema, createBreadcrumbSchema, addCanonicalLink } from '@/lib/metadata'
 
 export default function PredictorLanding() {
   useEffect(() => {
     document.title = 'Predictor Google Ads Chile - Calcula Conversiones y Revenue | M&P'
+
     const metaDescription = document.querySelector('meta[name="description"]')
     if (metaDescription) {
       metaDescription.setAttribute('content', 'Calcula cuántas conversiones y revenue generarás con Google Ads en Chile. Predictor basado en data real de 200+ campañas. Herramienta gratuita de Muller y Pérez.')
@@ -37,6 +38,9 @@ export default function PredictorLanding() {
       meta.content = 'Calcula cuántas conversiones y revenue generarás con Google Ads en Chile. Predictor basado en data real de 200+ campañas. Herramienta gratuita de Muller y Pérez.'
       document.head.appendChild(meta)
     }
+
+    // Canonical URL
+    addCanonicalLink('/labs/predictor')
   }, [])
 
   const predictorSchema = createSoftwareAppSchema(
@@ -45,11 +49,21 @@ export default function PredictorLanding() {
     'https://agencia.mulleryperez.cl/labs/predictor'
   )
 
+  const breadcrumbSchema = createBreadcrumbSchema([
+    { name: 'Inicio', url: 'https://agencia.mulleryperez.cl' },
+    { name: 'M&P Labs', url: 'https://agencia.mulleryperez.cl/labs' },
+    { name: 'Predictor Google Ads', url: 'https://agencia.mulleryperez.cl/labs/predictor' }
+  ])
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(predictorSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
       {/* Header */}
       <header className="bg-white/80 backdrop-blur-lg border-b border-gray-200 sticky top-0 z-50">

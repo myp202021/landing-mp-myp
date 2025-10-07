@@ -50,6 +50,17 @@ export default function LandingMP() {
       document.head.appendChild(meta)
     }
 
+    // Canonical URL
+    const existingCanonical = document.querySelector('link[rel="canonical"]')
+    if (existingCanonical) {
+      existingCanonical.setAttribute('href', 'https://agencia.mulleryperez.cl/')
+    } else {
+      const link = document.createElement('link')
+      link.rel = 'canonical'
+      link.href = 'https://agencia.mulleryperez.cl/'
+      document.head.appendChild(link)
+    }
+
     // Keywords meta tag
     const metaKeywords = document.querySelector('meta[name="keywords"]')
     const keywords = 'agencia marketing digital chile, google ads chile, meta ads chile, performance marketing, ROI, ROAS, CPL, CPA, CAC, agencia publicidad digital'

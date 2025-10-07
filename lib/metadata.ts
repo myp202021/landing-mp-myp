@@ -217,3 +217,20 @@ export function createBreadcrumbSchema(items: Array<{ name: string, url: string 
     }))
   }
 }
+
+// Helper para agregar canonical link en client components
+export function addCanonicalLink(path: string) {
+  const url = `${siteConfig.url}${path}`
+
+  // Remover canonical existente
+  const existingCanonical = document.querySelector('link[rel="canonical"]')
+  if (existingCanonical) {
+    existingCanonical.remove()
+  }
+
+  // Agregar nuevo canonical
+  const link = document.createElement('link')
+  link.rel = 'canonical'
+  link.href = url
+  document.head.appendChild(link)
+}

@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Calculator, TrendingUp, TrendingDown, AlertCircle, CheckCircle2 } from 'lucide-react'
-import { createSoftwareAppSchema } from '@/lib/metadata'
+import { createSoftwareAppSchema, addCanonicalLink, createBreadcrumbSchema } from '@/lib/metadata'
 
 interface Plataforma {
   id: string
@@ -33,6 +33,8 @@ export default function CalculadoraCAC() {
       meta.content = 'Calcula el CAC (Costo de Adquisición de Cliente) de tus campañas digitales. Compara plataformas, evalúa ROI y optimiza tu inversión publicitaria. Gratis.'
       document.head.appendChild(meta)
     }
+
+    addCanonicalLink('/utilidades/calculadora-cac')
   }, [])
 
   const cacSchema = createSoftwareAppSchema(
@@ -40,6 +42,12 @@ export default function CalculadoraCAC() {
     'Herramienta gratuita para calcular el CAC (Costo de Adquisición de Cliente) por plataforma publicitaria. Analiza Google Ads, Meta Ads, TikTok Ads, LinkedIn Ads y Email Marketing. Incluye evaluación de ROI y recomendaciones estratégicas.',
     'https://agencia.mulleryperez.cl/utilidades/calculadora-cac'
   )
+
+  const breadcrumbSchema = createBreadcrumbSchema([
+    { name: 'Inicio', url: 'https://agencia.mulleryperez.cl' },
+    { name: 'Utilidades', url: 'https://agencia.mulleryperez.cl/utilidades' },
+    { name: 'Calculadora CAC', url: 'https://agencia.mulleryperez.cl/utilidades/calculadora-cac' }
+  ])
 
   const [inversion, setInversion] = useState('')
   const [ventas, setVentas] = useState('')
@@ -181,6 +189,10 @@ export default function CalculadoraCAC() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(cacSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
         {/* Header */}

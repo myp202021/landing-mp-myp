@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { BarChart3, TrendingUp } from 'lucide-react'
-import { createSoftwareAppSchema } from '@/lib/metadata'
+import { createSoftwareAppSchema, addCanonicalLink, createBreadcrumbSchema } from '@/lib/metadata'
 
 interface IndustryData {
   nombre: string
@@ -172,6 +172,8 @@ export default function RadarIndustrias() {
       meta.content = 'Análisis de madurez digital por industria en Chile 2024. Compara Google Ads, ROAS, plataformas digitales, IA y velocidad web por sector.'
       document.head.appendChild(meta)
     }
+
+    addCanonicalLink('/labs/radar-industrias')
   }, [])
 
   const radarSchema = createSoftwareAppSchema(
@@ -179,6 +181,12 @@ export default function RadarIndustrias() {
     'Herramienta de análisis de madurez digital por industria en Chile 2024. Evalúa 10 sectores clave en Google Ads, competencia, ROAS, plataformas digitales, implementación de IA, velocidad web y Google My Business con recomendaciones estratégicas.',
     'https://agencia.mulleryperez.cl/labs/radar-industrias'
   )
+
+  const breadcrumbSchema = createBreadcrumbSchema([
+    { name: 'Inicio', url: 'https://agencia.mulleryperez.cl' },
+    { name: 'M&P Labs', url: 'https://agencia.mulleryperez.cl/labs' },
+    { name: 'Radar Industrias', url: 'https://agencia.mulleryperez.cl/labs/radar-industrias' }
+  ])
 
   const [selectedIndustry, setSelectedIndustry] = useState('tecnologia')
   const currentData = industriasData[selectedIndustry]
@@ -219,6 +227,10 @@ export default function RadarIndustrias() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(radarSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
         {/* Header */}
