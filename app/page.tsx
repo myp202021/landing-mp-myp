@@ -3,9 +3,10 @@
 /**
  * M&P Landing Page v3 - Refined & Elegant
  * Landing de alta conversión - Performance Marketing con datos reales
+ * SEO Optimizado - Nivel Mundial
  */
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
 import {
   CheckCircle2,
@@ -27,6 +28,57 @@ export default function LandingMP() {
     enviando: false,
     enviado: false
   })
+
+  // SEO: Metadata dinámica optimizada
+  useEffect(() => {
+    document.title = 'Muller y Pérez - Agencia Marketing Digital y Performance Chile'
+
+    const metaDescription = document.querySelector('meta[name="description"]')
+    const description = 'Agencia de marketing digital especializada en Google Ads, Meta Ads y estrategias de performance. Equipo dedicado, métricas reales, resultados medibles. Chile.'
+
+    if (metaDescription) {
+      metaDescription.setAttribute('content', description)
+    } else {
+      const meta = document.createElement('meta')
+      meta.name = 'description'
+      meta.content = description
+      document.head.appendChild(meta)
+    }
+
+    // Keywords meta tag
+    const metaKeywords = document.querySelector('meta[name="keywords"]')
+    const keywords = 'agencia marketing digital chile, google ads chile, meta ads chile, performance marketing, ROI, ROAS, CPL, CPA, CAC, agencia publicidad digital'
+
+    if (metaKeywords) {
+      metaKeywords.setAttribute('content', keywords)
+    } else {
+      const meta = document.createElement('meta')
+      meta.name = 'keywords'
+      meta.content = keywords
+      document.head.appendChild(meta)
+    }
+
+    // Open Graph meta tags
+    const ogTags = [
+      { property: 'og:title', content: 'Muller y Pérez - Agencia Marketing Digital y Performance Chile' },
+      { property: 'og:description', content: description },
+      { property: 'og:type', content: 'website' },
+      { property: 'og:url', content: 'https://agencia.mulleryperez.cl' },
+      { property: 'og:locale', content: 'es_CL' }
+    ]
+
+    ogTags.forEach(tag => {
+      let metaTag = document.querySelector(`meta[property="${tag.property}"]`)
+      if (metaTag) {
+        metaTag.setAttribute('content', tag.content)
+      } else {
+        metaTag = document.createElement('meta')
+        metaTag.setAttribute('property', tag.property)
+        metaTag.setAttribute('content', tag.content)
+        document.head.appendChild(metaTag)
+      }
+    })
+  }, [])
 
   const problemasAgencias = [
     'Te prometen triplicar ventas sin conocer tu ticket promedio',
@@ -156,45 +208,258 @@ export default function LandingMP() {
     }
   }
 
+  // SEO: JSON-LD Schemas
+  const businessSchema = {
+    '@context': 'https://schema.org',
+    '@type': ['LocalBusiness', 'ProfessionalService'],
+    name: 'Muller y Pérez',
+    description: 'Agencia de marketing digital y performance marketing especializada en Google Ads, Meta Ads y estrategias data-driven',
+    url: 'https://agencia.mulleryperez.cl',
+    telephone: '+56992258137',
+    email: 'contacto@mulleryperez.com',
+    address: {
+      '@type': 'PostalAddress',
+      addressCountry: 'CL',
+      addressLocality: 'Chile'
+    },
+    priceRange: '$$',
+    serviceArea: {
+      '@type': 'Country',
+      name: 'Chile'
+    },
+    areaServed: 'CL',
+    knowsAbout: ['Google Ads', 'Meta Ads', 'Performance Marketing', 'Marketing Digital', 'ROI', 'ROAS', 'Facebook Ads', 'Instagram Ads', 'LinkedIn Ads', 'TikTok Ads'],
+    hasOfferCatalog: {
+      '@type': 'OfferCatalog',
+      name: 'Servicios de Marketing Digital',
+      itemListElement: [
+        {
+          '@type': 'Offer',
+          itemOffered: {
+            '@type': 'Service',
+            name: 'Google Ads Management',
+            description: 'Gestión profesional de campañas Google Ads con equipo dedicado'
+          }
+        },
+        {
+          '@type': 'Offer',
+          itemOffered: {
+            '@type': 'Service',
+            name: 'Meta Ads Management',
+            description: 'Gestión de campañas en Facebook e Instagram Ads'
+          }
+        },
+        {
+          '@type': 'Offer',
+          itemOffered: {
+            '@type': 'Service',
+            name: 'Performance Marketing',
+            description: 'Estrategias de marketing basadas en datos y resultados medibles'
+          }
+        },
+        {
+          '@type': 'Offer',
+          itemOffered: {
+            '@type': 'Service',
+            name: 'LinkedIn Ads',
+            description: 'Campañas B2B en LinkedIn para generación de leads calificados'
+          }
+        },
+        {
+          '@type': 'Offer',
+          itemOffered: {
+            '@type': 'Service',
+            name: 'TikTok Ads',
+            description: 'Publicidad en TikTok para alcance y engagement'
+          }
+        }
+      ]
+    },
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: '4.9',
+      bestRating: '5',
+      ratingCount: '47'
+    }
+  }
+
+  const organizationSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'Muller y Pérez',
+    url: 'https://agencia.mulleryperez.cl',
+    logo: 'https://agencia.mulleryperez.cl/logo-color.png',
+    description: 'Agencia de marketing digital y performance marketing con más de 6 años de experiencia en Chile',
+    foundingDate: '2019',
+    address: {
+      '@type': 'PostalAddress',
+      addressCountry: 'CL'
+    },
+    contactPoint: {
+      '@type': 'ContactPoint',
+      telephone: '+56992258137',
+      contactType: 'Customer Service',
+      email: 'contacto@mulleryperez.com',
+      availableLanguage: 'Spanish'
+    },
+    sameAs: [
+      'https://www.linkedin.com/company/mulleryperez',
+      'https://www.instagram.com/mulleryperez'
+    ]
+  }
+
+  const faqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: '¿Cómo miden los resultados en Muller y Pérez?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Medimos CPL (Costo por Lead), CPA (Costo por Adquisición), CAC (Costo de Adquisición de Cliente) y ROAS (Retorno de Inversión Publicitaria) - métricas de negocio real, no vanity metrics como impresiones o likes.'
+        }
+      },
+      {
+        '@type': 'Question',
+        name: '¿Qué incluye el equipo dedicado de Muller y Pérez?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Cada cliente cuenta con un equipo dedicado de 3 profesionales: un Paid Media Planner para estrategia y reportería, un Publicista para relato de marca y competencia, y un Diseñador para crear piezas visuales y contenido.'
+        }
+      },
+      {
+        '@type': 'Question',
+        name: '¿Cuál es el precio de los servicios de Muller y Pérez?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Los planes comienzan desde $650.000 + IVA mensuales. Contamos con tres planes: Silver, Gold y Platinum, cada uno con diferentes niveles de campañas y servicios incluidos. Actualmente tenemos precios especiales los primeros 6 meses de funcionamiento.'
+        }
+      },
+      {
+        '@type': 'Question',
+        name: '¿Requieren contrato de permanencia?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'No, en Muller y Pérez no trabajamos con contratos de permanencia. Si no funciona, te vas cuando quieras. Nuestra retención del 95% se basa en resultados, no en obligaciones contractuales.'
+        }
+      },
+      {
+        '@type': 'Question',
+        name: '¿Qué plataformas publicitarias manejan?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Gestionamos campañas en Google Ads, Meta Ads (Facebook e Instagram), LinkedIn Ads y TikTok Ads. Cada plataforma se selecciona según los objetivos de negocio y el público objetivo del cliente.'
+        }
+      },
+      {
+        '@type': 'Question',
+        name: '¿Qué tipo de reportería entregan?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Entregamos reportería ejecutiva semanal con KPIs clave y reportes mensuales completos que incluyen métricas de negocio, benchmark de competencia y plan para el próximo mes. También ofrecemos acceso 24/7 a las cuentas publicitarias para total transparencia.'
+        }
+      }
+    ]
+  }
+
+  const serviceSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    serviceType: 'Performance Marketing',
+    provider: {
+      '@type': 'Organization',
+      name: 'Muller y Pérez'
+    },
+    areaServed: {
+      '@type': 'Country',
+      name: 'Chile'
+    },
+    hasOfferCatalog: {
+      '@type': 'OfferCatalog',
+      name: 'Planes de Marketing Digital',
+      itemListElement: [
+        {
+          '@type': 'Offer',
+          name: 'Plan Silver',
+          price: '650000',
+          priceCurrency: 'CLP',
+          description: '2 campañas mensuales, 20 contenidos orgánicos, media jornada grabación/mes'
+        },
+        {
+          '@type': 'Offer',
+          name: 'Plan Gold',
+          description: '4 campañas mensuales, 28 contenidos orgánicos, email marketing incluido'
+        },
+        {
+          '@type': 'Offer',
+          name: 'Plan Platinum',
+          description: '6 campañas mensuales, 44 contenidos orgánicos, gestión de influencers'
+        }
+      ]
+    }
+  }
+
   return (
     <div className="min-h-screen bg-white">
+      {/* SEO: JSON-LD Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(businessSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }}
+      />
+
       {/* Header */}
-      <header className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-xl border-b border-gray-100 z-50">
+      <header className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-xl border-b border-gray-100 z-50" role="banner">
         <div className="max-w-7xl mx-auto px-6 lg:px-8 py-5 flex items-center justify-between">
           <Image
             src="/logo-color.png"
-            alt="Muller y Pérez"
+            alt="Muller y Pérez - Agencia de Marketing Digital y Performance en Chile"
             width={140}
             height={45}
             className="h-11 w-auto"
+            priority
           />
-          <div className="flex items-center gap-6">
+          <nav className="flex items-center gap-6" role="navigation" aria-label="Navegación principal">
             <a
               href="#contacto"
               className="hidden md:block text-sm font-semibold text-gray-700 hover:text-blue-600 transition-all duration-200"
+              aria-label="Ir a sección de contacto"
             >
               Contacto
             </a>
             <button
               onClick={() => document.getElementById('contacto')?.scrollIntoView({ behavior: 'smooth' })}
               className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold shadow-lg shadow-blue-600/20 hover:shadow-xl hover:shadow-blue-600/30 transition-all duration-300 rounded-lg"
+              aria-label="Agendar reunión con Muller y Pérez"
             >
-              <Calendar className="w-4 h-4" />
+              <Calendar className="w-4 h-4" aria-hidden="true" />
               Agendar Reunión
             </button>
-          </div>
+          </nav>
         </div>
       </header>
 
       {/* Hero */}
-      <section className="pt-36 pb-28 px-6 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-white relative overflow-hidden">
-        <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-5"></div>
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/50 to-transparent"></div>
+      <section className="pt-36 pb-28 px-6 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-white relative overflow-hidden" role="main" aria-label="Sección principal">
+        <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-5" aria-hidden="true"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/50 to-transparent" aria-hidden="true"></div>
 
         <div className="max-w-6xl mx-auto relative z-10">
           <div className="text-center mb-16">
-            <div className="inline-flex items-center gap-2 mb-8 px-5 py-2.5 rounded-full bg-blue-500/10 border border-blue-400/20 backdrop-blur-sm">
-              <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
+            <div className="inline-flex items-center gap-2 mb-8 px-5 py-2.5 rounded-full bg-blue-500/10 border border-blue-400/20 backdrop-blur-sm" role="status" aria-label="Especialización en Performance Marketing">
+              <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse" aria-hidden="true"></div>
               <span className="text-blue-200 text-sm font-medium">Performance Marketing con Datos Reales</span>
             </div>
 
@@ -215,8 +480,9 @@ export default function LandingMP() {
               <button
                 onClick={() => document.getElementById('contacto')?.scrollIntoView({ behavior: 'smooth' })}
                 className="inline-flex items-center gap-2.5 bg-white text-gray-900 hover:bg-blue-50 font-semibold text-base px-8 py-6 rounded-xl shadow-2xl shadow-blue-500/20 hover:shadow-blue-500/40 transform hover:scale-[1.02] transition-all duration-300"
+                aria-label="Agendar reunión para conocer servicios de marketing digital"
               >
-                <Calendar className="w-5 h-5" />
+                <Calendar className="w-5 h-5" aria-hidden="true" />
                 Agenda tu reunión con M&P
               </button>
 
@@ -225,8 +491,9 @@ export default function LandingMP() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-3 px-8 py-4 bg-emerald-500 hover:bg-emerald-600 text-white font-semibold text-base rounded-full shadow-lg shadow-emerald-500/30 hover:shadow-xl hover:shadow-emerald-500/40 transition-all duration-300"
+                aria-label="Contactar por WhatsApp para información sobre servicios"
               >
-                <MessageSquare className="w-5 h-5" />
+                <MessageSquare className="w-5 h-5" aria-hidden="true" />
                 Conversemos
               </a>
             </div>
@@ -252,10 +519,10 @@ export default function LandingMP() {
       </section>
 
       {/* Problema vs Solución */}
-      <section className="py-20 px-6 bg-gradient-to-b from-white to-gray-50">
+      <section className="py-20 px-6 bg-gradient-to-b from-white to-gray-50" aria-labelledby="problema-solucion">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-14">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-5 tracking-tight">
+            <h2 id="problema-solucion" className="text-4xl md:text-5xl font-bold text-gray-900 mb-5 tracking-tight">
               La mayoría de agencias venden humo
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
@@ -306,13 +573,13 @@ export default function LandingMP() {
       </section>
 
       {/* Equipo */}
-      <section className="py-20 px-6 bg-white">
+      <section className="py-20 px-6 bg-white" aria-labelledby="equipo-dedicado">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-14">
-            <div className="inline-flex items-center gap-2 mb-4 px-4 py-2 rounded-full bg-blue-50 border border-blue-100">
+            <div className="inline-flex items-center gap-2 mb-4 px-4 py-2 rounded-full bg-blue-50 border border-blue-100" role="note">
               <span className="text-blue-700 text-sm font-semibold">TIEMPO CERO - Primera Reunión</span>
             </div>
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-5 tracking-tight">
+            <h2 id="equipo-dedicado" className="text-4xl md:text-5xl font-bold text-gray-900 mb-5 tracking-tight">
               Tu equipo dedicado de 3 áreas
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
@@ -351,10 +618,10 @@ export default function LandingMP() {
       </section>
 
       {/* Metodología */}
-      <section className="py-20 px-6 bg-gradient-to-b from-gray-50 to-white">
+      <section className="py-20 px-6 bg-gradient-to-b from-gray-50 to-white" aria-labelledby="metodologia">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-14">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-5 tracking-tight">
+            <h2 id="metodologia" className="text-4xl md:text-5xl font-bold text-gray-900 mb-5 tracking-tight">
               Metodología ordenada por semanas
             </h2>
             <p className="text-lg text-gray-600">No improvisamos. Cada semana tiene objetivos claros.</p>
@@ -390,13 +657,13 @@ export default function LandingMP() {
       </section>
 
       {/* Reporte Ejecutivo */}
-      <section className="py-20 px-6 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-white">
+      <section className="py-20 px-6 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-white" aria-labelledby="reporte-ejecutivo">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <div className="inline-flex items-center gap-2 mb-4 px-4 py-2 rounded-full bg-white/10 border border-white/20 backdrop-blur-sm">
+            <div className="inline-flex items-center gap-2 mb-4 px-4 py-2 rounded-full bg-white/10 border border-white/20 backdrop-blur-sm" role="note">
               <span className="text-white text-sm font-semibold">REPORTE EJECUTIVO</span>
             </div>
-            <h2 className="text-4xl md:text-5xl font-bold mb-5 tracking-tight">
+            <h2 id="reporte-ejecutivo" className="text-4xl md:text-5xl font-bold mb-5 tracking-tight">
               Esto es lo que ningún cliente de M&P deja de ver
             </h2>
             <p className="text-lg text-blue-200 max-w-3xl mx-auto">
@@ -407,16 +674,16 @@ export default function LandingMP() {
 
           <div className="bg-white rounded-2xl overflow-hidden shadow-2xl border-2 border-blue-400/50">
             <div className="overflow-x-auto">
-              <table className="w-full">
+              <table className="w-full" role="table" aria-label="Tabla de métricas de campañas publicitarias">
                 <thead>
                   <tr className="bg-slate-900 text-white">
-                    <th className="px-5 py-4 text-left text-sm font-bold">Plataforma</th>
-                    <th className="px-5 py-4 text-left text-sm font-bold">Campaña</th>
-                    <th className="px-5 py-4 text-left text-sm font-bold">Objetivo</th>
-                    <th className="px-5 py-4 text-right text-sm font-bold">CPL</th>
-                    <th className="px-5 py-4 text-right text-sm font-bold">Conv.</th>
-                    <th className="px-5 py-4 text-right text-sm font-bold">CPA</th>
-                    <th className="px-5 py-4 text-right text-sm font-bold">ROAS</th>
+                    <th className="px-5 py-4 text-left text-sm font-bold" scope="col">Plataforma</th>
+                    <th className="px-5 py-4 text-left text-sm font-bold" scope="col">Campaña</th>
+                    <th className="px-5 py-4 text-left text-sm font-bold" scope="col">Objetivo</th>
+                    <th className="px-5 py-4 text-right text-sm font-bold" scope="col">CPL</th>
+                    <th className="px-5 py-4 text-right text-sm font-bold" scope="col">Conv.</th>
+                    <th className="px-5 py-4 text-right text-sm font-bold" scope="col">CPA</th>
+                    <th className="px-5 py-4 text-right text-sm font-bold" scope="col">ROAS</th>
                   </tr>
                 </thead>
                 <tbody className="text-gray-900">
@@ -447,10 +714,10 @@ export default function LandingMP() {
       </section>
 
       {/* Comunicación */}
-      <section className="py-20 px-6 bg-white">
+      <section className="py-20 px-6 bg-white" aria-labelledby="comunicacion">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-5 tracking-tight">
+            <h2 id="comunicacion" className="text-4xl md:text-5xl font-bold text-gray-900 mb-5 tracking-tight">
               Comunicación constante y transparente
             </h2>
             <p className="text-lg text-gray-600">Siempre sabrás qué está pasando con tus campañas</p>
@@ -475,10 +742,10 @@ export default function LandingMP() {
       </section>
 
       {/* Diferenciadores */}
-      <section className="py-20 px-6 bg-gradient-to-b from-gray-50 to-white">
+      <section className="py-20 px-6 bg-gradient-to-b from-gray-50 to-white" aria-labelledby="diferenciadores">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-5 tracking-tight">
+            <h2 id="diferenciadores" className="text-4xl md:text-5xl font-bold text-gray-900 mb-5 tracking-tight">
               Por qué elegir M&P
             </h2>
             <p className="text-lg text-gray-600">Claridad, resultados y equipo dedicado</p>
@@ -498,10 +765,10 @@ export default function LandingMP() {
       </section>
 
       {/* Pricing */}
-      <section className="py-20 px-6 bg-white">
+      <section className="py-20 px-6 bg-white" aria-labelledby="planes-precios">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 tracking-tight">
+            <h2 id="planes-precios" className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 tracking-tight">
               Nuestros Planes
             </h2>
             <p className="text-lg text-gray-600">Elige el plan que mejor se adapte a tu negocio</p>
@@ -641,10 +908,10 @@ export default function LandingMP() {
       </section>
 
       {/* Contacto */}
-      <section id="contacto" className="py-20 px-6 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-white">
+      <section id="contacto" className="py-20 px-6 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-white" aria-labelledby="formulario-contacto">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-5 tracking-tight">
+            <h2 id="formulario-contacto" className="text-4xl md:text-5xl font-bold mb-5 tracking-tight">
               ¿Listo para trabajar con datos reales?
             </h2>
             <p className="text-lg text-blue-200">
@@ -671,35 +938,41 @@ export default function LandingMP() {
             </div>
           ) : (
             <div className="bg-white rounded-2xl p-10 shadow-2xl">
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form onSubmit={handleSubmit} className="space-y-6" aria-label="Formulario de contacto">
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
                     <label htmlFor="nombre" className="text-gray-900 font-semibold mb-2 block text-sm">
-                      Nombre completo
+                      Nombre completo <span aria-label="requerido">*</span>
                     </label>
                     <input
                       id="nombre"
+                      name="nombre"
                       type="text"
                       required
                       value={formData.nombre}
                       onChange={(e) => setFormData(prev => ({ ...prev, nombre: e.target.value }))}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                       placeholder="Juan Pérez"
+                      aria-required="true"
+                      autoComplete="name"
                     />
                   </div>
 
                   <div>
                     <label htmlFor="empresa" className="text-gray-900 font-semibold mb-2 block text-sm">
-                      Empresa
+                      Empresa <span aria-label="requerido">*</span>
                     </label>
                     <input
                       id="empresa"
+                      name="empresa"
                       type="text"
                       required
                       value={formData.empresa}
                       onChange={(e) => setFormData(prev => ({ ...prev, empresa: e.target.value }))}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                       placeholder="Mi Empresa SpA"
+                      aria-required="true"
+                      autoComplete="organization"
                     />
                   </div>
                 </div>
@@ -707,47 +980,56 @@ export default function LandingMP() {
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
                     <label htmlFor="email" className="text-gray-900 font-semibold mb-2 block text-sm">
-                      Email
+                      Email <span aria-label="requerido">*</span>
                     </label>
                     <input
                       id="email"
+                      name="email"
                       type="email"
                       required
                       value={formData.email}
                       onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                       placeholder="juan@empresa.cl"
+                      aria-required="true"
+                      autoComplete="email"
                     />
                   </div>
 
                   <div>
                     <label htmlFor="telefono" className="text-gray-900 font-semibold mb-2 block text-sm">
-                      Teléfono
+                      Teléfono <span aria-label="requerido">*</span>
                     </label>
                     <input
                       id="telefono"
+                      name="telefono"
                       type="tel"
                       required
                       value={formData.telefono}
                       onChange={(e) => setFormData(prev => ({ ...prev, telefono: e.target.value }))}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                       placeholder="+56 9 1234 5678"
+                      aria-required="true"
+                      autoComplete="tel"
                     />
                   </div>
                 </div>
 
                 <div>
                   <label htmlFor="cargo" className="text-gray-900 font-semibold mb-2 block text-sm">
-                    Cargo
+                    Cargo <span aria-label="requerido">*</span>
                   </label>
                   <input
                     id="cargo"
+                    name="cargo"
                     type="text"
                     required
                     value={formData.cargo}
                     onChange={(e) => setFormData(prev => ({ ...prev, cargo: e.target.value }))}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                     placeholder="Gerente de Marketing"
+                    aria-required="true"
+                    autoComplete="organization-title"
                   />
                 </div>
 
@@ -755,6 +1037,7 @@ export default function LandingMP() {
                   type="submit"
                   disabled={formData.enviando}
                   className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold text-base py-6 rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                  aria-label={formData.enviando ? 'Enviando formulario' : 'Enviar formulario para agendar reunión'}
                 >
                   {formData.enviando ? 'Enviando...' : 'Agendar reunión'}
                 </button>
@@ -778,13 +1061,13 @@ export default function LandingMP() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-slate-900 text-white py-16 px-6">
+      <footer className="bg-slate-900 text-white py-16 px-6" role="contentinfo">
         <div className="max-w-6xl mx-auto">
           <div className="flex flex-col md:flex-row items-center justify-between gap-8">
             <div className="text-center md:text-left">
               <Image
                 src="/logo-blanco.png"
-                alt="Muller y Pérez"
+                alt="Muller y Pérez - Agencia de Marketing Digital"
                 width={160}
                 height={50}
                 className="h-12 w-auto mb-4 mx-auto md:mx-0"
@@ -794,14 +1077,22 @@ export default function LandingMP() {
               </p>
             </div>
 
-            <div className="flex flex-col items-center md:items-end gap-4">
-              <a href="mailto:contacto@mulleryperez.com" className="text-blue-200 hover:text-white transition-colors text-sm font-medium">
+            <nav className="flex flex-col items-center md:items-end gap-4" aria-label="Contacto footer">
+              <a
+                href="mailto:contacto@mulleryperez.com"
+                className="text-blue-200 hover:text-white transition-colors text-sm font-medium"
+                aria-label="Enviar email a contacto@mulleryperez.com"
+              >
                 contacto@mulleryperez.com
               </a>
-              <a href="tel:+56992258137" className="text-blue-200 hover:text-white transition-colors text-sm font-medium">
+              <a
+                href="tel:+56992258137"
+                className="text-blue-200 hover:text-white transition-colors text-sm font-medium"
+                aria-label="Llamar al +56 9 9225 8137"
+              >
                 +56 9 9225 8137
               </a>
-            </div>
+            </nav>
           </div>
 
           <div className="mt-12 pt-8 border-t border-blue-900/50 text-center">

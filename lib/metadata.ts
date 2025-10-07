@@ -1,12 +1,12 @@
 import { Metadata } from 'next'
 
 export const siteConfig = {
-  name: 'Muller y Pérez - Marketing Digital',
-  description: 'Agencia de marketing digital especializada en Google Ads, Meta Ads y estrategias de conversión en Chile',
+  name: 'Muller y Pérez - Agencia Marketing Digital y Performance Chile',
+  description: 'Agencia de marketing digital especializada en Google Ads, Meta Ads y estrategias de performance. Equipo dedicado, métricas reales, resultados medibles. Chile.',
   url: 'https://agencia.mulleryperez.cl',
   ogImage: 'https://agencia.mulleryperez.cl/og-image.jpg',
   links: {
-    whatsapp: 'https://wa.me/56992225813'
+    whatsapp: 'https://wa.me/56992258137'
   }
 }
 
@@ -18,14 +18,34 @@ export const defaultMetadata: Metadata = {
   },
   description: siteConfig.description,
   keywords: [
-    'marketing digital chile',
+    'agencia marketing digital chile',
     'google ads chile',
     'meta ads chile',
-    'publicidad digital',
-    'agencia marketing digital',
-    'ROI marketing',
-    'conversiones digitales',
-    'estrategia digital'
+    'facebook ads chile',
+    'instagram ads chile',
+    'performance marketing',
+    'performance marketing chile',
+    'publicidad digital chile',
+    'agencia publicidad digital',
+    'ROI',
+    'ROAS',
+    'CPL',
+    'CPA',
+    'CAC',
+    'costo por lead',
+    'costo por adquisición',
+    'retorno inversión publicitaria',
+    'marketing basado en datos',
+    'data-driven marketing',
+    'agencia google ads',
+    'agencia meta ads',
+    'linkedin ads chile',
+    'tiktok ads chile',
+    'estrategia digital chile',
+    'campañas publicitarias',
+    'gestión campañas google ads',
+    'gestión campañas facebook',
+    'equipo marketing dedicado'
   ],
   authors: [{ name: 'Muller y Pérez' }],
   creator: 'Muller y Pérez',
@@ -136,8 +156,9 @@ export function createOrganizationSchema() {
     },
     contactPoint: {
       '@type': 'ContactPoint',
-      telephone: '+56992225813',
+      telephone: '+56992258137',
       contactType: 'customer service',
+      email: 'contacto@mulleryperez.com',
       areaServed: 'CL',
       availableLanguage: 'Spanish'
     },
