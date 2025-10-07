@@ -200,7 +200,7 @@ export default function LandingMP() {
 
             <h1 className="text-5xl md:text-7xl font-bold mb-10 leading-[1.1] tracking-tight">
               Si tu agencia no te habla<br />
-              de negocio,{' '}
+              de negocios,{' '}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-500">
                 no es tu agencia.
               </span>
@@ -311,10 +311,10 @@ export default function LandingMP() {
               <span className="text-blue-700 text-sm font-semibold">TIEMPO CERO - Primera Reunión</span>
             </div>
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-5 tracking-tight">
-              Tu equipo dedicado de 3 profesionales
+              Tu equipo dedicado de 3 áreas
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Conocerás a las 3 personas que estarán 100% enfocadas en hacer crecer tu negocio
+              A cada cliente se le asignan 3 personas especializadas que estarán 100% enfocadas en hacer crecer tu negocio
             </p>
           </div>
 
