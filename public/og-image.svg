@@ -1,0 +1,67 @@
+<svg width="1200" height="630" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background gradient -->
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f172a;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#1e40af;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0f172a;stop-opacity:1" />
+    </linearGradient>
+    <pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse">
+      <path d="M 50 0 L 0 0 0 50" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+
+  <!-- Accent circles -->
+  <circle cx="100" cy="100" r="150" fill="rgba(59, 130, 246, 0.1)"/>
+  <circle cx="1100" cy="530" r="120" fill="rgba(147, 51, 234, 0.1)"/>
+
+  <!-- Content -->
+  <text x="600" y="220" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+        font-size="80" font-weight="700" fill="white" text-anchor="middle" letter-spacing="-2">
+    Muller y Pérez
+  </text>
+
+  <line x1="400" y1="260" x2="800" y2="260" stroke="rgba(59, 130, 246, 0.5)" stroke-width="3"/>
+
+  <text x="600" y="330" font-family="system-ui, -apple-system, sans-serif"
+        font-size="38" font-weight="500" fill="rgba(255,255,255,0.9)" text-anchor="middle">
+    Marketing Digital &amp; Performance
+  </text>
+
+  <text x="600" y="385" font-family="system-ui, -apple-system, sans-serif"
+        font-size="32" font-weight="400" fill="rgba(147, 197, 253, 0.8)" text-anchor="middle">
+    Chile
+  </text>
+
+  <!-- Features -->
+  <g transform="translate(150, 450)">
+    <circle cx="0" cy="0" r="8" fill="#3b82f6"/>
+    <text x="20" y="7" font-family="system-ui" font-size="24" fill="rgba(255,255,255,0.8)">
+      Métricas reales
+    </text>
+  </g>
+
+  <g transform="translate(490, 450)">
+    <circle cx="0" cy="0" r="8" fill="#8b5cf6"/>
+    <text x="20" y="7" font-family="system-ui" font-size="24" fill="rgba(255,255,255,0.8)">
+      Equipo dedicado
+    </text>
+  </g>
+
+  <g transform="translate(850, 450)">
+    <circle cx="0" cy="0" r="8" fill="#06b6d4"/>
+    <text x="20" y="7" font-family="system-ui" font-size="24" fill="rgba(255,255,255,0.8)">
+      ROI medible
+    </text>
+  </g>
+
+  <!-- Bottom bar -->
+  <rect y="570" width="1200" height="60" fill="rgba(0,0,0,0.4)"/>
+  <text x="600" y="610" font-family="system-ui" font-size="22" font-weight="500"
+        fill="rgba(255,255,255,0.7)" text-anchor="middle">
+    agencia.mulleryperez.cl
+  </text>
+</svg>

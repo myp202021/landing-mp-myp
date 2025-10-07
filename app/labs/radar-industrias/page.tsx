@@ -173,6 +173,29 @@ export default function RadarIndustrias() {
       document.head.appendChild(meta)
     }
 
+    // OG Image específica
+    const ogImageMeta = document.querySelector('meta[property="og:image"]')
+    const twitterImageMeta = document.querySelector('meta[name="twitter:image"]')
+    const imageUrl = 'https://agencia.mulleryperez.cl/og-radar.svg'
+
+    if (ogImageMeta) {
+      ogImageMeta.setAttribute('content', imageUrl)
+    } else {
+      const meta = document.createElement('meta')
+      meta.setAttribute('property', 'og:image')
+      meta.setAttribute('content', imageUrl)
+      document.head.appendChild(meta)
+    }
+
+    if (twitterImageMeta) {
+      twitterImageMeta.setAttribute('content', imageUrl)
+    } else {
+      const meta = document.createElement('meta')
+      meta.name = 'twitter:image'
+      meta.content = imageUrl
+      document.head.appendChild(meta)
+    }
+
     addCanonicalLink('/labs/radar-industrias')
   }, [])
 
