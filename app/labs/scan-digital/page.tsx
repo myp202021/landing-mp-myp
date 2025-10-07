@@ -24,7 +24,7 @@ export default function ScanDigital() {
 
   const simulateScan = () => {
     if (!url.trim()) {
-      alert('Por favor ingresa una URL v·lida')
+      alert('Por favor ingresa una URL v√°lida')
       return
     }
 
@@ -40,9 +40,9 @@ export default function ScanDigital() {
           status: 'good',
           items: [
             { name: 'Tiempo de carga', status: 'pass', message: 'Carga en 2.3s (objetivo: <3s)' },
-            { name: 'First Contentful Paint', status: 'warning', message: '1.8s (objetivo: <1.8s)', recommendation: 'Optimiza im·genes y comprime recursos CSS/JS' },
+            { name: 'First Contentful Paint', status: 'warning', message: '1.8s (objetivo: <1.8s)', recommendation: 'Optimiza im√°genes y comprime recursos CSS/JS' },
             { name: 'Largest Contentful Paint', status: 'pass', message: '2.1s (objetivo: <2.5s)' },
-            { name: 'Cumulative Layout Shift', status: 'warning', message: '0.12 (objetivo: <0.1)', recommendation: 'Define dimensiones de im·genes para evitar saltos visuales' }
+            { name: 'Cumulative Layout Shift', status: 'warning', message: '0.12 (objetivo: <0.1)', recommendation: 'Define dimensiones de im√°genes para evitar saltos visuales' }
           ]
         },
         {
@@ -52,8 +52,8 @@ export default function ScanDigital() {
           items: [
             { name: 'Meta Title', status: 'pass', message: 'Presente y optimizado (58 caracteres)' },
             { name: 'Meta Description', status: 'pass', message: 'Presente y atractiva (142 caracteres)' },
-            { name: 'Headings (H1-H6)', status: 'warning', message: 'M˙ltiples H1 detectados', recommendation: 'Usa solo un H1 por p·gina' },
-            { name: 'Alt text en im·genes', status: 'fail', message: '8 de 15 im·genes sin alt text', recommendation: 'Agrega descripciones alt a todas las im·genes' },
+            { name: 'Headings (H1-H6)', status: 'warning', message: 'M√∫ltiples H1 detectados', recommendation: 'Usa solo un H1 por p√°gina' },
+            { name: 'Alt text en im√°genes', status: 'fail', message: '8 de 15 im√°genes sin alt text', recommendation: 'Agrega descripciones alt a todas las im√°genes' },
             { name: 'URL amigables', status: 'pass', message: 'URLs optimizadas y descriptivas' }
           ]
         },
@@ -63,8 +63,8 @@ export default function ScanDigital() {
           status: 'good',
           items: [
             { name: 'Viewport configurado', status: 'pass', message: 'Meta viewport correctamente configurado' },
-            { name: 'Texto legible', status: 'pass', message: 'TamaÒo de fuente adecuado para mÛvil' },
-            { name: 'Elementos t·ctiles', status: 'warning', message: 'Algunos botones muy pequeÒos', recommendation: 'Aumenta tamaÒo mÌnimo a 48x48px' },
+            { name: 'Texto legible', status: 'pass', message: 'Tama√±o de fuente adecuado para m√≥vil' },
+            { name: 'Elementos t√°ctiles', status: 'warning', message: 'Algunos botones muy peque√±os', recommendation: 'Aumenta tama√±o m√≠nimo a 48x48px' },
             { name: 'Contenido responsive', status: 'pass', message: 'Se adapta correctamente a diferentes pantallas' }
           ]
         },
@@ -74,7 +74,7 @@ export default function ScanDigital() {
           status: 'excellent',
           items: [
             { name: 'HTTPS habilitado', status: 'pass', message: 'Sitio servido mediante HTTPS' },
-            { name: 'Certificado SSL v·lido', status: 'pass', message: 'Certificado v·lido hasta 2025' },
+            { name: 'Certificado SSL v√°lido', status: 'pass', message: 'Certificado v√°lido hasta 2025' },
             { name: 'Headers de seguridad', status: 'warning', message: 'Faltan algunos headers', recommendation: 'Implementa Content-Security-Policy y X-Frame-Options' }
           ]
         },
@@ -83,9 +83,9 @@ export default function ScanDigital() {
           score: Math.floor(Math.random() * 25) + 60,
           status: 'good',
           items: [
-            { name: 'Llamados a la acciÛn', status: 'pass', message: 'CTAs claros y visibles' },
+            { name: 'Llamados a la acci√≥n', status: 'pass', message: 'CTAs claros y visibles' },
             { name: 'Formularios', status: 'pass', message: 'Formularios sencillos y accesibles' },
-            { name: 'NavegaciÛn', status: 'warning', message: 'Men˙ complejo en mÛvil', recommendation: 'Simplifica navegaciÛn mÛvil con men˙ hamburguesa' },
+            { name: 'Navegaci√≥n', status: 'warning', message: 'Men√∫ complejo en m√≥vil', recommendation: 'Simplifica navegaci√≥n m√≥vil con men√∫ hamburguesa' },
             { name: 'Tiempo de permanencia', status: 'fail', message: 'Alta tasa de rebote (68%)', recommendation: 'Mejora contenido above the fold y relevancia' }
           ]
         },
@@ -97,7 +97,7 @@ export default function ScanDigital() {
             { name: 'Enlaces sociales', status: 'pass', message: 'Links a redes sociales presentes' },
             { name: 'Open Graph tags', status: 'warning', message: 'Incompletos o faltantes', recommendation: 'Agrega og:image, og:title y og:description' },
             { name: 'Twitter Cards', status: 'fail', message: 'No implementadas', recommendation: 'Implementa Twitter Card tags para mejor sharing' },
-            { name: 'WhatsApp button', status: 'warning', message: 'No visible', recommendation: 'Agrega botÛn flotante de WhatsApp' }
+            { name: 'WhatsApp button', status: 'warning', message: 'No visible', recommendation: 'Agrega bot√≥n flotante de WhatsApp' }
           ]
         }
       ]
@@ -105,7 +105,7 @@ export default function ScanDigital() {
       // Calcular score global
       const totalScore = mockResults.reduce((sum, cat) => sum + cat.score, 0) / mockResults.length
 
-      // Actualizar status seg˙n score
+      // Actualizar status seg√∫n score
       mockResults.forEach(result => {
         if (result.score >= 85) result.status = 'excellent'
         else if (result.score >= 70) result.status = 'good'
@@ -147,10 +147,10 @@ export default function ScanDigital() {
   }
 
   const getGlobalStatus = () => {
-    if (globalScore >= 85) return { text: 'Excelente', color: 'text-green-600', icon: '<â' }
-    if (globalScore >= 70) return { text: 'Bueno', color: 'text-blue-600', icon: '=M' }
-    if (globalScore >= 50) return { text: 'Mejorable', color: 'text-yellow-600', icon: '†' }
-    return { text: 'Necesita AtenciÛn', color: 'text-red-600', icon: '=®' }
+    if (globalScore >= 85) return { text: 'Excelente', color: 'text-green-600', icon: '‚úì' }
+    if (globalScore >= 70) return { text: 'Bueno', color: 'text-blue-600', icon: '~' }
+    if (globalScore >= 50) return { text: 'Mejorable', color: 'text-yellow-600', icon: '!' }
+    return { text: 'Necesita Atenci√≥n', color: 'text-red-600', icon: '‚úï' }
   }
 
   return (
@@ -159,11 +159,11 @@ export default function ScanDigital() {
       <header className="bg-white/80 backdrop-blur-xl border-b border-gray-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <Link href="/labs" className="text-sm font-semibold text-gray-700 hover:text-blue-600 transition-all">
-            ê Volver a M&P Labs
+            ‚Üê Volver a M&P Labs
           </Link>
           <div className="text-right">
             <h1 className="text-lg font-bold text-gray-900">M&P Scan Digital</h1>
-            <p className="text-xs text-gray-600">AuditorÌa Digital Completa</p>
+            <p className="text-xs text-gray-600">Auditor√≠a Digital Completa</p>
           </div>
         </div>
       </header>
@@ -174,13 +174,13 @@ export default function ScanDigital() {
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 mb-4 px-4 py-2 rounded-full bg-blue-100 border border-blue-200">
             <Search className="w-4 h-4 text-blue-600" />
-            <span className="text-blue-700 text-sm font-semibold">An·lisis Autom·tico</span>
+            <span className="text-blue-700 text-sm font-semibold">An√°lisis Autom√°tico</span>
           </div>
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
             Escanea tu presencia digital<br />en segundos
           </h2>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            An·lisis completo de velocidad, SEO, mobile, seguridad, UX y redes sociales con recomendaciones accionables
+            An√°lisis completo de velocidad, SEO, mobile, seguridad, UX y redes sociales con recomendaciones accionables
           </p>
         </div>
 
@@ -216,8 +216,8 @@ export default function ScanDigital() {
           <div className="grid md:grid-cols-3 gap-6 mb-8">
             {[
               { icon: <TrendingUp className="w-8 h-8 text-blue-600" />, title: 'Velocidad Web', desc: 'Core Web Vitals y tiempos de carga' },
-              { icon: <Search className="w-8 h-8 text-blue-600" />, title: 'SEO On-Page', desc: 'Meta tags, headings y optimizaciÛn' },
-              { icon: <Smartphone className="w-8 h-8 text-blue-600" />, title: 'Mobile First', desc: 'Responsive y experiencia mÛvil' }
+              { icon: <Search className="w-8 h-8 text-blue-600" />, title: 'SEO On-Page', desc: 'Meta tags, headings y optimizaci√≥n' },
+              { icon: <Smartphone className="w-8 h-8 text-blue-600" />, title: 'Mobile First', desc: 'Responsive y experiencia m√≥vil' }
             ].map((feature, idx) => (
               <div key={idx} className="bg-white rounded-xl p-6 shadow-lg border border-gray-200 text-center">
                 <div className="mb-4 flex justify-center">{feature.icon}</div>
@@ -233,7 +233,7 @@ export default function ScanDigital() {
           <div className="bg-white rounded-2xl p-12 text-center shadow-xl border border-gray-200">
             <div className="w-16 h-16 border-4 border-gray-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-6"></div>
             <h3 className="text-xl font-bold text-gray-900 mb-2">Escaneando tu sitio...</h3>
-            <p className="text-gray-600">Analizando velocidad, SEO, mobile, seguridad y m·s</p>
+            <p className="text-gray-600">Analizando velocidad, SEO, mobile, seguridad y m√°s</p>
           </div>
         )}
 
@@ -274,7 +274,7 @@ export default function ScanDigital() {
                             <div className="text-sm text-gray-600 mt-1">{item.message}</div>
                             {item.recommendation && (
                               <div className="mt-2 p-3 bg-blue-50 border-l-2 border-blue-600 rounded">
-                                <div className="text-xs font-semibold text-blue-900 mb-1">=° RecomendaciÛn</div>
+                                <div className="text-xs font-semibold text-blue-900 mb-1">üí° Recomendaci√≥n</div>
                                 <div className="text-sm text-blue-800">{item.recommendation}</div>
                               </div>
                             )}
@@ -289,7 +289,7 @@ export default function ScanDigital() {
 
             {/* CTA */}
             <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 text-center text-white mt-8">
-              <h3 className="text-2xl font-bold mb-4">øQuieres optimizar tu sitio?</h3>
+              <h3 className="text-2xl font-bold mb-4">¬øQuieres optimizar tu sitio?</h3>
               <p className="text-blue-100 mb-6">
                 Nuestro equipo puede implementar todas estas mejoras y llevar tu presencia digital al siguiente nivel
               </p>
@@ -298,7 +298,7 @@ export default function ScanDigital() {
                   onClick={() => window.location.href = '/contacto'}
                   className="px-6 py-3 bg-white text-blue-600 rounded-lg font-semibold hover:bg-blue-50 transition-all"
                 >
-                  Agendar ConsultorÌa
+                  Agendar Consultor√≠a
                 </button>
                 <a
                   href="https://wa.me/56992225813"
@@ -317,7 +317,7 @@ export default function ScanDigital() {
       {/* Footer */}
       <footer className="border-t border-gray-200 py-8 px-6 bg-white/50 backdrop-blur-sm mt-12">
         <div className="max-w-7xl mx-auto text-center text-gray-600 text-sm">
-          <p>© 2024 Muller y PÈrez ∑ AuditorÌa Digital Automatizada</p>
+          <p>¬© 2024 Muller y P√©rez ¬∑ Auditor√≠a Digital Automatizada</p>
         </div>
       </footer>
     </div>

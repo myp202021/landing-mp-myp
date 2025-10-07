@@ -30,12 +30,12 @@ const TOTAL_BUDGET = 1000000
 
 const categories: { [key: string]: string } = {
   all: 'Todas',
-  'paid-search': 'Búsqueda Pagada',
+  'paid-search': 'BÃºsqueda Pagada',
   'social-media': 'Redes Sociales',
   content: 'Contenido',
-  conversion: 'Conversión',
+  conversion: 'ConversiÃ³n',
   email: 'Email Marketing',
-  automation: 'Automatización'
+  automation: 'AutomatizaciÃ³n'
 }
 
 const marketingOptions: MarketingOption[] = [
@@ -44,13 +44,13 @@ const marketingOptions: MarketingOption[] = [
     title: 'Google Ads Search',
     category: 'paid-search',
     cost: 250000,
-    desc: 'Anuncios en el buscador de Google para captar tráfico de personas que buscan activamente tus productos o servicios.',
-    extendedDesc: 'Las campañas de Google Ads Search te permiten aparecer en los resultados de búsqueda cuando potenciales clientes buscan tus productos o servicios. Incluye palabras clave con alta intención de compra, ideal para generar tráfico cualificado a tu sitio web y convertir usuarios en clientes.',
-    pros: 'Altamente enfocado en usuarios con intención de compra, resultados a corto plazo',
+    desc: 'Anuncios en el buscador de Google para captar trÃ¡fico de personas que buscan activamente tus productos o servicios.',
+    extendedDesc: 'Las campaÃ±as de Google Ads Search te permiten aparecer en los resultados de bÃºsqueda cuando potenciales clientes buscan tus productos o servicios. Incluye palabras clave con alta intenciÃ³n de compra, ideal para generar trÃ¡fico cualificado a tu sitio web y convertir usuarios en clientes.',
+    pros: 'Altamente enfocado en usuarios con intenciÃ³n de compra, resultados a corto plazo',
     cons: 'Competencia elevada, costo por clic puede ser alto en ciertos sectores',
     impactTags: [
-      { name: 'Tráfico cualificado', level: 'high' },
-      { name: 'Conversión', level: 'medium' },
+      { name: 'TrÃ¡fico cualificado', level: 'high' },
+      { name: 'ConversiÃ³n', level: 'medium' },
       { name: 'ROI a corto plazo', level: 'high' }
     ],
     impact: { awareness: 2, traffic: 4, leads: 3, conversion: 3, retention: 0, roi_short: 4, roi_long: 2 },
@@ -61,31 +61,31 @@ const marketingOptions: MarketingOption[] = [
     title: 'Remarketing',
     category: 'paid-search',
     cost: 180000,
-    desc: 'Campaña para impactar nuevamente a usuarios que ya visitaron tu sitio web pero no convirtieron.',
-    extendedDesc: 'El remarketing te permite mostrar anuncios específicos a personas que ya visitaron tu sitio web pero no realizaron la acción deseada (compra, registro, etc.). Esta estrategia incluye anuncios en la red de display de Google con mensajes para reconectar con estos usuarios y aumentar la conversión.',
-    pros: 'Mayor tasa de conversión, menor costo por conversión, aprovecha tráfico ya generado',
+    desc: 'CampaÃ±a para impactar nuevamente a usuarios que ya visitaron tu sitio web pero no convirtieron.',
+    extendedDesc: 'El remarketing te permite mostrar anuncios especÃ­ficos a personas que ya visitaron tu sitio web pero no realizaron la acciÃ³n deseada (compra, registro, etc.). Esta estrategia incluye anuncios en la red de display de Google con mensajes para reconectar con estos usuarios y aumentar la conversiÃ³n.',
+    pros: 'Mayor tasa de conversiÃ³n, menor costo por conversiÃ³n, aprovecha trÃ¡fico ya generado',
     cons: 'Alcance limitado a visitantes previos, puede generar fatiga de anuncios si no se configura correctamente',
     impactTags: [
-      { name: 'Reconversión', level: 'high' },
+      { name: 'ReconversiÃ³n', level: 'high' },
       { name: 'Costo-efectividad', level: 'high' },
-      { name: 'Recordación', level: 'medium' }
+      { name: 'RecordaciÃ³n', level: 'medium' }
     ],
     impact: { awareness: 1, traffic: 2, leads: 3, conversion: 4, retention: 2, roi_short: 4, roi_long: 2 },
     synergies: ['search-1', 'social-1', 'social-2', 'landing-1']
   },
   {
     id: 'social-1',
-    title: 'Meta Ads - Tráfico',
+    title: 'Meta Ads - TrÃ¡fico',
     category: 'social-media',
     cost: 150000,
-    desc: 'Campaña en Facebook e Instagram optimizada para dirigir usuarios a tu sitio web.',
-    extendedDesc: 'Las campañas de tráfico en Meta Ads (Facebook e Instagram) están diseñadas para atraer visitantes a tu sitio web utilizando el algoritmo de optimización de Facebook. Incluye configuración de audiencias basadas en intereses y comportamientos similares a tus clientes actuales.',
-    pros: 'Gran alcance, buena segmentación por intereses, costos por clic competitivos',
-    cons: 'El tráfico suele tener menor intención de compra que el de búsqueda',
+    desc: 'CampaÃ±a en Facebook e Instagram optimizada para dirigir usuarios a tu sitio web.',
+    extendedDesc: 'Las campaÃ±as de trÃ¡fico en Meta Ads (Facebook e Instagram) estÃ¡n diseÃ±adas para atraer visitantes a tu sitio web utilizando el algoritmo de optimizaciÃ³n de Facebook. Incluye configuraciÃ³n de audiencias basadas en intereses y comportamientos similares a tus clientes actuales.',
+    pros: 'Gran alcance, buena segmentaciÃ³n por intereses, costos por clic competitivos',
+    cons: 'El trÃ¡fico suele tener menor intenciÃ³n de compra que el de bÃºsqueda',
     impactTags: [
-      { name: 'Volumen de tráfico', level: 'high' },
-      { name: 'Segmentación', level: 'medium' },
-      { name: 'Intención de compra', level: 'low' }
+      { name: 'Volumen de trÃ¡fico', level: 'high' },
+      { name: 'SegmentaciÃ³n', level: 'medium' },
+      { name: 'IntenciÃ³n de compra', level: 'low' }
     ],
     impact: { awareness: 4, traffic: 5, leads: 2, conversion: 2, retention: 1, roi_short: 3, roi_long: 2 },
     synergies: ['remarketing-1', 'landing-1', 'content-1']
@@ -95,13 +95,13 @@ const marketingOptions: MarketingOption[] = [
     title: 'Meta Ads - Leads',
     category: 'social-media',
     cost: 200000,
-    desc: 'Campaña de captación de datos mediante formularios nativos de Facebook e Instagram.',
-    extendedDesc: 'Las campañas de generación de leads en Meta utilizan formularios integrados directamente en la plataforma, eliminando la fricción de redirigir a una landing page. Estos formularios precargados con datos del usuario facilitan la captación de información de contacto, ideal para negocios B2B o servicios que requieren seguimiento.',
-    pros: 'Formularios de fácil completado, menor fricción para el usuario, datos de contacto de calidad',
-    cons: 'A veces menor calidad de leads que otras fuentes, requiere seguimiento rápido',
+    desc: 'CampaÃ±a de captaciÃ³n de datos mediante formularios nativos de Facebook e Instagram.',
+    extendedDesc: 'Las campaÃ±as de generaciÃ³n de leads en Meta utilizan formularios integrados directamente en la plataforma, eliminando la fricciÃ³n de redirigir a una landing page. Estos formularios precargados con datos del usuario facilitan la captaciÃ³n de informaciÃ³n de contacto, ideal para negocios B2B o servicios que requieren seguimiento.',
+    pros: 'Formularios de fÃ¡cil completado, menor fricciÃ³n para el usuario, datos de contacto de calidad',
+    cons: 'A veces menor calidad de leads que otras fuentes, requiere seguimiento rÃ¡pido',
     impactTags: [
       { name: 'Volumen de leads', level: 'high' },
-      { name: 'Facilidad de captación', level: 'high' },
+      { name: 'Facilidad de captaciÃ³n', level: 'high' },
       { name: 'Calidad variable', level: 'medium' }
     ],
     impact: { awareness: 3, traffic: 2, leads: 5, conversion: 3, retention: 1, roi_short: 3, roi_long: 2 },
@@ -109,16 +109,16 @@ const marketingOptions: MarketingOption[] = [
   },
   {
     id: 'social-4',
-    title: 'Campaña de WhatsApp',
+    title: 'CampaÃ±a de WhatsApp',
     category: 'social-media',
     cost: 150000,
-    desc: 'Anuncios que dirigen al usuario a iniciar una conversación de WhatsApp con tu negocio.',
-    extendedDesc: 'Las campañas de WhatsApp combinan anuncios en Facebook e Instagram con la capacidad de iniciar conversaciones directas por WhatsApp. Esta estrategia es ideal para negocios donde la comunicación directa y personal es clave para la conversión, como servicios profesionales, consultas o reservas.',
-    pros: 'Comunicación directa, alta tasa de respuesta, canal preferido por muchos usuarios',
+    desc: 'Anuncios que dirigen al usuario a iniciar una conversaciÃ³n de WhatsApp con tu negocio.',
+    extendedDesc: 'Las campaÃ±as de WhatsApp combinan anuncios en Facebook e Instagram con la capacidad de iniciar conversaciones directas por WhatsApp. Esta estrategia es ideal para negocios donde la comunicaciÃ³n directa y personal es clave para la conversiÃ³n, como servicios profesionales, consultas o reservas.',
+    pros: 'ComunicaciÃ³n directa, alta tasa de respuesta, canal preferido por muchos usuarios',
     cons: 'Requiere personal disponible para responder mensajes, puede saturarse si hay muchas consultas',
     impactTags: [
-      { name: 'Interacción directa', level: 'high' },
-      { name: 'Personalización', level: 'high' },
+      { name: 'InteracciÃ³n directa', level: 'high' },
+      { name: 'PersonalizaciÃ³n', level: 'high' },
       { name: 'Recursos humanos', level: 'medium' }
     ],
     impact: { awareness: 2, traffic: 1, leads: 4, conversion: 4, retention: 3, roi_short: 3, roi_long: 3 },
@@ -129,10 +129,10 @@ const marketingOptions: MarketingOption[] = [
     title: 'Video para Redes Sociales',
     category: 'content',
     cost: 180000,
-    desc: 'Producción de videos cortos y atractivos optimizados para Facebook, Instagram y TikTok.',
-    extendedDesc: 'La creación de contenido audiovisual para redes sociales incluye el desarrollo de videos cortos (15-60 segundos) con mensajes claros y atractivos adaptados a cada plataforma. Los videos generan mayor engagement que cualquier otro formato y son fundamentales para aumentar la visibilidad orgánica.',
-    pros: 'Alto engagement, mayor reach orgánico, versatilidad para usar en distintas plataformas',
-    cons: 'Producción más costosa que otros formatos, pueden quedar obsoletos rápidamente',
+    desc: 'ProducciÃ³n de videos cortos y atractivos optimizados para Facebook, Instagram y TikTok.',
+    extendedDesc: 'La creaciÃ³n de contenido audiovisual para redes sociales incluye el desarrollo de videos cortos (15-60 segundos) con mensajes claros y atractivos adaptados a cada plataforma. Los videos generan mayor engagement que cualquier otro formato y son fundamentales para aumentar la visibilidad orgÃ¡nica.',
+    pros: 'Alto engagement, mayor reach orgÃ¡nico, versatilidad para usar en distintas plataformas',
+    cons: 'ProducciÃ³n mÃ¡s costosa que otros formatos, pueden quedar obsoletos rÃ¡pidamente',
     impactTags: [
       { name: 'Engagement', level: 'high' },
       { name: 'Branding', level: 'high' },
@@ -143,17 +143,17 @@ const marketingOptions: MarketingOption[] = [
   },
   {
     id: 'content-3',
-    title: 'Campaña con Influencers',
+    title: 'CampaÃ±a con Influencers',
     category: 'content',
     cost: 250000,
-    desc: 'Colaboración con creadores de contenido relevantes para tu audiencia.',
-    extendedDesc: 'Las campañas con influencers consisten en colaborar con creadores de contenido que tienen audiencias alineadas con tu público objetivo. En lugar de usar macro-influencers, esta estrategia se enfoca en micro-influencers (10-50K seguidores) con comunidades más pequeñas pero altamente comprometidas y relevantes para tu sector.',
-    pros: 'Alcance a audiencias nicho, mayor credibilidad y confianza, contenido auténtico',
-    cons: 'Resultados variables según el influencer, menor control sobre el mensaje final',
+    desc: 'ColaboraciÃ³n con creadores de contenido relevantes para tu audiencia.',
+    extendedDesc: 'Las campaÃ±as con influencers consisten en colaborar con creadores de contenido que tienen audiencias alineadas con tu pÃºblico objetivo. En lugar de usar macro-influencers, esta estrategia se enfoca en micro-influencers (10-50K seguidores) con comunidades mÃ¡s pequeÃ±as pero altamente comprometidas y relevantes para tu sector.',
+    pros: 'Alcance a audiencias nicho, mayor credibilidad y confianza, contenido autÃ©ntico',
+    cons: 'Resultados variables segÃºn el influencer, menor control sobre el mensaje final',
     impactTags: [
       { name: 'Credibilidad', level: 'high' },
-      { name: 'Audiencias específicas', level: 'medium' },
-      { name: 'Difícil medición', level: 'medium' }
+      { name: 'Audiencias especÃ­ficas', level: 'medium' },
+      { name: 'DifÃ­cil mediciÃ³n', level: 'medium' }
     ],
     impact: { awareness: 5, traffic: 3, leads: 3, conversion: 2, retention: 1, roi_short: 2, roi_long: 3 },
     synergies: ['social-1', 'social-2', 'content-1']
@@ -163,12 +163,12 @@ const marketingOptions: MarketingOption[] = [
     title: 'Landing Page Optimizada',
     category: 'conversion',
     cost: 250000,
-    desc: 'Diseño de página de aterrizaje enfocada en convertir visitantes en leads o clientes.',
-    extendedDesc: 'Una landing page optimizada incluye diseño orientado a conversión con un mensaje claro, propuesta de valor, testimonios y un formulario optimizado. Este tipo de página se enfoca en una única acción deseada, eliminando distracciones y aumentando las tasas de conversión.',
-    pros: 'Enfoque en una sola acción, elimina distracciones, facilita medición',
-    cons: 'Limitada a un solo objetivo o producto, requiere tráfico de calidad',
+    desc: 'DiseÃ±o de pÃ¡gina de aterrizaje enfocada en convertir visitantes en leads o clientes.',
+    extendedDesc: 'Una landing page optimizada incluye diseÃ±o orientado a conversiÃ³n con un mensaje claro, propuesta de valor, testimonios y un formulario optimizado. Este tipo de pÃ¡gina se enfoca en una Ãºnica acciÃ³n deseada, eliminando distracciones y aumentando las tasas de conversiÃ³n.',
+    pros: 'Enfoque en una sola acciÃ³n, elimina distracciones, facilita mediciÃ³n',
+    cons: 'Limitada a un solo objetivo o producto, requiere trÃ¡fico de calidad',
     impactTags: [
-      { name: 'Tasa de conversión', level: 'high' },
+      { name: 'Tasa de conversiÃ³n', level: 'high' },
       { name: 'Enfoque', level: 'high' },
       { name: 'Experiencia de usuario', level: 'medium' }
     ],
@@ -177,17 +177,17 @@ const marketingOptions: MarketingOption[] = [
   },
   {
     id: 'conversion-1',
-    title: 'Optimización de Conversión (CRO)',
+    title: 'OptimizaciÃ³n de ConversiÃ³n (CRO)',
     category: 'conversion',
     cost: 180000,
-    desc: 'Análisis y mejora sistemática de los puntos de conversión en tu sitio web.',
-    extendedDesc: 'La optimización de la tasa de conversión (CRO) incluye análisis de comportamiento de usuarios, mapas de calor, grabaciones de sesiones y pruebas A/B para identificar y resolver los obstáculos que impiden las conversiones. Este enfoque sistemático mejora el rendimiento de todo el tráfico que ya recibes.',
-    pros: 'Maximiza el rendimiento del tráfico existente, mejoras basadas en datos reales',
-    cons: 'Requiere tráfico suficiente para obtener datos significativos, proceso iterativo',
+    desc: 'AnÃ¡lisis y mejora sistemÃ¡tica de los puntos de conversiÃ³n en tu sitio web.',
+    extendedDesc: 'La optimizaciÃ³n de la tasa de conversiÃ³n (CRO) incluye anÃ¡lisis de comportamiento de usuarios, mapas de calor, grabaciones de sesiones y pruebas A/B para identificar y resolver los obstÃ¡culos que impiden las conversiones. Este enfoque sistemÃ¡tico mejora el rendimiento de todo el trÃ¡fico que ya recibes.',
+    pros: 'Maximiza el rendimiento del trÃ¡fico existente, mejoras basadas en datos reales',
+    cons: 'Requiere trÃ¡fico suficiente para obtener datos significativos, proceso iterativo',
     impactTags: [
-      { name: 'Análisis de datos', level: 'high' },
-      { name: 'Optimización web', level: 'high' },
-      { name: 'Valor del tráfico', level: 'medium' }
+      { name: 'AnÃ¡lisis de datos', level: 'high' },
+      { name: 'OptimizaciÃ³n web', level: 'high' },
+      { name: 'Valor del trÃ¡fico', level: 'medium' }
     ],
     impact: { awareness: 0, traffic: 0, leads: 3, conversion: 5, retention: 2, roi_short: 4, roi_long: 3 },
     synergies: ['search-1', 'remarketing-1', 'landing-1']
@@ -197,8 +197,8 @@ const marketingOptions: MarketingOption[] = [
     title: 'Email Marketing',
     category: 'email',
     cost: 120000,
-    desc: 'Creación y envío de newsletters y campañas de email marketing para tu base de datos.',
-    extendedDesc: 'El email marketing incluye la configuración de una plataforma de envío, diseño de plantillas, creación de contenido relevante y envío regular de comunicaciones a tu base de datos. Este canal directo te permite mantener el contacto con leads y clientes a un costo muy eficiente.',
+    desc: 'CreaciÃ³n y envÃ­o de newsletters y campaÃ±as de email marketing para tu base de datos.',
+    extendedDesc: 'El email marketing incluye la configuraciÃ³n de una plataforma de envÃ­o, diseÃ±o de plantillas, creaciÃ³n de contenido relevante y envÃ­o regular de comunicaciones a tu base de datos. Este canal directo te permite mantener el contacto con leads y clientes a un costo muy eficiente.',
     pros: 'Canal directo, control total del mensaje, bajo costo por contacto',
     cons: 'Requiere base de datos propia, tasas de apertura variables',
     impactTags: [
@@ -214,13 +214,13 @@ const marketingOptions: MarketingOption[] = [
     title: 'Secuencias Automatizadas',
     category: 'email',
     cost: 200000,
-    desc: 'Flujos de emails que se envían automáticamente según acciones o momentos específicos.',
-    extendedDesc: 'Las secuencias automatizadas de email son series de mensajes que se envían automáticamente en respuesta a acciones específicas o en momentos clave. Incluyen secuencias de bienvenida, nutrición de leads, recuperación de carritos abandonados y reactivación de clientes inactivos.',
-    pros: 'Funciona 24/7, guía al usuario en el funnel de conversión, personalización por comportamiento',
-    cons: 'Configuración técnica inicial más compleja, requiere mantenimiento periódico',
+    desc: 'Flujos de emails que se envÃ­an automÃ¡ticamente segÃºn acciones o momentos especÃ­ficos.',
+    extendedDesc: 'Las secuencias automatizadas de email son series de mensajes que se envÃ­an automÃ¡ticamente en respuesta a acciones especÃ­ficas o en momentos clave. Incluyen secuencias de bienvenida, nutriciÃ³n de leads, recuperaciÃ³n de carritos abandonados y reactivaciÃ³n de clientes inactivos.',
+    pros: 'Funciona 24/7, guÃ­a al usuario en el funnel de conversiÃ³n, personalizaciÃ³n por comportamiento',
+    cons: 'ConfiguraciÃ³n tÃ©cnica inicial mÃ¡s compleja, requiere mantenimiento periÃ³dico',
     impactTags: [
-      { name: 'Automatización', level: 'high' },
-      { name: 'Nutrición de leads', level: 'high' },
+      { name: 'AutomatizaciÃ³n', level: 'high' },
+      { name: 'NutriciÃ³n de leads', level: 'high' },
       { name: 'Ciclo de vida', level: 'high' }
     ],
     impact: { awareness: 0, traffic: 1, leads: 3, conversion: 4, retention: 5, roi_short: 3, roi_long: 5 },
@@ -231,14 +231,14 @@ const marketingOptions: MarketingOption[] = [
     title: 'CRM',
     category: 'automation',
     cost: 180000,
-    desc: 'Implementación de sistema de gestión de relaciones con clientes para seguimiento de leads y ventas.',
-    extendedDesc: 'Un CRM organiza toda la información de tus contactos, leads y clientes en un sistema centralizado. Permite seguimiento de interacciones, gestión de oportunidades de venta y análisis del embudo comercial, mejorando la coordinación entre marketing y ventas.',
-    pros: 'Organización centralizada, visibilidad del pipeline de ventas, seguimiento de interacciones',
-    cons: 'Requiere adopción por el equipo, curva de aprendizaje inicial',
+    desc: 'ImplementaciÃ³n de sistema de gestiÃ³n de relaciones con clientes para seguimiento de leads y ventas.',
+    extendedDesc: 'Un CRM organiza toda la informaciÃ³n de tus contactos, leads y clientes en un sistema centralizado. Permite seguimiento de interacciones, gestiÃ³n de oportunidades de venta y anÃ¡lisis del embudo comercial, mejorando la coordinaciÃ³n entre marketing y ventas.',
+    pros: 'OrganizaciÃ³n centralizada, visibilidad del pipeline de ventas, seguimiento de interacciones',
+    cons: 'Requiere adopciÃ³n por el equipo, curva de aprendizaje inicial',
     impactTags: [
-      { name: 'Gestión de leads', level: 'high' },
+      { name: 'GestiÃ³n de leads', level: 'high' },
       { name: 'Seguimiento', level: 'high' },
-      { name: 'Adopción interna', level: 'medium' }
+      { name: 'AdopciÃ³n interna', level: 'medium' }
     ],
     impact: { awareness: 0, traffic: 0, leads: 2, conversion: 4, retention: 4, roi_short: 2, roi_long: 5 },
     synergies: ['social-2', 'social-4', 'email-1', 'email-3']
@@ -248,10 +248,10 @@ const marketingOptions: MarketingOption[] = [
     title: 'Chatbot Inteligente',
     category: 'automation',
     cost: 150000,
-    desc: 'Asistente virtual para tu web que responde consultas, califica leads y programa citas automáticamente.',
-    extendedDesc: 'Un chatbot inteligente proporciona atención inmediata a los visitantes de tu web, respondiendo consultas frecuentes, calificando el potencial de cada lead, y programando citas automáticamente. Este asistente virtual atiende 24/7, mejora la experiencia del usuario y captura información valiosa de clientes potenciales.',
-    pros: 'Atención inmediata 24/7, calificación automática de leads, ahorro de tiempo en consultas básicas',
-    cons: 'Limitaciones para manejar consultas complejas, puede generar frustración si no está bien configurado',
+    desc: 'Asistente virtual para tu web que responde consultas, califica leads y programa citas automÃ¡ticamente.',
+    extendedDesc: 'Un chatbot inteligente proporciona atenciÃ³n inmediata a los visitantes de tu web, respondiendo consultas frecuentes, calificando el potencial de cada lead, y programando citas automÃ¡ticamente. Este asistente virtual atiende 24/7, mejora la experiencia del usuario y captura informaciÃ³n valiosa de clientes potenciales.',
+    pros: 'AtenciÃ³n inmediata 24/7, calificaciÃ³n automÃ¡tica de leads, ahorro de tiempo en consultas bÃ¡sicas',
+    cons: 'Limitaciones para manejar consultas complejas, puede generar frustraciÃ³n si no estÃ¡ bien configurado',
     impactTags: [
       { name: 'Disponibilidad 24/7', level: 'high' },
       { name: 'Captura de datos', level: 'medium' },
@@ -409,29 +409,29 @@ export default function JuegaAprende() {
     if (combinedImpact.awareness >= levelThreshold) strengths.push('reconocimiento de marca')
     else if (combinedImpact.awareness <= 3) weaknesses.push('reconocimiento de marca')
 
-    if (combinedImpact.traffic >= levelThreshold) strengths.push('generación de tráfico')
-    else if (combinedImpact.traffic <= 3) weaknesses.push('generación de tráfico')
+    if (combinedImpact.traffic >= levelThreshold) strengths.push('generaciÃ³n de trÃ¡fico')
+    else if (combinedImpact.traffic <= 3) weaknesses.push('generaciÃ³n de trÃ¡fico')
 
-    if (combinedImpact.leads >= levelThreshold) strengths.push('captación de leads')
-    else if (combinedImpact.leads <= 3) weaknesses.push('captación de leads')
+    if (combinedImpact.leads >= levelThreshold) strengths.push('captaciÃ³n de leads')
+    else if (combinedImpact.leads <= 3) weaknesses.push('captaciÃ³n de leads')
 
-    if (combinedImpact.conversion >= levelThreshold) strengths.push('conversión')
-    else if (combinedImpact.conversion <= 3) weaknesses.push('conversión')
+    if (combinedImpact.conversion >= levelThreshold) strengths.push('conversiÃ³n')
+    else if (combinedImpact.conversion <= 3) weaknesses.push('conversiÃ³n')
 
-    if (combinedImpact.retention >= levelThreshold) strengths.push('retención de clientes')
-    else if (combinedImpact.retention <= 3) weaknesses.push('retención de clientes')
+    if (combinedImpact.retention >= levelThreshold) strengths.push('retenciÃ³n de clientes')
+    else if (combinedImpact.retention <= 3) weaknesses.push('retenciÃ³n de clientes')
 
     let text = ''
 
     if (level === 'high') {
-      text += `<strong>¡Excelente estrategia!</strong> Has creado un plan con un ROI estimado de ${roiValue}x, lo que significa que por cada peso invertido, podrías recibir ${roiValue} pesos de retorno.<br><br>`
-      text += 'Tu estrategia logra un equilibrio entre captación, conversión y retención, los tres pilares fundamentales del embudo de marketing digital.<br><br>'
+      text += `<strong>Â¡Excelente estrategia!</strong> Has creado un plan con un ROI estimado de ${roiValue}x, lo que significa que por cada peso invertido, podrÃ­as recibir ${roiValue} pesos de retorno.<br><br>`
+      text += 'Tu estrategia logra un equilibrio entre captaciÃ³n, conversiÃ³n y retenciÃ³n, los tres pilares fundamentales del embudo de marketing digital.<br><br>'
     } else if (level === 'medium') {
       text += `<strong>Buen trabajo.</strong> Tu estrategia tiene un ROI estimado de ${roiValue}x, lo que indica un retorno positivo pero con margen de mejora.<br><br>`
-      text += 'Has cubierto algunos aspectos clave del marketing digital, pero aún hay áreas que podrían optimizarse para aumentar el rendimiento global.<br><br>'
+      text += 'Has cubierto algunos aspectos clave del marketing digital, pero aÃºn hay Ã¡reas que podrÃ­an optimizarse para aumentar el rendimiento global.<br><br>'
     } else {
-      text += `<strong>Atención:</strong> Tu estrategia actual tiene un ROI estimado bajo de ${roiValue}x, lo que significa que el retorno podría no justificar adecuadamente la inversión.<br><br>`
-      text += 'Existe un desequilibrio en la distribución del presupuesto que no aprovecha el efecto sinérgico de combinar acciones complementarias a lo largo del embudo de conversión.<br><br>'
+      text += `<strong>AtenciÃ³n:</strong> Tu estrategia actual tiene un ROI estimado bajo de ${roiValue}x, lo que significa que el retorno podrÃ­a no justificar adecuadamente la inversiÃ³n.<br><br>`
+      text += 'Existe un desequilibrio en la distribuciÃ³n del presupuesto que no aprovecha el efecto sinÃ©rgico de combinar acciones complementarias a lo largo del embudo de conversiÃ³n.<br><br>'
     }
 
     if (strengths.length > 0) {
@@ -439,15 +439,15 @@ export default function JuegaAprende() {
     }
 
     if (weaknesses.length > 0) {
-      text += `<strong>Áreas de mejora:</strong> Tu estrategia necesita fortalecer ${formatList(weaknesses)}.<br><br>`
+      text += `<strong>Ãreas de mejora:</strong> Tu estrategia necesita fortalecer ${formatList(weaknesses)}.<br><br>`
     }
 
     if (level === 'high') {
-      text += '<strong>Conclusión:</strong> Estás listo para implementar esta estrategia. ¿Te gustaría recibir una asesoría personalizada para llevar tu estrategia al siguiente nivel?'
+      text += '<strong>ConclusiÃ³n:</strong> EstÃ¡s listo para implementar esta estrategia. Â¿Te gustarÃ­a recibir una asesorÃ­a personalizada para llevar tu estrategia al siguiente nivel?'
     } else if (level === 'medium') {
-      text += '<strong>Conclusión:</strong> Con los ajustes sugeridos, podrás mejorar significativamente tus resultados. ¿Quieres que te ayudemos a optimizarla?'
+      text += '<strong>ConclusiÃ³n:</strong> Con los ajustes sugeridos, podrÃ¡s mejorar significativamente tus resultados. Â¿Quieres que te ayudemos a optimizarla?'
     } else {
-      text += '<strong>Conclusión:</strong> Recomendamos replantear tu estrategia siguiendo un enfoque más balanceado. Nuestro equipo puede ayudarte a desarrollar una estrategia más efectiva para tu negocio.'
+      text += '<strong>ConclusiÃ³n:</strong> Recomendamos replantear tu estrategia siguiendo un enfoque mÃ¡s balanceado. Nuestro equipo puede ayudarte a desarrollar una estrategia mÃ¡s efectiva para tu negocio.'
     }
 
     return text
@@ -494,7 +494,7 @@ export default function JuegaAprende() {
       <header className="bg-white/80 backdrop-blur-xl border-b border-gray-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <Link href="/utilidades" className="text-sm font-semibold text-gray-700 hover:text-indigo-600 transition-all">
-             Volver a Utilidades
+            â† Volver a Utilidades
           </Link>
           <div className="text-right">
             <h1 className="text-lg font-bold text-gray-900">El Planificador - Simulador</h1>
@@ -515,17 +515,17 @@ export default function JuegaAprende() {
             Crea tu estrategia digital<br />con $1.000.000
           </h2>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Explora estrategias de marketing digital, selecciona las que más te interesen y descubre qué combinación genera mejores resultados
+            Explora estrategias de marketing digital, selecciona las que mÃ¡s te interesen y descubre quÃ© combinaciÃ³n genera mejores resultados
           </p>
         </div>
 
         {/* Instructions */}
         <div className="bg-blue-50 border-l-4 border-blue-600 rounded-lg p-6 mb-8">
-          <h3 className="font-bold text-blue-900 mb-3">¿Cómo jugar?</h3>
+          <h3 className="font-bold text-blue-900 mb-3">Â¿CÃ³mo jugar?</h3>
           <div className="text-blue-800 space-y-2">
-            <p>1. Explora las estrategias de marketing digital disponibles en las diferentes categorías</p>
-            <p>2. Selecciona las que más te interesen hasta agotar tu presupuesto disponible</p>
-            <p>3. Analiza la efectividad de tu estrategia y descubre qué combinación genera mejores resultados</p>
+            <p>1. Explora las estrategias de marketing digital disponibles en las diferentes categorÃ­as</p>
+            <p>2. Selecciona las que mÃ¡s te interesen hasta agotar tu presupuesto disponible</p>
+            <p>3. Analiza la efectividad de tu estrategia y descubre quÃ© combinaciÃ³n genera mejores resultados</p>
           </div>
         </div>
 
@@ -632,11 +632,11 @@ export default function JuegaAprende() {
             {/* Strategy Stats */}
             <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
               {[
-                { key: 'awareness', label: 'Reconocimiento', icon: '=A' },
-                { key: 'traffic', label: 'Tráfico', icon: '=€' },
-                { key: 'leads', label: 'Leads', icon: '=Ë' },
-                { key: 'conversion', label: 'Conversión', icon: '=°' },
-                { key: 'retention', label: 'Retención', icon: '=' }
+                { key: 'awareness', label: 'Reconocimiento', icon: 'ğŸ‘' },
+                { key: 'traffic', label: 'TrÃ¡fico', icon: 'ğŸš€' },
+                { key: 'leads', label: 'Leads', icon: 'ğŸ¯' },
+                { key: 'conversion', label: 'ConversiÃ³n', icon: 'ğŸ’°' },
+                { key: 'retention', label: 'RetenciÃ³n', icon: 'ğŸ”„' }
               ].map(stat => (
                 <div key={stat.key} className="bg-gray-50 rounded-lg p-4 text-center">
                   <div className="text-sm text-gray-600 mb-2">
@@ -684,9 +684,9 @@ export default function JuegaAprende() {
 
         {selectedOptions.length === 0 && (
           <div className="bg-white rounded-xl p-12 text-center shadow-xl border border-gray-200">
-            <div className="text-6xl mb-4"><¯</div>
+            <div className="text-6xl mb-4">ğŸ¯</div>
             <p className="text-gray-600">
-              Aún no has seleccionado ninguna estrategia.<br />Elige al menos una para comenzar tu plan digital.
+              AÃºn no has seleccionado ninguna estrategia.<br />Elige al menos una para comenzar tu plan digital.
             </p>
           </div>
         )}
@@ -694,7 +694,7 @@ export default function JuegaAprende() {
         {/* Results */}
         {showResults && (
           <div id="results" className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-8 shadow-xl border border-indigo-200">
-            <h2 className="text-3xl font-bold text-gray-900 text-center mb-6">Diagnóstico de tu Estrategia Digital</h2>
+            <h2 className="text-3xl font-bold text-gray-900 text-center mb-6">DiagnÃ³stico de tu Estrategia Digital</h2>
 
             <div className="bg-white rounded-xl p-6 mb-6 text-center">
               <div className="text-xl text-gray-700 mb-2">ROI Estimado</div>
@@ -729,7 +729,7 @@ export default function JuegaAprende() {
                 href="/contacto"
                 className="flex items-center gap-2 px-6 py-3 bg-indigo-600 text-white font-semibold rounded-xl hover:bg-indigo-700 transition-all"
               >
-                <TrendingUp className="w-5 h-5" /> Solicitar Asesoría
+                <TrendingUp className="w-5 h-5" /> Solicitar AsesorÃ­a
               </Link>
               <a
                 href="https://wa.me/56992225813"
@@ -757,16 +757,16 @@ export default function JuegaAprende() {
 
             <div className="space-y-4">
               <div>
-                <strong>Descripción:</strong>
+                <strong>DescripciÃ³n:</strong>
                 <p className="text-gray-700 mt-2">{selectedModalOption.extendedDesc}</p>
               </div>
 
               <div className="flex justify-between items-center py-4 border-t border-b">
                 <div>
-                  <strong>Inversión:</strong> {formatNumber(selectedModalOption.cost)}
+                  <strong>InversiÃ³n:</strong> {formatNumber(selectedModalOption.cost)}
                 </div>
                 <div>
-                  <strong>Categoría:</strong> {categories[selectedModalOption.category]}
+                  <strong>CategorÃ­a:</strong> {categories[selectedModalOption.category]}
                 </div>
               </div>
 
@@ -825,7 +825,7 @@ export default function JuegaAprende() {
       {/* Footer */}
       <footer className="border-t border-gray-200 py-8 px-6 bg-white/50 backdrop-blur-sm mt-12">
         <div className="max-w-7xl mx-auto text-center text-gray-600 text-sm">
-          <p>© 2024 Muller y Pérez · Aprende jugando con estrategias digitales reales</p>
+          <p>Â© 2024 Muller y PÃ©rez Â· Aprende jugando con estrategias digitales reales</p>
         </div>
       </footer>
     </div>
