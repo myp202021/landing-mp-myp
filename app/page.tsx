@@ -233,16 +233,18 @@ export default function LandingMP() {
           </div>
 
           {/* Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-24 max-w-5xl mx-auto">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 mt-24 max-w-6xl mx-auto">
             {[
               { value: '6+', label: 'Años en el mercado' },
-              { value: '3', label: 'Profesionales dedicados' },
               { value: '100%', label: 'Transparencia de datos' },
-              { value: '650k', label: 'Desde $650.000/mes' }
+              { value: '650k', label: 'Desde $650.000/mes' },
+              { value: '2M+', label: 'Presupuesto gestionado' },
+              { value: '95%', label: 'Retención de clientes' },
+              { value: '4.9★', label: 'Valoración promedio' }
             ].map((stat, idx) => (
               <div key={idx} className="text-center">
-                <div className="text-4xl md:text-5xl font-bold text-blue-400 mb-2">{stat.value}</div>
-                <div className="text-sm text-blue-200/80 font-medium">{stat.label}</div>
+                <div className="text-3xl md:text-4xl font-bold text-blue-400 mb-2">{stat.value}</div>
+                <div className="text-xs md:text-sm text-blue-200/80 font-medium">{stat.label}</div>
               </div>
             ))}
           </div>
