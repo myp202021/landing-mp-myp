@@ -34,14 +34,6 @@ export default function MPLabs() {
       url: '/labs/radar-industrias',
       tag: 'Beta',
       color: 'from-orange-600 to-red-600'
-    },
-    {
-      nombre: 'M&P Scan Digital',
-      descripcion: 'Auditoría completa de tu presencia digital en segundos',
-      icono: Gamepad2,
-      url: '/labs/scan-digital',
-      tag: 'Beta',
-      color: 'from-emerald-600 to-teal-600'
     }
   ]
 
