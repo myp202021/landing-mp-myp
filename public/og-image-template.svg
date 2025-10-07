@@ -1,0 +1,37 @@
+<svg width="1200" height="630" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background gradient -->
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1e3a8a;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#3b82f6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1e3a8a;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- Grid pattern -->
+  <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+  </pattern>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+
+  <!-- Content -->
+  <text x="600" y="250" font-family="system-ui, -apple-system, sans-serif" font-size="72" font-weight="bold" fill="white" text-anchor="middle">
+    Muller y Pérez
+  </text>
+
+  <text x="600" y="320" font-family="system-ui, -apple-system, sans-serif" font-size="36" fill="rgba(255,255,255,0.9)" text-anchor="middle">
+    Marketing Digital &amp; Performance
+  </text>
+
+  <text x="600" y="400" font-family="system-ui, -apple-system, sans-serif" font-size="28" fill="rgba(255,255,255,0.7)" text-anchor="middle">
+    Métricas reales • Resultados medibles • Equipo dedicado
+  </text>
+
+  <!-- Bottom bar -->
+  <rect y="580" width="1200" height="50" fill="rgba(0,0,0,0.3)"/>
+  <text x="600" y="613" font-family="system-ui, -apple-system, sans-serif" font-size="20" fill="rgba(255,255,255,0.8)" text-anchor="middle">
+    agencia.mulleryperez.cl
+  </text>
+</svg>
