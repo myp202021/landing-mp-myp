@@ -7,7 +7,7 @@
 
 import React from 'react'
 import Link from 'next/link'
-import { Calculator, Gauge, GitBranch, ScanLine } from 'lucide-react'
+import { Calculator, Gauge, GitBranch, Gamepad2 } from 'lucide-react'
 
 export default function Utilidades() {
   const herramientas = [
@@ -33,10 +33,10 @@ export default function Utilidades() {
       color: 'from-purple-600 to-pink-600'
     },
     {
-      nombre: 'M&P Scan Digital',
-      descripcion: 'Auditoría completa de tu presencia digital en minutos',
-      icono: ScanLine,
-      url: '/utilidades/scan-digital',
+      nombre: 'Juega y Aprende con M&P',
+      descripcion: 'Simulador interactivo de estrategias de marketing digital',
+      icono: Gamepad2,
+      url: '/utilidades/juega-aprende',
       color: 'from-blue-600 to-indigo-600'
     }
   ]

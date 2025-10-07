@@ -21,27 +21,27 @@ export default function MPLabs() {
     },
     {
       nombre: 'Buyer Gen',
-      descripcion: 'Genera perfiles de buyer personas basados en data real',
+      descripcion: 'Genera perfiles de buyer personas basados en data intelligence',
       icono: Sparkles,
       url: '/labs/buyer-gen',
       tag: 'Nuevo',
       color: 'from-blue-600 to-cyan-600'
     },
     {
-      nombre: 'Juega y Aprende',
-      descripcion: 'Aprende marketing digital jugando con casos reales',
-      icono: Gamepad2,
-      url: '/labs/juega-aprende',
-      tag: 'Beta',
-      color: 'from-emerald-600 to-teal-600'
-    },
-    {
       nombre: 'Radar Industrias',
-      descripcion: 'Monitorea tendencias y métricas clave de tu industria',
+      descripcion: 'Análisis de madurez digital por industria en Chile 2024',
       icono: Radar,
       url: '/labs/radar-industrias',
       tag: 'Beta',
       color: 'from-orange-600 to-red-600'
+    },
+    {
+      nombre: 'M&P Scan Digital',
+      descripcion: 'Auditoría completa de tu presencia digital en segundos',
+      icono: Gamepad2,
+      url: '/labs/scan-digital',
+      tag: 'Beta',
+      color: 'from-emerald-600 to-teal-600'
     }
   ]
 
