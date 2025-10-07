@@ -8,6 +8,7 @@
 
 import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 import {
   CheckCircle2,
   XCircle,
@@ -16,6 +17,7 @@ import {
   Cpu,
   Megaphone,
   Palette,
+  ChevronDown,
 } from 'lucide-react'
 
 export default function LandingMP() {
@@ -28,6 +30,9 @@ export default function LandingMP() {
     enviando: false,
     enviado: false
   })
+
+  const [labsDropdown, setLabsDropdown] = useState(false)
+  const [utilidadesDropdown, setUtilidadesDropdown] = useState(false)
 
   // SEO: Metadata dinámica optimizada
   useEffect(() => {
@@ -423,15 +428,124 @@ export default function LandingMP() {
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-xl border-b border-gray-100 z-50" role="banner">
         <div className="max-w-7xl mx-auto px-6 lg:px-8 py-5 flex items-center justify-between">
-          <Image
-            src="/logo-color.png"
-            alt="Muller y Pérez - Agencia de Marketing Digital y Performance en Chile"
-            width={140}
-            height={45}
-            className="h-11 w-auto"
-            priority
-          />
+          <Link href="/" aria-label="Ir a inicio">
+            <Image
+              src="/logo-color.png"
+              alt="Muller y Pérez - Agencia de Marketing Digital y Performance en Chile"
+              width={140}
+              height={45}
+              className="h-11 w-auto"
+              priority
+            />
+          </Link>
           <nav className="flex items-center gap-6" role="navigation" aria-label="Navegación principal">
+            {/* M&P Labs Dropdown */}
+            <div
+              className="relative hidden md:block"
+              onMouseEnter={() => setLabsDropdown(true)}
+              onMouseLeave={() => setLabsDropdown(false)}
+            >
+              <button
+                className="flex items-center gap-1 text-sm font-semibold text-gray-700 hover:text-blue-600 transition-all duration-200"
+                aria-expanded={labsDropdown}
+                aria-haspopup="true"
+                aria-label="Abrir menú M&P Labs"
+              >
+                M&P Labs
+                <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${labsDropdown ? 'rotate-180' : ''}`} aria-hidden="true" />
+              </button>
+              {labsDropdown && (
+                <div className="absolute top-full mt-2 left-0 bg-white rounded-xl shadow-2xl border border-gray-100 py-2 min-w-[240px] animate-in fade-in slide-in-from-top-2 duration-200">
+                  <Link
+                    href="/labs/predictor"
+                    className="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
+                  >
+                    <div className="font-semibold">Predictor Google Ads</div>
+                    <div className="text-xs text-gray-500 mt-0.5">Calcula conversiones y ROAS</div>
+                  </Link>
+                  <Link
+                    href="/labs/buyer-gen"
+                    className="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
+                  >
+                    <div className="font-semibold">Buyer Gen</div>
+                    <div className="text-xs text-gray-500 mt-0.5">Genera buyer personas</div>
+                  </Link>
+                  <Link
+                    href="/labs/radar-industrias"
+                    className="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
+                  >
+                    <div className="font-semibold">Radar Industrias</div>
+                    <div className="text-xs text-gray-500 mt-0.5">Madurez digital por sector</div>
+                  </Link>
+                  <div className="border-t border-gray-100 mt-2 pt-2">
+                    <Link
+                      href="/labs"
+                      className="block px-4 py-2 text-sm text-blue-600 hover:text-blue-700 font-semibold transition-colors"
+                    >
+                      Ver todas las herramientas →
+                    </Link>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Utilidades Dropdown */}
+            <div
+              className="relative hidden md:block"
+              onMouseEnter={() => setUtilidadesDropdown(true)}
+              onMouseLeave={() => setUtilidadesDropdown(false)}
+            >
+              <button
+                className="flex items-center gap-1 text-sm font-semibold text-gray-700 hover:text-blue-600 transition-all duration-200"
+                aria-expanded={utilidadesDropdown}
+                aria-haspopup="true"
+                aria-label="Abrir menú Utilidades"
+              >
+                Utilidades
+                <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${utilidadesDropdown ? 'rotate-180' : ''}`} aria-hidden="true" />
+              </button>
+              {utilidadesDropdown && (
+                <div className="absolute top-full mt-2 left-0 bg-white rounded-xl shadow-2xl border border-gray-100 py-2 min-w-[260px] animate-in fade-in slide-in-from-top-2 duration-200">
+                  <Link
+                    href="/utilidades/calculadora-cac"
+                    className="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
+                  >
+                    <div className="font-semibold">Calculadora CAC</div>
+                    <div className="text-xs text-gray-500 mt-0.5">Costo de adquisición por canal</div>
+                  </Link>
+                  <Link
+                    href="/utilidades/comparador-web"
+                    className="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
+                  >
+                    <div className="font-semibold">Comparador Web</div>
+                    <div className="text-xs text-gray-500 mt-0.5">Velocidad y Core Web Vitals</div>
+                  </Link>
+                  <Link
+                    href="/utilidades/generador-funnels"
+                    className="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
+                  >
+                    <div className="font-semibold">Generador Funnels</div>
+                    <div className="text-xs text-gray-500 mt-0.5">Embudos de venta CRM</div>
+                  </Link>
+                  <Link
+                    href="/utilidades/juega-aprende"
+                    className="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
+                  >
+                    <div className="font-semibold">Juega y Aprende</div>
+                    <div className="text-xs text-gray-500 mt-0.5">Simulador estrategias marketing</div>
+                  </Link>
+                  <div className="border-t border-gray-100 mt-2 pt-2">
+                    <Link
+                      href="/utilidades"
+                      className="block px-4 py-2 text-sm text-blue-600 hover:text-blue-700 font-semibold transition-colors"
+                    >
+                      Ver todas las utilidades →
+                    </Link>
+                  </div>
+                </div>
+              )}
+            </div>
+
             <a
               href="#contacto"
               className="hidden md:block text-sm font-semibold text-gray-700 hover:text-blue-600 transition-all duration-200"
