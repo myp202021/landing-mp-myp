@@ -104,7 +104,7 @@ export default function ArticlePage() {
                 <div>
                   <p className="font-bold text-gray-900">3. Experiencia en Landing Page (30% del peso)</p>
                   <p className="text-gray-700">¿Tu página carga rápido y es relevante?</p>
-                  <p className="text-sm text-green-700 mt-2"><strong>✅ Cómo mejorarlo:</strong> Landing específica por keyword + carga < 2 seg</p>
+                  <p className="text-sm text-green-700 mt-2"><strong>✅ Cómo mejorarlo:</strong> Landing específica por keyword + carga {'<'} 2 seg</p>
                 </div>
               </div>
             </div>
@@ -227,7 +227,7 @@ export default function ArticlePage() {
                 <div className="flex items-start gap-2">
                   <CheckCircle className="w-5 h-5 text-green-600 mt-1 flex-shrink-0" />
                   <div>
-                    <p className="font-bold">3. Velocidad < 2 segundos</p>
+                    <p className="font-bold">3. Velocidad {'<'} 2 segundos</p>
                     <p className="text-sm text-gray-600">Usa PageSpeed Insights. Si carga lento, pierdes 40% de visitantes</p>
                   </div>
                 </div>

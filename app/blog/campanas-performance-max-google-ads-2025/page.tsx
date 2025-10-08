@@ -105,7 +105,7 @@ export default function ArticlePage() {
                   <p className="text-sm text-gray-600 pl-6">Deja que Google optimice mientras tú te enfocas en estrategia</p>
                 </li>
                 <li>
-                  <strong>4. Tienes presupuesto > $500.000/mes</strong>
+                  <strong>4. Tienes presupuesto {'>'} $500.000/mes</strong>
                   <p className="text-sm text-gray-600 pl-6">PMax necesita volumen para optimizar bien</p>
                 </li>
               </ul>
@@ -115,15 +115,15 @@ export default function ArticlePage() {
               <h3 className="text-2xl font-bold text-gray-900 mb-4">❌ NO Uses PMax Si:</h3>
               <ul className="space-y-3 text-gray-700">
                 <li>
-                  <strong>1. Eres nuevo en Google Ads (< 3 meses)</strong>
+                  <strong>1. Eres nuevo en Google Ads ({'<'} 3 meses)</strong>
                   <p className="text-sm text-gray-600 pl-6">Primero aprende con Search y Display tradicionales</p>
                 </li>
                 <li>
-                  <strong>2. Vendes servicios B2B de alto ticket (> $5M)</strong>
+                  <strong>2. Vendes servicios B2B de alto ticket ({'>'} $5M)</strong>
                   <p className="text-sm text-gray-600 pl-6">Necesitas control total sobre el mensaje y audiencia</p>
                 </li>
                 <li>
-                  <strong>3. Tu presupuesto es < $200.000/mes</strong>
+                  <strong>3. Tu presupuesto es {'<'} $200.000/mes</strong>
                   <p className="text-sm text-gray-600 pl-6">No hay suficiente data para que el algoritmo aprenda</p>
                 </li>
                 <li>
@@ -158,7 +158,7 @@ export default function ArticlePage() {
                 </ul>
                 <p><strong>Estrategia de Puja:</strong></p>
                 <ul className="pl-6 space-y-1 text-sm">
-                  <li>✅ <strong>Maximizar conversiones</strong> (sin CPA objetivo) si tienes < 3 meses de data</li>
+                  <li>✅ <strong>Maximizar conversiones</strong> (sin CPA objetivo) si tienes {'<'} 3 meses de data</li>
                   <li>✅ <strong>CPA objetivo</strong> si tienes historial sólido</li>
                   <li>✅ <strong>ROAS objetivo</strong> si eres E-commerce con valores variables</li>
                 </ul>
@@ -336,7 +336,7 @@ export default function ArticlePage() {
             </p>
             <ul className="space-y-2 text-gray-700 mb-8">
               <li>✅ Historial de conversiones (30+ en 30 días)</li>
-              <li>✅ Presupuesto > $500.000/mes</li>
+              <li>✅ Presupuesto {'>'} $500.000/mes</li>
               <li>✅ Tracking de conversiones bien configurado</li>
               <li>✅ Creatividades de calidad (imágenes, videos)</li>
             </ul>

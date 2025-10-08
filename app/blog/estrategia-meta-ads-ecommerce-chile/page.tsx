@@ -119,7 +119,7 @@ export default function ArticlePage() {
                     <li>• Presupuesto: <strong>15% del total</strong> (testing)</li>
                   </ul>
                 </div>
-                <p className="text-sm text-purple-700"><strong>Nota:</strong> Solo si tienes Pixel con > 50 conversiones/semana</p>
+                <p className="text-sm text-purple-700"><strong>Nota:</strong> Solo si tienes Pixel con {'>'} 50 conversiones/semana</p>
               </div>
             </div>
 
@@ -135,7 +135,7 @@ export default function ArticlePage() {
               </p>
               <div className="space-y-3 text-gray-700 text-sm">
                 <p><strong>Día 1-3:</strong> Presupuesto inicial (ej: $10.000/día)</p>
-                <p><strong>Día 4-6:</strong> Si ROAS > objetivo, aumenta +20% ($12.000/día)</p>
+                <p><strong>Día 4-6:</strong> Si ROAS {'>'} objetivo, aumenta +20% ($12.000/día)</p>
                 <p><strong>Día 7-9:</strong> Si sigue rentable, +20% más ($14.400/día)</p>
                 <p><strong>Y así sucesivamente...</strong></p>
               </div>
@@ -206,7 +206,7 @@ export default function ArticlePage() {
               <div className="bg-white border-2 border-purple-200 rounded-xl p-6">
                 <h3 className="text-xl font-bold text-gray-900 mb-4">Formato #3: Video Testimonial</h3>
                 <p className="text-gray-700 mb-4 text-sm">
-                  Cliente contando su experiencia mirando a cámara. <strong>Funciona muy bien para productos > $50.000</strong>
+                  Cliente contando su experiencia mirando a cámara. <strong>Funciona muy bien para productos {'>'} $50.000</strong>
                 </p>
                 <p className="text-sm text-gray-700">
                   Tip: Subtítulos obligatorios (85% ve videos sin sonido)
@@ -312,7 +312,7 @@ export default function ArticlePage() {
 
             <ul className="space-y-2 text-gray-700 mb-8">
               <li>✅ <strong>Estructura simple:</strong> 3 campañas (Prospecting + Retargeting + Advantage+)</li>
-              <li>✅ <strong>Creatividades ganadoras:</strong> UGC videos > Carousels > Static images</li>
+              <li>✅ <strong>Creatividades ganadoras:</strong> UGC videos {'>'} Carousels {'>'} Static images</li>
               <li>✅ <strong>Escalar inteligente:</strong> +20% cada 3 días (no de golpe)</li>
               <li>✅ <strong>Testing constante:</strong> 3 variantes mínimo por campaña</li>
               <li>✅ <strong>Pixel bien configurado:</strong> Sin data = sin optimización</li>
