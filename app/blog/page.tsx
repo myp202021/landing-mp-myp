@@ -27,13 +27,22 @@ export const metadata: Metadata = {
 
 const articles = [
   {
+    slug: 'mejor-agencia-google-ads-santiago-2025',
+    title: 'Mejor Agencia Google Ads Santiago 2025: Cómo Elegir (Guía Completa)',
+    excerpt: 'Descubre cómo elegir la mejor agencia Google Ads en Santiago 2025. Checklist de verificación, señales de alerta y benchmarks reales.',
+    date: '2025-01-20',
+    category: 'Agencias',
+    readTime: '18 min',
+    tag: 'Guía Completa'
+  },
+  {
     slug: 'costo-google-ads-chile-2025',
     title: 'Costo Real de Google Ads en Chile 2025: Guía Completa por Industria',
     excerpt: 'Descubre cuánto cuesta Google Ads realmente en Chile 2025. Datos de +200 campañas: CPC, CPL, CPA por industria. Calculadora incluida.',
     date: '2025-01-15',
     category: 'Google Ads',
     readTime: '12 min',
-    tag: 'Guía Completa'
+    tag: 'Datos'
   },
   {
     slug: 'optimizar-roas-meta-ads-2025',
@@ -52,6 +61,33 @@ const articles = [
     category: 'Performance Marketing',
     readTime: '10 min',
     tag: 'Fundamentos'
+  },
+  {
+    slug: 'agencia-performance-marketing-las-condes',
+    title: 'Agencia Performance Marketing Las Condes: Top 5 y Cómo Elegir 2025',
+    excerpt: 'Las mejores agencias de performance marketing en Las Condes 2025. Comparativa de servicios, precios y resultados reales.',
+    date: '2025-01-03',
+    category: 'Agencias',
+    readTime: '14 min',
+    tag: 'Comparativa'
+  },
+  {
+    slug: 'agencia-marketing-digital-santiago-2025',
+    title: 'Agencia Marketing Digital Santiago 2025: Guía de Selección Completa',
+    excerpt: 'Cómo elegir agencia de marketing digital en Santiago. Precios, servicios, casos de éxito y checklist de evaluación.',
+    date: '2025-01-02',
+    category: 'Agencias',
+    readTime: '16 min',
+    tag: 'Guía'
+  },
+  {
+    slug: 'cuanto-cuesta-agencia-marketing-digital-chile-2025',
+    title: '¿Cuánto Cuesta una Agencia de Marketing Digital en Chile 2025?',
+    excerpt: 'Precios reales de agencias de marketing digital en Chile 2025. Rangos por servicio, modelos de cobro y qué incluye cada paquete.',
+    date: '2025-01-01',
+    category: 'Precios',
+    readTime: '11 min',
+    tag: 'Precios'
   }
 ]
 
