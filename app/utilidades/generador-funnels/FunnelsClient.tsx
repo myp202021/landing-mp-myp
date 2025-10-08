@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Workflow, ArrowRight, Download, Copy, RefreshCw, CheckCircle2 } from 'lucide-react'
@@ -135,44 +135,6 @@ const funnelTemplates: { [key: string]: FunnelTemplate } = {
 }
 
 export default function GeneradorFunnels() {
-  useEffect(() => {
-    document.title = 'Generador de Funnels CRM - Crea tu Embudo de Ventas | M&P'
-
-    const metaDescription = document.querySelector('meta[name="description"]')
-    if (metaDescription) {
-      metaDescription.setAttribute('content', 'Genera funnels de ventas personalizados para tu CRM en 4 pasos. B2B, B2C, e-commerce, WhatsApp, cotizaciones. Exporta en CSV. Herramienta gratuita.')
-    } else {
-      const meta = document.createElement('meta')
-      meta.name = 'description'
-      meta.content = 'Genera funnels de ventas personalizados para tu CRM en 4 pasos. B2B, B2C, e-commerce, WhatsApp, cotizaciones. Exporta en CSV. Herramienta gratuita.'
-      document.head.appendChild(meta)
-    }
-
-    // OG Image específica
-    const ogImageMeta = document.querySelector('meta[property="og:image"]')
-    const twitterImageMeta = document.querySelector('meta[name="twitter:image"]')
-    const imageUrl = 'https://www.mulleryperez.cl/og-funnels.svg'
-
-    if (ogImageMeta) {
-      ogImageMeta.setAttribute('content', imageUrl)
-    } else {
-      const meta = document.createElement('meta')
-      meta.setAttribute('property', 'og:image')
-      meta.setAttribute('content', imageUrl)
-      document.head.appendChild(meta)
-    }
-
-    if (twitterImageMeta) {
-      twitterImageMeta.setAttribute('content', imageUrl)
-    } else {
-      const meta = document.createElement('meta')
-      meta.name = 'twitter:image'
-      meta.content = imageUrl
-      document.head.appendChild(meta)
-    }
-
-    addCanonicalLink('/utilidades/generador-funnels')
-  }, [])
 
   const funnelSchema = createSoftwareAppSchema(
     'Generador de Funnels CRM - Embudo de Ventas',
