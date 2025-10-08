@@ -414,15 +414,16 @@ export default function LandingClient() {
               onMouseEnter={() => setLabsDropdown(true)}
               onMouseLeave={() => setLabsDropdown(false)}
             >
-              <button
+              <Link
+                href="/labs"
                 className="flex items-center gap-1 text-sm font-semibold text-gray-700 hover:text-blue-600 transition-all duration-200"
                 aria-expanded={labsDropdown}
                 aria-haspopup="true"
-                aria-label="Abrir menú M&P Labs"
+                aria-label="Ir a M&P Labs"
               >
                 M&P Labs
                 <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${labsDropdown ? 'rotate-180' : ''}`} aria-hidden="true" />
-              </button>
+              </Link>
               {labsDropdown && (
                 <div className="absolute top-full mt-1 left-0 bg-white rounded-xl shadow-2xl border border-gray-100 py-2 min-w-[240px] animate-in fade-in slide-in-from-top-2 duration-200">
                   <Link
@@ -464,15 +465,16 @@ export default function LandingClient() {
               onMouseEnter={() => setUtilidadesDropdown(true)}
               onMouseLeave={() => setUtilidadesDropdown(false)}
             >
-              <button
+              <Link
+                href="/utilidades"
                 className="flex items-center gap-1 text-sm font-semibold text-gray-700 hover:text-blue-600 transition-all duration-200"
                 aria-expanded={utilidadesDropdown}
                 aria-haspopup="true"
-                aria-label="Abrir menú Utilidades"
+                aria-label="Ir a Utilidades"
               >
                 Utilidades
                 <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${utilidadesDropdown ? 'rotate-180' : ''}`} aria-hidden="true" />
-              </button>
+              </Link>
               {utilidadesDropdown && (
                 <div className="absolute top-full mt-1 left-0 bg-white rounded-xl shadow-2xl border border-gray-100 py-2 min-w-[260px] animate-in fade-in slide-in-from-top-2 duration-200">
                   <Link
