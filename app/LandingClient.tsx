@@ -1279,7 +1279,7 @@ export default function LandingClient() {
               Resultados <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Comprobables</span>
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Data real de +200 campañas optimizadas en Chile desde 2019
+              +500 campañas optimizadas en Chile, USA, México, Perú y Australia desde 2019
             </p>
           </div>
 
@@ -1295,18 +1295,18 @@ export default function LandingClient() {
 
             <div className="bg-white rounded-2xl p-8 text-center border-2 border-purple-100 hover:border-purple-300 hover:shadow-xl transition-all duration-300">
               <div className="text-5xl lg:text-6xl font-black bg-gradient-to-r from-purple-600 to-purple-800 bg-clip-text text-transparent mb-3">
-                +200
+                +500
               </div>
               <div className="text-gray-700 font-semibold text-lg">Campañas</div>
-              <div className="text-sm text-gray-500 mt-2">Google Ads + Meta</div>
+              <div className="text-sm text-gray-500 mt-2">5 países</div>
             </div>
 
             <div className="bg-white rounded-2xl p-8 text-center border-2 border-green-100 hover:border-green-300 hover:shadow-xl transition-all duration-300">
-              <div className="text-5xl lg:text-6xl font-black bg-gradient-to-r from-green-600 to-green-800 bg-clip-text text-transparent mb-3">
-                $2M+
+              <div className="text-4xl lg:text-5xl font-black bg-gradient-to-r from-green-600 to-green-800 bg-clip-text text-transparent mb-3">
+                USD$2M+
               </div>
               <div className="text-gray-700 font-semibold text-lg">Presupuesto</div>
-              <div className="text-sm text-gray-500 mt-2">Gestionado 2024</div>
+              <div className="text-sm text-gray-500 mt-2">Gestionado</div>
             </div>
 
             <div className="bg-white rounded-2xl p-8 text-center border-2 border-orange-100 hover:border-orange-300 hover:shadow-xl transition-all duration-300">
@@ -1318,74 +1318,122 @@ export default function LandingClient() {
             </div>
           </div>
 
-          {/* Clientes */}
+          {/* Clientes - Carrusel */}
           <div className="mb-20">
             <h3 className="text-center text-sm font-bold text-gray-500 uppercase tracking-wider mb-8">
               Confían en nosotros
             </h3>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 items-center justify-items-center">
-              <div className="bg-white p-6 rounded-xl border border-gray-200 hover:shadow-lg transition-all duration-300 w-full h-24 flex items-center justify-center">
-                <Image
-                  src="/genera-logo.svg"
-                  alt="Genera HR"
-                  width={140}
-                  height={60}
-                  className="opacity-70 hover:opacity-100 transition-opacity grayscale hover:grayscale-0"
-                />
-              </div>
-              <div className="bg-white p-6 rounded-xl border border-gray-200 hover:shadow-lg transition-all duration-300 w-full h-24 flex items-center justify-center">
-                <Image
-                  src="/invas-logo.png"
-                  alt="Invas WMS"
-                  width={120}
-                  height={60}
-                  className="opacity-70 hover:opacity-100 transition-opacity grayscale hover:grayscale-0"
-                />
-              </div>
-              <div className="bg-white p-6 rounded-xl border border-gray-200 hover:shadow-lg transition-all duration-300 w-full h-24 flex items-center justify-center">
-                <Image
-                  src="/dezar-logo.svg"
-                  alt="Dezar Rent a Car"
-                  width={140}
-                  height={60}
-                  className="opacity-70 hover:opacity-100 transition-opacity grayscale hover:grayscale-0"
-                />
-              </div>
-              <div className="bg-white p-6 rounded-xl border border-gray-200 hover:shadow-lg transition-all duration-300 w-full h-24 flex items-center justify-center">
-                <Image
-                  src="/idesami-logo.png"
-                  alt="Idesami Salud Mental"
-                  width={130}
-                  height={60}
-                  className="opacity-70 hover:opacity-100 transition-opacity grayscale hover:grayscale-0"
-                />
+            <div className="relative overflow-hidden">
+              <div className="flex gap-8 animate-scroll">
+                {/* Primera ronda de logos */}
+                <div className="flex gap-8 items-center shrink-0">
+                  <div className="bg-white px-8 py-6 rounded-xl border border-gray-200 hover:shadow-lg transition-all duration-300 h-20 flex items-center justify-center min-w-[160px]">
+                    <span className="text-gray-400 font-bold text-lg">Dezar</span>
+                  </div>
+                  <div className="bg-white px-8 py-6 rounded-xl border border-gray-200 hover:shadow-lg transition-all duration-300 h-20 flex items-center justify-center min-w-[160px]">
+                    <span className="text-gray-400 font-bold text-lg">Genera</span>
+                  </div>
+                  <div className="bg-white px-8 py-6 rounded-xl border border-gray-200 hover:shadow-lg transition-all duration-300 h-20 flex items-center justify-center min-w-[160px]">
+                    <span className="text-gray-400 font-bold text-lg">Invas</span>
+                  </div>
+                  <div className="bg-white px-8 py-6 rounded-xl border border-gray-200 hover:shadow-lg transition-all duration-300 h-20 flex items-center justify-center min-w-[160px]">
+                    <span className="text-gray-400 font-bold text-lg">Idesami</span>
+                  </div>
+                  <div className="bg-white px-8 py-6 rounded-xl border border-gray-200 hover:shadow-lg transition-all duration-300 h-20 flex items-center justify-center min-w-[160px]">
+                    <span className="text-gray-400 font-bold text-lg">qiiip</span>
+                  </div>
+                  <div className="bg-white px-8 py-6 rounded-xl border border-gray-200 hover:shadow-lg transition-all duration-300 h-20 flex items-center justify-center min-w-[160px]">
+                    <span className="text-gray-400 font-bold text-lg">First Pack</span>
+                  </div>
+                  <div className="bg-white px-8 py-6 rounded-xl border border-gray-200 hover:shadow-lg transition-all duration-300 h-20 flex items-center justify-center min-w-[160px]">
+                    <span className="text-gray-400 font-bold text-lg">Woo</span>
+                  </div>
+                  <div className="bg-white px-8 py-6 rounded-xl border border-gray-200 hover:shadow-lg transition-all duration-300 h-20 flex items-center justify-center min-w-[160px]">
+                    <span className="text-gray-400 font-bold text-lg">O'Higgins</span>
+                  </div>
+                </div>
+                {/* Segunda ronda (duplicada para loop infinito) */}
+                <div className="flex gap-8 items-center shrink-0">
+                  <div className="bg-white px-8 py-6 rounded-xl border border-gray-200 hover:shadow-lg transition-all duration-300 h-20 flex items-center justify-center min-w-[160px]">
+                    <span className="text-gray-400 font-bold text-lg">Dezar</span>
+                  </div>
+                  <div className="bg-white px-8 py-6 rounded-xl border border-gray-200 hover:shadow-lg transition-all duration-300 h-20 flex items-center justify-center min-w-[160px]">
+                    <span className="text-gray-400 font-bold text-lg">Genera</span>
+                  </div>
+                  <div className="bg-white px-8 py-6 rounded-xl border border-gray-200 hover:shadow-lg transition-all duration-300 h-20 flex items-center justify-center min-w-[160px]">
+                    <span className="text-gray-400 font-bold text-lg">Invas</span>
+                  </div>
+                  <div className="bg-white px-8 py-6 rounded-xl border border-gray-200 hover:shadow-lg transition-all duration-300 h-20 flex items-center justify-center min-w-[160px]">
+                    <span className="text-gray-400 font-bold text-lg">Idesami</span>
+                  </div>
+                  <div className="bg-white px-8 py-6 rounded-xl border border-gray-200 hover:shadow-lg transition-all duration-300 h-20 flex items-center justify-center min-w-[160px]">
+                    <span className="text-gray-400 font-bold text-lg">qiiip</span>
+                  </div>
+                  <div className="bg-white px-8 py-6 rounded-xl border border-gray-200 hover:shadow-lg transition-all duration-300 h-20 flex items-center justify-center min-w-[160px]">
+                    <span className="text-gray-400 font-bold text-lg">First Pack</span>
+                  </div>
+                  <div className="bg-white px-8 py-6 rounded-xl border border-gray-200 hover:shadow-lg transition-all duration-300 h-20 flex items-center justify-center min-w-[160px]">
+                    <span className="text-gray-400 font-bold text-lg">Woo</span>
+                  </div>
+                  <div className="bg-white px-8 py-6 rounded-xl border border-gray-200 hover:shadow-lg transition-all duration-300 h-20 flex items-center justify-center min-w-[160px]">
+                    <span className="text-gray-400 font-bold text-lg">O'Higgins</span>
+                  </div>
+                </div>
               </div>
             </div>
+            <style jsx>{`
+              @keyframes scroll {
+                0% {
+                  transform: translateX(0);
+                }
+                100% {
+                  transform: translateX(-50%);
+                }
+              }
+              .animate-scroll {
+                animation: scroll 30s linear infinite;
+              }
+              .animate-scroll:hover {
+                animation-play-state: paused;
+              }
+            `}</style>
           </div>
 
-          {/* Industrias */}
+          {/* Industrias - 10 con colores vivos */}
           <div className="text-center">
             <p className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-6">
               Industrias que trabajamos
             </p>
             <div className="flex flex-wrap justify-center gap-3">
-              <span className="px-5 py-2.5 bg-blue-100 text-blue-700 rounded-full font-semibold text-sm hover:bg-blue-200 transition-colors">
+              <span className="px-5 py-2.5 bg-blue-600 text-white rounded-full font-semibold text-sm hover:bg-blue-700 transition-colors shadow-md hover:shadow-lg">
                 SaaS & Tecnología
               </span>
-              <span className="px-5 py-2.5 bg-purple-100 text-purple-700 rounded-full font-semibold text-sm hover:bg-purple-200 transition-colors">
+              <span className="px-5 py-2.5 bg-purple-600 text-white rounded-full font-semibold text-sm hover:bg-purple-700 transition-colors shadow-md hover:shadow-lg">
                 Logística & WMS
               </span>
-              <span className="px-5 py-2.5 bg-green-100 text-green-700 rounded-full font-semibold text-sm hover:bg-green-200 transition-colors">
+              <span className="px-5 py-2.5 bg-green-600 text-white rounded-full font-semibold text-sm hover:bg-green-700 transition-colors shadow-md hover:shadow-lg">
                 Transporte & Movilidad
               </span>
-              <span className="px-5 py-2.5 bg-orange-100 text-orange-700 rounded-full font-semibold text-sm hover:bg-orange-200 transition-colors">
+              <span className="px-5 py-2.5 bg-orange-600 text-white rounded-full font-semibold text-sm hover:bg-orange-700 transition-colors shadow-md hover:shadow-lg">
                 Salud & Medicina
               </span>
-              <span className="px-5 py-2.5 bg-cyan-100 text-cyan-700 rounded-full font-semibold text-sm hover:bg-cyan-200 transition-colors">
-                E-commerce
+              <span className="px-5 py-2.5 bg-cyan-600 text-white rounded-full font-semibold text-sm hover:bg-cyan-700 transition-colors shadow-md hover:shadow-lg">
+                E-commerce & Retail
               </span>
-              <span className="px-5 py-2.5 bg-pink-100 text-pink-700 rounded-full font-semibold text-sm hover:bg-pink-200 transition-colors">
+              <span className="px-5 py-2.5 bg-pink-600 text-white rounded-full font-semibold text-sm hover:bg-pink-700 transition-colors shadow-md hover:shadow-lg">
                 Servicios B2B
+              </span>
+              <span className="px-5 py-2.5 bg-red-600 text-white rounded-full font-semibold text-sm hover:bg-red-700 transition-colors shadow-md hover:shadow-lg">
+                Inmobiliaria
+              </span>
+              <span className="px-5 py-2.5 bg-indigo-600 text-white rounded-full font-semibold text-sm hover:bg-indigo-700 transition-colors shadow-md hover:shadow-lg">
+                Educación Online
+              </span>
+              <span className="px-5 py-2.5 bg-yellow-600 text-white rounded-full font-semibold text-sm hover:bg-yellow-700 transition-colors shadow-md hover:shadow-lg">
+                Fintech & Seguros
+              </span>
+              <span className="px-5 py-2.5 bg-teal-600 text-white rounded-full font-semibold text-sm hover:bg-teal-700 transition-colors shadow-md hover:shadow-lg">
+                Gastronomía & Delivery
               </span>
             </div>
           </div>
