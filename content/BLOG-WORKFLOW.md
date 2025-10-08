@@ -8,24 +8,44 @@ Crear 50 blogs optimizados para SEO en Chile, con contenido de calidad y estrate
 - **Pendientes:** 43 blogs
 - **Total:** 50 blogs
 
-## 🚀 Cómo Generar Nuevos Blogs
+## 🚀 Cómo Generar Nuevos Blogs (MÉTODO AUTOMATIZADO)
 
-### Opción 1: Generar 1 blog específico
+### ✅ **Script Completo Automatizado (RECOMENDADO)**
+
 ```bash
+npx tsx scripts/create-blog-complete.ts <slug>
+```
+
+**Este script hace TODO automáticamente:**
+1. ✅ Crea el archivo `app/blog/<slug>/page.tsx` con JSX válido
+2. ✅ **Agrega automáticamente el blog al array** de `app/blog/page.tsx`
+3. ✅ Valida caracteres `<` y `>` (los escapa correctamente)
+4. ✅ Ejecuta `npm run build` para verificar que compila
+5. ✅ (Opcional) Commit y push automático con `--commit`
+
+**Ejemplo:**
+```bash
+# Crear blog (sin commit automático)
+npx tsx scripts/create-blog-complete.ts que-es-cac-como-calcularlo-reducirlo
+
+# Crear blog Y hacer commit/push automático
+npx tsx scripts/create-blog-complete.ts que-es-cac-como-calcularlo-reducirlo --commit
+```
+
+### ⚠️ **Scripts Viejos (NO recomendados, solo para referencia)**
+
+```bash
+# Método viejo (requiere agregar manualmente al array de app/blog/page.tsx)
 npx tsx scripts/generate-blog-post.ts <slug>
-```
 
-Ejemplo:
-```bash
-npx tsx scripts/generate-blog-post.ts como-aumentar-conversiones-google-ads
-```
-
-### Opción 2: Generar múltiples blogs en batch
-```bash
+# Batch viejo
 npx tsx scripts/generate-batch-blogs.ts 5
 ```
 
-Esto creará los próximos 5 blogs pendientes automáticamente.
+**Problema con scripts viejos:**
+- ❌ No agregan el blog al array de `app/blog/page.tsx` (hay que hacerlo manual)
+- ❌ No validan caracteres `<` y `>` (puede romper el build)
+- ❌ No validan que el build compile antes de commit
 
 ---
 
