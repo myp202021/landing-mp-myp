@@ -182,7 +182,7 @@ export default function MejorAgenciaGoogleAdsSantiago2025() {
               <CheckCircle2 className="w-5 h-5 text-blue-600 mt-1 flex-shrink-0" />
               <div>
                 <strong className="text-gray-900">4. Modelo de Fees (15% del score)</strong>
-                <p className="text-gray-600 text-sm mt-1">Fee fijo alineado con resultados > Fee porcentual del presupuesto. Las mejores agencias cobran por valor, no por gasto.</p>
+                <p className="text-gray-600 text-sm mt-1">Fee fijo alineado con resultados &gt; Fee porcentual del presupuesto. Las mejores agencias cobran por valor, no por gasto.</p>
               </div>
             </div>
             <div className="flex items-start gap-3">
