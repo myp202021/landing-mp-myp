@@ -1,9 +1,8 @@
 'use client'
 
-'use client'
-
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { Calculator, TrendingUp, TrendingDown, AlertCircle, CheckCircle2 } from 'lucide-react'
 import { createSoftwareAppSchema, addCanonicalLink, createBreadcrumbSchema } from '@/lib/metadata'
 
@@ -223,8 +222,11 @@ export default function CalculadoraCAC() {
         {/* Header */}
       <header className="border-b border-white/10 backdrop-blur-xl bg-white/5">
         <div className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
-          <Link href="/utilidades" className="text-white font-bold text-xl">
-            ← Volver a Utilidades
+          <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+            <Image src="/logo-blanco.png" alt="M&P Logo" width={120} height={32} className="h-8 w-auto" />
+          </Link>
+          <Link href="/utilidades" className="text-white font-semibold text-sm hover:text-emerald-300 transition-colors">
+            ← Volver
           </Link>
         </div>
       </header>
