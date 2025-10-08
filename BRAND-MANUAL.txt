@@ -1,0 +1,417 @@
+===========================================
+MULLER Y PÉREZ - MANUAL DE MARCA BÁSICO
+Agencia de Marketing Digital y Performance
+===========================================
+
+ÚLTIMA ACTUALIZACIÓN: 15 Enero 2025
+VERSIÓN: 1.0
+
+
+═══════════════════════════════════════════
+1. IDENTIDAD DE MARCA
+═══════════════════════════════════════════
+
+NOMBRE LEGAL:
+Muller y Pérez
+
+SLOGAN:
+"Marketing de Datos que Genera Resultados"
+
+PROPUESTA DE VALOR:
+Agencia líder en Marketing de Datos Chile | Expertos en Google Ads, Meta Ads y Performance Marketing con ROI +380% comprobado
+
+POSICIONAMIENTO:
+- #1 en transparencia total (acceso 24/7 a cuentas)
+- #1 en métricas reales (CAC, LTV, ROAS - no vanity metrics)
+- #1 en retención de clientes (95% vs 60% industria)
+
+TARGET PRINCIPAL:
+- Empresas B2B y B2C en Chile
+- Ticket promedio: $650k - $2M mensuales
+- Sectores: E-commerce, SaaS, Servicios Profesionales, Salud
+
+
+═══════════════════════════════════════════
+2. PALETA DE COLORES
+═══════════════════════════════════════════
+
+COLORES PRIMARIOS:
+├─ Azul Principal:    #2563EB (rgb(37, 99, 235))   - Confianza, profesionalismo
+├─ Azul Oscuro:       #1E40AF (rgb(30, 64, 175))   - Títulos, texto importante
+└─ Azul Claro:        #3B82F6 (rgb(59, 130, 246))  - Hover states, accents
+
+COLORES SECUNDARIOS:
+├─ Púrpura:           #7C3AED (rgb(124, 58, 237))  - Creatividad, innovación
+├─ Índigo:            #6366F1 (rgb(99, 102, 241))  - Herramientas M&P Labs
+└─ Cyan:              #06B6D4 (rgb(6, 182, 212))   - Datos, análisis
+
+COLORES DE FONDO:
+├─ Blanco Puro:       #FFFFFF (rgb(255, 255, 255)) - Fondos principales
+├─ Gris Muy Claro:    #F9FAFB (rgb(249, 250, 251)) - Fondos alternos
+├─ Gris Claro:        #F3F4F6 (rgb(243, 244, 246)) - Separadores
+└─ Azul Muy Claro:    #EFF6FF (rgb(239, 246, 255)) - Fondos de sección
+
+COLORES DE TEXTO:
+├─ Gris Oscuro:       #111827 (rgb(17, 24, 39))    - Texto principal
+├─ Gris Medio:        #6B7280 (rgb(107, 114, 128)) - Texto secundario
+└─ Gris Claro:        #9CA3AF (rgb(156, 163, 175)) - Texto terciario
+
+COLORES DE ACCIÓN (CTA):
+├─ Verde Éxito:       #10B981 (rgb(16, 185, 129))  - Botones positivos
+├─ Rojo Alerta:       #EF4444 (rgb(239, 68, 68))   - Botones negativos
+├─ Naranja Warning:   #F59E0B (rgb(245, 158, 11))  - Alertas
+└─ Azul CTA Primary:  #2563EB (rgb(37, 99, 235))   - CTA principal
+
+DEGRADADOS PERMITIDOS:
+├─ Principal:         from-gray-50 via-blue-50/30 to-white
+├─ Labs (Índigo):     from-indigo-50 via-white to-purple-50
+├─ Data (Cyan):       from-cyan-50 via-white to-blue-50
+└─ CTA (Azul-Púrpura): from-blue-600 to-purple-600
+
+❌ COLORES PROHIBIDOS:
+- Fondos púrpura sólidos (#7C3AED, #9333EA, #A855F7)
+- Fondos oscuros (#1F2937, #111827) excepto footers
+- Amarillo brillante (#FBBF24)
+- Rosa brillante (#EC4899)
+
+
+═══════════════════════════════════════════
+3. TIPOGRAFÍA
+═══════════════════════════════════════════
+
+FAMILIA TIPOGRÁFICA:
+Sistema: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif
+
+JERARQUÍA TIPOGRÁFICA:
+
+H1 (Títulos Principales):
+├─ Tamaño: text-4xl lg:text-5xl (36px → 48px)
+├─ Peso: font-black (900)
+├─ Color: text-gray-900 (#111827)
+├─ Espaciado: leading-tight
+└─ Uso: 1 por página, título hero principal
+
+H2 (Secciones Principales):
+├─ Tamaño: text-3xl lg:text-4xl (30px → 36px)
+├─ Peso: font-bold (700)
+├─ Color: text-gray-900 (#111827)
+├─ Espaciado: leading-tight
+└─ Uso: Títulos de sección
+
+H3 (Subsecciones):
+├─ Tamaño: text-2xl lg:text-3xl (24px → 30px)
+├─ Peso: font-bold (700)
+├─ Color: text-gray-900 (#111827)
+├─ Espaciado: leading-snug
+└─ Uso: Subtítulos dentro de secciones
+
+Texto Cuerpo (Body):
+├─ Tamaño: text-base lg:text-lg (16px → 18px)
+├─ Peso: font-normal (400)
+├─ Color: text-gray-700 (#374151)
+├─ Espaciado: leading-relaxed (1.625)
+└─ Uso: Párrafos, descripciones
+
+Texto Pequeño (Small):
+├─ Tamaño: text-sm (14px)
+├─ Peso: font-normal (400)
+├─ Color: text-gray-600 (#4B5563)
+└─ Uso: Labels, metadata, footers
+
+ÉNFASIS:
+├─ Negrita: font-semibold (600) o font-bold (700)
+├─ Números/Métricas: font-black (900) + text-blue-600
+└─ CTAs: font-bold (700) + text-white
+
+
+═══════════════════════════════════════════
+4. COMPONENTES Y ESPACIADO
+═══════════════════════════════════════════
+
+SISTEMA DE ESPACIADO:
+Base: Tailwind spacing scale (4px increments)
+
+├─ Micro:    gap-2, p-2, m-2    (8px)
+├─ Pequeño:  gap-4, p-4, m-4    (16px)
+├─ Medio:    gap-6, p-6, m-6    (24px)
+├─ Grande:   gap-8, p-8, m-8    (32px)
+├─ XL:       gap-12, p-12, m-12 (48px)
+└─ XXL:      gap-16, p-16, m-16 (64px)
+
+CONTENEDORES:
+├─ Ancho máximo: max-w-7xl mx-auto (1280px)
+├─ Padding lateral: px-6 lg:px-8
+└─ Centrado: mx-auto
+
+BORDES Y SOMBRAS:
+├─ Radius pequeño:  rounded-lg (8px)
+├─ Radius medio:    rounded-xl (12px)
+├─ Radius grande:   rounded-2xl (16px)
+├─ Sombra suave:    shadow-sm
+├─ Sombra media:    shadow-md
+└─ Sombra fuerte:   shadow-2xl
+
+BOTONES (CTAs):
+Primario:
+├─ BG: bg-blue-600 hover:bg-blue-700
+├─ Texto: text-white font-bold
+├─ Padding: px-8 py-4
+├─ Border: rounded-xl
+└─ Sombra: hover:shadow-2xl
+
+Secundario:
+├─ BG: bg-white border-2 border-blue-600
+├─ Texto: text-blue-600 font-bold
+├─ Padding: px-8 py-4
+└─ Border: rounded-xl
+
+TARJETAS (Cards):
+├─ BG: bg-white
+├─ Border: border border-gray-200
+├─ Radius: rounded-xl o rounded-2xl
+├─ Padding: p-6 o p-8
+├─ Hover: hover:border-blue-300 hover:shadow-2xl
+└─ Transición: transition-all duration-300
+
+
+═══════════════════════════════════════════
+5. FONDOS DE PÁGINA
+═══════════════════════════════════════════
+
+FONDO ESTÁNDAR (TODAS LAS PÁGINAS):
+bg-gradient-to-br from-gray-50 via-blue-50/30 to-white
+
+EXCEPCIONES PERMITIDAS:
+├─ Labs Predictor:    from-indigo-50 via-white to-purple-50
+├─ Labs Buyer Gen:    from-cyan-50 via-white to-blue-50
+├─ Labs Radar:        from-purple-50/30 via-white to-gray-50
+├─ Calculadora CAC:   from-emerald-50/30 via-white to-gray-50
+├─ Comparador Web:    from-orange-50/30 via-white to-gray-50
+├─ Generador Funnels: from-red-50/30 via-white to-gray-50
+└─ Juega y Aprende:   from-purple-50/30 via-white to-pink-50/30
+
+REGLA CRÍTICA:
+❌ NUNCA usar fondos púrpura sólidos
+❌ NUNCA usar fondos oscuros en páginas principales
+✅ SIEMPRE usar degradados sutiles con blanco
+✅ SIEMPRE asegurar contraste 4.5:1 mínimo (WCAG AA)
+
+
+═══════════════════════════════════════════
+6. ICONOGRAFÍA
+═══════════════════════════════════════════
+
+LIBRERÍA: Lucide React (lucide-react)
+
+TAMAÑOS:
+├─ Pequeño: w-4 h-4 (16px)
+├─ Medio:   w-5 h-5 (20px)
+├─ Grande:  w-6 h-6 (24px)
+└─ XL:      w-8 h-8 (32px)
+
+COLORES:
+├─ Principal: text-blue-600
+├─ Secundario: text-gray-600
+├─ Éxito: text-green-600
+└─ Alerta: text-red-600
+
+ICONOS MÁS USADOS:
+├─ CheckCircle2: Listas de beneficios
+├─ XCircle: Problemas/errores
+├─ TrendingUp: Métricas/crecimiento
+├─ Target: Objetivos/metas
+├─ Cpu: Tecnología/IA
+├─ Megaphone: Marketing/publicidad
+└─ Calendar: Fechas/reuniones
+
+
+═══════════════════════════════════════════
+7. IMÁGENES Y MEDIA
+═══════════════════════════════════════════
+
+OPEN GRAPH IMAGES:
+Formato: SVG (1200x630px)
+├─ /og-image.svg         (Home)
+├─ /og-predictor.svg     (Índigo-púrpura)
+├─ /og-buyer-gen.svg     (Cyan)
+├─ /og-radar.svg         (Púrpura)
+├─ /og-cac.svg           (Esmeralda)
+├─ /og-comparador.svg    (Naranja)
+├─ /og-funnels.svg       (Rojo)
+└─ /og-juega.svg         (Púrpura-rosa)
+
+LOGOS:
+├─ /logo-color.png       (Logo principal color)
+├─ /logo-white.png       (Logo blanco para fondos oscuros)
+└─ Tamaño header: h-11 w-auto (44px height)
+
+IMÁGENES EN ARTÍCULOS:
+├─ Ancho máximo: 800px
+├─ Formato: WebP preferido, fallback JPG
+├─ Compresión: Quality 85%
+├─ Alt text: SIEMPRE descriptivo con keyword
+└─ Lazy loading: loading="lazy"
+
+
+═══════════════════════════════════════════
+8. TONO DE VOZ Y COPYWRITING
+═══════════════════════════════════════════
+
+PERSONALIDAD DE MARCA:
+├─ Directo y sin rodeos
+├─ Basado en datos, no promesas
+├─ Profesional pero accesible
+├─ Transparente (sin letra chica)
+└─ Challenger (retamos el status quo)
+
+LENGUAJE:
+✅ Usar: ROI, ROAS, CAC, LTV, CPA, CPL (métricas reales)
+✅ Usar: "Data real", "Resultados medibles", "+380% ROI comprobado"
+✅ Usar: Números específicos ($650k, 95%, 3 profesionales)
+❌ Evitar: "Impresiones", "Alcance", "Likes" (vanity metrics)
+❌ Evitar: "Probablemente", "Quizás", "Podríamos"
+❌ Evitar: Jerga técnica sin explicación
+
+ESTRUCTURA DE COPY:
+1. Hook (problema + número)
+2. Solución específica
+3. Prueba social/dato
+4. CTA claro
+
+Ejemplo:
+"¿Tu agencia reporta impresiones en vez de ventas? → Nosotros medimos CAC, LTV y ROAS real → ROI +380% en 200+ campañas → Solicita auditoría gratis"
+
+
+═══════════════════════════════════════════
+9. SEO Y METADATA
+═══════════════════════════════════════════
+
+ESTRUCTURA DE TÍTULOS:
+[Beneficio Principal] - [Keyword] | [Marca]
+Ejemplo: "Predictor Google Ads Chile 2025 - Calcula ROI Gratis | M&P"
+
+META DESCRIPTIONS:
+├─ Longitud: 155-160 caracteres
+├─ Incluir: Año (2025)
+├─ Incluir: Números específicos
+├─ Incluir: CTA con →
+└─ Incluir: "Chile" o ciudad
+
+KEYWORDS POR PÁGINA:
+├─ Focus keyphrase: 1 (densidad 1-2%)
+├─ Related keywords: 5-7
+├─ Long-tail variations: 3-5
+└─ Ubicación: Title, H1, H2, primer párrafo
+
+SLUGS:
+├─ Minúsculas
+├─ Guiones, no underscores
+├─ Máximo 4-5 palabras
+├─ Incluir keyword principal
+└─ Ejemplo: /labs/predictor, /blog/costo-google-ads-chile-2025
+
+
+═══════════════════════════════════════════
+10. ACCESIBILIDAD (A11Y)
+═══════════════════════════════════════════
+
+CONTRASTE DE COLOR:
+├─ Texto normal: Mínimo 4.5:1 (WCAG AA)
+├─ Texto grande: Mínimo 3:1
+└─ Uso de herramienta: WebAIM Contrast Checker
+
+NAVEGACIÓN:
+├─ Todos los links tienen aria-label descriptivo
+├─ Botones indican acción: "Solicitar auditoría"
+├─ Imágenes tienen alt text
+└─ Formularios tienen labels
+
+KEYBOARD NAVIGATION:
+├─ Tab order lógico
+├─ Focus visible: outline-blue-600
+└─ Skip to content link (invisible hasta focus)
+
+SEMÁNTICA HTML:
+├─ header, nav, main, section, article, footer
+├─ h1 → h2 → h3 jerarquía
+└─ role="banner", role="navigation", etc.
+
+
+═══════════════════════════════════════════
+11. PERFORMANCE
+═══════════════════════════════════════════
+
+CORE WEB VITALS TARGETS:
+├─ LCP (Largest Contentful Paint): < 2.5s
+├─ FID (First Input Delay): < 100ms
+├─ CLS (Cumulative Layout Shift): < 0.1
+└─ FCP (First Contentful Paint): < 1.8s
+
+OPTIMIZACIONES:
+├─ Imágenes: Next.js Image component
+├─ Fonts: next/font con font-display: swap
+├─ CSS: Tailwind JIT, purge unused
+├─ JS: Code splitting automático Next.js
+└─ Caching: Cloudflare + Vercel Edge
+
+BUNDLE SIZE TARGET:
+├─ First Load JS: < 200KB
+├─ Total page weight: < 500KB
+└─ Time to Interactive: < 3.5s
+
+
+═══════════════════════════════════════════
+12. CHECKLIST DE CONSISTENCIA
+═══════════════════════════════════════════
+
+ANTES DE PUBLICAR PÁGINA:
+✅ Fondo usa degradado sutil (no sólido oscuro)
+✅ Texto tiene contraste 4.5:1 mínimo
+✅ Título H1 único por página
+✅ Meta description optimizada (155-160 chars)
+✅ Canonical URL configurada
+✅ OG image específica
+✅ Keywords definidas (focus + related)
+✅ Spacing consistente (p-6, p-8, gap-6, etc.)
+✅ Botones usan colores de marca
+✅ Links tienen hover states
+✅ Imágenes tienen alt text
+✅ Responsive mobile probado
+✅ Lighthouse score > 90 (Performance, SEO, A11Y)
+
+
+═══════════════════════════════════════════
+13. CONTACTO Y REDES SOCIALES
+═══════════════════════════════════════════
+
+INFORMACIÓN DE CONTACTO:
+├─ Email: contacto@mulleryperez.com
+├─ Teléfono: +56 9 9225 8137
+├─ Dirección: Av. Apoquindo 3000, Piso 10, Las Condes
+│             Región Metropolitana, Chile, 7550000
+└─ GEO: -33.4169, -70.6036
+
+REDES SOCIALES:
+├─ LinkedIn: https://www.linkedin.com/company/mulleryperez
+├─ Instagram: https://www.instagram.com/mulleryperez
+└─ Website: https://www.mulleryperez.cl
+
+HORARIO DE ATENCIÓN:
+Lunes a Viernes: 9:00 - 18:00 (CLT)
+Respuesta email: < 2 horas hábiles
+Respuesta WhatsApp: < 30 min hábiles
+
+
+═══════════════════════════════════════════
+FIN DEL MANUAL DE MARCA v1.0
+═══════════════════════════════════════════
+
+Este manual debe ser consultado antes de:
+- Crear nuevas páginas
+- Modificar componentes existentes
+- Diseñar creatividades
+- Escribir copy
+- Configurar SEO
+
+Actualizado: 15 Enero 2025
+Próxima revisión: Abril 2025

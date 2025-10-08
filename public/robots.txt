@@ -1,0 +1,36 @@
+# robots.txt for www.mulleryperez.cl
+# Optimized for SEO - Allow all crawlers
+
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: https://www.mulleryperez.cl/sitemap.xml
+
+# Block admin and API routes
+Disallow: /api/
+Disallow: /_next/
+Disallow: /admin/
+
+# Allow all tools and blog
+Allow: /labs/
+Allow: /utilidades/
+Allow: /blog/
+
+# Crawl-delay for nice behavior
+Crawl-delay: 0
+
+# Special rules for GPTBot (ChatGPT)
+User-agent: GPTBot
+Allow: /blog/
+Disallow: /api/
+
+# Special rules for Google
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
+
+# Special rules for Bing
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 0

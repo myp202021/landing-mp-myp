@@ -1,0 +1,32 @@
+import { Metadata } from 'next'
+import BuyerGenClient from './BuyerGenClient'
+
+export const metadata: Metadata = {
+  title: 'Buyer Gen - Generador de Buyer Personas Gratis | M&P Labs',
+  description: 'Crea buyer personas basados en data intelligence en 4 pasos. Herramienta gratuita con estrategias de contenido y KPIs para empresas chilenas.',
+  alternates: {
+    canonical: 'https://agencia.mulleryperez.cl/labs/buyer-gen'
+  },
+  openGraph: {
+    title: 'Buyer Gen - Generador de Buyer Personas Gratis | M&P Labs',
+    description: 'Crea buyer personas basados en data intelligence en 4 pasos. Herramienta gratuita con estrategias de contenido y KPIs para empresas chilenas.',
+    images: [
+      {
+        url: 'https://agencia.mulleryperez.cl/og-buyer-gen.svg',
+        width: 1200,
+        height: 630,
+        alt: 'Buyer Gen'
+      }
+    ]
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Buyer Gen - Generador de Buyer Personas Gratis | M&P Labs',
+    description: 'Crea buyer personas basados on data intelligence en 4 pasos.',
+    images: ['https://agencia.mulleryperez.cl/og-buyer-gen.svg']
+  }
+}
+
+export default function BuyerGenPage() {
+  return <BuyerGenClient />
+}

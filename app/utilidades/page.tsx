@@ -28,7 +28,7 @@ export default function Utilidades() {
   const utilidadesSchema = createSoftwareAppSchema(
     'Utilidades M&P - Herramientas de Marketing Digital',
     'Hub de herramientas prácticas para marketing digital: calculadora de CAC (costo de adquisición de cliente), comparador de velocidad web, generador de funnels para CRM y simulador de estrategias de marketing.',
-    'https://agencia.mulleryperez.cl/utilidades'
+    'https://www.mulleryperez.cl/utilidades'
   )
 
   const herramientas = [
@@ -72,8 +72,11 @@ export default function Utilidades() {
         {/* Header */}
       <header className="border-b border-white/10 backdrop-blur-xl bg-white/5">
         <div className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
-          <Link href="/" className="text-white font-bold text-xl">
-            ← Volver a M&P
+          <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+            <img src="/logo-blanco.png" alt="M&P Logo" className="h-8" />
+          </Link>
+          <Link href="/" className="text-white font-bold text-xl hover:text-purple-300 transition-colors">
+            ← Volver
           </Link>
         </div>
       </header>
@@ -81,8 +84,8 @@ export default function Utilidades() {
       {/* Hero */}
       <section className="pt-20 pb-16 px-6">
         <div className="max-w-6xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 mb-6 px-5 py-2.5 rounded-full bg-purple-500/10 border border-purple-400/20 backdrop-blur-sm">
-            <Calculator className="w-4 h-4 text-purple-400" />
+          <div className="inline-flex items-center gap-2 mb-6 px-5 py-2.5 rounded-full bg-purple-500/20 border border-purple-400/30">
+            <Calculator className="w-4 h-4 text-purple-300" />
             <span className="text-purple-200 text-sm font-medium">Utilidades M&P</span>
           </div>
 
@@ -93,7 +96,7 @@ export default function Utilidades() {
             </span>
           </h1>
 
-          <p className="text-xl text-purple-100/90 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-xl text-purple-100 max-w-3xl mx-auto leading-relaxed">
             Calculadoras y herramientas de análisis para tomar mejores decisiones de marketing
           </p>
         </div>
@@ -120,12 +123,12 @@ export default function Utilidades() {
                   <h3 className="text-2xl font-bold text-white mb-3 group-hover:text-purple-300 transition-colors">
                     {herramienta.nombre}
                   </h3>
-                  <p className="text-purple-200/80 leading-relaxed">
+                  <p className="text-purple-200 leading-relaxed">
                     {herramienta.descripcion}
                   </p>
 
                   {/* Arrow */}
-                  <div className="mt-6 flex items-center gap-2 text-purple-400 font-semibold group-hover:gap-4 transition-all duration-300">
+                  <div className="mt-6 flex items-center gap-2 text-purple-300 font-semibold group-hover:gap-4 transition-all duration-300">
                     <span>Usar ahora</span>
                     <span>→</span>
                   </div>

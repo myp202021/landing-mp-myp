@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: ['/api/', '/admin/'],
     },
-    sitemap: 'https://agencia.mulleryperez.cl/sitemap.xml',
+    sitemap: 'https://www.mulleryperez.cl/sitemap.xml',
   }
 }

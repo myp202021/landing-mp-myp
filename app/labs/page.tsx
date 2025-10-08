@@ -31,7 +31,7 @@ export default function MPLabs() {
   const labsSchema = createSoftwareAppSchema(
     'M&P Labs - Herramientas de Marketing Digital',
     'Hub de herramientas experimentales e innovadoras para optimizar campañas de marketing digital: predictor de Google Ads, generador de buyer personas y radar de industrias en Chile.',
-    'https://agencia.mulleryperez.cl/labs'
+    'https://www.mulleryperez.cl/labs'
   )
 
   const herramientas = [
@@ -71,8 +71,11 @@ export default function MPLabs() {
         {/* Header */}
       <header className="border-b border-white/10 backdrop-blur-xl bg-white/5">
         <div className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
-          <Link href="/" className="text-white font-bold text-xl">
-            ← Volver a M&P
+          <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+            <img src="/logo-blanco.png" alt="M&P Logo" className="h-8" />
+          </Link>
+          <Link href="/" className="text-white font-bold text-xl hover:text-blue-300 transition-colors">
+            ← Volver
           </Link>
         </div>
       </header>
