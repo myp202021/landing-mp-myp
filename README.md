@@ -139,3 +139,4 @@ RESEND_API_KEY=tu_api_key_aqui  # Para formularios email
 **Stack**: Next.js 14, TypeScript, Tailwind CSS
 **Repositorio**: https://github.com/myp202021/landing-mp-myp
 **Deploy**: Vercel
+# Forzar redeploy
