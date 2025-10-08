@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { defaultMetadata, createOrganizationSchema } from "@/lib/metadata";
 import "./globals.css";
-import Script from "next/script";
 
 export const metadata: Metadata = defaultMetadata;
 
@@ -33,22 +32,23 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
         />
+
+        {/* Google Analytics */}
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-QV8Y7X4ZC2"></script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-QV8Y7X4ZC2', {
+                page_path: window.location.pathname,
+              });
+            `,
+          }}
+        />
       </head>
       <body>
-        <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-QV8Y7X4ZC2"
-          strategy="afterInteractive"
-        />
-        <Script id="google-analytics" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-QV8Y7X4ZC2', {
-              page_path: window.location.pathname,
-            });
-          `}
-        </Script>
         {children}
       </body>
     </html>
