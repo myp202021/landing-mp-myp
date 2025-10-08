@@ -1177,14 +1177,14 @@ export default function LandingClient() {
           </div>
 
           <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {/* Video 1 - Último */}
+            {/* Video 1 - CRM M&P */}
             <div className="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all">
               <div className="aspect-video">
                 <iframe
                   width="100%"
                   height="100%"
-                  src="https://www.youtube.com/embed/UCgzocZZQLNnthZ82oEyblrA?si=example1"
-                  title="Video Marketing Digital 1"
+                  src="https://www.youtube.com/embed/Zxwm-4SUGDw"
+                  title="CRM: M&P Agencia Digital"
                   frameBorder="0"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
@@ -1192,18 +1192,18 @@ export default function LandingClient() {
                 ></iframe>
               </div>
               <div className="p-4">
-                <p className="text-sm text-gray-600 font-semibold">Último video</p>
+                <p className="text-sm text-gray-600 font-semibold">CRM: M&P Agencia Digital</p>
               </div>
             </div>
 
-            {/* Video 2 */}
+            {/* Video 2 - Plan de acción */}
             <div className="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all">
               <div className="aspect-video">
                 <iframe
                   width="100%"
                   height="100%"
-                  src="https://www.youtube.com/embed/UCgzocZZQLNnthZ82oEyblrA?si=example2"
-                  title="Video Marketing Digital 2"
+                  src="https://www.youtube.com/embed/bdB7ysX5TwQ"
+                  title="Plan de acción: M&P Agencia Digital"
                   frameBorder="0"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
@@ -1211,18 +1211,18 @@ export default function LandingClient() {
                 ></iframe>
               </div>
               <div className="p-4">
-                <p className="text-sm text-gray-600 font-semibold">Video destacado</p>
+                <p className="text-sm text-gray-600 font-semibold">Plan de acción: M&P Agencia Digital</p>
               </div>
             </div>
 
-            {/* Video 3 */}
+            {/* Video 3 - Árbol de decisión */}
             <div className="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all">
               <div className="aspect-video">
                 <iframe
                   width="100%"
                   height="100%"
-                  src="https://www.youtube.com/embed/UCgzocZZQLNnthZ82oEyblrA?si=example3"
-                  title="Video Marketing Digital 3"
+                  src="https://www.youtube.com/embed/g29oRYkhios"
+                  title="Árbol de decisión: M&P Agencia Digital"
                   frameBorder="0"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
@@ -1230,7 +1230,7 @@ export default function LandingClient() {
                 ></iframe>
               </div>
               <div className="p-4">
-                <p className="text-sm text-gray-600 font-semibold">Video popular</p>
+                <p className="text-sm text-gray-600 font-semibold">Árbol de decisión: M&P Agencia Digital</p>
               </div>
             </div>
           </div>
