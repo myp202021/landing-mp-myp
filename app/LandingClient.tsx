@@ -1318,86 +1318,13 @@ export default function LandingClient() {
             </div>
           </div>
 
-          {/* Clientes - Carrusel */}
-          <div className="mb-20">
+          {/* Clientes - Temporalmente oculto para depuración */}
+          {/* <div className="mb-20">
             <h3 className="text-center text-sm font-bold text-gray-500 uppercase tracking-wider mb-8">
               Confían en nosotros
             </h3>
-            <div className="relative overflow-hidden">
-              <div className="flex gap-8 animate-scroll">
-                {/* Primera ronda de logos */}
-                <div className="flex gap-8 items-center shrink-0">
-                  <div className="bg-white px-8 py-6 rounded-xl border border-gray-200 hover:shadow-lg transition-all duration-300 h-20 flex items-center justify-center min-w-[160px]">
-                    <span className="text-gray-400 font-bold text-lg">Dezar</span>
-                  </div>
-                  <div className="bg-white px-8 py-6 rounded-xl border border-gray-200 hover:shadow-lg transition-all duration-300 h-20 flex items-center justify-center min-w-[160px]">
-                    <span className="text-gray-400 font-bold text-lg">Genera</span>
-                  </div>
-                  <div className="bg-white px-8 py-6 rounded-xl border border-gray-200 hover:shadow-lg transition-all duration-300 h-20 flex items-center justify-center min-w-[160px]">
-                    <span className="text-gray-400 font-bold text-lg">Invas</span>
-                  </div>
-                  <div className="bg-white px-8 py-6 rounded-xl border border-gray-200 hover:shadow-lg transition-all duration-300 h-20 flex items-center justify-center min-w-[160px]">
-                    <span className="text-gray-400 font-bold text-lg">Idesami</span>
-                  </div>
-                  <div className="bg-white px-8 py-6 rounded-xl border border-gray-200 hover:shadow-lg transition-all duration-300 h-20 flex items-center justify-center min-w-[160px]">
-                    <span className="text-gray-400 font-bold text-lg">qiiip</span>
-                  </div>
-                  <div className="bg-white px-8 py-6 rounded-xl border border-gray-200 hover:shadow-lg transition-all duration-300 h-20 flex items-center justify-center min-w-[160px]">
-                    <span className="text-gray-400 font-bold text-lg">First Pack</span>
-                  </div>
-                  <div className="bg-white px-8 py-6 rounded-xl border border-gray-200 hover:shadow-lg transition-all duration-300 h-20 flex items-center justify-center min-w-[160px]">
-                    <span className="text-gray-400 font-bold text-lg">Woo</span>
-                  </div>
-                  <div className="bg-white px-8 py-6 rounded-xl border border-gray-200 hover:shadow-lg transition-all duration-300 h-20 flex items-center justify-center min-w-[160px]">
-                    <span className="text-gray-400 font-bold text-lg">O'Higgins</span>
-                  </div>
-                </div>
-                {/* Segunda ronda (duplicada para loop infinito) */}
-                <div className="flex gap-8 items-center shrink-0">
-                  <div className="bg-white px-8 py-6 rounded-xl border border-gray-200 hover:shadow-lg transition-all duration-300 h-20 flex items-center justify-center min-w-[160px]">
-                    <span className="text-gray-400 font-bold text-lg">Dezar</span>
-                  </div>
-                  <div className="bg-white px-8 py-6 rounded-xl border border-gray-200 hover:shadow-lg transition-all duration-300 h-20 flex items-center justify-center min-w-[160px]">
-                    <span className="text-gray-400 font-bold text-lg">Genera</span>
-                  </div>
-                  <div className="bg-white px-8 py-6 rounded-xl border border-gray-200 hover:shadow-lg transition-all duration-300 h-20 flex items-center justify-center min-w-[160px]">
-                    <span className="text-gray-400 font-bold text-lg">Invas</span>
-                  </div>
-                  <div className="bg-white px-8 py-6 rounded-xl border border-gray-200 hover:shadow-lg transition-all duration-300 h-20 flex items-center justify-center min-w-[160px]">
-                    <span className="text-gray-400 font-bold text-lg">Idesami</span>
-                  </div>
-                  <div className="bg-white px-8 py-6 rounded-xl border border-gray-200 hover:shadow-lg transition-all duration-300 h-20 flex items-center justify-center min-w-[160px]">
-                    <span className="text-gray-400 font-bold text-lg">qiiip</span>
-                  </div>
-                  <div className="bg-white px-8 py-6 rounded-xl border border-gray-200 hover:shadow-lg transition-all duration-300 h-20 flex items-center justify-center min-w-[160px]">
-                    <span className="text-gray-400 font-bold text-lg">First Pack</span>
-                  </div>
-                  <div className="bg-white px-8 py-6 rounded-xl border border-gray-200 hover:shadow-lg transition-all duration-300 h-20 flex items-center justify-center min-w-[160px]">
-                    <span className="text-gray-400 font-bold text-lg">Woo</span>
-                  </div>
-                  <div className="bg-white px-8 py-6 rounded-xl border border-gray-200 hover:shadow-lg transition-all duration-300 h-20 flex items-center justify-center min-w-[160px]">
-                    <span className="text-gray-400 font-bold text-lg">O'Higgins</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <style jsx>{`
-              @keyframes scroll {
-                0% {
-                  transform: translateX(0);
-                }
-                100% {
-                  transform: translateX(-50%);
-                }
-              }
-              .animate-scroll {
-                animation: scroll 30s linear infinite;
-              }
-              .animate-scroll:hover {
-                animation-play-state: paused;
-              }
-            `}</style>
-          </div>
+            TODO: Agregar carrusel con 42 clientes del PDF
+          </div> */}
 
           {/* Industrias - 10 con colores vivos */}
           <div className="text-center">
