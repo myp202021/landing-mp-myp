@@ -565,13 +565,6 @@ export default function LandingClient() {
               )}
             </div>
 
-            <a
-              href="#contacto"
-              className="hidden md:block text-sm font-semibold text-gray-700 hover:text-blue-600 transition-all duration-200"
-              aria-label="Ir a sección de contacto"
-            >
-              Contacto
-            </a>
             <button
               onClick={() => document.getElementById('contacto')?.scrollIntoView({ behavior: 'smooth' })}
               className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold shadow-lg shadow-blue-600/20 hover:shadow-xl hover:shadow-blue-600/30 transition-all duration-300 rounded-lg"
@@ -1308,34 +1301,34 @@ export default function LandingClient() {
               </a>
             </div>
 
-            {/* Columna 2: Servicios */}
+            {/* Columna 2: Planes */}
             <div>
-              <h3 className="text-white font-bold mb-4">Servicios</h3>
+              <h3 className="text-white font-bold mb-4">Planes</h3>
               <ul className="space-y-3 text-sm">
                 <li>
-                  <a href="#servicios" className="text-blue-200 hover:text-white transition-colors">
-                    Google Ads
-                  </a>
+                  <Link href="/planes#campanas" className="text-blue-200 hover:text-white transition-colors">
+                    Plan Campañas
+                  </Link>
                 </li>
                 <li>
-                  <a href="#servicios" className="text-blue-200 hover:text-white transition-colors">
-                    Meta Ads
-                  </a>
+                  <Link href="/planes#contenidos" className="text-blue-200 hover:text-white transition-colors">
+                    Plan Contenidos
+                  </Link>
                 </li>
                 <li>
-                  <a href="#servicios" className="text-blue-200 hover:text-white transition-colors">
-                    LinkedIn Ads
-                  </a>
+                  <Link href="/planes#silver" className="text-blue-200 hover:text-white transition-colors">
+                    Plan Silver ⭐
+                  </Link>
                 </li>
                 <li>
-                  <a href="#servicios" className="text-blue-200 hover:text-white transition-colors">
-                    TikTok Ads
-                  </a>
+                  <Link href="/planes#gold" className="text-blue-200 hover:text-white transition-colors">
+                    Plan Gold
+                  </Link>
                 </li>
                 <li>
-                  <a href="#equipocompleto" className="text-blue-200 hover:text-white transition-colors">
-                    Equipo Completo
-                  </a>
+                  <Link href="/planes#platinum" className="text-blue-200 hover:text-white transition-colors">
+                    Plan Platinum
+                  </Link>
                 </li>
               </ul>
             </div>
