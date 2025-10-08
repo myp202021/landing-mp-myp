@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { defaultMetadata, createOrganizationSchema } from "@/lib/metadata";
-import GoogleAnalytics from "./components/GoogleAnalytics";
 import "./globals.css";
+import Script from "next/script";
 
 export const metadata: Metadata = defaultMetadata;
 
@@ -35,7 +35,20 @@ export default function RootLayout({
         />
       </head>
       <body>
-        <GoogleAnalytics />
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-QV8Y7X4ZC2"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-QV8Y7X4ZC2', {
+              page_path: window.location.pathname,
+            });
+          `}
+        </Script>
         {children}
       </body>
     </html>
