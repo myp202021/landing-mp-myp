@@ -27,6 +27,33 @@ export const metadata: Metadata = {
 
 const articles = [
   {
+    slug: 'estrategia-meta-ads-ecommerce-chile',
+    title: 'Estrategia Meta Ads para E-commerce en Chile (ROI 8.5x Comprobado)',
+    excerpt: 'Estrategia completa de Meta Ads para e-commerce: prospecting, retargeting, Advantage+ Shopping y 3 casos reales Chile con ROAS 6.2x-8.5x.',
+    date: '2025-10-08',
+    category: 'Meta Ads',
+    readTime: '16 min',
+    tag: 'Estrategia'
+  },
+  {
+    slug: 'campanas-performance-max-google-ads-2025',
+    title: 'Campañas Performance Max: Guía Completa Chile 2025',
+    excerpt: 'Todo sobre Performance Max (PMax): cómo funcionan, cuándo usarlas, configuración paso a paso y 3 casos de éxito Chile con ROAS 6.2x-8.5x.',
+    date: '2025-10-08',
+    category: 'Google Ads',
+    readTime: '18 min',
+    tag: 'Guía Completa'
+  },
+  {
+    slug: 'como-aumentar-conversiones-google-ads',
+    title: 'Cómo Aumentar Conversiones en Google Ads en 30 Días (Guía 2025)',
+    excerpt: 'Estrategias probadas para aumentar conversiones: optimización de Quality Score, ajuste de pujas, extensiones y mejora de landing pages. 2 casos reales Chile.',
+    date: '2025-10-08',
+    category: 'Google Ads',
+    readTime: '15 min',
+    tag: 'Optimización'
+  },
+  {
     slug: 'mejor-agencia-google-ads-santiago-2025',
     title: 'Mejor Agencia Google Ads Santiago 2025: Cómo Elegir (Guía Completa)',
     excerpt: 'Descubre cómo elegir la mejor agencia Google Ads en Santiago 2025. Checklist de verificación, señales de alerta y benchmarks reales.',
