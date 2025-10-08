@@ -18,7 +18,7 @@ export const defaultMetadata: Metadata = {
   },
   description: siteConfig.description,
   verification: {
-    google: 'bac78b6435e3f6eb'
+    google: 'N1_98JB2O8f-9p49ys1CL0bu-_kijxbjs3aSRIZ7Syw'
   },
   keywords: [
     'agencia marketing digital chile',
@@ -89,9 +89,6 @@ export const defaultMetadata: Metadata = {
       'max-image-preview': 'large',
       'max-snippet': -1,
     },
-  },
-  verification: {
-    google: 'your-google-verification-code', // Reemplazar con código real
   }
 }
 
