@@ -27,6 +27,15 @@ export const metadata: Metadata = {
 
 const articles = [
   {
+    slug: 'que-es-cac-como-calcularlo-reducirlo',
+    title: 'Qué es CAC: Cómo Calcularlo y Reducirlo en 2025 (Fórmulas + Ejemplos)',
+    excerpt: 'Qué es CAC: Cómo Calcularlo y Reducirlo en 2025 (Fórmulas + Ejemplos). Guía completa con ejemplos reales y datos de Chile 2025.',
+    date: '2025-10-08',
+    category: 'Performance Marketing',
+    readTime: '12 min',
+    tag: 'Guía'
+  },
+  {
     slug: 'estrategia-meta-ads-ecommerce-chile',
     title: 'Estrategia Meta Ads para E-commerce en Chile (ROI 8.5x Comprobado)',
     excerpt: 'Estrategia completa de Meta Ads para e-commerce: prospecting, retargeting, Advantage+ Shopping y 3 casos reales Chile con ROAS 6.2x-8.5x.',

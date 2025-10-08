@@ -1306,23 +1306,13 @@ export default function LandingClient() {
               <h3 className="text-white font-bold mb-4">Planes</h3>
               <ul className="space-y-3 text-sm">
                 <li>
-                  <Link href="/planes#campanas" className="text-blue-200 hover:text-white transition-colors">
-                    Plan Campañas
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/planes#contenidos" className="text-blue-200 hover:text-white transition-colors">
-                    Plan Contenidos
-                  </Link>
-                </li>
-                <li>
                   <Link href="/planes#silver" className="text-blue-200 hover:text-white transition-colors">
-                    Plan Silver ⭐
+                    Plan Silver
                   </Link>
                 </li>
                 <li>
                   <Link href="/planes#gold" className="text-blue-200 hover:text-white transition-colors">
-                    Plan Gold
+                    Plan Gold ⭐
                   </Link>
                 </li>
                 <li>
@@ -1404,6 +1394,13 @@ export default function LandingClient() {
                     </svg>
                     +56 9 9225 8137
                   </a>
+                </li>
+                <li>
+                  <div className="text-blue-200">
+                    <strong className="text-white block mb-1">Horario de atención</strong>
+                    Lun a Jue de 09:00 a 18:00<br />
+                    Vie de 09:00 a 15:00
+                  </div>
                 </li>
               </ul>
             </div>
