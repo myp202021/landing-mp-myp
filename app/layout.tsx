@@ -14,6 +14,11 @@ export default function RootLayout({
   return (
     <html lang="es">
       <head>
+        {/* Favicon */}
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" href="/logo-color.png" type="image/png" />
+        <link rel="apple-touch-icon" href="/logo-color.png" />
+
         {/* Preconnect para performance */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />

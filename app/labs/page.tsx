@@ -7,7 +7,7 @@
 
 import React, { useEffect } from 'react'
 import Link from 'next/link'
-import Head from 'next/head'
+import Image from 'next/image'
 import { Sparkles, TrendingUp, Gamepad2, Radar } from 'lucide-react'
 import { createSoftwareAppSchema } from '@/lib/metadata'
 
@@ -72,9 +72,9 @@ export default function MPLabs() {
       <header className="border-b border-white/10 backdrop-blur-xl bg-white/5">
         <div className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
-            <img src="/logo-blanco.png" alt="M&P Logo" className="h-8" />
+            <Image src="/logo-blanco.png" alt="M&P Logo" width={120} height={32} className="h-8 w-auto" />
           </Link>
-          <Link href="/" className="text-white font-bold text-xl hover:text-blue-300 transition-colors">
+          <Link href="/" className="text-white font-semibold text-sm hover:text-blue-300 transition-colors">
             ← Volver
           </Link>
         </div>

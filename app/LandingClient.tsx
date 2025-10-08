@@ -515,6 +515,14 @@ export default function LandingClient() {
               )}
             </div>
 
+            <Link
+              href="/blog"
+              className="hidden md:block text-sm font-semibold text-gray-700 hover:text-blue-600 transition-all duration-200"
+              aria-label="Ir al blog"
+            >
+              Blog
+            </Link>
+
             <a
               href="#contacto"
               className="hidden md:block text-sm font-semibold text-gray-700 hover:text-blue-600 transition-all duration-200"
