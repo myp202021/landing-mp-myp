@@ -1,8 +1,49 @@
 import { MetadataRoute } from 'next'
+import fs from 'fs'
+import path from 'path'
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://www.mulleryperez.cl'
   const currentDate = new Date().toISOString()
+
+  // Leer automáticamente todas las carpetas de blog
+  const blogDir = path.join(process.cwd(), 'app', 'blog')
+  let blogPosts: string[] = []
+
+  try {
+    const entries = fs.readdirSync(blogDir, { withFileTypes: true })
+    blogPosts = entries
+      .filter(entry => entry.isDirectory() && !entry.name.startsWith('_'))
+      .map(entry => entry.name)
+  } catch (error) {
+    console.warn('No se pudo leer el directorio de blog:', error)
+  }
+
+  // Leer automáticamente todas las herramientas de labs
+  const labsDir = path.join(process.cwd(), 'app', 'labs')
+  let labsTools: string[] = []
+
+  try {
+    const entries = fs.readdirSync(labsDir, { withFileTypes: true })
+    labsTools = entries
+      .filter(entry => entry.isDirectory() && !entry.name.startsWith('_'))
+      .map(entry => entry.name)
+  } catch (error) {
+    console.warn('No se pudo leer el directorio de labs:', error)
+  }
+
+  // Leer automáticamente todas las utilidades
+  const utilidadesDir = path.join(process.cwd(), 'app', 'utilidades')
+  let utilidades: string[] = []
+
+  try {
+    const entries = fs.readdirSync(utilidadesDir, { withFileTypes: true })
+    utilidades = entries
+      .filter(entry => entry.isDirectory() && !entry.name.startsWith('_'))
+      .map(entry => entry.name)
+  } catch (error) {
+    console.warn('No se pudo leer el directorio de utilidades:', error)
+  }
 
   return [
     // Homepage
@@ -19,25 +60,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'weekly',
       priority: 0.9,
     },
-    // M&P Labs Tools
-    {
-      url: `${baseUrl}/labs/predictor`,
+    // M&P Labs Tools (automático)
+    ...labsTools.map(tool => ({
+      url: `${baseUrl}/labs/${tool}`,
       lastModified: currentDate,
-      changeFrequency: 'monthly',
+      changeFrequency: 'monthly' as const,
       priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/labs/buyer-gen`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly',
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/labs/radar-industrias`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly',
-      priority: 0.9,
-    },
+    })),
     // Utilidades Hub
     {
       url: `${baseUrl}/utilidades`,
@@ -45,31 +74,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'weekly',
       priority: 0.9,
     },
-    // Utilidades Tools
-    {
-      url: `${baseUrl}/utilidades/calculadora-cac`,
+    // Utilidades Tools (automático)
+    ...utilidades.map(utilidad => ({
+      url: `${baseUrl}/utilidades/${utilidad}`,
       lastModified: currentDate,
-      changeFrequency: 'monthly',
+      changeFrequency: 'monthly' as const,
       priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/utilidades/comparador-web`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly',
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/utilidades/generador-funnels`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly',
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/utilidades/juega-aprende`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly',
-      priority: 0.9,
-    },
+    })),
     // Blog Hub
     {
       url: `${baseUrl}/blog`,
@@ -77,48 +88,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'weekly',
       priority: 0.8,
     },
-    // Blog Articles
-    {
-      url: `${baseUrl}/blog/costo-google-ads-chile-2025`,
-      lastModified: '2025-01-15',
-      changeFrequency: 'monthly',
+    // Blog Articles (automático)
+    ...blogPosts.map(post => ({
+      url: `${baseUrl}/blog/${post}`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly' as const,
       priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/blog/optimizar-roas-meta-ads-2025`,
-      lastModified: '2025-01-10',
-      changeFrequency: 'monthly',
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/blog/kpis-marketing-digital-chile`,
-      lastModified: '2025-01-05',
-      changeFrequency: 'monthly',
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/blog/agencia-marketing-digital-santiago-2025`,
-      lastModified: '2025-01-15',
-      changeFrequency: 'monthly',
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/blog/agencia-performance-marketing-las-condes`,
-      lastModified: '2025-01-15',
-      changeFrequency: 'monthly',
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/blog/cuanto-cuesta-agencia-marketing-digital-chile-2025`,
-      lastModified: '2025-01-15',
-      changeFrequency: 'monthly',
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/blog/mejor-agencia-google-ads-santiago-2025`,
-      lastModified: '2025-01-15',
-      changeFrequency: 'monthly',
-      priority: 0.8,
-    },
+    })),
   ]
 }
