@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { defaultMetadata, createOrganizationSchema } from "@/lib/metadata";
+import GoogleAnalytics from "./components/GoogleAnalytics";
 import "./globals.css";
 
 export const metadata: Metadata = defaultMetadata;
@@ -33,7 +34,10 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
         />
       </head>
-      <body>{children}</body>
+      <body>
+        <GoogleAnalytics />
+        {children}
+      </body>
     </html>
   );
 }
