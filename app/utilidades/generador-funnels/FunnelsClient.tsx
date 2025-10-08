@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Workflow, ArrowRight, Download, Copy, RefreshCw, CheckCircle2 } from 'lucide-react'
-import { createSoftwareAppSchema, addCanonicalLink, createBreadcrumbSchema } from '@/lib/metadata'
+import { createSoftwareAppSchema, createBreadcrumbSchema } from '@/lib/metadata'
 
 interface FunnelStage {
   etapa: string
@@ -260,7 +260,12 @@ export default function GeneradorFunnels() {
     link.style.visibility = 'hidden'
     document.body.appendChild(link)
     link.click()
-    document.body.removeChild(link)
+    setTimeout(() => {
+      if (link && link.parentNode) {
+        document.body.removeChild(link)
+      }
+      URL.revokeObjectURL(url)
+    }, 100)
   }
 
   const copyToClipboard = () => {

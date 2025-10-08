@@ -1,10 +1,10 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { BarChart3, TrendingUp } from 'lucide-react'
-import { createSoftwareAppSchema, addCanonicalLink, createBreadcrumbSchema } from '@/lib/metadata'
+import { createSoftwareAppSchema, createBreadcrumbSchema } from '@/lib/metadata'
 
 interface IndustryData {
   nombre: string
@@ -161,44 +161,6 @@ const industriasData: { [key: string]: IndustryData } = {
 }
 
 export default function RadarIndustrias() {
-  useEffect(() => {
-    document.title = 'Radar de Industrias Chile 2024 - Madurez Digital | M&P Labs'
-
-    const metaDescription = document.querySelector('meta[name="description"]')
-    if (metaDescription) {
-      metaDescription.setAttribute('content', 'Análisis de madurez digital por industria en Chile 2024. Compara Google Ads, ROAS, plataformas digitales, IA y velocidad web por sector.')
-    } else {
-      const meta = document.createElement('meta')
-      meta.name = 'description'
-      meta.content = 'Análisis de madurez digital por industria en Chile 2024. Compara Google Ads, ROAS, plataformas digitales, IA y velocidad web por sector.'
-      document.head.appendChild(meta)
-    }
-
-    // OG Image específica
-    const ogImageMeta = document.querySelector('meta[property="og:image"]')
-    const twitterImageMeta = document.querySelector('meta[name="twitter:image"]')
-    const imageUrl = 'https://www.mulleryperez.cl/og-radar.svg'
-
-    if (ogImageMeta) {
-      ogImageMeta.setAttribute('content', imageUrl)
-    } else {
-      const meta = document.createElement('meta')
-      meta.setAttribute('property', 'og:image')
-      meta.setAttribute('content', imageUrl)
-      document.head.appendChild(meta)
-    }
-
-    if (twitterImageMeta) {
-      twitterImageMeta.setAttribute('content', imageUrl)
-    } else {
-      const meta = document.createElement('meta')
-      meta.name = 'twitter:image'
-      meta.content = imageUrl
-      document.head.appendChild(meta)
-    }
-
-    addCanonicalLink('/labs/radar-industrias')
-  }, [])
 
   const radarSchema = createSoftwareAppSchema(
     'Radar de Industrias - Análisis de Madurez Digital Chile',

@@ -4,47 +4,9 @@ import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Gauge, Zap, TrendingUp } from 'lucide-react'
-import { createSoftwareAppSchema, addCanonicalLink, createBreadcrumbSchema } from '@/lib/metadata'
+import { createSoftwareAppSchema, createBreadcrumbSchema } from '@/lib/metadata'
 
 export default function ComparadorWeb() {
-  useEffect(() => {
-    document.title = 'Comparador Velocidad Web - PageSpeed Insights Gratis | M&P'
-
-    const metaDescription = document.querySelector('meta[name="description"]')
-    if (metaDescription) {
-      metaDescription.setAttribute('content', 'Compara la velocidad de tu sitio web vs competencia con Google PageSpeed Insights. Analiza Core Web Vitals: FCP, LCP, CLS y TBT. Herramienta gratuita.')
-    } else {
-      const meta = document.createElement('meta')
-      meta.name = 'description'
-      meta.content = 'Compara la velocidad de tu sitio web vs competencia con Google PageSpeed Insights. Analiza Core Web Vitals: FCP, LCP, CLS y TBT. Herramienta gratuita.'
-      document.head.appendChild(meta)
-    }
-
-    // OG Image específica
-    const ogImageMeta = document.querySelector('meta[property="og:image"]')
-    const twitterImageMeta = document.querySelector('meta[name="twitter:image"]')
-    const imageUrl = 'https://www.mulleryperez.cl/og-comparador.svg'
-
-    if (ogImageMeta) {
-      ogImageMeta.setAttribute('content', imageUrl)
-    } else {
-      const meta = document.createElement('meta')
-      meta.setAttribute('property', 'og:image')
-      meta.setAttribute('content', imageUrl)
-      document.head.appendChild(meta)
-    }
-
-    if (twitterImageMeta) {
-      twitterImageMeta.setAttribute('content', imageUrl)
-    } else {
-      const meta = document.createElement('meta')
-      meta.name = 'twitter:image'
-      meta.content = imageUrl
-      document.head.appendChild(meta)
-    }
-
-    addCanonicalLink('/utilidades/comparador-web')
-  }, [])
 
   const comparadorSchema = createSoftwareAppSchema(
     'Comparador de Velocidad Web - PageSpeed Insights',

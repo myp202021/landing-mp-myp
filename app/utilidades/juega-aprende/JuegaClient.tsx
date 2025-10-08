@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Gamepad2, RefreshCw, Info, X, Check, TrendingUp, MessageCircle } from 'lucide-react'
-import { createSoftwareAppSchema, addCanonicalLink, createBreadcrumbSchema } from '@/lib/metadata'
+import { createSoftwareAppSchema, createBreadcrumbSchema } from '@/lib/metadata'
 
 interface MarketingOption {
   id: string
@@ -265,44 +265,6 @@ const marketingOptions: MarketingOption[] = [
 ]
 
 export default function JuegaAprende() {
-  useEffect(() => {
-    document.title = 'Simulador Marketing Digital - Crea tu Estrategia | M&P'
-
-    const metaDescription = document.querySelector('meta[name="description"]')
-    if (metaDescription) {
-      metaDescription.setAttribute('content', 'Simulador interactivo de estrategias de marketing digital. Aprende jugando con $1.000.000: Google Ads, Meta Ads, SEO, email marketing y más. Gratis.')
-    } else {
-      const meta = document.createElement('meta')
-      meta.name = 'description'
-      meta.content = 'Simulador interactivo de estrategias de marketing digital. Aprende jugando con $1.000.000: Google Ads, Meta Ads, SEO, email marketing y más. Gratis.'
-      document.head.appendChild(meta)
-    }
-
-    // OG Image específica
-    const ogImageMeta = document.querySelector('meta[property="og:image"]')
-    const twitterImageMeta = document.querySelector('meta[name="twitter:image"]')
-    const imageUrl = 'https://www.mulleryperez.cl/og-juega.svg'
-
-    if (ogImageMeta) {
-      ogImageMeta.setAttribute('content', imageUrl)
-    } else {
-      const meta = document.createElement('meta')
-      meta.setAttribute('property', 'og:image')
-      meta.setAttribute('content', imageUrl)
-      document.head.appendChild(meta)
-    }
-
-    if (twitterImageMeta) {
-      twitterImageMeta.setAttribute('content', imageUrl)
-    } else {
-      const meta = document.createElement('meta')
-      meta.name = 'twitter:image'
-      meta.content = imageUrl
-      document.head.appendChild(meta)
-    }
-
-    addCanonicalLink('/utilidades/juega-aprende')
-  }, [])
 
   const simuladorSchema = createSoftwareAppSchema(
     'El Planificador - Simulador de Marketing Digital',

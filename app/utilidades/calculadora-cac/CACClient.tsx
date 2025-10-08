@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Calculator, TrendingUp, TrendingDown, AlertCircle, CheckCircle2 } from 'lucide-react'
-import { createSoftwareAppSchema, addCanonicalLink, createBreadcrumbSchema } from '@/lib/metadata'
+import { createSoftwareAppSchema, createBreadcrumbSchema } from '@/lib/metadata'
 
 interface Plataforma {
   id: string
@@ -22,44 +22,6 @@ const plataformasDisponibles: Omit<Plataforma, 'checked' | 'distribucion'>[] = [
 ]
 
 export default function CalculadoraCAC() {
-  useEffect(() => {
-    document.title = 'Calculadora CAC - Costo Adquisición Cliente Gratis | M&P'
-
-    const metaDescription = document.querySelector('meta[name="description"]')
-    if (metaDescription) {
-      metaDescription.setAttribute('content', 'Calcula el CAC (Costo de Adquisición de Cliente) de tus campañas digitales. Compara plataformas, evalúa ROI y optimiza tu inversión publicitaria. Gratis.')
-    } else {
-      const meta = document.createElement('meta')
-      meta.name = 'description'
-      meta.content = 'Calcula el CAC (Costo de Adquisición de Cliente) de tus campañas digitales. Compara plataformas, evalúa ROI y optimiza tu inversión publicitaria. Gratis.'
-      document.head.appendChild(meta)
-    }
-
-    // OG Image específica
-    const ogImageMeta = document.querySelector('meta[property="og:image"]')
-    const twitterImageMeta = document.querySelector('meta[name="twitter:image"]')
-    const imageUrl = 'https://www.mulleryperez.cl/og-cac.svg'
-
-    if (ogImageMeta) {
-      ogImageMeta.setAttribute('content', imageUrl)
-    } else {
-      const meta = document.createElement('meta')
-      meta.setAttribute('property', 'og:image')
-      meta.setAttribute('content', imageUrl)
-      document.head.appendChild(meta)
-    }
-
-    if (twitterImageMeta) {
-      twitterImageMeta.setAttribute('content', imageUrl)
-    } else {
-      const meta = document.createElement('meta')
-      meta.name = 'twitter:image'
-      meta.content = imageUrl
-      document.head.appendChild(meta)
-    }
-
-    addCanonicalLink('/utilidades/calculadora-cac')
-  }, [])
 
   const cacSchema = createSoftwareAppSchema(
     'Calculadora CAC - Costo de Adquisición de Cliente',
