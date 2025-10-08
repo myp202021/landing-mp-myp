@@ -17,6 +17,9 @@ export const defaultMetadata: Metadata = {
     template: `%s | ${siteConfig.name}`
   },
   description: siteConfig.description,
+  verification: {
+    google: 'bac78b6435e3f6eb'
+  },
   keywords: [
     'agencia marketing digital chile',
     'google ads chile',
