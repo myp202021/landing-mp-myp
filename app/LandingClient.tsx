@@ -1270,6 +1270,128 @@ export default function LandingClient() {
         </div>
       </section>
 
+      {/* Social Proof & Resultados */}
+      <section className="py-24 bg-gradient-to-br from-blue-50 via-white to-purple-50">
+        <div className="max-w-7xl mx-auto px-6">
+          {/* Header */}
+          <div className="text-center mb-20">
+            <h2 className="text-4xl lg:text-5xl font-black text-gray-900 mb-4">
+              Resultados <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Comprobables</span>
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Data real de +200 campañas optimizadas en Chile desde 2019
+            </p>
+          </div>
+
+          {/* Métricas Clave */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-20">
+            <div className="bg-white rounded-2xl p-8 text-center border-2 border-blue-100 hover:border-blue-300 hover:shadow-xl transition-all duration-300">
+              <div className="text-5xl lg:text-6xl font-black bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent mb-3">
+                5.2x
+              </div>
+              <div className="text-gray-700 font-semibold text-lg">ROAS Promedio</div>
+              <div className="text-sm text-gray-500 mt-2">Últimos 12 meses</div>
+            </div>
+
+            <div className="bg-white rounded-2xl p-8 text-center border-2 border-purple-100 hover:border-purple-300 hover:shadow-xl transition-all duration-300">
+              <div className="text-5xl lg:text-6xl font-black bg-gradient-to-r from-purple-600 to-purple-800 bg-clip-text text-transparent mb-3">
+                +200
+              </div>
+              <div className="text-gray-700 font-semibold text-lg">Campañas</div>
+              <div className="text-sm text-gray-500 mt-2">Google Ads + Meta</div>
+            </div>
+
+            <div className="bg-white rounded-2xl p-8 text-center border-2 border-green-100 hover:border-green-300 hover:shadow-xl transition-all duration-300">
+              <div className="text-5xl lg:text-6xl font-black bg-gradient-to-r from-green-600 to-green-800 bg-clip-text text-transparent mb-3">
+                $2M+
+              </div>
+              <div className="text-gray-700 font-semibold text-lg">Presupuesto</div>
+              <div className="text-sm text-gray-500 mt-2">Gestionado 2024</div>
+            </div>
+
+            <div className="bg-white rounded-2xl p-8 text-center border-2 border-orange-100 hover:border-orange-300 hover:shadow-xl transition-all duration-300">
+              <div className="text-5xl lg:text-6xl font-black bg-gradient-to-r from-orange-600 to-orange-800 bg-clip-text text-transparent mb-3">
+                6+
+              </div>
+              <div className="text-gray-700 font-semibold text-lg">Años</div>
+              <div className="text-sm text-gray-500 mt-2">Desde 2019</div>
+            </div>
+          </div>
+
+          {/* Clientes */}
+          <div className="mb-20">
+            <h3 className="text-center text-sm font-bold text-gray-500 uppercase tracking-wider mb-8">
+              Confían en nosotros
+            </h3>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 items-center justify-items-center">
+              <div className="bg-white p-6 rounded-xl border border-gray-200 hover:shadow-lg transition-all duration-300 w-full h-24 flex items-center justify-center">
+                <Image
+                  src="/genera-logo.svg"
+                  alt="Genera HR"
+                  width={140}
+                  height={60}
+                  className="opacity-70 hover:opacity-100 transition-opacity grayscale hover:grayscale-0"
+                />
+              </div>
+              <div className="bg-white p-6 rounded-xl border border-gray-200 hover:shadow-lg transition-all duration-300 w-full h-24 flex items-center justify-center">
+                <Image
+                  src="/invas-logo.png"
+                  alt="Invas WMS"
+                  width={120}
+                  height={60}
+                  className="opacity-70 hover:opacity-100 transition-opacity grayscale hover:grayscale-0"
+                />
+              </div>
+              <div className="bg-white p-6 rounded-xl border border-gray-200 hover:shadow-lg transition-all duration-300 w-full h-24 flex items-center justify-center">
+                <Image
+                  src="/dezar-logo.svg"
+                  alt="Dezar Rent a Car"
+                  width={140}
+                  height={60}
+                  className="opacity-70 hover:opacity-100 transition-opacity grayscale hover:grayscale-0"
+                />
+              </div>
+              <div className="bg-white p-6 rounded-xl border border-gray-200 hover:shadow-lg transition-all duration-300 w-full h-24 flex items-center justify-center">
+                <Image
+                  src="/idesami-logo.png"
+                  alt="Idesami Salud Mental"
+                  width={130}
+                  height={60}
+                  className="opacity-70 hover:opacity-100 transition-opacity grayscale hover:grayscale-0"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Industrias */}
+          <div className="text-center">
+            <p className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-6">
+              Industrias que trabajamos
+            </p>
+            <div className="flex flex-wrap justify-center gap-3">
+              <span className="px-5 py-2.5 bg-blue-100 text-blue-700 rounded-full font-semibold text-sm hover:bg-blue-200 transition-colors">
+                SaaS & Tecnología
+              </span>
+              <span className="px-5 py-2.5 bg-purple-100 text-purple-700 rounded-full font-semibold text-sm hover:bg-purple-200 transition-colors">
+                Logística & WMS
+              </span>
+              <span className="px-5 py-2.5 bg-green-100 text-green-700 rounded-full font-semibold text-sm hover:bg-green-200 transition-colors">
+                Transporte & Movilidad
+              </span>
+              <span className="px-5 py-2.5 bg-orange-100 text-orange-700 rounded-full font-semibold text-sm hover:bg-orange-200 transition-colors">
+                Salud & Medicina
+              </span>
+              <span className="px-5 py-2.5 bg-cyan-100 text-cyan-700 rounded-full font-semibold text-sm hover:bg-cyan-200 transition-colors">
+                E-commerce
+              </span>
+              <span className="px-5 py-2.5 bg-pink-100 text-pink-700 rounded-full font-semibold text-sm hover:bg-pink-200 transition-colors">
+                Servicios B2B
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Footer Mejorado */}
       <footer className="bg-slate-900 text-white py-16 px-6" role="contentinfo">
         <div className="max-w-7xl mx-auto">
