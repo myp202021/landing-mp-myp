@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { UserCircle, ArrowRight, Download, MessageCircle, RefreshCw, ChevronDown } from 'lucide-react'
 import { personasDatabase, BasePersona } from './personasData'
 import { createSoftwareAppSchema, createBreadcrumbSchema } from '@/lib/metadata'
@@ -248,14 +249,13 @@ export default function BuyerGenClient() {
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
         {/* Header */}
       <header className="bg-white/80 backdrop-blur-xl border-b border-gray-200 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          <Link href="/labs" className="text-sm font-semibold text-gray-700 hover:text-blue-600 transition-all">
-            ← Volver a M&P Labs
+        <div className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+            <Image src="/logo-color.png" alt="M&P Logo" width={120} height={32} className="h-8 w-auto" />
           </Link>
-          <div className="text-right">
-            <h1 className="text-lg font-bold text-gray-900">Buyer Gen</h1>
-            <p className="text-xs text-gray-600">Generador de Buyer Personas</p>
-          </div>
+          <Link href="/labs" className="text-sm font-semibold text-gray-700 hover:text-blue-600 transition-colors">
+            ← Volver
+          </Link>
         </div>
       </header>
 
