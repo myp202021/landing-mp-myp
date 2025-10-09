@@ -27,6 +27,33 @@ export const metadata: Metadata = {
 
 const articles = [
   {
+    slug: 'tendencias-marketing-digital-chile-2025',
+    title: 'Tendencias del Marketing Digital en Chile 2025: Paid Media, IA y Performance',
+    excerpt: 'Conoce las principales tendencias del marketing digital en Chile 2025: paid media, inteligencia artificial, personalización y métricas de performance.',
+    date: '2025-10-09',
+    category: 'Tendencias',
+    readTime: '18 min',
+    tag: 'Tendencias 2025'
+  },
+  {
+    slug: 'presupuesto-marketing-digital-chile-2025',
+    title: 'Cómo Planificar el Presupuesto de Marketing Digital en Chile 2025',
+    excerpt: 'Aprende a planificar el presupuesto de marketing digital en Chile 2025 con escenarios conservador, medio y agresivo, y benchmarks locales.',
+    date: '2025-10-09',
+    category: 'Presupuesto',
+    readTime: '16 min',
+    tag: 'Guía Completa'
+  },
+  {
+    slug: 'tendencias-busqueda-marketing-digital-chile-2025',
+    title: 'Tendencias de Búsqueda en Marketing Digital en Chile 2025: Agencias vs. Equipos Internos',
+    excerpt: 'Descubre cómo en Chile 2025 crecen las búsquedas sobre agencias, equipos internos e híbridos en marketing digital, y cuál modelo conviene más.',
+    date: '2025-10-09',
+    category: 'Análisis',
+    readTime: '14 min',
+    tag: 'Insights'
+  },
+  {
     slug: 'correlaciones-inesperadas-marketing-digital',
     title: '15 Correlaciones Inesperadas en Marketing Digital que Desafían la Intuición',
     excerpt: 'Descubre 15 correlaciones inesperadas en marketing digital que contradicen la intuición y pueden transformar tu CAC, ROI y resultados.',
