@@ -1,0 +1,51 @@
+
+> landing-mp-myp@1.0.0 build
+> next build
+
+  ▲ Next.js 14.2.33
+
+   Creating an optimized production build ...
+Failed to compile.
+
+./app/blog/campanas-performance-max-google-ads-2025/page.tsx
+Error: 
+  [31mx[0m Unexpected token `div`. Expected jsx identifier
+    ,-[[36;1;4m/Users/christophermuller/google-ads-automation/landing-mp-myp/app/blog/campanas-performance-max-google-ads-2025/page.tsx[0m:20:1]
+ [2m20[0m | 
+ [2m21[0m | export default function ArticlePage() {
+ [2m22[0m |   return (
+ [2m23[0m |     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-purple-50/30 to-white">
+    : [31;1m     ^^^[0m
+ [2m24[0m |       <header className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-xl border-b border-gray-100 z-50">
+ [2m25[0m |         <div className="max-w-7xl mx-auto px-6 lg:px-8 py-5 flex items-center justify-between">
+ [2m26[0m |           <Link href="/"><img src="/logo-color.png" alt="Muller y Pérez" className="h-11 w-auto" /></Link>
+    `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./app/blog/campanas-performance-max-google-ads-2025/page.tsx
+
+./app/blog/como-aumentar-conversiones-google-ads/page.tsx
+Error: 
+  [31mx[0m Unexpected token `div`. Expected jsx identifier
+    ,-[[36;1;4m/Users/christophermuller/google-ads-automation/landing-mp-myp/app/blog/como-aumentar-conversiones-google-ads/page.tsx[0m:20:1]
+ [2m20[0m | 
+ [2m21[0m | export default function ArticlePage() {
+ [2m22[0m |   return (
+ [2m23[0m |     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-white">
+    : [31;1m     ^^^[0m
+ [2m24[0m |       <header className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-xl border-b border-gray-100 z-50">
+ [2m25[0m |         <div className="max-w-7xl mx-auto px-6 lg:px-8 py-5 flex items-center justify-between">
+ [2m26[0m |           <Link href="/"><img src="/logo-color.png" alt="Muller y Pérez" className="h-11 w-auto" /></Link>
+    `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./app/blog/como-aumentar-conversiones-google-ads/page.tsx
+
+
+> Build failed because of webpack errors
