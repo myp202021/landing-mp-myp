@@ -31,11 +31,10 @@ export async function POST(request: Request) {
     // 1. Guardar en Google Sheets
     try {
       const sheetsResponse = await fetch(
-        `https://sheets.googleapis.com/v4/spreadsheets/${process.env.GOOGLE_SHEET_ID}/values/Leads!A:E:append?valueInputOption=USER_ENTERED`,
+        `https://sheets.googleapis.com/v4/spreadsheets/${process.env.GOOGLE_SHEET_ID}/values/Leads!A:E:append?valueInputOption=USER_ENTERED&key=${process.env.GOOGLE_SHEETS_API_KEY}`,
         {
           method: 'POST',
           headers: {
-            'Authorization': `Bearer ${process.env.GOOGLE_SHEETS_API_KEY}`,
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
@@ -45,7 +44,10 @@ export async function POST(request: Request) {
       );
 
       if (!sheetsResponse.ok) {
-        console.error('Error guardando en Google Sheets:', await sheetsResponse.text());
+        const errorText = await sheetsResponse.text();
+        console.error('Error guardando en Google Sheets:', errorText);
+      } else {
+        console.log('✅ Lead guardado en Google Sheets');
       }
     } catch (sheetsError) {
       console.error('Error con Google Sheets:', sheetsError);

@@ -101,11 +101,10 @@ Fecha: ${new Date().toLocaleString('es-CL')}
     // 1. Guardar en Google Sheets (pestaña "Contactos")
     try {
       const sheetsResponse = await fetch(
-        `https://sheets.googleapis.com/v4/spreadsheets/${process.env.GOOGLE_SHEET_ID}/values/Contactos!A:F:append?valueInputOption=USER_ENTERED`,
+        `https://sheets.googleapis.com/v4/spreadsheets/${process.env.GOOGLE_SHEET_ID}/values/Contactos!A:F:append?valueInputOption=USER_ENTERED&key=${process.env.GOOGLE_SHEETS_API_KEY}`,
         {
           method: 'POST',
           headers: {
-            'Authorization': `Bearer ${process.env.GOOGLE_SHEETS_API_KEY}`,
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
@@ -115,7 +114,8 @@ Fecha: ${new Date().toLocaleString('es-CL')}
       );
 
       if (!sheetsResponse.ok) {
-        console.error('Error guardando en Google Sheets:', await sheetsResponse.text());
+        const errorText = await sheetsResponse.text();
+        console.error('Error guardando en Google Sheets:', errorText);
       } else {
         console.log('✅ Contacto guardado en Google Sheets');
       }
