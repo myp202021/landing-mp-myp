@@ -27,6 +27,51 @@ export const metadata: Metadata = {
 
 const articles = [
   {
+    slug: 'whatsapp-business-ia-chile-2025',
+    title: 'WhatsApp Business + IA en Chile 2025: Cómo Reducir el CAC con Flujos de Lead Scoring',
+    excerpt: 'Aprende cómo usar WhatsApp Business + IA en Chile 2025 para reducir CAC con flujos de lead scoring y nurturing automatizado. Casos y playbook.',
+    date: '2025-10-09',
+    category: 'Automatización',
+    readTime: '16 min',
+    tag: 'WhatsApp & IA'
+  },
+  {
+    slug: 'linkedin-ads-b2b-chile-2025',
+    title: 'LinkedIn Ads para B2B de Alto Ticket en Chile: Segmentaciones, Costos y Playbooks',
+    excerpt: 'Guía completa de LinkedIn Ads en Chile 2025 para negocios B2B de alto ticket. Segmentaciones, costos reales (CPL $20-50k) y playbooks de campañas exitosas.',
+    date: '2025-10-09',
+    category: 'LinkedIn Ads',
+    readTime: '19 min',
+    tag: 'B2B'
+  },
+  {
+    slug: 'atribucion-metricas-chile-2025',
+    title: 'Atribución y Métricas en Chile 2025: del CAC y LTV al Payback con Dashboards',
+    excerpt: 'Aprende cómo medir CAC, LTV y Payback en Chile 2025 con dashboards en tiempo real y modelos de atribución data-driven. Casos reales y benchmarks locales.',
+    date: '2025-10-09',
+    category: 'Métricas',
+    readTime: '17 min',
+    tag: 'Analytics'
+  },
+  {
+    slug: 'arbol-decision-marketing-mp-ia',
+    title: 'El Árbol de Decisión de Marketing de M&P: Implementación Práctica con IA',
+    excerpt: 'Descubre cómo funciona el Árbol de Decisión de M&P para marketing digital en Chile 2025. Variables, pasos de implementación e integración con IA.',
+    date: '2025-10-09',
+    category: 'Estrategia',
+    readTime: '18 min',
+    tag: 'IA & Automatización'
+  },
+  {
+    slug: 'publicidad-digital-chile-2025-costos-industria-region',
+    title: 'Publicidad Digital en Chile 2025: Costos Reales por Industria y Región',
+    excerpt: 'Descubre los costos reales de publicidad digital en Chile 2025. Benchmarks de Google y Meta Ads por industria y región, con ejemplos locales y proyecciones.',
+    date: '2025-10-09',
+    category: 'Costos',
+    readTime: '16 min',
+    tag: 'Benchmarks'
+  },
+  {
     slug: 'errores-comunes-campanas-digitales-chile',
     title: '10 Errores Comunes en Campañas Digitales en Chile (y Cómo Evitarlos)',
     excerpt: 'Los 10 errores más comunes que cometen empresas chilenas en Google Ads y Meta Ads, y cómo evitarlos. Datos reales, ejemplos y soluciones prácticas.',
