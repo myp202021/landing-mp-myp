@@ -27,6 +27,24 @@ export const metadata: Metadata = {
 
 const articles = [
   {
+    slug: 'errores-comunes-campanas-digitales-chile',
+    title: '10 Errores Comunes en Campañas Digitales en Chile (y Cómo Evitarlos)',
+    excerpt: 'Los 10 errores más comunes que cometen empresas chilenas en Google Ads y Meta Ads, y cómo evitarlos. Datos reales, ejemplos y soluciones prácticas.',
+    date: '2025-10-09',
+    category: 'Optimización',
+    readTime: '14 min',
+    tag: 'Optimización'
+  },
+  {
+    slug: 'google-ads-vs-meta-ads-cual-elegir-chile-2025',
+    title: 'Google Ads vs Meta Ads: Cuál Elegir en Chile 2025 (Comparativa Completa)',
+    excerpt: 'Comparativa completa Google Ads vs Meta Ads en Chile 2025. CPL, ROAS, industrias ideales y cuándo usar cada plataforma. Datos reales de +200 campañas.',
+    date: '2025-10-09',
+    category: 'Comparativa',
+    readTime: '16 min',
+    tag: 'Comparativa'
+  },
+  {
     slug: 'tendencias-marketing-digital-chile-2025',
     title: 'Tendencias del Marketing Digital en Chile 2025: Paid Media, IA y Performance',
     excerpt: 'Conoce las principales tendencias del marketing digital en Chile 2025: paid media, inteligencia artificial, personalización y métricas de performance.',
