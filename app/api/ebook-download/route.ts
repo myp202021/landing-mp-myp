@@ -29,6 +29,9 @@ export async function POST(request: Request) {
     const companyText = company || 'No especificada';
 
     // 1. Guardar en Google Sheets via Apps Script webhook
+    // TEMPORALMENTE DESHABILITADO - El webhook de Google Apps Script no responde desde servidores externos
+    // TODO: Implementar con Zapier/Make.com o solución alternativa
+    /*
     try {
       const sheetsResponse = await fetch(
         process.env.GOOGLE_APPS_SCRIPT_URL || '',
@@ -55,6 +58,8 @@ export async function POST(request: Request) {
       console.error('Error con Google Sheets:', sheetsError);
       // No fallar si Google Sheets falla
     }
+    */
+    console.log('📝 Lead capturado (solo email por ahora):', { name, email, companyText });
 
     // 2. Enviar email de notificación a contacto@mulleryperez.com
     try {

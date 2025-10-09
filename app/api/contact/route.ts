@@ -99,6 +99,9 @@ Fecha: ${new Date().toLocaleString('es-CL')}
     const timestamp = new Date().toISOString()
 
     // 1. Guardar en Google Sheets (pestaña "Contactos") via Apps Script webhook
+    // TEMPORALMENTE DESHABILITADO - El webhook de Google Apps Script no responde desde servidores externos
+    // TODO: Implementar con Zapier/Make.com o solución alternativa
+    /*
     try {
       const sheetsResponse = await fetch(
         process.env.GOOGLE_APPS_SCRIPT_URL || '',
@@ -125,6 +128,8 @@ Fecha: ${new Date().toLocaleString('es-CL')}
       console.error('Error con Google Sheets:', sheetsError);
       // No fallar si Google Sheets falla
     }
+    */
+    console.log('📝 Contacto capturado (solo email por ahora):', { nombre, empresa, email, telefono });
 
     // Verificar si hay API key configurada
     if (!process.env.RESEND_API_KEY) {
