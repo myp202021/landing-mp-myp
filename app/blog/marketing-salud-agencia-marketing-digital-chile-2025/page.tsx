@@ -1,20 +1,20 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
-import { ArrowLeft, Heart, Target, DollarSign, TrendingUp, CheckCircle } from 'lucide-react'
+import { ArrowLeft, TrendingUp, Target, DollarSign, CheckCircle, Zap, Users, BarChart3, PlayCircle } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Marketing en Educación en Chile 2025: Cómo una Agencia de Marketing Digital Atrae Alumnos y Optimiza CAC',
-  description: 'Descubre cómo una agencia de marketing digital en Chile 2025 implementa Salud con estrategias de performance, costos reales y casos prácticos.',
-  keywords: 'agencia de marketing digital, Salud Chile, marketing digital Chile 2025',
+  title: 'Marketing en Salud Privada en Chile 2025: Cómo una Agencia de Marketing Digital Capta Pacientes y Aumenta ROI',
+  description: 'Descubre cómo una agencia de marketing digital en Chile 2025 capta pacientes en salud privada con estrategias multicanal, CRM y reportería de ROI.',
+  keywords: 'agencia de marketing digital, marketing salud Chile 2025, agencia marketing digital salud, leads médicos Chile, performance salud privada',
   alternates: {
     canonical: 'https://www.mulleryperez.cl/blog/marketing-salud-agencia-marketing-digital-chile-2025'
   },
   openGraph: {
-    title: 'Marketing en Educación en Chile 2025: Cómo una Agencia de Marketing Digital Atrae Alumnos y Optimiza CAC',
-    description: 'Estrategias de Salud en Chile 2025 por agencia de marketing digital experta en performance.',
+    title: 'Marketing en Salud Privada en Chile 2025: Cómo una Agencia de Marketing Digital Capta Pacientes y Aumenta ROI',
+    description: 'Descubre cómo una agencia de marketing digital en Chile 2025 capta pacientes en salud privada con estrategias multicanal, CRM y reportería de ROI.',
     type: 'article',
     url: 'https://www.mulleryperez.cl/blog/marketing-salud-agencia-marketing-digital-chile-2025',
-    publishedTime: '2025-10-09T00:00:00.000Z'
+    publishedTime: '2025-01-29T00:00:00.000Z'
   }
 }
 
@@ -33,220 +33,273 @@ export default function ArticlePage() {
       <article className="pt-32 pb-24 px-6">
         <div className="max-w-4xl mx-auto">
           <div className="mb-8">
-            <span className="px-4 py-2 bg-red-100 text-red-700 rounded-full text-sm font-bold">Salud</span>
-            <p className="text-gray-500 mt-4">9 de octubre de 2025 · 21 min de lectura</p>
+            <span className="px-4 py-2 bg-red-100 text-red-700 rounded-full text-sm font-bold">Performance</span>
+            <p className="text-gray-500 mt-4">29 de enero de 2025 · 10 min de lectura</p>
           </div>
 
           <h1 className="text-4xl lg:text-5xl font-black text-gray-900 mb-6 leading-tight">
-            Marketing en Educación en Chile 2025: Cómo una Agencia de Marketing Digital Atrae Alumnos y Optimiza CAC
+            Marketing en Salud Privada en Chile 2025: Cómo una Agencia de Marketing Digital Capta Pacientes y Aumenta ROI
           </h1>
 
           <div className="prose prose-lg max-w-none">
+            {/* Introducción */}
             <div className="bg-red-50 border-l-4 border-red-600 p-6 rounded-r-xl mb-12">
               <h3 className="text-xl font-bold text-gray-900 mb-4">Introducción</h3>
-              <p className="text-gray-700 mb-4">En Chile 2025, la educación privada —desde colegios hasta universidades y plataformas de e-learning— se encuentra en un escenario de alta competencia. Los estudiantes y sus familias ya no toman decisiones basadas solo en cercanía o prestigio, sino que investigan online, comparan precios, revisan reseñas y buscan confianza en el proceso de admisión.</p>
-              <p className="text-gray-700 mb-4">El gran reto: captar alumnos con un CAC (Costo de Adquisición de Cliente) sostenible en un mercado donde los leads son abundantes, pero la conversión a matrícula es baja si no existe un journey bien diseñado.</p>
-              <p className="text-gray-700 mb-4">Aquí es donde una agencia de marketing digital aporta valor: crea ecosistemas multicanal que convierten interesados en alumnos matriculados, con métricas claras y reportería que conecta inversión con matrícula efectiva.</p>
-
+              <p className="text-gray-700 mb-4">
+                En Chile 2025, la salud privada es uno de los sectores más competitivos y con mayor presión digital. Clínicas, centros médicos, laboratorios y especialistas invierten cada vez más en marketing para atraer pacientes, pero pocos logran diferenciarse en un mercado donde los usuarios comparan precios, disponibilidad y reputación online antes de tomar decisiones.
+              </p>
+              <p className="text-gray-700 mb-4">
+                El gran error de muchos prestadores de salud es enfocar sus campañas solo en awareness, sin medir impacto real en CAC (Costo de Adquisición de Cliente) y ROI. Aquí es donde una agencia de marketing digital con experiencia en salud transforma la estrategia: diseña campañas enfocadas en captar pacientes calificados, optimizar presupuestos y entregar reportería financiera clara.
+              </p>
+              <p className="text-gray-700 mb-4">
+                Particularidades del marketing en salud privada
+              </p>
             </div>
 
+            {/* 1. Captación de pacientes por canales digitales */}
             <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6 flex items-center gap-3">
-              <Heart className="w-8 h-8 text-red-600" />
-              Puntos Clave
+              <TrendingUp className="w-8 h-8 text-blue-600" />
+              1. Captación de pacientes por canales digitales
             </h2>
 
-            <div className="bg-white border-2 border-red-200 rounded-xl p-6 mb-8">
+            <div className="bg-white border-2 border-blue-200 rounded-xl p-6 mb-8">
               <ul className="space-y-3 text-gray-700">
-            <p className="text-gray-700 mb-4">Marketing en Educación en Chile 2025: Cómo una Agencia de Marketing Digital Atrae Alumnos y Optimiza CAC</p>
-
-            <p className="text-gray-700 mb-4">Aquí es donde una agencia de marketing digital aporta valor: crea ecosistemas multicanal que convierten interesados en alumnos matriculados, con métricas claras y reportería que conecta inversión con matrícula efectiva.</p>
-
-            <p className="text-gray-700 mb-4">Particularidades del marketing en educación</p>
-
                 <li className="flex items-start gap-3">
-                  <span className="text-red-600 font-bold">•</span>
-                  <span>🎓 Ciclos de decisión largos: las familias investigan durante meses antes de tomar la decisión.</span>
+                  <span className="text-blue-600 font-bold text-xl">•</span>
+                  <span>Google Ads: campañas en búsqueda de especialidades (“dentista Santiago”, “dermatólogo Viña”).</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <span className="text-red-600 font-bold">•</span>
-                  <span>🧑‍🎓 Multiplicidad de decisores: padres, alumnos y en ocasiones financiamiento externo.</span>
+                  <span className="text-blue-600 font-bold text-xl">•</span>
+                  <span>Meta Ads: awareness y retargeting con promociones de servicios.</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <span className="text-red-600 font-bold">•</span>
-                  <span>📊 Estacionalidad marcada: picos en marzo y diciembre, con caídas en otros meses.</span>
+                  <span className="text-blue-600 font-bold text-xl">•</span>
+                  <span>TikTok e Instagram Reels: contenido educativo y testimoniales.</span>
                 </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-red-600 font-bold">•</span>
-                  <span>💡 Sensibilidad al precio: el costo de aranceles y becas influye fuertemente.</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-red-600 font-bold">•</span>
-                  <span>📍 Importancia de la reputación: reseñas y testimonios online son determinantes.</span>
-                </li>
-            <p className="text-gray-700 mb-4">Estrategias de una agencia de marketing digital para educación</p>
-
-            <p className="text-gray-700 mb-4">1. Investigación de mercado</p>
-
-                <li className="flex items-start gap-3">
-                  <span className="text-red-600 font-bold">•</span>
-                  <span>Keywords de intención: “universidad Chile 2025”, “colegio bilingüe Santiago”.</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-red-600 font-bold">•</span>
-                  <span>Benchmarks de CPL y CAC por nivel educativo.</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-red-600 font-bold">•</span>
-                  <span>Identificación de buyer personas: padres, jóvenes y ejecutivos en formación.</span>
-                </li>
-            <p className="text-gray-700 mb-4">2. Generación de leads calificados</p>
-
-                <li className="flex items-start gap-3">
-                  <span className="text-red-600 font-bold">•</span>
-                  <span>Google Search: para captar intención directa (ej. “matrícula universidad ingeniería Santiago”).</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-red-600 font-bold">•</span>
-                  <span>Meta Ads: awareness en padres y retargeting en interesados.</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-red-600 font-bold">•</span>
-                  <span>LinkedIn Ads: ideal para postgrados y educación ejecutiva.</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-red-600 font-bold">•</span>
-                  <span>TikTok Ads: captar a estudiantes jóvenes en etapa de exploración.</span>
-                </li>
-            <p className="text-gray-700 mb-4">3. Nurturing y fidelización</p>
-
-                <li className="flex items-start gap-3">
-                  <span className="text-red-600 font-bold">•</span>
-                  <span>Email marketing con información detallada de programas.</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-red-600 font-bold">•</span>
-                  <span>Webinars con directores académicos.</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-red-600 font-bold">•</span>
-                  <span>WhatsApp Business para agendar visitas o entrevistas.</span>
-                </li>
-            <p className="text-gray-700 mb-4">4. Optimización de journeys</p>
-
-                <li className="flex items-start gap-3">
-                  <span className="text-red-600 font-bold">•</span>
-                  <span>Landing pages con formulario corto y claro.</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-red-600 font-bold">•</span>
-                  <span>Testimonios de exalumnos y casos de éxito.</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-red-600 font-bold">•</span>
-                  <span>Dashboards que miden conversiones reales: lead → matrícula.</span>
-                </li>
-            <div className="bg-gradient-to-r from-red-600 to-pink-600 rounded-xl p-8 mb-8 text-white">
-              <h3 className="text-2xl font-bold mb-4">Ejemplo práctico en Chile</h3>
-            </div>
-
-            <div className="bg-gradient-to-r from-red-600 to-pink-600 rounded-xl p-8 mb-8 text-white">
-              <h3 className="text-2xl font-bold mb-4">Caso: universidad privada en Santiago</h3>
-            </div>
-
-                <li className="flex items-start gap-3">
-                  <span className="text-red-600 font-bold">•</span>
-                  <span>Problema: alto volumen de leads, pero baja tasa de matrícula.</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-red-600 font-bold">•</span>
-                  <span>Estrategia:</span>
-                </li>
-            <p className="text-gray-700 mb-4">○	Google Ads con keywords específicas de carreras.</p>
-
-            <p className="text-gray-700 mb-4">○	Retargeting en Meta Ads con testimonios de estudiantes.</p>
-
-            <p className="text-gray-700 mb-4">○	Webinar mensual con docentes destacados.</p>
-
-                <li className="flex items-start gap-3">
-                  <span className="text-red-600 font-bold">•</span>
-                  <span>Resultados:</span>
-                </li>
-            <p className="text-gray-700 mb-4">○	Conversión a matrícula ↑ 35%.</p>
-
-            <p className="text-gray-700 mb-4">Benchmarks de marketing en educación en Chile 2025</p>
-
-                <li className="flex items-start gap-3">
-                  <span className="text-red-600 font-bold">•</span>
-                  <span>CPL promedio: \$7.000 – \$15.000 CLP.</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-red-600 font-bold">•</span>
-                  <span>CAC promedio: \$150.000 – \$300.000 CLP.</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-red-600 font-bold">•</span>
-                  <span>Conversión de lead a matrícula: 10–20%.</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-red-600 font-bold">•</span>
-                  <span>ROI esperado: 4x – 8x.</span>
-                </li>
-            <p className="text-gray-700 mb-4">Costos del marketing educativo con agencia</p>
-
-                <li className="flex items-start gap-3">
-                  <span className="text-red-600 font-bold">•</span>
-                  <span>Setup inicial (campañas + landing + CRM): \$1.500.000 – \$3.000.000 CLP.</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-red-600 font-bold">•</span>
-                  <span>Gestión mensual con agencia de marketing digital: \$700.000 – \$1.500.000 CLP.</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-red-600 font-bold">•</span>
-                  <span>Inversión en Ads recomendada: desde \$2M CLP mensuales en temporada alta.</span>
-                </li>
-            <p className="text-gray-700 mb-4">Checklist M&P para educación</p>
-
-                <li className="flex items-start gap-3">
-                  <span className="text-red-600 font-bold">•</span>
-                  <span>✅ Define buyer personas: padres, alumnos, ejecutivos.</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-red-600 font-bold">•</span>
-                  <span>✅ Usa Google Search para captar intención directa.</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-red-600 font-bold">•</span>
-                  <span>✅ Refuerza con Meta, LinkedIn y TikTok según segmento.</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-red-600 font-bold">•</span>
-                  <span>✅ Diseña nurturing con webinars, email y WhatsApp.</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-red-600 font-bold">•</span>
-                  <span>✅ Mide CPL, CAC y ROI con dashboards en tiempo real.</span>
-                </li>
-
               </ul>
             </div>
 
-            <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6">Conclusión</h2>
+            {/* 2. Optimización de journeys */}
+            <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6 flex items-center gap-3">
+              <Target className="w-8 h-8 text-orange-600" />
+              2. Optimización de journeys
+            </h2>
 
-            <p className="text-gray-700 mb-4">
-              En 2025, Salud en Chile se ha convertido en una estrategia fundamental para las empresas que buscan resultados medibles y ROI positivo.
-            </p>
+            <div className="bg-white border-2 border-orange-200 rounded-xl p-6 mb-8">
+              <ul className="space-y-3 text-gray-700">
+                <li className="flex items-start gap-3">
+                  <span className="text-orange-600 font-bold text-xl">•</span>
+                  <span>Landing pages con reservas en línea.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-orange-600 font-bold text-xl">•</span>
+                  <span>Integración con WhatsApp para agendar consultas.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-orange-600 font-bold text-xl">•</span>
+                  <span>Formularios simplificados con call-to-action claro.</span>
+                </li>
+              </ul>
+            </div>
 
-            <p className="text-gray-700 mb-6">
-              👉 En M&P diseñamos e implementamos estrategias de Salud con foco en performance, integración multicanal y reportería financiera clara.
-            </p>
+            {/* 3. Contenido de valor */}
+            <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6 flex items-center gap-3">
+              <DollarSign className="w-8 h-8 text-green-600" />
+              3. Contenido de valor
+            </h2>
 
+            <div className="bg-white border-2 border-green-200 rounded-xl p-6 mb-8">
+              <ul className="space-y-3 text-gray-700">
+                <li className="flex items-start gap-3">
+                  <span className="text-green-600 font-bold text-xl">•</span>
+                  <span>Blogs SEO sobre síntomas, tratamientos y tendencias en salud.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-green-600 font-bold text-xl">•</span>
+                  <span>Videos cortos con tips de especialistas.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-green-600 font-bold text-xl">•</span>
+                  <span>Casos de éxito y testimonios de pacientes.</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* 4. Integración con CRM y reportería */}
+            <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6 flex items-center gap-3">
+              <CheckCircle className="w-8 h-8 text-green-600" />
+              4. Integración con CRM y reportería
+            </h2>
+
+            <div className="bg-white border-2 border-green-200 rounded-xl p-6 mb-8">
+              <ul className="space-y-3 text-gray-700">
+                <li className="flex items-start gap-3">
+                  <span className="text-green-600 font-bold text-xl">•</span>
+                  <span>CRM para seguimiento de leads médicos.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-green-600 font-bold text-xl">•</span>
+                  <span>Lead scoring para priorizar pacientes con alta intención.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-green-600 font-bold text-xl">•</span>
+                  <span>Dashboards con métricas CAC, ROI y recurrencia.</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Ejemplo práctico en Chile */}
+            <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6 flex items-center gap-3">
+              <Zap className="w-8 h-8 text-yellow-600" />
+              Ejemplo práctico en Chile
+            </h2>
+
+            <p className="text-gray-700 mb-4">Caso: clínica odontológica en Santiago</p>
+
+            <div className="bg-white border-2 border-yellow-200 rounded-xl p-6 mb-6">
+              <ul className="space-y-3 text-gray-700">
+                <li className="flex items-start gap-3">
+                  <span className="text-yellow-600 font-bold text-xl">•</span>
+                  <span>Problema: campañas genéricas en Meta con CPL alto y baja conversión.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-yellow-600 font-bold text-xl">•</span>
+                  <span>Estrategia:</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-yellow-600 font-bold text-xl">•</span>
+                  <span>Google Search con keywords específicas: “implantes dentales Santiago 2025”.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-yellow-600 font-bold text-xl">•</span>
+                  <span>Landing con simulador de presupuesto.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-yellow-600 font-bold text-xl">•</span>
+                  <span>Retargeting con testimonios en Meta.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-yellow-600 font-bold text-xl">•</span>
+                  <span>Resultados:</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-yellow-600 font-bold text-xl">•</span>
+                  <span>CPL: $7.800 CLP.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-yellow-600 font-bold text-xl">•</span>
+                  <span>CAC: $45.000 CLP.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-yellow-600 font-bold text-xl">•</span>
+                  <span>ROI: 6.2x en 3 meses.</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Benchmarks de marketing en salud en Chile 2025 */}
+            <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6 flex items-center gap-3">
+              <TrendingUp className="w-8 h-8 text-blue-600" />
+              Benchmarks de marketing en salud en Chile 2025
+            </h2>
+
+            <div className="bg-white border-2 border-blue-200 rounded-xl p-6 mb-8">
+              <ul className="space-y-3 text-gray-700">
+                <li className="flex items-start gap-3">
+                  <span className="text-blue-600 font-bold text-xl">•</span>
+                  <span>CPL promedio: $6.000 – $12.000 CLP.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-blue-600 font-bold text-xl">•</span>
+                  <span>CAC promedio: $40.000 – $120.000 CLP.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-blue-600 font-bold text-xl">•</span>
+                  <span>ROI esperado: 4x – 8x.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-blue-600 font-bold text-xl">•</span>
+                  <span>Tasa de conversión de leads a pacientes: 15–25%.</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Costos del marketing en salud con agencia */}
+            <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6 flex items-center gap-3">
+              <Target className="w-8 h-8 text-orange-600" />
+              Costos del marketing en salud con agencia
+            </h2>
+
+            <div className="bg-white border-2 border-orange-200 rounded-xl p-6 mb-8">
+              <ul className="space-y-3 text-gray-700">
+                <li className="flex items-start gap-3">
+                  <span className="text-orange-600 font-bold text-xl">•</span>
+                  <span>Setup inicial (campañas + landing + CRM): $1.200.000 – $2.500.000 CLP.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-orange-600 font-bold text-xl">•</span>
+                  <span>Gestión mensual con agencia de marketing digital: $600.000 – $1.200.000 CLP.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-orange-600 font-bold text-xl">•</span>
+                  <span>Inversión en Ads recomendada: desde $2M CLP mensuales.</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Checklist M&P para salud privada */}
+            <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6 flex items-center gap-3">
+              <CheckCircle className="w-8 h-8 text-green-600" />
+              Checklist M&P para salud privada
+            </h2>
+
+            <div className="bg-green-50 border-2 border-green-200 rounded-xl p-6 mb-8">
+              <ul className="space-y-3 text-gray-700">
+                <li className="flex items-start gap-3">
+                  <span className="text-green-600 font-bold">✅</span>
+                  <span>Define especialidades y keywords con intención alta.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-green-600 font-bold">✅</span>
+                  <span>Diseña landings con reserva online y WhatsApp integrado.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-green-600 font-bold">✅</span>
+                  <span>Usa testimonios reales para generar confianza.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-green-600 font-bold">✅</span>
+                  <span>Conecta campañas con CRM y reporterías.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-green-600 font-bold">✅</span>
+                  <span>Mide CPL, CAC y ROI en tiempo real.</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Una agencia de marketing digital con experiencia en salud sabe cómo integrar Ads, contenido, CRM y reportería para transformar campañas en consultas reales y ROI positivo. */}
+            <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6 flex items-center gap-3">
+              <CheckCircle className="w-8 h-8 text-green-600" />
+              Una agencia de marketing digital con experiencia en salud sabe cómo integrar Ads, contenido, CRM y reportería para transformar campañas en consultas reales y ROI positivo.
+            </h2>
+
+            <div className="bg-white border-2 border-green-200 rounded-xl p-6 mb-8">
+              <ul className="space-y-3 text-gray-700">
+                <li className="flex items-start gap-3">
+                  <span className="text-green-600 font-bold text-xl">•</span>
+                  <span>En M&P ayudamos a clínicas y centros médicos chilenos a captar más pacientes con estrategias de performance, multicanal y reportería financiera clara.</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* CTA */}
             <div className="bg-gradient-to-br from-red-600 to-pink-700 rounded-2xl p-10 text-center mt-16">
               <h3 className="text-3xl font-black text-white mb-4">
-                ¿Quieres implementar Salud en tu empresa?
+                ¿Quieres transformar tu marketing digital?
               </h3>
               <p className="text-xl text-red-100 mb-8">
-                Agenda una sesión estratégica gratuita y te mostramos cómo transformar tu inversión en resultados reales.
+                Agenda una sesión estratégica gratuita con nuestros especialistas.
               </p>
               <Link
                 href="https://wa.me/56992258137"
@@ -259,10 +312,10 @@ export default function ArticlePage() {
         </div>
       </article>
 
-      <footer className="bg-gray-900 text-white py-12 px-6">
-        <div className="max-w-7xl mx-auto text-center">
-          <Link href="/"><img src="/logo-blanco.png" alt="Muller y Pérez" className="h-10 w-auto mx-auto mb-6" /></Link>
-          <p className="text-gray-400">© 2025 Muller y Pérez. Marketing Digital Basado en Datos.</p>
+      {/* Footer */}
+      <footer className="border-t border-gray-200 py-12 px-6">
+        <div className="max-w-7xl mx-auto text-center text-gray-600 text-sm">
+          <p>© 2025 Muller y Pérez · Agencia de Marketing Digital</p>
         </div>
       </footer>
     </div>

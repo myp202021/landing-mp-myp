@@ -3,18 +3,18 @@ import Link from 'next/link'
 import { ArrowLeft, TrendingUp, Target, DollarSign, CheckCircle, Zap, Users, BarChart3, PlayCircle } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Email Marketing en Chile 2025: Cómo una Agencia de Marketing Digital Convierte Contactos en Ventas Recurrentes',
-  description: 'Descubre cómo una agencia de marketing digital en Chile 2025 usa email marketing con IA y automatización para generar ventas recurrentes y fidelizar clientes.',
-  keywords: 'agencia de marketing digital, email marketing Chile 2025, agencia marketing digital email, automatización email Chile, performance marketing email',
+  title: 'TikTok Ads en Chile 2025: Cómo una Agencia de Marketing Digital Convierte Awareness en Ventas',
+  description: 'Descubre cómo una agencia de marketing digital en Chile 2025 usa TikTok Ads para convertir awareness en ventas, con benchmarks locales y casos reales.',
+  keywords: 'agencia de marketing digital, TikTok Ads Chile 2025, agencia marketing digital TikTok, performance TikTok Chile, publicidad digital Chile',
   alternates: {
-    canonical: 'https://www.mulleryperez.cl/blog/email-marketing-agencia-marketing-digital-chile-2025'
+    canonical: 'https://www.mulleryperez.cl/blog/tiktok-ads-2-agencia-marketing-digital-chile-2025'
   },
   openGraph: {
-    title: 'Email Marketing en Chile 2025: Cómo una Agencia de Marketing Digital Convierte Contactos en Ventas Recurrentes',
-    description: 'Descubre cómo una agencia de marketing digital en Chile 2025 usa email marketing con IA y automatización para generar ventas recurrentes y fidelizar clientes.',
+    title: 'TikTok Ads en Chile 2025: Cómo una Agencia de Marketing Digital Convierte Awareness en Ventas',
+    description: 'Descubre cómo una agencia de marketing digital en Chile 2025 usa TikTok Ads para convertir awareness en ventas, con benchmarks locales y casos reales.',
     type: 'article',
-    url: 'https://www.mulleryperez.cl/blog/email-marketing-agencia-marketing-digital-chile-2025',
-    publishedTime: '2025-01-25T00:00:00.000Z'
+    url: 'https://www.mulleryperez.cl/blog/tiktok-ads-2-agencia-marketing-digital-chile-2025',
+    publishedTime: '2025-01-24T00:00:00.000Z'
   }
 }
 
@@ -34,11 +34,11 @@ export default function ArticlePage() {
         <div className="max-w-4xl mx-auto">
           <div className="mb-8">
             <span className="px-4 py-2 bg-red-100 text-red-700 rounded-full text-sm font-bold">Performance</span>
-            <p className="text-gray-500 mt-4">25 de enero de 2025 · 10 min de lectura</p>
+            <p className="text-gray-500 mt-4">24 de enero de 2025 · 10 min de lectura</p>
           </div>
 
           <h1 className="text-4xl lg:text-5xl font-black text-gray-900 mb-6 leading-tight">
-            Email Marketing en Chile 2025: Cómo una Agencia de Marketing Digital Convierte Contactos en Ventas Recurrentes
+            TikTok Ads en Chile 2025: Cómo una Agencia de Marketing Digital Convierte Awareness en Ventas
           </h1>
 
           <div className="prose prose-lg max-w-none">
@@ -46,38 +46,35 @@ export default function ArticlePage() {
             <div className="bg-red-50 border-l-4 border-red-600 p-6 rounded-r-xl mb-12">
               <h3 className="text-xl font-bold text-gray-900 mb-4">Introducción</h3>
               <p className="text-gray-700 mb-4">
-                En Chile 2025, muchos piensan que el email marketing está “pasado de moda”. Nada más lejos de la realidad. Los datos muestran que el email sigue siendo el canal con mayor ROI en marketing digital, superando incluso a Google y Meta Ads en retorno por peso invertido.
+                En Chile 2025, TikTok dejó de ser solo una red de bailes virales para transformarse en una de las plataformas publicitarias más rentables y con mayor crecimiento en inversión. Con más de 9 millones de usuarios activos en el país, y un tiempo promedio de consumo que supera los 70 minutos diarios, TikTok Ads se convirtió en un canal clave no solo para awareness, sino también para ventas directas.
               </p>
               <p className="text-gray-700 mb-4">
-                El problema es que la mayoría de las empresas en Chile aún lo usan de forma básica: envían correos masivos sin segmentación, sin personalización y sin reportería. El resultado: bajas tasas de apertura y correos en la carpeta de spam.
+                El error de muchas marcas chilenas es usar TikTok solo para “hacer ruido”, sin estrategias claras de performance. Ahí es donde una agencia de marketing digital experta en performance entra en acción: diseñando campañas que conectan creatividad nativa con métricas financieras (CPC, CPL, CAC y ROI).
               </p>
               <p className="text-gray-700 mb-4">
-                Aquí es donde una agencia de marketing digital con foco en performance transforma el email en un motor de ventas recurrentes, integrándolo con CRM, automatización e inteligencia artificial.
-              </p>
-              <p className="text-gray-700 mb-4">
-                ¿Por qué el email marketing es clave en Chile 2025?
+                ¿Por qué TikTok Ads es clave en Chile 2025?
               </p>
             </div>
 
-            {/* 1. Construcción de base de datos */}
+            {/* 1. Definición de objetivos */}
             <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6 flex items-center gap-3">
               <TrendingUp className="w-8 h-8 text-blue-600" />
-              1. Construcción de base de datos
+              1. Definición de objetivos
             </h2>
 
             <div className="bg-white border-2 border-blue-200 rounded-xl p-6 mb-8">
               <ul className="space-y-3 text-gray-700">
                 <li className="flex items-start gap-3">
                   <span className="text-blue-600 font-bold text-xl">•</span>
-                  <span>Formularios en landing pages.</span>
+                  <span>Awareness: alcance masivo con CPM bajos.</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="text-blue-600 font-bold text-xl">•</span>
-                  <span>Captación con lead magnets (ebooks, webinars).</span>
+                  <span>Consideración: engagement con videos y descargas.</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="text-blue-600 font-bold text-xl">•</span>
-                  <span>Integración con WhatsApp y CRM.</span>
+                  <span>Conversión: leads, ventas online o tráfico a WhatsApp.</span>
                 </li>
               </ul>
             </div>
@@ -92,233 +89,206 @@ export default function ArticlePage() {
               <ul className="space-y-3 text-gray-700">
                 <li className="flex items-start gap-3">
                   <span className="text-orange-600 font-bold text-xl">•</span>
-                  <span>Por industria (ej: retail, SaaS, educación).</span>
+                  <span>Intereses (ej: deportes, e-commerce, educación).</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="text-orange-600 font-bold text-xl">•</span>
-                  <span>Por comportamiento (apertura, clics, compras).</span>
+                  <span>Lookalike audiences (clientes actuales).</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="text-orange-600 font-bold text-xl">•</span>
-                  <span>Por etapa del journey (lead frío, en consideración, cliente activo).</span>
+                  <span>Segmentación geográfica (Santiago vs regiones).</span>
                 </li>
               </ul>
             </div>
 
-            {/* 3. Personalización con IA */}
+            {/* 3. Creatividad nativa */}
             <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6 flex items-center gap-3">
               <DollarSign className="w-8 h-8 text-green-600" />
-              3. Personalización con IA
+              3. Creatividad nativa
             </h2>
 
             <div className="bg-white border-2 border-green-200 rounded-xl p-6 mb-8">
               <ul className="space-y-3 text-gray-700">
                 <li className="flex items-start gap-3">
                   <span className="text-green-600 font-bold text-xl">•</span>
-                  <span>Asuntos dinámicos que aumentan la apertura.</span>
+                  <span>Videos verticales de 15–30 segundos.</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="text-green-600 font-bold text-xl">•</span>
-                  <span>Recomendaciones de productos basadas en comportamiento.</span>
+                  <span>Storytelling rápido y con call-to-action claro.</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="text-green-600 font-bold text-xl">•</span>
-                  <span>Mensajes diferenciados según cargo o industria.</span>
+                  <span>Creativos iterativos (mínimo 5 variantes por campaña).</span>
                 </li>
               </ul>
             </div>
 
-            {/* 4. Automatización de flujos */}
+            {/* 4. Integración con performance */}
             <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6 flex items-center gap-3">
               <CheckCircle className="w-8 h-8 text-green-600" />
-              4. Automatización de flujos
+              4. Integración con performance
             </h2>
 
             <div className="bg-white border-2 border-green-200 rounded-xl p-6 mb-8">
               <ul className="space-y-3 text-gray-700">
                 <li className="flex items-start gap-3">
                   <span className="text-green-600 font-bold text-xl">•</span>
-                  <span>Onboarding: bienvenida + contenido educativo.</span>
+                  <span>Lead forms dentro de TikTok.</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="text-green-600 font-bold text-xl">•</span>
-                  <span>Nurturing: secuencias para calentar leads B2B.</span>
+                  <span>Conexión con CRM para nurturing.</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="text-green-600 font-bold text-xl">•</span>
-                  <span>Postventa: correos de fidelización y upselling.</span>
-                </li>
-              </ul>
-            </div>
-
-            {/* 5. Reporterías y métricas */}
-            <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6 flex items-center gap-3">
-              <Zap className="w-8 h-8 text-yellow-600" />
-              5. Reporterías y métricas
-            </h2>
-
-            <div className="bg-white border-2 border-yellow-200 rounded-xl p-6 mb-8">
-              <ul className="space-y-3 text-gray-700">
-                <li className="flex items-start gap-3">
-                  <span className="text-yellow-600 font-bold text-xl">•</span>
-                  <span>Tasa de apertura (benchmark en Chile: 20–35%).</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-yellow-600 font-bold text-xl">•</span>
-                  <span>Tasa de clics (2–6%).</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-yellow-600 font-bold text-xl">•</span>
-                  <span>Conversiones directas atribuidas a email.</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-yellow-600 font-bold text-xl">•</span>
-                  <span>Impacto en CAC y LTV.</span>
+                  <span>Retargeting cruzado con Google y Meta Ads.</span>
                 </li>
               </ul>
             </div>
 
             {/* Ejemplo práctico en Chile */}
             <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6 flex items-center gap-3">
-              <TrendingUp className="w-8 h-8 text-blue-600" />
+              <Zap className="w-8 h-8 text-yellow-600" />
               Ejemplo práctico en Chile
             </h2>
 
-            <p className="text-gray-700 mb-4">Caso: SaaS de finanzas en Santiago</p>
+            <p className="text-gray-700 mb-4">Caso: e-commerce de moda en Santiago</p>
 
-            <div className="bg-white border-2 border-blue-200 rounded-xl p-6 mb-6">
+            <div className="bg-white border-2 border-yellow-200 rounded-xl p-6 mb-6">
               <ul className="space-y-3 text-gray-700">
                 <li className="flex items-start gap-3">
-                  <span className="text-blue-600 font-bold text-xl">•</span>
-                  <span>Problema: alta dependencia de Google Ads para leads.</span>
+                  <span className="text-yellow-600 font-bold text-xl">•</span>
+                  <span>Objetivo: aumentar ventas directas en CyberDay.</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <span className="text-blue-600 font-bold text-xl">•</span>
+                  <span className="text-yellow-600 font-bold text-xl">•</span>
                   <span>Estrategia:</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <span className="text-blue-600 font-bold text-xl">•</span>
-                  <span>Captación vía ebook “Tendencias FinTech 2025”.</span>
+                  <span className="text-yellow-600 font-bold text-xl">•</span>
+                  <span>Creatividades con influencers locales en formato nativo.</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <span className="text-blue-600 font-bold text-xl">•</span>
-                  <span>Automatización con flujo de 7 correos segmentados.</span>
+                  <span className="text-yellow-600 font-bold text-xl">•</span>
+                  <span>Campañas de awareness con CPM 45% más bajos que en Meta.</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <span className="text-blue-600 font-bold text-xl">•</span>
-                  <span>Integración con CRM para lead scoring.</span>
+                  <span className="text-yellow-600 font-bold text-xl">•</span>
+                  <span>Retargeting en Meta y Google con audiencias de TikTok.</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <span className="text-blue-600 font-bold text-xl">•</span>
+                  <span className="text-yellow-600 font-bold text-xl">•</span>
                   <span>Resultados:</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <span className="text-blue-600 font-bold text-xl">•</span>
-                  <span>Apertura promedio: 42%.</span>
+                  <span className="text-yellow-600 font-bold text-xl">•</span>
+                  <span>CTR: 2.8%.</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <span className="text-blue-600 font-bold text-xl">•</span>
-                  <span>CPL bajó en 28%.</span>
+                  <span className="text-yellow-600 font-bold text-xl">•</span>
+                  <span>CAC ↓ 32%.</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <span className="text-blue-600 font-bold text-xl">•</span>
-                  <span>31% de leads cerraron contrato en 3 meses.</span>
+                  <span className="text-yellow-600 font-bold text-xl">•</span>
+                  <span>ROI: 6.4x en 2 meses.</span>
                 </li>
               </ul>
             </div>
 
-            {/* Benchmarks de email marketing en Chile 2025 */}
+            {/* Benchmarks de TikTok Ads en Chile 2025 */}
+            <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6 flex items-center gap-3">
+              <TrendingUp className="w-8 h-8 text-blue-600" />
+              Benchmarks de TikTok Ads en Chile 2025
+            </h2>
+
+            <div className="bg-white border-2 border-blue-200 rounded-xl p-6 mb-8">
+              <ul className="space-y-3 text-gray-700">
+                <li className="flex items-start gap-3">
+                  <span className="text-blue-600 font-bold text-xl">•</span>
+                  <span>CPC promedio: $180 – $450 CLP.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-blue-600 font-bold text-xl">•</span>
+                  <span>CPM promedio: $1.200 – $3.500 CLP.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-blue-600 font-bold text-xl">•</span>
+                  <span>CPL promedio (leads): $2.500 – $7.000 CLP.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-blue-600 font-bold text-xl">•</span>
+                  <span>ROAS esperado en e-commerce: 4x – 8x.</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Costos de campañas en TikTok Ads */}
             <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6 flex items-center gap-3">
               <Target className="w-8 h-8 text-orange-600" />
-              Benchmarks de email marketing en Chile 2025
+              Costos de campañas en TikTok Ads
             </h2>
 
             <div className="bg-white border-2 border-orange-200 rounded-xl p-6 mb-8">
               <ul className="space-y-3 text-gray-700">
                 <li className="flex items-start gap-3">
                   <span className="text-orange-600 font-bold text-xl">•</span>
-                  <span>Tasa de apertura: 20–35%.</span>
+                  <span>Setup inicial: $500.000 – $1.200.000 CLP.</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="text-orange-600 font-bold text-xl">•</span>
-                  <span>CTR (clics): 2–6%.</span>
+                  <span>Inversión mínima mensual recomendada: $2M – $5M CLP.</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="text-orange-600 font-bold text-xl">•</span>
-                  <span>Conversiones directas: 5–15% (dependiendo del rubro).</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-orange-600 font-bold text-xl">•</span>
-                  <span>ROI esperado: 25x – 36x.</span>
+                  <span>Gestión con agencia de marketing digital: $600.000 – $1.200.000 CLP/mes.</span>
                 </li>
               </ul>
             </div>
 
-            {/* Costos del email marketing en Chile */}
-            <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6 flex items-center gap-3">
-              <DollarSign className="w-8 h-8 text-green-600" />
-              Costos del email marketing en Chile
-            </h2>
-
-            <div className="bg-white border-2 border-green-200 rounded-xl p-6 mb-8">
-              <ul className="space-y-3 text-gray-700">
-                <li className="flex items-start gap-3">
-                  <span className="text-green-600 font-bold text-xl">•</span>
-                  <span>Setup inicial (plataforma + automatización): $800.000 – $1.500.000 CLP.</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-green-600 font-bold text-xl">•</span>
-                  <span>Gestión mensual con agencia: $400.000 – $900.000 CLP.</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-green-600 font-bold text-xl">•</span>
-                  <span>Plataformas más usadas: Mailchimp, ActiveCampaign, Brevo, HubSpot.</span>
-                </li>
-              </ul>
-            </div>
-
-            {/* Checklist M&P para email marketing */}
+            {/* Checklist M&P para TikTok Ads */}
             <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6 flex items-center gap-3">
               <CheckCircle className="w-8 h-8 text-green-600" />
-              Checklist M&P para email marketing
+              Checklist M&P para TikTok Ads
             </h2>
 
             <div className="bg-green-50 border-2 border-green-200 rounded-xl p-6 mb-8">
               <ul className="space-y-3 text-gray-700">
                 <li className="flex items-start gap-3">
                   <span className="text-green-600 font-bold">✅</span>
-                  <span>Construye base de datos propia y segmentada.</span>
+                  <span>Define objetivos claros (awareness, leads o ventas).</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="text-green-600 font-bold">✅</span>
-                  <span>Usa lead magnets atractivos para captar contactos.</span>
+                  <span>Usa segmentación avanzada con audiencias lookalike.</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="text-green-600 font-bold">✅</span>
-                  <span>Automatiza flujos diferenciados por journey.</span>
+                  <span>Diseña creatividades nativas con storytelling rápido.</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="text-green-600 font-bold">✅</span>
-                  <span>Personaliza mensajes con IA y datos de CRM.</span>
+                  <span>Conecta TikTok con CRM y otras plataformas.</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="text-green-600 font-bold">✅</span>
-                  <span>Mide impacto en CAC, LTV y ROI, no solo aperturas.</span>
+                  <span>Mide CPL, CAC y ROI, no solo views.</span>
                 </li>
               </ul>
             </div>
 
-            {/* Una agencia de marketing digital convierte simples correos en flujos inteligentes que generan ventas recurrentes y fidelización. */}
+            {/* Con una estrategia clara, creatividades nativas y reportería financiera, una agencia de marketing digital transforma awareness en ventas medibles, integrando TikTok dentro de un ecosistema multicanal que incluye Google y Meta Ads. */}
             <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6 flex items-center gap-3">
-              <Zap className="w-8 h-8 text-yellow-600" />
-              Una agencia de marketing digital convierte simples correos en flujos inteligentes que generan ventas recurrentes y fidelización.
+              <CheckCircle className="w-8 h-8 text-green-600" />
+              Con una estrategia clara, creatividades nativas y reportería financiera, una agencia de marketing digital transforma awareness en ventas medibles, integrando TikTok dentro de un ecosistema multicanal que incluye Google y Meta Ads.
             </h2>
 
-            <div className="bg-white border-2 border-yellow-200 rounded-xl p-6 mb-8">
+            <div className="bg-white border-2 border-green-200 rounded-xl p-6 mb-8">
               <ul className="space-y-3 text-gray-700">
                 <li className="flex items-start gap-3">
-                  <span className="text-yellow-600 font-bold text-xl">•</span>
-                  <span>En M&P diseñamos estrategias de email marketing que integran CRM, IA y reportería financiera, transformando cada contacto en un cliente potencial de largo plazo.</span>
+                  <span className="text-green-600 font-bold text-xl">•</span>
+                  <span>En M&P ayudamos a empresas chilenas a aprovechar TikTok Ads con lógica de performance, optimizando tanto branding como conversiones.</span>
                 </li>
               </ul>
             </div>

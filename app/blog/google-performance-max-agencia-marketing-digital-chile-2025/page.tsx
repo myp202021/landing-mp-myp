@@ -1,26 +1,26 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
-import { ArrowLeft, Zap, Target, DollarSign, TrendingUp, CheckCircle } from 'lucide-react'
+import { ArrowLeft, TrendingUp, Target, DollarSign, CheckCircle, Zap, Users, BarChart3, PlayCircle } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Email Marketing + IA en Chile 2025: Cómo una Agencia de Marketing Digital Convierte Correos en ROI Real',
-  description: 'Descubre cómo una agencia de marketing digital en Chile 2025 implementa Performance Max con estrategias de performance, costos reales y casos prácticos.',
-  keywords: 'agencia de marketing digital, Performance Max Chile, marketing digital Chile 2025',
+  title: 'Google Performance Max en Chile 2025: Cómo una Agencia de Marketing Digital Convierte Automatización en Resultados',
+  description: 'Descubre cómo una agencia de marketing digital en Chile 2025 usa Google Performance Max para automatización inteligente y resultados medibles. Costos y estrategias.',
+  keywords: 'agencia de marketing digital, Google Performance Max Chile, PMax Chile, automatización Google Ads, agencia marketing digital performance',
   alternates: {
     canonical: 'https://www.mulleryperez.cl/blog/google-performance-max-agencia-marketing-digital-chile-2025'
   },
   openGraph: {
-    title: 'Email Marketing + IA en Chile 2025: Cómo una Agencia de Marketing Digital Convierte Correos en ROI Real',
-    description: 'Estrategias de Performance Max en Chile 2025 por agencia de marketing digital experta en performance.',
+    title: 'Google Performance Max en Chile 2025: Cómo una Agencia de Marketing Digital Convierte Automatización en Resultados',
+    description: 'Descubre cómo una agencia de marketing digital en Chile 2025 usa Google Performance Max para automatización inteligente y resultados medibles. Costos y estrategias.',
     type: 'article',
     url: 'https://www.mulleryperez.cl/blog/google-performance-max-agencia-marketing-digital-chile-2025',
-    publishedTime: '2025-10-09T00:00:00.000Z'
+    publishedTime: '2025-01-12T00:00:00.000Z'
   }
 }
 
 export default function ArticlePage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-white">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-red-50/30 to-white">
       <header className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-xl border-b border-gray-100 z-50">
         <div className="max-w-7xl mx-auto px-6 lg:px-8 py-5 flex items-center justify-between">
           <Link href="/"><img src="/logo-color.png" alt="Muller y Pérez" className="h-11 w-auto" /></Link>
@@ -33,221 +33,292 @@ export default function ArticlePage() {
       <article className="pt-32 pb-24 px-6">
         <div className="max-w-4xl mx-auto">
           <div className="mb-8">
-            <span className="px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-bold">Performance Max</span>
-            <p className="text-gray-500 mt-4">9 de octubre de 2025 · 21 min de lectura</p>
+            <span className="px-4 py-2 bg-red-100 text-red-700 rounded-full text-sm font-bold">Performance</span>
+            <p className="text-gray-500 mt-4">12 de enero de 2025 · 10 min de lectura</p>
           </div>
 
           <h1 className="text-4xl lg:text-5xl font-black text-gray-900 mb-6 leading-tight">
-            Email Marketing + IA en Chile 2025: Cómo una Agencia de Marketing Digital Convierte Correos en ROI Real
+            Google Performance Max en Chile 2025: Cómo una Agencia de Marketing Digital Convierte Automatización en Resultados
           </h1>
 
           <div className="prose prose-lg max-w-none">
-            <div className="bg-blue-50 border-l-4 border-blue-600 p-6 rounded-r-xl mb-12">
+            {/* Introducción */}
+            <div className="bg-red-50 border-l-4 border-red-600 p-6 rounded-r-xl mb-12">
               <h3 className="text-xl font-bold text-gray-900 mb-4">Introducción</h3>
-              <p className="text-gray-700 mb-4">En 2025, mientras todos hablan de TikTok, YouTube o la inteligencia artificial generativa, hay un canal silencioso que sigue siendo uno de los más rentables en Chile: el email marketing.</p>
-              <p className="text-gray-700 mb-4">La diferencia hoy es que ya no se trata de enviar correos masivos y esperar resultados. Con IA y automatización, el email marketing se convirtió en un motor de performance: segmentación avanzada, personalización dinámica y nurturing inteligente.</p>
-              <p className="text-gray-700 mb-4">Eso sí, para que funcione en serio, hace falta la estrategia de una agencia de marketing digital que sepa integrar data, creatividad y automatización en un sistema de ROI comprobado.</p>
-              <p className="text-gray-700 mb-4">👉 En un entorno de costos crecientes en Ads, el email marketing bien gestionado es un canal con CAC bajo y LTV alto.</p>
-
+              <p className="text-gray-700 mb-4">
+                En Chile 2025, Google Performance Max (PMax) ya no es una novedad: es la herramienta predilecta de Google Ads para centralizar campañas multicanal con inteligencia artificial. Pero su efectividad depende directamente de cómo se configure, qué data se alimente y cómo se mida el rendimiento.
+              </p>
+              <p className="text-gray-700 mb-4">
+                El problema es que muchas empresas se limitan a “encender” Performance Max sin estrategia, confiando ciegamente en la automatización. El resultado: inversión ineficiente y falta de control.
+              </p>
+              <p className="text-gray-700 mb-4">
+                La diferencia está en contar con una agencia de marketing digital que combine lógica de performance, dashboards avanzados y modelos de atribución para transformar la IA de Google en ventas reales.
+              </p>
+              <p className="text-gray-700 mb-4">
+                ¿Qué es Google Performance Max?
+              </p>
+              <p className="text-gray-700 mb-4">
+                Performance Max es un tipo de campaña que usa inteligencia artificial para mostrar anuncios en todos los canales de Google:
+              </p>
             </div>
 
+            {/* Ventajas de Performance Max */}
             <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6 flex items-center gap-3">
-              <Zap className="w-8 h-8 text-blue-600" />
-              Puntos Clave
+              <TrendingUp className="w-8 h-8 text-blue-600" />
+              Ventajas de Performance Max
             </h2>
 
             <div className="bg-white border-2 border-blue-200 rounded-xl p-6 mb-8">
               <ul className="space-y-3 text-gray-700">
-            <p className="text-gray-700 mb-4">Email Marketing + IA en Chile 2025: Cómo una Agencia de Marketing Digital Convierte Correos en ROI Real</p>
-
-            <p className="text-gray-700 mb-4">👉 En un entorno de costos crecientes en Ads, el email marketing bien gestionado es un canal con CAC bajo y LTV alto.</p>
-
-            <p className="text-gray-700 mb-4">Evolución del email marketing en Chile</p>
-
                 <li className="flex items-start gap-3">
-                  <span className="text-blue-600 font-bold">•</span>
-                  <span>2015: correos masivos con baja segmentación.</span>
+                  <span className="text-blue-600 font-bold text-xl">•</span>
+                  <span>⚡ Cobertura total: aparece en todos los espacios publicitarios de Google.</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <span className="text-blue-600 font-bold">•</span>
-                  <span>2020: primeras plataformas de automatización (Mailchimp, ActiveCampaign).</span>
+                  <span className="text-blue-600 font-bold text-xl">•</span>
+                  <span>🤖 Automatización inteligente: aprendizaje automático para asignar presupuesto.</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <span className="text-blue-600 font-bold">•</span>
-                  <span>2023: integración con CRM y e-commerce.</span>
+                  <span className="text-blue-600 font-bold text-xl">•</span>
+                  <span>🎯 Optimización por conversiones: enfoca inversión en lo que genera resultados.</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <span className="text-blue-600 font-bold">•</span>
-                  <span>2025: IA predictiva que decide qué enviar, a quién y cuándo.</span>
+                  <span className="text-blue-600 font-bold text-xl">•</span>
+                  <span>📊 Acceso a insights: muestra audiencias y ubicaciones más rentables.</span>
                 </li>
-            <p className="text-gray-700 mb-4">Estrategias que una agencia de marketing digital aplica en email marketing</p>
-
-            <p className="text-gray-700 mb-4">1. Segmentación inteligente</p>
-
-                <li className="flex items-start gap-3">
-                  <span className="text-blue-600 font-bold">•</span>
-                  <span>Por industria, ticket promedio, historial de compras.</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-blue-600 font-bold">•</span>
-                  <span>Por comportamiento en el sitio web.</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-blue-600 font-bold">•</span>
-                  <span>Por etapa del funnel (lead frío, lead activo, cliente recurrente).</span>
-                </li>
-            <p className="text-gray-700 mb-4">2. Automatización avanzada</p>
-
-                <li className="flex items-start gap-3">
-                  <span className="text-blue-600 font-bold">•</span>
-                  <span>Bienvenida → onboarding → conversión → fidelización.</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-blue-600 font-bold">•</span>
-                  <span>Carritos abandonados (retail, e-commerce).</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-blue-600 font-bold">•</span>
-                  <span>Retención postventa (servicios, SaaS).</span>
-                </li>
-            <p className="text-gray-700 mb-4">3. Personalización con IA</p>
-
-                <li className="flex items-start gap-3">
-                  <span className="text-blue-600 font-bold">•</span>
-                  <span>Asuntos generados dinámicamente para cada lead.</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-blue-600 font-bold">•</span>
-                  <span>Recomendaciones de producto según historial.</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-blue-600 font-bold">•</span>
-                  <span>Timing de envío optimizado con machine learning.</span>
-                </li>
-            <p className="text-gray-700 mb-4">4. Integración con CRM</p>
-
-                <li className="flex items-start gap-3">
-                  <span className="text-blue-600 font-bold">•</span>
-                  <span>Leads fluyen directo al pipeline de ventas.</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-blue-600 font-bold">•</span>
-                  <span>Dashboards muestran CPL, CAC y LTV por cohorte.</span>
-                </li>
-            <p className="text-gray-700 mb-4">Costos y resultados en Chile 2025</p>
-
-                <li className="flex items-start gap-3">
-                  <span className="text-blue-600 font-bold">•</span>
-                  <span>Costo promedio por envío (plataforma): \$0,02 – \$0,05 USD por contacto.</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-blue-600 font-bold">•</span>
-                  <span>Tasa de apertura promedio: 27% (cuando está bien segmentado).</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-blue-600 font-bold">•</span>
-                  <span>CTR promedio: 3–8%.</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-blue-600 font-bold">•</span>
-                  <span>ROI promedio: 30–45x dependiendo de la industria.</span>
-                </li>
-            <p className="text-gray-700 mb-4">👉 El email marketing sigue siendo el canal con mayor retorno sobre inversión en comparación a Google o Meta Ads.</p>
-
-            <div className="bg-gradient-to-r from-blue-600 to-pink-600 rounded-xl p-8 mb-8 text-white">
-              <h3 className="text-2xl font-bold mb-4">Ejemplo práctico en Chile</h3>
-            </div>
-
-            <div className="bg-gradient-to-r from-blue-600 to-pink-600 rounded-xl p-8 mb-8 text-white">
-              <h3 className="text-2xl font-bold mb-4">Caso: SaaS en Santiago</h3>
-            </div>
-
-                <li className="flex items-start gap-3">
-                  <span className="text-blue-600 font-bold">•</span>
-                  <span>Base de datos: 15.000 leads.</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-blue-600 font-bold">•</span>
-                  <span>Estrategia: nurturing automatizado con IA.</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-blue-600 font-bold">•</span>
-                  <span>Resultados en 3 meses:</span>
-                </li>
-            <p className="text-gray-700 mb-4">○	Tasa de apertura: 34%.</p>
-
-            <p className="text-gray-700 mb-4">○	Conversiones: 320 clientes.</p>
-
-            <p className="text-gray-700 mb-4">👉 CAC bajó un 28% al integrar nurturing por email con flujos de WhatsApp.</p>
-
-            <p className="text-gray-700 mb-4">Checklist M&P para email marketing con IA</p>
-
-                <li className="flex items-start gap-3">
-                  <span className="text-blue-600 font-bold">•</span>
-                  <span>✅ Segmenta por comportamiento y ticket promedio.</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-blue-600 font-bold">•</span>
-                  <span>✅ Diseña flujos automatizados para cada etapa del funnel.</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-blue-600 font-bold">•</span>
-                  <span>✅ Usa IA para personalizar asunto, contenido y timing.</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-blue-600 font-bold">•</span>
-                  <span>✅ Integra email con CRM para trazabilidad.</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-blue-600 font-bold">•</span>
-                  <span>✅ Mide ROI, CAC y LTV en dashboards en tiempo real.</span>
-                </li>
-            <p className="text-gray-700 mb-4">El email marketing no solo sigue vivo en Chile 2025: está más fuerte que nunca gracias a la inteligencia artificial.</p>
-
-            <p className="text-gray-700 mb-4">Cuando una agencia de marketing digital lo gestiona con estrategia, integración de data y reportería financiera, se convierte en un canal insuperable de ROI.</p>
-
-            <p className="text-gray-700 mb-4">👉 En M&P diseñamos flujos de email marketing con IA que reducen CAC, aumentan LTV y generan valor real para cada peso invertido.</p>
-
-                <li className="flex items-start gap-3">
-                  <span className="text-blue-600 font-bold">•</span>
-                  <span>H1: Email Marketing + IA en Chile 2025: Cómo una Agencia de Marketing Digital Convierte Correos en ROI Real</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-blue-600 font-bold">•</span>
-                  <span>Slug: email-marketing-ia-agencia-marketing-digital-chile-2025</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-blue-600 font-bold">•</span>
-                  <span>Meta descripción: Descubre cómo una agencia de marketing digital en Chile 2025 usa IA en email marketing para reducir CAC y aumentar ROI. Estrategias, costos y casos reales.</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-blue-600 font-bold">•</span>
-                  <span>Frase clave objetivo: agencia de marketing digital</span>
-                </li>
-
               </ul>
             </div>
 
-            <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6">Conclusión</h2>
+            {/* Riesgos de usar PMax sin agencia de marketing digital */}
+            <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6 flex items-center gap-3">
+              <Target className="w-8 h-8 text-orange-600" />
+              Riesgos de usar PMax sin agencia de marketing digital
+            </h2>
 
-            <p className="text-gray-700 mb-4">
-              En 2025, Performance Max en Chile se ha convertido en una estrategia fundamental para las empresas que buscan resultados medibles y ROI positivo.
-            </p>
+            <div className="bg-white border-2 border-orange-200 rounded-xl p-6 mb-8">
+              <ul className="space-y-3 text-gray-700">
+                <li className="flex items-start gap-3">
+                  <span className="text-orange-600 font-bold text-xl">•</span>
+                  <span>❌ Falta de control: Google decide qué anuncios mostrar y dónde.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-orange-600 font-bold text-xl">•</span>
+                  <span>❌ Dependencia total de IA: sin supervisión, puede optimizar hacia métricas de vanidad.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-orange-600 font-bold text-xl">•</span>
+                  <span>❌ Atribución borrosa: difícil saber qué canal específico generó el lead.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-orange-600 font-bold text-xl">•</span>
+                  <span>❌ Creatividades pobres: sin un equipo creativo, los anuncios terminan genéricos.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-orange-600 font-bold text-xl">•</span>
+                  <span>Aquí es donde una agencia de marketing digital agrega valor: estructura campañas con data, define audiencias personalizadas y mide CAC y ROAS reales.</span>
+                </li>
+              </ul>
+            </div>
 
-            <p className="text-gray-700 mb-6">
-              👉 En M&P diseñamos e implementamos estrategias de Performance Max con foco en performance, integración multicanal y reportería financiera clara.
-            </p>
+            {/* Costos de Performance Max en Chile 2025 */}
+            <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6 flex items-center gap-3">
+              <DollarSign className="w-8 h-8 text-green-600" />
+              Costos de Performance Max en Chile 2025
+            </h2>
 
-            <div className="bg-gradient-to-br from-blue-600 to-pink-700 rounded-2xl p-10 text-center mt-16">
+            <div className="bg-white border-2 border-green-200 rounded-xl p-6 mb-8">
+              <ul className="space-y-3 text-gray-700">
+                <li className="flex items-start gap-3">
+                  <span className="text-green-600 font-bold text-xl">•</span>
+                  <span>CPC promedio: $350 – $600 CLP.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-green-600 font-bold text-xl">•</span>
+                  <span>CPL promedio: $8.000 – $20.000 CLP según industria.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-green-600 font-bold text-xl">•</span>
+                  <span>ROAS promedio: 3.5x – 6x (con optimización profesional).</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-green-600 font-bold text-xl">•</span>
+                  <span>En sectores como inmobiliarias y SaaS, PMax puede superar el rendimiento de campañas tradicionales de búsqueda si se trabaja con la estrategia adecuada.</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Estrategia de una agencia de marketing digital para PMax */}
+            <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6 flex items-center gap-3">
+              <CheckCircle className="w-8 h-8 text-green-600" />
+              Estrategia de una agencia de marketing digital para PMax
+            </h2>
+
+            <p className="text-gray-700 mb-4">Paso 1 – Configuración inicial</p>
+
+            <div className="bg-white border-2 border-green-200 rounded-xl p-6 mb-6">
+              <ul className="space-y-3 text-gray-700">
+                <li className="flex items-start gap-3">
+                  <span className="text-green-600 font-bold text-xl">•</span>
+                  <span>Definir objetivos (leads, ventas).</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-green-600 font-bold text-xl">•</span>
+                  <span>Conectar conversiones en Google Ads + GA4.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-green-600 font-bold text-xl">•</span>
+                  <span>Subir creatividades optimizadas (imágenes, videos, headlines).</span>
+                </li>
+              </ul>
+            </div>
+
+            <p className="text-gray-700 mb-4">Paso 2 – Alimentación de data</p>
+
+            <div className="bg-white border-2 border-green-200 rounded-xl p-6 mb-6">
+              <ul className="space-y-3 text-gray-700">
+                <li className="flex items-start gap-3">
+                  <span className="text-green-600 font-bold text-xl">•</span>
+                  <span>Importar audiencias propias (CRM, clientes, visitantes web).</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-green-600 font-bold text-xl">•</span>
+                  <span>Usar listas de remarketing.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-green-600 font-bold text-xl">•</span>
+                  <span>Incluir señales de audiencia (intenciones de compra).</span>
+                </li>
+              </ul>
+            </div>
+
+            <p className="text-gray-700 mb-4">Paso 3 – Optimización continua</p>
+
+            <div className="bg-white border-2 border-green-200 rounded-xl p-6 mb-6">
+              <ul className="space-y-3 text-gray-700">
+                <li className="flex items-start gap-3">
+                  <span className="text-green-600 font-bold text-xl">•</span>
+                  <span>Monitorear CPL y CAC, no solo conversiones.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-green-600 font-bold text-xl">•</span>
+                  <span>Ajustar creatividades y mensajes.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-green-600 font-bold text-xl">•</span>
+                  <span>Revisar insights de búsqueda y ubicaciones.</span>
+                </li>
+              </ul>
+            </div>
+
+            <p className="text-gray-700 mb-4">Paso 4 – Dashboards de performance</p>
+
+            <div className="bg-white border-2 border-green-200 rounded-xl p-6 mb-6">
+              <ul className="space-y-3 text-gray-700">
+                <li className="flex items-start gap-3">
+                  <span className="text-green-600 font-bold text-xl">•</span>
+                  <span>Conectar Google Ads API a dashboards M&P.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-green-600 font-bold text-xl">•</span>
+                  <span>Medir ROI, ROAS, CAC y LTV por cohorte.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-green-600 font-bold text-xl">•</span>
+                  <span>Reportar como “estado de resultados de marketing”.</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Ejemplo práctico en Chile */}
+            <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6 flex items-center gap-3">
+              <Zap className="w-8 h-8 text-yellow-600" />
+              Ejemplo práctico en Chile
+            </h2>
+
+            <p className="text-gray-700 mb-4">Caso: SaaS B2B en Santiago</p>
+
+            <div className="bg-white border-2 border-yellow-200 rounded-xl p-6 mb-6">
+              <ul className="space-y-3 text-gray-700">
+                <li className="flex items-start gap-3">
+                  <span className="text-yellow-600 font-bold text-xl">•</span>
+                  <span>Presupuesto mensual: $5.000.000 CLP.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-yellow-600 font-bold text-xl">•</span>
+                  <span>CPC promedio: $420 CLP.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-yellow-600 font-bold text-xl">•</span>
+                  <span>CPL: $12.000 CLP.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-yellow-600 font-bold text-xl">•</span>
+                  <span>CAC: $220.000 CLP.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-yellow-600 font-bold text-xl">•</span>
+                  <span>LTV: $2.500.000 CLP.  👉 Payback en 2 meses, con ROAS de 7.1x.</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Checklist M&P para Performance Max */}
+            <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6 flex items-center gap-3">
+              <CheckCircle className="w-8 h-8 text-green-600" />
+              Checklist M&P para Performance Max
+            </h2>
+
+            <div className="bg-green-50 border-2 border-green-200 rounded-xl p-6 mb-8">
+              <ul className="space-y-3 text-gray-700">
+                <li className="flex items-start gap-3">
+                  <span className="text-green-600 font-bold">✅</span>
+                  <span>Define KPIs financieros (CAC, ROAS, LTV), no solo clics.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-green-600 font-bold">✅</span>
+                  <span>Alimenta PMax con audiencias propias y señales de valor.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-green-600 font-bold">✅</span>
+                  <span>Usa creatividades profesionales adaptadas a cada canal.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-green-600 font-bold">✅</span>
+                  <span>Conecta dashboards para medición en tiempo real.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-green-600 font-bold">✅</span>
+                  <span>Evalúa semanalmente si PMax supera campañas de búsqueda tradicionales.</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Google Performance Max en Chile 2025 puede ser un arma de doble filo. Mal configurada, es una caja negra que gasta presupuesto sin control. Bien gestionada por una agencia de marketing digital, se transforma en una máquina de ventas automatizada con resultados comprobables. */}
+            <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6 flex items-center gap-3">
+              <Target className="w-8 h-8 text-orange-600" />
+              Google Performance Max en Chile 2025 puede ser un arma de doble filo. Mal configurada, es una caja negra que gasta presupuesto sin control. Bien gestionada por una agencia de marketing digital, se transforma en una máquina de ventas automatizada con resultados comprobables.
+            </h2>
+
+            <div className="bg-white border-2 border-orange-200 rounded-xl p-6 mb-8">
+              <ul className="space-y-3 text-gray-700">
+                <li className="flex items-start gap-3">
+                  <span className="text-orange-600 font-bold text-xl">•</span>
+                  <span>En M&P ayudamos a empresas a usar PMax con estrategia, data y reportería clara, logrando que cada peso invertido en Google Ads tenga trazabilidad financiera real.</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* CTA */}
+            <div className="bg-gradient-to-br from-red-600 to-pink-700 rounded-2xl p-10 text-center mt-16">
               <h3 className="text-3xl font-black text-white mb-4">
-                ¿Quieres implementar Performance Max en tu empresa?
+                ¿Quieres transformar tu marketing digital?
               </h3>
-              <p className="text-xl text-blue-100 mb-8">
-                Agenda una sesión estratégica gratuita y te mostramos cómo transformar tu inversión en resultados reales.
+              <p className="text-xl text-red-100 mb-8">
+                Agenda una sesión estratégica gratuita con nuestros especialistas.
               </p>
               <Link
                 href="https://wa.me/56992258137"
-                className="inline-block bg-white text-blue-600 px-10 py-4 rounded-xl font-bold text-lg hover:shadow-2xl transition-all hover:scale-105"
+                className="inline-block bg-white text-red-600 px-10 py-4 rounded-xl font-bold text-lg hover:shadow-2xl transition-all hover:scale-105"
               >
                 Hablar con un Especialista
               </Link>
@@ -256,10 +327,10 @@ export default function ArticlePage() {
         </div>
       </article>
 
-      <footer className="bg-gray-900 text-white py-12 px-6">
-        <div className="max-w-7xl mx-auto text-center">
-          <Link href="/"><img src="/logo-blanco.png" alt="Muller y Pérez" className="h-10 w-auto mx-auto mb-6" /></Link>
-          <p className="text-gray-400">© 2025 Muller y Pérez. Marketing Digital Basado en Datos.</p>
+      {/* Footer */}
+      <footer className="border-t border-gray-200 py-12 px-6">
+        <div className="max-w-7xl mx-auto text-center text-gray-600 text-sm">
+          <p>© 2025 Muller y Pérez · Agencia de Marketing Digital</p>
         </div>
       </footer>
     </div>

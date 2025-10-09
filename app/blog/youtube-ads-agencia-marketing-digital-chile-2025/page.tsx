@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     description: 'Descubre cómo una agencia de marketing digital en Chile 2025 usa YouTube Ads y video performance para aumentar conversiones. Costos reales y estrategias.',
     type: 'article',
     url: 'https://www.mulleryperez.cl/blog/youtube-ads-agencia-marketing-digital-chile-2025',
-    publishedTime: '2025-10-09T00:00:00.000Z'
+    publishedTime: '2025-01-10T00:00:00.000Z'
   }
 }
 
@@ -33,8 +33,8 @@ export default function ArticlePage() {
       <article className="pt-32 pb-24 px-6">
         <div className="max-w-4xl mx-auto">
           <div className="mb-8">
-            <span className="px-4 py-2 bg-red-100 text-red-700 rounded-full text-sm font-bold">YouTube Ads</span>
-            <p className="text-gray-500 mt-4">9 de octubre de 2025 · 21 min de lectura</p>
+            <span className="px-4 py-2 bg-red-100 text-red-700 rounded-full text-sm font-bold">Performance</span>
+            <p className="text-gray-500 mt-4">10 de enero de 2025 · 11 min de lectura</p>
           </div>
 
           <h1 className="text-4xl lg:text-5xl font-black text-gray-900 mb-6 leading-tight">
@@ -42,6 +42,7 @@ export default function ArticlePage() {
           </h1>
 
           <div className="prose prose-lg max-w-none">
+            {/* Introducción */}
             <div className="bg-red-50 border-l-4 border-red-600 p-6 rounded-r-xl mb-12">
               <h3 className="text-xl font-bold text-gray-900 mb-4">Introducción</h3>
               <p className="text-gray-700 mb-4">
@@ -55,12 +56,13 @@ export default function ArticlePage() {
               </p>
             </div>
 
+            {/* El poder del video en Chile */}
             <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6 flex items-center gap-3">
               <Youtube className="w-8 h-8 text-red-600" />
               El poder del video en Chile
             </h2>
 
-            <div className="bg-white border-2 border-red-200 rounded-xl p-6 mb-8">
+            <div className="bg-white border-2 border-red-200 rounded-xl p-6 mb-6">
               <ul className="space-y-3 text-gray-700">
                 <li className="flex items-start gap-3">
                   <span className="text-red-600 font-bold text-xl">📊</span>
@@ -81,13 +83,14 @@ export default function ArticlePage() {
               </ul>
             </div>
 
-            <div className="bg-gradient-to-r from-red-600 to-pink-600 rounded-xl p-8 mb-8 text-white">
-              <p className="text-xl font-bold mb-2">👉 Insight clave:</p>
+            <div className="bg-gradient-to-r from-red-600 to-pink-600 rounded-xl p-6 mb-8 text-white">
+              <p className="text-lg font-bold mb-2">👉 Insight clave:</p>
               <p>
                 En un contexto donde las audiencias fragmentan su atención, el video permite captar interés, generar confianza y cerrar ventas en el mismo canal.
               </p>
             </div>
 
+            {/* Formatos de YouTube Ads */}
             <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6 flex items-center gap-3">
               <PlayCircle className="w-8 h-8 text-blue-600" />
               Formatos de YouTube Ads
@@ -130,38 +133,40 @@ export default function ArticlePage() {
               </div>
             </div>
 
+            {/* Costos reales */}
             <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6 flex items-center gap-3">
               <DollarSign className="w-8 h-8 text-green-600" />
               Costos reales de YouTube Ads en Chile 2025
             </h2>
 
-            <div className="grid md:grid-cols-3 gap-6 mb-12">
+            <div className="grid md:grid-cols-3 gap-6 mb-8">
               <div className="bg-white border-2 border-green-200 rounded-xl p-6">
-                <h3 className="text-xl font-bold text-gray-900 mb-4">CPV promedio</h3>
+                <h3 className="text-lg font-bold text-gray-900 mb-3">CPV promedio</h3>
                 <p className="text-3xl font-black text-green-600 mb-2">$40 – $120</p>
                 <p className="text-gray-600 text-sm">CLP por vista</p>
               </div>
 
               <div className="bg-white border-2 border-blue-200 rounded-xl p-6">
-                <h3 className="text-xl font-bold text-gray-900 mb-4">CPC promedio</h3>
+                <h3 className="text-lg font-bold text-gray-900 mb-3">CPC promedio</h3>
                 <p className="text-3xl font-black text-blue-600 mb-2">$350 – $600</p>
                 <p className="text-gray-600 text-sm">CLP (campañas orientadas a clic)</p>
               </div>
 
               <div className="bg-white border-2 border-purple-200 rounded-xl p-6">
-                <h3 className="text-xl font-bold text-gray-900 mb-4">CPM promedio</h3>
+                <h3 className="text-lg font-bold text-gray-900 mb-3">CPM promedio</h3>
                 <p className="text-3xl font-black text-purple-600 mb-2">$2.000 – $5.000</p>
                 <p className="text-gray-600 text-sm">CLP por mil impresiones</p>
               </div>
             </div>
 
-            <div className="bg-gradient-to-r from-green-600 to-blue-700 rounded-xl p-8 mb-8 text-white">
-              <p className="text-xl font-bold mb-2">👉 Ventaja competitiva:</p>
+            <div className="bg-gradient-to-r from-green-600 to-blue-700 rounded-xl p-6 mb-8 text-white">
+              <p className="text-lg font-bold mb-2">👉 Ventaja competitiva:</p>
               <p>
                 Comparado con TV, los costos son significativamente menores y permiten una segmentación precisa por intereses, palabras clave e incluso remarketing.
               </p>
             </div>
 
+            {/* Estrategia */}
             <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6 flex items-center gap-3">
               <Target className="w-8 h-8 text-orange-600" />
               Estrategia de una agencia de marketing digital en YouTube Ads
@@ -209,6 +214,7 @@ export default function ArticlePage() {
               </div>
             </div>
 
+            {/* Casos prácticos */}
             <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6 flex items-center gap-3">
               <TrendingUp className="w-8 h-8 text-green-600" />
               Casos prácticos en Chile
@@ -241,6 +247,7 @@ export default function ArticlePage() {
               </div>
             </div>
 
+            {/* Checklist */}
             <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6 flex items-center gap-3">
               <CheckCircle className="w-8 h-8 text-green-600" />
               Checklist M&P para YouTube Ads en Chile
@@ -271,6 +278,7 @@ export default function ArticlePage() {
               </ul>
             </div>
 
+            {/* Conclusión */}
             <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6">Conclusión</h2>
 
             <p className="text-gray-700 mb-4">
@@ -281,6 +289,7 @@ export default function ArticlePage() {
               👉 En M&P diseñamos campañas de YouTube Ads con foco en ROI, integradas a Google, Meta y LinkedIn, y conectadas a dashboards que hablan el lenguaje de las finanzas.
             </p>
 
+            {/* CTA */}
             <div className="bg-gradient-to-br from-red-600 to-pink-700 rounded-2xl p-10 text-center mt-16">
               <h3 className="text-3xl font-black text-white mb-4">
                 ¿Quieres convertir YouTube Ads en ventas reales?
@@ -299,10 +308,10 @@ export default function ArticlePage() {
         </div>
       </article>
 
-      <footer className="bg-gray-900 text-white py-12 px-6">
-        <div className="max-w-7xl mx-auto text-center">
-          <Link href="/"><img src="/logo-blanco.png" alt="Muller y Pérez" className="h-10 w-auto mx-auto mb-6" /></Link>
-          <p className="text-gray-400">© 2025 Muller y Pérez. Marketing Digital Basado en Datos.</p>
+      {/* Footer */}
+      <footer className="border-t border-gray-200 py-12 px-6">
+        <div className="max-w-7xl mx-auto text-center text-gray-600 text-sm">
+          <p>© 2025 Muller y Pérez · Agencia de Marketing Digital</p>
         </div>
       </footer>
     </div>
