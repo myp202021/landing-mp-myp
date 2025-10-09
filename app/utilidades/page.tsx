@@ -8,7 +8,7 @@
 import React, { useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Calculator, Gauge, GitBranch, Gamepad2 } from 'lucide-react'
+import { Calculator, Gauge, GitBranch, Gamepad2, BookOpen } from 'lucide-react'
 import { createSoftwareAppSchema } from '@/lib/metadata'
 
 export default function Utilidades() {
@@ -33,6 +33,14 @@ export default function Utilidades() {
   )
 
   const herramientas = [
+    {
+      nombre: 'Ebook: Marketing de Datos 2025',
+      descripcion: 'Descarga gratis la guía definitiva del marketing basado en datos e IA',
+      icono: BookOpen,
+      url: '/recursos/ebook-marketing-datos-2025',
+      color: 'from-violet-600 to-fuchsia-600',
+      destacado: true
+    },
     {
       nombre: 'Calculadora de CAC',
       descripcion: 'Calcula tu Costo de Adquisición de Cliente de forma precisa',
@@ -115,6 +123,13 @@ export default function Utilidades() {
                   href={herramienta.url}
                   className="group relative bg-white/5 backdrop-blur-sm rounded-2xl p-8 border border-white/10 hover:border-white/20 hover:bg-white/10 transition-all duration-300"
                 >
+                  {/* Badge GRATIS para el ebook */}
+                  {herramienta.destacado && (
+                    <div className="absolute top-4 right-4 bg-gradient-to-r from-green-500 to-emerald-500 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg animate-pulse">
+                      GRATIS
+                    </div>
+                  )}
+
                   {/* Icon */}
                   <div className={`w-16 h-16 bg-gradient-to-br ${herramienta.color} rounded-xl flex items-center justify-center mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300`}>
                     <IconComponent className="w-8 h-8 text-white" />
@@ -130,7 +145,7 @@ export default function Utilidades() {
 
                   {/* Arrow */}
                   <div className="mt-6 flex items-center gap-2 text-purple-300 font-semibold group-hover:gap-4 transition-all duration-300">
-                    <span>Usar ahora</span>
+                    <span>{herramienta.destacado ? 'Descargar ahora' : 'Usar ahora'}</span>
                     <span>→</span>
                   </div>
                 </Link>
