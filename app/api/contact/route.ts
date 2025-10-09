@@ -96,6 +96,34 @@ Fecha: ${new Date().toLocaleString('es-CL')}
     console.log('📧 Procesando solicitud de contacto...')
     console.log(`Nombre: ${nombre}, Empresa: ${empresa}`)
 
+    const timestamp = new Date().toISOString()
+
+    // 1. Guardar en Google Sheets (pestaña "Contactos")
+    try {
+      const sheetsResponse = await fetch(
+        `https://sheets.googleapis.com/v4/spreadsheets/${process.env.GOOGLE_SHEET_ID}/values/Contactos!A:F:append?valueInputOption=USER_ENTERED`,
+        {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${process.env.GOOGLE_SHEETS_API_KEY}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            values: [[timestamp, nombre, empresa, email, telefono, solicitud]],
+          }),
+        }
+      );
+
+      if (!sheetsResponse.ok) {
+        console.error('Error guardando en Google Sheets:', await sheetsResponse.text());
+      } else {
+        console.log('✅ Contacto guardado en Google Sheets');
+      }
+    } catch (sheetsError) {
+      console.error('Error con Google Sheets:', sheetsError);
+      // No fallar si Google Sheets falla
+    }
+
     // Verificar si hay API key configurada
     if (!process.env.RESEND_API_KEY) {
       console.warn('⚠️ RESEND_API_KEY no configurada. Email NO enviado.')

@@ -99,10 +99,13 @@ export default function EbookMarketingDatos2025() {
       <header className="bg-white/80 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <Link href="/" className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-xl">M&P</span>
-            </div>
-            <span className="font-bold text-xl text-gray-900">Muller y Pérez</span>
+            <Image
+              src="/logo-myp.png"
+              alt="Muller y Pérez"
+              width={150}
+              height={40}
+              className="h-10 w-auto"
+            />
           </Link>
         </div>
       </header>
