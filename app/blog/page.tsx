@@ -232,6 +232,231 @@ const articles = [
     category: 'Precios',
     readTime: '11 min',
     tag: 'Precios'
+  },
+  {
+    slug: 'youtube-ads-agencia-marketing-digital-chile-2025',
+    title: 'YouTube Ads en Chile 2025: Cómo una Agencia de Marketing Digital Usa Video Performance para Aumentar Conversiones',
+    excerpt: 'En Chile 2025, el consumo de video online alcanzó cifras históricas: más del 92% de los usuarios de internet ven YouTube al menos una vez al mes, y el tiempo promedio diario dedicado a la plataforma supera los 60 minutos. Para las marcas, YouTube ya no es solo un canal de branding.',
+    date: '2025-01-10',
+    category: 'Performance',
+    readTime: '11 min',
+    tag: 'YouTube Ads'
+  },
+  {
+    slug: 'tiktok-ads-agencia-marketing-digital-chile-2025',
+    title: 'TikTok Ads en Chile 2025: Cómo una Agencia de Marketing Digital Transforma Creatividad en Performance',
+    excerpt: 'TikTok pasó de ser una red de entretenimiento juvenil a convertirse en la plataforma con mayor crecimiento en inversión publicitaria en Chile 2025. Su algoritmo basado en intereses y comportamiento de consumo lo hace ideal no solo para awareness, sino también para performance.',
+    date: '2025-01-11',
+    category: 'Performance',
+    readTime: '9 min',
+    tag: 'TikTok Ads'
+  },
+  {
+    slug: 'google-performance-max-agencia-marketing-digital-chile-2025',
+    title: 'Google Performance Max en Chile 2025: Cómo una Agencia de Marketing Digital Convierte Automatización en Resultados',
+    excerpt: 'En Chile 2025, Google Performance Max (PMax) ya no es una novedad: es la herramienta predilecta de Google Ads para centralizar campañas multicanal con inteligencia artificial. Pero su efectividad depende directamente de cómo se configure, qué data se alimente y cómo se mida el rendimiento.',
+    date: '2025-01-12',
+    category: 'Performance',
+    readTime: '10 min',
+    tag: 'Google Ads'
+  },
+  {
+    slug: 'email-marketing-ia-agencia-marketing-digital-chile-2025',
+    title: 'Email Marketing + IA en Chile 2025: Cómo una Agencia de Marketing Digital Convierte Correos en ROI Real',
+    excerpt: 'En 2025, mientras todos hablan de TikTok, YouTube o la inteligencia artificial generativa, hay un canal silencioso que sigue siendo uno de los más rentables en Chile: el email marketing. La diferencia hoy es que ya no se trata de enviar correos masivos y esperar resultados.',
+    date: '2025-01-13',
+    category: 'Performance',
+    readTime: '9 min',
+    tag: 'Email Marketing'
+  },
+  {
+    slug: 'seo-ia-agencia-marketing-digital-chile-2025',
+    title: 'SEO + IA en Chile 2025: Cómo una Agencia de Marketing Digital Logra Posicionar en Google y en Plataformas de Inteligencia Artificial',
+    excerpt: 'El SEO en Chile 2025 ya no es solo aparecer en Google. Hoy, las decisiones de los usuarios pasan por múltiples buscadores: Google, YouTube, Amazon, TikTok, y —cada vez más— plataformas de inteligencia artificial como ChatGPT, Gemini o Meta AI.',
+    date: '2025-01-14',
+    category: 'Performance',
+    readTime: '10 min',
+    tag: 'SEO'
+  },
+  {
+    slug: 'inbound-marketing-agencia-marketing-digital-chile-2025',
+    title: 'Inbound Marketing en Chile 2025: Cómo una Agencia de Marketing Digital Convierte Contenido en Clientes',
+    excerpt: 'En un mercado cada vez más saturado de anuncios, los consumidores chilenos se han vuelto inmunes a la publicidad invasiva. Hoy, el 70% de los usuarios prefiere investigar por su cuenta antes de hablar con un vendedor.',
+    date: '2025-01-15',
+    category: 'Performance',
+    readTime: '11 min',
+    tag: 'Inbound'
+  },
+  {
+    slug: 'retargeting-agencia-marketing-digital-chile-2025',
+    title: 'Estrategias de Retargeting en Chile 2025: Cómo una Agencia de Marketing Digital Maximiza Conversiones',
+    excerpt: 'En Chile 2025, conseguir tráfico ya no es el problema. Las empresas invierten millones en Google Ads, Meta Ads y TikTok Ads para atraer visitantes, pero el 95% de los usuarios abandona un sitio sin comprar ni dejar sus datos.',
+    date: '2025-01-16',
+    category: 'Performance',
+    readTime: '9 min',
+    tag: 'Retargeting'
+  },
+  {
+    slug: 'marketing-automation-agencia-marketing-digital-chile-2025',
+    title: 'Marketing Automation en Chile 2025: Cómo una Agencia de Marketing Digital Integra IA y CRM para Escalar Ventas',
+    excerpt: 'En Chile 2025, la mayoría de las empresas ya entendió que sin automatización no hay escalabilidad. El marketing digital dejó de ser una serie de tareas manuales y pasó a ser un ecosistema de procesos conectados por IA y CRM.',
+    date: '2025-01-17',
+    category: 'Performance',
+    readTime: '10 min',
+    tag: 'Automatización'
+  },
+  {
+    slug: 'customer-journey-agencia-marketing-digital-chile-2025',
+    title: 'Customer Journey en Chile 2025: Cómo una Agencia de Marketing Digital Diseña Mapas de Decisión para Aumentar Conversiones',
+    excerpt: 'En 2025, el marketing digital en Chile dejó de centrarse en "atraer clics" y evolucionó hacia algo más profundo: entender cómo deciden los clientes. Hoy, las empresas que no tienen claridad sobre el journey de sus consumidores pierden oportunidades, gastan de más en Ads y no logran fidelización.',
+    date: '2025-01-18',
+    category: 'Performance',
+    readTime: '10 min',
+    tag: 'Customer Journey'
+  },
+  {
+    slug: 'dashboards-agencia-marketing-digital-chile-2025',
+    title: 'Dashboards de Marketing en Chile 2025: Cómo una Agencia de Marketing Digital Convierte Datos en Decisiones',
+    excerpt: 'En Chile 2025, las gerencias ya no aceptan reportes de marketing llenos de impresiones, likes o clics sin contexto. Hoy, los directorios quieren ver marketing como si fueran estados financieros: ingresos, costos, margen y retorno.',
+    date: '2025-01-19',
+    category: 'Performance',
+    readTime: '9 min',
+    tag: 'Analytics'
+  },
+  {
+    slug: 'benchmarking-agencia-marketing-digital-chile-2025',
+    title: 'Benchmarking en Chile 2025: Cómo una Agencia de Marketing Digital Compara Industrias y Optimiza Inversión',
+    excerpt: 'En marketing digital, no basta con mirar solo tus propias métricas. En Chile 2025, las empresas más competitivas son aquellas que comparan su rendimiento con benchmarks reales de la industria: CPC, CPL, CAC, LTV y ROAS en distintos sectores.',
+    date: '2025-01-20',
+    category: 'Performance',
+    readTime: '9 min',
+    tag: 'Benchmarks'
+  },
+  {
+    slug: 'marketing-b2b-agencia-marketing-digital-chile-2025',
+    title: 'Marketing B2B en Chile 2025: Cómo una Agencia de Marketing Digital Genera Leads de Alto Valor',
+    excerpt: 'En Chile 2025, el marketing B2B dejó de ser "hacer un par de campañas en LinkedIn" para transformarse en un ecosistema completo donde cada lead debe ser tratado como una inversión estratégica. A diferencia del B2C, donde el ticket promedio puede ser bajo y la decisión rápida, en B2B hablamos de procesos largos, decisores múltiples y contratos millonarios.',
+    date: '2025-01-21',
+    category: 'Performance',
+    readTime: '11 min',
+    tag: 'B2B'
+  },
+  {
+    slug: 'roi-roas-agencia-marketing-digital-chile-2025',
+    title: 'Estrategias de ROI y ROAS en Chile 2025: Cómo una Agencia de Marketing Digital Mide lo que Importa',
+    excerpt: 'En Chile 2025, hablar de marketing digital sin mencionar ROI y ROAS es como hablar de finanzas sin ver utilidades. Las empresas ya no se conforman con "alcance" o "me gusta": quieren entender cuánto dinero vuelve por cada peso invertido.',
+    date: '2025-01-22',
+    category: 'Performance',
+    readTime: '10 min',
+    tag: 'ROI & ROAS'
+  },
+  {
+    slug: 'seo-agencia-marketing-digital-chile-2025',
+    title: 'Estrategias de SEO en Chile 2025: Cómo una Agencia de Marketing Digital Combina Ads y Contenido para Dominar Búsquedas',
+    excerpt: 'En Chile 2025, las búsquedas en Google y en plataformas de inteligencia artificial (ChatGPT, Gemini, Meta AI) se han convertido en el principal canal de descubrimiento de marcas y servicios. Sin embargo, la mayoría de las empresas sigue viendo SEO y Paid Media como estrategias separadas, cuando en realidad deben funcionar de manera integrada.',
+    date: '2025-01-23',
+    category: 'Performance',
+    readTime: '10 min',
+    tag: 'SEO'
+  },
+  {
+    slug: 'tiktok-ads-agencia-marketing-digital-chile-2025-2',
+    title: 'TikTok Ads en Chile 2025: Cómo una Agencia de Marketing Digital Convierte Awareness en Ventas',
+    excerpt: 'En Chile 2025, TikTok dejó de ser solo una red de bailes virales para transformarse en una de las plataformas publicitarias más rentables y con mayor crecimiento en inversión. Con más de 9 millones de usuarios activos en el país, y un tiempo promedio de consumo que supera los 70 minutos diarios, TikTok Ads se convirtió en un canal clave no solo para awareness, sino también para ventas directas.',
+    date: '2025-01-24',
+    category: 'Performance',
+    readTime: '9 min',
+    tag: 'TikTok Ads'
+  },
+  {
+    slug: 'email-marketing-agencia-marketing-digital-chile-2025',
+    title: 'Email Marketing en Chile 2025: Cómo una Agencia de Marketing Digital Convierte Contactos en Ventas Recurrentes',
+    excerpt: 'En Chile 2025, muchos piensan que el email marketing está "pasado de moda". Nada más lejos de la realidad. Los datos muestran que el email sigue siendo el canal con mayor ROI en marketing digital, superando incluso a Google y Meta Ads en retorno por peso invertido.',
+    date: '2025-01-25',
+    category: 'Performance',
+    readTime: '10 min',
+    tag: 'Email Marketing'
+  },
+  {
+    slug: 'marketing-inmobiliario-agencia-marketing-digital-chile-2025',
+    title: 'Marketing Inmobiliario en Chile 2025: Cómo una Agencia de Marketing Digital Convierte Leads en Ventas de Alto Ticket',
+    excerpt: 'En Chile 2025, el sector inmobiliario sigue siendo uno de los más competitivos y dinámicos del país. Con proyectos en Santiago, regiones emergentes como Temuco y Concepción, y polos turísticos como Pucón o La Serena, la competencia por captar compradores e inversionistas es feroz.',
+    date: '2025-01-26',
+    category: 'Performance',
+    readTime: '11 min',
+    tag: 'Inmobiliario'
+  },
+  {
+    slug: 'marketing-contenidos-agencia-marketing-digital-chile-2025',
+    title: 'Marketing de Contenidos en Chile 2025: Cómo una Agencia de Marketing Digital Convierte Blogs y Videos en Ventas',
+    excerpt: 'En 2025, el marketing de contenidos ya no es publicar un par de artículos en un blog y esperar resultados. En Chile, donde la competencia digital crece cada mes, las marcas que logran diferenciarse son aquellas que transforman contenido en ventas reales, no en métricas de vanidad.',
+    date: '2025-01-27',
+    category: 'Performance',
+    readTime: '10 min',
+    tag: 'Contenidos'
+  },
+  {
+    slug: 'marketing-saas-agencia-marketing-digital-chile-2025',
+    title: 'Marketing para SaaS en Chile 2025: Cómo una Agencia de Marketing Digital Escala Suscripciones con Performance',
+    excerpt: 'El mercado SaaS (Software as a Service) en Chile 2025 está en pleno auge. Desde soluciones de RRHH y contabilidad, hasta plataformas de e-commerce y logística, cada semana surgen nuevos competidores.',
+    date: '2025-01-28',
+    category: 'Performance',
+    readTime: '11 min',
+    tag: 'SaaS'
+  },
+  {
+    slug: 'marketing-salud-agencia-marketing-digital-chile-2025',
+    title: 'Marketing en Salud Privada en Chile 2025: Cómo una Agencia de Marketing Digital Capta Pacientes y Aumenta ROI',
+    excerpt: 'En Chile 2025, la salud privada es uno de los sectores más competitivos y con mayor presión digital. Clínicas, centros médicos, laboratorios y especialistas invierten cada vez más en marketing para atraer pacientes, pero pocos logran diferenciarse en un mercado donde los usuarios comparan precios, disponibilidad y reputación online antes de tomar decisiones.',
+    date: '2025-01-29',
+    category: 'Performance',
+    readTime: '10 min',
+    tag: 'Salud'
+  },
+  {
+    slug: 'marketing-educacion-agencia-marketing-digital-chile-2025',
+    title: 'Marketing en Educación en Chile 2025: Cómo una Agencia de Marketing Digital Atrae Alumnos y Optimiza CAC',
+    excerpt: 'En Chile 2025, la educación privada —desde colegios hasta universidades y plataformas de e-learning— se encuentra en un escenario de alta competencia. Los estudiantes y sus familias ya no toman decisiones basadas solo en cercanía o prestigio, sino que investigan online, comparan precios, revisan reseñas y buscan confianza en el proceso de admisión.',
+    date: '2025-01-30',
+    category: 'Performance',
+    readTime: '10 min',
+    tag: 'Educación'
+  },
+  {
+    slug: 'marketing-retail-ecommerce-agencia-marketing-digital-chile-2025',
+    title: 'Marketing en Retail y E-commerce en Chile 2025: Cómo una Agencia de Marketing Digital Escala Ventas con Performance',
+    excerpt: 'En Chile 2025, el retail y el e-commerce viven un crecimiento explosivo impulsado por la digitalización, la logística avanzada y el cambio en hábitos de consumo. Desde grandes cadenas hasta pequeños comercios en regiones, todos compiten por atraer al mismo usuario: un comprador digital exigente que busca conveniencia, precio competitivo y confianza.',
+    date: '2025-01-31',
+    category: 'Performance',
+    readTime: '10 min',
+    tag: 'Retail'
+  },
+  {
+    slug: 'marketing-turismo-hotel-agencia-marketing-digital-chile-2025',
+    title: 'Marketing en Turismo y Hotelería en Chile 2025: Cómo una Agencia de Marketing Digital Llena Habitaciones y Tours',
+    excerpt: 'El turismo en Chile 2025 está en plena recuperación y expansión. Con el auge del turismo interno, el regreso del turismo internacional y el crecimiento del ecoturismo en regiones como Magallanes, Atacama y Los Lagos, la competencia por captar viajeros es más intensa que nunca.',
+    date: '2025-02-01',
+    category: 'Performance',
+    readTime: '10 min',
+    tag: 'Turismo'
+  },
+  {
+    slug: 'marketing-construccion-industria-agencia-marketing-digital-chile-2025',
+    title: 'Marketing en Construcción e Industria en Chile 2025: Cómo una Agencia de Marketing Digital Genera Leads B2B de Alto Valor',
+    excerpt: 'En Chile 2025, la construcción y la industria enfrentan un escenario desafiante: costos en alza, presión regulatoria y necesidad de atraer contratos de gran envergadura. Ya no basta con relaciones comerciales tradicionales: los directorios exigen procesos digitales que generen leads B2B de calidad, con reportería que justifique cada peso invertido.',
+    date: '2025-02-02',
+    category: 'Performance',
+    readTime: '11 min',
+    tag: 'Construcción'
+  },
+  {
+    slug: 'marketing-agroindustria-agencia-marketing-digital-chile-2025',
+    title: 'Marketing en Agroindustria en Chile 2025: Cómo una Agencia de Marketing Digital Potencia Exportaciones y Ventas Locales',
+    excerpt: 'La agroindustria chilena es un motor clave de la economía: desde la fruta fresca hasta el vino, pasando por berries, frutos secos, salmonicultura y agroprocesados. En 2025, este sector enfrenta grandes oportunidades —como el crecimiento de exportaciones a Asia— pero también desafíos: mayores exigencias de trazabilidad, competencia internacional feroz y márgenes ajustados por costos logísticos.',
+    date: '2025-02-03',
+    category: 'Performance',
+    readTime: '11 min',
+    tag: 'Agroindustria'
   }
 ]
 
