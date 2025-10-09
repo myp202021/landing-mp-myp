@@ -27,6 +27,24 @@ export const metadata: Metadata = {
 
 const articles = [
   {
+    slug: 'correlaciones-inesperadas-marketing-digital',
+    title: '15 Correlaciones Inesperadas en Marketing Digital que Desafían la Intuición',
+    excerpt: 'Descubre 15 correlaciones inesperadas en marketing digital que contradicen la intuición y pueden transformar tu CAC, ROI y resultados.',
+    date: '2025-10-09',
+    category: 'Performance Marketing',
+    readTime: '15 min',
+    tag: 'Insights'
+  },
+  {
+    slug: 'marketing-de-datos-no-es-un-juego',
+    title: 'Marketing de Datos: No es un Juego, es Ingeniería',
+    excerpt: 'El marketing de datos no es azar: requiere ingeniería, modelos de decisión y métricas claras para lograr resultados sostenibles en Chile.',
+    date: '2025-10-09',
+    category: 'Performance Marketing',
+    readTime: '12 min',
+    tag: 'Estrategia'
+  },
+  {
     slug: 'que-es-cac-como-calcularlo-reducirlo',
     title: 'Qué es CAC: Cómo Calcularlo y Reducirlo en 2025 (Fórmulas + Ejemplos)',
     excerpt: 'Qué es CAC: Cómo Calcularlo y Reducirlo en 2025 (Fórmulas + Ejemplos). Guía completa con ejemplos reales y datos de Chile 2025.',
