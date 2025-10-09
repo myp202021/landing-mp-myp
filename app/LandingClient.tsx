@@ -1552,6 +1552,18 @@ export default function LandingClient() {
                     <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
                   </svg>
                 </a>
+                <a
+                  href="https://www.google.com/maps/place/M%C3%BCller+y+P%C3%A9rez+Agencia+Digital/@-33.4082192,-70.5754085,17z/data=!3m1!4b1!4m6!3m5!1s0x9662cf8ad2cd9fbf:0xa33471793df8d335!8m2!3d-33.4082237!4d-70.5728336!16s%2Fg%2F11jvfwf3zg"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-200 hover:text-white transition-colors"
+                  aria-label="Google Business Profile M&P"
+                  title="Ver en Google Maps"
+                >
+                  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 0C7.31 0 3.5 3.81 3.5 8.5c0 6.125 7.5 13.5 8.086 14.086a1 1 0 001.414 0C13.586 22 21.5 14.625 21.5 8.5 21.5 3.81 17.69 0 12 0zm0 12c-1.933 0-3.5-1.567-3.5-3.5S10.067 5 12 5s3.5 1.567 3.5 3.5S13.933 12 12 12z"/>
+                  </svg>
+                </a>
               </div>
 
               {/* Copyright */}
