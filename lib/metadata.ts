@@ -144,27 +144,110 @@ export function createMetadata({
 export function createOrganizationSchema() {
   return {
     '@context': 'https://schema.org',
-    '@type': 'Organization',
+    '@type': ['Organization', 'LocalBusiness', 'ProfessionalService'],
     name: 'Muller y Pérez',
+    alternateName: 'M&P Agencia Marketing Digital',
+    legalName: 'Muller y Perez SPA',
     url: siteConfig.url,
-    logo: `${siteConfig.url}/logo.png`,
+    logo: `${siteConfig.url}/logo-color.png`,
+    image: `${siteConfig.url}/og-image.svg`,
     description: siteConfig.description,
+
+    // Dirección principal - Las Condes
     address: {
       '@type': 'PostalAddress',
-      addressCountry: 'CL',
-      addressLocality: 'Chile'
+      streetAddress: 'Av Santa María 9300',
+      addressLocality: 'Las Condes',
+      addressRegion: 'Región Metropolitana',
+      postalCode: '7560000',
+      addressCountry: 'CL'
     },
-    contactPoint: {
-      '@type': 'ContactPoint',
-      telephone: '+56992258137',
-      contactType: 'customer service',
-      email: 'contacto@mulleryperez.com',
-      areaServed: 'CL',
-      availableLanguage: 'Spanish'
+
+    // Ubicación geográfica (Las Condes)
+    geo: {
+      '@type': 'GeoCoordinates',
+      latitude: -33.3983,
+      longitude: -70.5472
     },
+
+    // Área de servicio
+    areaServed: [
+      {
+        '@type': 'City',
+        name: 'Santiago',
+        '@id': 'https://www.wikidata.org/wiki/Q2887'
+      },
+      {
+        '@type': 'AdministrativeArea',
+        name: 'Región Metropolitana',
+        '@id': 'https://www.wikidata.org/wiki/Q2718'
+      },
+      {
+        '@type': 'Country',
+        name: 'Chile',
+        '@id': 'https://www.wikidata.org/wiki/Q298'
+      }
+    ],
+
+    // Contacto
+    contactPoint: [
+      {
+        '@type': 'ContactPoint',
+        telephone: '+56992258137',
+        contactType: 'customer service',
+        email: 'contacto@mulleryperez.com',
+        areaServed: 'CL',
+        availableLanguage: ['Spanish', 'English'],
+        contactOption: 'TollFree'
+      },
+      {
+        '@type': 'ContactPoint',
+        telephone: '+56992258137',
+        contactType: 'sales',
+        areaServed: 'CL',
+        availableLanguage: 'Spanish'
+      }
+    ],
+
+    // Servicios ofrecidos
+    makesOffer: [
+      {
+        '@type': 'Offer',
+        itemOffered: {
+          '@type': 'Service',
+          name: 'Google Ads Management',
+          description: 'Gestión profesional de campañas Google Ads'
+        }
+      },
+      {
+        '@type': 'Offer',
+        itemOffered: {
+          '@type': 'Service',
+          name: 'Meta Ads Management',
+          description: 'Gestión de campañas Facebook e Instagram Ads'
+        }
+      },
+      {
+        '@type': 'Offer',
+        itemOffered: {
+          '@type': 'Service',
+          name: 'Performance Marketing',
+          description: 'Estrategias de marketing basadas en datos y resultados medibles'
+        }
+      }
+    ],
+
+    // Redes sociales y enlaces
     sameAs: [
       siteConfig.links.whatsapp
-    ]
+    ],
+
+    // Información adicional
+    foundingDate: '2019',
+    slogan: 'Performance Marketing con Datos Reales',
+    priceRange: '$$',
+    currenciesAccepted: 'CLP, USD',
+    paymentAccepted: 'Cash, Credit Card, Invoice'
   }
 }
 
