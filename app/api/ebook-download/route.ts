@@ -28,17 +28,18 @@ export async function POST(request: Request) {
     const timestamp = new Date().toISOString();
     const companyText = company || 'No especificada';
 
-    // 1. Guardar en Google Sheets
+    // 1. Guardar en Google Sheets via Apps Script webhook
     try {
       const sheetsResponse = await fetch(
-        `https://sheets.googleapis.com/v4/spreadsheets/${process.env.GOOGLE_SHEET_ID}/values/Leads!A:E:append?valueInputOption=USER_ENTERED&key=${process.env.GOOGLE_SHEETS_API_KEY}`,
+        process.env.GOOGLE_APPS_SCRIPT_URL || '',
         {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            values: [[timestamp, name, email, companyText, 'Ebook Marketing Datos 2025']],
+            sheet: 'Leads',
+            values: [timestamp, name, email, companyText, 'Ebook Marketing Datos 2025'],
           }),
         }
       );
@@ -47,7 +48,8 @@ export async function POST(request: Request) {
         const errorText = await sheetsResponse.text();
         console.error('Error guardando en Google Sheets:', errorText);
       } else {
-        console.log('✅ Lead guardado en Google Sheets');
+        const result = await sheetsResponse.json();
+        console.log('✅ Lead guardado en Google Sheets:', result);
       }
     } catch (sheetsError) {
       console.error('Error con Google Sheets:', sheetsError);

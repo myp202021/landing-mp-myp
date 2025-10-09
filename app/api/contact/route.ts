@@ -98,17 +98,18 @@ Fecha: ${new Date().toLocaleString('es-CL')}
 
     const timestamp = new Date().toISOString()
 
-    // 1. Guardar en Google Sheets (pestaña "Contactos")
+    // 1. Guardar en Google Sheets (pestaña "Contactos") via Apps Script webhook
     try {
       const sheetsResponse = await fetch(
-        `https://sheets.googleapis.com/v4/spreadsheets/${process.env.GOOGLE_SHEET_ID}/values/Contactos!A:F:append?valueInputOption=USER_ENTERED&key=${process.env.GOOGLE_SHEETS_API_KEY}`,
+        process.env.GOOGLE_APPS_SCRIPT_URL || '',
         {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            values: [[timestamp, nombre, empresa, email, telefono, solicitud]],
+            sheet: 'Contactos',
+            values: [timestamp, nombre, empresa, email, telefono, solicitud],
           }),
         }
       );
@@ -117,7 +118,8 @@ Fecha: ${new Date().toLocaleString('es-CL')}
         const errorText = await sheetsResponse.text();
         console.error('Error guardando en Google Sheets:', errorText);
       } else {
-        console.log('✅ Contacto guardado en Google Sheets');
+        const result = await sheetsResponse.json();
+        console.log('✅ Contacto guardado en Google Sheets:', result);
       }
     } catch (sheetsError) {
       console.error('Error con Google Sheets:', sheetsError);
