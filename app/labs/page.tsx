@@ -8,7 +8,7 @@
 import React, { useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Sparkles, TrendingUp, Gamepad2, Radar } from 'lucide-react'
+import { Sparkles, TrendingUp, Gamepad2, Radar, Database } from 'lucide-react'
 import { createSoftwareAppSchema } from '@/lib/metadata'
 
 export default function MPLabs() {
@@ -19,18 +19,18 @@ export default function MPLabs() {
     // Update meta description
     const metaDescription = document.querySelector('meta[name="description"]')
     if (metaDescription) {
-      metaDescription.setAttribute('content', 'Herramientas experimentales de marketing digital: Predictor Google Ads, generador de buyer personas y radar de industrias. Gratis en Chile.')
+      metaDescription.setAttribute('content', 'Herramientas experimentales de marketing digital: Predictor Google Ads, generador de buyer personas, radar de industrias y red colaborativa de benchmarks. Gratis en Chile.')
     } else {
       const meta = document.createElement('meta')
       meta.name = 'description'
-      meta.content = 'Herramientas experimentales de marketing digital: Predictor Google Ads, generador de buyer personas y radar de industrias. Gratis en Chile.'
+      meta.content = 'Herramientas experimentales de marketing digital: Predictor Google Ads, generador de buyer personas, radar de industrias y red colaborativa de benchmarks. Gratis en Chile.'
       document.head.appendChild(meta)
     }
   }, [])
 
   const labsSchema = createSoftwareAppSchema(
     'M&P Labs - Herramientas de Marketing Digital',
-    'Hub de herramientas experimentales e innovadoras para optimizar campañas de marketing digital: predictor de Google Ads, generador de buyer personas y radar de industrias en Chile.',
+    'Hub de herramientas experimentales e innovadoras para optimizar campañas de marketing digital: predictor de Google Ads, generador de buyer personas, radar de industrias y red colaborativa de benchmarks en Chile.',
     'https://www.mulleryperez.cl/labs'
   )
 
@@ -58,6 +58,14 @@ export default function MPLabs() {
       url: '/labs/radar-industrias',
       tag: 'Beta',
       color: 'from-orange-600 to-red-600'
+    },
+    {
+      nombre: 'M&P Intelligence',
+      descripcion: 'Red colaborativa de benchmarks. Comparte métricas anónimas y recibe datos reales de tu industria',
+      icono: Database,
+      url: '/labs/mp-intelligence',
+      tag: 'Nuevo',
+      color: 'from-emerald-600 to-teal-600'
     }
   ]
 
