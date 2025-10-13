@@ -8,7 +8,7 @@
 import React, { useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Calculator, Gauge, GitBranch, Gamepad2, BookOpen } from 'lucide-react'
+import { Calculator, Gauge, GitBranch, Gamepad2, BookOpen, TrendingUp, Users } from 'lucide-react'
 import { createSoftwareAppSchema } from '@/lib/metadata'
 
 export default function Utilidades() {
@@ -17,11 +17,11 @@ export default function Utilidades() {
 
     const metaDescription = document.querySelector('meta[name="description"]')
     if (metaDescription) {
-      metaDescription.setAttribute('content', 'Herramientas prácticas de marketing digital: calculadora CAC, comparador de velocidad web, generador de funnels CRM y simulador de estrategias. Gratis.')
+      metaDescription.setAttribute('content', 'Herramientas prácticas de marketing digital: calculadoras CAC, ROI/ROAS, LTV, comparador web, generador funnels CRM y simulador estrategias. Gratis.')
     } else {
       const meta = document.createElement('meta')
       meta.name = 'description'
-      meta.content = 'Herramientas prácticas de marketing digital: calculadora CAC, comparador de velocidad web, generador de funnels CRM y simulador de estrategias. Gratis.'
+      meta.content = 'Herramientas prácticas de marketing digital: calculadoras CAC, ROI/ROAS, LTV, comparador web, generador funnels CRM y simulador estrategias. Gratis.'
       document.head.appendChild(meta)
     }
   }, [])
@@ -47,6 +47,20 @@ export default function Utilidades() {
       icono: Calculator,
       url: '/utilidades/calculadora-cac',
       color: 'from-emerald-600 to-teal-600'
+    },
+    {
+      nombre: 'Calculadora ROI / ROAS',
+      descripcion: 'Mide la rentabilidad real de tus campañas publicitarias',
+      icono: TrendingUp,
+      url: '/utilidades/calculadora-roi-roas',
+      color: 'from-blue-600 to-cyan-600'
+    },
+    {
+      nombre: 'Calculadora LTV',
+      descripcion: 'Calcula el valor de vida de tus clientes y proyecta ingresos',
+      icono: Users,
+      url: '/utilidades/calculadora-ltv',
+      color: 'from-purple-600 to-indigo-600'
     },
     {
       nombre: 'Comparador de Velocidad Web',
