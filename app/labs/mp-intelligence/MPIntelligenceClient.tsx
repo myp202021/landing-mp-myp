@@ -176,55 +176,41 @@ export default function MPIntelligenceClient() {
 
       const { cac, roas, conversionRate } = calcularMetricas()
 
-      // Construir objeto base obligatorio
-      const metricBase = {
-        industry: industry,
-        channel: channel,
+      // Construir payload para API
+      const payload = {
+        industry,
+        channel,
         budget_monthly: parseInt(budgetMonthly),
         revenue: parseInt(revenue),
         anonymous_user_id: getAnonymousUserId(),
-        roas: roas
+        roas,
+        leads_generated: leadsGenerated ? parseInt(leadsGenerated) : undefined,
+        sales_generated: salesGenerated ? parseInt(salesGenerated) : undefined,
+        cac,
+        conversion_rate: conversionRate,
+        region: region || undefined,
+        company_size: companySize || undefined
       }
 
-      // Agregar campos opcionales solo si existen
-      const optionalFields: any = {}
+      console.log('📤 Enviando métricas a API:', JSON.stringify(payload, null, 2))
 
-      if (leadsGenerated && parseInt(leadsGenerated) > 0) {
-        optionalFields.leads_generated = parseInt(leadsGenerated)
+      // Llamar al API route en lugar de Supabase directamente
+      const response = await fetch('/api/intelligence/metrics', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      })
+
+      const result = await response.json()
+
+      if (!response.ok) {
+        console.error('❌ Error del servidor:', result)
+        throw new Error(result.error || 'Error al guardar métricas')
       }
 
-      if (salesGenerated && parseInt(salesGenerated) > 0) {
-        optionalFields.sales_generated = parseInt(salesGenerated)
-      }
-
-      if (cac && !isNaN(cac) && isFinite(cac) && cac > 0) {
-        optionalFields.cac = cac
-      }
-
-      if (conversionRate && !isNaN(conversionRate) && isFinite(conversionRate) && conversionRate > 0) {
-        optionalFields.conversion_rate = conversionRate
-      }
-
-      if (region) {
-        optionalFields.region = region
-      }
-
-      if (companySize) {
-        optionalFields.company_size = companySize
-      }
-
-      const metric = { ...metricBase, ...optionalFields }
-
-      console.log('📤 Enviando metric a Supabase:', JSON.stringify(metric, null, 2))
-
-      const { error } = await supabase
-        .from('campaign_metrics')
-        .insert(metric)
-
-      if (error) {
-        console.error('❌ Error de Supabase:', error)
-        throw error
-      }
+      console.log('✅ Métricas guardadas:', result)
 
       setSubmitSuccess(true)
       toast.success('¡Datos compartidos exitosamente! 🎉')
