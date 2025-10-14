@@ -176,42 +176,20 @@ export default function MPIntelligenceClient() {
 
       const { cac, roas, conversionRate } = calcularMetricas()
 
-      // Construir objeto sin undefined - SOLO agregar campos que tienen valor
-      const metric: Record<string, any> = {
-        industry: industry as Industry,
-        channel: channel as Channel,
+      // Construir objeto LIMPIO - absolutamente sin undefined/null
+      const metric = {
+        industry: String(industry),
+        channel: String(channel),
         budget_monthly: parseInt(budgetMonthly),
         revenue: parseInt(revenue),
         anonymous_user_id: getAnonymousUserId(),
-      }
-
-      // Solo agregar ROAS si es un número válido
-      if (roas && !isNaN(roas) && isFinite(roas)) {
-        metric.roas = roas
-      }
-
-      if (leadsGenerated && parseInt(leadsGenerated) > 0) {
-        metric.leads_generated = parseInt(leadsGenerated)
-      }
-
-      if (salesGenerated && parseInt(salesGenerated) > 0) {
-        metric.sales_generated = parseInt(salesGenerated)
-      }
-
-      if (cac && !isNaN(cac) && isFinite(cac) && cac > 0) {
-        metric.cac = cac
-      }
-
-      if (conversionRate && !isNaN(conversionRate) && isFinite(conversionRate) && conversionRate > 0) {
-        metric.conversion_rate = conversionRate
-      }
-
-      if (region) {
-        metric.region = region
-      }
-
-      if (companySize) {
-        metric.company_size = companySize
+        roas: roas,
+        ...(leadsGenerated && parseInt(leadsGenerated) > 0 && { leads_generated: parseInt(leadsGenerated) }),
+        ...(salesGenerated && parseInt(salesGenerated) > 0 && { sales_generated: parseInt(salesGenerated) }),
+        ...(cac && !isNaN(cac) && isFinite(cac) && cac > 0 && { cac: cac }),
+        ...(conversionRate && !isNaN(conversionRate) && isFinite(conversionRate) && conversionRate > 0 && { conversion_rate: conversionRate }),
+        ...(region && { region: String(region) }),
+        ...(companySize && { company_size: String(companySize) }),
       }
 
       console.log('📤 Enviando metric a Supabase:', JSON.stringify(metric, null, 2))
