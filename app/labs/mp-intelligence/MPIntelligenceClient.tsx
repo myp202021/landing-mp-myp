@@ -176,29 +176,55 @@ export default function MPIntelligenceClient() {
 
       const { cac, roas, conversionRate } = calcularMetricas()
 
-      // Construir objeto LIMPIO - absolutamente sin undefined/null
-      const metric = {
-        industry: String(industry),
-        channel: String(channel),
+      // Construir objeto base obligatorio
+      const metricBase = {
+        industry: industry,
+        channel: channel,
         budget_monthly: parseInt(budgetMonthly),
         revenue: parseInt(revenue),
         anonymous_user_id: getAnonymousUserId(),
-        roas: roas,
-        ...(leadsGenerated && parseInt(leadsGenerated) > 0 && { leads_generated: parseInt(leadsGenerated) }),
-        ...(salesGenerated && parseInt(salesGenerated) > 0 && { sales_generated: parseInt(salesGenerated) }),
-        ...(cac && !isNaN(cac) && isFinite(cac) && cac > 0 && { cac: cac }),
-        ...(conversionRate && !isNaN(conversionRate) && isFinite(conversionRate) && conversionRate > 0 && { conversion_rate: conversionRate }),
-        ...(region && { region: String(region) }),
-        ...(companySize && { company_size: String(companySize) }),
+        roas: roas
       }
+
+      // Agregar campos opcionales solo si existen
+      const optionalFields: any = {}
+
+      if (leadsGenerated && parseInt(leadsGenerated) > 0) {
+        optionalFields.leads_generated = parseInt(leadsGenerated)
+      }
+
+      if (salesGenerated && parseInt(salesGenerated) > 0) {
+        optionalFields.sales_generated = parseInt(salesGenerated)
+      }
+
+      if (cac && !isNaN(cac) && isFinite(cac) && cac > 0) {
+        optionalFields.cac = cac
+      }
+
+      if (conversionRate && !isNaN(conversionRate) && isFinite(conversionRate) && conversionRate > 0) {
+        optionalFields.conversion_rate = conversionRate
+      }
+
+      if (region) {
+        optionalFields.region = region
+      }
+
+      if (companySize) {
+        optionalFields.company_size = companySize
+      }
+
+      const metric = { ...metricBase, ...optionalFields }
 
       console.log('📤 Enviando metric a Supabase:', JSON.stringify(metric, null, 2))
 
       const { error } = await supabase
         .from('campaign_metrics')
-        .insert([metric])
+        .insert(metric)
 
-      if (error) throw error
+      if (error) {
+        console.error('❌ Error de Supabase:', error)
+        throw error
+      }
 
       setSubmitSuccess(true)
       toast.success('¡Datos compartidos exitosamente! 🎉')
