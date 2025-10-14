@@ -25,13 +25,13 @@ import {
   COMPANY_SIZE_LABELS as COMPANY_SIZES
 } from '@/lib/types/intelligence'
 
-// Validaciones de rangos razonables (basado en mercado chileno)
+// Validaciones de rangos razonables (basado en mercado chileno) - MÁS PERMISIVAS
 const VALIDATIONS = {
   budget: { min: 50000, max: 50000000 },        // $50k - $50M
   revenue: { min: 0, max: 500000000 },          // $0 - $500M
-  roas: { min: 0.1, max: 20 },                  // 0.1x - 20x
-  cac: { min: 500, max: 1000000 },              // $500 - $1M
-  conversion_rate: { min: 0.1, max: 50 },       // 0.1% - 50%
+  roas: { min: 0.05, max: 50 },                 // 0.05x - 50x (más amplio)
+  cac: { min: 100, max: 5000000 },              // $100 - $5M (más amplio)
+  conversion_rate: { min: 0.05, max: 80 },      // 0.05% - 80% (más amplio)
   leads: { min: 1, max: 100000 },               // 1 - 100k leads
   sales: { min: 1, max: 50000 }                 // 1 - 50k sales
 }
@@ -134,37 +134,37 @@ export default function MPIntelligenceClient() {
 
     // Validar presupuesto
     if (budget < VALIDATIONS.budget.min || budget > VALIDATIONS.budget.max) {
-      return `Presupuesto debe estar entre ${formatCLP(VALIDATIONS.budget.min)} y ${formatCLP(VALIDATIONS.budget.max)}`
+      return `💰 Tu presupuesto de ${formatCLP(budget)} está fuera del rango típico (${formatCLP(VALIDATIONS.budget.min)} - ${formatCLP(VALIDATIONS.budget.max)}). ¿Podrías verificarlo?`
     }
 
     // Validar revenue
     if (rev < VALIDATIONS.revenue.min || rev > VALIDATIONS.revenue.max) {
-      return `Ingresos debe estar entre $0 y ${formatCLP(VALIDATIONS.revenue.max)}`
+      return `📊 Los ingresos de ${formatCLP(rev)} parecen muy altos. El máximo que aceptamos es ${formatCLP(VALIDATIONS.revenue.max)}. Por favor verifica.`
     }
 
     // Validar ROAS
     if (roas < VALIDATIONS.roas.min || roas > VALIDATIONS.roas.max) {
-      return `ROAS fuera de rango razonable (${VALIDATIONS.roas.min}x - ${VALIDATIONS.roas.max}x). Tu ROAS calculado es ${roas.toFixed(2)}x. Verifica tus datos.`
+      return `🎯 Tu ROAS de ${roas.toFixed(2)}x parece inusual. En Chile, el ROAS típico está entre ${VALIDATIONS.roas.min}x - ${VALIDATIONS.roas.max}x. ¿Los datos son correctos?`
     }
 
     // Validar CAC si existe
     if (cac && (cac < VALIDATIONS.cac.min || cac > VALIDATIONS.cac.max)) {
-      return `CAC fuera de rango razonable (${formatCLP(VALIDATIONS.cac.min)} - ${formatCLP(VALIDATIONS.cac.max)}). Tu CAC calculado es ${formatCLP(cac)}. Verifica tus datos.`
+      return `🤔 Tu CAC de ${formatCLP(cac)} parece inusual. En Chile, el CAC típico está entre ${formatCLP(VALIDATIONS.cac.min)} - ${formatCLP(VALIDATIONS.cac.max)}. ¿Los datos son correctos?`
     }
 
     // Validar conversion rate si existe
     if (conversionRate && (conversionRate < VALIDATIONS.conversion_rate.min || conversionRate > VALIDATIONS.conversion_rate.max)) {
-      return `Tasa de conversión fuera de rango razonable (${VALIDATIONS.conversion_rate.min}% - ${VALIDATIONS.conversion_rate.max}%). Tu tasa calculada es ${conversionRate.toFixed(1)}%. Verifica tus datos.`
+      return `📈 Tu tasa de conversión de ${conversionRate.toFixed(1)}% parece inusual. En Chile, lo típico está entre ${VALIDATIONS.conversion_rate.min}% - ${VALIDATIONS.conversion_rate.max}%. ¿Podrías revisarla?`
     }
 
     // Validar leads si existe
     if (leads > 0 && (leads < VALIDATIONS.leads.min || leads > VALIDATIONS.leads.max)) {
-      return `Leads fuera de rango razonable (${VALIDATIONS.leads.min} - ${VALIDATIONS.leads.max.toLocaleString()})`
+      return `👥 La cantidad de leads (${leads.toLocaleString()}) está fuera del rango típico (${VALIDATIONS.leads.min} - ${VALIDATIONS.leads.max.toLocaleString()}). ¿Podrías verificarlo?`
     }
 
     // Validar sales si existe
     if (sales > 0 && (sales < VALIDATIONS.sales.min || sales > VALIDATIONS.sales.max)) {
-      return `Ventas fuera de rango razonable (${VALIDATIONS.sales.min} - ${VALIDATIONS.sales.max.toLocaleString()})`
+      return `✅ La cantidad de ventas (${sales.toLocaleString()}) está fuera del rango típico (${VALIDATIONS.sales.min} - ${VALIDATIONS.sales.max.toLocaleString()}). ¿Es correcto?`
     }
 
     return null // Sin errores
@@ -213,9 +213,13 @@ export default function MPIntelligenceClient() {
       await obtenerBenchmark()
       await cargarTotalContribuciones()
 
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error al enviar métricas:', error)
-      setSubmitError('Hubo un error al enviar tus datos. Por favor intenta de nuevo.')
+      // Mostrar error específico de Supabase o mensaje genérico amigable
+      const errorMessage = error?.message
+        ? `❌ Error al guardar: ${error.message}`
+        : '❌ Hubo un problema al enviar tus datos. Por favor intenta de nuevo o contáctanos si persiste.'
+      setSubmitError(errorMessage)
     } finally {
       setIsSubmitting(false)
     }
@@ -301,22 +305,40 @@ export default function MPIntelligenceClient() {
           <div className="text-center mb-12">
             <div className="inline-flex items-center gap-2 mb-4 px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-400/20 backdrop-blur-sm">
               <Database className="w-4 h-4 text-emerald-400" />
-              <span className="text-emerald-200 text-sm font-semibold">Red Colaborativa</span>
+              <span className="text-emerald-200 text-sm font-semibold">🌐 Red Colaborativa · 100% Anónimo</span>
             </div>
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
-              M&P Intelligence<br />
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 leading-tight">
+              La primera red colaborativa de<br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">
-                Benchmarks Reales de Chile
+                benchmarks de marketing en Chile
               </span>
             </h2>
-            <p className="text-xl text-purple-100 max-w-2xl mx-auto mb-6">
-              Comparte tus métricas anónimamente y recibe benchmarks reales de tu industria
+            <p className="text-xl text-purple-100 max-w-3xl mx-auto mb-4 leading-relaxed">
+              <strong>¿Estás invirtiendo bien en publicidad?</strong> Descúbrelo comparando tus métricas con las de tu industria.<br />
+              Comparte tus datos anónimamente y accede a benchmarks reales que nadie más publica.
             </p>
 
+            {/* Value Prop Bullets */}
+            <div className="flex flex-wrap items-center justify-center gap-6 mb-6 text-emerald-200">
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+                <span>Datos reales, no inventados</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+                <span>100% anónimo y seguro</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+                <span>Instantáneo y gratis</span>
+              </div>
+            </div>
+
             {/* Stats */}
-            <div className="flex items-center justify-center gap-4 text-emerald-300">
-              <Users className="w-5 h-5" />
-              <span className="text-lg font-semibold">{totalContributions} empresas ya contribuyeron</span>
+            <div className="inline-flex items-center gap-3 px-6 py-3 bg-white/10 backdrop-blur-sm rounded-full border border-emerald-400/30">
+              <Users className="w-5 h-5 text-emerald-300" />
+              <span className="text-lg font-bold text-white">{totalContributions}+ empresas</span>
+              <span className="text-emerald-200">ya forman parte de la red</span>
             </div>
           </div>
 
@@ -464,10 +486,15 @@ export default function MPIntelligenceClient() {
 
               {/* Mensajes */}
               {submitSuccess && (
-                <div className="mt-4 p-4 bg-emerald-50 border border-emerald-200 rounded-lg flex items-start gap-2">
-                  <CheckCircle2 className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
-                  <p className="text-sm text-emerald-800">
-                    ¡Gracias por contribuir! Tus datos fueron agregados anónimamente a la red.
+                <div className="mt-4 p-4 bg-gradient-to-r from-emerald-50 to-cyan-50 border-2 border-emerald-300 rounded-lg">
+                  <div className="flex items-start gap-2 mb-2">
+                    <CheckCircle2 className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                    <p className="text-sm font-bold text-emerald-900">
+                      ¡Listo! Ya eres parte de la red colaborativa
+                    </p>
+                  </div>
+                  <p className="text-xs text-emerald-700 leading-relaxed">
+                    Tus datos se agregaron anónimamente. Ahora puedes ver tu benchmark en el panel de la derecha →
                   </p>
                 </div>
               )}
@@ -480,19 +507,37 @@ export default function MPIntelligenceClient() {
               )}
 
               {/* Nota de privacidad */}
-              <p className="mt-4 text-xs text-gray-500 text-center">
-                🔒 Tus datos son completamente anónimos. No guardamos información personal.
-              </p>
+              <div className="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                <p className="text-sm text-gray-700 text-center mb-2">
+                  <strong>🔒 Garantía de privacidad total</strong>
+                </p>
+                <p className="text-xs text-gray-600 text-center leading-relaxed">
+                  No guardamos emails, nombres ni datos de contacto. Solo métricas agregadas.
+                  Tu información se mezcla con la de otras empresas para calcular promedios.
+                  <strong className="text-gray-800">Imposible identificarte.</strong>
+                </p>
+              </div>
             </div>
 
             {/* Panel Benchmark */}
             <div className="bg-white rounded-2xl p-8 shadow-xl border border-gray-200">
               {!benchmark ? (
                 <div className="h-full flex items-center justify-center text-center text-gray-500 min-h-[400px]">
-                  <div>
-                    <BarChart3 className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                    <p className="text-lg font-semibold text-gray-700 mb-2">Comparte tus métricas</p>
-                    <p className="text-sm">para ver cómo te comparas con otras empresas de tu industria</p>
+                  <div className="max-w-sm">
+                    <div className="mb-6 relative">
+                      <BarChart3 className="w-20 h-20 text-emerald-500 mx-auto mb-2" />
+                      <div className="absolute -top-2 -right-2 bg-emerald-500 text-white text-xs font-bold px-2 py-1 rounded-full">
+                        ¡Gratis!
+                      </div>
+                    </div>
+                    <p className="text-xl font-bold text-gray-800 mb-3">Tu benchmark te espera</p>
+                    <p className="text-sm text-gray-600 leading-relaxed mb-4">
+                      Completa el formulario de la izquierda para descubrir cómo te comparas con {totalContributions}+ empresas de tu industria
+                    </p>
+                    <div className="flex items-center justify-center gap-2 text-emerald-600 text-sm font-semibold">
+                      <CheckCircle2 className="w-4 h-4" />
+                      <span>Resultados instantáneos</span>
+                    </div>
                   </div>
                 </div>
               ) : (
@@ -571,47 +616,98 @@ export default function MPIntelligenceClient() {
                     )}
                   </div>
 
-                  {/* Información */}
-                  <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded">
-                    <p className="text-sm text-blue-800 leading-relaxed">
-                      💡 Mientras más empresas compartan datos, más precisos serán los benchmarks.
-                      Comparte este link con tu red!
+                  {/* Call to action virality */}
+                  <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-300 p-4 rounded-xl">
+                    <p className="text-sm font-bold text-blue-900 mb-2">
+                      🚀 Ayuda a que la red crezca
                     </p>
+                    <p className="text-xs text-blue-700 leading-relaxed mb-3">
+                      Mientras más empresas participen, más precisos son los benchmarks para todos.
+                      <strong className="text-blue-900"> Comparte M&P Intelligence</strong> con tu red de marketers.
+                    </p>
+                    <button
+                      onClick={() => {
+                        navigator.clipboard.writeText('https://www.mulleryperez.cl/labs/mp-intelligence')
+                        alert('¡Link copiado! Compártelo con tu red 🎉')
+                      }}
+                      className="w-full bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold py-2 px-4 rounded-lg transition-colors"
+                    >
+                      📋 Copiar link para compartir
+                    </button>
                   </div>
                 </div>
               )}
             </div>
           </div>
 
+          {/* Qué recibes */}
+          <div className="mt-12 bg-gradient-to-br from-emerald-500/10 to-cyan-500/10 backdrop-blur-sm border border-emerald-400/20 rounded-2xl p-8">
+            <h3 className="text-2xl font-bold text-white mb-2 text-center">¿Qué obtienes al compartir tus métricas?</h3>
+            <p className="text-emerald-200 text-center mb-8 max-w-2xl mx-auto">
+              Acceso instantáneo a datos que normalmente cuestan miles de dólares o simplemente no existen para Chile
+            </p>
+            <div className="grid md:grid-cols-2 gap-4 max-w-3xl mx-auto">
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 flex items-start gap-3">
+                <CheckCircle2 className="w-6 h-6 text-emerald-400 flex-shrink-0 mt-1" />
+                <div>
+                  <h4 className="font-bold text-white mb-1">CAC promedio de tu industria</h4>
+                  <p className="text-sm text-emerald-100">Sabrás si estás pagando de más por cliente</p>
+                </div>
+              </div>
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 flex items-start gap-3">
+                <CheckCircle2 className="w-6 h-6 text-emerald-400 flex-shrink-0 mt-1" />
+                <div>
+                  <h4 className="font-bold text-white mb-1">ROAS real de tu canal</h4>
+                  <p className="text-sm text-emerald-100">Compara tu retorno vs la competencia</p>
+                </div>
+              </div>
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 flex items-start gap-3">
+                <CheckCircle2 className="w-6 h-6 text-emerald-400 flex-shrink-0 mt-1" />
+                <div>
+                  <h4 className="font-bold text-white mb-1">Tu posición en el ranking</h4>
+                  <p className="text-sm text-emerald-100">Top 10%, promedio o necesitas mejorar</p>
+                </div>
+              </div>
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 flex items-start gap-3">
+                <CheckCircle2 className="w-6 h-6 text-emerald-400 flex-shrink-0 mt-1" />
+                <div>
+                  <h4 className="font-bold text-white mb-1">Tasas de conversión reales</h4>
+                  <p className="text-sm text-emerald-100">Benchmarks que no encontrarás en Google</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
           {/* Cómo funciona */}
-          <div className="mt-12 bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8">
-            <h3 className="text-2xl font-bold text-white mb-6 text-center">¿Cómo funciona M&P Intelligence?</h3>
+          <div className="mt-8 bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8">
+            <h3 className="text-2xl font-bold text-white mb-2 text-center">¿Cómo funciona la red colaborativa?</h3>
+            <p className="text-purple-200 text-center mb-8">Mientras más empresas participen, más precisos son los benchmarks para todos</p>
             <div className="grid md:grid-cols-3 gap-6">
               <div className="text-center">
-                <div className="w-16 h-16 bg-gradient-to-br from-emerald-500 to-cyan-500 rounded-xl flex items-center justify-center mx-auto mb-4">
+                <div className="w-16 h-16 bg-gradient-to-br from-emerald-500 to-cyan-500 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg">
                   <Share2 className="w-8 h-8 text-white" />
                 </div>
-                <h4 className="text-lg font-semibold text-white mb-2">1. Compartes tus métricas</h4>
-                <p className="text-purple-200 text-sm">
-                  Ingresas datos reales de tus campañas de forma completamente anónima
+                <h4 className="text-lg font-semibold text-white mb-2">1. Das para recibir</h4>
+                <p className="text-purple-200 text-sm leading-relaxed">
+                  Compartes tus métricas anónimas (presupuesto, revenue, conversiones). <strong className="text-white">Nadie sabrá que eres tú.</strong>
                 </p>
               </div>
               <div className="text-center">
-                <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-xl flex items-center justify-center mx-auto mb-4">
+                <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg">
                   <Database className="w-8 h-8 text-white" />
                 </div>
-                <h4 className="text-lg font-semibold text-white mb-2">2. Se agrega a la red</h4>
-                <p className="text-purple-200 text-sm">
-                  Tus datos se agregan al pool colaborativo de tu industria y canal
+                <h4 className="text-lg font-semibold text-white mb-2">2. Se suma a la red</h4>
+                <p className="text-purple-200 text-sm leading-relaxed">
+                  Tus datos se agregan al pool de tu industria. <strong className="text-white">Cuantos más seamos, mejor para todos.</strong>
                 </p>
               </div>
               <div className="text-center">
-                <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mx-auto mb-4">
+                <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg">
                   <BarChart3 className="w-8 h-8 text-white" />
                 </div>
-                <h4 className="text-lg font-semibold text-white mb-2">3. Recibes benchmarks</h4>
-                <p className="text-purple-200 text-sm">
-                  Obtienes promedios reales y ves cómo te comparas vs tu competencia
+                <h4 className="text-lg font-semibold text-white mb-2">3. Recibes insights</h4>
+                <p className="text-purple-200 text-sm leading-relaxed">
+                  Al instante ves promedios reales y tu posición. <strong className="text-white">Datos que no están en ningún lado.</strong>
                 </p>
               </div>
             </div>
