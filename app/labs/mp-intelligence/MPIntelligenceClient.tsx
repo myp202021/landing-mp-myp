@@ -25,6 +25,27 @@ import {
   COMPANY_SIZE_LABELS as COMPANY_SIZES
 } from '@/lib/types/intelligence'
 
+// Validaciones de rangos razonables (basado en mercado chileno)
+const VALIDATIONS = {
+  budget: { min: 50000, max: 50000000 },        // $50k - $50M
+  revenue: { min: 0, max: 500000000 },          // $0 - $500M
+  roas: { min: 0.1, max: 20 },                  // 0.1x - 20x
+  cac: { min: 500, max: 1000000 },              // $500 - $1M
+  conversion_rate: { min: 0.1, max: 50 },       // 0.1% - 50%
+  leads: { min: 1, max: 100000 },               // 1 - 100k leads
+  sales: { min: 1, max: 50000 }                 // 1 - 50k sales
+}
+
+// Función para calcular mediana (resistente a outliers)
+const calculateMedian = (values: number[]): number => {
+  if (values.length === 0) return 0
+  const sorted = [...values].sort((a, b) => a - b)
+  const mid = Math.floor(sorted.length / 2)
+  return sorted.length % 2 === 0
+    ? (sorted[mid - 1] + sorted[mid]) / 2
+    : sorted[mid]
+}
+
 // Generar ID anónimo único por navegador
 const getAnonymousUserId = (): string => {
   if (typeof window === 'undefined') return 'server'
@@ -104,6 +125,51 @@ export default function MPIntelligenceClient() {
     return { cac, roas, conversionRate }
   }
 
+  const validateMetrics = () => {
+    const budget = parseFloat(budgetMonthly)
+    const rev = parseFloat(revenue)
+    const sales = parseFloat(salesGenerated || '0')
+    const leads = parseFloat(leadsGenerated || '0')
+    const { cac, roas, conversionRate } = calcularMetricas()
+
+    // Validar presupuesto
+    if (budget < VALIDATIONS.budget.min || budget > VALIDATIONS.budget.max) {
+      return `Presupuesto debe estar entre ${formatCLP(VALIDATIONS.budget.min)} y ${formatCLP(VALIDATIONS.budget.max)}`
+    }
+
+    // Validar revenue
+    if (rev < VALIDATIONS.revenue.min || rev > VALIDATIONS.revenue.max) {
+      return `Ingresos debe estar entre $0 y ${formatCLP(VALIDATIONS.revenue.max)}`
+    }
+
+    // Validar ROAS
+    if (roas < VALIDATIONS.roas.min || roas > VALIDATIONS.roas.max) {
+      return `ROAS fuera de rango razonable (${VALIDATIONS.roas.min}x - ${VALIDATIONS.roas.max}x). Tu ROAS calculado es ${roas.toFixed(2)}x. Verifica tus datos.`
+    }
+
+    // Validar CAC si existe
+    if (cac && (cac < VALIDATIONS.cac.min || cac > VALIDATIONS.cac.max)) {
+      return `CAC fuera de rango razonable (${formatCLP(VALIDATIONS.cac.min)} - ${formatCLP(VALIDATIONS.cac.max)}). Tu CAC calculado es ${formatCLP(cac)}. Verifica tus datos.`
+    }
+
+    // Validar conversion rate si existe
+    if (conversionRate && (conversionRate < VALIDATIONS.conversion_rate.min || conversionRate > VALIDATIONS.conversion_rate.max)) {
+      return `Tasa de conversión fuera de rango razonable (${VALIDATIONS.conversion_rate.min}% - ${VALIDATIONS.conversion_rate.max}%). Tu tasa calculada es ${conversionRate.toFixed(1)}%. Verifica tus datos.`
+    }
+
+    // Validar leads si existe
+    if (leads > 0 && (leads < VALIDATIONS.leads.min || leads > VALIDATIONS.leads.max)) {
+      return `Leads fuera de rango razonable (${VALIDATIONS.leads.min} - ${VALIDATIONS.leads.max.toLocaleString()})`
+    }
+
+    // Validar sales si existe
+    if (sales > 0 && (sales < VALIDATIONS.sales.min || sales > VALIDATIONS.sales.max)) {
+      return `Ventas fuera de rango razonable (${VALIDATIONS.sales.min} - ${VALIDATIONS.sales.max.toLocaleString()})`
+    }
+
+    return null // Sin errores
+  }
+
   const enviarMetricas = async () => {
     if (!puedeEnviar) return
 
@@ -112,6 +178,14 @@ export default function MPIntelligenceClient() {
     setSubmitSuccess(false)
 
     try {
+      // Validar antes de enviar
+      const validationError = validateMetrics()
+      if (validationError) {
+        setSubmitError(validationError)
+        setIsSubmitting(false)
+        return
+      }
+
       const { cac, roas, conversionRate } = calcularMetricas()
 
       const metric: CampaignMetric = {
@@ -160,11 +234,12 @@ export default function MPIntelligenceClient() {
       if (error) throw error
 
       if (data && data.length > 0) {
-        const avgBudget = data.reduce((sum, m) => sum + m.budget_monthly, 0) / data.length
-        const avgRevenue = data.reduce((sum, m) => sum + m.revenue, 0) / data.length
-        const avgCAC = data.filter(m => m.cac).reduce((sum, m) => sum + (m.cac || 0), 0) / data.filter(m => m.cac).length
-        const avgROAS = data.filter(m => m.roas).reduce((sum, m) => sum + (m.roas || 0), 0) / data.filter(m => m.roas).length
-        const avgConversionRate = data.filter(m => m.conversion_rate).reduce((sum, m) => sum + (m.conversion_rate || 0), 0) / data.filter(m => m.conversion_rate).length
+        // Usar MEDIANA en vez de promedio (resistente a outliers)
+        const avgBudget = calculateMedian(data.map(m => m.budget_monthly))
+        const avgRevenue = calculateMedian(data.map(m => m.revenue))
+        const avgCAC = calculateMedian(data.filter(m => m.cac).map(m => m.cac || 0))
+        const avgROAS = calculateMedian(data.filter(m => m.roas).map(m => m.roas || 0))
+        const avgConversionRate = calculateMedian(data.filter(m => m.conversion_rate).map(m => m.conversion_rate || 0))
 
         // Determinar posición del usuario
         const userROAS = calcularMetricas().roas
@@ -426,6 +501,20 @@ export default function MPIntelligenceClient() {
                     <TrendingUp className="w-5 h-5" />
                     Tu benchmark
                   </h3>
+
+                  {/* Warning si pocos datos */}
+                  {benchmark.totalSamples < 10 && (
+                    <div className="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg flex items-start gap-2">
+                      <AlertCircle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
+                      <div className="text-sm">
+                        <p className="font-semibold text-yellow-800 mb-1">Datos insuficientes</p>
+                        <p className="text-yellow-700">
+                          Solo {benchmark.totalSamples} {benchmark.totalSamples === 1 ? 'empresa ha' : 'empresas han'} compartido datos.
+                          Los benchmarks serán más precisos con más contribuciones (idealmente 10+).
+                        </p>
+                      </div>
+                    </div>
+                  )}
 
                   {/* Posición */}
                   <div className="mb-6 p-4 bg-gradient-to-r from-purple-50 to-indigo-50 rounded-xl border border-purple-200">
