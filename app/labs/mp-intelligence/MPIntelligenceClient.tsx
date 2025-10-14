@@ -3,9 +3,10 @@
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Database, TrendingUp, Users, AlertCircle, CheckCircle2, BarChart3, Share2 } from 'lucide-react'
+import { Database, Users, CheckCircle2, Share2 } from 'lucide-react'
 import { createSoftwareAppSchema, createBreadcrumbSchema } from '@/lib/metadata'
 import { supabase } from '@/lib/supabase'
+import toast, { Toaster } from 'react-hot-toast'
 import type {
   CampaignMetric,
   Industry,
@@ -13,10 +14,6 @@ import type {
   Region,
   CompanySize,
   Benchmark,
-  INDUSTRY_LABELS,
-  CHANNEL_LABELS,
-  REGION_LABELS,
-  COMPANY_SIZE_LABELS
 } from '@/lib/types/intelligence'
 import {
   INDUSTRY_LABELS as INDUSTRIES,
@@ -24,26 +21,22 @@ import {
   REGION_LABELS as REGIONS,
   COMPANY_SIZE_LABELS as COMPANY_SIZES
 } from '@/lib/types/intelligence'
+import { calculateQuartiles, getValuePercentile, getUserPosition } from '@/lib/utils/percentiles'
+import { MetricTooltip } from '@/components/ui/Tooltip'
+import LoadingState, { FormSkeleton } from '@/components/intelligence/LoadingState'
+import EmptyState, { InitialState } from '@/components/intelligence/EmptyState'
+import ErrorState, { FieldError } from '@/components/intelligence/ErrorState'
+import BenchmarkResults from '@/components/intelligence/BenchmarkResults'
 
-// Validaciones de rangos razonables (basado en mercado chileno) - MÁS PERMISIVAS
+// Validaciones de rangos razonables (basado en mercado chileno)
 const VALIDATIONS = {
-  budget: { min: 50000, max: 50000000 },        // $50k - $50M
-  revenue: { min: 0, max: 500000000 },          // $0 - $500M
-  roas: { min: 0.05, max: 50 },                 // 0.05x - 50x (más amplio)
-  cac: { min: 100, max: 5000000 },              // $100 - $5M (más amplio)
-  conversion_rate: { min: 0.05, max: 80 },      // 0.05% - 80% (más amplio)
-  leads: { min: 1, max: 100000 },               // 1 - 100k leads
-  sales: { min: 1, max: 50000 }                 // 1 - 50k sales
-}
-
-// Función para calcular mediana (resistente a outliers)
-const calculateMedian = (values: number[]): number => {
-  if (values.length === 0) return 0
-  const sorted = [...values].sort((a, b) => a - b)
-  const mid = Math.floor(sorted.length / 2)
-  return sorted.length % 2 === 0
-    ? (sorted[mid - 1] + sorted[mid]) / 2
-    : sorted[mid]
+  budget: { min: 50000, max: 50000000 },
+  revenue: { min: 0, max: 500000000 },
+  roas: { min: 0.05, max: 50 },
+  cac: { min: 100, max: 5000000 },
+  conversion_rate: { min: 0.05, max: 80 },
+  leads: { min: 1, max: 100000 },
+  sales: { min: 1, max: 50000 }
 }
 
 // Generar ID anónimo único por navegador
@@ -59,7 +52,6 @@ const getAnonymousUserId = (): string => {
 }
 
 export default function MPIntelligenceClient() {
-
   const intelligenceSchema = createSoftwareAppSchema(
     'M&P Intelligence - Red Colaborativa de Datos de Marketing Chile',
     'Plataforma colaborativa para compartir métricas de marketing en Chile. Ingresa tus datos anónimamente y recibe benchmarks reales de tu industria. Compara CAC, ROAS, conversión y más.',
@@ -84,8 +76,9 @@ export default function MPIntelligenceClient() {
 
   // Estados de UI
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isLoadingBenchmark, setIsLoadingBenchmark] = useState(false)
   const [submitSuccess, setSubmitSuccess] = useState(false)
-  const [submitError, setSubmitError] = useState('')
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
   const [benchmark, setBenchmark] = useState<Benchmark | null>(null)
   const [totalContributions, setTotalContributions] = useState(0)
   const [puedeEnviar, setPuedeEnviar] = useState(false)
@@ -125,98 +118,103 @@ export default function MPIntelligenceClient() {
     return { cac, roas, conversionRate }
   }
 
-  const validateMetrics = () => {
+  const validateMetrics = (): Record<string, string> => {
+    const errors: Record<string, string> = {}
     const budget = parseFloat(budgetMonthly)
     const rev = parseFloat(revenue)
     const sales = parseFloat(salesGenerated || '0')
     const leads = parseFloat(leadsGenerated || '0')
     const { cac, roas, conversionRate } = calcularMetricas()
 
-    // Validar presupuesto
     if (budget < VALIDATIONS.budget.min || budget > VALIDATIONS.budget.max) {
-      return `💰 Tu presupuesto de ${formatCLP(budget)} está fuera del rango típico (${formatCLP(VALIDATIONS.budget.min)} - ${formatCLP(VALIDATIONS.budget.max)}). ¿Podrías verificarlo?`
+      errors.budgetMonthly = `Presupuesto debe estar entre ${formatCLP(VALIDATIONS.budget.min)} y ${formatCLP(VALIDATIONS.budget.max)}`
     }
 
-    // Validar revenue
     if (rev < VALIDATIONS.revenue.min || rev > VALIDATIONS.revenue.max) {
-      return `📊 Los ingresos de ${formatCLP(rev)} parecen muy altos. El máximo que aceptamos es ${formatCLP(VALIDATIONS.revenue.max)}. Por favor verifica.`
+      errors.revenue = `Ingresos no pueden superar ${formatCLP(VALIDATIONS.revenue.max)}`
     }
 
-    // Validar ROAS
     if (roas < VALIDATIONS.roas.min || roas > VALIDATIONS.roas.max) {
-      return `🎯 Tu ROAS de ${roas.toFixed(2)}x parece inusual. En Chile, el ROAS típico está entre ${VALIDATIONS.roas.min}x - ${VALIDATIONS.roas.max}x. ¿Los datos son correctos?`
+      errors.roas = `ROAS de ${roas.toFixed(2)}x parece inusual (rango típico: ${VALIDATIONS.roas.min}x - ${VALIDATIONS.roas.max}x)`
     }
 
-    // Validar CAC si existe
     if (cac && (cac < VALIDATIONS.cac.min || cac > VALIDATIONS.cac.max)) {
-      return `🤔 Tu CAC de ${formatCLP(cac)} parece inusual. En Chile, el CAC típico está entre ${formatCLP(VALIDATIONS.cac.min)} - ${formatCLP(VALIDATIONS.cac.max)}. ¿Los datos son correctos?`
+      errors.cac = `CAC de ${formatCLP(cac)} está fuera del rango típico`
     }
 
-    // Validar conversion rate si existe
     if (conversionRate && (conversionRate < VALIDATIONS.conversion_rate.min || conversionRate > VALIDATIONS.conversion_rate.max)) {
-      return `📈 Tu tasa de conversión de ${conversionRate.toFixed(1)}% parece inusual. En Chile, lo típico está entre ${VALIDATIONS.conversion_rate.min}% - ${VALIDATIONS.conversion_rate.max}%. ¿Podrías revisarla?`
+      errors.conversionRate = `Conversión de ${conversionRate.toFixed(1)}% parece inusual`
     }
 
-    // Validar leads si existe
     if (leads > 0 && (leads < VALIDATIONS.leads.min || leads > VALIDATIONS.leads.max)) {
-      return `👥 La cantidad de leads (${leads.toLocaleString()}) está fuera del rango típico (${VALIDATIONS.leads.min} - ${VALIDATIONS.leads.max.toLocaleString()}). ¿Podrías verificarlo?`
+      errors.leadsGenerated = `Leads debe estar entre ${VALIDATIONS.leads.min} y ${VALIDATIONS.leads.max.toLocaleString()}`
     }
 
-    // Validar sales si existe
     if (sales > 0 && (sales < VALIDATIONS.sales.min || sales > VALIDATIONS.sales.max)) {
-      return `✅ La cantidad de ventas (${sales.toLocaleString()}) está fuera del rango típico (${VALIDATIONS.sales.min} - ${VALIDATIONS.sales.max.toLocaleString()}). ¿Es correcto?`
+      errors.salesGenerated = `Ventas debe estar entre ${VALIDATIONS.sales.min} y ${VALIDATIONS.sales.max.toLocaleString()}`
     }
 
-    return null // Sin errores
+    return errors
   }
 
   const enviarMetricas = async () => {
     if (!puedeEnviar) return
 
     setIsSubmitting(true)
-    setSubmitError('')
+    setFieldErrors({})
     setSubmitSuccess(false)
 
     try {
-      // Validar antes de enviar
-      const validationError = validateMetrics()
-      if (validationError) {
-        setSubmitError(validationError)
+      // Validar
+      const errors = validateMetrics()
+      if (Object.keys(errors).length > 0) {
+        setFieldErrors(errors)
+        toast.error('Por favor corrige los errores en el formulario')
         setIsSubmitting(false)
         return
       }
 
       const { cac, roas, conversionRate } = calcularMetricas()
 
-      // Construir objeto sin campos undefined (Supabase no acepta undefined en headers)
-      const metric: any = {
+      // Construir objeto sin undefined - SOLO agregar campos que tienen valor
+      const metric: Record<string, any> = {
         industry: industry as Industry,
         channel: channel as Channel,
         budget_monthly: parseInt(budgetMonthly),
         revenue: parseInt(revenue),
         anonymous_user_id: getAnonymousUserId(),
-        roas,
       }
 
-      // Solo agregar campos opcionales si tienen valor
+      // Solo agregar ROAS si es un número válido
+      if (roas && !isNaN(roas) && isFinite(roas)) {
+        metric.roas = roas
+      }
+
       if (leadsGenerated && parseInt(leadsGenerated) > 0) {
         metric.leads_generated = parseInt(leadsGenerated)
       }
+
       if (salesGenerated && parseInt(salesGenerated) > 0) {
         metric.sales_generated = parseInt(salesGenerated)
       }
-      if (cac && cac > 0) {
+
+      if (cac && !isNaN(cac) && isFinite(cac) && cac > 0) {
         metric.cac = cac
       }
-      if (conversionRate && conversionRate > 0) {
+
+      if (conversionRate && !isNaN(conversionRate) && isFinite(conversionRate) && conversionRate > 0) {
         metric.conversion_rate = conversionRate
       }
+
       if (region) {
-        metric.region = region as Region
+        metric.region = region
       }
+
       if (companySize) {
-        metric.company_size = companySize as CompanySize
+        metric.company_size = companySize
       }
+
+      console.log('📤 Enviando metric a Supabase:', JSON.stringify(metric, null, 2))
 
       const { error } = await supabase
         .from('campaign_metrics')
@@ -225,16 +223,14 @@ export default function MPIntelligenceClient() {
       if (error) throw error
 
       setSubmitSuccess(true)
+      toast.success('¡Datos compartidos exitosamente! 🎉')
+
       await obtenerBenchmark()
       await cargarTotalContribuciones()
 
     } catch (error: any) {
       console.error('Error al enviar métricas:', error)
-      // Mostrar error específico de Supabase o mensaje genérico amigable
-      const errorMessage = error?.message
-        ? `❌ Error al guardar: ${error.message}`
-        : '❌ Hubo un problema al enviar tus datos. Por favor intenta de nuevo o contáctanos si persiste.'
-      setSubmitError(errorMessage)
+      toast.error(error?.message || 'Error al enviar datos. Por favor intenta de nuevo.')
     } finally {
       setIsSubmitting(false)
     }
@@ -242,6 +238,8 @@ export default function MPIntelligenceClient() {
 
   const obtenerBenchmark = async () => {
     if (!industry || !channel) return
+
+    setIsLoadingBenchmark(true)
 
     try {
       const { data, error } = await supabase
@@ -252,47 +250,83 @@ export default function MPIntelligenceClient() {
 
       if (error) throw error
 
-      if (data && data.length > 0) {
-        // Usar MEDIANA en vez de promedio (resistente a outliers)
-        const avgBudget = calculateMedian(data.map(m => m.budget_monthly))
-        const avgRevenue = calculateMedian(data.map(m => m.revenue))
-        const avgCAC = calculateMedian(data.filter(m => m.cac).map(m => m.cac || 0))
-        const avgROAS = calculateMedian(data.filter(m => m.roas).map(m => m.roas || 0))
-        const avgConversionRate = calculateMedian(data.filter(m => m.conversion_rate).map(m => m.conversion_rate || 0))
-
-        // Determinar posición del usuario
-        const userROAS = calcularMetricas().roas
-        const sortedROAS = data.map(m => m.roas).filter(r => r).sort((a, b) => (b || 0) - (a || 0))
-        const userPosition = sortedROAS.findIndex(r => r && r <= userROAS)
-        const percentile = (userPosition / sortedROAS.length) * 100
-
-        let userPos: 'TOP_10' | 'ABOVE_AVG' | 'AVERAGE' | 'BELOW_AVG' | 'BOTTOM_10'
-        if (percentile <= 10) userPos = 'TOP_10'
-        else if (percentile <= 40) userPos = 'ABOVE_AVG'
-        else if (percentile <= 60) userPos = 'AVERAGE'
-        else if (percentile <= 90) userPos = 'BELOW_AVG'
-        else userPos = 'BOTTOM_10'
-
-        setBenchmark({
-          industry: industry as Industry,
-          channel: channel as Channel,
-          avgBudget,
-          avgRevenue,
-          avgCAC,
-          avgROAS,
-          avgConversionRate,
-          totalSamples: data.length,
-          userPosition: userPos
-        })
+      if (!data || data.length === 0) {
+        setBenchmark(null)
+        return
       }
+
+      // Calcular medianas
+      const avgBudget = calculateQuartiles(data.map(m => m.budget_monthly)).median
+      const avgRevenue = calculateQuartiles(data.map(m => m.revenue)).median
+
+      const cacValues = data.filter(m => m.cac).map(m => m.cac!)
+      const avgCAC = cacValues.length > 0 ? calculateQuartiles(cacValues).median : 0
+
+      const roasValues = data.filter(m => m.roas).map(m => m.roas!)
+      const avgROAS = roasValues.length > 0 ? calculateQuartiles(roasValues).median : 0
+
+      const conversionValues = data.filter(m => m.conversion_rate).map(m => m.conversion_rate!)
+      const avgConversionRate = conversionValues.length > 0 ? calculateQuartiles(conversionValues).median : 0
+
+      // Calcular percentiles del usuario
+      const userMetrics = calcularMetricas()
+      const userROASPercentile = getValuePercentile(userMetrics.roas, roasValues)
+
+      // Para CAC, invertir porque menor es mejor
+      const userCACPercentile = userMetrics.cac && cacValues.length > 0
+        ? 100 - getValuePercentile(userMetrics.cac, cacValues)
+        : 50
+
+      const userConversionPercentile = userMetrics.conversionRate && conversionValues.length > 0
+        ? getValuePercentile(userMetrics.conversionRate, conversionValues)
+        : 50
+
+      // Posición basada en ROAS (métrica principal)
+      const userPos = getUserPosition(userROASPercentile)
+
+      // Calcular quartiles para todas las métricas
+      const percentiles = {
+        budget: calculateQuartiles(data.map(m => m.budget_monthly)),
+        revenue: calculateQuartiles(data.map(m => m.revenue)),
+        cac: cacValues.length > 0 ? calculateQuartiles(cacValues) : { p25: 0, median: 0, p75: 0 },
+        roas: roasValues.length > 0 ? calculateQuartiles(roasValues) : { p25: 0, median: 0, p75: 0 },
+        conversion: conversionValues.length > 0 ? calculateQuartiles(conversionValues) : { p25: 0, median: 0, p75: 0 },
+      }
+
+      setBenchmark({
+        industry: industry as Industry,
+        channel: channel as Channel,
+        avgBudget,
+        avgRevenue,
+        avgCAC,
+        avgROAS,
+        avgConversionRate,
+        totalSamples: data.length,
+        userPosition: userPos,
+        percentiles,
+        userPercentiles: {
+          roas: userROASPercentile,
+          cac: userCACPercentile,
+          conversion: userConversionPercentile,
+        }
+      })
 
     } catch (error) {
       console.error('Error al obtener benchmark:', error)
+      toast.error('Error al cargar benchmarks')
+    } finally {
+      setIsLoadingBenchmark(false)
     }
+  }
+
+  const handleShare = () => {
+    navigator.clipboard.writeText('https://www.mulleryperez.cl/labs/mp-intelligence')
+    toast.success('¡Link copiado! Compártelo con tu red 🎉')
   }
 
   return (
     <>
+      <Toaster position="top-right" />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(intelligenceSchema) }}
@@ -368,7 +402,7 @@ export default function MPIntelligenceClient() {
 
               {/* Industria */}
               <div className="mb-6">
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
                   Industria *
                 </label>
                 <select
@@ -402,58 +436,72 @@ export default function MPIntelligenceClient() {
 
               {/* Presupuesto */}
               <div className="mb-6">
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
                   Presupuesto mensual (CLP) *
+                  <MetricTooltip metric="budget" />
                 </label>
                 <input
                   type="text"
                   value={budgetMonthly}
                   onChange={(e) => setBudgetMonthly(e.target.value.replace(/\D/g, ''))}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                    fieldErrors.budgetMonthly ? 'border-red-300' : 'border-gray-300'
+                  }`}
                   placeholder="Ej: 500000"
                 />
+                {fieldErrors.budgetMonthly && <FieldError message={fieldErrors.budgetMonthly} />}
               </div>
 
               {/* Ingresos */}
               <div className="mb-6">
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Ingresos generados (CLP) *
+                <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                  Ingresos generados mensuales (CLP) *
+                  <MetricTooltip metric="revenue" />
                 </label>
                 <input
                   type="text"
                   value={revenue}
                   onChange={(e) => setRevenue(e.target.value.replace(/\D/g, ''))}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                    fieldErrors.revenue ? 'border-red-300' : 'border-gray-300'
+                  }`}
                   placeholder="Ej: 2000000"
                 />
+                {fieldErrors.revenue && <FieldError message={fieldErrors.revenue} />}
               </div>
 
               {/* Leads (opcional) */}
               <div className="mb-6">
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Leads generados (opcional)
+                  Leads generados del mes (opcional)
                 </label>
                 <input
                   type="text"
                   value={leadsGenerated}
                   onChange={(e) => setLeadsGenerated(e.target.value.replace(/\D/g, ''))}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                    fieldErrors.leadsGenerated ? 'border-red-300' : 'border-gray-300'
+                  }`}
                   placeholder="Ej: 100"
                 />
+                {fieldErrors.leadsGenerated && <FieldError message={fieldErrors.leadsGenerated} />}
               </div>
 
               {/* Ventas (opcional) */}
               <div className="mb-6">
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Ventas cerradas (opcional)
+                  Ventas cerradas del mes (opcional)
                 </label>
                 <input
                   type="text"
                   value={salesGenerated}
                   onChange={(e) => setSalesGenerated(e.target.value.replace(/\D/g, ''))}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                    fieldErrors.salesGenerated ? 'border-red-300' : 'border-gray-300'
+                  }`}
                   placeholder="Ej: 25"
                 />
+                {fieldErrors.salesGenerated && <FieldError message={fieldErrors.salesGenerated} />}
               </div>
 
               {/* Región (opcional) */}
@@ -499,28 +547,6 @@ export default function MPIntelligenceClient() {
                 {isSubmitting ? 'Enviando...' : 'Compartir y Ver Benchmark'}
               </button>
 
-              {/* Mensajes */}
-              {submitSuccess && (
-                <div className="mt-4 p-4 bg-gradient-to-r from-emerald-50 to-cyan-50 border-2 border-emerald-300 rounded-lg">
-                  <div className="flex items-start gap-2 mb-2">
-                    <CheckCircle2 className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
-                    <p className="text-sm font-bold text-emerald-900">
-                      ¡Listo! Ya eres parte de la red colaborativa
-                    </p>
-                  </div>
-                  <p className="text-xs text-emerald-700 leading-relaxed">
-                    Tus datos se agregaron anónimamente. Ahora puedes ver tu benchmark en el panel de la derecha →
-                  </p>
-                </div>
-              )}
-
-              {submitError && (
-                <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start gap-2">
-                  <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
-                  <p className="text-sm text-red-800">{submitError}</p>
-                </div>
-              )}
-
               {/* Nota de privacidad */}
               <div className="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
                 <p className="text-sm text-gray-700 text-center mb-2">
@@ -529,133 +555,37 @@ export default function MPIntelligenceClient() {
                 <p className="text-xs text-gray-600 text-center leading-relaxed">
                   No guardamos emails, nombres ni datos de contacto. Solo métricas agregadas.
                   Tu información se mezcla con la de otras empresas para calcular promedios.
-                  <strong className="text-gray-800">Imposible identificarte.</strong>
+                  <strong className="text-gray-800"> Imposible identificarte.</strong>
                 </p>
               </div>
             </div>
 
             {/* Panel Benchmark */}
             <div className="bg-white rounded-2xl p-8 shadow-xl border border-gray-200">
-              {!benchmark ? (
-                <div className="h-full flex items-center justify-center text-center text-gray-500 min-h-[400px]">
-                  <div className="max-w-sm">
-                    <div className="mb-6 relative">
-                      <BarChart3 className="w-20 h-20 text-emerald-500 mx-auto mb-2" />
-                      <div className="absolute -top-2 -right-2 bg-emerald-500 text-white text-xs font-bold px-2 py-1 rounded-full">
-                        ¡Gratis!
-                      </div>
-                    </div>
-                    <p className="text-xl font-bold text-gray-800 mb-3">Tu benchmark te espera</p>
-                    <p className="text-sm text-gray-600 leading-relaxed mb-4">
-                      Completa el formulario de la izquierda para descubrir cómo te comparas con {totalContributions}+ empresas de tu industria
-                    </p>
-                    <div className="flex items-center justify-center gap-2 text-emerald-600 text-sm font-semibold">
-                      <CheckCircle2 className="w-4 h-4" />
-                      <span>Resultados instantáneos</span>
-                    </div>
-                  </div>
+              {isLoadingBenchmark ? (
+                <LoadingState />
+              ) : !benchmark ? (
+                <div className="h-full flex items-center justify-center min-h-[400px]">
+                  <InitialState />
                 </div>
               ) : (
-                <div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-                    <TrendingUp className="w-5 h-5" />
-                    Tu benchmark
-                  </h3>
-
-                  {/* Warning si pocos datos */}
-                  {benchmark.totalSamples < 10 && (
-                    <div className="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg flex items-start gap-2">
-                      <AlertCircle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
-                      <div className="text-sm">
-                        <p className="font-semibold text-yellow-800 mb-1">Datos insuficientes</p>
-                        <p className="text-yellow-700">
-                          Solo {benchmark.totalSamples} {benchmark.totalSamples === 1 ? 'empresa ha' : 'empresas han'} compartido datos.
-                          Los benchmarks serán más precisos con más contribuciones (idealmente 10+).
-                        </p>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Posición */}
-                  <div className="mb-6 p-4 bg-gradient-to-r from-purple-50 to-indigo-50 rounded-xl border border-purple-200">
-                    <div className="flex items-center justify-between mb-2">
-                      <h4 className="text-sm font-semibold text-gray-700">Tu posición</h4>
-                      {benchmark.userPosition === 'TOP_10' && <CheckCircle2 className="w-5 h-5 text-emerald-600" />}
-                      {benchmark.userPosition === 'ABOVE_AVG' && <TrendingUp className="w-5 h-5 text-blue-600" />}
-                    </div>
-                    <div className="text-2xl font-bold text-purple-600 mb-1">
-                      {benchmark.userPosition === 'TOP_10' && 'Top 10%'}
-                      {benchmark.userPosition === 'ABOVE_AVG' && 'Sobre el promedio'}
-                      {benchmark.userPosition === 'AVERAGE' && 'Promedio'}
-                      {benchmark.userPosition === 'BELOW_AVG' && 'Bajo el promedio'}
-                      {benchmark.userPosition === 'BOTTOM_10' && 'Necesita mejorar'}
-                    </div>
-                    <p className="text-xs text-gray-600">
-                      Basado en {benchmark.totalSamples} empresas de {INDUSTRIES[benchmark.industry]}
-                    </p>
-                  </div>
-
-                  {/* Métricas */}
-                  <div className="space-y-4 mb-6">
-                    <div className="p-4 bg-gray-50 rounded-lg">
-                      <p className="text-sm text-gray-600 mb-1">Presupuesto promedio</p>
-                      <p className="text-xl font-bold text-gray-900">{formatCLP(benchmark.avgBudget)}</p>
-                    </div>
-
-                    <div className="p-4 bg-gray-50 rounded-lg">
-                      <p className="text-sm text-gray-600 mb-1">Ingresos promedio</p>
-                      <p className="text-xl font-bold text-gray-900">{formatCLP(benchmark.avgRevenue)}</p>
-                    </div>
-
-                    <div className="p-4 bg-gray-50 rounded-lg">
-                      <p className="text-sm text-gray-600 mb-1">CAC promedio</p>
-                      <p className="text-xl font-bold text-gray-900">
-                        {benchmark.avgCAC ? formatCLP(benchmark.avgCAC) : 'N/A'}
-                      </p>
-                    </div>
-
-                    <div className="p-4 bg-gray-50 rounded-lg">
-                      <p className="text-sm text-gray-600 mb-1">ROAS promedio</p>
-                      <p className="text-xl font-bold text-gray-900">
-                        {benchmark.avgROAS ? benchmark.avgROAS.toFixed(2) + 'x' : 'N/A'}
-                      </p>
-                    </div>
-
-                    {benchmark.avgConversionRate && (
-                      <div className="p-4 bg-gray-50 rounded-lg">
-                        <p className="text-sm text-gray-600 mb-1">Conversión promedio</p>
-                        <p className="text-xl font-bold text-gray-900">
-                          {benchmark.avgConversionRate.toFixed(1)}%
-                        </p>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Call to action virality */}
-                  <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-300 p-4 rounded-xl">
-                    <p className="text-sm font-bold text-blue-900 mb-2">
-                      🚀 Ayuda a que la red crezca
-                    </p>
-                    <p className="text-xs text-blue-700 leading-relaxed mb-3">
-                      Mientras más empresas participen, más precisos son los benchmarks para todos.
-                      <strong className="text-blue-900"> Comparte M&P Intelligence</strong> con tu red de marketers.
-                    </p>
-                    <button
-                      onClick={() => {
-                        navigator.clipboard.writeText('https://www.mulleryperez.cl/labs/mp-intelligence')
-                        alert('¡Link copiado! Compártelo con tu red 🎉')
-                      }}
-                      className="w-full bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold py-2 px-4 rounded-lg transition-colors"
-                    >
-                      📋 Copiar link para compartir
-                    </button>
-                  </div>
-                </div>
+                <BenchmarkResults
+                  benchmark={benchmark}
+                  userMetrics={{
+                    budget: parseFloat(budgetMonthly),
+                    revenue: parseFloat(revenue),
+                    ...calcularMetricas(),
+                    leads: leadsGenerated ? parseFloat(leadsGenerated) : undefined,
+                    sales: salesGenerated ? parseFloat(salesGenerated) : undefined,
+                  }}
+                  totalContributions={totalContributions}
+                  onShare={handleShare}
+                />
               )}
             </div>
           </div>
 
-          {/* Qué recibes */}
+          {/* Info sections remain the same... */}
           <div className="mt-12 bg-gradient-to-br from-emerald-500/10 to-cyan-500/10 backdrop-blur-sm border border-emerald-400/20 rounded-2xl p-8">
             <h3 className="text-2xl font-bold text-white mb-2 text-center">¿Qué obtienes al compartir tus métricas?</h3>
             <p className="text-emerald-200 text-center mb-8 max-w-2xl mx-auto">
@@ -665,65 +595,30 @@ export default function MPIntelligenceClient() {
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 flex items-start gap-3">
                 <CheckCircle2 className="w-6 h-6 text-emerald-400 flex-shrink-0 mt-1" />
                 <div>
-                  <h4 className="font-bold text-white mb-1">CAC promedio de tu industria</h4>
-                  <p className="text-sm text-emerald-100">Sabrás si estás pagando de más por cliente</p>
+                  <h4 className="font-bold text-white mb-1">Benchmarks con percentiles</h4>
+                  <p className="text-sm text-emerald-100">Ve dónde estás en top 25%, mediana o top 75%</p>
                 </div>
               </div>
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 flex items-start gap-3">
                 <CheckCircle2 className="w-6 h-6 text-emerald-400 flex-shrink-0 mt-1" />
                 <div>
-                  <h4 className="font-bold text-white mb-1">ROAS real de tu canal</h4>
-                  <p className="text-sm text-emerald-100">Compara tu retorno vs la competencia</p>
+                  <h4 className="font-bold text-white mb-1">Insights automáticos</h4>
+                  <p className="text-sm text-emerald-100">Recomendaciones accionables basadas en tus métricas</p>
                 </div>
               </div>
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 flex items-start gap-3">
                 <CheckCircle2 className="w-6 h-6 text-emerald-400 flex-shrink-0 mt-1" />
                 <div>
-                  <h4 className="font-bold text-white mb-1">Tu posición en el ranking</h4>
-                  <p className="text-sm text-emerald-100">Top 10%, promedio o necesitas mejorar</p>
+                  <h4 className="font-bold text-white mb-1">Tu posición visual</h4>
+                  <p className="text-sm text-emerald-100">Percentile rings animados que muestran tu ranking</p>
                 </div>
               </div>
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 flex items-start gap-3">
                 <CheckCircle2 className="w-6 h-6 text-emerald-400 flex-shrink-0 mt-1" />
                 <div>
-                  <h4 className="font-bold text-white mb-1">Tasas de conversión reales</h4>
-                  <p className="text-sm text-emerald-100">Benchmarks que no encontrarás en Google</p>
+                  <h4 className="font-bold text-white mb-1">Badges y logros</h4>
+                  <p className="text-sm text-emerald-100">Gamificación por contribuir a la comunidad</p>
                 </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Cómo funciona */}
-          <div className="mt-8 bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8">
-            <h3 className="text-2xl font-bold text-white mb-2 text-center">¿Cómo funciona la red colaborativa?</h3>
-            <p className="text-purple-200 text-center mb-8">Mientras más empresas participen, más precisos son los benchmarks para todos</p>
-            <div className="grid md:grid-cols-3 gap-6">
-              <div className="text-center">
-                <div className="w-16 h-16 bg-gradient-to-br from-emerald-500 to-cyan-500 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-                  <Share2 className="w-8 h-8 text-white" />
-                </div>
-                <h4 className="text-lg font-semibold text-white mb-2">1. Das para recibir</h4>
-                <p className="text-purple-200 text-sm leading-relaxed">
-                  Compartes tus métricas anónimas (presupuesto, revenue, conversiones). <strong className="text-white">Nadie sabrá que eres tú.</strong>
-                </p>
-              </div>
-              <div className="text-center">
-                <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-                  <Database className="w-8 h-8 text-white" />
-                </div>
-                <h4 className="text-lg font-semibold text-white mb-2">2. Se suma a la red</h4>
-                <p className="text-purple-200 text-sm leading-relaxed">
-                  Tus datos se agregan al pool de tu industria. <strong className="text-white">Cuantos más seamos, mejor para todos.</strong>
-                </p>
-              </div>
-              <div className="text-center">
-                <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-                  <BarChart3 className="w-8 h-8 text-white" />
-                </div>
-                <h4 className="text-lg font-semibold text-white mb-2">3. Recibes insights</h4>
-                <p className="text-purple-200 text-sm leading-relaxed">
-                  Al instante ves promedios reales y tu posición. <strong className="text-white">Datos que no están en ningún lado.</strong>
-                </p>
               </div>
             </div>
           </div>

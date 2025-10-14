@@ -66,6 +66,20 @@ export interface Benchmark {
   avgConversionRate: number
   totalSamples: number
   userPosition?: 'TOP_10' | 'ABOVE_AVG' | 'AVERAGE' | 'BELOW_AVG' | 'BOTTOM_10'
+  // Percentiles for quartile visualization
+  percentiles?: {
+    budget: { p25: number; median: number; p75: number }
+    revenue: { p25: number; median: number; p75: number }
+    cac: { p25: number; median: number; p75: number }
+    roas: { p25: number; median: number; p75: number }
+    conversion: { p25: number; median: number; p75: number }
+  }
+  // User's exact percentile position for each metric
+  userPercentiles?: {
+    roas: number
+    cac: number
+    conversion: number
+  }
 }
 
 export interface IndustryLabels {
