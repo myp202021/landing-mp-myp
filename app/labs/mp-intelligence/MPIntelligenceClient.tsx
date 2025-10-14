@@ -84,7 +84,7 @@ export default function MPIntelligenceClient() {
       .from('campaign_metrics')
       .select('*', { count: 'exact', head: true })
 
-    if (count) setTotalContribuciones(count)
+    if (count) setTotalContributions(count)
   }
 
   const formatCLP = (valor: number) => {
@@ -241,7 +241,7 @@ export default function MPIntelligenceClient() {
             {/* Stats */}
             <div className="flex items-center justify-center gap-4 text-emerald-300">
               <Users className="w-5 h-5" />
-              <span className="text-lg font-semibold">{totalContribuciones} empresas ya contribuyeron</span>
+              <span className="text-lg font-semibold">{totalContributions} empresas ya contribuyeron</span>
             </div>
           </div>
 
