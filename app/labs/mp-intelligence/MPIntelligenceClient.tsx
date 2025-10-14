@@ -5,7 +5,6 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Database, Users, CheckCircle2, Share2 } from 'lucide-react'
 import { createSoftwareAppSchema, createBreadcrumbSchema } from '@/lib/metadata'
-import { supabase } from '@/lib/supabase'
 import toast, { Toaster } from 'react-hot-toast'
 import type {
   CampaignMetric,
@@ -94,11 +93,16 @@ export default function MPIntelligenceClient() {
   }
 
   const cargarTotalContribuciones = async () => {
-    const { count } = await supabase
-      .from('campaign_metrics')
-      .select('*', { count: 'exact', head: true })
+    try {
+      const response = await fetch('/api/intelligence/count')
+      const result = await response.json()
 
-    if (count) setTotalContributions(count)
+      if (response.ok && result.count) {
+        setTotalContributions(result.count)
+      }
+    } catch (error) {
+      console.error('Error al cargar total de contribuciones:', error)
+    }
   }
 
   const formatCLP = (valor: number) => {
@@ -232,13 +236,25 @@ export default function MPIntelligenceClient() {
     setIsLoadingBenchmark(true)
 
     try {
-      const { data, error } = await supabase
-        .from('campaign_metrics')
-        .select('*')
-        .eq('industry', industry)
-        .eq('channel', channel)
+      // Llamar al API route en lugar de Supabase directamente
+      const response = await fetch(
+        `/api/intelligence/benchmark?industry=${industry}&channel=${channel}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }
+      )
 
-      if (error) throw error
+      const result = await response.json()
+
+      if (!response.ok) {
+        console.error('❌ Error del servidor:', result)
+        throw new Error(result.error || 'Error al cargar benchmark')
+      }
+
+      const data = result.data
 
       if (!data || data.length === 0) {
         setBenchmark(null)
