@@ -132,8 +132,11 @@ export default function BenchmarkResults({
               {benchmark.userPosition === 'BOTTOM_10' && 'Necesita mejoras'}
             </div>
             <p className="text-sm text-gray-600 mb-4">
-              Basado en {benchmark.totalSamples} empresas de{' '}
-              {INDUSTRY_LABELS[benchmark.industry]}
+              {benchmark.isReference ? (
+                <>Comparado con benchmarks de referencia de {INDUSTRY_LABELS[benchmark.industry]}</>
+              ) : (
+                <>Basado en {benchmark.totalSamples} empresas de {INDUSTRY_LABELS[benchmark.industry]}</>
+              )}
             </p>
 
             {/* Quick stats */}
