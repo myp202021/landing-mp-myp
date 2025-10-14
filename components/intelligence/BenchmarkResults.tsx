@@ -65,23 +65,72 @@ export default function BenchmarkResults({
         </motion.div>
       </div>
 
-      {/* Warning si pocos datos */}
-      {benchmark.totalSamples < 10 && (
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg flex items-start gap-2"
-        >
-          <AlertCircle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
-          <div className="text-sm">
-            <p className="font-semibold text-yellow-800 mb-1">Datos preliminares</p>
-            <p className="text-yellow-700">
-              Solo {benchmark.totalSamples} {benchmark.totalSamples === 1 ? 'empresa ha' : 'empresas han'} compartido datos.
-              Los benchmarks serán más precisos con 10+ contribuciones.
-            </p>
-          </div>
-        </motion.div>
-      )}
+      {/* Data Quality Badge */}
+      <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        className={`p-3 rounded-lg flex items-start gap-3 ${
+          benchmark.dataQuality === 'HIGH'
+            ? 'bg-emerald-50 border border-emerald-200'
+            : benchmark.dataQuality === 'MEDIUM'
+            ? 'bg-blue-50 border border-blue-200'
+            : benchmark.dataQuality === 'LOW'
+            ? 'bg-yellow-50 border border-yellow-200'
+            : 'bg-purple-50 border border-purple-200'
+        }`}
+      >
+        <div className={`p-2 rounded-full ${
+          benchmark.dataQuality === 'HIGH'
+            ? 'bg-emerald-100'
+            : benchmark.dataQuality === 'MEDIUM'
+            ? 'bg-blue-100'
+            : benchmark.dataQuality === 'LOW'
+            ? 'bg-yellow-100'
+            : 'bg-purple-100'
+        }`}>
+          {benchmark.dataQuality === 'HIGH' && <TrendingUp className="w-5 h-5 text-emerald-600" />}
+          {benchmark.dataQuality === 'MEDIUM' && <TrendingUp className="w-5 h-5 text-blue-600" />}
+          {benchmark.dataQuality === 'LOW' && <AlertCircle className="w-5 h-5 text-yellow-600" />}
+          {benchmark.dataQuality === 'REFERENCE' && <Sparkles className="w-5 h-5 text-purple-600" />}
+        </div>
+        <div className="flex-1 text-sm">
+          {benchmark.dataQuality === 'HIGH' && (
+            <>
+              <p className="font-semibold text-emerald-800 mb-1">✅ Data de Alta Calidad</p>
+              <p className="text-emerald-700">
+                Basado en {benchmark.totalSamples} empresas reales. Estos benchmarks son 100% datos de la comunidad.
+              </p>
+            </>
+          )}
+          {benchmark.dataQuality === 'MEDIUM' && (
+            <>
+              <p className="font-semibold text-blue-800 mb-1">🔀 Data Híbrida (Calidad Media)</p>
+              <p className="text-blue-700">
+                Combinando {benchmark.totalSamples} empresas reales con referencias de mercado para mayor precisión.
+                Los benchmarks mejorarán con 10+ contribuciones.
+              </p>
+            </>
+          )}
+          {benchmark.dataQuality === 'LOW' && (
+            <>
+              <p className="font-semibold text-yellow-800 mb-1">⚠️ Data Preliminar</p>
+              <p className="text-yellow-700">
+                Solo {benchmark.totalSamples} {benchmark.totalSamples === 1 ? 'empresa ha' : 'empresas han'} compartido datos.
+                Usando referencias de mercado para complementar. Los benchmarks serán más precisos con más contribuciones.
+              </p>
+            </>
+          )}
+          {benchmark.dataQuality === 'REFERENCE' && (
+            <>
+              <p className="font-semibold text-purple-800 mb-1">📚 Benchmarks de Referencia</p>
+              <p className="text-purple-700">
+                Aún no hay datos reales para esta combinación de industria/canal. Mostrando benchmarks basados en
+                fuentes verificadas (WordStream 2024, Triple Whale). ¡Sé el primero en contribuir!
+              </p>
+            </>
+          )}
+        </div>
+      </motion.div>
 
       {/* Hero Position Card */}
       <div className="bg-gradient-to-r from-purple-50 to-indigo-50 rounded-xl border border-purple-200 p-6">

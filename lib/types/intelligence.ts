@@ -80,6 +80,10 @@ export interface Benchmark {
     cac: number
     conversion: number
   }
+  // Data quality indicators
+  dataQuality: 'HIGH' | 'MEDIUM' | 'LOW' | 'REFERENCE'
+  isHybrid: boolean
+  isReference: boolean
 }
 
 export interface IndustryLabels {
