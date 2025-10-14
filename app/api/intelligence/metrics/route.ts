@@ -179,8 +179,9 @@ export async function POST(request: NextRequest) {
     console.log('✅ Validated metric object:', JSON.stringify(metric, null, 2))
 
     // Inicializar Supabase con variables de entorno del servidor
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    // IMPORTANT: Strip whitespace and newlines from environment variables
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim().replace(/\s/g, '')
+    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.trim().replace(/\s/g, '')
 
     if (!supabaseUrl || !supabaseKey) {
       console.error('❌ Supabase credentials not configured')
