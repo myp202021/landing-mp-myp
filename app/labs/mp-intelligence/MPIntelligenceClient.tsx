@@ -188,19 +188,34 @@ export default function MPIntelligenceClient() {
 
       const { cac, roas, conversionRate } = calcularMetricas()
 
-      const metric: CampaignMetric = {
+      // Construir objeto sin campos undefined (Supabase no acepta undefined en headers)
+      const metric: any = {
         industry: industry as Industry,
         channel: channel as Channel,
         budget_monthly: parseInt(budgetMonthly),
         revenue: parseInt(revenue),
-        leads_generated: leadsGenerated ? parseInt(leadsGenerated) : undefined,
-        sales_generated: salesGenerated ? parseInt(salesGenerated) : undefined,
-        cac,
+        anonymous_user_id: getAnonymousUserId(),
         roas,
-        conversion_rate: conversionRate,
-        region: region as Region || undefined,
-        company_size: companySize as CompanySize || undefined,
-        anonymous_user_id: getAnonymousUserId()
+      }
+
+      // Solo agregar campos opcionales si tienen valor
+      if (leadsGenerated && parseInt(leadsGenerated) > 0) {
+        metric.leads_generated = parseInt(leadsGenerated)
+      }
+      if (salesGenerated && parseInt(salesGenerated) > 0) {
+        metric.sales_generated = parseInt(salesGenerated)
+      }
+      if (cac && cac > 0) {
+        metric.cac = cac
+      }
+      if (conversionRate && conversionRate > 0) {
+        metric.conversion_rate = conversionRate
+      }
+      if (region) {
+        metric.region = region as Region
+      }
+      if (companySize) {
+        metric.company_size = companySize as CompanySize
       }
 
       const { error } = await supabase
