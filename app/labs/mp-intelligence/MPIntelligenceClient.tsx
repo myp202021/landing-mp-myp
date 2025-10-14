@@ -26,7 +26,7 @@ import LoadingState, { FormSkeleton } from '@/components/intelligence/LoadingSta
 import EmptyState, { InitialState } from '@/components/intelligence/EmptyState'
 import ErrorState, { FieldError } from '@/components/intelligence/ErrorState'
 import BenchmarkResults from '@/components/intelligence/BenchmarkResults'
-import { getReferenceBenchmark, getDataQuality, getDataWeights } from '@/lib/reference-benchmarks'
+import { getReferenceBenchmark, shouldUseReferences, getDataQualityLabel } from '@/lib/reference-benchmarks'
 
 // Validaciones de rangos razonables (basado en mercado chileno)
 const VALIDATIONS = {
@@ -260,24 +260,20 @@ export default function MPIntelligenceClient() {
 
       console.log(`📊 Muestras reales encontradas: ${totalSamples}`)
 
-      // 2. Obtener benchmarks de referencia
+      // 2. Decidir si usar referencias o datos reales
+      const useReferences = shouldUseReferences(totalSamples)
       const referenceBenchmark = getReferenceBenchmark(industry as Industry, channel as Channel)
 
-      // 3. Determinar calidad de datos
-      const dataQuality = getDataQuality(totalSamples)
-      const isReference = totalSamples === 0
-      const isHybrid = totalSamples > 0 && totalSamples < 10
+      console.log(`🎯 Usar referencias: ${useReferences}, Tiene referencias: ${!!referenceBenchmark}`)
 
-      console.log(`📈 Calidad de datos: ${dataQuality}, Híbrido: ${isHybrid}, Referencias: ${isReference}`)
-
-      // 4. Si no hay datos ni referencias, mostrar null
-      if (totalSamples === 0 && !referenceBenchmark) {
+      // 3. Si no hay datos ni referencias, mostrar null
+      if (useReferences && !referenceBenchmark) {
         console.log('⚠️ Sin datos reales ni referencias disponibles')
         setBenchmark(null)
         return
       }
 
-      // 5. Calcular métricas según disponibilidad
+      // 4. Calcular métricas
       let avgBudget = 0
       let avgRevenue = 0
       let avgCAC = 0
@@ -285,9 +281,9 @@ export default function MPIntelligenceClient() {
       let avgConversionRate = 0
       let percentiles: any = {}
 
-      if (totalSamples === 0 && referenceBenchmark) {
-        // Solo referencias (0 muestras)
-        console.log('📚 Usando 100% referencias')
+      if (useReferences && referenceBenchmark) {
+        // USAR REFERENCIAS (<10 muestras)
+        console.log(`📚 Usando referencias (solo ${totalSamples} muestras)`)
         avgCAC = referenceBenchmark.cac.median
         avgROAS = referenceBenchmark.roas.median
         avgConversionRate = referenceBenchmark.conversion.median
@@ -298,46 +294,9 @@ export default function MPIntelligenceClient() {
           roas: referenceBenchmark.roas,
           conversion: referenceBenchmark.conversion,
         }
-      } else if (isHybrid && referenceBenchmark) {
-        // Sistema híbrido (1-9 muestras)
-        const weights = getDataWeights(totalSamples)
-        console.log(`🔀 Sistema híbrido: ${(weights.real * 100).toFixed(0)}% real, ${(weights.reference * 100).toFixed(0)}% referencias`)
-
-        // Calcular métricas reales
-        avgBudget = calculateQuartiles(realData.map(m => m.budget_monthly)).median
-        avgRevenue = calculateQuartiles(realData.map(m => m.revenue)).median
-
-        const cacValues = realData.filter(m => m.cac).map(m => m.cac!)
-        const realCAC = cacValues.length > 0 ? calculateQuartiles(cacValues).median : referenceBenchmark.cac.median
-
-        const roasValues = realData.filter(m => m.roas).map(m => m.roas!)
-        const realROAS = roasValues.length > 0 ? calculateQuartiles(roasValues).median : referenceBenchmark.roas.median
-
-        const conversionValues = realData.filter(m => m.conversion_rate).map(m => m.conversion_rate!)
-        const realConversion = conversionValues.length > 0 ? calculateQuartiles(conversionValues).median : referenceBenchmark.conversion.median
-
-        // Blend con pesos progresivos
-        avgCAC = (realCAC * weights.real) + (referenceBenchmark.cac.median * weights.reference)
-        avgROAS = (realROAS * weights.real) + (referenceBenchmark.roas.median * weights.reference)
-        avgConversionRate = (realConversion * weights.real) + (referenceBenchmark.conversion.median * weights.reference)
-
-        // Blend de percentiles
-        const blendPercentiles = (real: any, ref: any) => ({
-          p25: (real.p25 * weights.real) + (ref.p25 * weights.reference),
-          median: (real.median * weights.real) + (ref.median * weights.reference),
-          p75: (real.p75 * weights.real) + (ref.p75 * weights.reference),
-        })
-
-        percentiles = {
-          budget: calculateQuartiles(realData.map(m => m.budget_monthly)),
-          revenue: calculateQuartiles(realData.map(m => m.revenue)),
-          cac: cacValues.length > 0 ? blendPercentiles(calculateQuartiles(cacValues), referenceBenchmark.cac) : referenceBenchmark.cac,
-          roas: roasValues.length > 0 ? blendPercentiles(calculateQuartiles(roasValues), referenceBenchmark.roas) : referenceBenchmark.roas,
-          conversion: conversionValues.length > 0 ? blendPercentiles(calculateQuartiles(conversionValues), referenceBenchmark.conversion) : referenceBenchmark.conversion,
-        }
       } else {
-        // 100% datos reales (10+ muestras)
-        console.log('✅ Usando 100% datos reales')
+        // USAR DATOS REALES (10+ muestras)
+        console.log(`✅ Usando datos reales (${totalSamples} muestras)`)
         avgBudget = calculateQuartiles(realData.map(m => m.budget_monthly)).median
         avgRevenue = calculateQuartiles(realData.map(m => m.revenue)).median
 
@@ -359,40 +318,36 @@ export default function MPIntelligenceClient() {
         }
       }
 
-      // 6. Calcular percentiles del usuario
+      // 5. Calcular percentiles del usuario (contra referencias o data real, según corresponda)
       const userMetrics = calcularMetricas()
 
-      // Para ROAS: usar datos reales si existen, sino referencias
-      const roasForComparison = totalSamples > 0
-        ? realData.filter(m => m.roas).map(m => m.roas!)
-        : (referenceBenchmark ? [referenceBenchmark.roas.p25, referenceBenchmark.roas.median, referenceBenchmark.roas.p75] : [])
+      const roasForComparison = useReferences && referenceBenchmark
+        ? [referenceBenchmark.roas.p25, referenceBenchmark.roas.median, referenceBenchmark.roas.p75]
+        : realData.filter(m => m.roas).map(m => m.roas!)
 
       const userROASPercentile = roasForComparison.length > 0
         ? getValuePercentile(userMetrics.roas, roasForComparison)
         : 50
 
-      // Para CAC: invertir porque menor es mejor
-      const cacForComparison = totalSamples > 0
-        ? realData.filter(m => m.cac).map(m => m.cac!)
-        : (referenceBenchmark ? [referenceBenchmark.cac.p25, referenceBenchmark.cac.median, referenceBenchmark.cac.p75] : [])
+      const cacForComparison = useReferences && referenceBenchmark
+        ? [referenceBenchmark.cac.p25, referenceBenchmark.cac.median, referenceBenchmark.cac.p75]
+        : realData.filter(m => m.cac).map(m => m.cac!)
 
       const userCACPercentile = userMetrics.cac && cacForComparison.length > 0
         ? 100 - getValuePercentile(userMetrics.cac, cacForComparison)
         : 50
 
-      // Para Conversion Rate
-      const conversionForComparison = totalSamples > 0
-        ? realData.filter(m => m.conversion_rate).map(m => m.conversion_rate!)
-        : (referenceBenchmark ? [referenceBenchmark.conversion.p25, referenceBenchmark.conversion.median, referenceBenchmark.conversion.p75] : [])
+      const conversionForComparison = useReferences && referenceBenchmark
+        ? [referenceBenchmark.conversion.p25, referenceBenchmark.conversion.median, referenceBenchmark.conversion.p75]
+        : realData.filter(m => m.conversion_rate).map(m => m.conversion_rate!)
 
       const userConversionPercentile = userMetrics.conversionRate && conversionForComparison.length > 0
         ? getValuePercentile(userMetrics.conversionRate, conversionForComparison)
         : 50
 
-      // Posición basada en ROAS (métrica principal)
       const userPos = getUserPosition(userROASPercentile)
 
-      // 7. Construir benchmark final
+      // 6. Construir benchmark final
       setBenchmark({
         industry: industry as Industry,
         channel: channel as Channel,
@@ -409,12 +364,12 @@ export default function MPIntelligenceClient() {
           cac: userCACPercentile,
           conversion: userConversionPercentile,
         },
-        dataQuality,
-        isHybrid,
-        isReference
+        dataQuality: useReferences ? 'REFERENCE' : 'HIGH',
+        isHybrid: false,
+        isReference: useReferences
       })
 
-      console.log('✅ Benchmark calculado:', { dataQuality, isHybrid, isReference, avgROAS, avgCAC })
+      console.log('✅ Benchmark calculado:', { useReferences, totalSamples, avgROAS, avgCAC })
 
     } catch (error) {
       console.error('Error al obtener benchmark:', error)

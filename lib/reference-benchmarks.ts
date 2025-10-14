@@ -30,11 +30,9 @@ export interface ReferenceBenchmark {
   }
 }
 
-// Umbrales para decidir cuándo usar referencias vs data real
+// Umbral para decidir cuándo usar referencias vs data real
 export const DATA_THRESHOLDS = {
-  MINIMUM_FOR_REAL: 10,      // 10+ muestras = 100% data real
-  MINIMUM_FOR_HYBRID: 3,      // 3-9 muestras = híbrido
-  MINIMUM_FOR_DISPLAY: 1      // 1-2 muestras = mayormente referencias
+  MINIMUM_FOR_REAL: 10      // 10+ muestras = usar data real, <10 = usar referencias
 }
 
 /**
@@ -278,22 +276,21 @@ export function getReferenceBenchmark(
 }
 
 /**
- * Calcula el tipo de data según cantidad de muestras
+ * Determina si usar referencias o data real
  */
-export function getDataQuality(totalSamples: number): 'HIGH' | 'MEDIUM' | 'LOW' | 'REFERENCE' {
-  if (totalSamples >= DATA_THRESHOLDS.MINIMUM_FOR_REAL) return 'HIGH'
-  if (totalSamples >= DATA_THRESHOLDS.MINIMUM_FOR_HYBRID) return 'MEDIUM'
-  if (totalSamples >= DATA_THRESHOLDS.MINIMUM_FOR_DISPLAY) return 'LOW'
-  return 'REFERENCE'
+export function shouldUseReferences(totalSamples: number): boolean {
+  return totalSamples < DATA_THRESHOLDS.MINIMUM_FOR_REAL
 }
 
 /**
- * Calcula el peso de data real vs referencias
+ * Obtiene el label de calidad para UI
  */
-export function getDataWeights(totalSamples: number): { real: number, reference: number } {
-  const realWeight = Math.min(totalSamples / DATA_THRESHOLDS.MINIMUM_FOR_REAL, 1)
-  return {
-    real: realWeight,
-    reference: 1 - realWeight
+export function getDataQualityLabel(totalSamples: number): string {
+  if (totalSamples >= DATA_THRESHOLDS.MINIMUM_FOR_REAL) {
+    return `Basado en ${totalSamples} empresas reales`
   }
+  if (totalSamples > 0) {
+    return `Solo ${totalSamples} ${totalSamples === 1 ? 'muestra' : 'muestras'}. Usando referencias de mercado hasta tener 10+ contribuciones.`
+  }
+  return 'Benchmarks de referencia de mercado (WordStream 2024, Triple Whale)'
 }
