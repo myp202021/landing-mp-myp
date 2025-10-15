@@ -94,23 +94,25 @@ export function generateInsights(
     }
   }
 
-  // 4. Análisis de presupuesto
-  if (userMetrics.budget < benchmark.avgBudget * 0.5) {
-    insights.push({
-      type: 'info',
-      title: 'Presupuesto conservador',
-      description: `Tu presupuesto de $${Math.round(userMetrics.budget).toLocaleString('es-CL')} es significativamente menor al promedio de la industria ($${Math.round(benchmark.avgBudget).toLocaleString('es-CL')}).`,
-      action: userMetrics.roas > 2 ? 'Con tu ROAS actual, hay oportunidad de escalar inversión' : 'Mejora ROAS antes de escalar presupuesto',
-      priority: 2,
-    })
-  } else if (userMetrics.budget > benchmark.avgBudget * 2) {
-    insights.push({
-      type: 'info',
-      title: 'Presupuesto agresivo',
-      description: `Tu presupuesto de $${Math.round(userMetrics.budget).toLocaleString('es-CL')} es más del doble del promedio de la industria ($${Math.round(benchmark.avgBudget).toLocaleString('es-CL')}).`,
-      action: userMetrics.roas > benchmark.avgROAS ? 'Bien hecho, estás escalando con buenos resultados' : 'Con ROAS bajo promedio, considera reducir hasta optimizar',
-      priority: 3,
-    })
+  // 4. Análisis de presupuesto (solo si hay datos reales)
+  if (!benchmark.isReference && benchmark.avgBudget > 0) {
+    if (userMetrics.budget < benchmark.avgBudget * 0.5) {
+      insights.push({
+        type: 'info',
+        title: 'Presupuesto conservador',
+        description: `Tu presupuesto de $${Math.round(userMetrics.budget).toLocaleString('es-CL')} es significativamente menor al promedio de la industria ($${Math.round(benchmark.avgBudget).toLocaleString('es-CL')}).`,
+        action: userMetrics.roas > 2 ? 'Con tu ROAS actual, hay oportunidad de escalar inversión' : 'Mejora ROAS antes de escalar presupuesto',
+        priority: 2,
+      })
+    } else if (userMetrics.budget > benchmark.avgBudget * 2) {
+      insights.push({
+        type: 'info',
+        title: 'Presupuesto agresivo',
+        description: `Tu presupuesto de $${Math.round(userMetrics.budget).toLocaleString('es-CL')} es más del doble del promedio de la industria ($${Math.round(benchmark.avgBudget).toLocaleString('es-CL')}).`,
+        action: userMetrics.roas > benchmark.avgROAS ? 'Bien hecho, estás escalando con buenos resultados' : 'Con ROAS bajo promedio, considera reducir hasta optimizar',
+        priority: 3,
+      })
+    }
   }
 
   // 5. Análisis de volumen (leads vs sales)
@@ -135,12 +137,14 @@ export function generateInsights(
   }
 
   // 6. Análisis de sample size
-  if (benchmark.totalSamples < 5) {
+  if (benchmark.isReference) {
     insights.push({
-      type: 'warning',
-      title: 'Datos insuficientes',
-      description: `Solo ${benchmark.totalSamples} empresas han compartido datos en esta combinación industria/canal. Los benchmarks serán más precisos con más contribuciones.`,
-      action: 'Comparte este link con tu red para mejorar los datos',
+      type: 'info',
+      title: 'Benchmarks de referencia',
+      description: benchmark.totalSamples === 0
+        ? 'Aún no hay datos reales para esta combinación. Mostrando benchmarks de fuentes verificadas (WordStream, Triple Whale).'
+        : `Solo ${benchmark.totalSamples} ${benchmark.totalSamples === 1 ? 'empresa ha' : 'empresas han'} compartido datos (se necesitan 10+ para usar data real). Mostrando benchmarks de referencia mientras tanto.`,
+      action: 'Comparte este link con tu red para obtener benchmarks reales',
       priority: 1,
     })
   } else if (benchmark.totalSamples >= 20) {
@@ -150,20 +154,30 @@ export function generateInsights(
       description: `Con ${benchmark.totalSamples} empresas contribuyendo, estos benchmarks son estadísticamente significativos.`,
       priority: 1,
     })
+  } else if (benchmark.totalSamples < 20) {
+    insights.push({
+      type: 'info',
+      title: 'Benchmarks en crecimiento',
+      description: `Hay ${benchmark.totalSamples} empresas contribuyendo. Los datos serán más representativos con más contribuciones.`,
+      action: 'Comparte este link con tu red para mejorar la precisión',
+      priority: 1,
+    })
   }
 
-  // 7. Análisis de eficiencia relativa
-  const yourEfficiency = userMetrics.revenue / userMetrics.budget
-  const avgEfficiency = benchmark.avgRevenue / benchmark.avgBudget
+  // 7. Análisis de eficiencia relativa (solo si hay datos reales)
+  if (!benchmark.isReference && benchmark.avgBudget > 0 && benchmark.avgRevenue > 0) {
+    const yourEfficiency = userMetrics.revenue / userMetrics.budget
+    const avgEfficiency = benchmark.avgRevenue / benchmark.avgBudget
 
-  if (yourEfficiency > avgEfficiency * 1.5) {
-    insights.push({
-      type: 'success',
-      title: '⚡ Alta eficiencia de inversión',
-      description: `Estás generando ${yourEfficiency.toFixed(2)}x en revenue por cada peso invertido, vs ${avgEfficiency.toFixed(2)}x del promedio.`,
-      action: 'Este canal está funcionando excepcionalmente bien',
-      priority: 4,
-    })
+    if (yourEfficiency > avgEfficiency * 1.5) {
+      insights.push({
+        type: 'success',
+        title: '⚡ Alta eficiencia de inversión',
+        description: `Estás generando ${yourEfficiency.toFixed(2)}x en revenue por cada peso invertido, vs ${avgEfficiency.toFixed(2)}x del promedio.`,
+        action: 'Este canal está funcionando excepcionalmente bien',
+        priority: 4,
+      })
+    }
   }
 
   // Ordenar por prioridad (mayor a menor)

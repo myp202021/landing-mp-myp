@@ -7,7 +7,7 @@
  * Fuentes: WordStream 2024, Triple Whale, Databox, XYZLab Chile
  *
  * USO: Estos benchmarks se muestran cuando no hay suficiente data real
- * de la comunidad. Sistema híbrido progresivo según cantidad de muestras.
+ * de la comunidad. Sistema binario: <10 muestras = referencias, 10+ = data real.
  */
 
 import type { Industry, Channel } from './types/intelligence'

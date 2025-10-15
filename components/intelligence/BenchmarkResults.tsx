@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react'
 import { motion } from 'framer-motion'
-import { TrendingUp, AlertCircle, Sparkles, ChevronDown, ChevronUp } from 'lucide-react'
+import { TrendingUp, Sparkles, ChevronDown, ChevronUp } from 'lucide-react'
 import type { Benchmark } from '@/lib/types/intelligence'
 import { INDUSTRY_LABELS } from '@/lib/types/intelligence'
 import BenchmarkChart from './BenchmarkChart'
@@ -244,55 +244,57 @@ export default function BenchmarkResults({
         </div>
       )}
 
-      {/* Advanced Metrics (Collapsible) */}
-      <div className="bg-white rounded-xl border border-gray-200">
-        <button
-          onClick={() => setShowAdvanced(!showAdvanced)}
-          className="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors"
-        >
-          <span className="font-semibold text-gray-900">
-            Métricas adicionales
-          </span>
-          {showAdvanced ? (
-            <ChevronUp className="w-5 h-5 text-gray-500" />
-          ) : (
-            <ChevronDown className="w-5 h-5 text-gray-500" />
-          )}
-        </button>
-
-        {showAdvanced && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            className="border-t border-gray-200 p-4 space-y-3"
+      {/* Advanced Metrics (Collapsible) - Solo mostrar si hay datos reales */}
+      {!benchmark.isReference && benchmark.avgBudget > 0 && (
+        <div className="bg-white rounded-xl border border-gray-200">
+          <button
+            onClick={() => setShowAdvanced(!showAdvanced)}
+            className="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors"
           >
-            <div className="grid grid-cols-2 gap-3">
-              <div className="p-3 bg-gray-50 rounded-lg">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-xs text-gray-600">Presupuesto</span>
-                  <MetricTooltip metric="budget" />
-                </div>
-                <div className="text-lg font-bold text-gray-900">
-                  {formatCLP(benchmark.avgBudget)}
-                </div>
-                <div className="text-xs text-gray-500">promedio industria</div>
-              </div>
+            <span className="font-semibold text-gray-900">
+              Métricas adicionales
+            </span>
+            {showAdvanced ? (
+              <ChevronUp className="w-5 h-5 text-gray-500" />
+            ) : (
+              <ChevronDown className="w-5 h-5 text-gray-500" />
+            )}
+          </button>
 
-              <div className="p-3 bg-gray-50 rounded-lg">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-xs text-gray-600">Revenue</span>
-                  <MetricTooltip metric="revenue" />
+          {showAdvanced && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              className="border-t border-gray-200 p-4 space-y-3"
+            >
+              <div className="grid grid-cols-2 gap-3">
+                <div className="p-3 bg-gray-50 rounded-lg">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-xs text-gray-600">Presupuesto</span>
+                    <MetricTooltip metric="budget" />
+                  </div>
+                  <div className="text-lg font-bold text-gray-900">
+                    {formatCLP(benchmark.avgBudget)}
+                  </div>
+                  <div className="text-xs text-gray-500">promedio industria</div>
                 </div>
-                <div className="text-lg font-bold text-gray-900">
-                  {formatCLP(benchmark.avgRevenue)}
+
+                <div className="p-3 bg-gray-50 rounded-lg">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-xs text-gray-600">Revenue</span>
+                    <MetricTooltip metric="revenue" />
+                  </div>
+                  <div className="text-lg font-bold text-gray-900">
+                    {formatCLP(benchmark.avgRevenue)}
+                  </div>
+                  <div className="text-xs text-gray-500">promedio industria</div>
                 </div>
-                <div className="text-xs text-gray-500">promedio industria</div>
               </div>
-            </div>
-          </motion.div>
-        )}
-      </div>
+            </motion.div>
+          )}
+        </div>
+      )}
 
       {/* Badges Section */}
       <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl border border-blue-200 p-6">

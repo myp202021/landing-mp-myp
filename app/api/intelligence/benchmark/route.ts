@@ -7,11 +7,8 @@ export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams
     const industry = searchParams.get('industry') as Industry | null
     const channel = searchParams.get('channel') as Channel | null
-    const userROAS = searchParams.get('roas')
-    const userCAC = searchParams.get('cac')
-    const userConversion = searchParams.get('conversion')
 
-    console.log('📊 Obteniendo benchmark:', { industry, channel, userROAS, userCAC, userConversion })
+    console.log('📊 Obteniendo benchmark:', { industry, channel })
 
     if (!industry || !channel) {
       return NextResponse.json(
