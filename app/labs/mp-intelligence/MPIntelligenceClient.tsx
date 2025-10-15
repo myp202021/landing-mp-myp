@@ -255,7 +255,7 @@ export default function MPIntelligenceClient() {
         throw new Error(result.error || 'Error al cargar benchmark')
       }
 
-      const realData = result.data || []
+      const realData: CampaignMetric[] = result.data || []
       const totalSamples = realData.length
 
       console.log(`📊 Muestras reales encontradas: ${totalSamples}`)
