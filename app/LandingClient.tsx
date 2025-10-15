@@ -17,6 +17,12 @@ import {
   Megaphone,
   Palette,
   ChevronDown,
+  TrendingUp,
+  Users,
+  Calculator,
+  BarChart3,
+  Target,
+  ArrowRight,
 } from 'lucide-react'
 import { generateAISearchSchema } from '@/lib/ai-search-optimization'
 
@@ -640,6 +646,163 @@ export default function LandingClient() {
                 <div className="text-xs md:text-sm text-blue-200/80 font-medium">{stat.label}</div>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Herramientas Gratuitas */}
+      <section className="py-20 px-6 bg-gradient-to-br from-gray-50 via-white to-blue-50">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-14">
+            <div className="inline-flex items-center gap-2 mb-4 px-4 py-2 rounded-full bg-blue-50 border border-blue-100">
+              <span className="text-blue-700 text-sm font-semibold">HERRAMIENTAS GRATUITAS</span>
+            </div>
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-5 tracking-tight">
+              Herramientas profesionales{' '}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">100% gratis</span>
+            </h2>
+            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+              Potencia tu estrategia de marketing con nuestras herramientas basadas en datos reales de +500 campañas en Chile
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+            {/* M&P Intelligence */}
+            <Link
+              href="/labs/mp-intelligence"
+              className="group bg-white rounded-2xl p-6 border-2 border-gray-200 hover:border-blue-500 hover:shadow-xl transition-all duration-300"
+            >
+              <div className="flex items-start justify-between mb-4">
+                <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                  <BarChart3 className="w-6 h-6 text-white" />
+                </div>
+                <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-blue-600 group-hover:translate-x-1 transition-all" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">M&P Intelligence</h3>
+              <p className="text-sm text-gray-600 mb-3">
+                Benchmarks en tiempo real de Google Ads, Meta Ads y LinkedIn. Compara tu performance con la industria.
+              </p>
+              <div className="flex items-center gap-2 text-xs text-blue-600 font-semibold">
+                <span className="px-2 py-1 bg-blue-50 rounded-full">Data Real</span>
+                <span className="px-2 py-1 bg-purple-50 rounded-full">15 Industrias</span>
+              </div>
+            </Link>
+
+            {/* Buyer Gen */}
+            <Link
+              href="/labs/buyer-gen"
+              className="group bg-white rounded-2xl p-6 border-2 border-gray-200 hover:border-purple-500 hover:shadow-xl transition-all duration-300"
+            >
+              <div className="flex items-start justify-between mb-4">
+                <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                  <Users className="w-6 h-6 text-white" />
+                </div>
+                <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-purple-600 group-hover:translate-x-1 transition-all" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Buyer Gen</h3>
+              <p className="text-sm text-gray-600 mb-3">
+                Genera buyer personas completas con IA en 4 pasos. Incluye estrategia de contenido y KPIs validados.
+              </p>
+              <div className="flex items-center gap-2 text-xs text-purple-600 font-semibold">
+                <span className="px-2 py-1 bg-purple-50 rounded-full">IA Generativa</span>
+                <span className="px-2 py-1 bg-pink-50 rounded-full">12+ Segmentos</span>
+              </div>
+            </Link>
+
+            {/* Predictor Google Ads */}
+            <Link
+              href="/labs/predictor"
+              className="group bg-white rounded-2xl p-6 border-2 border-gray-200 hover:border-green-500 hover:shadow-xl transition-all duration-300"
+            >
+              <div className="flex items-start justify-between mb-4">
+                <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                  <TrendingUp className="w-6 h-6 text-white" />
+                </div>
+                <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-green-600 group-hover:translate-x-1 transition-all" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Predictor Google Ads</h3>
+              <p className="text-sm text-gray-600 mb-3">
+                Calcula conversiones, revenue y ROI de tus campañas con data real de +200 campañas Chile.
+              </p>
+              <div className="flex items-center gap-2 text-xs text-green-600 font-semibold">
+                <span className="px-2 py-1 bg-green-50 rounded-full">ROI/ROAS</span>
+                <span className="px-2 py-1 bg-emerald-50 rounded-full">15 Industrias</span>
+              </div>
+            </Link>
+
+            {/* Calculadora CAC */}
+            <Link
+              href="/utilidades/calculadora-cac"
+              className="group bg-white rounded-2xl p-6 border-2 border-gray-200 hover:border-orange-500 hover:shadow-xl transition-all duration-300"
+            >
+              <div className="flex items-start justify-between mb-4">
+                <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-red-600 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                  <Calculator className="w-6 h-6 text-white" />
+                </div>
+                <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-orange-600 group-hover:translate-x-1 transition-all" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Calculadora CAC</h3>
+              <p className="text-sm text-gray-600 mb-3">
+                Calcula el costo de adquisición de cliente y compara entre Google Ads, Meta y LinkedIn.
+              </p>
+              <div className="flex items-center gap-2 text-xs text-orange-600 font-semibold">
+                <span className="px-2 py-1 bg-orange-50 rounded-full">3 Canales</span>
+                <span className="px-2 py-1 bg-red-50 rounded-full">LTV/CAC Ratio</span>
+              </div>
+            </Link>
+
+            {/* Calculadora LTV */}
+            <Link
+              href="/utilidades/calculadora-ltv"
+              className="group bg-white rounded-2xl p-6 border-2 border-gray-200 hover:border-cyan-500 hover:shadow-xl transition-all duration-300"
+            >
+              <div className="flex items-start justify-between mb-4">
+                <div className="w-12 h-12 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                  <TrendingUp className="w-6 h-6 text-white" />
+                </div>
+                <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-cyan-600 group-hover:translate-x-1 transition-all" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Calculadora LTV</h3>
+              <p className="text-sm text-gray-600 mb-3">
+                Calcula el valor de vida del cliente y optimiza tu inversión en marketing digital.
+              </p>
+              <div className="flex items-center gap-2 text-xs text-cyan-600 font-semibold">
+                <span className="px-2 py-1 bg-cyan-50 rounded-full">Retention</span>
+                <span className="px-2 py-1 bg-blue-50 rounded-full">ARPU</span>
+              </div>
+            </Link>
+
+            {/* Radar Industrias */}
+            <Link
+              href="/labs/radar-industrias"
+              className="group bg-white rounded-2xl p-6 border-2 border-gray-200 hover:border-indigo-500 hover:shadow-xl transition-all duration-300"
+            >
+              <div className="flex items-start justify-between mb-4">
+                <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                  <Target className="w-6 h-6 text-white" />
+                </div>
+                <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-indigo-600 group-hover:translate-x-1 transition-all" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Radar Industrias</h3>
+              <p className="text-sm text-gray-600 mb-3">
+                Descubre oportunidades y benchmarks específicos de tu industria en Chile 2025.
+              </p>
+              <div className="flex items-center gap-2 text-xs text-indigo-600 font-semibold">
+                <span className="px-2 py-1 bg-indigo-50 rounded-full">15 Sectores</span>
+                <span className="px-2 py-1 bg-purple-50 rounded-full">Data 2025</span>
+              </div>
+            </Link>
+          </div>
+
+          {/* CTA Ver más */}
+          <div className="text-center mt-12">
+            <Link
+              href="/labs"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+            >
+              Ver todas las herramientas
+              <ArrowRight className="w-5 h-5" />
+            </Link>
           </div>
         </div>
       </section>

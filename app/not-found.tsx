@@ -5,6 +5,16 @@
 
 import Link from 'next/link'
 import { Home, Search, ArrowLeft } from 'lucide-react'
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Página no encontrada - 404 | Muller y Pérez',
+  description: 'La página que buscas no existe. Explora nuestras herramientas gratuitas de marketing digital.',
+  robots: {
+    index: false,
+    follow: true,
+  }
+}
 
 export default function NotFound() {
   return (
@@ -58,20 +68,24 @@ export default function NotFound() {
         <div className="mt-16 pt-8 border-t border-white/10">
           <p className="text-sm text-blue-300/60 mb-4">Enlaces rápidos:</p>
           <div className="flex flex-wrap gap-4 justify-center text-sm">
+            <Link href="/labs/mp-intelligence" className="text-blue-300 hover:text-white transition-colors">
+              M&P Intelligence
+            </Link>
+            <span className="text-white/20">•</span>
             <Link href="/labs/predictor" className="text-blue-300 hover:text-white transition-colors">
               Predictor Google Ads
+            </Link>
+            <span className="text-white/20">•</span>
+            <Link href="/labs/buyer-gen" className="text-blue-300 hover:text-white transition-colors">
+              Buyer Gen
             </Link>
             <span className="text-white/20">•</span>
             <Link href="/utilidades/calculadora-cac" className="text-blue-300 hover:text-white transition-colors">
               Calculadora CAC
             </Link>
             <span className="text-white/20">•</span>
-            <Link href="/utilidades/comparador-web" className="text-blue-300 hover:text-white transition-colors">
-              Comparador Web
-            </Link>
-            <span className="text-white/20">•</span>
-            <Link href="/" className="text-blue-300 hover:text-white transition-colors">
-              Contacto
+            <Link href="/blog" className="text-blue-300 hover:text-white transition-colors">
+              Blog
             </Link>
           </div>
         </div>

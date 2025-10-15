@@ -32,6 +32,23 @@ export default function sitemap(): MetadataRoute.Sitemap {
     console.warn('No se pudo leer el directorio de labs:', error)
   }
 
+  // Para cada tool de labs, verificar si tiene subdirectorios que no debemos indexar
+  const labsToolsFiltered: string[] = []
+  for (const tool of labsTools) {
+    labsToolsFiltered.push(tool)
+    // Verificar si hay subdirectorios dentro de cada tool
+    try {
+      const toolDir = path.join(labsDir, tool)
+      const toolEntries = fs.readdirSync(toolDir, { withFileTypes: true })
+      // Filtrar subdirectorios, excluyendo internal-stats y otros privados
+      const subDirs = toolEntries
+        .filter(entry => entry.isDirectory() && !entry.name.startsWith('_') && entry.name !== 'internal-stats')
+      // Por ahora no agregamos subdirectorios al sitemap ya que internal-stats es el único
+    } catch (error) {
+      // Ignorar errores de lectura de subdirectorios
+    }
+  }
+
   // Leer automáticamente todas las utilidades
   const utilidadesDir = path.join(process.cwd(), 'app', 'utilidades')
   let utilidades: string[] = []
@@ -60,8 +77,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'weekly',
       priority: 0.9,
     },
-    // M&P Labs Tools (automático)
-    ...labsTools.map(tool => ({
+    // M&P Labs Tools (automático, excluyendo internal-stats)
+    ...labsToolsFiltered.map(tool => ({
       url: `${baseUrl}/labs/${tool}`,
       lastModified: currentDate,
       changeFrequency: 'monthly' as const,

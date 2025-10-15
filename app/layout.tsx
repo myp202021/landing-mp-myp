@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { defaultMetadata, createOrganizationSchema } from "@/lib/metadata";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import Breadcrumbs from "./components/Breadcrumbs";
 import "./globals.css";
 
 export const metadata: Metadata = defaultMetadata;
@@ -99,6 +100,7 @@ export default function RootLayout({
             style={{ display: 'none', visibility: 'hidden' }}
           />
         </noscript>
+        <Breadcrumbs />
         {children}
         <SpeedInsights />
       </body>
