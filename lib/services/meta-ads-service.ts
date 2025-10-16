@@ -4,7 +4,7 @@
  * Docs: https://www.facebook.com/ads/library/api/
  */
 
-import type { MetaAd, AdFormat, Platform, PostingFrequency } from '@/lib/types/mp-intelligence'
+import { MetaAd, AdFormat, Platform, PostingFrequency } from '@/lib/types/mp-intelligence'
 
 // =====================================================
 // CONSTANTS
