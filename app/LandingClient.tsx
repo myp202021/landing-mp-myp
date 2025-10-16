@@ -25,6 +25,7 @@ import {
   ArrowRight,
 } from 'lucide-react'
 import { generateAISearchSchema } from '@/lib/ai-search-optimization'
+import YouTubeLite from '@/components/YouTubeLite'
 
 export default function LandingClient() {
   const aiSearchSchema = generateAISearchSchema()
@@ -1376,16 +1377,11 @@ export default function LandingClient() {
             {/* Video 1 - CRM M&P */}
             <div className="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all">
               <div className="aspect-video">
-                <iframe
-                  width="100%"
-                  height="100%"
-                  src="https://www.youtube.com/embed/Zxwm-4SUGDw"
+                <YouTubeLite
+                  videoId="Zxwm-4SUGDw"
                   title="CRM: M&P Agencia Digital"
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                  className="w-full h-full"
-                ></iframe>
+                  thumbnailQuality="hqdefault"
+                />
               </div>
               <div className="p-4">
                 <p className="text-sm text-gray-600 font-semibold">CRM: M&P Agencia Digital</p>
@@ -1395,16 +1391,11 @@ export default function LandingClient() {
             {/* Video 2 - Plan de acción */}
             <div className="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all">
               <div className="aspect-video">
-                <iframe
-                  width="100%"
-                  height="100%"
-                  src="https://www.youtube.com/embed/bdB7ysX5TwQ"
+                <YouTubeLite
+                  videoId="bdB7ysX5TwQ"
                   title="Plan de acción: M&P Agencia Digital"
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                  className="w-full h-full"
-                ></iframe>
+                  thumbnailQuality="hqdefault"
+                />
               </div>
               <div className="p-4">
                 <p className="text-sm text-gray-600 font-semibold">Plan de acción: M&P Agencia Digital</p>
@@ -1414,16 +1405,11 @@ export default function LandingClient() {
             {/* Video 3 - Árbol de decisión */}
             <div className="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all">
               <div className="aspect-video">
-                <iframe
-                  width="100%"
-                  height="100%"
-                  src="https://www.youtube.com/embed/g29oRYkhios"
+                <YouTubeLite
+                  videoId="g29oRYkhios"
                   title="Árbol de decisión: M&P Agencia Digital"
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                  className="w-full h-full"
-                ></iframe>
+                  thumbnailQuality="hqdefault"
+                />
               </div>
               <div className="p-4">
                 <p className="text-sm text-gray-600 font-semibold">Árbol de decisión: M&P Agencia Digital</p>
@@ -1542,6 +1528,7 @@ export default function LandingClient() {
                 width={160}
                 height={50}
                 className="h-12 w-auto mb-4"
+                loading="lazy"
               />
               <p className="text-blue-200 text-sm mb-6 leading-relaxed">
                 Agencia de Performance Marketing especializada en Google Ads, Meta Ads y estrategias data-driven. Resultados medibles desde 2019.
