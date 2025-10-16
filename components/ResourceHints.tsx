@@ -7,20 +7,27 @@
 export default function ResourceHints() {
   return (
     <>
-      {/* Preconnect to critical origins - establishes connection early */}
-      <link rel="preconnect" href="https://www.googletagmanager.com" />
-      <link rel="preconnect" href="https://www.google-analytics.com" />
-      <link rel="preconnect" href="https://connect.facebook.net" />
+      {/* Preload critical logo image */}
+      <link
+        rel="preload"
+        href="/logo-color.png"
+        as="image"
+        type="image/png"
+        fetchPriority="high"
+      />
+
+      {/* Preconnect to critical origins with crossorigin */}
+      <link rel="preconnect" href="https://www.googletagmanager.com" crossOrigin="anonymous" />
+      <link rel="preconnect" href="https://www.google-analytics.com" crossOrigin="anonymous" />
+      <link rel="preconnect" href="https://connect.facebook.net" crossOrigin="anonymous" />
 
       {/* DNS prefetch for less critical resources */}
       <link rel="dns-prefetch" href="https://i.ytimg.com" />
       <link rel="dns-prefetch" href="https://www.youtube.com" />
       <link rel="dns-prefetch" href="https://static.doubleclick.net" />
       <link rel="dns-prefetch" href="https://static.cloudflareinsights.com" />
-
-      {/* Preload critical CSS if any */}
-      {/* Uncomment if you have critical CSS file */}
-      {/* <link rel="preload" href="/styles/critical.css" as="style" /> */}
+      <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+      <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
     </>
   )
 }

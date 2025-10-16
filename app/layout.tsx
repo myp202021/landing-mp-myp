@@ -33,24 +33,6 @@ export default function RootLayout({
         />
       </head>
       <body>
-        {/* Google Tag Manager (noscript) */}
-        <noscript>
-          <iframe
-            src="https://www.googletagmanager.com/ns.html?id=GTM-58VSTLZ"
-            height="0"
-            width="0"
-            style={{ display: 'none', visibility: 'hidden' }}
-          />
-        </noscript>
-        <noscript>
-          <img
-            height="1"
-            width="1"
-            style={{display: 'none'}}
-            src="https://www.facebook.com/tr?id=555544348819002&ev=PageView&noscript=1"
-            alt=""
-          />
-        </noscript>
         <Breadcrumbs />
         {children}
         <ThirdPartyScripts />

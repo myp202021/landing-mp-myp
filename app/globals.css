@@ -1,3 +1,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Optimize font loading */
+@layer base {
+  html {
+    font-display: swap;
+  }
+}
