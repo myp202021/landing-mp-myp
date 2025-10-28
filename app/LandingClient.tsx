@@ -1609,15 +1609,8 @@ export default function LandingClient() {
                 <li>
                   <div className="text-blue-200">
                     <strong className="text-white block mb-1">Oficina Las Condes</strong>
-                    Av Santa María 9300<br />
-                    Las Condes, Santiago
-                  </div>
-                </li>
-                <li>
-                  <div className="text-blue-200">
-                    <strong className="text-white block mb-1">Oficina Providencia</strong>
                     Badajoz 100, Of 523<br />
-                    Providencia, Santiago
+                    Las Condes, Santiago
                   </div>
                 </li>
                 <li>
