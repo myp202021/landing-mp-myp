@@ -11,10 +11,6 @@ import { createClient } from '@supabase/supabase-js'
 export const runtime = 'edge'
 export const dynamic = 'force-dynamic'
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
 
 /**
  * GET /api/crm/leads
@@ -31,6 +27,10 @@ const supabase = createClient(
  *   - order: asc/desc (default desc)
  */
 export async function GET(req: NextRequest) {
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  )
   try {
     const { searchParams } = new URL(req.url)
     const clientId = searchParams.get('clientId')
@@ -119,6 +119,10 @@ export async function GET(req: NextRequest) {
  * }
  */
 export async function PATCH(req: NextRequest) {
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  )
   try {
     const body = await req.json()
     const { id, ...updates } = body
@@ -187,6 +191,10 @@ export async function PATCH(req: NextRequest) {
  * DELETE /api/crm/leads/[id]
  */
 export async function DELETE(req: NextRequest) {
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  )
   try {
     const { searchParams } = new URL(req.url)
     const id = searchParams.get('id')
