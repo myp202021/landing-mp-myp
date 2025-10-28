@@ -23,12 +23,7 @@ import crypto from 'crypto'
 // Configuración Vercel
 export const runtime = 'nodejs'
 export const maxDuration = 30 // 30s para procesar archivos grandes
-
-// Supabase client
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY! // Service role para bypass RLS
-)
+export const dynamic = 'force-dynamic'
 
 // Límites
 const MAX_FILE_SIZE = 5 * 1024 * 1024 // 5MB
@@ -172,6 +167,11 @@ function validateLead(lead: any): { valid: boolean; error?: string } {
  */
 export async function POST(req: NextRequest) {
   try {
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    )
+
     const formData = await req.formData()
     const file = formData.get('file') as File
     const clientId = formData.get('clientId') as string
