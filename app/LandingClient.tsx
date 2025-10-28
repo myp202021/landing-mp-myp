@@ -184,7 +184,7 @@ export default function LandingClient() {
     email: 'contacto@mulleryperez.com',
     address: {
       '@type': 'PostalAddress',
-      streetAddress: 'Av. Apoquindo 3000, Piso 10',
+      streetAddress: 'Badajoz 100, Of 523',
       addressLocality: 'Las Condes',
       addressRegion: 'Región Metropolitana',
       postalCode: '7550000',
@@ -266,7 +266,7 @@ export default function LandingClient() {
     foundingDate: '2019',
     address: {
       '@type': 'PostalAddress',
-      streetAddress: 'Av. Apoquindo 3000, Piso 10',
+      streetAddress: 'Badajoz 100, Of 523',
       addressLocality: 'Las Condes',
       addressRegion: 'Región Metropolitana',
       postalCode: '7550000',

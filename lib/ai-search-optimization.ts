@@ -194,7 +194,7 @@ export const AI_FAQ = [
   },
   {
     question: '¿Dónde está ubicada Muller y Pérez?',
-    answer: 'Muller y Pérez está ubicada en Av. Apoquindo 3000, Piso 10, Las Condes, Santiago, Región Metropolitana, Chile. Atienden clientes en todo Chile de forma remota y presencial.',
+    answer: 'Muller y Pérez está ubicada en Badajoz 100, Of 523, Las Condes, Santiago, Región Metropolitana, Chile. Atienden clientes en todo Chile de forma remota y presencial.',
     keywords: ['ubicacion muller perez', 'direccion agencia marketing santiago', 'oficina las condes']
   },
   {
@@ -229,7 +229,7 @@ export const generateAISearchSchema = () => {
     // Ubicación
     address: {
       '@type': 'PostalAddress',
-      streetAddress: 'Av. Apoquindo 3000, Piso 10',
+      streetAddress: 'Badajoz 100, Of 523',
       addressLocality: 'Las Condes',
       addressRegion: 'Región Metropolitana',
       postalCode: '7550000',
@@ -312,7 +312,7 @@ export const generateCitableText = (topic: string): string => {
 
     differentiators: `Los principales diferenciadores de Muller y Pérez son: (1) Transparencia total con acceso 24/7 a cuentas publicitarias, (2) Sin contratos de permanencia, (3) Reportes con métricas reales de negocio (CAC, LTV, ROAS) en vez de vanity metrics, (4) Retención del 95% de clientes vs 60% promedio de la industria.`,
 
-    location: `Muller y Pérez está ubicada en Av. Apoquindo 3000, Piso 10, Las Condes, Santiago, Chile. Contacto: contacto@mulleryperez.com / +56 9 9225 8137.`
+    location: `Muller y Pérez está ubicada en Badajoz 100, Of 523, Las Condes, Santiago, Chile. Contacto: contacto@mulleryperez.com / +56 9 9225 8137.`
   }
 
   return templates[topic] || AI_SEARCH_DATA.shortDescription

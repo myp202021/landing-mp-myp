@@ -90,7 +90,7 @@ export default function PrivacyPage() {
             <ul className="list-none pl-0 text-gray-700 space-y-2">
               <li><strong>Email:</strong> contacto@mulleryperez.com</li>
               <li><strong>Teléfono:</strong> +56 9 9225 8137</li>
-              <li><strong>Dirección:</strong> Av. Apoquindo 3000, Piso 10, Las Condes, Santiago, Chile</li>
+              <li><strong>Dirección:</strong> Badajoz 100, Of 523, Las Condes, Santiago, Chile</li>
             </ul>
           </section>
 
