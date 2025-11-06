@@ -39,6 +39,7 @@
 --   monto_vendido (numeric)
 --   razon_no_venta (text)
 --   observaciones (text)
+--   notas (text) - Campo de texto libre para detalles adicionales
 --   fecha_ingreso (timestamptz, NOT NULL)
 --   mes_ingreso (text) - formato YYYY-MM
 --   creado_en (timestamptz)

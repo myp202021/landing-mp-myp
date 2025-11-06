@@ -26,6 +26,7 @@ interface Lead {
   monto_vendido?: number
   razon_no_venta?: string
   observaciones?: string
+  notas?: string
   fecha_ingreso: string
   clientes?: Cliente
 }
@@ -790,8 +791,21 @@ export default function CRMAdmin() {
                     value={editingLead.observaciones || ''}
                     onChange={(e) => setEditingLead({...editingLead, observaciones: e.target.value})}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                    rows={3}
-                    placeholder="Notas adicionales sobre el lead..."
+                    rows={2}
+                    placeholder="Observaciones generales..."
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Notas Detalladas
+                  </label>
+                  <textarea
+                    value={editingLead.notas || ''}
+                    onChange={(e) => setEditingLead({...editingLead, notas: e.target.value})}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+                    rows={4}
+                    placeholder="Detalles de la conversación, seguimientos, próximos pasos..."
                   />
                 </div>
 
@@ -808,7 +822,8 @@ export default function CRMAdmin() {
                       vendido: editingLead.vendido,
                       monto_vendido: editingLead.monto_vendido || null,
                       razon_no_venta: editingLead.razon_no_venta || null,
-                      observaciones: editingLead.observaciones || null
+                      observaciones: editingLead.observaciones || null,
+                      notas: editingLead.notas || null
                     })}
                     className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
                   >
