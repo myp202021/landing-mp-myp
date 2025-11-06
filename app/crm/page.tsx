@@ -164,6 +164,28 @@ export default function CRMAdmin() {
     }
   }
 
+  const deleteCliente = async (clienteId: string) => {
+    if (!confirm('¿Estás seguro de eliminar este cliente? Esto también eliminará todos los leads asociados. Esta acción no se puede deshacer.')) {
+      return
+    }
+
+    try {
+      const res = await fetch(`/api/crm/clientes?id=${clienteId}`, {
+        method: 'DELETE'
+      })
+
+      if (res.ok) {
+        await loadData()
+        alert('Cliente eliminado exitosamente')
+      } else {
+        alert('Error eliminando cliente')
+      }
+    } catch (error) {
+      console.error('Error eliminando cliente:', error)
+      alert('Error eliminando cliente')
+    }
+  }
+
   if (!authenticated) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
@@ -470,10 +492,16 @@ export default function CRMAdmin() {
                           href={`/cliente/${cliente.id}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-blue-600 hover:text-blue-900"
+                          className="text-blue-600 hover:text-blue-900 mr-3"
                         >
                           Ver Portal
                         </a>
+                        <button
+                          onClick={() => deleteCliente(cliente.id)}
+                          className="text-red-600 hover:text-red-900"
+                        >
+                          Eliminar
+                        </button>
                       </td>
                     </tr>
                   ))}

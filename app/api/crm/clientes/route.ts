@@ -174,3 +174,45 @@ export async function PATCH(req: NextRequest) {
     )
   }
 }
+
+// DELETE: Eliminar un cliente
+export async function DELETE(req: NextRequest) {
+  try {
+    const { searchParams } = new URL(req.url)
+    const id = searchParams.get('id')
+
+    if (!id) {
+      return NextResponse.json(
+        { error: 'id es requerido' },
+        { status: 400 }
+      )
+    }
+
+    const { error } = await supabase
+      .from('clientes')
+      .delete()
+      .eq('id', id)
+
+    if (error) {
+      console.error('❌ Error eliminando cliente:', error)
+      return NextResponse.json(
+        { error: 'Error eliminando cliente', details: error.message },
+        { status: 500 }
+      )
+    }
+
+    console.log('✅ Cliente eliminado:', id)
+
+    return NextResponse.json({
+      success: true,
+      message: 'Cliente eliminado exitosamente'
+    })
+
+  } catch (error: any) {
+    console.error('❌ Error en DELETE /api/crm/clientes:', error)
+    return NextResponse.json(
+      { error: 'Error interno del servidor', details: error.message },
+      { status: 500 }
+    )
+  }
+}
