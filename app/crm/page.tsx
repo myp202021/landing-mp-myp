@@ -56,6 +56,8 @@ export default function CRMAdmin() {
   const [selectedCliente, setSelectedCliente] = useState<string>('all')
   const [editingLead, setEditingLead] = useState<Lead | null>(null)
   const [loading, setLoading] = useState(false)
+  const [showNewClienteModal, setShowNewClienteModal] = useState(false)
+  const [newCliente, setNewCliente] = useState({ nombre: '', rubro: '', activo: true })
 
   // Autenticación simple
   const handleLogin = (e: React.FormEvent) => {
@@ -108,6 +110,35 @@ export default function CRMAdmin() {
     } catch (error) {
       console.error('Error actualizando lead:', error)
       alert('Error actualizando lead')
+    }
+  }
+
+  const createCliente = async () => {
+    if (!newCliente.nombre.trim()) {
+      alert('El nombre del cliente es obligatorio')
+      return
+    }
+
+    try {
+      const res = await fetch('/api/crm/clientes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newCliente)
+      })
+
+      const data = await res.json()
+
+      if (res.ok) {
+        await loadData()
+        setShowNewClienteModal(false)
+        setNewCliente({ nombre: '', rubro: '', activo: true })
+        alert('Cliente creado exitosamente')
+      } else {
+        alert(data.error || 'Error creando cliente')
+      }
+    } catch (error) {
+      console.error('Error creando cliente:', error)
+      alert('Error creando cliente')
     }
   }
 
@@ -311,8 +342,20 @@ export default function CRMAdmin() {
 
         {/* Vista Clientes */}
         {view === 'clientes' && (
-          <div className="bg-white rounded-lg shadow overflow-hidden">
-            <div className="overflow-x-auto">
+          <div className="space-y-4">
+            {/* Botón Nuevo Cliente */}
+            <div className="flex justify-end">
+              <button
+                onClick={() => setShowNewClienteModal(true)}
+                className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 flex items-center gap-2"
+              >
+                <span>+</span>
+                Nuevo Cliente
+              </button>
+            </div>
+
+            <div className="bg-white rounded-lg shadow overflow-hidden">
+              <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                   <tr>
@@ -376,6 +419,7 @@ export default function CRMAdmin() {
                   ))}
                 </tbody>
               </table>
+            </div>
             </div>
           </div>
         )}
@@ -536,6 +580,74 @@ export default function CRMAdmin() {
                     className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
                   >
                     Guardar Cambios
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de nuevo cliente */}
+      {showNewClienteModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-lg shadow-xl max-w-md w-full">
+            <div className="p-6">
+              <h2 className="text-2xl font-bold mb-4">Nuevo Cliente</h2>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Nombre del Cliente *
+                  </label>
+                  <input
+                    type="text"
+                    value={newCliente.nombre}
+                    onChange={(e) => setNewCliente({...newCliente, nombre: e.target.value})}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                    placeholder="Ej: Empresa ABC"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Rubro / Industria
+                  </label>
+                  <input
+                    type="text"
+                    value={newCliente.rubro}
+                    onChange={(e) => setNewCliente({...newCliente, rubro: e.target.value})}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                    placeholder="Ej: Tecnología, Retail, Servicios"
+                  />
+                </div>
+
+                <div>
+                  <label className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      checked={newCliente.activo}
+                      onChange={(e) => setNewCliente({...newCliente, activo: e.target.checked})}
+                      className="rounded border-gray-300"
+                    />
+                    <span className="text-sm text-gray-700">Cliente activo</span>
+                  </label>
+                </div>
+
+                <div className="flex justify-end space-x-3 pt-4">
+                  <button
+                    onClick={() => {
+                      setShowNewClienteModal(false)
+                      setNewCliente({ nombre: '', rubro: '', activo: true })
+                    }}
+                    className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    onClick={createCliente}
+                    className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+                  >
+                    Crear Cliente
                   </button>
                 </div>
               </div>
