@@ -142,6 +142,28 @@ export default function CRMAdmin() {
     }
   }
 
+  const deleteLead = async (leadId: number) => {
+    if (!confirm('¿Estás seguro de eliminar este lead? Esta acción no se puede deshacer.')) {
+      return
+    }
+
+    try {
+      const res = await fetch(`/api/crm/leads?id=${leadId}`, {
+        method: 'DELETE'
+      })
+
+      if (res.ok) {
+        await loadData()
+        alert('Lead eliminado exitosamente')
+      } else {
+        alert('Error eliminando lead')
+      }
+    } catch (error) {
+      console.error('Error eliminando lead:', error)
+      alert('Error eliminando lead')
+    }
+  }
+
   if (!authenticated) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
@@ -240,6 +262,38 @@ export default function CRMAdmin() {
         {/* Vista Leads */}
         {view === 'leads' && (
           <div className="space-y-4">
+            {/* Métricas */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <div className="bg-white p-6 rounded-lg shadow">
+                <div className="text-sm text-gray-600 mb-1">Total Leads</div>
+                <div className="text-3xl font-bold text-gray-900">{leads.length}</div>
+              </div>
+              <div className="bg-white p-6 rounded-lg shadow">
+                <div className="text-sm text-gray-600 mb-1">Contactados</div>
+                <div className="text-3xl font-bold text-blue-600">
+                  {leads.filter(l => l.contactado).length}
+                </div>
+                <div className="text-xs text-gray-500 mt-1">
+                  {leads.length > 0 ? ((leads.filter(l => l.contactado).length / leads.length) * 100).toFixed(1) : 0}%
+                </div>
+              </div>
+              <div className="bg-white p-6 rounded-lg shadow">
+                <div className="text-sm text-gray-600 mb-1">Vendidos</div>
+                <div className="text-3xl font-bold text-green-600">
+                  {leads.filter(l => l.vendido).length}
+                </div>
+                <div className="text-xs text-gray-500 mt-1">
+                  {leads.length > 0 ? ((leads.filter(l => l.vendido).length / leads.length) * 100).toFixed(1) : 0}% conversión
+                </div>
+              </div>
+              <div className="bg-white p-6 rounded-lg shadow">
+                <div className="text-sm text-gray-600 mb-1">Monto Total</div>
+                <div className="text-2xl font-bold text-green-600">
+                  ${leads.filter(l => l.monto_vendido).reduce((sum, l) => sum + Number(l.monto_vendido || 0), 0).toLocaleString('es-CL')}
+                </div>
+              </div>
+            </div>
+
             {/* Filtro por cliente */}
             <div className="bg-white p-4 rounded-lg shadow">
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -329,6 +383,12 @@ export default function CRMAdmin() {
                             className="text-blue-600 hover:text-blue-900 mr-3"
                           >
                             Editar
+                          </button>
+                          <button
+                            onClick={() => deleteLead(lead.id)}
+                            className="text-red-600 hover:text-red-900"
+                          >
+                            Eliminar
                           </button>
                         </td>
                       </tr>
