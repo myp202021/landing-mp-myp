@@ -50,17 +50,17 @@ export async function POST(req: NextRequest) {
       nombre: body.full_name || 'Sin nombre',
       email: body.email || null,
       telefono: body.phone_number || null,
-      form_name: body.form_name || null,
-      form_id: body.form_id || null,
-      ad_name: body.ad_name || null,
-      ad_id: body.ad_id || null,
-      campaign_name: body.campaign_name || null,
-      campaign_id: body.campaign_id || null,
+      form_nombre: body.form_name || null,
+      ad_nombre: body.ad_name || null,
+      campana_nombre: body.campaign_name || null,
+      meta_lead_id: body.form_id || null,
+      fuente: 'zapier',
       contactado: false,
       vendido: false,
       monto_vendido: null,
       observaciones: null,
-      fecha_lead: new Date().toISOString()
+      fecha_ingreso: new Date().toISOString(),
+      mes_ingreso: new Date().toISOString().substring(0, 7)
     }
 
     const { data: leadInserted, error: leadError } = await supabase
