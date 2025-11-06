@@ -215,25 +215,34 @@ export default function CRMAdmin() {
       return
     }
 
+    console.log('🗑️ Intentando eliminar leads:', selectedLeads)
+
     try {
-      const deletePromises = selectedLeads.map(leadId =>
-        fetch(`/api/crm/leads?id=${leadId}`, {
+      const deletePromises = selectedLeads.map(async (leadId) => {
+        const response = await fetch(`/api/crm/leads?id=${leadId}`, {
           method: 'DELETE'
         })
-      )
+        const data = await response.json()
+        console.log(`Lead ${leadId}:`, response.ok ? '✅ eliminado' : '❌ error', data)
+        return { ok: response.ok, leadId, data }
+      })
 
       const results = await Promise.all(deletePromises)
-      const allSuccess = results.every(res => res.ok)
+      const failed = results.filter(r => !r.ok)
+      const successful = results.filter(r => r.ok)
 
-      if (allSuccess) {
-        alert(`${selectedLeads.length} lead(s) eliminado(s) exitosamente`)
+      console.log(`✅ Exitosos: ${successful.length}, ❌ Fallidos: ${failed.length}`)
+
+      if (successful.length > 0) {
+        alert(`${successful.length} lead(s) eliminado(s) exitosamente${failed.length > 0 ? `, ${failed.length} fallidos` : ''}`)
         setSelectedLeads([])
         await loadData()
       } else {
-        alert('Algunos leads no pudieron ser eliminados')
+        alert('No se pudo eliminar ningún lead')
+        console.error('Fallos:', failed)
       }
     } catch (error) {
-      console.error('Error eliminando leads:', error)
+      console.error('❌ Error eliminando leads:', error)
       alert('Error eliminando leads')
     }
   }
