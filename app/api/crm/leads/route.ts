@@ -111,6 +111,18 @@ export async function DELETE(req: NextRequest) {
       )
     }
 
+    // Primero eliminar audits asociados (si existen)
+    const { error: auditError } = await supabase
+      .from('lead_audits')
+      .delete()
+      .eq('lead_id', id)
+
+    if (auditError) {
+      console.error('⚠️  Error eliminando audits del lead (puede no existir la tabla):', auditError)
+      // No retornar error aquí, puede ser que la tabla no exista
+    }
+
+    // Luego eliminar el lead
     const { error } = await supabase
       .from('leads')
       .delete()
