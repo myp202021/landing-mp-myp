@@ -61,6 +61,7 @@ export default function CRMAdmin() {
   const [selectedLeads, setSelectedLeads] = useState<number[]>([])
   const [showCotizacionModal, setShowCotizacionModal] = useState(false)
   const [cotizacionLead, setCotizacionLead] = useState<Lead | null>(null)
+  const [proyectoNombre, setProyectoNombre] = useState('')
 
   // Autenticación simple
   const handleLogin = (e: React.FormEvent) => {
@@ -254,9 +255,10 @@ export default function CRMAdmin() {
 
   const createCotizacionFromLead = async () => {
     if (!cotizacionLead) return
-
-    const proyecto = prompt('Nombre del proyecto:')
-    if (!proyecto) return
+    if (!proyectoNombre.trim()) {
+      alert('Ingresa un nombre para el proyecto')
+      return
+    }
 
     try {
       const res = await fetch('/api/crm/cotizaciones', {
@@ -265,7 +267,7 @@ export default function CRMAdmin() {
         body: JSON.stringify({
           cliente_id: cotizacionLead.cliente_id,
           lead_id: cotizacionLead.id,
-          nombre_proyecto: proyecto,
+          nombre_proyecto: proyectoNombre,
           cliente_nombre: cotizacionLead.nombre || '',
           cliente_email: cotizacionLead.email || '',
           items: [],
@@ -279,6 +281,7 @@ export default function CRMAdmin() {
         alert('Cotización creada exitosamente')
         setShowCotizacionModal(false)
         setCotizacionLead(null)
+        setProyectoNombre('')
         await loadData()
       } else {
         alert('Error creando cotización')
@@ -878,6 +881,60 @@ export default function CRMAdmin() {
                     className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
                   >
                     Crear Cliente
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Crear Cotización */}
+      {showCotizacionModal && cotizacionLead && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg w-full max-w-md">
+            <div className="p-6">
+              <h3 className="text-xl font-bold mb-4">Crear Cotización</h3>
+
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Lead: {cotizacionLead.nombre}
+                  </label>
+                  <p className="text-sm text-gray-500">
+                    {cotizacionLead.email} | {cotizacionLead.telefono}
+                  </p>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Nombre del Proyecto *
+                  </label>
+                  <input
+                    type="text"
+                    value={proyectoNombre}
+                    onChange={(e) => setProyectoNombre(e.target.value)}
+                    className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Ej: Campaña Google Ads Q1 2025"
+                  />
+                </div>
+
+                <div className="flex justify-end space-x-3 pt-4">
+                  <button
+                    onClick={() => {
+                      setShowCotizacionModal(false)
+                      setCotizacionLead(null)
+                      setProyectoNombre('')
+                    }}
+                    className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    onClick={createCotizacionFromLead}
+                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                  >
+                    Crear Cotización
                   </button>
                 </div>
               </div>

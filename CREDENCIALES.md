@@ -23,7 +23,7 @@
 **URL:** https://www.mulleryperez.cl/login
 
 **ID de cliente (UUID):** `b1f839a4-db36-4341-b1b3-7d1ec290ca02`
-**Contraseña:** `m&p-marketingdigital` (nombre del cliente en minúsculas sin espacios)
+**Contraseña MAESTRA:** `mypcliente2025` (funciona para TODOS los clientes)
 
 **Funcionalidades disponibles:**
 - Ver dashboard con estadísticas de sus propios leads
@@ -42,8 +42,8 @@
    - Cliente (`/cliente/[id]`): Solo ve SUS propios leads
 
 2. **Contraseñas de clientes:**
-   - Por defecto, la contraseña es el nombre del cliente en minúsculas sin espacios
-   - Ejemplo: "M&P - Marketing Digital" → contraseña: `m&p-marketingdigital`
+   - Contraseña MAESTRA universal: `mypcliente2025`
+   - Esta contraseña funciona para TODOS los clientes (solo necesitas el UUID correcto)
 
 3. **IDs de Cliente:**
    - Para login de cliente, usa el UUID del cliente (se puede obtener desde el admin)

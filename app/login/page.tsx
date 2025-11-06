@@ -26,18 +26,20 @@ export default function LoginPage() {
       const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 
       if (uuidRegex.test(username)) {
-        // Verificar que el cliente existe
-        const res = await fetch(`/api/crm/clientes?id=${username}`)
-        const data = await res.json()
+        // Contraseña maestra para todos los clientes
+        const MASTER_CLIENT_PASSWORD = 'mypcliente2025'
 
-        if (res.ok && data.clientes && data.clientes.length > 0) {
-          const cliente = data.clientes[0]
+        if (password === MASTER_CLIENT_PASSWORD) {
+          // Verificar que el cliente existe
+          const res = await fetch(`/api/crm/clientes?id=${username}`)
+          const data = await res.json()
 
-          // Verificar contraseña (por ahora, la contraseña es el nombre del cliente en minúsculas sin espacios)
-          const expectedPassword = cliente.nombre.toLowerCase().replace(/\s+/g, '')
-
-          if (password === expectedPassword) {
+          if (res.ok && data.cliente) {
             router.push(`/cliente/${username}`)
+            return
+          } else {
+            setError('Cliente no encontrado')
+            setLoading(false)
             return
           }
         }
@@ -111,7 +113,7 @@ export default function LoginPage() {
             <span className="font-semibold">Admin:</span> usuario "admin" | contraseña "myp2025"
           </p>
           <p className="text-xs text-gray-500 mt-2">
-            <span className="font-semibold">Clientes:</span> usar UUID + contraseña personalizada
+            <span className="font-semibold">Clientes:</span> usar UUID + contraseña "mypcliente2025"
           </p>
         </div>
 
