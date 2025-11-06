@@ -58,6 +58,9 @@ export default function CRMAdmin() {
   const [loading, setLoading] = useState(false)
   const [showNewClienteModal, setShowNewClienteModal] = useState(false)
   const [newCliente, setNewCliente] = useState({ nombre: '', rubro: '', activo: true })
+  const [selectedLeads, setSelectedLeads] = useState<number[]>([])
+  const [showCotizacionModal, setShowCotizacionModal] = useState(false)
+  const [cotizacionLead, setCotizacionLead] = useState<Lead | null>(null)
 
   // Autenticación simple
   const handleLogin = (e: React.FormEvent) => {
@@ -183,6 +186,97 @@ export default function CRMAdmin() {
     } catch (error) {
       console.error('Error eliminando cliente:', error)
       alert('Error eliminando cliente')
+    }
+  }
+
+  const toggleLeadSelection = (leadId: number) => {
+    setSelectedLeads(prev =>
+      prev.includes(leadId)
+        ? prev.filter(id => id !== leadId)
+        : [...prev, leadId]
+    )
+  }
+
+  const toggleSelectAll = () => {
+    if (selectedLeads.length === filteredLeads.length) {
+      setSelectedLeads([])
+    } else {
+      setSelectedLeads(filteredLeads.map(lead => lead.id))
+    }
+  }
+
+  const deleteSelectedLeads = async () => {
+    if (selectedLeads.length === 0) {
+      alert('No hay leads seleccionados')
+      return
+    }
+
+    if (!confirm(`¿Estás seguro de eliminar ${selectedLeads.length} lead(s)? Esta acción no se puede deshacer.`)) {
+      return
+    }
+
+    try {
+      const deletePromises = selectedLeads.map(leadId =>
+        fetch(`/api/crm/leads?id=${leadId}`, {
+          method: 'DELETE'
+        })
+      )
+
+      const results = await Promise.all(deletePromises)
+      const allSuccess = results.every(res => res.ok)
+
+      if (allSuccess) {
+        alert(`${selectedLeads.length} lead(s) eliminado(s) exitosamente`)
+        setSelectedLeads([])
+        await loadData()
+      } else {
+        alert('Algunos leads no pudieron ser eliminados')
+      }
+    } catch (error) {
+      console.error('Error eliminando leads:', error)
+      alert('Error eliminando leads')
+    }
+  }
+
+  const openCotizacionModal = (lead: Lead) => {
+    setCotizacionLead(lead)
+    setShowCotizacionModal(true)
+  }
+
+  const createCotizacionFromLead = async () => {
+    if (!cotizacionLead) return
+
+    const proyecto = prompt('Nombre del proyecto:')
+    if (!proyecto) return
+
+    try {
+      const res = await fetch('/api/crm/cotizaciones', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          cliente_id: cotizacionLead.cliente_id,
+          lead_id: cotizacionLead.id,
+          nombre_proyecto: proyecto,
+          cliente_nombre: cotizacionLead.nombre || '',
+          cliente_email: cotizacionLead.email || '',
+          items: [],
+          subtotal: 0,
+          total: 0,
+          estado: 'borrador'
+        })
+      })
+
+      if (res.ok) {
+        alert('Cotización creada exitosamente')
+        setShowCotizacionModal(false)
+        setCotizacionLead(null)
+        await loadData()
+      } else {
+        alert('Error creando cotización')
+      }
+    } catch (error) {
+      console.error('Error creando cotización:', error)
+      alert('Error creando cotización')
     }
   }
 
@@ -337,10 +431,31 @@ export default function CRMAdmin() {
 
             {/* Tabla de leads */}
             <div className="bg-white rounded-lg shadow overflow-hidden">
+              {selectedLeads.length > 0 && (
+                <div className="px-6 py-3 bg-blue-50 border-b border-blue-200 flex items-center justify-between">
+                  <span className="text-sm font-medium text-blue-900">
+                    {selectedLeads.length} lead(s) seleccionado(s)
+                  </span>
+                  <button
+                    onClick={deleteSelectedLeads}
+                    className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 text-sm"
+                  >
+                    Eliminar seleccionados
+                  </button>
+                </div>
+              )}
               <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-gray-200">
                   <thead className="bg-gray-50">
                     <tr>
+                      <th className="px-6 py-3 text-left">
+                        <input
+                          type="checkbox"
+                          checked={selectedLeads.length === filteredLeads.length && filteredLeads.length > 0}
+                          onChange={toggleSelectAll}
+                          className="rounded border-gray-300 text-blue-600 focus:ring-blue-500 h-4 w-4"
+                        />
+                      </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Fecha
                       </th>
@@ -367,6 +482,14 @@ export default function CRMAdmin() {
                   <tbody className="bg-white divide-y divide-gray-200">
                     {filteredLeads.map(lead => (
                       <tr key={lead.id} className="hover:bg-gray-50">
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <input
+                            type="checkbox"
+                            checked={selectedLeads.includes(lead.id)}
+                            onChange={() => toggleLeadSelection(lead.id)}
+                            className="rounded border-gray-300 text-blue-600 focus:ring-blue-500 h-4 w-4"
+                          />
+                        </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                           {new Date(lead.fecha_ingreso).toLocaleDateString('es-CL')}
                         </td>
@@ -390,6 +513,10 @@ export default function CRMAdmin() {
                             <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
                               Contactado
                             </span>
+                          ) : lead.razon_no_venta ? (
+                            <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                              Negativo
+                            </span>
                           ) : (
                             <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
                               Nuevo
@@ -399,12 +526,18 @@ export default function CRMAdmin() {
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                           {lead.monto_vendido ? `$${Number(lead.monto_vendido).toLocaleString('es-CL')}` : '-'}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
                           <button
                             onClick={() => setEditingLead(lead)}
-                            className="text-blue-600 hover:text-blue-900 mr-3"
+                            className="text-blue-600 hover:text-blue-900"
                           >
                             Editar
+                          </button>
+                          <button
+                            onClick={() => openCotizacionModal(lead)}
+                            className="text-green-600 hover:text-green-900"
+                          >
+                            Cotizar
                           </button>
                           <button
                             onClick={() => deleteLead(lead.id)}
