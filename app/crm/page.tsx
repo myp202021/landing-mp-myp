@@ -63,6 +63,9 @@ export default function CRMAdmin() {
   const [showCotizacionModal, setShowCotizacionModal] = useState(false)
   const [cotizacionLead, setCotizacionLead] = useState<Lead | null>(null)
   const [proyectoNombre, setProyectoNombre] = useState('')
+  const [showHistorialCotizaciones, setShowHistorialCotizaciones] = useState(false)
+  const [cotizacionesLead, setCotizacionesLead] = useState<Cotizacion[]>([])
+  const [leadSeleccionado, setLeadSeleccionado] = useState<Lead | null>(null)
 
   // Autenticación simple
   const handleLogin = (e: React.FormEvent) => {
@@ -291,6 +294,29 @@ export default function CRMAdmin() {
       console.error('Error creando cotización:', error)
       alert('Error creando cotización')
     }
+  }
+
+  // Cargar cotizaciones de un lead específico
+  const viewCotizacionesLead = async (lead: Lead) => {
+    setLeadSeleccionado(lead)
+    setLoading(true)
+
+    try {
+      const res = await fetch(`/api/crm/cotizaciones?lead_id=${lead.id}`)
+      const data = await res.json()
+
+      if (res.ok) {
+        setCotizacionesLead(data.cotizaciones || [])
+        setShowHistorialCotizaciones(true)
+      } else {
+        alert('Error cargando cotizaciones del lead')
+      }
+    } catch (error) {
+      console.error('Error cargando cotizaciones:', error)
+      alert('Error cargando cotizaciones')
+    }
+
+    setLoading(false)
   }
 
   if (!authenticated) {
@@ -551,6 +577,13 @@ export default function CRMAdmin() {
                             className="text-green-600 hover:text-green-900"
                           >
                             Cotizar
+                          </button>
+                          <button
+                            onClick={() => viewCotizacionesLead(lead)}
+                            className="text-purple-600 hover:text-purple-900"
+                            title="Ver cotizaciones de este lead"
+                          >
+                            📄 Historial
                           </button>
                           <button
                             onClick={() => deleteLead(lead.id)}
@@ -952,6 +985,113 @@ export default function CRMAdmin() {
                     Crear Cotización
                   </button>
                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Historial de Cotizaciones */}
+      {showHistorialCotizaciones && leadSeleccionado && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg w-full max-w-3xl max-h-[80vh] overflow-y-auto">
+            <div className="p-6">
+              <div className="flex justify-between items-center mb-4">
+                <div>
+                  <h3 className="text-xl font-bold">Historial de Cotizaciones</h3>
+                  <p className="text-sm text-gray-600 mt-1">
+                    Lead: {leadSeleccionado.nombre} ({leadSeleccionado.email})
+                  </p>
+                </div>
+                <button
+                  onClick={() => {
+                    setShowHistorialCotizaciones(false)
+                    setLeadSeleccionado(null)
+                    setCotizacionesLead([])
+                  }}
+                  className="text-gray-500 hover:text-gray-700 text-2xl"
+                >
+                  ×
+                </button>
+              </div>
+
+              {cotizacionesLead.length === 0 ? (
+                <div className="text-center py-8 text-gray-500">
+                  <p>No hay cotizaciones registradas para este lead</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {cotizacionesLead.map((cot) => {
+                    const estadoColor = {
+                      borrador: 'bg-gray-100 text-gray-700',
+                      enviada: 'bg-blue-100 text-blue-700',
+                      aceptada: 'bg-green-100 text-green-700',
+                      rechazada: 'bg-red-100 text-red-700'
+                    }[cot.estado] || 'bg-gray-100 text-gray-700'
+
+                    return (
+                      <div key={cot.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition">
+                        <div className="flex justify-between items-start mb-2">
+                          <div>
+                            <h4 className="font-semibold text-lg">{cot.nombre_proyecto}</h4>
+                            <p className="text-sm text-gray-500">
+                              Creada: {new Date(cot.creado_en).toLocaleDateString('es-CL')}
+                            </p>
+                          </div>
+                          <span className={`px-3 py-1 rounded-full text-xs font-medium ${estadoColor}`}>
+                            {cot.estado.charAt(0).toUpperCase() + cot.estado.slice(1)}
+                          </span>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4 text-sm">
+                          <div>
+                            <span className="text-gray-600">Subtotal:</span>
+                            <span className="ml-2 font-medium">
+                              ${Number(cot.subtotal).toLocaleString('es-CL')}
+                            </span>
+                          </div>
+                          <div>
+                            <span className="text-gray-600">Descuento:</span>
+                            <span className="ml-2 font-medium">
+                              ${Number(cot.descuento || 0).toLocaleString('es-CL')}
+                            </span>
+                          </div>
+                          <div className="col-span-2">
+                            <span className="text-gray-600">Total:</span>
+                            <span className="ml-2 font-bold text-lg text-blue-600">
+                              ${Number(cot.total).toLocaleString('es-CL')}
+                            </span>
+                          </div>
+                        </div>
+
+                        {cot.notas && (
+                          <div className="mt-3 pt-3 border-t border-gray-200">
+                            <p className="text-sm text-gray-600">{cot.notas}</p>
+                          </div>
+                        )}
+
+                        {cot.enviada_en && (
+                          <div className="mt-2 text-xs text-gray-500">
+                            Enviada: {new Date(cot.enviada_en).toLocaleDateString('es-CL')}
+                          </div>
+                        )}
+                      </div>
+                    )
+                  })}
+                </div>
+              )}
+
+              <div className="mt-6 flex justify-end">
+                <button
+                  onClick={() => {
+                    setShowHistorialCotizaciones(false)
+                    setLeadSeleccionado(null)
+                    setCotizacionesLead([])
+                  }}
+                  className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300"
+                >
+                  Cerrar
+                </button>
               </div>
             </div>
           </div>
