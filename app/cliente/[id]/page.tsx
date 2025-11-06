@@ -14,6 +14,7 @@ interface Lead {
   contactado: boolean
   vendido: boolean
   monto_vendido?: number
+  observaciones?: string
   fecha_ingreso: string
 }
 
@@ -52,6 +53,13 @@ export default function ClientePortal() {
   const [loading, setLoading] = useState(true)
   const [selectedLeads, setSelectedLeads] = useState<number[]>([])
   const [deleting, setDeleting] = useState(false)
+  const [editingLead, setEditingLead] = useState<Lead | null>(null)
+  const [editForm, setEditForm] = useState({
+    contactado: false,
+    vendido: false,
+    monto_vendido: '',
+    observaciones: ''
+  })
 
   useEffect(() => {
     loadData()
@@ -130,6 +138,62 @@ export default function ClientePortal() {
       alert('Error eliminando leads')
     }
     setDeleting(false)
+  }
+
+  const openEditModal = (lead: Lead) => {
+    setEditingLead(lead)
+    setEditForm({
+      contactado: lead.contactado,
+      vendido: lead.vendido,
+      monto_vendido: lead.monto_vendido?.toString() || '',
+      observaciones: lead.observaciones || ''
+    })
+  }
+
+  const closeEditModal = () => {
+    setEditingLead(null)
+    setEditForm({
+      contactado: false,
+      vendido: false,
+      monto_vendido: '',
+      observaciones: ''
+    })
+  }
+
+  const saveLeadEdit = async () => {
+    if (!editingLead) return
+
+    try {
+      const updates: any = {
+        id: editingLead.id,
+        contactado: editForm.contactado,
+        vendido: editForm.vendido,
+        observaciones: editForm.observaciones || null
+      }
+
+      if (editForm.monto_vendido) {
+        updates.monto_vendido = parseFloat(editForm.monto_vendido)
+      } else {
+        updates.monto_vendido = null
+      }
+
+      const res = await fetch('/api/crm/leads', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updates)
+      })
+
+      if (res.ok) {
+        alert('Lead actualizado exitosamente')
+        closeEditModal()
+        await loadData()
+      } else {
+        alert('Error actualizando lead')
+      }
+    } catch (error) {
+      console.error('Error actualizando lead:', error)
+      alert('Error actualizando lead')
+    }
   }
 
   if (loading) {
@@ -418,6 +482,9 @@ export default function ClientePortal() {
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Monto
                     </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Acciones
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
@@ -464,6 +531,14 @@ export default function ClientePortal() {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                         {lead.monto_vendido ? `$${Number(lead.monto_vendido).toLocaleString('es-CL')}` : '-'}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        <button
+                          onClick={() => openEditModal(lead)}
+                          className="text-blue-600 hover:text-blue-900"
+                        >
+                          Editar
+                        </button>
                       </td>
                     </tr>
                   ))}
@@ -533,6 +608,113 @@ export default function ClientePortal() {
           </div>
         )}
       </div>
+
+      {/* Edit Lead Modal */}
+      {editingLead && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="px-6 py-4 border-b border-gray-200">
+              <div className="flex items-center justify-between">
+                <h3 className="text-xl font-bold text-gray-800">Editar Lead</h3>
+                <button
+                  onClick={closeEditModal}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <div className="px-6 py-4 space-y-4">
+              <div className="grid grid-cols-2 gap-4 text-sm">
+                <div>
+                  <span className="font-semibold text-gray-700">Nombre:</span>
+                  <p className="text-gray-900">{editingLead.nombre || '-'}</p>
+                </div>
+                <div>
+                  <span className="font-semibold text-gray-700">Email:</span>
+                  <p className="text-gray-900">{editingLead.email || '-'}</p>
+                </div>
+                <div>
+                  <span className="font-semibold text-gray-700">Teléfono:</span>
+                  <p className="text-gray-900">{editingLead.telefono || '-'}</p>
+                </div>
+                <div>
+                  <span className="font-semibold text-gray-700">Fuente:</span>
+                  <p className="text-gray-900">{editingLead.fuente}</p>
+                </div>
+              </div>
+
+              <div className="border-t pt-4 space-y-4">
+                <div className="flex items-center space-x-6">
+                  <label className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      checked={editForm.contactado}
+                      onChange={(e) => setEditForm({ ...editForm, contactado: e.target.checked })}
+                      className="rounded border-gray-300 text-blue-600 focus:ring-blue-500 h-4 w-4"
+                    />
+                    <span className="text-sm font-medium text-gray-700">Contactado</span>
+                  </label>
+
+                  <label className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      checked={editForm.vendido}
+                      onChange={(e) => setEditForm({ ...editForm, vendido: e.target.checked })}
+                      className="rounded border-gray-300 text-blue-600 focus:ring-blue-500 h-4 w-4"
+                    />
+                    <span className="text-sm font-medium text-gray-700">Vendido</span>
+                  </label>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Monto Vendido
+                  </label>
+                  <input
+                    type="number"
+                    value={editForm.monto_vendido}
+                    onChange={(e) => setEditForm({ ...editForm, monto_vendido: e.target.value })}
+                    placeholder="0"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Observaciones
+                  </label>
+                  <textarea
+                    value={editForm.observaciones}
+                    onChange={(e) => setEditForm({ ...editForm, observaciones: e.target.value })}
+                    rows={4}
+                    placeholder="Notas o comentarios adicionales..."
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="px-6 py-4 border-t border-gray-200 flex justify-end space-x-3">
+              <button
+                onClick={closeEditModal}
+                className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={saveLeadEdit}
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+              >
+                Guardar Cambios
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
