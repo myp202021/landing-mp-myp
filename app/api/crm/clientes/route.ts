@@ -188,6 +188,21 @@ export async function DELETE(req: NextRequest) {
       )
     }
 
+    // Primero eliminar todos los leads asociados
+    const { error: leadsError } = await supabase
+      .from('leads')
+      .delete()
+      .eq('cliente_id', id)
+
+    if (leadsError) {
+      console.error('❌ Error eliminando leads del cliente:', leadsError)
+      return NextResponse.json(
+        { error: 'Error eliminando leads del cliente', details: leadsError.message },
+        { status: 500 }
+      )
+    }
+
+    // Luego eliminar el cliente
     const { error } = await supabase
       .from('clientes')
       .delete()
@@ -201,7 +216,7 @@ export async function DELETE(req: NextRequest) {
       )
     }
 
-    console.log('✅ Cliente eliminado:', id)
+    console.log('✅ Cliente y sus leads eliminados:', id)
 
     return NextResponse.json({
       success: true,
