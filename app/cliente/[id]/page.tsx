@@ -50,6 +50,8 @@ export default function ClientePortal() {
   const [cotizaciones, setCotizaciones] = useState<Cotizacion[]>([])
   const [view, setView] = useState<'dashboard' | 'leads' | 'cotizaciones'>('dashboard')
   const [loading, setLoading] = useState(true)
+  const [selectedLeads, setSelectedLeads] = useState<number[]>([])
+  const [deleting, setDeleting] = useState(false)
 
   useEffect(() => {
     loadData()
@@ -77,6 +79,57 @@ export default function ClientePortal() {
       console.error('Error cargando datos:', error)
     }
     setLoading(false)
+  }
+
+  const toggleLeadSelection = (leadId: number) => {
+    setSelectedLeads(prev =>
+      prev.includes(leadId)
+        ? prev.filter(id => id !== leadId)
+        : [...prev, leadId]
+    )
+  }
+
+  const toggleSelectAll = () => {
+    if (selectedLeads.length === leads.length) {
+      setSelectedLeads([])
+    } else {
+      setSelectedLeads(leads.map(lead => lead.id))
+    }
+  }
+
+  const deleteSelectedLeads = async () => {
+    if (selectedLeads.length === 0) {
+      alert('No hay leads seleccionados')
+      return
+    }
+
+    if (!confirm(`¿Estás seguro de eliminar ${selectedLeads.length} lead(s)? Esta acción no se puede deshacer.`)) {
+      return
+    }
+
+    setDeleting(true)
+    try {
+      const deletePromises = selectedLeads.map(leadId =>
+        fetch(`/api/crm/leads?id=${leadId}`, {
+          method: 'DELETE'
+        })
+      )
+
+      const results = await Promise.all(deletePromises)
+      const allSuccess = results.every(res => res.ok)
+
+      if (allSuccess) {
+        alert(`${selectedLeads.length} lead(s) eliminado(s) exitosamente`)
+        setSelectedLeads([])
+        await loadData()
+      } else {
+        alert('Algunos leads no pudieron ser eliminados')
+      }
+    } catch (error) {
+      console.error('Error eliminando leads:', error)
+      alert('Error eliminando leads')
+    }
+    setDeleting(false)
   }
 
   if (loading) {
@@ -323,13 +376,30 @@ export default function ClientePortal() {
         {/* Leads View */}
         {view === 'leads' && (
           <div className="bg-white rounded-lg shadow overflow-hidden">
-            <div className="px-6 py-4 border-b border-gray-200">
+            <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
               <h2 className="text-xl font-bold text-gray-800">Historial Completo de Leads</h2>
+              {selectedLeads.length > 0 && (
+                <button
+                  onClick={deleteSelectedLeads}
+                  disabled={deleting}
+                  className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium"
+                >
+                  {deleting ? 'Eliminando...' : `Eliminar ${selectedLeads.length} seleccionado(s)`}
+                </button>
+              )}
             </div>
             <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                   <tr>
+                    <th className="px-6 py-3 text-left">
+                      <input
+                        type="checkbox"
+                        checked={selectedLeads.length === leads.length && leads.length > 0}
+                        onChange={toggleSelectAll}
+                        className="rounded border-gray-300 text-blue-600 focus:ring-blue-500 h-4 w-4"
+                      />
+                    </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Fecha
                     </th>
@@ -353,6 +423,14 @@ export default function ClientePortal() {
                 <tbody className="bg-white divide-y divide-gray-200">
                   {leads.map(lead => (
                     <tr key={lead.id} className="hover:bg-gray-50">
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <input
+                          type="checkbox"
+                          checked={selectedLeads.includes(lead.id)}
+                          onChange={() => toggleLeadSelection(lead.id)}
+                          className="rounded border-gray-300 text-blue-600 focus:ring-blue-500 h-4 w-4"
+                        />
+                      </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         {new Date(lead.fecha_ingreso).toLocaleDateString('es-CL')}
                       </td>
