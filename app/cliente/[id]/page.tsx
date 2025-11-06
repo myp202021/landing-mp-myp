@@ -60,6 +60,24 @@ export default function ClientePortal() {
     monto_vendido: '',
     observaciones: ''
   })
+  const [showNewCotizacion, setShowNewCotizacion] = useState(false)
+  const [cotizacionForm, setCotizacionForm] = useState({
+    nombre_proyecto: '',
+    cliente_nombre: '',
+    cliente_email: '',
+    cliente_empresa: '',
+    items: [] as Array<{ descripcion: string; cantidad: number; precio_unitario: number; total: number }>,
+    subtotal: 0,
+    descuento: 0,
+    total: 0,
+    notas: '',
+    vigencia_dias: 30
+  })
+  const [newItem, setNewItem] = useState({
+    descripcion: '',
+    cantidad: 1,
+    precio_unitario: 0
+  })
 
   useEffect(() => {
     loadData()
@@ -193,6 +211,104 @@ export default function ClientePortal() {
     } catch (error) {
       console.error('Error actualizando lead:', error)
       alert('Error actualizando lead')
+    }
+  }
+
+  const openNewCotizacionModal = () => {
+    setShowNewCotizacion(true)
+    setCotizacionForm({
+      nombre_proyecto: '',
+      cliente_nombre: cliente?.nombre || '',
+      cliente_email: '',
+      cliente_empresa: '',
+      items: [],
+      subtotal: 0,
+      descuento: 0,
+      total: 0,
+      notas: '',
+      vigencia_dias: 30
+    })
+  }
+
+  const closeNewCotizacionModal = () => {
+    setShowNewCotizacion(false)
+    setNewItem({ descripcion: '', cantidad: 1, precio_unitario: 0 })
+  }
+
+  const addItemToCotizacion = () => {
+    if (!newItem.descripcion || newItem.precio_unitario <= 0) {
+      alert('Completa la descripción y precio del item')
+      return
+    }
+
+    const itemTotal = newItem.cantidad * newItem.precio_unitario
+    const updatedItems = [...cotizacionForm.items, { ...newItem, total: itemTotal }]
+    const newSubtotal = updatedItems.reduce((sum, item) => sum + item.total, 0)
+    const newTotal = newSubtotal - cotizacionForm.descuento
+
+    setCotizacionForm({
+      ...cotizacionForm,
+      items: updatedItems,
+      subtotal: newSubtotal,
+      total: newTotal
+    })
+
+    setNewItem({ descripcion: '', cantidad: 1, precio_unitario: 0 })
+  }
+
+  const removeItemFromCotizacion = (index: number) => {
+    const updatedItems = cotizacionForm.items.filter((_, i) => i !== index)
+    const newSubtotal = updatedItems.reduce((sum, item) => sum + item.total, 0)
+    const newTotal = newSubtotal - cotizacionForm.descuento
+
+    setCotizacionForm({
+      ...cotizacionForm,
+      items: updatedItems,
+      subtotal: newSubtotal,
+      total: newTotal
+    })
+  }
+
+  const updateDescuento = (descuento: number) => {
+    const newTotal = cotizacionForm.subtotal - descuento
+    setCotizacionForm({
+      ...cotizacionForm,
+      descuento,
+      total: newTotal
+    })
+  }
+
+  const saveCotizacion = async () => {
+    if (!cotizacionForm.nombre_proyecto) {
+      alert('El nombre del proyecto es requerido')
+      return
+    }
+
+    if (cotizacionForm.items.length === 0) {
+      alert('Agrega al menos un item a la cotización')
+      return
+    }
+
+    try {
+      const res = await fetch('/api/crm/cotizaciones', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          cliente_id: clienteId,
+          ...cotizacionForm
+        })
+      })
+
+      if (res.ok) {
+        alert('Cotización creada exitosamente')
+        closeNewCotizacionModal()
+        await loadData()
+      } else {
+        alert('Error creando cotización')
+      }
+    } catch (error) {
+      console.error('Error creando cotización:', error)
+      alert('Error creando cotización')
     }
   }
 
@@ -551,8 +667,14 @@ export default function ClientePortal() {
         {/* Cotizaciones View */}
         {view === 'cotizaciones' && (
           <div className="bg-white rounded-lg shadow overflow-hidden">
-            <div className="px-6 py-4 border-b border-gray-200">
+            <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
               <h2 className="text-xl font-bold text-gray-800">Cotizaciones Generadas</h2>
+              <button
+                onClick={openNewCotizacionModal}
+                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm font-medium"
+              >
+                + Nueva Cotización
+              </button>
             </div>
             <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-gray-200">
@@ -710,6 +832,219 @@ export default function ClientePortal() {
                 className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
               >
                 Guardar Cambios
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* New Cotizacion Modal */}
+      {showNewCotizacion && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="px-6 py-4 border-b border-gray-200">
+              <div className="flex items-center justify-between">
+                <h3 className="text-xl font-bold text-gray-800">Nueva Cotización</h3>
+                <button
+                  onClick={closeNewCotizacionModal}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <div className="px-6 py-4 space-y-6">
+              {/* Información básica */}
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Nombre del Proyecto *
+                  </label>
+                  <input
+                    type="text"
+                    value={cotizacionForm.nombre_proyecto}
+                    onChange={(e) => setCotizacionForm({ ...cotizacionForm, nombre_proyecto: e.target.value })}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="Ej: Desarrollo Web E-commerce"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Vigencia (días)
+                  </label>
+                  <input
+                    type="number"
+                    value={cotizacionForm.vigencia_dias}
+                    onChange={(e) => setCotizacionForm({ ...cotizacionForm, vigencia_dias: parseInt(e.target.value) || 30 })}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Nombre Cliente
+                  </label>
+                  <input
+                    type="text"
+                    value={cotizacionForm.cliente_nombre}
+                    onChange={(e) => setCotizacionForm({ ...cotizacionForm, cliente_nombre: e.target.value })}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Email Cliente
+                  </label>
+                  <input
+                    type="email"
+                    value={cotizacionForm.cliente_email}
+                    onChange={(e) => setCotizacionForm({ ...cotizacionForm, cliente_email: e.target.value })}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Empresa
+                  </label>
+                  <input
+                    type="text"
+                    value={cotizacionForm.cliente_empresa}
+                    onChange={(e) => setCotizacionForm({ ...cotizacionForm, cliente_empresa: e.target.value })}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+              </div>
+
+              {/* Items */}
+              <div className="border-t pt-4">
+                <h4 className="text-lg font-semibold text-gray-800 mb-3">Items</h4>
+
+                {/* Lista de items */}
+                {cotizacionForm.items.length > 0 && (
+                  <div className="mb-4 space-y-2">
+                    {cotizacionForm.items.map((item, index) => (
+                      <div key={index} className="flex items-center justify-between bg-gray-50 p-3 rounded-lg">
+                        <div className="flex-1">
+                          <p className="font-medium text-gray-900">{item.descripcion}</p>
+                          <p className="text-sm text-gray-600">
+                            {item.cantidad} x ${item.precio_unitario.toLocaleString('es-CL')} = ${item.total.toLocaleString('es-CL')}
+                          </p>
+                        </div>
+                        <button
+                          onClick={() => removeItemFromCotizacion(index)}
+                          className="text-red-600 hover:text-red-800"
+                        >
+                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                          </svg>
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Agregar nuevo item */}
+                <div className="bg-blue-50 p-4 rounded-lg space-y-3">
+                  <div className="grid grid-cols-12 gap-3">
+                    <div className="col-span-6">
+                      <input
+                        type="text"
+                        value={newItem.descripcion}
+                        onChange={(e) => setNewItem({ ...newItem, descripcion: e.target.value })}
+                        placeholder="Descripción del servicio"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      />
+                    </div>
+                    <div className="col-span-2">
+                      <input
+                        type="number"
+                        value={newItem.cantidad}
+                        onChange={(e) => setNewItem({ ...newItem, cantidad: parseInt(e.target.value) || 1 })}
+                        placeholder="Cant."
+                        min="1"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      />
+                    </div>
+                    <div className="col-span-3">
+                      <input
+                        type="number"
+                        value={newItem.precio_unitario}
+                        onChange={(e) => setNewItem({ ...newItem, precio_unitario: parseFloat(e.target.value) || 0 })}
+                        placeholder="Precio unitario"
+                        min="0"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      />
+                    </div>
+                    <div className="col-span-1 flex items-center">
+                      <button
+                        onClick={addItemToCotizacion}
+                        className="w-full bg-blue-600 text-white rounded-lg hover:bg-blue-700 py-2"
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Totales */}
+              <div className="border-t pt-4">
+                <div className="flex justify-end">
+                  <div className="w-64 space-y-2">
+                    <div className="flex justify-between text-sm">
+                      <span className="text-gray-600">Subtotal:</span>
+                      <span className="font-medium">${cotizacionForm.subtotal.toLocaleString('es-CL')}</span>
+                    </div>
+                    <div className="flex justify-between items-center text-sm">
+                      <span className="text-gray-600">Descuento:</span>
+                      <input
+                        type="number"
+                        value={cotizacionForm.descuento}
+                        onChange={(e) => updateDescuento(parseFloat(e.target.value) || 0)}
+                        className="w-32 px-2 py-1 border border-gray-300 rounded text-right"
+                        min="0"
+                      />
+                    </div>
+                    <div className="flex justify-between text-lg font-bold border-t pt-2">
+                      <span>Total:</span>
+                      <span className="text-blue-600">${cotizacionForm.total.toLocaleString('es-CL')}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Notas */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Notas / Observaciones
+                </label>
+                <textarea
+                  value={cotizacionForm.notas}
+                  onChange={(e) => setCotizacionForm({ ...cotizacionForm, notas: e.target.value })}
+                  rows={3}
+                  placeholder="Información adicional, términos y condiciones, etc."
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
+            </div>
+
+            <div className="px-6 py-4 border-t border-gray-200 flex justify-end space-x-3">
+              <button
+                onClick={closeNewCotizacionModal}
+                className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={saveCotizacion}
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+              >
+                Crear Cotización
               </button>
             </div>
           </div>
