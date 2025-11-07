@@ -28,14 +28,14 @@ export function generarPDFCotizacion(cotizacion: CotizacionData) {
   const doc = new jsPDF()
 
   // Colores M&P
-  const azulOscuro = [30, 58, 138] // #1E3A8A
-  const azulClaro = [59, 130, 246] // #3B82F6
-  const grisTexto = [55, 65, 81] // #374151
+  const azulOscuro = {r: 30, g: 58, b: 138} // #1E3A8A
+  const azulClaro = {r: 59, g: 130, b: 246} // #3B82F6
+  const grisTexto = {r: 55, g: 65, b: 81} // #374151
 
   let yPos = 20
 
   // HEADER - Logo y datos de empresa
-  doc.setFillColor(...azulOscuro)
+  doc.setFillColor(azulOscuro.r, azulOscuro.g, azulOscuro.b)
   doc.rect(0, 0, 210, 40, 'F')
 
   doc.setTextColor(255, 255, 255)
@@ -67,7 +67,7 @@ export function generarPDFCotizacion(cotizacion: CotizacionData) {
   yPos = 50
 
   // DATOS DEL CLIENTE
-  doc.setTextColor(...grisTexto)
+  doc.setTextColor(grisTexto.r, grisTexto.g, grisTexto.b)
   doc.setFontSize(12)
   doc.setFont('helvetica', 'bold')
   doc.text('DATOS DEL CLIENTE', 15, yPos)
@@ -94,7 +94,7 @@ export function generarPDFCotizacion(cotizacion: CotizacionData) {
   yPos += 5
 
   // NOMBRE DEL PROYECTO
-  doc.setFillColor(...azulClaro)
+  doc.setFillColor(azulClaro.r, azulClaro.g, azulClaro.b)
   doc.rect(15, yPos, 180, 10, 'F')
 
   doc.setTextColor(255, 255, 255)
@@ -121,14 +121,14 @@ export function generarPDFCotizacion(cotizacion: CotizacionData) {
     body: tableData,
     theme: 'grid',
     headStyles: {
-      fillColor: azulOscuro,
+      fillColor: [azulOscuro.r, azulOscuro.g, azulOscuro.b],
       textColor: [255, 255, 255],
       fontSize: 10,
       fontStyle: 'bold',
       halign: 'center'
     },
     bodyStyles: {
-      textColor: grisTexto,
+      textColor: [grisTexto.r, grisTexto.g, grisTexto.b],
       fontSize: 9
     },
     columnStyles: {
@@ -147,7 +147,7 @@ export function generarPDFCotizacion(cotizacion: CotizacionData) {
   const xLabel = 130
   const xValor = 195
 
-  doc.setTextColor(...grisTexto)
+  doc.setTextColor(grisTexto.r, grisTexto.g, grisTexto.b)
   doc.setFontSize(10)
   doc.setFont('helvetica', 'normal')
 
@@ -163,7 +163,7 @@ export function generarPDFCotizacion(cotizacion: CotizacionData) {
   }
 
   // Línea separadora
-  doc.setDrawColor(...azulOscuro)
+  doc.setDrawColor(azulOscuro.r, azulOscuro.g, azulOscuro.b)
   doc.setLineWidth(0.5)
   doc.line(xLabel - 65, yPos, xValor, yPos)
   yPos += 7
@@ -171,7 +171,7 @@ export function generarPDFCotizacion(cotizacion: CotizacionData) {
   // TOTAL
   doc.setFontSize(14)
   doc.setFont('helvetica', 'bold')
-  doc.setTextColor(...azulOscuro)
+  doc.setTextColor(azulOscuro.r, azulOscuro.g, azulOscuro.b)
   doc.text('TOTAL:', xLabel, yPos, { align: 'right' })
   doc.text(`$${cotizacion.total.toLocaleString('es-CL')} ${cotizacion.moneda || 'CLP'}`, xValor, yPos, { align: 'right' })
 
@@ -181,7 +181,7 @@ export function generarPDFCotizacion(cotizacion: CotizacionData) {
   if (cotizacion.notas) {
     doc.setFontSize(11)
     doc.setFont('helvetica', 'bold')
-    doc.setTextColor(...grisTexto)
+    doc.setTextColor(grisTexto.r, grisTexto.g, grisTexto.b)
     doc.text('NOTAS ADICIONALES', 15, yPos)
 
     yPos += 7
@@ -198,7 +198,7 @@ export function generarPDFCotizacion(cotizacion: CotizacionData) {
   doc.setFillColor(245, 245, 245)
   doc.rect(0, footerY, 210, 17, 'F')
 
-  doc.setTextColor(...grisTexto)
+  doc.setTextColor(grisTexto.r, grisTexto.g, grisTexto.b)
   doc.setFontSize(8)
   doc.setFont('helvetica', 'normal')
   doc.text('Muller & Pérez - Marketing Digital', 105, footerY + 6, { align: 'center' })
