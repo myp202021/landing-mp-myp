@@ -11,6 +11,7 @@ interface Lead {
   vendido: boolean
   monto_vendido?: number
   fecha_ingreso: string
+  costo_publicidad?: number
   clientes?: {
     nombre: string
   }
@@ -77,6 +78,35 @@ export default function MetricasPage() {
   const leadsVendidos = leads.filter(l => l.vendido).length
   const tasaConversion = totalLeads > 0 ? ((leadsVendidos / totalLeads) * 100).toFixed(1) : '0'
   const totalVendido = leads.reduce((sum, l) => sum + (l.monto_vendido || 0), 0)
+
+  // Calcular metricas ROAS
+  const costoPorLeadGlobal = typeof window !== 'undefined'
+    ? Number(localStorage.getItem('costoPorLeadGlobal') || 5000)
+    : 5000
+
+  const costoTotalPublicidad = leads.reduce((sum, lead) =>
+    sum + (lead.costo_publicidad || costoPorLeadGlobal), 0
+  )
+
+  const ventasTotales = leads.reduce((sum, lead) =>
+    sum + (lead.vendido ? (lead.monto_vendido || 0) : 0), 0
+  )
+
+  const roas = costoTotalPublicidad > 0
+    ? (ventasTotales / costoTotalPublicidad)
+    : 0
+
+  const costoPorLeadReal = leads.length > 0
+    ? costoTotalPublicidad / leads.length
+    : 0
+
+  const costoPorLeadContactado = leadsContactados > 0
+    ? leads.filter(l => l.contactado).reduce((sum, l) => sum + (l.costo_publicidad || costoPorLeadGlobal), 0) / leadsContactados
+    : 0
+
+  const costoPorVenta = leadsVendidos > 0
+    ? leads.filter(l => l.vendido).reduce((sum, l) => sum + (l.costo_publicidad || costoPorLeadGlobal), 0) / leadsVendidos
+    : 0
 
   const cotizacionesEnviadas = cotizaciones.filter(c => c.estado === 'enviada').length
   const cotizacionesAceptadas = cotizaciones.filter(c => c.estado === 'aceptada').length
@@ -209,6 +239,45 @@ export default function MetricasPage() {
           subtitle="Por venta"
           icon="💳"
           color="purple"
+        />
+      </div>
+
+      {/* Metricas ROAS */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-6">
+        <MetricCard
+          title="ROAS (Return on Ad Spend)"
+          value={`${roas.toFixed(2)}x`}
+          subtitle="Retorno de inversion"
+          icon="💰"
+          color="green"
+        />
+        <MetricCard
+          title="Inversion Publicitaria"
+          value={`$${costoTotalPublicidad.toLocaleString('es-CL')}`}
+          subtitle="Costo total"
+          icon="💵"
+          color="blue"
+        />
+        <MetricCard
+          title="Costo por Lead"
+          value={`$${Math.round(costoPorLeadReal).toLocaleString('es-CL')}`}
+          subtitle="Promedio"
+          icon="📊"
+          color="orange"
+        />
+        <MetricCard
+          title="Costo por Contactado"
+          value={`$${Math.round(costoPorLeadContactado).toLocaleString('es-CL')}`}
+          subtitle="Por lead contactado"
+          icon="📞"
+          color="purple"
+        />
+        <MetricCard
+          title="Costo por Venta"
+          value={`$${Math.round(costoPorVenta).toLocaleString('es-CL')}`}
+          subtitle="CAC real"
+          icon="✅"
+          color="green"
         />
       </div>
 

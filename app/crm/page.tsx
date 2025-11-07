@@ -31,6 +31,8 @@ interface Lead {
   observaciones?: string
   notas?: string
   fecha_ingreso: string
+  prioridad?: boolean
+  costo_publicidad?: number
   clientes?: Cliente
 }
 
@@ -72,6 +74,32 @@ export default function CRMAdmin() {
   const [showHistorialCotizaciones, setShowHistorialCotizaciones] = useState(false)
   const [cotizacionesLead, setCotizacionesLead] = useState<Cotizacion[]>([])
   const [leadSeleccionado, setLeadSeleccionado] = useState<Lead | null>(null)
+
+  // Función para calcular horas desde ingreso
+  const getHorasSinContacto = (lead: Lead): number => {
+    if (lead.contactado) return 0
+    const fechaIngreso = new Date(lead.fecha_ingreso)
+    const ahora = new Date()
+    const diff = ahora.getTime() - fechaIngreso.getTime()
+    return Math.floor(diff / (1000 * 60 * 60)) // horas
+  }
+
+  // Función para obtener color del semáforo
+  const getSemaforoColor = (horas: number): string => {
+    if (horas === 0) return 'bg-gray-400' // Contactado
+    if (horas < 24) return 'bg-green-500' // Verde: menos de 24h
+    if (horas < 48) return 'bg-yellow-500' // Amarillo: 24-48h
+    return 'bg-red-500' // Rojo: más de 48h
+  }
+
+  // Función para obtener texto del semáforo
+  const getSemaforoTexto = (horas: number): string => {
+    if (horas === 0) return 'Ya contactado'
+    if (horas < 24) return `${horas}h`
+    const dias = Math.floor(horas / 24)
+    const horasRestantes = horas % 24
+    return `${dias}d ${horasRestantes}h`
+  }
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault()
@@ -143,6 +171,21 @@ export default function CRMAdmin() {
     } catch (error) {
       console.error('Error eliminando lead:', error)
       alert('Error eliminando lead')
+    }
+  }
+
+  const togglePrioridad = async (leadId: number, prioridad: boolean) => {
+    try {
+      const res = await fetch('/api/crm/leads', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: leadId, prioridad })
+      })
+      if (res.ok) {
+        await loadData()
+      }
+    } catch (error) {
+      console.error('Error actualizando prioridad:', error)
     }
   }
 
@@ -294,9 +337,15 @@ export default function CRMAdmin() {
     )
   }
 
-  const filteredLeads = selectedCliente === 'all'
-    ? leads
-    : leads.filter(l => l.cliente_id === selectedCliente)
+  const filteredLeads = leads
+    .filter(lead => selectedCliente === 'all' || lead.cliente_id === selectedCliente)
+    .sort((a, b) => {
+      // Primero por prioridad (prioritarios arriba)
+      if (a.prioridad && !b.prioridad) return -1
+      if (!a.prioridad && b.prioridad) return 1
+      // Luego por fecha (más recientes primero)
+      return new Date(b.fecha_ingreso).getTime() - new Date(a.fecha_ingreso).getTime()
+    })
 
   const getClienteNombre = (clienteId: string) => {
     const cliente = clientes.find(c => c.id === clienteId)
@@ -408,6 +457,9 @@ export default function CRMAdmin() {
                 <th className="px-6 py-4 text-left text-xs font-semibold text-blue-900 uppercase tracking-wider">
                   Fuente
                 </th>
+                <th className="px-6 py-3 text-left text-xs font-semibold text-blue-900 uppercase">
+                  Tiempo sin contacto
+                </th>
                 <th className="px-6 py-4 text-left text-xs font-semibold text-blue-900 uppercase tracking-wider">
                   Estado
                 </th>
@@ -421,7 +473,12 @@ export default function CRMAdmin() {
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {filteredLeads.map(lead => (
-                <tr key={lead.id} className="hover:bg-gray-50 transition-colors">
+                <tr
+                  key={lead.id}
+                  className={`border-b border-gray-200 hover:bg-gray-50 transition-colors ${
+                    lead.prioridad ? 'bg-yellow-50 border-l-4 border-l-yellow-500' : ''
+                  }`}
+                >
                   <td className="px-6 py-4 whitespace-nowrap">
                     <input
                       type="checkbox"
@@ -443,6 +500,17 @@ export default function CRMAdmin() {
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                     {lead.fuente}<br/>
                     <span className="text-xs text-gray-500">{lead.ad_nombre || lead.form_nombre}</span>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {(() => {
+                      const horas = getHorasSinContacto(lead)
+                      return (
+                        <div className="flex items-center gap-2">
+                          <div className={`w-3 h-3 rounded-full ${getSemaforoColor(horas)} animate-pulse`} />
+                          <span className="text-sm font-medium text-gray-700">{getSemaforoTexto(horas)}</span>
+                        </div>
+                      )
+                    })()}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     {lead.vendido ? (
@@ -467,6 +535,17 @@ export default function CRMAdmin() {
                     {lead.monto_vendido ? `$${Number(lead.monto_vendido).toLocaleString('es-CL')}` : '-'}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                    <button
+                      onClick={() => togglePrioridad(lead.id, !lead.prioridad)}
+                      className={`p-2 rounded-lg transition-all ${
+                        lead.prioridad
+                          ? 'bg-yellow-500 hover:bg-yellow-600 text-white shadow-md'
+                          : 'bg-white hover:bg-yellow-50 text-gray-400 hover:text-yellow-500 border border-gray-300'
+                      }`}
+                      title={lead.prioridad ? 'Quitar prioridad' : 'Marcar como prioritario'}
+                    >
+                      ⭐
+                    </button>
                     <button
                       onClick={() => setEditingLead(lead)}
                       className="text-blue-600 hover:text-blue-700 font-medium"
