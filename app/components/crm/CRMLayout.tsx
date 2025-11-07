@@ -3,6 +3,8 @@
 import { ReactNode } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useAuth } from '@/lib/auth/supabase-auth'
+import AuthGuard from './AuthGuard'
 
 interface CRMLayoutProps {
   children: ReactNode
@@ -13,6 +15,7 @@ interface CRMLayoutProps {
 
 export default function CRMLayout({ children, title, authenticated = true, onRefresh }: CRMLayoutProps) {
   const pathname = usePathname()
+  const { user, signOut } = useAuth()
 
   if (!authenticated) {
     return <>{children}</>
@@ -27,29 +30,46 @@ export default function CRMLayout({ children, title, authenticated = true, onRef
     { href: '/crm/integraciones', label: 'Integraciones', icon: '🔌' },
   ]
 
+  const handleLogout = async () => {
+    if (confirm('¿Estás seguro de que deseas cerrar sesión?')) {
+      await signOut()
+    }
+  }
+
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-gradient-to-r from-blue-900 to-blue-800 shadow-xl">
-        <div className="max-w-7xl mx-auto px-6 py-5">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-white">
-                {title || 'CRM Muller & Pérez'}
-              </h1>
-              <p className="text-blue-100 text-sm mt-1">Sistema de Gestión de Clientes</p>
+    <AuthGuard>
+      <div className="min-h-screen bg-gray-50">
+        {/* Header */}
+        <div className="bg-gradient-to-r from-blue-900 to-blue-800 shadow-xl">
+          <div className="max-w-7xl mx-auto px-6 py-5">
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-3xl font-bold text-white">
+                  {title || 'CRM Muller & Pérez'}
+                </h1>
+                <p className="text-blue-100 text-sm mt-1">
+                  Sistema de Gestión de Clientes {user && `· ${user.email}`}
+                </p>
+              </div>
+              <div className="flex items-center gap-3">
+                {onRefresh && (
+                  <button
+                    onClick={onRefresh}
+                    className="px-5 py-2.5 bg-white text-blue-900 rounded-lg hover:bg-blue-50 transition text-sm font-semibold shadow-lg"
+                  >
+                    🔄 Actualizar
+                  </button>
+                )}
+                <button
+                  onClick={handleLogout}
+                  className="px-5 py-2.5 bg-red-600 text-white rounded-lg hover:bg-red-700 transition text-sm font-semibold shadow-lg"
+                >
+                  🚪 Cerrar Sesión
+                </button>
+              </div>
             </div>
-            {onRefresh && (
-              <button
-                onClick={onRefresh}
-                className="px-5 py-2.5 bg-white text-blue-900 rounded-lg hover:bg-blue-50 transition text-sm font-semibold shadow-lg"
-              >
-                🔄 Actualizar
-              </button>
-            )}
           </div>
         </div>
-      </div>
 
       {/* Navigation */}
       <div className="bg-white shadow-md border-b border-gray-200">
@@ -76,10 +96,11 @@ export default function CRMLayout({ children, title, authenticated = true, onRef
         </div>
       </div>
 
-      {/* Content */}
-      <div className="max-w-7xl mx-auto px-6 py-8">
-        {children}
+        {/* Content */}
+        <div className="max-w-7xl mx-auto px-6 py-8">
+          {children}
+        </div>
       </div>
-    </div>
+    </AuthGuard>
   )
 }
