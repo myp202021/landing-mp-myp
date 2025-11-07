@@ -350,14 +350,14 @@ export default function CRMAdmin() {
       </div>
 
       {/* Filtro por cliente */}
-      <div className="bg-white rounded-lg shadow-md p-4 mb-6">
-        <label className="block text-sm font-medium text-slate-700 mb-2">
+      <div className="bg-white rounded-xl shadow-md p-6 mb-6 border border-gray-200">
+        <label className="block text-sm font-semibold text-gray-700 mb-2">
           Filtrar por cliente
         </label>
         <select
           value={selectedCliente}
           onChange={(e) => setSelectedCliente(e.target.value)}
-          className="w-full max-w-xs px-4 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500"
+          className="w-full max-w-xs px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 text-gray-900"
         >
           <option value="all">Todos los clientes</option>
           {clientes.map(cliente => (
@@ -383,66 +383,66 @@ export default function CRMAdmin() {
       )}
 
       {/* Tabla de Leads */}
-      <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+      <div className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-200">
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-slate-200">
-            <thead className="bg-gradient-to-r from-slate-700 to-slate-600">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-blue-50">
               <tr>
                 <th className="px-6 py-4 text-left">
                   <input
                     type="checkbox"
                     checked={selectedLeads.length === filteredLeads.length && filteredLeads.length > 0}
                     onChange={toggleSelectAll}
-                    className="rounded border-slate-300 text-blue-600 focus:ring-blue-500 h-4 w-4"
+                    className="rounded border-gray-300 text-blue-600 focus:ring-blue-500 h-4 w-4"
                   />
                 </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-white uppercase tracking-wider">
+                <th className="px-6 py-4 text-left text-xs font-semibold text-blue-900 uppercase tracking-wider">
                   Fecha
                 </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-white uppercase tracking-wider">
+                <th className="px-6 py-4 text-left text-xs font-semibold text-blue-900 uppercase tracking-wider">
                   Cliente
                 </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-white uppercase tracking-wider">
+                <th className="px-6 py-4 text-left text-xs font-semibold text-blue-900 uppercase tracking-wider">
                   Lead
                 </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-white uppercase tracking-wider">
+                <th className="px-6 py-4 text-left text-xs font-semibold text-blue-900 uppercase tracking-wider">
                   Fuente
                 </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-white uppercase tracking-wider">
+                <th className="px-6 py-4 text-left text-xs font-semibold text-blue-900 uppercase tracking-wider">
                   Estado
                 </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-white uppercase tracking-wider">
+                <th className="px-6 py-4 text-left text-xs font-semibold text-blue-900 uppercase tracking-wider">
                   Monto
                 </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-white uppercase tracking-wider">
+                <th className="px-6 py-4 text-left text-xs font-semibold text-blue-900 uppercase tracking-wider">
                   Acciones
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-slate-200">
+            <tbody className="bg-white divide-y divide-gray-200">
               {filteredLeads.map(lead => (
-                <tr key={lead.id} className="hover:bg-slate-50 transition-colors">
+                <tr key={lead.id} className="hover:bg-gray-50 transition-colors">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <input
                       type="checkbox"
                       checked={selectedLeads.includes(lead.id)}
                       onChange={() => toggleLeadSelection(lead.id)}
-                      className="rounded border-slate-300 text-blue-600 focus:ring-blue-500 h-4 w-4"
+                      className="rounded border-gray-300 text-blue-600 focus:ring-blue-500 h-4 w-4"
                     />
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-600">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                     {new Date(lead.fecha_ingreso).toLocaleDateString('es-CL')}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                     {getClienteNombre(lead.cliente_id)}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-slate-900 font-medium">{lead.nombre || 'Sin nombre'}</div>
-                    <div className="text-sm text-slate-500">{lead.email || lead.telefono}</div>
+                    <div className="text-sm text-gray-900 font-medium">{lead.nombre || 'Sin nombre'}</div>
+                    <div className="text-sm text-gray-600">{lead.email || lead.telefono}</div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-600">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                     {lead.fuente}<br/>
-                    <span className="text-xs text-slate-500">{lead.ad_nombre || lead.form_nombre}</span>
+                    <span className="text-xs text-gray-500">{lead.ad_nombre || lead.form_nombre}</span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     {lead.vendido ? (
@@ -463,7 +463,7 @@ export default function CRMAdmin() {
                       </span>
                     )}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                     {lead.monto_vendido ? `$${Number(lead.monto_vendido).toLocaleString('es-CL')}` : '-'}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">

@@ -172,7 +172,7 @@ export default function MetricasPage() {
       <CRMLayout title="Metricas y Analytics">
         <div className="text-center py-12">
           <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-          <p className="text-white mt-4">Cargando metricas...</p>
+          <p className="text-gray-600 mt-4">Cargando metricas...</p>
         </div>
       </CRMLayout>
     )
@@ -238,8 +238,8 @@ export default function MetricasPage() {
       </div>
 
       {/* Metricas por mes */}
-      <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
-        <h2 className="text-xl font-bold text-slate-900 mb-6">Evolucion Mensual (Ultimos 6 Meses)</h2>
+      <div className="bg-white rounded-xl shadow-md p-6 mb-6 border border-gray-200">
+        <h2 className="text-xl font-bold text-gray-900 mb-6">Evolucion Mensual (Ultimos 6 Meses)</h2>
 
         <div className="space-y-6">
           {metricasPorMes.map((metrica, index) => {
@@ -250,24 +250,24 @@ export default function MetricasPage() {
             const conversionRate = metrica.leads > 0 ? ((metrica.vendidos / metrica.leads) * 100).toFixed(1) : '0'
 
             return (
-              <div key={index} className="border-b border-slate-200 pb-4 last:border-b-0">
+              <div key={index} className="border-b border-gray-200 pb-4 last:border-b-0">
                 <div className="flex items-center justify-between mb-3">
-                  <div className="font-semibold text-slate-900 w-32">{metrica.mes}</div>
+                  <div className="font-semibold text-gray-900 w-32">{metrica.mes}</div>
                   <div className="flex-1 grid grid-cols-4 gap-4 text-sm">
                     <div>
-                      <span className="text-slate-600">Leads: </span>
-                      <span className="font-medium">{metrica.leads}</span>
+                      <span className="text-gray-600">Leads: </span>
+                      <span className="font-medium text-gray-900">{metrica.leads}</span>
                     </div>
                     <div>
-                      <span className="text-slate-600">Contactados: </span>
-                      <span className="font-medium">{metrica.contactados}</span>
+                      <span className="text-gray-600">Contactados: </span>
+                      <span className="font-medium text-gray-900">{metrica.contactados}</span>
                     </div>
                     <div>
-                      <span className="text-slate-600">Vendidos: </span>
+                      <span className="text-gray-600">Vendidos: </span>
                       <span className="font-medium text-green-600">{metrica.vendidos}</span>
                     </div>
                     <div>
-                      <span className="text-slate-600">Monto: </span>
+                      <span className="text-gray-600">Monto: </span>
                       <span className="font-medium text-green-600">
                         ${metrica.monto.toLocaleString('es-CL')}
                       </span>
@@ -278,10 +278,10 @@ export default function MetricasPage() {
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <div className="flex items-center justify-between text-xs mb-1">
-                      <span className="text-slate-600">Volumen de Leads</span>
-                      <span className="text-slate-900 font-medium">{metrica.leads}</span>
+                      <span className="text-gray-600">Volumen de Leads</span>
+                      <span className="text-gray-900 font-medium">{metrica.leads}</span>
                     </div>
-                    <div className="w-full bg-slate-200 rounded-full h-2">
+                    <div className="w-full bg-gray-200 rounded-full h-2">
                       <div
                         className="bg-blue-500 h-2 rounded-full transition-all duration-500"
                         style={{ width: `${leadsPercentage}%` }}
@@ -290,12 +290,12 @@ export default function MetricasPage() {
                   </div>
                   <div>
                     <div className="flex items-center justify-between text-xs mb-1">
-                      <span className="text-slate-600">Ingresos ({conversionRate}% conversion)</span>
+                      <span className="text-gray-600">Ingresos ({conversionRate}% conversion)</span>
                       <span className="text-green-600 font-medium">
                         ${metrica.monto.toLocaleString('es-CL')}
                       </span>
                     </div>
-                    <div className="w-full bg-slate-200 rounded-full h-2">
+                    <div className="w-full bg-gray-200 rounded-full h-2">
                       <div
                         className="bg-green-500 h-2 rounded-full transition-all duration-500"
                         style={{ width: `${montoPercentage}%` }}
@@ -310,8 +310,8 @@ export default function MetricasPage() {
       </div>
 
       {/* Top Clientes */}
-      <div className="bg-white rounded-lg shadow-lg p-6">
-        <h2 className="text-xl font-bold text-slate-900 mb-6">Top 5 Clientes por Ventas</h2>
+      <div className="bg-white rounded-xl shadow-md p-6 border border-gray-200">
+        <h2 className="text-xl font-bold text-gray-900 mb-6">Top 5 Clientes por Ventas</h2>
 
         <div className="space-y-4">
           {topClientes.map((cliente, index) => {
@@ -319,16 +319,16 @@ export default function MetricasPage() {
             const montoPercentage = (cliente.monto / maxMonto) * 100
 
             return (
-              <div key={index} className="border border-slate-200 rounded-lg p-4 hover:shadow-md transition">
+              <div key={index} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition bg-white">
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex-1">
                     <div className="flex items-center gap-3">
-                      <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-blue-600 text-white font-bold">
+                      <div className="flex items-center justify-center w-8 h-8 rounded-full bg-blue-500 text-white font-bold">
                         {index + 1}
                       </div>
                       <div>
-                        <h3 className="font-bold text-slate-900 text-lg">{cliente.nombre}</h3>
-                        <p className="text-sm text-slate-600">
+                        <h3 className="font-bold text-gray-900 text-lg">{cliente.nombre}</h3>
+                        <p className="text-sm text-gray-600">
                           {cliente.leads} leads • {cliente.vendidos} vendidos • {cliente.tasaConversion.toFixed(1)}% conversion
                         </p>
                       </div>
@@ -338,13 +338,13 @@ export default function MetricasPage() {
                     <div className="text-2xl font-bold text-green-600">
                       ${cliente.monto.toLocaleString('es-CL')}
                     </div>
-                    <div className="text-xs text-slate-600">Total vendido</div>
+                    <div className="text-xs text-gray-600">Total vendido</div>
                   </div>
                 </div>
 
-                <div className="w-full bg-slate-200 rounded-full h-3">
+                <div className="w-full bg-gray-200 rounded-full h-3">
                   <div
-                    className="bg-gradient-to-r from-green-500 to-green-600 h-3 rounded-full transition-all duration-500"
+                    className="bg-green-500 h-3 rounded-full transition-all duration-500"
                     style={{ width: `${montoPercentage}%` }}
                   ></div>
                 </div>
@@ -354,7 +354,7 @@ export default function MetricasPage() {
         </div>
 
         {topClientes.length === 0 && (
-          <div className="text-center py-8 text-slate-500">
+          <div className="text-center py-8 text-gray-600">
             <p>No hay datos de clientes disponibles</p>
           </div>
         )}

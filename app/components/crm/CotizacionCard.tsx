@@ -32,23 +32,26 @@ export default function CotizacionCard({
 
   return (
     <Link href={`/crm/cotizaciones/${id}`}>
-      <div className="bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-200 border border-slate-200 overflow-hidden cursor-pointer hover:scale-[1.02]">
-        <div className="bg-gradient-to-r from-blue-900 to-blue-800 p-4">
-          <h3 className="text-lg font-bold text-white truncate">{nombre_proyecto}</h3>
-          <p className="text-blue-200 text-sm mt-1">{cliente_nombre}</p>
+      <div className="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-200 border border-gray-200 p-6 cursor-pointer">
+        <div className="flex items-start justify-between mb-4">
+          <div className="flex-1 min-w-0">
+            <h3 className="text-lg font-semibold text-gray-900 truncate">{nombre_proyecto}</h3>
+            <p className="text-gray-600 text-sm mt-1">{cliente_nombre}</p>
+          </div>
+          <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${estadoColor} ml-2 flex-shrink-0`}>
+            {estado.charAt(0).toUpperCase() + estado.slice(1)}
+          </span>
         </div>
 
-        <div className="p-4">
-          <div className="flex items-center justify-between mb-3">
-            <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${estadoColor}`}>
-              {estado.charAt(0).toUpperCase() + estado.slice(1)}
-            </span>
-            <span className="text-2xl font-bold text-slate-900">
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <span className="text-gray-600 text-sm">Monto:</span>
+            <span className="text-2xl font-bold text-blue-900">
               ${Number(total).toLocaleString('es-CL')}
             </span>
           </div>
 
-          <div className="text-xs text-slate-600 space-y-1">
+          <div className="text-xs text-gray-600 space-y-1 pt-2 border-t border-gray-200">
             <div>Creada: {new Date(creado_en).toLocaleDateString('es-CL')}</div>
             {enviada_en && (
               <div>Enviada: {new Date(enviada_en).toLocaleDateString('es-CL')}</div>

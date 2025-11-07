@@ -25,23 +25,23 @@ export default function CRMLayout({ children, title, authenticated = true, onRef
   ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900">
+    <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-gradient-to-r from-blue-900 to-blue-800 shadow-lg border-b border-blue-700">
-        <div className="max-w-7xl mx-auto px-4 py-4">
+      <div className="bg-gradient-to-r from-blue-900 to-blue-800 shadow-xl">
+        <div className="max-w-7xl mx-auto px-6 py-5">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">
-                {title || 'CRM Muller y Perez'}
+              <h1 className="text-3xl font-bold text-white">
+                {title || 'CRM Muller & Pérez'}
               </h1>
-              <p className="text-blue-200 text-sm mt-1">Sistema de Gestion de Clientes</p>
+              <p className="text-blue-100 text-sm mt-1">Sistema de Gestión de Clientes</p>
             </div>
             {onRefresh && (
               <button
                 onClick={onRefresh}
-                className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-400 transition text-sm font-medium shadow-md"
+                className="px-5 py-2.5 bg-white text-blue-900 rounded-lg hover:bg-blue-50 transition text-sm font-semibold shadow-lg"
               >
-                Actualizar
+                🔄 Actualizar
               </button>
             )}
           </div>
@@ -49,8 +49,8 @@ export default function CRMLayout({ children, title, authenticated = true, onRef
       </div>
 
       {/* Navigation */}
-      <div className="bg-slate-800/50 backdrop-blur-sm border-b border-slate-700">
-        <div className="max-w-7xl mx-auto px-4">
+      <div className="bg-white shadow-md border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-6">
           <nav className="flex space-x-1">
             {navItems.map((item) => {
               const isActive = pathname === item.href
@@ -58,10 +58,10 @@ export default function CRMLayout({ children, title, authenticated = true, onRef
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`px-4 py-3 flex items-center gap-2 font-medium text-sm transition-all ${
+                  className={`px-6 py-4 flex items-center gap-2 font-semibold text-sm transition-all border-b-2 ${
                     isActive
-                      ? 'bg-blue-500 text-white border-b-2 border-blue-300'
-                      : 'text-blue-200 hover:text-white hover:bg-slate-700/50'
+                      ? 'bg-blue-50 text-blue-900 border-blue-600'
+                      : 'text-gray-600 hover:text-blue-900 hover:bg-gray-50 border-transparent'
                   }`}
                 >
                   <span>{item.icon}</span>
@@ -74,7 +74,7 @@ export default function CRMLayout({ children, title, authenticated = true, onRef
       </div>
 
       {/* Content */}
-      <div className="max-w-7xl mx-auto px-4 py-6">
+      <div className="max-w-7xl mx-auto px-6 py-8">
         {children}
       </div>
     </div>

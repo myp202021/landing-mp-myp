@@ -341,10 +341,10 @@ export default function CotizacionPage() {
         </div>
 
         {/* Informacion del cliente */}
-        <div className="bg-slate-50 p-8 border-x border-slate-200">
+        <div className="bg-gray-50 p-8 border-x border-gray-200">
           <div className="grid grid-cols-2 gap-8">
             <div>
-              <h3 className="font-bold text-slate-900 mb-3">CLIENTE</h3>
+              <h3 className="font-bold text-gray-900 mb-3">CLIENTE</h3>
               {editing ? (
                 <div className="space-y-2">
                   <input
@@ -370,7 +370,7 @@ export default function CotizacionPage() {
                   />
                 </div>
               ) : (
-                <div className="text-slate-700">
+                <div className="text-gray-700">
                   <p className="font-medium">{cotizacion.cliente_nombre || cotizacion.clientes?.nombre}</p>
                   <p className="text-sm">{cotizacion.cliente_email || cotizacion.leads?.email}</p>
                   <p className="text-sm">{cotizacion.cliente_empresa}</p>
@@ -378,7 +378,7 @@ export default function CotizacionPage() {
               )}
             </div>
             <div>
-              <h3 className="font-bold text-slate-900 mb-3">PROYECTO</h3>
+              <h3 className="font-bold text-gray-900 mb-3">PROYECTO</h3>
               {editing ? (
                 <input
                   type="text"
@@ -395,15 +395,15 @@ export default function CotizacionPage() {
         </div>
 
         {/* Items */}
-        <div className="bg-white border-x border-slate-200 p-8">
-          <h3 className="font-bold text-slate-900 mb-4">DETALLE DE SERVICIOS</h3>
+        <div className="bg-white border-x border-gray-200 p-8">
+          <h3 className="font-bold text-gray-900 mb-4">DETALLE DE SERVICIOS</h3>
           <table className="w-full">
             <thead>
-              <tr className="border-b-2 border-slate-300">
-                <th className="text-left py-3 text-sm font-semibold text-slate-700">Descripcion</th>
-                <th className="text-center py-3 text-sm font-semibold text-slate-700 w-24">Cant.</th>
-                <th className="text-right py-3 text-sm font-semibold text-slate-700 w-32">Precio Unit.</th>
-                <th className="text-right py-3 text-sm font-semibold text-slate-700 w-32">Total</th>
+              <tr className="border-b-2 border-gray-300">
+                <th className="text-left py-3 text-sm font-semibold text-gray-700">Descripcion</th>
+                <th className="text-center py-3 text-sm font-semibold text-gray-700 w-24">Cant.</th>
+                <th className="text-right py-3 text-sm font-semibold text-gray-700 w-32">Precio Unit.</th>
+                <th className="text-right py-3 text-sm font-semibold text-gray-700 w-32">Total</th>
                 {editing && <th className="w-16"></th>}
               </tr>
             </thead>
@@ -480,18 +480,18 @@ export default function CotizacionPage() {
         </div>
 
         {/* Totales */}
-        <div className="bg-slate-50 border-x border-b border-slate-200 p-8 rounded-b-lg print:rounded-none">
+        <div className="bg-gray-50 border-x border-b border-gray-200 p-8 rounded-b-lg print:rounded-none">
           <div className="flex justify-end">
             <div className="w-80">
-              <div className="flex justify-between py-2 border-b border-slate-300">
-                <span className="text-slate-700">Subtotal:</span>
-                <span className="font-medium text-slate-900">
+              <div className="flex justify-between py-2 border-b border-gray-300">
+                <span className="text-gray-700">Subtotal:</span>
+                <span className="font-medium text-gray-900">
                   ${editedCotizacion.subtotal.toLocaleString('es-CL')}
                 </span>
               </div>
-              <div className="flex justify-between py-2 border-b border-slate-300">
-                <span className="text-slate-700">Descuento:</span>
-                <span className="font-medium text-slate-900">
+              <div className="flex justify-between py-2 border-b border-gray-300">
+                <span className="text-gray-700">Descuento:</span>
+                <span className="font-medium text-gray-900">
                   {editing ? (
                     <input
                       type="number"
@@ -505,7 +505,7 @@ export default function CotizacionPage() {
                   )}
                 </span>
               </div>
-              <div className="flex justify-between py-3 bg-blue-900 text-white px-4 rounded mt-2">
+              <div className="flex justify-between py-3 bg-blue-50 border-2 border-blue-600 text-blue-900 px-4 rounded mt-2">
                 <span className="font-bold text-lg">TOTAL:</span>
                 <span className="font-bold text-2xl">
                   ${editedCotizacion.total.toLocaleString('es-CL')}
@@ -517,8 +517,8 @@ export default function CotizacionPage() {
 
         {/* Notas */}
         {(editing || cotizacion.notas) && (
-          <div className="mt-6 bg-slate-50 p-6 rounded-lg border border-slate-200">
-            <h3 className="font-bold text-slate-900 mb-3">NOTAS / OBSERVACIONES</h3>
+          <div className="mt-6 bg-gray-50 p-6 rounded-lg border border-gray-200">
+            <h3 className="font-bold text-gray-900 mb-3">NOTAS / OBSERVACIONES</h3>
             {editing ? (
               <textarea
                 value={editedCotizacion.notas || ''}
