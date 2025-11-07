@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import CRMLayout from '@/app/components/crm/CRMLayout'
 import Button from '@/app/components/crm/Button'
 
