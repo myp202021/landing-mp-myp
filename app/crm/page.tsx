@@ -39,9 +39,13 @@ interface Cotizacion {
   cliente_nombre?: string
   cliente_email?: string
   subtotal: number
+  descuento?: number
   total: number
+  notas?: string
   estado: string
   creado_en: string
+  enviada_en?: string
+  aceptada_en?: string
   clientes?: Cliente
 }
 
