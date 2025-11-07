@@ -113,31 +113,7 @@ export async function DELETE(req: NextRequest) {
 
     console.log('🗑️ Intentando eliminar lead:', id)
 
-    // Eliminar TODAS las referencias antes de eliminar el lead
-    const tablesToClean = [
-      'lead_audits',
-      'cotizaciones',
-      'cotizaciones_crm'
-    ]
-
-    for (const table of tablesToClean) {
-      try {
-        const { error } = await supabase
-          .from(table)
-          .delete()
-          .eq('lead_id', id)
-
-        if (error) {
-          console.warn(`⚠️  Error eliminando de ${table}:`, error.message)
-        } else {
-          console.log(`✅ Limpiado ${table} para lead ${id}`)
-        }
-      } catch (e: any) {
-        console.warn(`⚠️  Tabla ${table} no existe o error:`, e.message)
-      }
-    }
-
-    // Eliminar lead directamente
+    // Eliminar lead DIRECTAMENTE - las FK con CASCADE manejarán el resto
     const { error, data } = await supabase
       .from('leads')
       .delete()
