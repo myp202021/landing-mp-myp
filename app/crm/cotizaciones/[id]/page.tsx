@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Button from '@/app/components/crm/Button'
+import { generarPDFCotizacion } from '@/lib/utils/pdfGenerator'
 
 interface CotizacionItem {
   descripcion: string
@@ -273,8 +274,28 @@ export default function CotizacionPage() {
                   <Button onClick={() => setEditing(true)} variant="primary" className="text-sm">
                     Editar
                   </Button>
-                  <Button onClick={() => window.print()} variant="success" className="text-sm">
-                    Imprimir PDF
+                  <Button
+                    onClick={() => generarPDFCotizacion({
+                      id: cotizacion.id,
+                      nombre_proyecto: cotizacion.nombre_proyecto,
+                      cliente_nombre: cotizacion.cliente_nombre,
+                      cliente_email: cotizacion.cliente_email,
+                      cliente_telefono: cotizacion.leads?.telefono,
+                      items: cotizacion.items,
+                      subtotal: cotizacion.subtotal,
+                      descuento: cotizacion.descuento,
+                      total: cotizacion.total,
+                      notas: cotizacion.notas,
+                      vigencia_dias: cotizacion.vigencia_dias,
+                      creado_en: cotizacion.creado_en
+                    })}
+                    variant="success"
+                    className="text-sm"
+                  >
+                    📥 Exportar PDF
+                  </Button>
+                  <Button onClick={() => window.print()} variant="secondary" className="text-sm">
+                    🖨️ Imprimir
                   </Button>
                   <Button onClick={handleDelete} variant="danger" className="text-sm">
                     Eliminar

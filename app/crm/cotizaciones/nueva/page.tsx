@@ -26,12 +26,23 @@ interface CotizacionItem {
   total: number
 }
 
+interface Plantilla {
+  id: number
+  nombre: string
+  descripcion?: string
+  items_default: Array<{ descripcion: string; cantidad: number; precio: number }>
+  notas_default?: string
+  vigencia_dias_default: number
+  descuento_default: number
+}
+
 export default function NuevaCotizacionPage() {
   const router = useRouter()
 
   const [clientes, setClientes] = useState<Cliente[]>([])
   const [leads, setLeads] = useState<Lead[]>([])
   const [leadsFiltered, setLeadsFiltered] = useState<Lead[]>([])
+  const [plantillas, setPlantillas] = useState<Plantilla[]>([])
 
   const [clienteId, setClienteId] = useState('')
   const [leadId, setLeadId] = useState<number | null>(null)
@@ -76,20 +87,49 @@ export default function NuevaCotizacionPage() {
   const loadData = async () => {
     setLoading(true)
     try {
-      const [resClientes, resLeads] = await Promise.all([
+      const [resClientes, resLeads, resPlantillas] = await Promise.all([
         fetch('/api/crm/clientes'),
-        fetch('/api/crm/leads?limit=500')
+        fetch('/api/crm/leads?limit=500'),
+        fetch('/api/crm/plantillas')
       ])
 
       const dataClientes = await resClientes.json()
       const dataLeads = await resLeads.json()
+      const dataPlantillas = await resPlantillas.json()
 
       setClientes(dataClientes.clientes || [])
       setLeads(dataLeads.leads || [])
+      setPlantillas(dataPlantillas.plantillas || [])
     } catch (error) {
       console.error('Error cargando datos:', error)
     }
     setLoading(false)
+  }
+
+  const aplicarPlantilla = (plantillaId: string) => {
+    if (!plantillaId) return
+
+    const plantilla = plantillas.find(p => p.id === parseInt(plantillaId))
+    if (!plantilla) return
+
+    // Convertir items de la plantilla al formato de cotización
+    const itemsConvertidos = plantilla.items_default.map(item => ({
+      descripcion: item.descripcion,
+      cantidad: item.cantidad,
+      precio_unitario: item.precio,
+      total: item.cantidad * item.precio
+    }))
+
+    setItems(itemsConvertidos)
+    setNotas(plantilla.notas_default || '')
+    setVigenciaDias(plantilla.vigencia_dias_default)
+
+    // Calcular descuento en pesos
+    const subtotal = itemsConvertidos.reduce((sum, item) => sum + item.total, 0)
+    const descuentoPesos = (subtotal * plantilla.descuento_default) / 100
+    setDescuento(descuentoPesos)
+
+    alert(`✅ Plantilla "${plantilla.nombre}" aplicada correctamente`)
   }
 
   const addItem = () => {
@@ -197,6 +237,36 @@ export default function NuevaCotizacionPage() {
 
           {/* Formulario */}
           <div className="p-6 space-y-6">
+            {/* Selector de plantilla */}
+            {plantillas.length > 0 && (
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <label className="block text-sm font-medium text-blue-900 mb-2">
+                  📋 Usar Plantilla (Opcional)
+                </label>
+                <div className="flex gap-3">
+                  <select
+                    onChange={(e) => aplicarPlantilla(e.target.value)}
+                    className="flex-1 px-3 py-2 border border-blue-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                  >
+                    <option value="">Selecciona una plantilla predefinida...</option>
+                    {plantillas.map(plantilla => (
+                      <option key={plantilla.id} value={plantilla.id}>
+                        {plantilla.nombre} - ${plantilla.items_default.reduce((sum, item) => sum + (item.cantidad * item.precio), 0).toLocaleString('es-CL')}
+                      </option>
+                    ))}
+                  </select>
+                  <Link href="/crm/plantillas">
+                    <Button variant="secondary" className="text-sm whitespace-nowrap">
+                      Gestionar
+                    </Button>
+                  </Link>
+                </div>
+                <p className="text-xs text-blue-700 mt-2">
+                  Al seleccionar una plantilla, se llenarán automáticamente los items, notas y configuración.
+                </p>
+              </div>
+            )}
+
             {/* Seleccion de cliente y lead */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
