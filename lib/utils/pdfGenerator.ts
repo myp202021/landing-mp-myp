@@ -4,7 +4,8 @@ import autoTable from 'jspdf-autotable'
 interface CotizacionItem {
   descripcion: string
   cantidad: number
-  precio: number
+  precio?: number
+  precio_unitario?: number
 }
 
 interface CotizacionData {
@@ -104,12 +105,15 @@ export function generarPDFCotizacion(cotizacion: CotizacionData) {
   yPos += 15
 
   // TABLA DE ITEMS
-  const tableData = cotizacion.items.map((item: CotizacionItem) => [
-    item.descripcion,
-    item.cantidad.toString(),
-    `$${item.precio.toLocaleString('es-CL')}`,
-    `$${(item.cantidad * item.precio).toLocaleString('es-CL')}`
-  ])
+  const tableData = cotizacion.items.map((item: CotizacionItem) => {
+    const precioUnitario = item.precio || item.precio_unitario || 0
+    return [
+      item.descripcion,
+      item.cantidad.toString(),
+      `$${precioUnitario.toLocaleString('es-CL')}`,
+      `$${(item.cantidad * precioUnitario).toLocaleString('es-CL')}`
+    ]
+  })
 
   autoTable(doc, {
     startY: yPos,
