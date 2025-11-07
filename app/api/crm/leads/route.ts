@@ -111,22 +111,24 @@ export async function DELETE(req: NextRequest) {
       )
     }
 
-    // Primero eliminar audits asociados (si existen)
-    const { error: auditError } = await supabase
-      .from('lead_audits')
-      .delete()
-      .eq('lead_id', id)
+    console.log('🗑️ Intentando eliminar lead:', id)
 
-    if (auditError) {
-      console.error('⚠️  Error eliminando audits del lead (puede no existir la tabla):', auditError)
-      // No retornar error aquí, puede ser que la tabla no exista
+    // Eliminar cotizaciones asociadas primero
+    try {
+      await supabase
+        .from('cotizaciones')
+        .delete()
+        .eq('lead_id', id)
+    } catch (e) {
+      console.warn('⚠️  No se pudieron eliminar cotizaciones (puede no existir):', e)
     }
 
-    // Luego eliminar el lead
-    const { error } = await supabase
+    // Eliminar lead directamente
+    const { error, data } = await supabase
       .from('leads')
       .delete()
       .eq('id', id)
+      .select()
 
     if (error) {
       console.error('❌ Error eliminando lead:', error)
@@ -136,7 +138,7 @@ export async function DELETE(req: NextRequest) {
       )
     }
 
-    console.log('✅ Lead eliminado:', id)
+    console.log('✅ Lead eliminado exitosamente:', id, data)
 
     return NextResponse.json({
       success: true,

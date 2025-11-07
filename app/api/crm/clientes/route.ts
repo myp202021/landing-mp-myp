@@ -188,58 +188,39 @@ export async function DELETE(req: NextRequest) {
       )
     }
 
-    // Paso 1: Obtener todos los lead IDs del cliente
-    const { data: leadsData, error: fetchError } = await supabase
+    console.log('🗑️ Intentando eliminar cliente:', id)
+
+    // Paso 1: Eliminar cotizaciones del cliente
+    try {
+      await supabase
+        .from('cotizaciones')
+        .delete()
+        .eq('cliente_id', id)
+    } catch (e) {
+      console.warn('⚠️  Error eliminando cotizaciones del cliente:', e)
+    }
+
+    // Paso 2: Obtener leads para eliminar sus cotizaciones
+    const { data: leadsData } = await supabase
       .from('leads')
       .select('id')
       .eq('cliente_id', id)
 
-    if (fetchError) {
-      console.error('❌ Error obteniendo leads del cliente:', fetchError)
-      return NextResponse.json(
-        { error: 'Error obteniendo leads del cliente', details: fetchError.message },
-        { status: 500 }
-      )
-    }
-
     const leadIds = leadsData?.map(l => l.id) || []
 
-    // Paso 2: Eliminar lead_audits de todos los leads (si existen)
+    // Paso 3: Eliminar cotizaciones de los leads
     if (leadIds.length > 0) {
-      const { error: auditsError } = await supabase
-        .from('lead_audits')
-        .delete()
-        .in('lead_id', leadIds)
-
-      if (auditsError) {
-        console.warn('⚠️  Error eliminando audits (puede no existir la tabla):', auditsError)
-        // No retornar error aquí, puede ser que la tabla no exista
+      try {
+        await supabase
+          .from('cotizaciones')
+          .delete()
+          .in('lead_id', leadIds)
+      } catch (e) {
+        console.warn('⚠️  Error eliminando cotizaciones de leads:', e)
       }
     }
 
-    // Paso 3: Eliminar cotizaciones asociadas a los leads
-    if (leadIds.length > 0) {
-      const { error: cotizacionesError } = await supabase
-        .from('cotizaciones')
-        .delete()
-        .in('lead_id', leadIds)
-
-      if (cotizacionesError) {
-        console.warn('⚠️  Error eliminando cotizaciones de leads:', cotizacionesError)
-      }
-    }
-
-    // Paso 4: Eliminar cotizaciones directamente del cliente
-    const { error: cotizacionesClienteError } = await supabase
-      .from('cotizaciones')
-      .delete()
-      .eq('cliente_id', id)
-
-    if (cotizacionesClienteError) {
-      console.warn('⚠️  Error eliminando cotizaciones del cliente:', cotizacionesClienteError)
-    }
-
-    // Paso 5: Eliminar todos los leads asociados
+    // Paso 4: Eliminar todos los leads asociados
     const { error: leadsError } = await supabase
       .from('leads')
       .delete()
@@ -253,7 +234,7 @@ export async function DELETE(req: NextRequest) {
       )
     }
 
-    // Paso 6: Eliminar el cliente
+    // Paso 5: Eliminar el cliente
     const { error } = await supabase
       .from('clientes')
       .delete()
@@ -267,7 +248,7 @@ export async function DELETE(req: NextRequest) {
       )
     }
 
-    console.log('✅ Cliente, leads, cotizaciones y audits eliminados:', id)
+    console.log('✅ Cliente eliminado exitosamente:', id)
 
     return NextResponse.json({
       success: true,
