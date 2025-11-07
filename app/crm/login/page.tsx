@@ -132,13 +132,3 @@ export default function LoginPage() {
     </div>
   )
 }
-
-export const metadata = {
-  title: 'Login - CRM Muller & Pérez',
-  description: 'Acceso al sistema CRM',
-  robots: {
-    index: false,
-    follow: false,
-    nocache: true
-  }
-}
