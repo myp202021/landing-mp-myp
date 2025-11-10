@@ -21,15 +21,21 @@ export default function CRMLayout({ children, title, authenticated = true, onRef
     return <>{children}</>
   }
 
-  const navItems = [
-    { href: '/crm', label: 'CRM Admin', icon: '🏠' },
-    { href: '/crm/clientes', label: 'Clientes', icon: '👥' },
-    { href: '/crm/cotizaciones', label: 'Cotizaciones', icon: '📄' },
-    { href: '/crm/plantillas', label: 'Plantillas', icon: '📋' },
-    { href: '/crm/metricas', label: 'Metricas', icon: '📊' },
-    { href: '/crm/configuracion', label: 'Configuracion', icon: '⚙️' },
-    { href: '/crm/integraciones', label: 'Integraciones', icon: '🔌' },
+  // Filtrar navegación según rol
+  const isAdmin = user?.role === 'admin'
+
+  const allNavItems = [
+    { href: '/crm', label: 'CRM Admin', icon: '🏠', adminOnly: true },
+    { href: '/crm/clientes', label: 'Clientes', icon: '👥', adminOnly: true },
+    { href: '/crm/cliente/dashboard', label: 'Dashboard', icon: '🏠', adminOnly: false },
+    { href: '/crm/cotizaciones', label: 'Cotizaciones', icon: '📄', adminOnly: false },
+    { href: '/crm/plantillas', label: 'Plantillas', icon: '📋', adminOnly: true },
+    { href: '/crm/metricas', label: 'Metricas', icon: '📊', adminOnly: true },
+    { href: '/crm/configuracion', label: 'Configuracion', icon: '⚙️', adminOnly: true },
+    { href: '/crm/integraciones', label: 'Integraciones', icon: '🔌', adminOnly: true },
   ]
+
+  const navItems = allNavItems.filter(item => isAdmin ? item.adminOnly : !item.adminOnly)
 
   const handleLogout = () => {
     if (confirm('¿Estás seguro de que deseas cerrar sesión?')) {

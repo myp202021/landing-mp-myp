@@ -103,14 +103,16 @@ export default function CRMAdmin() {
     return `${dias}d ${horasRestantes}h`
   }
 
-  // Redirigir a login si no está autenticado
+  // Redirigir a login si no está autenticado o a dashboard de cliente si es cliente
   useEffect(() => {
     if (!isAuthenticated) {
       router.push('/crm/login')
+    } else if (user?.role === 'cliente') {
+      router.push('/crm/cliente/dashboard')
     } else {
       loadData()
     }
-  }, [isAuthenticated, router])
+  }, [isAuthenticated, user, router])
 
   const loadData = async () => {
     setLoading(true)
@@ -318,18 +320,9 @@ export default function CRMAdmin() {
     )
   }
 
-  // Si es cliente, mostrar vista limitada (futuro)
+  // Si es cliente, redirigir a su dashboard (este código no debería ejecutarse por el useEffect arriba)
   if (user?.role === 'cliente') {
-    return (
-      <CRMLayout title="CRM Cliente - Muller y Perez" authenticated onRefresh={loadData}>
-        <div className="text-center py-12">
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">
-            Bienvenido, {user.nombre}
-          </h2>
-          <p className="text-gray-600">Vista de cliente - En construcción</p>
-        </div>
-      </CRMLayout>
-    )
+    return null
   }
 
   const filteredLeads = leads
