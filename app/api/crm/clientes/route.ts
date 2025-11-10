@@ -86,11 +86,11 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json()
-    const { nombre, email, empresa, telefono } = body
+    const { nombre, email, rubro, telefono } = body
 
-    if (!nombre || !email) {
+    if (!nombre) {
       return NextResponse.json(
-        { error: 'nombre y email son requeridos' },
+        { error: 'nombre es requerido' },
         { status: 400 }
       )
     }
@@ -99,9 +99,7 @@ export async function POST(req: NextRequest) {
       .from('clientes')
       .insert({
         nombre,
-        email,
-        empresa: empresa || null,
-        telefono: telefono || null,
+        rubro: rubro || null,
         activo: true
       })
       .select()

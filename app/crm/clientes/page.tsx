@@ -6,11 +6,9 @@ import CRMLayout from '@/app/components/crm/CRMLayout'
 import Button from '@/app/components/crm/Button'
 
 interface Cliente {
-  id: number
+  id: string  // UUID
   nombre: string
-  email: string
-  empresa?: string
-  telefono?: string
+  rubro?: string
   activo: boolean
   creado_en: string
   leads?: { count: number }[]
@@ -23,9 +21,7 @@ export default function ClientesPage() {
   const [editingCliente, setEditingCliente] = useState<Cliente | null>(null)
   const [formData, setFormData] = useState({
     nombre: '',
-    email: '',
-    empresa: '',
-    telefono: ''
+    rubro: ''
   })
 
   useEffect(() => {
@@ -50,17 +46,13 @@ export default function ClientesPage() {
       setEditingCliente(cliente)
       setFormData({
         nombre: cliente.nombre,
-        email: cliente.email,
-        empresa: cliente.empresa || '',
-        telefono: cliente.telefono || ''
+        rubro: cliente.rubro || ''
       })
     } else {
       setEditingCliente(null)
       setFormData({
         nombre: '',
-        email: '',
-        empresa: '',
-        telefono: ''
+        rubro: ''
       })
     }
     setShowModal(true)
@@ -71,17 +63,15 @@ export default function ClientesPage() {
     setEditingCliente(null)
     setFormData({
       nombre: '',
-      email: '',
-      empresa: '',
-      telefono: ''
+      rubro: ''
     })
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    if (!formData.nombre || !formData.email) {
-      alert('Nombre y Email son obligatorios')
+    if (!formData.nombre) {
+      alert('Nombre es obligatorio')
       return
     }
 
@@ -121,7 +111,7 @@ export default function ClientesPage() {
     }
   }
 
-  const handleDelete = async (id: number, nombre: string) => {
+  const handleDelete = async (id: string, nombre: string) => {
     if (!confirm(`¿Estás seguro de eliminar el cliente "${nombre}"?\n\nEsto eliminará también todos los leads y cotizaciones asociados.`)) {
       return
     }
@@ -201,10 +191,7 @@ export default function ClientesPage() {
                     Cliente
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Empresa
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Contacto
+                    Rubro
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Leads
@@ -222,16 +209,10 @@ export default function ClientesPage() {
                   <tr key={cliente.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="font-medium text-gray-900">{cliente.nombre}</div>
-                      <div className="text-sm text-gray-500">{cliente.email}</div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className="text-gray-900">
-                        {cliente.empresa || '-'}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className="text-gray-900">
-                        {cliente.telefono || '-'}
+                        {cliente.rubro || '-'}
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
@@ -298,41 +279,14 @@ export default function ClientesPage() {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Email <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="email"
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-                    required
-                    placeholder="correo@ejemplo.com"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Empresa
+                    Rubro
                   </label>
                   <input
                     type="text"
-                    value={formData.empresa}
-                    onChange={(e) => setFormData({ ...formData, empresa: e.target.value })}
+                    value={formData.rubro}
+                    onChange={(e) => setFormData({ ...formData, rubro: e.target.value })}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="Nombre de la empresa"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Teléfono
-                  </label>
-                  <input
-                    type="tel"
-                    value={formData.telefono}
-                    onChange={(e) => setFormData({ ...formData, telefono: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="+56 9 1234 5678"
+                    placeholder="Ej: Marketing Digital, E-commerce, Servicios B2B"
                   />
                 </div>
               </div>
