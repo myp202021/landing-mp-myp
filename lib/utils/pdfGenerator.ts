@@ -156,9 +156,8 @@ export function generarPDFCotizacion(cotizacion: CotizacionData) {
   yPos += 7
 
   if (cotizacion.descuento && cotizacion.descuento > 0) {
-    doc.text(`Descuento (${cotizacion.descuento}%):`, xLabel, yPos, { align: 'right' })
-    const montoDescuento = (cotizacion.subtotal * cotizacion.descuento) / 100
-    doc.text(`-$${montoDescuento.toLocaleString('es-CL')}`, xValor, yPos, { align: 'right' })
+    doc.text('Descuento:', xLabel, yPos, { align: 'right' })
+    doc.text(`-$${cotizacion.descuento.toLocaleString('es-CL')}`, xValor, yPos, { align: 'right' })
     yPos += 7
   }
 
