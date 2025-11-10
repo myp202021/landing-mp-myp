@@ -26,8 +26,13 @@ export default function LoginPage() {
 
     const response = login(username, password)
 
-    if (response.success) {
-      router.push('/crm')
+    if (response.success && response.user) {
+      // Redirigir según el rol del usuario
+      if (response.user.role === 'admin') {
+        router.push('/crm')
+      } else {
+        router.push('/crm/cliente/dashboard')
+      }
     } else {
       setError(response.error || 'Error al iniciar sesión')
       setLoading(false)
@@ -44,8 +49,8 @@ export default function LoginPage() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
             </svg>
           </div>
-          <h1 className="text-3xl font-bold text-white mb-2">CRM Muller & Pérez</h1>
-          <p className="text-blue-200">Acceso al Sistema de Gestión</p>
+          <h1 className="text-3xl font-bold text-white mb-2">Acceso Clientes</h1>
+          <p className="text-blue-200">Muller y Pérez CRM</p>
         </div>
 
         {/* Formulario */}
@@ -119,11 +124,14 @@ export default function LoginPage() {
           </form>
 
           {/* Info adicional */}
-          <div className="mt-6 pt-6 border-t border-gray-200">
-            <p className="text-center text-sm text-gray-600">
-              ¿Problemas para acceder?{' '}
-              <a href="mailto:soporte@mulleryperez.cl" className="text-blue-600 hover:text-blue-800 font-semibold">
-                Contacta soporte
+          <div className="mt-6 pt-6 border-t border-gray-200 space-y-2">
+            <div className="text-xs text-gray-600 space-y-1">
+              <p><strong className="text-gray-800">Admin:</strong> usuario "admin" | contraseña "myp2025"</p>
+              <p><strong className="text-gray-800">Clientes:</strong> usar UUID + contraseña "mypcliente2025"</p>
+            </div>
+            <p className="text-center text-sm text-gray-600 pt-2">
+              <a href="/" className="text-blue-600 hover:text-blue-800 font-semibold">
+                ← Volver al inicio
               </a>
             </p>
           </div>
