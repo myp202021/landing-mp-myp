@@ -342,14 +342,14 @@ export default function ClientesPage() {
                   type="button"
                   onClick={handleCloseModal}
                   variant="secondary"
-                  fullWidth
+                  className="w-full"
                 >
                   Cancelar
                 </Button>
                 <Button
                   type="submit"
                   variant="primary"
-                  fullWidth
+                  className="w-full"
                 >
                   {editingCliente ? 'Guardar Cambios' : 'Crear Cliente'}
                 </Button>
