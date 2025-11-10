@@ -141,14 +141,16 @@ export function SimpleAuthProvider({ children }: { children: ReactNode }) {
 
   const permissions = user ? getUserPermissions(user.role) : null
 
+  const contextValue: AuthContextType = {
+    user,
+    isAuthenticated: !!user,
+    login,
+    logout,
+    permissions
+  }
+
   return (
-    <AuthContext.Provider value={{
-      user,
-      isAuthenticated: !!user,
-      login,
-      logout,
-      permissions
-    }}>
+    <AuthContext.Provider value={contextValue}>
       {children}
     </AuthContext.Provider>
   )
