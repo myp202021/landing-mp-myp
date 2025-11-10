@@ -2,6 +2,9 @@
 
 import { SimpleAuthProvider } from '@/lib/auth/simple-auth'
 
+// Forzar renderizado dinámico para todas las páginas CRM
+export const dynamic = 'force-dynamic'
+
 export default function CRMRootLayout({
   children,
 }: {
