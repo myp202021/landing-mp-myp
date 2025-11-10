@@ -20,12 +20,8 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    if (!body.full_name && !body.email && !body.phone_number) {
-      return NextResponse.json(
-        { error: 'Se requiere al menos: full_name, email o phone_number' },
-        { status: 400 }
-      )
-    }
+    // NOTA: Aceptamos leads con cualquier combinación de datos
+    // Facebook Lead Ads a veces solo envía nombre, sin email ni teléfono
 
     // Verificar que el cliente existe
     const { data: clienteData, error: clienteError } = await supabase
