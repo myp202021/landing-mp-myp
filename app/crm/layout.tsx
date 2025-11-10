@@ -1,6 +1,6 @@
 'use client'
 
-import { SimpleAuthProvider } from '@/lib/auth/simple-auth'
+import { SimpleAuthProvider } from '@/lib/auth/simple-auth.tsx'
 
 export default function CRMRootLayout({
   children,

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useSimpleAuth } from '@/lib/auth/simple-auth'
+import { useSimpleAuth } from '@/lib/auth/simple-auth.tsx'
 import { useRouter } from 'next/navigation'
 import CRMLayout from '@/app/components/crm/CRMLayout'
 import MetricCard from '@/app/components/crm/MetricCard'
