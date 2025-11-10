@@ -3,7 +3,7 @@
 import { ReactNode } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useAuth } from '@/lib/auth/supabase-auth'
+import { useSimpleAuth } from '@/lib/auth/simple-auth'
 import AuthGuard from './AuthGuard'
 
 interface CRMLayoutProps {
@@ -15,7 +15,7 @@ interface CRMLayoutProps {
 
 export default function CRMLayout({ children, title, authenticated = true, onRefresh }: CRMLayoutProps) {
   const pathname = usePathname()
-  const { user, signOut } = useAuth()
+  const { user, logout } = useSimpleAuth()
 
   if (!authenticated) {
     return <>{children}</>
@@ -30,9 +30,9 @@ export default function CRMLayout({ children, title, authenticated = true, onRef
     { href: '/crm/integraciones', label: 'Integraciones', icon: '🔌' },
   ]
 
-  const handleLogout = async () => {
+  const handleLogout = () => {
     if (confirm('¿Estás seguro de que deseas cerrar sesión?')) {
-      await signOut()
+      logout()
     }
   }
 
@@ -48,7 +48,7 @@ export default function CRMLayout({ children, title, authenticated = true, onRef
                   {title || 'CRM Muller & Pérez'}
                 </h1>
                 <p className="text-blue-100 text-sm mt-1">
-                  Sistema de Gestión de Clientes {user && `· ${user.email}`}
+                  Sistema de Gestión de Clientes {user && `· ${user.nombre}`}
                 </p>
               </div>
               <div className="flex items-center gap-3">

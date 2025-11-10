@@ -1,25 +1,33 @@
 'use client'
 
-import { useAuth } from '@/lib/auth/supabase-auth'
+import { useSimpleAuth } from '@/lib/auth/simple-auth'
 import { useRouter, usePathname } from 'next/navigation'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 export default function AuthGuard({ children }: { children: React.ReactNode }) {
-  const { user, loading } = useAuth()
+  const { user, isAuthenticated } = useSimpleAuth()
   const router = useRouter()
   const pathname = usePathname()
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    // Dar tiempo para que se cargue el usuario desde localStorage
+    setLoading(false)
+  }, [])
+
+  useEffect(() => {
+    if (loading) return
+
     // Si NO estamos en /crm/login y NO hay usuario, redirigir a login
-    if (!loading && !user && pathname !== '/crm/login') {
+    if (!isAuthenticated && pathname !== '/crm/login') {
       router.push('/crm/login')
     }
 
     // Si estamos en /crm/login y ya hay usuario, redirigir al dashboard
-    if (!loading && user && pathname === '/crm/login') {
+    if (isAuthenticated && pathname === '/crm/login') {
       router.push('/crm')
     }
-  }, [user, loading, router, pathname])
+  }, [user, isAuthenticated, loading, router, pathname])
 
   // Mostrar loading mientras se verifica la autenticación
   if (loading) {
@@ -34,12 +42,12 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
   }
 
   // Si no estamos en login y no hay usuario, mostrar nada (el redirect se hará)
-  if (!user && pathname !== '/crm/login') {
+  if (!isAuthenticated && pathname !== '/crm/login') {
     return null
   }
 
   // Si estamos en login y hay usuario, mostrar nada (el redirect se hará)
-  if (user && pathname === '/crm/login') {
+  if (isAuthenticated && pathname === '/crm/login') {
     return null
   }
 
