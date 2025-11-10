@@ -1,30 +1,36 @@
 'use client'
 
-import { useState } from 'react'
-import { useAuth } from '@/lib/auth/supabase-auth'
+import { useState, useEffect } from 'react'
+import { useSimpleAuth } from '@/lib/auth/simple-auth'
 import { useRouter } from 'next/navigation'
 
 export default function LoginPage() {
-  const [email, setEmail] = useState('')
+  const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
-  const { signIn } = useAuth()
+  const { login, isAuthenticated } = useSimpleAuth()
   const router = useRouter()
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  // Si ya está autenticado, redirigir al dashboard
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.push('/crm')
+    }
+  }, [isAuthenticated, router])
+
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
     setLoading(true)
 
-    const { error } = await signIn(email, password)
+    const response = login(username, password)
 
-    if (error) {
-      setError(error.message)
-      setLoading(false)
-    } else {
-      // Redirect se hace automáticamente en el AuthProvider
+    if (response.success) {
       router.push('/crm')
+    } else {
+      setError(response.error || 'Error al iniciar sesión')
+      setLoading(false)
     }
   }
 
@@ -45,20 +51,21 @@ export default function LoginPage() {
         {/* Formulario */}
         <div className="bg-white rounded-2xl shadow-2xl p-8">
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Email */}
+            {/* Username */}
             <div>
-              <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">
-                Correo Electrónico
+              <label htmlFor="username" className="block text-sm font-semibold text-gray-700 mb-2">
+                Usuario
               </label>
               <input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                id="username"
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
                 required
                 className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring focus:ring-blue-200 transition text-gray-900"
-                placeholder="tu@email.com"
-                autoComplete="email"
+                placeholder="usuario"
+                autoComplete="username"
+                autoFocus
               />
             </div>
 
@@ -114,7 +121,7 @@ export default function LoginPage() {
           {/* Info adicional */}
           <div className="mt-6 pt-6 border-t border-gray-200">
             <p className="text-center text-sm text-gray-600">
-              ¿Olvidaste tu contraseña?{' '}
+              ¿Problemas para acceder?{' '}
               <a href="mailto:soporte@mulleryperez.cl" className="text-blue-600 hover:text-blue-800 font-semibold">
                 Contacta soporte
               </a>

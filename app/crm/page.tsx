@@ -1,6 +1,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useSimpleAuth } from '@/lib/auth/simple-auth'
+import { useRouter } from 'next/navigation'
 import CRMLayout from '@/app/components/crm/CRMLayout'
 import MetricCard from '@/app/components/crm/MetricCard'
 import Button from '@/app/components/crm/Button'
@@ -53,8 +55,8 @@ interface Cotizacion {
 }
 
 export default function CRMAdmin() {
-  const [authenticated, setAuthenticated] = useState(false)
-  const [password, setPassword] = useState('')
+  const { isAuthenticated, user, permissions } = useSimpleAuth()
+  const router = useRouter()
 
   const [clientes, setClientes] = useState<Cliente[]>([])
   const [leads, setLeads] = useState<Lead[]>([])
@@ -101,15 +103,14 @@ export default function CRMAdmin() {
     return `${dias}d ${horasRestantes}h`
   }
 
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (password === 'myp2025') {
-      setAuthenticated(true)
-      loadData()
+  // Redirigir a login si no está autenticado
+  useEffect(() => {
+    if (!isAuthenticated) {
+      router.push('/crm/login')
     } else {
-      alert('Contrasena incorrecta')
+      loadData()
     }
-  }
+  }, [isAuthenticated, router])
 
   const loadData = async () => {
     setLoading(true)
@@ -305,35 +306,29 @@ export default function CRMAdmin() {
     setLoading(false)
   }
 
-  if (!authenticated) {
+  // Mostrar loading mientras se verifica autenticación
+  if (!isAuthenticated) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 flex items-center justify-center p-4">
-        <div className="bg-white p-8 rounded-lg shadow-xl w-full max-w-md">
-          <div className="text-center mb-6">
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-900 to-blue-600 bg-clip-text text-transparent">
-              CRM Muller y Perez
-            </h1>
-            <p className="text-slate-600 mt-2">Sistema de Gestion de Clientes</p>
-          </div>
-          <form onSubmit={handleLogin} className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
-                Contrasena Admin
-              </label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="Ingrese contrasena"
-              />
-            </div>
-            <Button type="submit" variant="primary" className="w-full py-3">
-              Acceder al CRM
-            </Button>
-          </form>
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-white mb-4"></div>
+          <p className="text-white">Verificando autenticación...</p>
         </div>
       </div>
+    )
+  }
+
+  // Si es cliente, mostrar vista limitada (futuro)
+  if (user?.role === 'cliente') {
+    return (
+      <CRMLayout title="CRM Cliente - Muller y Perez" authenticated onRefresh={loadData}>
+        <div className="text-center py-12">
+          <h2 className="text-2xl font-bold text-gray-800 mb-4">
+            Bienvenido, {user.nombre}
+          </h2>
+          <p className="text-gray-600">Vista de cliente - En construcción</p>
+        </div>
+      </CRMLayout>
     )
   }
 

@@ -1,14 +1,6 @@
-import { AuthProvider } from '@/lib/auth/supabase-auth'
+'use client'
 
-export const metadata = {
-  title: 'CRM - Muller & Pérez',
-  description: 'Sistema de gestión de clientes y leads',
-  robots: {
-    index: false,
-    follow: false,
-    nocache: true,
-  }
-}
+import { SimpleAuthProvider } from '@/lib/auth/simple-auth'
 
 export default function CRMRootLayout({
   children,
@@ -16,8 +8,8 @@ export default function CRMRootLayout({
   children: React.ReactNode
 }) {
   return (
-    <AuthProvider>
+    <SimpleAuthProvider>
       {children}
-    </AuthProvider>
+    </SimpleAuthProvider>
   )
 }
