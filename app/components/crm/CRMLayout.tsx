@@ -23,6 +23,7 @@ export default function CRMLayout({ children, title, authenticated = true, onRef
 
   const navItems = [
     { href: '/crm', label: 'CRM Admin', icon: '🏠' },
+    { href: '/crm/clientes', label: 'Clientes', icon: '👥' },
     { href: '/crm/cotizaciones', label: 'Cotizaciones', icon: '📄' },
     { href: '/crm/plantillas', label: 'Plantillas', icon: '📋' },
     { href: '/crm/metricas', label: 'Metricas', icon: '📊' },
