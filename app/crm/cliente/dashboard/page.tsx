@@ -35,11 +35,9 @@ export default function ClienteDashboard() {
   const router = useRouter()
 
   const [leads, setLeads] = useState<Lead[]>([])
+  const [inversionMensual, setInversionMensual] = useState<number>(0)
   const [loading, setLoading] = useState(true)
   const [editingLead, setEditingLead] = useState<Lead | null>(null)
-
-  // Configuración de inversión mensual (hardcoded por ahora, debería venir de la BD)
-  const INVERSION_MENSUAL = 5000000 // CLP
 
   // Redirigir si no es cliente
   useEffect(() => {
@@ -65,6 +63,15 @@ export default function ClienteDashboard() {
       const dataLeads = await resLeads.json()
 
       setLeads(dataLeads.leads || [])
+
+      // Cargar inversión mensual del cliente
+      if (user?.cliente_id) {
+        const resCliente = await fetch(`/api/crm/clientes?id=${user.cliente_id}`)
+        const dataCliente = await resCliente.json()
+        if (dataCliente.cliente?.inversion_mensual) {
+          setInversionMensual(Number(dataCliente.cliente.inversion_mensual))
+        }
+      }
     } catch (error) {
       console.error('Error cargando datos:', error)
     }
@@ -146,7 +153,19 @@ export default function ClienteDashboard() {
   const leadsVendidos = leads.filter(l => l.vendido).length
   const totalVendido = leads.filter(l => l.monto_vendido).reduce((sum, l) => sum + Number(l.monto_vendido || 0), 0)
   const tasaConversion = totalLeads > 0 ? ((leadsVendidos / totalLeads) * 100).toFixed(1) : '0'
-  const roas = INVERSION_MENSUAL > 0 ? (totalVendido / INVERSION_MENSUAL).toFixed(2) : '0.00'
+
+  // CPF (Costo Por Formulario) = Inversión / N° Leads
+  const cpf = (inversionMensual > 0 && totalLeads > 0)
+    ? Math.round(inversionMensual / totalLeads)
+    : 0
+
+  // ROAS (Return on Ad Spend) = Ventas / Inversión
+  const roas = inversionMensual > 0 ? (totalVendido / inversionMensual).toFixed(2) : '0.00'
+
+  // ROA (Return on Advertising) = ((Ventas - Inversión) / Inversión) * 100
+  const roa = inversionMensual > 0
+    ? (((totalVendido - inversionMensual) / inversionMensual) * 100).toFixed(1)
+    : '0.0'
 
   // Ordenar leads por prioridad y fecha
   const sortedLeads = [...leads].sort((a, b) => {
@@ -170,7 +189,7 @@ export default function ClienteDashboard() {
       </div>
 
       {/* Métricas */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-7 gap-6 mb-8">
         <MetricCard
           title="Total Leads"
           value={totalLeads}
@@ -198,11 +217,25 @@ export default function ClienteDashboard() {
           color="green"
         />
         <MetricCard
+          title="CPF"
+          value={`$${cpf.toLocaleString('es-CL')}`}
+          subtitle="Costo por lead"
+          icon="💵"
+          color="orange"
+        />
+        <MetricCard
           title="ROAS"
           value={`${roas}x`}
-          subtitle={`Inversión: $${INVERSION_MENSUAL.toLocaleString('es-CL')}`}
+          subtitle={`Inversión: $${inversionMensual.toLocaleString('es-CL')}`}
           icon="📈"
           color="purple"
+        />
+        <MetricCard
+          title="ROA"
+          value={`${roa}%`}
+          subtitle="Retorno de inversión"
+          icon="📊"
+          color="green"
         />
       </div>
 

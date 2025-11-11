@@ -46,21 +46,44 @@ export interface AuthResponse {
   error?: string
 }
 
-// Función para autenticar usuario
-export function authenticateUser(username: string, password: string): AuthResponse {
+// Función para autenticar usuario (ahora async)
+export async function authenticateUser(username: string, password: string): Promise<AuthResponse> {
+  // PRIMERO: Intentar con usuarios hardcodeados (para que funcione siempre)
   const userCred = USERS.find(u => u.username === username && u.password === password)
 
   if (userCred) {
-    const { password: _, ...user } = userCred // Excluir password
+    const { password: _, ...user } = userCred
     return {
       success: true,
       user
     }
   }
 
-  return {
-    success: false,
-    error: 'Usuario o contraseña incorrectos'
+  // SEGUNDO: Si no está en hardcoded, intentar con base de datos
+  try {
+    const response = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password })
+    })
+
+    if (response.ok) {
+      const { user } = await response.json()
+      return {
+        success: true,
+        user
+      }
+    }
+
+    return {
+      success: false,
+      error: 'Usuario o contraseña incorrectos'
+    }
+  } catch (error) {
+    return {
+      success: false,
+      error: 'Usuario o contraseña incorrectos'
+    }
   }
 }
 
@@ -106,7 +129,7 @@ export function getUserPermissions(role: UserRole) {
 interface AuthContextType {
   user: User | null
   isAuthenticated: boolean
-  login: (username: string, password: string) => AuthResponse
+  login: (username: string, password: string) => Promise<AuthResponse>
   logout: () => void
   permissions: ReturnType<typeof getUserPermissions> | null
 }
@@ -130,8 +153,8 @@ export function SimpleAuthProvider({ children }: { children: ReactNode }) {
     }
   }, [])
 
-  const login = (username: string, password: string): AuthResponse => {
-    const response = authenticateUser(username, password)
+  const login = async (username: string, password: string): Promise<AuthResponse> => {
+    const response = await authenticateUser(username, password)
 
     if (response.success && response.user) {
       setUser(response.user)
