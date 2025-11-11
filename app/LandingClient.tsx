@@ -573,7 +573,7 @@ export default function LandingClient() {
             </div>
 
             <Link
-              href="/login"
+              href="/crm/login"
               className="inline-flex items-center gap-2 px-5 py-2.5 border-2 border-blue-600 text-blue-600 font-semibold hover:bg-blue-50 transition-all duration-300 rounded-lg"
               aria-label="Acceso clientes"
             >
