@@ -27,13 +27,14 @@ export default function CRMLayout({ children, title, authenticated = true, onRef
   const allNavItems = [
     { href: '/crm', label: 'CRM Admin', icon: '🏠', adminOnly: true },
     { href: '/crm/clientes', label: 'Clientes', icon: '👥', adminOnly: true },
+    { href: '/crm/cotizaciones', label: 'Cotizaciones', icon: '📄', adminOnly: true },
     { href: '/crm/usuarios', label: 'Usuarios', icon: '🔐', adminOnly: true },
-    { href: '/crm/cliente/dashboard', label: 'Dashboard', icon: '🏠', adminOnly: false },
-    { href: '/crm/cotizaciones', label: 'Cotizaciones', icon: '📄', adminOnly: false },
     { href: '/crm/plantillas', label: 'Plantillas', icon: '📋', adminOnly: true },
     { href: '/crm/metricas', label: 'Metricas', icon: '📊', adminOnly: true },
     { href: '/crm/configuracion', label: 'Configuracion', icon: '⚙️', adminOnly: true },
     { href: '/crm/integraciones', label: 'Integraciones', icon: '🔌', adminOnly: true },
+    { href: '/crm/cliente/dashboard', label: 'Dashboard', icon: '🏠', adminOnly: false },
+    { href: '/crm/cliente/cotizaciones', label: 'Cotizaciones', icon: '📄', adminOnly: false },
   ]
 
   const navItems = allNavItems.filter(item => isAdmin ? item.adminOnly : !item.adminOnly)
