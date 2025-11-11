@@ -10,6 +10,7 @@ export interface User {
   username: string
   role: UserRole
   nombre: string
+  cliente_id?: string  // UUID del cliente para filtrar datos
 }
 
 export interface UserCredentials extends User {
@@ -29,6 +30,13 @@ const USERS: UserCredentials[] = [
     password: 'Cliente@2025!',
     role: 'cliente',
     nombre: 'Cliente Demo'
+  },
+  {
+    username: 'myp',
+    password: 'mypcliente2025',
+    role: 'cliente',
+    nombre: 'M&P Marketing y Performance',
+    cliente_id: 'bf1b925e-8799-4db4-bd12-d12fbd106020'
   }
 ]
 

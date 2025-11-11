@@ -43,8 +43,13 @@ export default function ClienteDashboard() {
   const loadData = async () => {
     setLoading(true)
     try {
-      // En el futuro, esto se filtrará por el cliente_id del usuario
-      const resCotizaciones = await fetch('/api/crm/cotizaciones')
+      // Filtrar cotizaciones por cliente_id del usuario
+      let url = '/api/crm/cotizaciones'
+      if (user?.cliente_id) {
+        url += `?cliente_id=${user.cliente_id}`
+      }
+
+      const resCotizaciones = await fetch(url)
       const dataCotizaciones = await resCotizaciones.json()
 
       setCotizaciones(dataCotizaciones.cotizaciones || [])
