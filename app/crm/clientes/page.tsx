@@ -9,6 +9,7 @@ interface Cliente {
   id: string  // UUID
   nombre: string
   rubro?: string
+  inversion_mensual?: number
   activo: boolean
   creado_en: string
   leads?: { count: number }[]
@@ -21,7 +22,8 @@ export default function ClientesPage() {
   const [editingCliente, setEditingCliente] = useState<Cliente | null>(null)
   const [formData, setFormData] = useState({
     nombre: '',
-    rubro: ''
+    rubro: '',
+    inversion_mensual: ''
   })
 
   useEffect(() => {
@@ -46,13 +48,15 @@ export default function ClientesPage() {
       setEditingCliente(cliente)
       setFormData({
         nombre: cliente.nombre,
-        rubro: cliente.rubro || ''
+        rubro: cliente.rubro || '',
+        inversion_mensual: cliente.inversion_mensual ? String(cliente.inversion_mensual) : ''
       })
     } else {
       setEditingCliente(null)
       setFormData({
         nombre: '',
-        rubro: ''
+        rubro: '',
+        inversion_mensual: ''
       })
     }
     setShowModal(true)
@@ -63,7 +67,8 @@ export default function ClientesPage() {
     setEditingCliente(null)
     setFormData({
       nombre: '',
-      rubro: ''
+      rubro: '',
+      inversion_mensual: ''
     })
   }
 
@@ -76,6 +81,12 @@ export default function ClientesPage() {
     }
 
     try {
+      // Preparar datos para enviar
+      const dataToSend = {
+        ...formData,
+        inversion_mensual: formData.inversion_mensual ? parseFloat(formData.inversion_mensual) : null
+      }
+
       if (editingCliente) {
         // Actualizar cliente
         const res = await fetch('/api/crm/clientes', {
@@ -83,7 +94,7 @@ export default function ClientesPage() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             id: editingCliente.id,
-            ...formData
+            ...dataToSend
           })
         })
 
@@ -95,7 +106,7 @@ export default function ClientesPage() {
         const res = await fetch('/api/crm/clientes', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(formData)
+          body: JSON.stringify(dataToSend)
         })
 
         if (!res.ok) throw new Error('Error creando cliente')
@@ -194,6 +205,9 @@ export default function ClientesPage() {
                     Rubro
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Inversión Mensual
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Leads
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -213,6 +227,13 @@ export default function ClientesPage() {
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className="text-gray-900">
                         {cliente.rubro || '-'}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className="text-gray-900 font-semibold">
+                        {cliente.inversion_mensual
+                          ? `$${cliente.inversion_mensual.toLocaleString('es-CL')}`
+                          : '-'}
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
@@ -288,6 +309,24 @@ export default function ClientesPage() {
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                     placeholder="Ej: Marketing Digital, E-commerce, Servicios B2B"
                   />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Inversión Mensual (CLP)
+                  </label>
+                  <input
+                    type="number"
+                    value={formData.inversion_mensual}
+                    onChange={(e) => setFormData({ ...formData, inversion_mensual: e.target.value })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="5000000"
+                    min="0"
+                    step="1000"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    Inversión mensual en publicidad para calcular CPF y ROA
+                  </p>
                 </div>
               </div>
 
