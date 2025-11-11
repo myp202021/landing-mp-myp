@@ -19,12 +19,12 @@ export default function LoginPage() {
     }
   }, [isAuthenticated, router])
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
     setLoading(true)
 
-    const response = login(username, password)
+    const response = await login(username, password)
 
     if (response.success && response.user) {
       // Redirigir según el rol del usuario
@@ -126,8 +126,9 @@ export default function LoginPage() {
           {/* Info adicional */}
           <div className="mt-6 pt-6 border-t border-gray-200 space-y-2">
             <div className="text-xs text-gray-600 space-y-1">
-              <p><strong className="text-gray-800">Admin:</strong> usuario "admin" | contraseña "myp2025"</p>
-              <p><strong className="text-gray-800">Clientes:</strong> usar UUID + contraseña "mypcliente2025"</p>
+              <p><strong className="text-gray-800">Admin:</strong> usuario "admin" | contraseña "MYP@admin2025!"</p>
+              <p><strong className="text-gray-800">M&P:</strong> usuario "myp" | contraseña "mypcliente2025"</p>
+              <p><strong className="text-gray-800">Cliente Demo:</strong> usuario "cliente1" | contraseña "Cliente@2025!"</p>
             </div>
             <p className="text-center text-sm text-gray-600 pt-2">
               <a href="/" className="text-blue-600 hover:text-blue-800 font-semibold">
