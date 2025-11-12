@@ -107,15 +107,22 @@ export default function UsuariosPage() {
         setSuccess('Usuario actualizado exitosamente')
       } else {
         // Crear nuevo usuario
+        console.log('📤 Enviando datos:', formData)
         const res = await fetch('/api/crm/usuarios', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(formData)
         })
 
+        const responseData = await res.json()
+        console.log('📥 Respuesta del servidor:', responseData)
+
         if (!res.ok) {
-          const error = await res.json()
-          throw new Error(error.error || 'Error creando usuario')
+          // Mostrar el error detallado del servidor
+          const errorMsg = responseData.details
+            ? `${responseData.error}: ${responseData.details}`
+            : responseData.error || 'Error creando usuario'
+          throw new Error(errorMsg)
         }
 
         setSuccess('Usuario creado exitosamente')
