@@ -22,6 +22,7 @@ export default function PlantillasPage() {
   const [plantillas, setPlantillas] = useState<Plantilla[]>([])
   const [loading, setLoading] = useState(true)
   const [expandedId, setExpandedId] = useState<number | null>(null)
+  const [previewPlantilla, setPreviewPlantilla] = useState<Plantilla | null>(null)
 
   useEffect(() => {
     loadPlantillas()
@@ -181,6 +182,12 @@ export default function PlantillasPage() {
                     </div>
                     <div className="flex items-center gap-2 ml-4">
                       <button
+                        onClick={() => setPreviewPlantilla(plantilla)}
+                        className="px-4 py-2 text-purple-600 hover:bg-purple-50 rounded-lg transition text-sm font-semibold"
+                      >
+                        Vista Previa
+                      </button>
+                      <button
                         onClick={() => toggleExpand(plantilla.id)}
                         className="px-4 py-2 text-blue-600 hover:bg-blue-50 rounded-lg transition text-sm font-semibold"
                       >
@@ -243,6 +250,133 @@ export default function PlantillasPage() {
               </div>
             )
           })}
+        </div>
+      )}
+
+      {/* Modal de Vista Previa */}
+      {previewPlantilla && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto">
+          <div className="bg-white rounded-xl shadow-2xl max-w-4xl w-full my-8">
+            {/* Header del modal */}
+            <div className="bg-gradient-to-r from-purple-600 to-purple-700 text-white p-6 rounded-t-xl">
+              <div className="flex justify-between items-center">
+                <h2 className="text-2xl font-bold">Vista Previa: {previewPlantilla.nombre}</h2>
+                <button
+                  onClick={() => setPreviewPlantilla(null)}
+                  className="text-white hover:text-gray-200 text-3xl font-bold"
+                >
+                  ×
+                </button>
+              </div>
+            </div>
+
+            {/* Contenido del preview estilo cotización */}
+            <div className="p-8">
+              {/* Encabezado de la cotización */}
+              <div className="bg-gradient-to-r from-blue-900 to-blue-800 text-white p-8 rounded-t-lg mb-6">
+                <div className="grid grid-cols-2 gap-8">
+                  <div className="flex items-start gap-4">
+                    <img src="/logo-myp.png" alt="M&P Logo" className="h-16 w-16 object-contain" />
+                    <div>
+                      <h3 className="text-3xl font-bold mb-2">COTIZACIÓN</h3>
+                      <p className="text-blue-200">Müller y Pérez</p>
+                      <p className="text-blue-200 text-sm">Agencia de Marketing Digital</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-sm text-blue-200 mb-1">Proyecto</div>
+                    <div className="text-2xl font-bold">{previewPlantilla.nombre}</div>
+                    <div className="text-sm text-blue-200 mt-4">
+                      Vigencia: {previewPlantilla.vigencia_dias_default} días
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Información del proyecto */}
+              {previewPlantilla.descripcion && (
+                <div className="bg-gray-50 p-6 rounded-lg mb-6 border-l-4 border-blue-500">
+                  <h4 className="font-bold text-gray-900 mb-2">DESCRIPCIÓN</h4>
+                  <p className="text-gray-700">{previewPlantilla.descripcion}</p>
+                </div>
+              )}
+
+              {/* Tabla de items */}
+              <div className="mb-6">
+                <h4 className="text-lg font-bold text-gray-900 mb-4">DETALLE DE SERVICIOS</h4>
+                <div className="overflow-x-auto">
+                  <table className="min-w-full border border-gray-200">
+                    <thead className="bg-blue-600 text-white">
+                      <tr>
+                        <th className="px-4 py-3 text-left font-semibold">Descripción</th>
+                        <th className="px-4 py-3 text-center font-semibold">Cantidad</th>
+                        <th className="px-4 py-3 text-right font-semibold">Precio Unit.</th>
+                        <th className="px-4 py-3 text-right font-semibold">Total</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {previewPlantilla.items_default.map((item, idx) => (
+                        <tr key={idx} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                          <td className="px-4 py-3 border-t border-gray-200 text-gray-900">{item.descripcion}</td>
+                          <td className="px-4 py-3 border-t border-gray-200 text-center text-gray-900">{item.cantidad}</td>
+                          <td className="px-4 py-3 border-t border-gray-200 text-right text-gray-900">
+                            ${item.precio.toLocaleString('es-CL')}
+                          </td>
+                          <td className="px-4 py-3 border-t border-gray-200 text-right font-semibold text-gray-900">
+                            ${(item.cantidad * item.precio).toLocaleString('es-CL')}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              {/* Totales */}
+              <div className="flex justify-end mb-6">
+                <div className="w-80">
+                  <div className="flex justify-between py-2 border-b border-gray-200">
+                    <span className="text-gray-700">Subtotal:</span>
+                    <span className="font-semibold text-gray-900">
+                      ${calcularTotal(previewPlantilla.items_default).toLocaleString('es-CL')}
+                    </span>
+                  </div>
+                  {previewPlantilla.descuento_default > 0 && (
+                    <div className="flex justify-between py-2 border-b border-gray-200">
+                      <span className="text-gray-700">Descuento ({previewPlantilla.descuento_default}%):</span>
+                      <span className="text-red-600 font-semibold">
+                        -${((calcularTotal(previewPlantilla.items_default) * previewPlantilla.descuento_default) / 100).toLocaleString('es-CL')}
+                      </span>
+                    </div>
+                  )}
+                  <div className="flex justify-between py-3 bg-blue-50 px-4 rounded-lg mt-2">
+                    <span className="text-lg font-bold text-blue-900">TOTAL:</span>
+                    <span className="text-lg font-bold text-blue-900">
+                      ${(calcularTotal(previewPlantilla.items_default) - (calcularTotal(previewPlantilla.items_default) * previewPlantilla.descuento_default / 100)).toLocaleString('es-CL')} CLP
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Notas */}
+              {previewPlantilla.notas_default && (
+                <div className="bg-yellow-50 p-6 rounded-lg border-l-4 border-yellow-400">
+                  <h4 className="font-bold text-gray-900 mb-3">NOTAS ADICIONALES</h4>
+                  <p className="text-gray-700 text-sm whitespace-pre-line">{previewPlantilla.notas_default}</p>
+                </div>
+              )}
+            </div>
+
+            {/* Footer del modal */}
+            <div className="bg-gray-100 p-6 rounded-b-xl border-t border-gray-200">
+              <button
+                onClick={() => setPreviewPlantilla(null)}
+                className="w-full px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition font-semibold shadow-lg"
+              >
+                Cerrar Vista Previa
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </CRMLayout>

@@ -27,82 +27,96 @@ interface CotizacionData {
 export function generarPDFCotizacion(cotizacion: CotizacionData) {
   const doc = new jsPDF()
 
-  // Colores M&P
+  // Colores M&P - Usando colores del template HTML (#4A90E2)
+  const azulPrincipal = {r: 74, g: 144, b: 226} // #4A90E2
   const azulOscuro = {r: 30, g: 58, b: 138} // #1E3A8A
-  const azulClaro = {r: 59, g: 130, b: 246} // #3B82F6
-  const grisTexto = {r: 55, g: 65, b: 81} // #374151
+  const grisTexto = {r: 51, g: 51, b: 51} // #333
+  const grisFondo = {r: 248, g: 249, b: 250} // #f8f9fa
 
   let yPos = 20
 
-  // HEADER - Logo y datos de empresa
-  doc.setFillColor(azulOscuro.r, azulOscuro.g, azulOscuro.b)
-  doc.rect(0, 0, 210, 40, 'F')
+  // HEADER - Fondo blanco con borde azul (estilo más profesional)
+  doc.setFillColor(255, 255, 255)
+  doc.rect(0, 0, 210, 50, 'F')
 
-  doc.setTextColor(255, 255, 255)
-  doc.setFontSize(24)
+  // Línea decorativa superior
+  doc.setFillColor(azulPrincipal.r, azulPrincipal.g, azulPrincipal.b)
+  doc.rect(0, 0, 210, 3, 'F')
+
+  // Título principal
+  doc.setTextColor(azulPrincipal.r, azulPrincipal.g, azulPrincipal.b)
+  doc.setFontSize(28)
   doc.setFont('helvetica', 'bold')
-  doc.text('MULLER & PÉREZ', 15, 20)
+  doc.text('PROPUESTA COMERCIAL', 105, 20, { align: 'center' })
+
+  doc.setFontSize(16)
+  doc.setTextColor(grisTexto.r, grisTexto.g, grisTexto.b)
+  doc.text('MÜLLER & PÉREZ', 105, 30, { align: 'center' })
 
   doc.setFontSize(10)
   doc.setFont('helvetica', 'normal')
-  doc.text('Marketing Digital & Desarrollo Web', 15, 27)
-  doc.text('www.mulleryperez.cl', 15, 32)
+  doc.text('Marketing Digital & Desarrollo Web', 105, 36, { align: 'center' })
+  doc.text('www.mulleryperez.cl', 105, 42, { align: 'center' })
 
-  // Número de cotización (alineado a la derecha)
-  doc.setFontSize(12)
-  doc.setFont('helvetica', 'bold')
-  doc.text(`COTIZACIÓN #${cotizacion.id}`, 210 - 15, 20, { align: 'right' })
+  const fecha = new Date(cotizacion.creado_en).toLocaleDateString('es-CL')
 
+  yPos = 60
+
+  // Información de la cotización (estilo meta-info)
+  doc.setTextColor(102, 102, 102) // #666
   doc.setFontSize(9)
   doc.setFont('helvetica', 'normal')
-  const fecha = new Date(cotizacion.creado_en).toLocaleDateString('es-CL')
-  doc.text(`Fecha: ${fecha}`, 210 - 15, 27, { align: 'right' })
 
+  const metaX = 195
+  doc.text(`N°: ${cotizacion.id}`, metaX, yPos, { align: 'right' })
+  doc.text(`Fecha: ${fecha}`, metaX, yPos + 5, { align: 'right' })
   if (cotizacion.vigencia_dias) {
     const fechaVencimiento = new Date(cotizacion.creado_en)
     fechaVencimiento.setDate(fechaVencimiento.getDate() + cotizacion.vigencia_dias)
-    doc.text(`Válida hasta: ${fechaVencimiento.toLocaleDateString('es-CL')}`, 210 - 15, 32, { align: 'right' })
+    doc.text(`Válida hasta: ${fechaVencimiento.toLocaleDateString('es-CL')}`, metaX, yPos + 10, { align: 'right' })
   }
 
-  yPos = 50
+  yPos += 20
 
-  // DATOS DEL CLIENTE
+  // DATOS DEL CLIENTE - Estilo caja (client-box)
+  doc.setFillColor(grisFondo.r, grisFondo.g, grisFondo.b)
+  doc.rect(15, yPos, 180, 25, 'F')
+
+  // Borde izquierdo azul
+  doc.setFillColor(azulPrincipal.r, azulPrincipal.g, azulPrincipal.b)
+  doc.rect(15, yPos, 4, 25, 'F')
+
   doc.setTextColor(grisTexto.r, grisTexto.g, grisTexto.b)
-  doc.setFontSize(12)
-  doc.setFont('helvetica', 'bold')
-  doc.text('DATOS DEL CLIENTE', 15, yPos)
-
-  yPos += 8
   doc.setFontSize(10)
-  doc.setFont('helvetica', 'normal')
-
-  if (cotizacion.cliente_nombre) {
-    doc.text(`Cliente: ${cotizacion.cliente_nombre}`, 15, yPos)
-    yPos += 6
-  }
-
-  if (cotizacion.cliente_email) {
-    doc.text(`Email: ${cotizacion.cliente_email}`, 15, yPos)
-    yPos += 6
-  }
-
-  if (cotizacion.cliente_telefono) {
-    doc.text(`Teléfono: ${cotizacion.cliente_telefono}`, 15, yPos)
-    yPos += 6
-  }
-
-  yPos += 5
-
-  // NOMBRE DEL PROYECTO
-  doc.setFillColor(azulClaro.r, azulClaro.g, azulClaro.b)
-  doc.rect(15, yPos, 180, 10, 'F')
-
-  doc.setTextColor(255, 255, 255)
-  doc.setFontSize(12)
   doc.setFont('helvetica', 'bold')
-  doc.text(cotizacion.nombre_proyecto.toUpperCase(), 20, yPos + 7)
+  doc.text('CLIENTE:', 22, yPos + 8)
 
-  yPos += 15
+  doc.setFont('helvetica', 'normal')
+  let clienteY = yPos + 8
+  if (cotizacion.cliente_nombre) {
+    doc.text(cotizacion.cliente_nombre, 45, clienteY)
+  }
+  if (cotizacion.cliente_email) {
+    doc.text(`Email: ${cotizacion.cliente_email}`, 22, clienteY + 6)
+  }
+  if (cotizacion.cliente_telefono) {
+    doc.text(`Tel: ${cotizacion.cliente_telefono}`, 22, clienteY + 12)
+  }
+
+  yPos += 35
+
+  // NOMBRE DEL PROYECTO - Título con estilo section-title
+  doc.setTextColor(azulPrincipal.r, azulPrincipal.g, azulPrincipal.b)
+  doc.setFontSize(14)
+  doc.setFont('helvetica', 'bold')
+  doc.text(cotizacion.nombre_proyecto.toUpperCase(), 15, yPos)
+
+  // Línea decorativa debajo del título
+  doc.setDrawColor(azulPrincipal.r, azulPrincipal.g, azulPrincipal.b)
+  doc.setLineWidth(1)
+  doc.line(15, yPos + 2, 195, yPos + 2)
+
+  yPos += 10
 
   // TABLA DE ITEMS
   const tableData = cotizacion.items.map((item: CotizacionItem) => {
@@ -121,15 +135,18 @@ export function generarPDFCotizacion(cotizacion: CotizacionData) {
     body: tableData,
     theme: 'grid',
     headStyles: {
-      fillColor: [azulOscuro.r, azulOscuro.g, azulOscuro.b],
+      fillColor: [azulPrincipal.r, azulPrincipal.g, azulPrincipal.b],
       textColor: [255, 255, 255],
       fontSize: 10,
       fontStyle: 'bold',
-      halign: 'center'
+      halign: 'left'
     },
     bodyStyles: {
       textColor: [grisTexto.r, grisTexto.g, grisTexto.b],
       fontSize: 9
+    },
+    alternateRowStyles: {
+      fillColor: [grisFondo.r, grisFondo.g, grisFondo.b]
     },
     columnStyles: {
       0: { cellWidth: 100 },
@@ -167,10 +184,13 @@ export function generarPDFCotizacion(cotizacion: CotizacionData) {
   doc.line(xLabel - 65, yPos, xValor, yPos)
   yPos += 7
 
-  // TOTAL
+  // TOTAL - Resaltado
+  doc.setFillColor(227, 242, 253) // #e3f2fd
+  doc.rect(xLabel - 65, yPos - 5, 70, 10, 'F')
+
   doc.setFontSize(14)
   doc.setFont('helvetica', 'bold')
-  doc.setTextColor(azulOscuro.r, azulOscuro.g, azulOscuro.b)
+  doc.setTextColor(azulPrincipal.r, azulPrincipal.g, azulPrincipal.b)
   doc.text('TOTAL:', xLabel, yPos, { align: 'right' })
   doc.text(`$${cotizacion.total.toLocaleString('es-CL')} ${cotizacion.moneda || 'CLP'}`, xValor, yPos, { align: 'right' })
 
@@ -192,16 +212,25 @@ export function generarPDFCotizacion(cotizacion: CotizacionData) {
     yPos += (lineasNotas.length * 5) + 10
   }
 
-  // FOOTER
+  // FOOTER - Estilo profesional
   const footerY = 280
-  doc.setFillColor(245, 245, 245)
-  doc.rect(0, footerY, 210, 17, 'F')
 
-  doc.setTextColor(grisTexto.r, grisTexto.g, grisTexto.b)
+  // Línea decorativa azul
+  doc.setFillColor(azulPrincipal.r, azulPrincipal.g, azulPrincipal.b)
+  doc.rect(0, footerY, 210, 3, 'F')
+
+  // Fondo gris claro
+  doc.setFillColor(248, 249, 250)
+  doc.rect(0, footerY + 3, 210, 14, 'F')
+
+  doc.setTextColor(102, 102, 102) // #666
   doc.setFontSize(8)
+  doc.setFont('helvetica', 'italic')
+  doc.text('"Menos improvisación. Más performance."', 105, footerY + 8, { align: 'center' })
+
   doc.setFont('helvetica', 'normal')
-  doc.text('Muller & Pérez - Marketing Digital', 105, footerY + 6, { align: 'center' })
-  doc.text('contacto@mulleryperez.cl | +56 9 XXXX XXXX | www.mulleryperez.cl', 105, footerY + 11, { align: 'center' })
+  doc.setFontSize(7)
+  doc.text('Müller & Pérez - Marketing Digital | contacto@mulleryperez.cl | www.mulleryperez.cl', 105, footerY + 13, { align: 'center' })
 
   // Guardar PDF
   const nombreArchivo = `Cotizacion_${cotizacion.id}_${cotizacion.nombre_proyecto.replace(/\s+/g, '_')}.pdf`

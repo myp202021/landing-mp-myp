@@ -341,10 +341,13 @@ export default function CotizacionPage() {
         {/* Encabezado de la cotizacion */}
         <div className="bg-gradient-to-r from-blue-900 to-blue-800 text-white p-8 rounded-t-lg print:rounded-none">
           <div className="grid grid-cols-2 gap-8">
-            <div>
-              <h2 className="text-3xl font-bold mb-2">COTIZACION</h2>
-              <p className="text-blue-200">Muller y Perez</p>
-              <p className="text-blue-200 text-sm">Agencia de Marketing Digital</p>
+            <div className="flex items-start gap-4">
+              <img src="/logo-myp.png" alt="M&P Logo" className="h-16 w-16 object-contain" />
+              <div>
+                <h2 className="text-3xl font-bold mb-2">COTIZACION</h2>
+                <p className="text-blue-200">Muller y Perez</p>
+                <p className="text-blue-200 text-sm">Agencia de Marketing Digital</p>
+              </div>
             </div>
             <div className="text-right">
               <div className="text-sm text-blue-200 mb-1">N° Cotizacion</div>
