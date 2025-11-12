@@ -10,6 +10,8 @@ interface Cliente {
   nombre: string
   rubro?: string
   inversion_mensual?: number
+  zapier_webhook_url?: string
+  zapier_activo?: boolean
   activo: boolean
   creado_en: string
   leads?: { count: number }[]
@@ -23,7 +25,9 @@ export default function ClientesPage() {
   const [formData, setFormData] = useState({
     nombre: '',
     rubro: '',
-    inversion_mensual: ''
+    inversion_mensual: '',
+    zapier_webhook_url: '',
+    zapier_activo: false
   })
 
   useEffect(() => {
@@ -49,14 +53,18 @@ export default function ClientesPage() {
       setFormData({
         nombre: cliente.nombre,
         rubro: cliente.rubro || '',
-        inversion_mensual: cliente.inversion_mensual ? String(cliente.inversion_mensual) : ''
+        inversion_mensual: cliente.inversion_mensual ? String(cliente.inversion_mensual) : '',
+        zapier_webhook_url: cliente.zapier_webhook_url || '',
+        zapier_activo: cliente.zapier_activo || false
       })
     } else {
       setEditingCliente(null)
       setFormData({
         nombre: '',
         rubro: '',
-        inversion_mensual: ''
+        inversion_mensual: '',
+        zapier_webhook_url: '',
+        zapier_activo: false
       })
     }
     setShowModal(true)
@@ -68,7 +76,9 @@ export default function ClientesPage() {
     setFormData({
       nombre: '',
       rubro: '',
-      inversion_mensual: ''
+      inversion_mensual: '',
+      zapier_webhook_url: '',
+      zapier_activo: false
     })
   }
 
@@ -83,8 +93,11 @@ export default function ClientesPage() {
     try {
       // Preparar datos para enviar
       const dataToSend = {
-        ...formData,
-        inversion_mensual: formData.inversion_mensual ? parseFloat(formData.inversion_mensual) : null
+        nombre: formData.nombre,
+        rubro: formData.rubro,
+        inversion_mensual: formData.inversion_mensual ? parseFloat(formData.inversion_mensual) : null,
+        zapier_webhook_url: formData.zapier_webhook_url || null,
+        zapier_activo: formData.zapier_activo
       }
 
       if (editingCliente) {
@@ -328,6 +341,72 @@ export default function ClientesPage() {
                     Inversión mensual en publicidad para calcular CPF y ROA
                   </p>
                 </div>
+
+                {/* Configuración de Zapier/Meta Leads */}
+                {editingCliente && (
+                  <>
+                    <div className="border-t border-gray-200 pt-4">
+                      <h4 className="text-sm font-semibold text-gray-900 mb-3">Integración Zapier / Meta Leads</h4>
+
+                      <div className="mb-3 bg-blue-50 p-3 rounded-md">
+                        <p className="text-xs font-medium text-blue-900 mb-1">URL del Webhook para Zapier:</p>
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="text"
+                            value={`https://www.mulleryperez.cl/api/webhooks/meta-leads?cliente_id=${editingCliente.id}`}
+                            readOnly
+                            className="flex-1 px-2 py-1 text-xs font-mono bg-white border border-blue-300 rounded"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => {
+                              navigator.clipboard.writeText(`https://www.mulleryperez.cl/api/webhooks/meta-leads?cliente_id=${editingCliente.id}`)
+                              alert('URL copiada al portapapeles')
+                            }}
+                            className="px-3 py-1 bg-blue-600 text-white text-xs rounded hover:bg-blue-700"
+                          >
+                            Copiar
+                          </button>
+                        </div>
+                        <p className="text-xs text-blue-700 mt-1">
+                          Pega esta URL en Zapier como destino del Webhook POST
+                        </p>
+                      </div>
+
+                      <div className="mb-3">
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          URL de Retorno (opcional)
+                        </label>
+                        <input
+                          type="url"
+                          value={formData.zapier_webhook_url}
+                          onChange={(e) => setFormData({ ...formData, zapier_webhook_url: e.target.value })}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 text-sm"
+                          placeholder="https://hooks.zapier.com/hooks/catch/..."
+                        />
+                        <p className="text-xs text-gray-500 mt-1">
+                          URL del Zap creado (para referencia interna)
+                        </p>
+                      </div>
+
+                      <div className="flex items-center">
+                        <input
+                          type="checkbox"
+                          id="zapier_activo"
+                          checked={formData.zapier_activo}
+                          onChange={(e) => setFormData({ ...formData, zapier_activo: e.target.checked })}
+                          className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                        />
+                        <label htmlFor="zapier_activo" className="ml-2 block text-sm text-gray-900">
+                          Activar integración de Zapier
+                        </label>
+                      </div>
+                      <p className="text-xs text-gray-500 mt-1 ml-6">
+                        Debe estar activo para recibir leads desde Meta Ads
+                      </p>
+                    </div>
+                  </>
+                )}
               </div>
 
               <div className="mt-6 flex gap-3">
