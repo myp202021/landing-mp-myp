@@ -133,7 +133,7 @@ export default function UsuariosPage() {
         username: '',
         password: '',
         nombre: '',
-        role: 'cliente',
+        rol: 'cliente',
         cliente_id: ''
       })
       setEditingUser(null)
