@@ -253,39 +253,39 @@ export default function PlantillasPage() {
         </div>
       )}
 
-      {/* Modal de Vista Previa */}
+      {/* Modal de Vista Previa - MEJORADO */}
       {previewPlantilla && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto">
-          <div className="bg-white rounded-xl shadow-2xl max-w-4xl w-full my-8">
-            {/* Header del modal */}
-            <div className="bg-gradient-to-r from-purple-600 to-purple-700 text-white p-6 rounded-t-xl">
+        <div className="fixed inset-0 bg-black bg-opacity-60 flex items-start justify-center z-50 overflow-y-auto">
+          <div className="bg-white rounded-xl shadow-2xl max-w-5xl w-full my-8 mx-4 max-h-[90vh] overflow-hidden flex flex-col">
+            {/* Header del modal - FIJO */}
+            <div className="bg-gradient-to-r from-purple-600 to-purple-700 text-white p-6 flex-shrink-0">
               <div className="flex justify-between items-center">
-                <h2 className="text-2xl font-bold">Vista Previa: {previewPlantilla.nombre}</h2>
+                <h2 className="text-2xl font-bold truncate mr-4">Vista Previa: {previewPlantilla.nombre}</h2>
                 <button
                   onClick={() => setPreviewPlantilla(null)}
-                  className="text-white hover:text-gray-200 text-3xl font-bold"
+                  className="text-white hover:text-gray-200 text-3xl font-bold leading-none flex-shrink-0"
                 >
                   ×
                 </button>
               </div>
             </div>
 
-            {/* Contenido del preview estilo cotización */}
-            <div className="p-8">
+            {/* Contenido del preview estilo cotización - CON SCROLL */}
+            <div className="p-6 md:p-8 overflow-y-auto flex-1">
               {/* Encabezado de la cotización */}
-              <div className="bg-gradient-to-r from-blue-900 to-blue-800 text-white p-8 rounded-t-lg mb-6">
-                <div className="grid grid-cols-2 gap-8">
+              <div className="bg-gradient-to-r from-blue-900 to-blue-800 text-white p-6 md:p-8 rounded-lg mb-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
                   <div className="flex items-start gap-4">
-                    <img src="/logo-myp.png" alt="M&P Logo" className="h-16 w-16 object-contain" />
+                    <img src="/logo-myp.png" alt="M&P Logo" className="h-14 w-14 md:h-16 md:w-16 object-contain flex-shrink-0" />
                     <div>
-                      <h3 className="text-3xl font-bold mb-2">COTIZACIÓN</h3>
-                      <p className="text-blue-200">Müller y Pérez</p>
-                      <p className="text-blue-200 text-sm">Agencia de Marketing Digital</p>
+                      <h3 className="text-2xl md:text-3xl font-bold mb-2">COTIZACIÓN</h3>
+                      <p className="text-blue-200 text-sm md:text-base">Müller y Pérez</p>
+                      <p className="text-blue-200 text-xs md:text-sm">Agencia de Marketing Digital</p>
                     </div>
                   </div>
-                  <div className="text-right">
+                  <div className="text-left md:text-right">
                     <div className="text-sm text-blue-200 mb-1">Proyecto</div>
-                    <div className="text-2xl font-bold">{previewPlantilla.nombre}</div>
+                    <div className="text-xl md:text-2xl font-bold break-words">{previewPlantilla.nombre}</div>
                     <div className="text-sm text-blue-200 mt-4">
                       Vigencia: {previewPlantilla.vigencia_dias_default} días
                     </div>
@@ -295,63 +295,65 @@ export default function PlantillasPage() {
 
               {/* Información del proyecto */}
               {previewPlantilla.descripcion && (
-                <div className="bg-gray-50 p-6 rounded-lg mb-6 border-l-4 border-blue-500">
-                  <h4 className="font-bold text-gray-900 mb-2">DESCRIPCIÓN</h4>
-                  <p className="text-gray-700">{previewPlantilla.descripcion}</p>
+                <div className="bg-gray-50 p-4 md:p-6 rounded-lg mb-6 border-l-4 border-blue-500">
+                  <h4 className="font-bold text-gray-900 mb-2 text-sm md:text-base">DESCRIPCIÓN</h4>
+                  <p className="text-gray-700 text-sm md:text-base break-words">{previewPlantilla.descripcion}</p>
                 </div>
               )}
 
-              {/* Tabla de items */}
+              {/* Tabla de items - RESPONSIVE */}
               <div className="mb-6">
-                <h4 className="text-lg font-bold text-gray-900 mb-4">DETALLE DE SERVICIOS</h4>
-                <div className="overflow-x-auto">
-                  <table className="min-w-full border border-gray-200">
-                    <thead className="bg-blue-600 text-white">
-                      <tr>
-                        <th className="px-4 py-3 text-left font-semibold">Descripción</th>
-                        <th className="px-4 py-3 text-center font-semibold">Cantidad</th>
-                        <th className="px-4 py-3 text-right font-semibold">Precio Unit.</th>
-                        <th className="px-4 py-3 text-right font-semibold">Total</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {previewPlantilla.items_default.map((item, idx) => (
-                        <tr key={idx} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                          <td className="px-4 py-3 border-t border-gray-200 text-gray-900">{item.descripcion}</td>
-                          <td className="px-4 py-3 border-t border-gray-200 text-center text-gray-900">{item.cantidad}</td>
-                          <td className="px-4 py-3 border-t border-gray-200 text-right text-gray-900">
-                            ${item.precio.toLocaleString('es-CL')}
-                          </td>
-                          <td className="px-4 py-3 border-t border-gray-200 text-right font-semibold text-gray-900">
-                            ${(item.cantidad * item.precio).toLocaleString('es-CL')}
-                          </td>
+                <h4 className="text-base md:text-lg font-bold text-gray-900 mb-4">DETALLE DE SERVICIOS</h4>
+                <div className="overflow-x-auto -mx-2 md:mx-0">
+                  <div className="inline-block min-w-full align-middle px-2 md:px-0">
+                    <table className="min-w-full border border-gray-200">
+                      <thead className="bg-blue-600 text-white">
+                        <tr>
+                          <th className="px-3 md:px-4 py-3 text-left font-semibold text-sm md:text-base">Descripción</th>
+                          <th className="px-3 md:px-4 py-3 text-center font-semibold text-sm md:text-base whitespace-nowrap">Cant.</th>
+                          <th className="px-3 md:px-4 py-3 text-right font-semibold text-sm md:text-base whitespace-nowrap">Precio Unit.</th>
+                          <th className="px-3 md:px-4 py-3 text-right font-semibold text-sm md:text-base">Total</th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                      </thead>
+                      <tbody>
+                        {previewPlantilla.items_default.map((item, idx) => (
+                          <tr key={idx} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                            <td className="px-3 md:px-4 py-3 border-t border-gray-200 text-gray-900 text-sm break-words max-w-xs">{item.descripcion}</td>
+                            <td className="px-3 md:px-4 py-3 border-t border-gray-200 text-center text-gray-900 text-sm whitespace-nowrap">{item.cantidad}</td>
+                            <td className="px-3 md:px-4 py-3 border-t border-gray-200 text-right text-gray-900 text-sm whitespace-nowrap">
+                              ${item.precio.toLocaleString('es-CL')}
+                            </td>
+                            <td className="px-3 md:px-4 py-3 border-t border-gray-200 text-right font-semibold text-gray-900 text-sm whitespace-nowrap">
+                              ${(item.cantidad * item.precio).toLocaleString('es-CL')}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
 
-              {/* Totales */}
+              {/* Totales - RESPONSIVE */}
               <div className="flex justify-end mb-6">
-                <div className="w-80">
+                <div className="w-full md:w-96">
                   <div className="flex justify-between py-2 border-b border-gray-200">
-                    <span className="text-gray-700">Subtotal:</span>
-                    <span className="font-semibold text-gray-900">
+                    <span className="text-gray-700 text-sm md:text-base">Subtotal:</span>
+                    <span className="font-semibold text-gray-900 text-sm md:text-base">
                       ${calcularTotal(previewPlantilla.items_default).toLocaleString('es-CL')}
                     </span>
                   </div>
                   {previewPlantilla.descuento_default > 0 && (
                     <div className="flex justify-between py-2 border-b border-gray-200">
-                      <span className="text-gray-700">Descuento ({previewPlantilla.descuento_default}%):</span>
-                      <span className="text-red-600 font-semibold">
+                      <span className="text-gray-700 text-sm md:text-base">Descuento ({previewPlantilla.descuento_default}%):</span>
+                      <span className="text-red-600 font-semibold text-sm md:text-base">
                         -${((calcularTotal(previewPlantilla.items_default) * previewPlantilla.descuento_default) / 100).toLocaleString('es-CL')}
                       </span>
                     </div>
                   )}
                   <div className="flex justify-between py-3 bg-blue-50 px-4 rounded-lg mt-2">
-                    <span className="text-lg font-bold text-blue-900">TOTAL:</span>
-                    <span className="text-lg font-bold text-blue-900">
+                    <span className="text-base md:text-lg font-bold text-blue-900">TOTAL:</span>
+                    <span className="text-base md:text-lg font-bold text-blue-900">
                       ${(calcularTotal(previewPlantilla.items_default) - (calcularTotal(previewPlantilla.items_default) * previewPlantilla.descuento_default / 100)).toLocaleString('es-CL')} CLP
                     </span>
                   </div>
@@ -360,15 +362,15 @@ export default function PlantillasPage() {
 
               {/* Notas */}
               {previewPlantilla.notas_default && (
-                <div className="bg-yellow-50 p-6 rounded-lg border-l-4 border-yellow-400">
-                  <h4 className="font-bold text-gray-900 mb-3">NOTAS ADICIONALES</h4>
-                  <p className="text-gray-700 text-sm whitespace-pre-line">{previewPlantilla.notas_default}</p>
+                <div className="bg-yellow-50 p-4 md:p-6 rounded-lg border-l-4 border-yellow-400">
+                  <h4 className="font-bold text-gray-900 mb-3 text-sm md:text-base">NOTAS ADICIONALES</h4>
+                  <p className="text-gray-700 text-xs md:text-sm whitespace-pre-line break-words">{previewPlantilla.notas_default}</p>
                 </div>
               )}
             </div>
 
-            {/* Footer del modal */}
-            <div className="bg-gray-100 p-6 rounded-b-xl border-t border-gray-200">
+            {/* Footer del modal - FIJO */}
+            <div className="bg-gray-100 p-4 md:p-6 border-t border-gray-200 flex-shrink-0">
               <button
                 onClick={() => setPreviewPlantilla(null)}
                 className="w-full px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition font-semibold shadow-lg"
