@@ -47,6 +47,7 @@ export default function NuevaCotizacionPage() {
 
   const [clienteId, setClienteId] = useState('')
   const [leadId, setLeadId] = useState<number | null>(null)
+  const [initialLoadDone, setInitialLoadDone] = useState(false)
   const [nombreProyecto, setNombreProyecto] = useState('')
   const [clienteNombre, setClienteNombre] = useState('')
   const [clienteEmail, setClienteEmail] = useState('')
@@ -65,6 +66,25 @@ export default function NuevaCotizacionPage() {
   useEffect(() => {
     loadData()
   }, [])
+
+  // Cargar parámetros de URL cuando los datos estén listos
+  useEffect(() => {
+    if (!initialLoadDone && leads.length > 0 && clientes.length > 0) {
+      const searchParams = new URLSearchParams(window.location.search)
+      const urlLeadId = searchParams.get('lead_id')
+      const urlClienteId = searchParams.get('cliente_id')
+
+      if (urlClienteId) {
+        setClienteId(urlClienteId)
+      }
+
+      if (urlLeadId) {
+        setLeadId(parseInt(urlLeadId))
+      }
+
+      setInitialLoadDone(true)
+    }
+  }, [leads, clientes, initialLoadDone])
 
   useEffect(() => {
     if (clienteId) {

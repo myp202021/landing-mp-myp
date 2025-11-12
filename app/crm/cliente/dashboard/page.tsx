@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useSimpleAuth } from '@/lib/auth/simple-auth'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import CRMLayout from '@/app/components/crm/CRMLayout'
 import MetricCard from '@/app/components/crm/MetricCard'
 import Button from '@/app/components/crm/Button'
@@ -38,6 +39,8 @@ export default function ClienteDashboard() {
   const [inversionMensual, setInversionMensual] = useState<number>(0)
   const [loading, setLoading] = useState(true)
   const [editingLead, setEditingLead] = useState<Lead | null>(null)
+  const [leadHistorial, setLeadHistorial] = useState<any[]>([])
+  const [loadingHistorial, setLoadingHistorial] = useState(false)
 
   // Redirigir si no es cliente
   useEffect(() => {
@@ -104,8 +107,24 @@ export default function ClienteDashboard() {
     return `${dias}d ${horasRestantes}h`
   }
 
+  const loadLeadHistorial = async (leadId: number) => {
+    setLoadingHistorial(true)
+    try {
+      const res = await fetch(`/api/crm/leads/historial?lead_id=${leadId}`)
+      const data = await res.json()
+      setLeadHistorial(data.historial || [])
+    } catch (error) {
+      console.error('Error cargando historial:', error)
+      setLeadHistorial([])
+    }
+    setLoadingHistorial(false)
+  }
+
   const updateLead = async (leadId: number, updates: any) => {
     try {
+      // Obtener lead actual para comparar cambios
+      const leadActual = editingLead
+
       const res = await fetch('/api/crm/leads', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
@@ -113,6 +132,46 @@ export default function ClienteDashboard() {
       })
 
       if (res.ok) {
+        // Registrar cambios en historial
+        const cambios = []
+        if (leadActual) {
+          if (updates.contactado !== undefined && updates.contactado !== leadActual.contactado) {
+            cambios.push({
+              campo: 'contactado',
+              antes: leadActual.contactado ? 'Sí' : 'No',
+              despues: updates.contactado ? 'Sí' : 'No'
+            })
+          }
+          if (updates.vendido !== undefined && updates.vendido !== leadActual.vendido) {
+            cambios.push({
+              campo: 'vendido',
+              antes: leadActual.vendido ? 'Sí' : 'No',
+              despues: updates.vendido ? 'Sí' : 'No'
+            })
+          }
+          if (updates.monto_vendido !== undefined && updates.monto_vendido !== leadActual.monto_vendido) {
+            cambios.push({
+              campo: 'monto_vendido',
+              antes: leadActual.monto_vendido || 0,
+              despues: updates.monto_vendido || 0
+            })
+          }
+        }
+
+        // Guardar en historial (no esperar respuesta, continuar aunque falle)
+        if (cambios.length > 0) {
+          fetch('/api/crm/leads/historial', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              lead_id: leadId,
+              usuario: user?.nombre || 'Cliente',
+              accion: 'actualizar',
+              descripcion: `Cambios: ${cambios.map(c => `${c.campo} (${c.antes} → ${c.despues})`).join(', ')}`
+            })
+          }).catch(err => console.error('Error guardando historial:', err))
+        }
+
         await loadData()
         setEditingLead(null)
         alert('Lead actualizado exitosamente')
@@ -186,6 +245,58 @@ export default function ClienteDashboard() {
         <p className="text-gray-600 mt-2">
           Aquí puedes ver y gestionar tus leads de marketing
         </p>
+      </div>
+
+      {/* Inversión Mensual */}
+      <div className="bg-gradient-to-r from-orange-50 to-amber-50 border border-orange-200 rounded-xl p-6 mb-8 shadow-sm">
+        <div className="flex items-center justify-between">
+          <div className="flex-1">
+            <label className="block text-sm font-semibold text-orange-900 mb-2">
+              💰 Inversión Mensual en Publicidad
+            </label>
+            <p className="text-xs text-orange-700 mb-3">
+              Esta inversión se usa para calcular CPF, ROAS y ROA. Actualízala mensualmente.
+            </p>
+            <div className="flex items-center gap-3">
+              <span className="text-gray-700 font-medium">$</span>
+              <input
+                type="number"
+                value={inversionMensual}
+                onChange={(e) => setInversionMensual(parseFloat(e.target.value) || 0)}
+                className="px-4 py-2 border-2 border-orange-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent text-gray-900 font-semibold w-48"
+                placeholder="0"
+                min="0"
+              />
+              <button
+                onClick={async () => {
+                  if (!user?.cliente_id) return
+                  try {
+                    const res = await fetch('/api/crm/clientes', {
+                      method: 'PATCH',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({
+                        id: user.cliente_id,
+                        inversion_mensual: inversionMensual
+                      })
+                    })
+                    if (res.ok) {
+                      alert('✅ Inversión mensual actualizada')
+                      loadData()
+                    } else {
+                      alert('❌ Error actualizando inversión')
+                    }
+                  } catch (error) {
+                    console.error('Error:', error)
+                    alert('❌ Error actualizando inversión')
+                  }
+                }}
+                className="px-6 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition font-semibold shadow-md"
+              >
+                Guardar
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Métricas */}
@@ -337,11 +448,20 @@ export default function ClienteDashboard() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
                       <button
-                        onClick={() => setEditingLead(lead)}
+                        onClick={() => {
+                          setEditingLead(lead)
+                          loadLeadHistorial(lead.id)
+                        }}
                         className="text-blue-600 hover:text-blue-700 font-medium"
                       >
                         Editar
                       </button>
+                      <Link
+                        href={`/crm/cotizaciones/nueva?lead_id=${lead.id}&cliente_id=${lead.cliente_id}`}
+                        className="text-green-600 hover:text-green-700 font-medium"
+                      >
+                        Cotizar
+                      </Link>
                     </td>
                   </tr>
                 ))}
@@ -443,6 +563,43 @@ export default function ClienteDashboard() {
                   rows={4}
                   placeholder="Detalles de la conversación, seguimientos, próximos pasos..."
                 />
+              </div>
+
+              {/* Historial del Lead */}
+              <div className="border-t border-slate-200 pt-6">
+                <h3 className="text-lg font-semibold text-slate-900 mb-3">📋 Historial de Cambios</h3>
+                {loadingHistorial ? (
+                  <div className="text-center py-4">
+                    <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+                  </div>
+                ) : leadHistorial.length === 0 ? (
+                  <div className="text-center py-4 text-slate-500 text-sm">
+                    No hay historial de cambios para este lead
+                  </div>
+                ) : (
+                  <div className="max-h-60 overflow-y-auto border border-slate-200 rounded-lg">
+                    <table className="min-w-full divide-y divide-gray-200">
+                      <thead className="bg-slate-50">
+                        <tr>
+                          <th className="px-3 py-2 text-left text-xs font-medium text-slate-600 uppercase">Fecha</th>
+                          <th className="px-3 py-2 text-left text-xs font-medium text-slate-600 uppercase">Usuario</th>
+                          <th className="px-3 py-2 text-left text-xs font-medium text-slate-600 uppercase">Cambio</th>
+                        </tr>
+                      </thead>
+                      <tbody className="bg-white divide-y divide-gray-200">
+                        {leadHistorial.map((item, index) => (
+                          <tr key={index} className="text-sm">
+                            <td className="px-3 py-2 text-slate-600">
+                              {new Date(item.created_at).toLocaleString('es-CL')}
+                            </td>
+                            <td className="px-3 py-2 text-slate-700 font-medium">{item.usuario}</td>
+                            <td className="px-3 py-2 text-slate-600">{item.descripcion}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
               </div>
 
               <div className="flex justify-end space-x-3 pt-4">

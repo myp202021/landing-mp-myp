@@ -216,7 +216,7 @@ export default function ClienteCotizacionesPage() {
           </div>
         </div>
 
-        {/* Lista de cotizaciones */}
+        {/* Lista de cotizaciones - TABLA */}
         {loading ? (
           <div className="text-center py-12">
             <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
@@ -228,23 +228,89 @@ export default function ClienteCotizacionesPage() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
             <p className="text-gray-600 text-lg mb-2">No hay cotizaciones que mostrar</p>
-            <p className="text-gray-500 text-sm">M&P generará cotizaciones para ti cuando sea necesario</p>
+            <p className="text-gray-500 text-sm">Genera cotizaciones desde tus leads en el Dashboard</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredCotizaciones.map(cotizacion => (
-              <CotizacionCard
-                key={cotizacion.id}
-                id={cotizacion.id}
-                nombre_proyecto={cotizacion.nombre_proyecto}
-                cliente_nombre={cotizacion.clientes?.nombre || cotizacion.cliente_nombre || user.nombre}
-                total={cotizacion.total}
-                estado={cotizacion.estado}
-                creado_en={cotizacion.creado_en}
-                enviada_en={cotizacion.enviada_en}
-                aceptada_en={cotizacion.aceptada_en}
-              />
-            ))}
+          <div className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-200">
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-blue-50">
+                  <tr>
+                    <th className="px-6 py-4 text-left text-xs font-semibold text-blue-900 uppercase tracking-wider">
+                      Proyecto
+                    </th>
+                    <th className="px-6 py-4 text-left text-xs font-semibold text-blue-900 uppercase tracking-wider">
+                      Estado
+                    </th>
+                    <th className="px-6 py-4 text-left text-xs font-semibold text-blue-900 uppercase tracking-wider">
+                      Monto
+                    </th>
+                    <th className="px-6 py-4 text-left text-xs font-semibold text-blue-900 uppercase tracking-wider">
+                      Creada
+                    </th>
+                    <th className="px-6 py-4 text-left text-xs font-semibold text-blue-900 uppercase tracking-wider">
+                      Enviada
+                    </th>
+                    <th className="px-6 py-4 text-left text-xs font-semibold text-blue-900 uppercase tracking-wider">
+                      Aceptada
+                    </th>
+                    <th className="px-6 py-4 text-left text-xs font-semibold text-blue-900 uppercase tracking-wider">
+                      Acciones
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {filteredCotizaciones.map(cotizacion => {
+                    const estadoColors = {
+                      borrador: 'bg-gray-100 text-gray-700 border-gray-300',
+                      enviada: 'bg-blue-100 text-blue-700 border-blue-300',
+                      aceptada: 'bg-green-100 text-green-700 border-green-300',
+                      rechazada: 'bg-red-100 text-red-700 border-red-300',
+                    }
+                    const estadoColor = estadoColors[cotizacion.estado as keyof typeof estadoColors] || estadoColors.borrador
+
+                    return (
+                      <tr key={cotizacion.id} className="hover:bg-gray-50 transition-colors">
+                        <td className="px-6 py-4">
+                          <div className="text-sm font-semibold text-gray-900">{cotizacion.nombre_proyecto}</div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${estadoColor}`}>
+                            {cotizacion.estado.charAt(0).toUpperCase() + cotizacion.estado.slice(1)}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4">
+                          <span className="text-lg font-bold text-blue-900">
+                            ${Number(cotizacion.total).toLocaleString('es-CL')}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-600">
+                          {new Date(cotizacion.creado_en).toLocaleDateString('es-CL')}
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-600">
+                          {cotizacion.enviada_en ? new Date(cotizacion.enviada_en).toLocaleDateString('es-CL') : '-'}
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-600">
+                          {cotizacion.aceptada_en ? (
+                            <span className="text-green-600 font-medium">
+                              {new Date(cotizacion.aceptada_en).toLocaleDateString('es-CL')}
+                            </span>
+                          ) : '-'}
+                        </td>
+                        <td className="px-6 py-4 text-sm font-medium">
+                          <Link
+                            href={`/crm/cotizaciones/${cotizacion.id}`}
+                            className="text-blue-600 hover:text-blue-700 font-medium"
+                          >
+                            Ver detalles
+                          </Link>
+                        </td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
       </div>
