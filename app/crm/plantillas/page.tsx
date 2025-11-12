@@ -57,6 +57,30 @@ export default function PlantillasPage() {
     }
   }
 
+  const inicializarPlantillasPredefinidas = async () => {
+    if (!confirm('¿Crear plantillas Silver, Gold y Platinum M&P predefinidas?')) return
+
+    setLoading(true)
+    try {
+      const res = await fetch('/api/crm/plantillas/inicializar', {
+        method: 'POST'
+      })
+      const data = await res.json()
+
+      if (res.ok) {
+        alert(data.message || 'Plantillas predefinidas creadas exitosamente')
+        loadPlantillas()
+      } else {
+        alert(data.error || data.message || 'Error al crear plantillas')
+      }
+    } catch (error) {
+      console.error('Error inicializando plantillas:', error)
+      alert('Error al crear plantillas predefinidas')
+    } finally {
+      setLoading(false)
+    }
+  }
+
   const toggleExpand = (id: number) => {
     setExpandedId(expandedId === id ? null : id)
   }
@@ -75,9 +99,14 @@ export default function PlantillasPage() {
             Administra plantillas predefinidas para agilizar la creación de cotizaciones
           </p>
         </div>
-        <Link href="/crm/plantillas/nueva">
-          <Button variant="primary">+ Nueva Plantilla</Button>
-        </Link>
+        <div className="flex gap-3">
+          <Button variant="secondary" onClick={inicializarPlantillasPredefinidas}>
+            Crear Planes M&P (Silver/Gold/Platinum)
+          </Button>
+          <Link href="/crm/plantillas/nueva">
+            <Button variant="primary">+ Nueva Plantilla</Button>
+          </Link>
+        </div>
       </div>
 
       {/* Métricas */}
