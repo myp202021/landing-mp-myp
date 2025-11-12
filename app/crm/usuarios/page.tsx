@@ -14,7 +14,7 @@ interface Usuario {
   id: number
   username: string
   nombre: string
-  role: 'admin' | 'cliente'
+  rol: 'admin' | 'cliente'
   cliente_id: string | null
   activo: boolean
   creado_en: string
@@ -37,7 +37,7 @@ export default function UsuariosPage() {
     username: '',
     password: '',
     nombre: '',
-    role: 'cliente' as 'admin' | 'cliente',
+    rol: 'cliente' as 'admin' | 'cliente',
     cliente_id: ''
   })
 
@@ -149,7 +149,7 @@ export default function UsuariosPage() {
       username: usuario.username,
       password: '', // No prellenar contraseña por seguridad
       nombre: usuario.nombre,
-      role: usuario.role,
+      rol: usuario.rol,
       cliente_id: usuario.cliente_id || ''
     })
     setShowModal(true)
@@ -208,7 +208,7 @@ export default function UsuariosPage() {
       username: '',
       password: '',
       nombre: '',
-      role: 'cliente',
+      rol: 'cliente',
       cliente_id: ''
     })
     setShowModal(true)
@@ -280,11 +280,11 @@ export default function UsuariosPage() {
                 </td>
                 <td className="px-6 py-4">
                   <span className={`inline-block px-3 py-1 rounded-full text-xs font-bold ${
-                    usuario.role === 'admin'
+                    usuario.rol === 'admin'
                       ? 'bg-purple-100 text-purple-800'
                       : 'bg-blue-100 text-blue-800'
                   }`}>
-                    {usuario.role === 'admin' ? 'Admin' : 'Cliente'}
+                    {usuario.rol === 'admin' ? 'Admin' : 'Cliente'}
                   </span>
                 </td>
                 <td className="px-6 py-4">
@@ -397,15 +397,15 @@ export default function UsuariosPage() {
                 />
               </div>
 
-              {/* Role - solo al crear */}
+              {/* Rol - solo al crear */}
               {!editingUser && (
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
                     Rol
                   </label>
                   <select
-                    value={formData.role}
-                    onChange={(e) => setFormData({ ...formData, role: e.target.value as 'admin' | 'cliente' })}
+                    value={formData.rol}
+                    onChange={(e) => setFormData({ ...formData, rol: e.target.value as 'admin' | 'cliente' })}
                     className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring focus:ring-blue-200 transition text-gray-900"
                   >
                     <option value="cliente">Cliente</option>
@@ -414,8 +414,8 @@ export default function UsuariosPage() {
                 </div>
               )}
 
-              {/* Cliente - solo si role es cliente */}
-              {formData.role === 'cliente' && !editingUser && (
+              {/* Cliente - solo si rol es cliente */}
+              {formData.rol === 'cliente' && !editingUser && (
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
                     Cliente asignado

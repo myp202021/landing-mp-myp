@@ -61,24 +61,24 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json()
-    const { username, password, cliente_id, role, nombre } = body
+    const { username, password, cliente_id, rol, nombre } = body
 
     // Validaciones
-    if (!username || !password || !role || !nombre) {
+    if (!username || !password || !rol || !nombre) {
       return NextResponse.json(
-        { error: 'Faltan campos requeridos: username, password, role, nombre' },
+        { error: 'Faltan campos requeridos: username, password, rol, nombre' },
         { status: 400 }
       )
     }
 
-    if (role !== 'admin' && role !== 'cliente') {
+    if (rol !== 'admin' && rol !== 'cliente') {
       return NextResponse.json(
-        { error: 'El role debe ser "admin" o "cliente"' },
+        { error: 'El rol debe ser "admin" o "cliente"' },
         { status: 400 }
       )
     }
 
-    if (role === 'cliente' && !cliente_id) {
+    if (rol === 'cliente' && !cliente_id) {
       return NextResponse.json(
         { error: 'Los usuarios de tipo "cliente" requieren cliente_id' },
         { status: 400 }
@@ -106,8 +106,8 @@ export async function POST(req: NextRequest) {
       .insert({
         username,
         password_hash: password, // En producción: await bcrypt.hash(password, 10)
-        cliente_id: role === 'cliente' ? cliente_id : null,
-        role,
+        cliente_id: rol === 'cliente' ? cliente_id : null,
+        rol,
         nombre,
         activo: true
       })
@@ -123,7 +123,7 @@ export async function POST(req: NextRequest) {
           id: usuario.id,
           username: usuario.username,
           nombre: usuario.nombre,
-          role: usuario.role,
+          rol: usuario.rol,
           cliente_id: usuario.cliente_id
         },
         message: 'Usuario creado exitosamente'
@@ -180,7 +180,7 @@ export async function PATCH(req: NextRequest) {
         id: usuario.id,
         username: usuario.username,
         nombre: usuario.nombre,
-        role: usuario.role,
+        rol: usuario.rol,
         cliente_id: usuario.cliente_id,
         activo: usuario.activo
       },
@@ -211,11 +211,11 @@ export async function DELETE(req: NextRequest) {
     // Verificar que no sea el admin principal
     const { data: usuario } = await supabase
       .from('usuarios')
-      .select('username, role')
+      .select('username, rol')
       .eq('id', id)
       .single()
 
-    if (usuario && usuario.username === 'admin' && usuario.role === 'admin') {
+    if (usuario && usuario.username === 'admin' && usuario.rol === 'admin') {
       return NextResponse.json(
         { error: 'No se puede eliminar el usuario administrador principal' },
         { status: 403 }
