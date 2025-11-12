@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
         username,
         password_hash,
         cliente_id,
-        role,
+        rol,
         nombre,
         activo
       `)
@@ -60,7 +60,7 @@ export async function POST(req: NextRequest) {
     // Autenticación exitosa
     const user = {
       username: usuario.username,
-      role: usuario.role,
+      role: usuario.rol, // Map 'rol' (DB) to 'role' (frontend)
       nombre: usuario.nombre,
       cliente_id: usuario.cliente_id
     }
