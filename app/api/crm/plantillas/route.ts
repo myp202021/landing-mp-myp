@@ -13,12 +13,21 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
     const id = searchParams.get('id')
+    const tipo = searchParams.get('tipo') // 'base', 'cliente', o null (todas)
+    const cliente_id = searchParams.get('cliente_id')
 
     if (id) {
-      // Obtener plantilla específica
+      // Obtener plantilla específica con información del cliente
       const { data, error } = await supabase
         .from('plantillas_cotizacion')
-        .select('*')
+        .select(`
+          *,
+          clientes (
+            id,
+            nombre,
+            empresa
+          )
+        `)
         .eq('id', id)
         .single()
 
@@ -26,12 +35,36 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ plantilla: data })
     }
 
-    // Listar todas las plantillas activas
-    const { data, error } = await supabase
+    // Construir query base con información de clientes
+    let query = supabase
       .from('plantillas_cotizacion')
-      .select('*')
+      .select(`
+        *,
+        clientes (
+          id,
+          nombre,
+          empresa
+        )
+      `)
       .eq('activa', true)
-      .order('nombre', { ascending: true })
+
+    // Filtrar por tipo
+    if (tipo === 'base') {
+      query = query.eq('es_base', true)
+    } else if (tipo === 'cliente') {
+      query = query.eq('es_base', false)
+    }
+
+    // Filtrar por cliente específico
+    if (cliente_id) {
+      query = query.eq('cliente_id', cliente_id)
+    }
+
+    // Ordenar: primero plantillas base, luego por nombre
+    query = query.order('es_base', { ascending: false })
+    query = query.order('nombre', { ascending: true })
+
+    const { data, error } = await query
 
     if (error) throw error
     return NextResponse.json({ plantillas: data || [] })
@@ -55,7 +88,11 @@ export async function POST(request: NextRequest) {
       notas_default,
       vigencia_dias_default,
       descuento_default,
-      activa
+      activa,
+      logo_url,
+      logo_filename,
+      cliente_id,
+      es_base
     } = body
 
     const { data, error } = await supabase
@@ -67,7 +104,11 @@ export async function POST(request: NextRequest) {
         notas_default,
         vigencia_dias_default: vigencia_dias_default || 15,
         descuento_default: descuento_default || 0,
-        activa: activa !== undefined ? activa : true
+        activa: activa !== undefined ? activa : true,
+        logo_url: logo_url || null,
+        logo_filename: logo_filename || null,
+        cliente_id: cliente_id || null,
+        es_base: es_base !== undefined ? es_base : false
       })
       .select()
       .single()
