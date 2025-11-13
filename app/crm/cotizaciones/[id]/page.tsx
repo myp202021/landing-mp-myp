@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
+import Image from 'next/image'
 import Button from '@/app/components/crm/Button'
 import { generarPDFCotizacion } from '@/lib/utils/pdfGenerator'
 
@@ -342,6 +343,33 @@ export default function CotizacionPage() {
             </div>
           )}
         </div>
+
+        {/* Logo del Cliente (si existe) */}
+        {cotizacion.logo_url && (
+          <div className="bg-white border border-gray-200 p-6 rounded-lg mb-6 flex items-center gap-4">
+            <div className="flex-shrink-0 bg-gray-50 p-4 rounded-lg">
+              <Image
+                src={cotizacion.logo_url}
+                alt="Logo del cliente"
+                width={200}
+                height={75}
+                className="max-w-full h-auto"
+                style={{ objectFit: 'contain' }}
+              />
+            </div>
+            <div>
+              <div className="flex items-center gap-2 mb-1">
+                <svg className="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+                <span className="text-sm font-semibold text-green-800">Cotización con Branding Personalizado</span>
+              </div>
+              <p className="text-xs text-gray-600">
+                Esta cotización incluye el logo del cliente para mantener consistencia de marca
+              </p>
+            </div>
+          </div>
+        )}
 
         {/* Encabezado de la cotizacion */}
         <div className="bg-gradient-to-r from-blue-900 to-blue-800 text-white p-8 rounded-t-lg print:rounded-none">

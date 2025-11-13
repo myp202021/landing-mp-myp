@@ -2,8 +2,10 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter, useParams } from 'next/navigation'
+import Image from 'next/image'
 import CRMLayout from '@/app/components/crm/CRMLayout'
 import Button from '@/app/components/crm/Button'
+import LogoUploader from '@/app/components/crm/LogoUploader'
 
 interface Item {
   descripcion: string
@@ -20,6 +22,15 @@ interface Plantilla {
   vigencia_dias_default: number
   descuento_default: number
   activa: boolean
+  logo_url?: string | null
+  logo_filename?: string | null
+  cliente_id?: string | null
+  es_base?: boolean
+  clientes?: {
+    id: string
+    nombre: string
+    empresa: string
+  }
 }
 
 export default function EditarPlantillaPage() {
@@ -29,6 +40,7 @@ export default function EditarPlantillaPage() {
 
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
+  const [plantilla, setPlantilla] = useState<Plantilla | null>(null)
   const [formData, setFormData] = useState({
     nombre: '',
     descripcion: '',
@@ -40,6 +52,9 @@ export default function EditarPlantillaPage() {
   const [items, setItems] = useState<Item[]>([
     { descripcion: '', cantidad: 1, precio: 0 }
   ])
+  const [logoUrl, setLogoUrl] = useState<string>('')
+  const [logoFilename, setLogoFilename] = useState<string>('')
+  const [logoChanged, setLogoChanged] = useState(false)
 
   useEffect(() => {
     cargarPlantilla()
@@ -50,7 +65,10 @@ export default function EditarPlantillaPage() {
       const res = await fetch(`/api/crm/plantillas?id=${plantillaId}`)
       if (!res.ok) throw new Error('Error al cargar plantilla')
 
-      const data: Plantilla = await res.json()
+      const response = await res.json()
+      const data: Plantilla = response.plantilla
+
+      setPlantilla(data)
 
       setFormData({
         nombre: data.nombre,
@@ -65,12 +83,87 @@ export default function EditarPlantillaPage() {
         setItems(data.items_default)
       }
 
+      if (data.logo_url) {
+        setLogoUrl(data.logo_url)
+        setLogoFilename(data.logo_filename || '')
+      }
+
       setLoading(false)
     } catch (error) {
       console.error('Error:', error)
       alert('Error al cargar la plantilla')
       router.push('/crm/plantillas')
     }
+  }
+
+  const handleLogoUpload = (url: string, filename: string) => {
+    setLogoUrl(url)
+    setLogoFilename(filename)
+    setLogoChanged(true)
+  }
+
+  const handleUpdateLogo = async () => {
+    if (!logoUrl || !logoFilename) {
+      alert('Primero debes subir un logo')
+      return
+    }
+
+    setSaving(true)
+    try {
+      const res = await fetch('/api/crm/plantillas/logo', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          plantilla_id: plantillaId,
+          logo_url: logoUrl,
+          logo_filename: logoFilename
+        })
+      })
+
+      const data = await res.json()
+
+      if (res.ok) {
+        alert('Logo actualizado correctamente')
+        setLogoChanged(false)
+        await cargarPlantilla()
+      } else {
+        throw new Error(data.error || 'Error actualizando logo')
+      }
+    } catch (err: any) {
+      console.error('Error:', err)
+      alert('Error al actualizar logo: ' + err.message)
+    }
+    setSaving(false)
+  }
+
+  const handleRemoveLogo = async () => {
+    if (!confirm('¿Estás seguro de eliminar el logo de esta plantilla?')) return
+
+    setSaving(true)
+    try {
+      const res = await fetch(`/api/crm/plantillas?id=${plantillaId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          logo_url: null,
+          logo_filename: null
+        })
+      })
+
+      if (res.ok) {
+        alert('Logo eliminado correctamente')
+        setLogoUrl('')
+        setLogoFilename('')
+        setLogoChanged(false)
+        await cargarPlantilla()
+      } else {
+        alert('Error eliminando logo')
+      }
+    } catch (err: any) {
+      console.error('Error:', err)
+      alert('Error eliminando logo')
+    }
+    setSaving(false)
   }
 
   const agregarItem = () => {
@@ -176,9 +269,85 @@ export default function EditarPlantillaPage() {
           <p className="text-gray-600 mt-1">
             Modifica los datos de esta plantilla de cotización
           </p>
+          {plantilla?.es_base && (
+            <p className="text-sm text-purple-600 mt-1 font-semibold">
+              📋 Plantilla Base/Maestra
+            </p>
+          )}
+          {plantilla?.clientes && (
+            <p className="text-sm text-green-600 mt-1 font-semibold">
+              👤 Plantilla de Cliente: {plantilla.clientes.nombre}
+            </p>
+          )}
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Gestión de Logo */}
+          <div className="bg-white rounded-xl shadow-md p-6 border border-gray-200">
+            <h3 className="text-lg font-bold text-gray-900 mb-4">Logo de la Plantilla</h3>
+
+            {/* Logo actual */}
+            {plantilla?.logo_url && (
+              <div className="mb-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                <p className="text-sm font-semibold text-gray-700 mb-3">Logo actual:</p>
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0 bg-white p-3 rounded-lg shadow-sm">
+                    <Image
+                      src={plantilla.logo_url}
+                      alt="Logo actual"
+                      width={200}
+                      height={75}
+                      className="max-w-full h-auto"
+                      style={{ objectFit: 'contain' }}
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-xs text-gray-600 mb-2">
+                      Archivo: {plantilla.logo_filename || 'logo.png'}
+                    </p>
+                    <Button
+                      type="button"
+                      onClick={handleRemoveLogo}
+                      variant="danger"
+                      disabled={saving}
+                      className="text-sm"
+                    >
+                      Eliminar Logo
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Uploader para nuevo logo */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                {plantilla?.logo_url ? 'Cambiar Logo' : 'Agregar Logo'}
+              </label>
+              <LogoUploader
+                clienteId={plantilla?.cliente_id || undefined}
+                plantillaId={parseInt(plantillaId)}
+                onUploadSuccess={handleLogoUpload}
+                onUploadError={(err) => alert(err)}
+              />
+              {logoChanged && logoUrl && (
+                <div className="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                  <p className="text-sm text-blue-800 mb-3">
+                    Nuevo logo cargado. Haz clic para guardar los cambios.
+                  </p>
+                  <Button
+                    type="button"
+                    onClick={handleUpdateLogo}
+                    variant="success"
+                    disabled={saving}
+                  >
+                    {saving ? 'Guardando...' : 'Guardar Nuevo Logo'}
+                  </Button>
+                </div>
+              )}
+            </div>
+          </div>
+
           {/* Información Básica */}
           <div className="bg-white rounded-xl shadow-md p-6 border border-gray-200">
             <h3 className="text-lg font-bold text-gray-900 mb-4">Información Básica</h3>
