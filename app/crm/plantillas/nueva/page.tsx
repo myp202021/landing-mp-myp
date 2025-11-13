@@ -70,7 +70,8 @@ export default function NuevaPlantillaPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...formData,
-          items_default: itemsValidos
+          items_default: itemsValidos,
+          es_base: true  // CRÍTICO: marcar como plantilla base
         })
       })
 

@@ -213,7 +213,6 @@ CREATE OR REPLACE VIEW v_plantillas_completas AS
 SELECT
   p.*,
   c.nombre as cliente_nombre,
-  c.empresa as cliente_empresa,
   pb.nombre as plantilla_base_nombre,
   CASE
     WHEN p.es_base THEN 'Plantilla Base'
