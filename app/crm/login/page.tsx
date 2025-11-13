@@ -1,156 +1,148 @@
 'use client'
 
-/**
- * LOGIN PAGE - Autenticación simple
- */
-
 import { useState, useEffect } from 'react'
+import { useSimpleAuth } from '@/lib/auth/simple-auth'
 import { useRouter } from 'next/navigation'
-import Image from 'next/image'
 
 export default function LoginPage() {
-  const router = useRouter()
-  const [email, setEmail] = useState('')
+  const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-  const [checkingSession, setCheckingSession] = useState(true)
+  const [loading, setLoading] = useState(false)
+  const { login, isAuthenticated } = useSimpleAuth()
+  const router = useRouter()
 
-  // Verificar si ya hay sesión activa
+  // Si ya está autenticado, redirigir al dashboard
   useEffect(() => {
-    const checkSession = async () => {
-      try {
-        const res = await fetch('/api/auth/session')
-        if (res.ok) {
-          const data = await res.json()
-          if (data.user) {
-            // Ya está logueado, redirigir según rol
-            if (data.user.rol === 'admin') {
-              router.push('/crm/leads')
-            } else {
-              router.push('/crm/upload')
-            }
-            return
-          }
-        }
-      } catch (error) {
-        console.error('Error checking session:', error)
-      } finally {
-        setCheckingSession(false)
-      }
+    if (isAuthenticated) {
+      router.push('/crm')
     }
-    checkSession()
-  }, [router])
+  }, [isAuthenticated, router])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
     setLoading(true)
 
-    try {
-      const res = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
-      })
+    const response = await login(username, password)
 
-      const data = await res.json()
-
-      if (!res.ok) {
-        throw new Error(data.error || 'Error al iniciar sesión')
-      }
-
-      // Login exitoso - redirigir según rol
-      if (data.user.rol === 'admin') {
-        router.push('/crm/leads')
+    if (response.success && response.user) {
+      // Redirigir según el rol del usuario
+      if (response.user.role === 'admin') {
+        router.push('/crm')
       } else {
-        router.push('/crm/upload')
+        router.push('/crm/cliente/dashboard')
       }
-
-    } catch (err: any) {
-      setError(err.message)
-    } finally {
+    } else {
+      setError(response.error || 'Error al iniciar sesión')
       setLoading(false)
     }
   }
 
-  // Mostrar loading mientras verifica sesión
-  if (checkingSession) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
-        <div className="text-gray-600">Verificando sesión...</div>
-      </div>
-    )
-  }
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center px-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900 flex items-center justify-center px-4">
       <div className="max-w-md w-full">
-        {/* Card */}
-        <div className="bg-white rounded-2xl shadow-xl p-8">
-          {/* Logo */}
-          <div className="text-center mb-8">
-            <div className="inline-block bg-blue-600 text-white rounded-full w-16 h-16 flex items-center justify-center text-2xl font-bold mb-4">
-              M&P
-            </div>
-            <h1 className="text-2xl font-bold text-gray-900">CRM Müller & Pérez</h1>
-            <p className="text-gray-600 mt-2">Gestión de Leads Meta Ads</p>
+        {/* Logo y header */}
+        <div className="text-center mb-8">
+          <div className="inline-block bg-white rounded-full p-4 mb-4 shadow-xl">
+            <svg className="w-12 h-12 text-blue-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
           </div>
+          <h1 className="text-3xl font-bold text-white mb-2">Acceso Clientes</h1>
+          <p className="text-blue-200">Muller y Pérez CRM</p>
+        </div>
 
-          {/* Formulario */}
-          <form onSubmit={handleSubmit} className="space-y-5">
-            {error && (
-              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
-                {error}
-              </div>
-            )}
-
+        {/* Formulario */}
+        <div className="bg-white rounded-2xl shadow-2xl p-8">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Username */}
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                Email
+              <label htmlFor="username" className="block text-sm font-semibold text-gray-700 mb-2">
+                Usuario
               </label>
               <input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="tu@email.com"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                id="username"
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
                 required
-                disabled={loading}
+                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring focus:ring-blue-200 transition text-gray-900"
+                placeholder="usuario"
+                autoComplete="username"
+                autoFocus
               />
             </div>
 
+            {/* Password */}
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
-                Password
+              <label htmlFor="password" className="block text-sm font-semibold text-gray-700 mb-2">
+                Contraseña
               </label>
               <input
                 id="password"
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
                 required
-                disabled={loading}
+                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring focus:ring-blue-200 transition text-gray-900"
+                placeholder="••••••••"
+                autoComplete="current-password"
               />
             </div>
 
+            {/* Error message */}
+            {error && (
+              <div className="bg-red-50 border-2 border-red-200 rounded-lg p-4">
+                <div className="flex items-center gap-2">
+                  <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <p className="text-sm text-red-800 font-medium">{error}</p>
+                </div>
+              </div>
+            )}
+
+            {/* Submit button */}
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-blue-900 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-800 transition shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
+              {loading ? (
+                <span className="flex items-center justify-center gap-2">
+                  <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                  </svg>
+                  Iniciando sesión...
+                </span>
+              ) : (
+                'Iniciar Sesión'
+              )}
             </button>
           </form>
 
-          {/* Footer */}
-          <div className="mt-6 text-center text-sm text-gray-500">
-            <p>¿Olvidaste tu contraseña?</p>
-            <p className="mt-1">Contacta a <span className="font-medium text-blue-600">admin@mulleryperez.cl</span></p>
+          {/* Info adicional */}
+          <div className="mt-6 pt-6 border-t border-gray-200 space-y-2">
+            <div className="text-xs text-gray-600 space-y-1">
+              <p><strong className="text-gray-800">Admin:</strong> usuario "admin" | contraseña "MYP@admin2025!"</p>
+              <p><strong className="text-gray-800">M&P:</strong> usuario "myp" | contraseña "mypcliente2025"</p>
+              <p><strong className="text-gray-800">Cliente Demo:</strong> usuario "cliente1" | contraseña "Cliente@2025!"</p>
+            </div>
+            <p className="text-center text-sm text-gray-600 pt-2">
+              <a href="/" className="text-blue-600 hover:text-blue-800 font-semibold">
+                ← Volver al inicio
+              </a>
+            </p>
           </div>
+        </div>
+
+        {/* Footer */}
+        <div className="mt-8 text-center">
+          <p className="text-blue-200 text-sm">
+            © 2025 Muller & Pérez - Sistema Privado
+          </p>
         </div>
       </div>
     </div>

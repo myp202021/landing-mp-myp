@@ -1,19 +1,18 @@
-import CRMNavigation from '@/components/crm/Navigation'
+'use client'
 
-export const metadata = {
-  title: 'CRM - Muller y Pérez',
-  description: 'Sistema de gestión de leads Meta Ads'
-}
+import { SimpleAuthProvider } from '@/lib/auth/simple-auth'
 
-export default function CRMLayout({
+// Forzar renderizado dinámico para todas las páginas CRM
+export const dynamic = 'force-dynamic'
+
+export default function CRMRootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
   return (
-    <>
-      <CRMNavigation />
+    <SimpleAuthProvider>
       {children}
-    </>
+    </SimpleAuthProvider>
   )
 }

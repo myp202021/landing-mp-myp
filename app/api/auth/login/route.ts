@@ -1,100 +1,78 @@
-/**
- * AUTH LOGIN API
- * POST: Login simple con email + password
- */
-
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
-export const runtime = 'nodejs'
-export const dynamic = 'force-dynamic'
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+)
 
-/**
- * POST /api/auth/login
- *
- * Body: {
- *   email: string
- *   password: string
- * }
- */
 export async function POST(req: NextRequest) {
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-  )
-
   try {
-    const { email, password } = await req.json()
+    const { username, password } = await req.json()
 
-    if (!email || !password) {
+    if (!username || !password) {
       return NextResponse.json(
-        { error: 'Email y password son requeridos' },
+        { error: 'Se requieren username y password' },
         { status: 400 }
       )
     }
 
-    // Llamar a función SQL para verificar login
-    const { data, error } = await supabase
-      .rpc('verificar_login', {
-        p_email: email,
-        p_password: password
-      })
+    // Buscar usuario por username
+    const { data: usuario, error } = await supabase
+      .from('usuarios')
+      .select(`
+        id,
+        username,
+        password_hash,
+        cliente_id,
+        rol,
+        nombre,
+        activo
+      `)
+      .eq('username', username)
+      .single()
 
-    if (error) {
-      console.error('Error en verificar_login:', error)
+    if (error || !usuario) {
       return NextResponse.json(
-        { error: 'Error al verificar credenciales', details: error.message },
-        { status: 500 }
-      )
-    }
-
-    // Si no hay datos, credenciales inválidas
-    if (!data || data.length === 0) {
-      return NextResponse.json(
-        { error: 'Email o password incorrectos' },
+        { error: 'Usuario o contraseña incorrectos' },
         { status: 401 }
       )
     }
 
-    const user = data[0]
-
-    // Validar que los datos del usuario existen
-    if (!user || !user.user_id || !user.email || !user.rol) {
+    // Verificar que el usuario esté activo
+    if (!usuario.activo) {
       return NextResponse.json(
-        { error: 'Datos de usuario incompletos' },
-        { status: 500 }
+        { error: 'Usuario deshabilitado' },
+        { status: 403 }
       )
     }
 
-    // Crear sesión (cookie httpOnly)
-    const sessionData = {
-      userId: user.user_id,
-      email: user.email,
-      rol: user.rol,
-      nombre: user.nombre || ''
+    // Validar contraseña
+    // NOTA: En producción esto debería usar bcrypt.compare()
+    // Por ahora comparamos en texto plano
+    if (usuario.password_hash !== password) {
+      return NextResponse.json(
+        { error: 'Usuario o contraseña incorrectos' },
+        { status: 401 }
+      )
     }
 
-    const response = NextResponse.json({
+    // Autenticación exitosa
+    const user = {
+      username: usuario.username,
+      role: usuario.rol, // Map 'rol' (DB) to 'role' (frontend)
+      nombre: usuario.nombre,
+      cliente_id: usuario.cliente_id
+    }
+
+    return NextResponse.json({
       success: true,
-      user: {
-        id: user.user_id,
-        email: user.email,
-        nombre: user.nombre || '',
-        rol: user.rol
-      }
+      user
     })
-
-    // Guardar sesión en cookie usando Set-Cookie header (Edge Runtime compatible)
-    const cookieValue = `mp_session=${encodeURIComponent(JSON.stringify(sessionData))}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${60 * 60 * 24 * 7}${process.env.NODE_ENV === 'production' ? '; Secure' : ''}`
-
-    response.headers.set('Set-Cookie', cookieValue)
-
-    return response
-
   } catch (error: any) {
-    console.error('Error en login:', error)
+    console.error('Error en POST /api/auth/login:', error)
     return NextResponse.json(
-      { error: error.message || 'Error en login' },
+      { error: 'Error en autenticación', details: error.message },
       { status: 500 }
     )
   }

@@ -1,417 +1,472 @@
 'use client'
 
-/**
- * PÁGINA DE MÉTRICAS
- * Análisis de performance: ROAS, CPL, tasa de conversión, etc.
- */
-
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import CRMLayout from '@/app/components/crm/CRMLayout'
+import MetricCard from '@/app/components/crm/MetricCard'
 
-interface Cliente {
-  id: string
-  nombre: string
-  rubro: string | null
-  inversion_mensual: number
+interface Lead {
+  id: number
+  cliente_id: string
+  contactado: boolean
+  vendido: boolean
+  monto_vendido?: number
+  fecha_ingreso: string
+  costo_publicidad?: number
+  clientes?: {
+    nombre: string
+  }
 }
 
-interface Metricas {
-  total_leads: number
-  leads_contactados: number
-  leads_vendidos: number
-  total_ventas: number
-  inversion: number
-  // Calculadas
-  cpl: number // Costo por lead
-  cpa: number // Costo por adquisición (venta)
-  roas: number // Return on ad spend
-  conversion_rate: number // % de leads que se convierten en venta
-  contact_rate: number // % de leads contactados
+interface Cotizacion {
+  id: number
+  cliente_id: string
+  total: number
+  estado: string
+  creado_en: string
+  clientes?: {
+    nombre: string
+  }
+}
+
+interface MetricasPorMes {
+  mes: string
+  leads: number
+  contactados: number
+  vendidos: number
+  monto: number
+}
+
+interface ClienteMetricas {
+  nombre: string
+  leads: number
+  vendidos: number
+  monto: number
+  tasaConversion: number
 }
 
 export default function MetricasPage() {
-  const router = useRouter()
-  const [clientes, setClientes] = useState<Cliente[]>([])
-  const [selectedCliente, setSelectedCliente] = useState('')
-  const [metricas, setMetricas] = useState<Metricas | null>(null)
-  const [loading, setLoading] = useState(false)
-  const [editingInversion, setEditingInversion] = useState(false)
-  const [nuevaInversion, setNuevaInversion] = useState('')
+  const [leads, setLeads] = useState<Lead[]>([])
+  const [cotizaciones, setCotizaciones] = useState<Cotizacion[]>([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    fetchClientes()
+    loadData()
   }, [])
 
-  useEffect(() => {
-    if (selectedCliente) {
-      fetchMetricas()
-    }
-  }, [selectedCliente])
-
-  const fetchClientes = async () => {
-    try {
-      const res = await fetch('/api/crm/clientes')
-      const data = await res.json()
-      setClientes(data.clientes || [])
-
-      // Seleccionar primer cliente automáticamente
-      if (data.clientes && data.clientes.length > 0) {
-        setSelectedCliente(data.clientes[0].id)
-      }
-    } catch (error) {
-      console.error('Error fetching clientes:', error)
-    }
-  }
-
-  const fetchMetricas = async () => {
-    if (!selectedCliente) return
-
+  const loadData = async () => {
     setLoading(true)
     try {
-      const res = await fetch(`/api/crm/metricas?cliente_id=${selectedCliente}`)
-      const data = await res.json()
-      setMetricas(data.metricas)
+      const [resLeads, resCotizaciones] = await Promise.all([
+        fetch('/api/crm/leads?limit=1000'),
+        fetch('/api/crm/cotizaciones')
+      ])
 
-      // Actualizar inversión en el input
-      const cliente = clientes.find(c => c.id === selectedCliente)
-      setNuevaInversion(cliente?.inversion_mensual?.toString() || '0')
+      const dataLeads = await resLeads.json()
+      const dataCotizaciones = await resCotizaciones.json()
+
+      setLeads(dataLeads.leads || [])
+      setCotizaciones(dataCotizaciones.cotizaciones || [])
     } catch (error) {
-      console.error('Error fetching metricas:', error)
-    } finally {
-      setLoading(false)
+      console.error('Error cargando datos:', error)
     }
+    setLoading(false)
   }
 
-  const debugCliente = async () => {
-    if (!selectedCliente) return
+  // Metricas generales
+  const totalLeads = leads.length
+  const leadsContactados = leads.filter(l => l.contactado).length
+  const leadsVendidos = leads.filter(l => l.vendido).length
+  const tasaConversion = totalLeads > 0 ? ((leadsVendidos / totalLeads) * 100).toFixed(1) : '0'
+  const totalVendido = leads.reduce((sum, l) => sum + (l.monto_vendido || 0), 0)
 
-    try {
-      const res = await fetch(`/api/crm/debug-cliente?id=${selectedCliente}`)
-      const data = await res.json()
-      console.log('🔍 DEBUG COMPLETO:', data)
-      alert(`Debug en consola. Inversión en BD: ${data.tipos?.inversion_mensual_value}`)
-    } catch (error) {
-      console.error('Error en debug:', error)
+  // Calcular metricas ROAS
+  const costoPorLeadGlobal = typeof window !== 'undefined'
+    ? Number(localStorage.getItem('costoPorLeadGlobal') || 5000)
+    : 5000
+
+  const costoTotalPublicidad = leads.reduce((sum, lead) =>
+    sum + (lead.costo_publicidad || costoPorLeadGlobal), 0
+  )
+
+  const ventasTotales = leads.reduce((sum, lead) =>
+    sum + (lead.vendido ? (lead.monto_vendido || 0) : 0), 0
+  )
+
+  const roas = costoTotalPublicidad > 0
+    ? (ventasTotales / costoTotalPublicidad)
+    : 0
+
+  const costoPorLeadReal = leads.length > 0
+    ? costoTotalPublicidad / leads.length
+    : 0
+
+  const costoPorLeadContactado = leadsContactados > 0
+    ? leads.filter(l => l.contactado).reduce((sum, l) => sum + (l.costo_publicidad || costoPorLeadGlobal), 0) / leadsContactados
+    : 0
+
+  const costoPorVenta = leadsVendidos > 0
+    ? leads.filter(l => l.vendido).reduce((sum, l) => sum + (l.costo_publicidad || costoPorLeadGlobal), 0) / leadsVendidos
+    : 0
+
+  const cotizacionesEnviadas = cotizaciones.filter(c => c.estado === 'enviada').length
+  const cotizacionesAceptadas = cotizaciones.filter(c => c.estado === 'aceptada').length
+  const tasaAceptacion = cotizacionesEnviadas > 0
+    ? ((cotizacionesAceptadas / cotizacionesEnviadas) * 100).toFixed(1)
+    : '0'
+
+  // Metricas por mes (ultimos 6 meses)
+  const getMetricasPorMes = (): MetricasPorMes[] => {
+    const meses: { [key: string]: MetricasPorMes } = {}
+    const hoy = new Date()
+
+    // Inicializar ultimos 6 meses
+    for (let i = 5; i >= 0; i--) {
+      const fecha = new Date(hoy.getFullYear(), hoy.getMonth() - i, 1)
+      const mesKey = `${fecha.getFullYear()}-${String(fecha.getMonth() + 1).padStart(2, '0')}`
+      const mesNombre = fecha.toLocaleDateString('es-CL', { month: 'short', year: 'numeric' })
+
+      meses[mesKey] = {
+        mes: mesNombre,
+        leads: 0,
+        contactados: 0,
+        vendidos: 0,
+        monto: 0
+      }
     }
-  }
 
-  const updateInversion = async () => {
-    if (!selectedCliente) return
+    // Contar leads por mes
+    leads.forEach(lead => {
+      const fecha = new Date(lead.fecha_ingreso)
+      const mesKey = `${fecha.getFullYear()}-${String(fecha.getMonth() + 1).padStart(2, '0')}`
 
-    const valor = parseFloat(nuevaInversion) || 0
-    console.log('🔄 Actualizando inversión:', {
-      cliente_id: selectedCliente,
-      valor
+      if (meses[mesKey]) {
+        meses[mesKey].leads++
+        if (lead.contactado) meses[mesKey].contactados++
+        if (lead.vendido) {
+          meses[mesKey].vendidos++
+          meses[mesKey].monto += lead.monto_vendido || 0
+        }
+      }
     })
 
-    try {
-      const res = await fetch('/api/crm/clientes', {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          id: selectedCliente,
-          inversion_mensual: valor
-        })
-      })
+    return Object.values(meses)
+  }
 
-      const data = await res.json()
-      console.log('✅ Respuesta del servidor:', data)
+  // Top clientes
+  const getTopClientes = (): ClienteMetricas[] => {
+    const clientesMap: { [key: string]: ClienteMetricas } = {}
 
-      if (res.ok) {
-        setEditingInversion(false)
+    leads.forEach(lead => {
+      const clienteNombre = lead.clientes?.nombre || 'Sin cliente'
 
-        // Verificar que la inversión se actualizó correctamente
-        const inversionActualizada = data.cliente?.inversion_mensual
-        console.log('💰 Inversión en respuesta:', inversionActualizada)
-
-        if (parseFloat(inversionActualizada) === valor) {
-          alert(`✅ Inversión actualizada a ${formatCurrency(valor)}`)
-
-          // Esperar 1 segundo para que Supabase replique
-          await new Promise(resolve => setTimeout(resolve, 1000))
-
-          // Recargar datos
-          await fetchClientes()
-          await fetchMetricas()
-
-          console.log('🔄 Datos recargados')
-        } else {
-          alert(`⚠️ La inversión se guardó pero hay un problema de sincronización. Recarga la página.`)
+      if (!clientesMap[clienteNombre]) {
+        clientesMap[clienteNombre] = {
+          nombre: clienteNombre,
+          leads: 0,
+          vendidos: 0,
+          monto: 0,
+          tasaConversion: 0
         }
-      } else {
-        alert(`❌ Error: ${data.error || 'No se pudo actualizar'}`)
       }
-    } catch (error) {
-      console.error('❌ Error updating inversion:', error)
-      alert('❌ Error de conexión')
-    }
+
+      clientesMap[clienteNombre].leads++
+      if (lead.vendido) {
+        clientesMap[clienteNombre].vendidos++
+        clientesMap[clienteNombre].monto += lead.monto_vendido || 0
+      }
+    })
+
+    // Calcular tasa de conversion
+    Object.values(clientesMap).forEach(cliente => {
+      cliente.tasaConversion = cliente.leads > 0
+        ? (cliente.vendidos / cliente.leads) * 100
+        : 0
+    })
+
+    // Ordenar por monto vendido
+    return Object.values(clientesMap)
+      .sort((a, b) => b.monto - a.monto)
+      .slice(0, 5)
   }
 
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('es-CL', {
-      style: 'currency',
-      currency: 'CLP',
-      minimumFractionDigits: 0
-    }).format(amount)
-  }
+  const metricasPorMes = getMetricasPorMes()
+  const topClientes = getTopClientes()
 
-  const formatPercent = (value: number) => {
-    return `${value.toFixed(1)}%`
-  }
+  // Calcular valor promedio por venta
+  const valorPromedioVenta = leadsVendidos > 0
+    ? Math.round(totalVendido / leadsVendidos)
+    : 0
 
-  const clienteActual = clientes.find(c => c.id === selectedCliente)
+  if (loading) {
+    return (
+      <CRMLayout title="Metricas y Analytics">
+        <div className="text-center py-12">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+          <p className="text-gray-600 mt-4">Cargando metricas...</p>
+        </div>
+      </CRMLayout>
+    )
+  }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4">
-      <div className="max-w-7xl mx-auto">
-        <div className="bg-white rounded-lg shadow-lg p-6">
-          {/* Header */}
-          <div className="mb-6">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">📊 Métricas de Performance</h1>
-            <p className="text-gray-600">Análisis de retorno de inversión y eficiencia</p>
-          </div>
+    <CRMLayout title="Metricas y Analytics" onRefresh={loadData}>
+      {/* Metricas principales */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+        <MetricCard
+          title="Total Leads"
+          value={totalLeads}
+          subtitle="Todos los registros"
+          icon="📊"
+          color="blue"
+        />
+        <MetricCard
+          title="Tasa de Conversion"
+          value={`${tasaConversion}%`}
+          subtitle={`${leadsVendidos} de ${totalLeads} vendidos`}
+          icon="📈"
+          color="green"
+        />
+        <MetricCard
+          title="Total Vendido"
+          value={`$${totalVendido.toLocaleString('es-CL')}`}
+          subtitle="Ingresos totales"
+          icon="💰"
+          color="green"
+        />
+        <MetricCard
+          title="Ticket Promedio"
+          value={`$${valorPromedioVenta.toLocaleString('es-CL')}`}
+          subtitle="Por venta"
+          icon="💳"
+          color="purple"
+        />
+      </div>
 
-          {/* Selector de Cliente */}
-          <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Seleccionar Cliente
-            </label>
-            <select
-              value={selectedCliente}
-              onChange={(e) => setSelectedCliente(e.target.value)}
-              className="w-full md:w-96 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              {clientes.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.nombre} {c.rubro ? `(${c.rubro})` : ''}
-                </option>
-              ))}
-            </select>
-          </div>
+      {/* Metricas ROAS */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-6">
+        <MetricCard
+          title="ROAS (Return on Ad Spend)"
+          value={`${roas.toFixed(2)}x`}
+          subtitle="Retorno de inversion"
+          icon="💰"
+          color="green"
+        />
+        <MetricCard
+          title="Inversion Publicitaria"
+          value={`$${costoTotalPublicidad.toLocaleString('es-CL')}`}
+          subtitle="Costo total"
+          icon="💵"
+          color="blue"
+        />
+        <MetricCard
+          title="Costo por Lead"
+          value={`$${Math.round(costoPorLeadReal).toLocaleString('es-CL')}`}
+          subtitle="Promedio"
+          icon="📊"
+          color="orange"
+        />
+        <MetricCard
+          title="Costo por Contactado"
+          value={`$${Math.round(costoPorLeadContactado).toLocaleString('es-CL')}`}
+          subtitle="Por lead contactado"
+          icon="📞"
+          color="purple"
+        />
+        <MetricCard
+          title="Costo por Venta"
+          value={`$${Math.round(costoPorVenta).toLocaleString('es-CL')}`}
+          subtitle="CAC real"
+          icon="✅"
+          color="green"
+        />
+      </div>
 
-          {/* Inversión */}
-          <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-            <h3 className="text-sm font-semibold text-gray-700 mb-3">Inversión Mensual</h3>
-            {!editingInversion ? (
-              <div className="flex items-center gap-3">
-                <p className="text-2xl font-bold text-blue-600">
-                  {formatCurrency(clienteActual?.inversion_mensual || 0)}
-                </p>
-                <button
-                  onClick={() => {
-                    console.log('Click en Editar')
-                    setEditingInversion(true)
-                  }}
-                  className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm font-medium"
-                >
-                  ✏️ Editar
-                </button>
-                <button
-                  onClick={debugCliente}
-                  className="px-3 py-1 bg-orange-600 text-white rounded hover:bg-orange-700 text-sm font-medium"
-                >
-                  🔍 Debug
-                </button>
-              </div>
-            ) : (
-              <div className="flex items-center gap-2 mt-2">
-                <div className="flex flex-col gap-1">
-                  <label className="text-xs text-gray-600">Nueva inversión mensual</label>
-                  <input
-                    type="number"
-                    value={nuevaInversion}
-                    onChange={(e) => setNuevaInversion(e.target.value)}
-                    className="border-2 border-blue-300 rounded px-3 py-2 w-48 focus:outline-none focus:border-blue-500"
-                    placeholder="Ej: 600000"
-                    autoFocus
-                  />
-                </div>
-                <div className="flex gap-2 mt-5">
-                  <button
-                    onClick={updateInversion}
-                    className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 text-sm font-medium"
-                  >
-                    ✓ Guardar
-                  </button>
-                  <button
-                    onClick={() => setEditingInversion(false)}
-                    className="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 text-sm font-medium"
-                  >
-                    ✕ Cancelar
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
+      {/* Metricas de cotizaciones */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        <MetricCard
+          title="Cotizaciones Totales"
+          value={cotizaciones.length}
+          subtitle="Todas las cotizaciones"
+          icon="📄"
+          color="blue"
+        />
+        <MetricCard
+          title="Cotizaciones Enviadas"
+          value={cotizacionesEnviadas}
+          subtitle="En proceso"
+          icon="📧"
+          color="orange"
+        />
+        <MetricCard
+          title="Tasa de Aceptacion"
+          value={`${tasaAceptacion}%`}
+          subtitle={`${cotizacionesAceptadas} aceptadas`}
+          icon="✅"
+          color="green"
+        />
+      </div>
 
-          {loading ? (
-            <div className="text-center py-12">
-              <div className="text-gray-600">Cargando métricas...</div>
-            </div>
-          ) : metricas ? (
-            <>
-              {/* KPIs Principales */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-                {/* ROAS */}
-                <div className="p-6 bg-gradient-to-br from-green-50 to-green-100 border border-green-200 rounded-lg">
-                  <div className="text-sm font-semibold text-green-700 mb-1">ROAS</div>
-                  <div className="text-3xl font-bold text-green-600">
-                    {metricas.roas.toFixed(2)}x
-                  </div>
-                  <div className="text-xs text-green-600 mt-1">
-                    Return on Ad Spend
-                  </div>
-                </div>
+      {/* Metricas por mes */}
+      <div className="bg-white rounded-xl shadow-md p-6 mb-6 border border-gray-200">
+        <h2 className="text-xl font-bold text-gray-900 mb-6">Evolucion Mensual (Ultimos 6 Meses)</h2>
 
-                {/* CPL */}
-                <div className="p-6 bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 rounded-lg">
-                  <div className="text-sm font-semibold text-blue-700 mb-1">CPL</div>
-                  <div className="text-3xl font-bold text-blue-600">
-                    {formatCurrency(metricas.cpl)}
-                  </div>
-                  <div className="text-xs text-blue-600 mt-1">
-                    Costo por Lead
-                  </div>
-                </div>
+        <div className="space-y-6">
+          {metricasPorMes.map((metrica, index) => {
+            const maxLeads = Math.max(...metricasPorMes.map(m => m.leads))
+            const maxMonto = Math.max(...metricasPorMes.map(m => m.monto))
+            const leadsPercentage = maxLeads > 0 ? (metrica.leads / maxLeads) * 100 : 0
+            const montoPercentage = maxMonto > 0 ? (metrica.monto / maxMonto) * 100 : 0
+            const conversionRate = metrica.leads > 0 ? ((metrica.vendidos / metrica.leads) * 100).toFixed(1) : '0'
 
-                {/* CPA */}
-                <div className="p-6 bg-gradient-to-br from-purple-50 to-purple-100 border border-purple-200 rounded-lg">
-                  <div className="text-sm font-semibold text-purple-700 mb-1">CPA</div>
-                  <div className="text-3xl font-bold text-purple-600">
-                    {formatCurrency(metricas.cpa)}
-                  </div>
-                  <div className="text-xs text-purple-600 mt-1">
-                    Costo por Adquisición
-                  </div>
-                </div>
-
-                {/* Conversión */}
-                <div className="p-6 bg-gradient-to-br from-orange-50 to-orange-100 border border-orange-200 rounded-lg">
-                  <div className="text-sm font-semibold text-orange-700 mb-1">Conversión</div>
-                  <div className="text-3xl font-bold text-orange-600">
-                    {formatPercent(metricas.conversion_rate)}
-                  </div>
-                  <div className="text-xs text-orange-600 mt-1">
-                    Tasa de Conversión
-                  </div>
-                </div>
-              </div>
-
-              {/* Métricas Detalladas */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                {/* Embudo de Conversión */}
-                <div className="p-6 bg-white border border-gray-200 rounded-lg">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Embudo de Conversión</h3>
-                  <div className="space-y-3">
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-700">Total Leads</span>
-                      <span className="font-bold text-gray-900">{metricas.total_leads}</span>
+            return (
+              <div key={index} className="border-b border-gray-200 pb-4 last:border-b-0">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="font-semibold text-gray-900 w-32">{metrica.mes}</div>
+                  <div className="flex-1 grid grid-cols-4 gap-4 text-sm">
+                    <div>
+                      <span className="text-gray-600">Leads: </span>
+                      <span className="font-medium text-gray-900">{metrica.leads}</span>
                     </div>
-                    <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
-                      <div className="h-full bg-blue-500" style={{ width: '100%' }}></div>
+                    <div>
+                      <span className="text-gray-600">Contactados: </span>
+                      <span className="font-medium text-gray-900">{metrica.contactados}</span>
                     </div>
-
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-700">Contactados</span>
-                      <span className="font-bold text-gray-900">
-                        {metricas.leads_contactados} ({formatPercent(metricas.contact_rate)})
+                    <div>
+                      <span className="text-gray-600">Vendidos: </span>
+                      <span className="font-medium text-green-600">{metrica.vendidos}</span>
+                    </div>
+                    <div>
+                      <span className="text-gray-600">Monto: </span>
+                      <span className="font-medium text-green-600">
+                        ${metrica.monto.toLocaleString('es-CL')}
                       </span>
                     </div>
-                    <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <div className="flex items-center justify-between text-xs mb-1">
+                      <span className="text-gray-600">Volumen de Leads</span>
+                      <span className="text-gray-900 font-medium">{metrica.leads}</span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2">
                       <div
-                        className="h-full bg-purple-500"
-                        style={{ width: `${metricas.contact_rate}%` }}
+                        className="bg-blue-500 h-2 rounded-full transition-all duration-500"
+                        style={{ width: `${leadsPercentage}%` }}
                       ></div>
                     </div>
-
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-700">Vendidos</span>
-                      <span className="font-bold text-gray-900">
-                        {metricas.leads_vendidos} ({formatPercent(metricas.conversion_rate)})
+                  </div>
+                  <div>
+                    <div className="flex items-center justify-between text-xs mb-1">
+                      <span className="text-gray-600">Ingresos ({conversionRate}% conversion)</span>
+                      <span className="text-green-600 font-medium">
+                        ${metrica.monto.toLocaleString('es-CL')}
                       </span>
                     </div>
-                    <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+                    <div className="w-full bg-gray-200 rounded-full h-2">
                       <div
-                        className="h-full bg-green-500"
-                        style={{ width: `${metricas.conversion_rate}%` }}
+                        className="bg-green-500 h-2 rounded-full transition-all duration-500"
+                        style={{ width: `${montoPercentage}%` }}
                       ></div>
                     </div>
                   </div>
                 </div>
-
-                {/* Resumen Financiero */}
-                <div className="p-6 bg-white border border-gray-200 rounded-lg">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Resumen Financiero</h3>
-                  <div className="space-y-3">
-                    <div className="flex justify-between items-center py-2 border-b border-gray-200">
-                      <span className="text-gray-700">Inversión</span>
-                      <span className="font-bold text-red-600">
-                        - {formatCurrency(metricas.inversion)}
-                      </span>
-                    </div>
-                    <div className="flex justify-between items-center py-2 border-b border-gray-200">
-                      <span className="text-gray-700">Ventas Totales</span>
-                      <span className="font-bold text-green-600">
-                        + {formatCurrency(metricas.total_ventas)}
-                      </span>
-                    </div>
-                    <div className="flex justify-between items-center py-3 bg-gray-50 rounded px-3">
-                      <span className="text-gray-900 font-semibold">ROI Neto</span>
-                      <span className={`font-bold text-xl ${
-                        metricas.total_ventas - metricas.inversion >= 0
-                          ? 'text-green-600'
-                          : 'text-red-600'
-                      }`}>
-                        {formatCurrency(metricas.total_ventas - metricas.inversion)}
-                      </span>
-                    </div>
-                  </div>
-                </div>
               </div>
-
-              {/* Indicadores de Salud */}
-              <div className="p-6 bg-gradient-to-br from-gray-50 to-gray-100 border border-gray-200 rounded-lg">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">💡 Indicadores de Salud</h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="flex items-start gap-2">
-                    <span className="text-2xl">{metricas.roas >= 3 ? '✅' : metricas.roas >= 2 ? '⚠️' : '❌'}</span>
-                    <div>
-                      <div className="font-semibold text-gray-900">ROAS</div>
-                      <div className="text-sm text-gray-600">
-                        {metricas.roas >= 3 ? 'Excelente' : metricas.roas >= 2 ? 'Aceptable' : 'Bajo'}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-2">
-                    <span className="text-2xl">{metricas.conversion_rate >= 2 ? '✅' : metricas.conversion_rate >= 1 ? '⚠️' : '❌'}</span>
-                    <div>
-                      <div className="font-semibold text-gray-900">Conversión</div>
-                      <div className="text-sm text-gray-600">
-                        {metricas.conversion_rate >= 2 ? 'Excelente' : metricas.conversion_rate >= 1 ? 'Aceptable' : 'Bajo'}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-2">
-                    <span className="text-2xl">{metricas.contact_rate >= 70 ? '✅' : metricas.contact_rate >= 50 ? '⚠️' : '❌'}</span>
-                    <div>
-                      <div className="font-semibold text-gray-900">Contacto</div>
-                      <div className="text-sm text-gray-600">
-                        {metricas.contact_rate >= 70 ? 'Excelente' : metricas.contact_rate >= 50 ? 'Aceptable' : 'Bajo'}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </>
-          ) : (
-            <div className="text-center py-12 text-gray-500">
-              Selecciona un cliente para ver las métricas
-            </div>
-          )}
+            )
+          })}
         </div>
       </div>
-    </div>
+
+      {/* Top Clientes */}
+      <div className="bg-white rounded-xl shadow-md p-6 border border-gray-200">
+        <h2 className="text-xl font-bold text-gray-900 mb-6">Top 5 Clientes por Ventas</h2>
+
+        <div className="space-y-4">
+          {topClientes.map((cliente, index) => {
+            const maxMonto = topClientes[0]?.monto || 1
+            const montoPercentage = (cliente.monto / maxMonto) * 100
+
+            return (
+              <div key={index} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition bg-white">
+                <div className="flex items-start justify-between mb-3">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-3">
+                      <div className="flex items-center justify-center w-8 h-8 rounded-full bg-blue-500 text-white font-bold">
+                        {index + 1}
+                      </div>
+                      <div>
+                        <h3 className="font-bold text-gray-900 text-lg">{cliente.nombre}</h3>
+                        <p className="text-sm text-gray-600">
+                          {cliente.leads} leads • {cliente.vendidos} vendidos • {cliente.tasaConversion.toFixed(1)}% conversion
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-2xl font-bold text-green-600">
+                      ${cliente.monto.toLocaleString('es-CL')}
+                    </div>
+                    <div className="text-xs text-gray-600">Total vendido</div>
+                  </div>
+                </div>
+
+                <div className="w-full bg-gray-200 rounded-full h-3">
+                  <div
+                    className="bg-green-500 h-3 rounded-full transition-all duration-500"
+                    style={{ width: `${montoPercentage}%` }}
+                  ></div>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+
+        {topClientes.length === 0 && (
+          <div className="text-center py-8 text-gray-600">
+            <p>No hay datos de clientes disponibles</p>
+          </div>
+        )}
+      </div>
+
+      {/* Insights adicionales */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+        <div className="bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-lg shadow-lg p-6">
+          <h3 className="text-lg font-bold mb-4">📊 Resumen de Rendimiento</h3>
+          <div className="space-y-3">
+            <div className="flex justify-between items-center border-b border-blue-400 pb-2">
+              <span className="text-blue-100">Leads Contactados</span>
+              <span className="font-bold">{leadsContactados} ({totalLeads > 0 ? ((leadsContactados / totalLeads) * 100).toFixed(1) : 0}%)</span>
+            </div>
+            <div className="flex justify-between items-center border-b border-blue-400 pb-2">
+              <span className="text-blue-100">Leads No Contactados</span>
+              <span className="font-bold">{totalLeads - leadsContactados}</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-blue-100">Tasa de Cierre</span>
+              <span className="font-bold text-xl">{tasaConversion}%</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-gradient-to-br from-green-500 to-green-600 text-white rounded-lg shadow-lg p-6">
+          <h3 className="text-lg font-bold mb-4">💰 Resumen Financiero</h3>
+          <div className="space-y-3">
+            <div className="flex justify-between items-center border-b border-green-400 pb-2">
+              <span className="text-green-100">Total Vendido</span>
+              <span className="font-bold">${totalVendido.toLocaleString('es-CL')}</span>
+            </div>
+            <div className="flex justify-between items-center border-b border-green-400 pb-2">
+              <span className="text-green-100">Numero de Ventas</span>
+              <span className="font-bold">{leadsVendidos}</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-green-100">Ticket Promedio</span>
+              <span className="font-bold text-xl">${valorPromedioVenta.toLocaleString('es-CL')}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </CRMLayout>
   )
 }

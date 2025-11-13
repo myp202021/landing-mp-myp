@@ -1,120 +1,170 @@
-import { createClient } from '@supabase/supabase-js'
 import { NextRequest, NextResponse } from 'next/server'
+import { createClient } from '@supabase/supabase-js'
+
+export const dynamic = 'force-dynamic'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 )
 
-// ===========================================
-// GET: Listar cotizaciones (con filtros opcionales)
-// ===========================================
+// GET: Obtener cotizaciones
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url)
-    const lead_id = searchParams.get('lead_id')
     const cliente_id = searchParams.get('cliente_id')
-    const vendido = searchParams.get('vendido')
+    const lead_id = searchParams.get('lead_id')
+    const id = searchParams.get('id')
+
+    if (id) {
+      // Obtener cotización específica
+      const { data: cotizacion, error } = await supabase
+        .from('cotizaciones')
+        .select(`
+          *,
+          clientes (
+            id,
+            nombre,
+            rubro
+          ),
+          leads (
+            id,
+            nombre,
+            email,
+            telefono
+          )
+        `)
+        .eq('id', id)
+        .single()
+
+      if (error) {
+        console.error('❌ Error obteniendo cotización:', error)
+        return NextResponse.json(
+          { error: 'Error obteniendo cotización', details: error.message },
+          { status: 500 }
+        )
+      }
+
+      return NextResponse.json({ cotizacion })
+    }
 
     let query = supabase
-      .from('cotizaciones_crm')
+      .from('cotizaciones')
       .select(`
         *,
-        lead:leads(id, nombre, email, telefono),
-        cliente:clientes(id, nombre)
+        clientes (
+          id,
+          nombre,
+          rubro
+        ),
+        leads (
+          id,
+          nombre,
+          email
+        )
       `)
-      .order('created_at', { ascending: false })
-
-    if (lead_id) {
-      query = query.eq('lead_id', lead_id)
-    }
+      .order('creado_en', { ascending: false })
 
     if (cliente_id) {
       query = query.eq('cliente_id', cliente_id)
     }
 
-    if (vendido !== null && vendido !== undefined) {
-      query = query.eq('vendido', vendido === 'true')
+    if (lead_id) {
+      query = query.eq('lead_id', lead_id)
     }
 
     const { data: cotizaciones, error } = await query
 
-    if (error) throw error
+    if (error) {
+      console.error('❌ Error obteniendo cotizaciones:', error)
+      return NextResponse.json(
+        { error: 'Error obteniendo cotizaciones', details: error.message },
+        { status: 500 }
+      )
+    }
 
-    return NextResponse.json({ cotizaciones })
+    return NextResponse.json({ cotizaciones, total: cotizaciones.length })
+
   } catch (error: any) {
-    console.error('Error fetching cotizaciones:', error)
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    console.error('❌ Error en GET /api/crm/cotizaciones:', error)
+    return NextResponse.json(
+      { error: 'Error interno del servidor', details: error.message },
+      { status: 500 }
+    )
   }
 }
 
-// ===========================================
 // POST: Crear nueva cotización
-// ===========================================
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json()
     const {
-      lead_id,
       cliente_id,
-      descripcion_servicio,
-      monto_subtotal,
-      monto_iva,
-      monto_total,
-      estado = 'pendiente'
+      lead_id,
+      nombre_proyecto,
+      cliente_nombre,
+      cliente_email,
+      cliente_empresa,
+      items,
+      subtotal,
+      descuento,
+      total,
+      notas,
+      vigencia_dias
     } = body
 
-    // Validar datos requeridos
-    if (!lead_id || !cliente_id || !descripcion_servicio || monto_total === undefined) {
+    if (!cliente_id || !nombre_proyecto) {
       return NextResponse.json(
-        { error: 'Campos requeridos: lead_id, cliente_id, descripcion_servicio, monto_total' },
+        { error: 'cliente_id y nombre_proyecto son requeridos' },
         { status: 400 }
       )
     }
 
-    // Generar número de cotización automático
-    const { data: numeroData, error: numeroError } = await supabase
-      .rpc('generar_numero_cotizacion')
-
-    if (numeroError) throw numeroError
-
-    const numero_cotizacion = numeroData
-
-    // Crear cotización
-    const { data: newCotizacion, error: cotizacionError } = await supabase
-      .from('cotizaciones_crm')
+    const { data: cotizacion, error } = await supabase
+      .from('cotizaciones')
       .insert({
-        lead_id,
         cliente_id,
-        numero_cotizacion,
-        descripcion_servicio,
-        monto_subtotal: monto_subtotal || 0,
-        monto_iva: monto_iva || 0,
-        monto_total,
-        estado
+        lead_id: lead_id || null,
+        nombre_proyecto,
+        cliente_nombre: cliente_nombre || null,
+        cliente_email: cliente_email || null,
+        cliente_empresa: cliente_empresa || null,
+        items: items || [],
+        subtotal: subtotal || 0,
+        descuento: descuento || 0,
+        total: total || 0,
+        notas: notas || null,
+        vigencia_dias: vigencia_dias || 30,
+        estado: 'borrador'
       })
-      .select(`
-        *,
-        lead:leads(id, nombre, email, telefono),
-        cliente:clientes(id, nombre)
-      `)
+      .select()
       .single()
 
-    if (cotizacionError) throw cotizacionError
+    if (error) {
+      console.error('❌ Error creando cotización:', error)
+      return NextResponse.json(
+        { error: 'Error creando cotización', details: error.message },
+        { status: 500 }
+      )
+    }
+
+    console.log('✅ Cotización creada:', cotizacion.id)
 
     return NextResponse.json({
       success: true,
-      cotizacion: newCotizacion
+      cotizacion
     })
+
   } catch (error: any) {
-    console.error('Error creating cotización:', error)
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    console.error('❌ Error en POST /api/crm/cotizaciones:', error)
+    return NextResponse.json(
+      { error: 'Error interno del servidor', details: error.message },
+      { status: 500 }
+    )
   }
 }
 
-// ===========================================
 // PATCH: Actualizar cotización
-// ===========================================
 export async function PATCH(req: NextRequest) {
   try {
     const body = await req.json()
@@ -122,38 +172,51 @@ export async function PATCH(req: NextRequest) {
 
     if (!id) {
       return NextResponse.json(
-        { error: 'ID de cotización requerido' },
+        { error: 'id es requerido' },
         { status: 400 }
       )
     }
 
-    // Actualizar cotización
-    const { data: updatedCotizacion, error: updateError } = await supabase
-      .from('cotizaciones_crm')
+    // Si se está cambiando el estado a 'enviada' o 'aceptada', actualizar timestamp
+    if (updates.estado === 'enviada' && !updates.enviada_en) {
+      updates.enviada_en = new Date().toISOString()
+    }
+    if (updates.estado === 'aceptada' && !updates.aceptada_en) {
+      updates.aceptada_en = new Date().toISOString()
+    }
+
+    const { data: cotizacion, error } = await supabase
+      .from('cotizaciones')
       .update(updates)
       .eq('id', id)
-      .select(`
-        *,
-        lead:leads(id, nombre, email, telefono),
-        cliente:clientes(id, nombre)
-      `)
+      .select()
       .single()
 
-    if (updateError) throw updateError
+    if (error) {
+      console.error('❌ Error actualizando cotización:', error)
+      return NextResponse.json(
+        { error: 'Error actualizando cotización', details: error.message },
+        { status: 500 }
+      )
+    }
+
+    console.log('✅ Cotización actualizada:', id)
 
     return NextResponse.json({
       success: true,
-      cotizacion: updatedCotizacion
+      cotizacion
     })
+
   } catch (error: any) {
-    console.error('Error updating cotización:', error)
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    console.error('❌ Error en PATCH /api/crm/cotizaciones:', error)
+    return NextResponse.json(
+      { error: 'Error interno del servidor', details: error.message },
+      { status: 500 }
+    )
   }
 }
 
-// ===========================================
 // DELETE: Eliminar cotización
-// ===========================================
 export async function DELETE(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url)
@@ -161,21 +224,36 @@ export async function DELETE(req: NextRequest) {
 
     if (!id) {
       return NextResponse.json(
-        { error: 'ID de cotización requerido' },
+        { error: 'id es requerido' },
         { status: 400 }
       )
     }
 
     const { error } = await supabase
-      .from('cotizaciones_crm')
+      .from('cotizaciones')
       .delete()
       .eq('id', id)
 
-    if (error) throw error
+    if (error) {
+      console.error('❌ Error eliminando cotización:', error)
+      return NextResponse.json(
+        { error: 'Error eliminando cotización', details: error.message },
+        { status: 500 }
+      )
+    }
 
-    return NextResponse.json({ success: true })
+    console.log('✅ Cotización eliminada:', id)
+
+    return NextResponse.json({
+      success: true,
+      message: 'Cotización eliminada exitosamente'
+    })
+
   } catch (error: any) {
-    console.error('Error deleting cotización:', error)
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    console.error('❌ Error en DELETE /api/crm/cotizaciones:', error)
+    return NextResponse.json(
+      { error: 'Error interno del servidor', details: error.message },
+      { status: 500 }
+    )
   }
 }

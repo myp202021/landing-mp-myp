@@ -1,137 +1,60 @@
-/**
- * CRM LEADS API
- * GET: Listar leads con filtros
- * PATCH: Actualizar campos de gestión (contactado, vendido, etc.)
- * DELETE: Eliminar lead
- */
-
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
-export const runtime = 'edge'
 export const dynamic = 'force-dynamic'
 
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+)
 
-/**
- * GET /api/crm/leads
- *
- * Query params:
- *   - clientId: UUID (required)
- *   - fecha_desde: YYYY-MM-DD (opcional)
- *   - fecha_hasta: YYYY-MM-DD (opcional)
- *   - contactado: true/false (opcional)
- *   - vendido: true/false (opcional)
- *   - search: texto búsqueda (nombre, email, teléfono)
- *   - limit: número (default 100)
- *   - offset: número (default 0)
- *   - orderBy: campo (default fecha_ingreso)
- *   - order: asc/desc (default desc)
- */
+// GET: Obtener todos los leads o filtrar por cliente_id
 export async function GET(req: NextRequest) {
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-  )
   try {
     const { searchParams } = new URL(req.url)
-    const clientId = searchParams.get('clientId')
+    const cliente_id = searchParams.get('cliente_id')
+    const limit = searchParams.get('limit') || '100'
 
-    if (!clientId) {
-      return NextResponse.json(
-        { error: 'clientId es requerido' },
-        { status: 400 }
-      )
-    }
-
-    // Construir query
     let query = supabase
       .from('leads')
-      .select('*', { count: 'exact' })
-      .eq('cliente_id', clientId)
+      .select(`
+        *,
+        clientes (
+          id,
+          nombre,
+          rubro
+        )
+      `)
+      .order('fecha_ingreso', { ascending: false })
+      .limit(parseInt(limit))
 
-    // Filtros
-    const fecha_desde = searchParams.get('fecha_desde')
-    if (fecha_desde) {
-      query = query.gte('fecha_ingreso', fecha_desde)
+    if (cliente_id) {
+      query = query.eq('cliente_id', cliente_id)
     }
 
-    const fecha_hasta = searchParams.get('fecha_hasta')
-    if (fecha_hasta) {
-      // Agregar un día para incluir todo el día final
-      const fechaFin = new Date(fecha_hasta)
-      fechaFin.setDate(fechaFin.getDate() + 1)
-      query = query.lt('fecha_ingreso', fechaFin.toISOString().split('T')[0])
-    }
-
-    const contactado = searchParams.get('contactado')
-    if (contactado !== null && contactado !== '') {
-      query = query.eq('contactado', contactado === 'true')
-    }
-
-    const vendido = searchParams.get('vendido')
-    if (vendido !== null && vendido !== '') {
-      query = query.eq('vendido', vendido === 'true')
-    }
-
-    const search = searchParams.get('search')
-    if (search) {
-      // Búsqueda en nombre, email, teléfono
-      query = query.or(`nombre.ilike.%${search}%,email.ilike.%${search}%,telefono.ilike.%${search}%`)
-    }
-
-    // Paginación
-    const limit = parseInt(searchParams.get('limit') || '100')
-    const offset = parseInt(searchParams.get('offset') || '0')
-    query = query.range(offset, offset + limit - 1)
-
-    // Orden
-    const orderBy = searchParams.get('orderBy') || 'fecha_ingreso'
-    const order = searchParams.get('order') === 'asc' ? 'asc' : 'desc'
-    query = query.order(orderBy, { ascending: order === 'asc' })
-
-    const { data, error, count } = await query
+    const { data: leads, error } = await query
 
     if (error) {
-      console.error('Error fetching leads:', error)
+      console.error('❌ Error obteniendo leads:', error)
       return NextResponse.json(
-        { error: error.message },
+        { error: 'Error obteniendo leads', details: error.message },
         { status: 500 }
       )
     }
 
-    return NextResponse.json({
-      leads: data,
-      total: count,
-      limit,
-      offset
-    })
+    return NextResponse.json({ leads, total: leads.length })
 
   } catch (error: any) {
-    console.error('Error en GET leads:', error)
+    console.error('❌ Error en GET /api/crm/leads:', error)
     return NextResponse.json(
-      { error: error.message },
+      { error: 'Error interno del servidor', details: error.message },
       { status: 500 }
     )
   }
 }
 
-/**
- * PATCH /api/crm/leads/[id]
- *
- * Body: {
- *   contactado?: boolean
- *   fecha_contacto?: string (YYYY-MM-DD)
- *   vendido?: boolean
- *   monto_vendido?: number
- *   razon_no_venta?: string
- *   observaciones?: string
- * }
- */
+// PATCH: Actualizar un lead (estado, monto, etc.)
 export async function PATCH(req: NextRequest) {
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-  )
   try {
     const body = await req.json()
     const { id, ...updates } = body
@@ -143,67 +66,40 @@ export async function PATCH(req: NextRequest) {
       )
     }
 
-    // Solo permitir actualizar campos de gestión
-    const allowedFields = [
-      'contactado',
-      'fecha_contacto',
-      'vendido',
-      'monto_vendido',
-      'razon_no_venta',
-      'observaciones'
-    ]
-
-    const sanitizedUpdates: any = {}
-    for (const field of allowedFields) {
-      if (updates[field] !== undefined) {
-        sanitizedUpdates[field] = updates[field]
-      }
-    }
-
-    if (Object.keys(sanitizedUpdates).length === 0) {
-      return NextResponse.json(
-        { error: 'No hay campos válidos para actualizar' },
-        { status: 400 }
-      )
-    }
-
-    // Actualizar timestamp
-    sanitizedUpdates.actualizado_en = new Date().toISOString()
-
-    const { data, error } = await supabase
+    // Actualizar lead
+    const { data: lead, error } = await supabase
       .from('leads')
-      .update(sanitizedUpdates)
+      .update(updates)
       .eq('id', id)
       .select()
       .single()
 
     if (error) {
-      console.error('Error updating lead:', error)
+      console.error('❌ Error actualizando lead:', error)
       return NextResponse.json(
-        { error: error.message },
+        { error: 'Error actualizando lead', details: error.message },
         { status: 500 }
       )
     }
 
-    return NextResponse.json({ lead: data })
+    console.log('✅ Lead actualizado:', id)
+
+    return NextResponse.json({
+      success: true,
+      lead
+    })
 
   } catch (error: any) {
-    console.error('Error en PATCH lead:', error)
+    console.error('❌ Error en PATCH /api/crm/leads:', error)
     return NextResponse.json(
-      { error: error.message },
+      { error: 'Error interno del servidor', details: error.message },
       { status: 500 }
     )
   }
 }
 
-/**
- * DELETE /api/crm/leads/[id]
- */
+// DELETE: Eliminar un lead
 export async function DELETE(req: NextRequest) {
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-  )
   try {
     const { searchParams } = new URL(req.url)
     const id = searchParams.get('id')
@@ -215,25 +111,34 @@ export async function DELETE(req: NextRequest) {
       )
     }
 
-    const { error } = await supabase
+    console.log('🗑️ Intentando eliminar lead:', id)
+
+    // Eliminar lead DIRECTAMENTE - las FK con CASCADE manejarán el resto
+    const { error, data } = await supabase
       .from('leads')
       .delete()
       .eq('id', id)
+      .select()
 
     if (error) {
-      console.error('Error deleting lead:', error)
+      console.error('❌ Error eliminando lead:', error)
       return NextResponse.json(
-        { error: error.message },
+        { error: 'Error eliminando lead', details: error.message },
         { status: 500 }
       )
     }
 
-    return NextResponse.json({ success: true })
+    console.log('✅ Lead eliminado exitosamente:', id, data)
+
+    return NextResponse.json({
+      success: true,
+      message: 'Lead eliminado exitosamente'
+    })
 
   } catch (error: any) {
-    console.error('Error en DELETE lead:', error)
+    console.error('❌ Error en DELETE /api/crm/leads:', error)
     return NextResponse.json(
-      { error: error.message },
+      { error: 'Error interno del servidor', details: error.message },
       { status: 500 }
     )
   }

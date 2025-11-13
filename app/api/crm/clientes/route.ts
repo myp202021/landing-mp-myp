@@ -1,92 +1,92 @@
-/**
- * CRM CLIENTES API
- * GET: Listar clientes
- * POST: Crear cliente (admin only)
- * DELETE: Eliminar cliente (soft delete)
- */
-
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
-export const runtime = 'edge'
 export const dynamic = 'force-dynamic'
 
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+)
 
-/**
- * GET /api/crm/clientes
- * GET /api/crm/clientes?id=xxx (obtener cliente específico)
- */
+// GET: Obtener todos los clientes
 export async function GET(req: NextRequest) {
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-  )
   try {
     const { searchParams } = new URL(req.url)
     const id = searchParams.get('id')
 
-    // Si se proporciona ID, obtener cliente específico
     if (id) {
-      const { data, error } = await supabase
+      // Obtener un cliente específico con sus estadísticas
+      const { data: cliente, error: clienteError } = await supabase
         .from('clientes')
         .select('*')
         .eq('id', id)
-        .eq('activo', true)
         .single()
 
-      if (error) {
-        console.error('Error fetching cliente:', error)
+      if (clienteError) {
+        console.error('❌ Error obteniendo cliente:', clienteError)
         return NextResponse.json(
-          { error: error.message },
+          { error: 'Error obteniendo cliente', details: clienteError.message },
           { status: 500 }
         )
       }
 
-      return NextResponse.json({ cliente: data })
+      // Obtener estadísticas del cliente
+      const { data: leads, error: leadsError } = await supabase
+        .from('leads')
+        .select('*')
+        .eq('cliente_id', id)
+
+      const total_leads = leads?.length || 0
+      const contactados = leads?.filter(l => l.contactado).length || 0
+      const vendidos = leads?.filter(l => l.vendido).length || 0
+      const monto_total = leads?.reduce((sum, l) => sum + (parseFloat(l.monto_vendido) || 0), 0) || 0
+
+      return NextResponse.json({
+        cliente,
+        estadisticas: {
+          total_leads,
+          contactados,
+          vendidos,
+          monto_total,
+          tasa_contacto: total_leads > 0 ? (contactados / total_leads * 100).toFixed(1) : 0,
+          tasa_conversion: total_leads > 0 ? (vendidos / total_leads * 100).toFixed(1) : 0
+        }
+      })
     }
 
-    // Si no hay ID, obtener todos los clientes
-    const { data, error } = await supabase
+    // Obtener todos los clientes con conteo de leads
+    const { data: clientes, error } = await supabase
       .from('clientes')
-      .select('*')
-      .eq('activo', true)
-      .order('nombre', { ascending: true })
+      .select(`
+        *,
+        leads (count)
+      `)
+      .order('creado_en', { ascending: false })
 
     if (error) {
-      console.error('Error fetching clientes:', error)
+      console.error('❌ Error obteniendo clientes:', error)
       return NextResponse.json(
-        { error: error.message },
+        { error: 'Error obteniendo clientes', details: error.message },
         { status: 500 }
       )
     }
 
-    return NextResponse.json({ clientes: data })
+    return NextResponse.json({ clientes, total: clientes.length })
 
   } catch (error: any) {
-    console.error('Error en GET clientes:', error)
+    console.error('❌ Error en GET /api/crm/clientes:', error)
     return NextResponse.json(
-      { error: error.message },
+      { error: 'Error interno del servidor', details: error.message },
       { status: 500 }
     )
   }
 }
 
-/**
- * POST /api/crm/clientes
- *
- * Body: {
- *   nombre: string
- *   rubro?: string
- * }
- */
+// POST: Crear un nuevo cliente
 export async function POST(req: NextRequest) {
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-  )
   try {
     const body = await req.json()
-    const { nombre, rubro } = body
+    const { nombre, email, rubro, telefono } = body
 
     if (!nombre) {
       return NextResponse.json(
@@ -95,7 +95,7 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    const { data, error } = await supabase
+    const { data: cliente, error } = await supabase
       .from('clientes')
       .insert({
         nombre,
@@ -106,48 +106,34 @@ export async function POST(req: NextRequest) {
       .single()
 
     if (error) {
-      console.error('Error creating cliente:', error)
+      console.error('❌ Error creando cliente:', error)
       return NextResponse.json(
-        { error: error.message },
+        { error: 'Error creando cliente', details: error.message },
         { status: 500 }
       )
     }
 
-    return NextResponse.json({ cliente: data })
+    console.log('✅ Cliente creado:', cliente.id)
+
+    return NextResponse.json({
+      success: true,
+      cliente
+    })
 
   } catch (error: any) {
-    console.error('Error en POST cliente:', error)
+    console.error('❌ Error en POST /api/crm/clientes:', error)
     return NextResponse.json(
-      { error: error.message },
+      { error: 'Error interno del servidor', details: error.message },
       { status: 500 }
     )
   }
 }
 
-/**
- * PATCH /api/crm/clientes
- * Actualizar cliente (ej: inversión mensual, campos Meta)
- *
- * Body: {
- *   id: string
- *   inversion_mensual?: number
- *   nombre?: string
- *   rubro?: string
- *   meta_page_id?: string
- *   meta_form_id?: string
- *   sync_meta_activo?: boolean
- * }
- */
+// PATCH: Actualizar un cliente
 export async function PATCH(req: NextRequest) {
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-  )
   try {
     const body = await req.json()
-    const { id, inversion_mensual, nombre, rubro, meta_page_id, meta_form_id, sync_meta_activo } = body
-
-    console.log('📝 PATCH /api/crm/clientes - Body recibido:', body)
+    const { id, ...updates } = body
 
     if (!id) {
       return NextResponse.json(
@@ -156,18 +142,7 @@ export async function PATCH(req: NextRequest) {
       )
     }
 
-    // Construir objeto de actualización solo con campos presentes
-    const updates: any = {}
-    if (inversion_mensual !== undefined) updates.inversion_mensual = inversion_mensual
-    if (nombre) updates.nombre = nombre
-    if (rubro !== undefined) updates.rubro = rubro
-    if (meta_page_id !== undefined) updates.meta_page_id = meta_page_id
-    if (meta_form_id !== undefined) updates.meta_form_id = meta_form_id
-    if (sync_meta_activo !== undefined) updates.sync_meta_activo = sync_meta_activo
-
-    console.log('🔄 Actualizando cliente con:', { id, updates })
-
-    const { data, error } = await supabase
+    const { data: cliente, error } = await supabase
       .from('clientes')
       .update(updates)
       .eq('id', id)
@@ -175,34 +150,31 @@ export async function PATCH(req: NextRequest) {
       .single()
 
     if (error) {
-      console.error('❌ Error updating cliente:', error)
+      console.error('❌ Error actualizando cliente:', error)
       return NextResponse.json(
-        { error: error.message },
+        { error: 'Error actualizando cliente', details: error.message },
         { status: 500 }
       )
     }
 
-    console.log('✅ Cliente actualizado:', data)
-    return NextResponse.json({ cliente: data })
+    console.log('✅ Cliente actualizado:', id)
+
+    return NextResponse.json({
+      success: true,
+      cliente
+    })
 
   } catch (error: any) {
-    console.error('❌ Error en PATCH cliente:', error)
+    console.error('❌ Error en PATCH /api/crm/clientes:', error)
     return NextResponse.json(
-      { error: error.message },
+      { error: 'Error interno del servidor', details: error.message },
       { status: 500 }
     )
   }
 }
 
-/**
- * DELETE /api/crm/clientes?id=xxx
- * Soft delete - marca como inactivo
- */
+// DELETE: Eliminar un cliente (con manejo de todas las relaciones)
 export async function DELETE(req: NextRequest) {
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-  )
   try {
     const { searchParams } = new URL(req.url)
     const id = searchParams.get('id')
@@ -214,26 +186,77 @@ export async function DELETE(req: NextRequest) {
       )
     }
 
-    // Soft delete - marcar como inactivo
-    const { error } = await supabase
-      .from('clientes')
-      .update({ activo: false })
-      .eq('id', id)
+    console.log('🗑️ Intentando eliminar cliente:', id)
 
-    if (error) {
-      console.error('Error deleting cliente:', error)
+    // Paso 1: Eliminar cotizaciones del cliente
+    try {
+      await supabase
+        .from('cotizaciones')
+        .delete()
+        .eq('cliente_id', id)
+    } catch (e) {
+      console.warn('⚠️  Error eliminando cotizaciones del cliente:', e)
+    }
+
+    // Paso 2: Obtener leads para eliminar sus cotizaciones
+    const { data: leadsData } = await supabase
+      .from('leads')
+      .select('id')
+      .eq('cliente_id', id)
+
+    const leadIds = leadsData?.map(l => l.id) || []
+
+    // Paso 3: Eliminar cotizaciones de los leads
+    if (leadIds.length > 0) {
+      try {
+        await supabase
+          .from('cotizaciones')
+          .delete()
+          .in('lead_id', leadIds)
+      } catch (e) {
+        console.warn('⚠️  Error eliminando cotizaciones de leads:', e)
+      }
+    }
+
+    // Paso 4: Eliminar todos los leads asociados
+    const { error: leadsError } = await supabase
+      .from('leads')
+      .delete()
+      .eq('cliente_id', id)
+
+    if (leadsError) {
+      console.error('❌ Error eliminando leads del cliente:', leadsError)
       return NextResponse.json(
-        { error: error.message },
+        { error: 'Error eliminando leads del cliente', details: leadsError.message },
         { status: 500 }
       )
     }
 
-    return NextResponse.json({ success: true })
+    // Paso 5: Eliminar el cliente
+    const { error } = await supabase
+      .from('clientes')
+      .delete()
+      .eq('id', id)
+
+    if (error) {
+      console.error('❌ Error eliminando cliente:', error)
+      return NextResponse.json(
+        { error: 'Error eliminando cliente', details: error.message },
+        { status: 500 }
+      )
+    }
+
+    console.log('✅ Cliente eliminado exitosamente:', id)
+
+    return NextResponse.json({
+      success: true,
+      message: 'Cliente eliminado exitosamente'
+    })
 
   } catch (error: any) {
-    console.error('Error en DELETE cliente:', error)
+    console.error('❌ Error en DELETE /api/crm/clientes:', error)
     return NextResponse.json(
-      { error: error.message },
+      { error: 'Error interno del servidor', details: error.message },
       { status: 500 }
     )
   }

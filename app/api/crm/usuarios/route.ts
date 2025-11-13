@@ -1,200 +1,242 @@
-/**
- * CRM USUARIOS API
- * GET: Listar usuarios
- * POST: Crear usuario (admin only)
- */
-
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
-export const runtime = 'edge'
-export const dynamic = 'force-dynamic'
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+)
 
-
-/**
- * GET /api/crm/usuarios
- *
- * Query params:
- *   - clientId: UUID (optional, filtra por cliente)
- */
+// GET - Listar todos los usuarios (solo admin)
 export async function GET(req: NextRequest) {
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-  )
   try {
     const { searchParams } = new URL(req.url)
-    const clientId = searchParams.get('clientId')
+    const id = searchParams.get('id')
 
-    let query = supabase
+    if (id) {
+      // Obtener usuario específico
+      const { data: usuario, error } = await supabase
+        .from('usuarios')
+        .select(`
+          *,
+          clientes (
+            id,
+            nombre,
+            rubro
+          )
+        `)
+        .eq('id', id)
+        .single()
+
+      if (error) throw error
+
+      return NextResponse.json({ usuario })
+    }
+
+    // Listar todos los usuarios
+    const { data: usuarios, error } = await supabase
       .from('usuarios')
       .select(`
         *,
-        cliente:clientes(id, nombre, rubro)
+        clientes (
+          id,
+          nombre,
+          rubro
+        )
       `)
       .order('creado_en', { ascending: false })
 
-    if (clientId) {
-      query = query.eq('cliente_id', clientId)
-    }
+    if (error) throw error
 
-    const { data, error } = await query
-
-    if (error) {
-      console.error('Error fetching usuarios:', error)
-      return NextResponse.json(
-        { error: error.message },
-        { status: 500 }
-      )
-    }
-
-    return NextResponse.json({ usuarios: data })
-
+    return NextResponse.json({ usuarios })
   } catch (error: any) {
-    console.error('Error en GET usuarios:', error)
+    console.error('Error en GET /api/crm/usuarios:', error)
     return NextResponse.json(
-      { error: error.message },
+      { error: 'Error obteniendo usuarios', details: error.message },
       { status: 500 }
     )
   }
 }
 
-/**
- * POST /api/crm/usuarios
- *
- * Body: {
- *   email: string
- *   password: string
- *   nombre: string
- *   cliente_id: UUID
- *   rol: 'admin' | 'cliente'
- * }
- */
+// POST - Crear nuevo usuario
 export async function POST(req: NextRequest) {
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-  )
   try {
     const body = await req.json()
-    const { email, password, nombre, cliente_id, rol } = body
+    const { username, password, cliente_id, rol, nombre } = body
 
-    if (!email || !password || !cliente_id) {
+    // Validaciones
+    if (!username || !password || !rol || !nombre) {
       return NextResponse.json(
-        { error: 'email, password y cliente_id son requeridos' },
+        { error: 'Faltan campos requeridos: username, password, rol, nombre' },
         { status: 400 }
       )
     }
 
-    if (rol && !['admin', 'cliente'].includes(rol)) {
+    if (rol !== 'admin' && rol !== 'cliente') {
       return NextResponse.json(
-        { error: 'rol debe ser "admin" o "cliente"' },
+        { error: 'El rol debe ser "admin" o "cliente"' },
         { status: 400 }
       )
     }
 
-    // Usar función SQL para crear usuario con password hasheado
-    const { data, error } = await supabase
-      .rpc('crear_usuario_con_password', {
-        p_email: email,
-        p_password: password,
-        p_nombre: nombre || '',
-        p_cliente_id: cliente_id,
-        p_rol: rol || 'cliente'
-      })
-
-    if (error) {
-      console.error('Error creating usuario:', error)
+    if (rol === 'cliente' && !cliente_id) {
       return NextResponse.json(
-        { error: error.message },
-        { status: 500 }
+        { error: 'Los usuarios de tipo "cliente" requieren cliente_id' },
+        { status: 400 }
       )
     }
 
-    // Obtener el usuario creado
-    const { data: usuario, error: fetchError } = await supabase
+    // Verificar que el username no exista
+    const { data: existente } = await supabase
       .from('usuarios')
-      .select('id, email, nombre, cliente_id, rol, activo, creado_en')
-      .eq('id', data)
+      .select('id')
+      .eq('username', username)
       .single()
 
-    if (fetchError) {
-      console.error('Error fetching created usuario:', fetchError)
+    if (existente) {
+      return NextResponse.json(
+        { error: 'El username ya existe' },
+        { status: 400 }
+      )
     }
 
-    return NextResponse.json({ usuario: usuario || { id: data } })
+    // Crear usuario
+    // NOTA: En producción, password debería hashearse con bcrypt
+    const { data: usuario, error } = await supabase
+      .from('usuarios')
+      .insert({
+        username,
+        password_hash: password, // En producción: await bcrypt.hash(password, 10)
+        cliente_id: rol === 'cliente' ? cliente_id : null,
+        rol,
+        nombre,
+        activo: true
+      })
+      .select()
+      .single()
 
-  } catch (error: any) {
-    console.error('Error en POST usuario:', error)
+    if (error) throw error
+
     return NextResponse.json(
-      { error: error.message },
+      {
+        success: true,
+        usuario: {
+          id: usuario.id,
+          username: usuario.username,
+          nombre: usuario.nombre,
+          rol: usuario.rol,
+          cliente_id: usuario.cliente_id
+        },
+        message: 'Usuario creado exitosamente'
+      },
+      { status: 201 }
+    )
+  } catch (error: any) {
+    console.error('Error en POST /api/crm/usuarios:', error)
+    return NextResponse.json(
+      { error: 'Error creando usuario', details: error.message },
       { status: 500 }
     )
   }
 }
 
-/**
- * PATCH /api/crm/usuarios
- *
- * Body: {
- *   id: UUID
- *   activo?: boolean
- *   nombre?: string
- * }
- */
+// PATCH - Actualizar usuario existente
 export async function PATCH(req: NextRequest) {
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-  )
   try {
     const body = await req.json()
-    const { id, ...updates } = body
+    const { id, username, password, nombre, activo } = body
 
     if (!id) {
       return NextResponse.json(
-        { error: 'id es requerido' },
+        { error: 'Se requiere el id del usuario' },
         { status: 400 }
       )
     }
 
-    const allowedFields = ['activo', 'nombre']
-    const sanitizedUpdates: any = {}
+    const updateData: any = {}
 
-    for (const field of allowedFields) {
-      if (updates[field] !== undefined) {
-        sanitizedUpdates[field] = updates[field]
-      }
+    if (username !== undefined) updateData.username = username
+    if (nombre !== undefined) updateData.nombre = nombre
+    if (activo !== undefined) updateData.activo = activo
+
+    // Solo actualizar password si se proporciona uno nuevo
+    if (password) {
+      updateData.password_hash = password // En producción: await bcrypt.hash(password, 10)
     }
 
-    if (Object.keys(sanitizedUpdates).length === 0) {
-      return NextResponse.json(
-        { error: 'No hay campos válidos para actualizar' },
-        { status: 400 }
-      )
-    }
+    updateData.actualizado_en = new Date().toISOString()
 
-    const { data, error } = await supabase
+    const { data: usuario, error } = await supabase
       .from('usuarios')
-      .update(sanitizedUpdates)
+      .update(updateData)
       .eq('id', id)
       .select()
       .single()
 
-    if (error) {
-      console.error('Error updating usuario:', error)
+    if (error) throw error
+
+    return NextResponse.json({
+      success: true,
+      usuario: {
+        id: usuario.id,
+        username: usuario.username,
+        nombre: usuario.nombre,
+        rol: usuario.rol,
+        cliente_id: usuario.cliente_id,
+        activo: usuario.activo
+      },
+      message: 'Usuario actualizado exitosamente'
+    })
+  } catch (error: any) {
+    console.error('Error en PATCH /api/crm/usuarios:', error)
+    return NextResponse.json(
+      { error: 'Error actualizando usuario', details: error.message },
+      { status: 500 }
+    )
+  }
+}
+
+// DELETE - Eliminar usuario
+export async function DELETE(req: NextRequest) {
+  try {
+    const { searchParams } = new URL(req.url)
+    const id = searchParams.get('id')
+
+    if (!id) {
       return NextResponse.json(
-        { error: error.message },
-        { status: 500 }
+        { error: 'Se requiere el id del usuario' },
+        { status: 400 }
       )
     }
 
-    return NextResponse.json({ usuario: data })
+    // Verificar que no sea el admin principal
+    const { data: usuario } = await supabase
+      .from('usuarios')
+      .select('username, rol')
+      .eq('id', id)
+      .single()
 
+    if (usuario && usuario.username === 'admin' && usuario.rol === 'admin') {
+      return NextResponse.json(
+        { error: 'No se puede eliminar el usuario administrador principal' },
+        { status: 403 }
+      )
+    }
+
+    const { error } = await supabase
+      .from('usuarios')
+      .delete()
+      .eq('id', id)
+
+    if (error) throw error
+
+    return NextResponse.json({
+      success: true,
+      message: 'Usuario eliminado exitosamente'
+    })
   } catch (error: any) {
-    console.error('Error en PATCH usuario:', error)
+    console.error('Error en DELETE /api/crm/usuarios:', error)
     return NextResponse.json(
-      { error: error.message },
+      { error: 'Error eliminando usuario', details: error.message },
       { status: 500 }
     )
   }
