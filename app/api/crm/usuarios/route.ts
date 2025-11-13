@@ -63,8 +63,8 @@ export async function GET(req: NextRequest) {
  * POST /api/crm/usuarios
  *
  * Body: {
- *   id: UUID (auth_user_id de Supabase Auth)
  *   email: string
+ *   password: string
  *   nombre: string
  *   cliente_id: UUID
  *   rol: 'admin' | 'cliente'
@@ -77,11 +77,11 @@ export async function POST(req: NextRequest) {
   )
   try {
     const body = await req.json()
-    const { id, email, nombre, cliente_id, rol } = body
+    const { email, password, nombre, cliente_id, rol } = body
 
-    if (!id || !email || !cliente_id) {
+    if (!email || !password || !cliente_id) {
       return NextResponse.json(
-        { error: 'id, email y cliente_id son requeridos' },
+        { error: 'email, password y cliente_id son requeridos' },
         { status: 400 }
       )
     }
@@ -93,18 +93,15 @@ export async function POST(req: NextRequest) {
       )
     }
 
+    // Usar función SQL para crear usuario con password hasheado
     const { data, error } = await supabase
-      .from('usuarios')
-      .insert({
-        id,
-        email,
-        nombre,
-        cliente_id,
-        rol: rol || 'cliente',
-        activo: true
+      .rpc('crear_usuario_con_password', {
+        p_email: email,
+        p_password: password,
+        p_nombre: nombre || '',
+        p_cliente_id: cliente_id,
+        p_rol: rol || 'cliente'
       })
-      .select()
-      .single()
 
     if (error) {
       console.error('Error creating usuario:', error)
@@ -114,7 +111,18 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    return NextResponse.json({ usuario: data })
+    // Obtener el usuario creado
+    const { data: usuario, error: fetchError } = await supabase
+      .from('usuarios')
+      .select('id, email, nombre, cliente_id, rol, activo, creado_en')
+      .eq('id', data)
+      .single()
+
+    if (fetchError) {
+      console.error('Error fetching created usuario:', fetchError)
+    }
+
+    return NextResponse.json({ usuario: usuario || { id: data } })
 
   } catch (error: any) {
     console.error('Error en POST usuario:', error)

@@ -31,10 +31,10 @@ const MAX_ROWS = 5000
 
 /**
  * MAPEO DE CAMPOS META → SCHEMA
- * Meta usa nombres en inglés, nosotros en español
+ * Soporta nombres en inglés y español
  */
 const FIELD_MAPPING: Record<string, string> = {
-  // Datos del lead
+  // Datos del lead - INGLÉS
   'full_name': 'nombre',
   'first_name': 'nombre',
   'last_name': 'apellido',
@@ -52,7 +52,28 @@ const FIELD_MAPPING: Record<string, string> = {
   'service': 'servicio',
   'message': 'mensaje',
 
-  // Contexto campaña
+  // Datos del lead - ESPAÑOL
+  'nombre_completo': 'nombre',
+  'apellido': 'apellido',
+  'correo': 'email',
+  'correo_electrónico': 'email',
+  'e-mail': 'email',
+  'mail': 'email', // Agregado para archivos Arturo
+  'teléfono': 'telefono',
+  'celular': 'telefono',
+  'número_de_teléfono': 'telefono', // Con guión bajo (Meta exports)
+  'nombre_de_la_empresa': 'empresa',
+  'región': 'region',
+  'dirección': 'mensaje',
+  'cargo': 'servicio',
+  'comentarios': 'mensaje',
+  'comentario': 'observaciones', // Agregado para archivos Arturo
+  'status': 'observaciones', // Agregado para archivos Arturo
+  'valor_venta': 'monto_vendido', // Agregado para archivos Arturo
+  'motivos_de_no_venta': 'razon_no_venta', // Agregado para archivos Arturo
+  'facturación_mensual_empresa': 'presupuesto', // Meta exports
+
+  // Contexto campaña - INGLÉS
   'campaign_name': 'campana_nombre',
   'ad_set_name': 'adset_nombre',
   'ad_name': 'ad_nombre',
@@ -60,6 +81,19 @@ const FIELD_MAPPING: Record<string, string> = {
   'created_time': 'fecha_ingreso',
   'timestamp': 'fecha_ingreso',
   'date': 'fecha_ingreso',
+
+  // Contexto campaña - ESPAÑOL
+  'nombre_de_la_campaña': 'campana_nombre',
+  'campaña': 'campana_nombre',
+  'nombre_del_conjunto_de_anuncios': 'adset_nombre',
+  'conjunto_de_anuncios': 'adset_nombre',
+  'nombre_del_anuncio': 'ad_nombre',
+  'anuncio': 'ad_nombre',
+  'nombre_del_formulario': 'form_nombre',
+  'formulario': 'form_nombre',
+  'hora_de_creación': 'fecha_ingreso',
+  'fecha_de_creación': 'fecha_ingreso',
+  'fecha': 'fecha_ingreso', // Agregado para archivos Arturo
 }
 
 /**
@@ -118,9 +152,17 @@ function mapRowToLead(row: any, clientId: string, rubro: string): any {
   for (const [metaField, dbField] of Object.entries(FIELD_MAPPING)) {
     if (row[metaField]) {
       if (dbField === 'fecha_ingreso') {
-        // Parsear fecha
+        // Parsear fecha (puede ser número de Excel o string ISO)
         try {
-          lead[dbField] = new Date(row[metaField]).toISOString()
+          const value = row[metaField]
+          if (typeof value === 'number') {
+            // Fecha serializada de Excel (días desde 1900-01-01)
+            const excelEpoch = new Date(1899, 11, 30) // Excel epoch ajustado
+            const date = new Date(excelEpoch.getTime() + value * 24 * 60 * 60 * 1000)
+            lead[dbField] = date.toISOString()
+          } else {
+            lead[dbField] = new Date(value).toISOString()
+          }
         } catch {
           lead[dbField] = new Date().toISOString()
         }
@@ -131,10 +173,31 @@ function mapRowToLead(row: any, clientId: string, rubro: string): any {
         if (parts.length > 1) {
           lead['apellido'] = parts.slice(1).join(' ')
         }
+      } else if (dbField === 'monto_vendido') {
+        // Convertir valor venta a número
+        const value = String(row[metaField]).replace(/[^0-9.]/g, '')
+        lead[dbField] = value ? parseFloat(value) : null
       } else {
         lead[dbField] = row[metaField]
       }
     }
+  }
+
+  // Detectar si fue contactado (formato Arturo)
+  if (row['mail_enviado'] || row['whatsapp'] || row['llamada']) {
+    const contacted = ['mail_enviado', 'whatsapp', 'llamada'].some(field => {
+      const value = String(row[field] || '').toLowerCase()
+      return value === 'si' || value === 'sí' || value === 'yes' || value === 'true'
+    })
+    if (contacted) {
+      lead.contactado = true
+      lead.fecha_contacto = lead.fecha_ingreso
+    }
+  }
+
+  // Detectar si fue vendido (si tiene valor venta)
+  if (lead.monto_vendido && lead.monto_vendido > 0) {
+    lead.vendido = true
   }
 
   return lead

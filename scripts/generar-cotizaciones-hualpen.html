@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cotizaciones Buses Hualpén</title>
+    <style>
+        @page {
+            size: letter;
+            margin: 2cm;
+        }
+
+        body {
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 21cm;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .cotizacion {
+            page-break-after: always;
+            padding: 40px;
+            background: white;
+        }
+
+        .cotizacion:last-child {
+            page-break-after: auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 40px;
+            border-bottom: 3px solid #5B7FE7;
+            padding-bottom: 20px;
+        }
+
+        .logo {
+            max-width: 250px;
+        }
+
+        .info-cotizacion {
+            text-align: right;
+        }
+
+        .info-cotizacion h1 {
+            color: #5B7FE7;
+            font-size: 32px;
+            margin: 0 0 10px 0;
+        }
+
+        .info-cotizacion p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+
+        .cliente-info {
+            background: #f8f9fb;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        .cliente-info h2 {
+            color: #5B7FE7;
+            font-size: 18px;
+            margin-top: 0;
+        }
+
+        .servicios {
+            margin: 30px 0;
+        }
+
+        .servicios h3 {
+            color: #333;
+            font-size: 20px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #5B7FE7;
+            padding-bottom: 10px;
+        }
+
+        .servicio-item {
+            padding: 12px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .servicio-item:last-child {
+            border-bottom: none;
+        }
+
+        .servicio-numero {
+            color: #5B7FE7;
+            font-weight: bold;
+            display: inline-block;
+            width: 30px;
+        }
+
+        .totales {
+            margin-top: 40px;
+            background: #f8f9fb;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            font-size: 16px;
+        }
+
+        .total-row.final {
+            border-top: 2px solid #5B7FE7;
+            margin-top: 10px;
+            padding-top: 15px;
+            font-size: 20px;
+            font-weight: bold;
+            color: #5B7FE7;
+        }
+
+        .footer {
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+        }
+
+        .validez {
+            background: #fff3cd;
+            padding: 15px;
+            border-left: 4px solid #ffc107;
+            margin: 20px 0;
+            font-size: 14px;
+        }
+
+        @media print {
+            body {
+                padding: 0;
+            }
+
+            .no-print {
+                display: none;
+            }
+        }
+
+        .controls {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        .btn {
+            background: #5B7FE7;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 5px 0;
+            display: block;
+            width: 100%;
+        }
+
+        .btn:hover {
+            background: #4a6bc5;
+        }
+    </style>
+</head>
+<body>
+    <div class="controls no-print">
+        <button class="btn" onclick="window.print()">🖨️ Imprimir Todo</button>
+        <button class="btn" onclick="printCotizacion(1)">📄 Cotización Sept</button>
+        <button class="btn" onclick="printCotizacion(2)">📄 Cotización Oct</button>
+        <button class="btn" onclick="printCotizacion(3)">📄 Cotización Nov</button>
+    </div>
+
+    <!-- COTIZACIÓN 1: OC SEPTIEMBRE (Servicios Agosto) -->
+    <div class="cotizacion" id="cotizacion-1">
+        <div class="header">
+            <div>
+                <img src="file:///Users/christophermuller/Desktop/logo color.png" alt="M&P Logo" class="logo">
+            </div>
+            <div class="info-cotizacion">
+                <h1>COTIZACIÓN</h1>
+                <p><strong>N°:</strong> COT-HLP-09-2024</p>
+                <p><strong>Fecha:</strong> 30 de Octubre de 2025</p>
+                <p><strong>Válida hasta:</strong> 15 de Noviembre de 2025</p>
+            </div>
+        </div>
+
+        <div class="cliente-info">
+            <h2>CLIENTE</h2>
+            <p><strong>Empresa:</strong> Buses Hualpén</p>
+            <p><strong>Para:</strong> Orden de Compra Septiembre 2024</p>
+            <p><strong>Corresponde a:</strong> Servicios prestados en Agosto 2024</p>
+        </div>
+
+        <div class="servicios">
+            <h3>DETALLE DE SERVICIOS</h3>
+
+            <div class="servicio-item">
+                <span class="servicio-numero">1.</span>
+                <strong>Gestión de redes sociales:</strong> Administración profesional de LinkedIn, Instagram y Meta, incluyendo monitoreo y respuesta de comentarios y mensajes directos.
+            </div>
+
+            <div class="servicio-item">
+                <span class="servicio-numero">2.</span>
+                <strong>Generación y publicación de contenidos:</strong> Creación de contenido estratégico y publicación programada para cada red social.
+            </div>
+
+            <div class="servicio-item">
+                <span class="servicio-numero">3.</span>
+                <strong>Gráficas para redes sociales:</strong> Diseño de piezas gráficas, incluyendo reels y videos para aumentar el engagement.
+            </div>
+
+            <div class="servicio-item">
+                <span class="servicio-numero">4.</span>
+                <strong>Trabajo y edición de material:</strong> Edición y optimización del material audiovisual enviado por el cliente.
+            </div>
+
+            <div class="servicio-item">
+                <span class="servicio-numero">5.</span>
+                <strong>Reportería e informe:</strong> Informe mensual detallado con métricas de desempeño, análisis de comentarios y recomendaciones estratégicas.
+            </div>
+
+            <div class="servicio-item">
+                <span class="servicio-numero">6.</span>
+                <strong>Reuniones de seguimiento:</strong> Reuniones periódicas de reportería y seguimiento, con comunicación continua vía WhatsApp.
+            </div>
+        </div>
+
+        <div class="validez">
+            <strong>📌 Importante:</strong> Esta cotización corresponde a la Orden de Compra de Septiembre 2024 por servicios prestados durante el mes de Agosto 2024.
+        </div>
+
+        <div class="totales">
+            <div class="total-row">
+                <span>Subtotal Servicios:</span>
+                <span>$952.000</span>
+            </div>
+            <div class="total-row">
+                <span>IVA (19%):</span>
+                <span>$180.880</span>
+            </div>
+            <div class="total-row final">
+                <span>TOTAL A PAGAR:</span>
+                <span>$1.132.880</span>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p><strong>Müller & Pérez - Marketing & Performance</strong></p>
+            <p>Email: contacto@mulleryperez.cl | Web: www.mulleryperez.cl</p>
+            <p>Esta cotización es válida por 15 días desde la fecha de emisión</p>
+        </div>
+    </div>
+
+    <!-- COTIZACIÓN 2: OC OCTUBRE (Servicios Septiembre) -->
+    <div class="cotizacion" id="cotizacion-2">
+        <div class="header">
+            <div>
+                <img src="file:///Users/christophermuller/Desktop/logo color.png" alt="M&P Logo" class="logo">
+            </div>
+            <div class="info-cotizacion">
+                <h1>COTIZACIÓN</h1>
+                <p><strong>N°:</strong> COT-HLP-10-2024</p>
+                <p><strong>Fecha:</strong> 30 de Octubre de 2025</p>
+                <p><strong>Válida hasta:</strong> 15 de Noviembre de 2025</p>
+            </div>
+        </div>
+
+        <div class="cliente-info">
+            <h2>CLIENTE</h2>
+            <p><strong>Empresa:</strong> Buses Hualpén</p>
+            <p><strong>Para:</strong> Orden de Compra Octubre 2024</p>
+            <p><strong>Corresponde a:</strong> Servicios prestados en Septiembre 2024</p>
+        </div>
+
+        <div class="servicios">
+            <h3>DETALLE DE SERVICIOS</h3>
+
+            <div class="servicio-item">
+                <span class="servicio-numero">1.</span>
+                <strong>Gestión de redes sociales:</strong> Administración profesional de LinkedIn, Instagram y Meta, incluyendo monitoreo y respuesta de comentarios y mensajes directos.
+            </div>
+
+            <div class="servicio-item">
+                <span class="servicio-numero">2.</span>
+                <strong>Generación y publicación de contenidos:</strong> Creación de contenido estratégico y publicación programada para cada red social.
+            </div>
+
+            <div class="servicio-item">
+                <span class="servicio-numero">3.</span>
+                <strong>Gráficas para redes sociales:</strong> Diseño de piezas gráficas, incluyendo reels y videos para aumentar el engagement.
+            </div>
+
+            <div class="servicio-item">
+                <span class="servicio-numero">4.</span>
+                <strong>Trabajo y edición de material:</strong> Edición y optimización del material audiovisual enviado por el cliente.
+            </div>
+
+            <div class="servicio-item">
+                <span class="servicio-numero">5.</span>
+                <strong>Reportería e informe:</strong> Informe mensual detallado con métricas de desempeño, análisis de comentarios y recomendaciones estratégicas.
+            </div>
+
+            <div class="servicio-item">
+                <span class="servicio-numero">6.</span>
+                <strong>Reuniones de seguimiento:</strong> Reuniones periódicas de reportería y seguimiento, con comunicación continua vía WhatsApp.
+            </div>
+        </div>
+
+        <div class="validez">
+            <strong>📌 Importante:</strong> Esta cotización corresponde a la Orden de Compra de Octubre 2024 por servicios prestados durante el mes de Septiembre 2024.
+        </div>
+
+        <div class="totales">
+            <div class="total-row">
+                <span>Subtotal Servicios:</span>
+                <span>$952.000</span>
+            </div>
+            <div class="total-row">
+                <span>IVA (19%):</span>
+                <span>$180.880</span>
+            </div>
+            <div class="total-row final">
+                <span>TOTAL A PAGAR:</span>
+                <span>$1.132.880</span>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p><strong>Müller & Pérez - Marketing & Performance</strong></p>
+            <p>Email: contacto@mulleryperez.cl | Web: www.mulleryperez.cl</p>
+            <p>Esta cotización es válida por 15 días desde la fecha de emisión</p>
+        </div>
+    </div>
+
+    <!-- COTIZACIÓN 3: OC NOVIEMBRE (Servicios Octubre) -->
+    <div class="cotizacion" id="cotizacion-3">
+        <div class="header">
+            <div>
+                <img src="file:///Users/christophermuller/Desktop/logo color.png" alt="M&P Logo" class="logo">
+            </div>
+            <div class="info-cotizacion">
+                <h1>COTIZACIÓN</h1>
+                <p><strong>N°:</strong> COT-HLP-11-2024</p>
+                <p><strong>Fecha:</strong> 30 de Octubre de 2025</p>
+                <p><strong>Válida hasta:</strong> 15 de Noviembre de 2025</p>
+            </div>
+        </div>
+
+        <div class="cliente-info">
+            <h2>CLIENTE</h2>
+            <p><strong>Empresa:</strong> Buses Hualpén</p>
+            <p><strong>Para:</strong> Orden de Compra Noviembre 2024</p>
+            <p><strong>Corresponde a:</strong> Servicios prestados en Octubre 2024</p>
+        </div>
+
+        <div class="servicios">
+            <h3>DETALLE DE SERVICIOS</h3>
+
+            <div class="servicio-item">
+                <span class="servicio-numero">1.</span>
+                <strong>Gestión de redes sociales:</strong> Administración profesional de LinkedIn, Instagram y Meta, incluyendo monitoreo y respuesta de comentarios y mensajes directos.
+            </div>
+
+            <div class="servicio-item">
+                <span class="servicio-numero">2.</span>
+                <strong>Generación y publicación de contenidos:</strong> Creación de contenido estratégico y publicación programada para cada red social.
+            </div>
+
+            <div class="servicio-item">
+                <span class="servicio-numero">3.</span>
+                <strong>Gráficas para redes sociales:</strong> Diseño de piezas gráficas, incluyendo reels y videos para aumentar el engagement.
+            </div>
+
+            <div class="servicio-item">
+                <span class="servicio-numero">4.</span>
+                <strong>Trabajo y edición de material:</strong> Edición y optimización del material audiovisual enviado por el cliente.
+            </div>
+
+            <div class="servicio-item">
+                <span class="servicio-numero">5.</span>
+                <strong>Reportería e informe:</strong> Informe mensual detallado con métricas de desempeño, análisis de comentarios y recomendaciones estratégicas.
+            </div>
+
+            <div class="servicio-item">
+                <span class="servicio-numero">6.</span>
+                <strong>Reuniones de seguimiento:</strong> Reuniones periódicas de reportería y seguimiento, con comunicación continua vía WhatsApp.
+            </div>
+        </div>
+
+        <div class="validez">
+            <strong>📌 Importante:</strong> Esta cotización corresponde a la Orden de Compra de Noviembre 2024 por servicios prestados durante el mes de Octubre 2024.
+        </div>
+
+        <div class="totales">
+            <div class="total-row">
+                <span>Subtotal Servicios:</span>
+                <span>$952.000</span>
+            </div>
+            <div class="total-row">
+                <span>IVA (19%):</span>
+                <span>$180.880</span>
+            </div>
+            <div class="total-row final">
+                <span>TOTAL A PAGAR:</span>
+                <span>$1.132.880</span>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p><strong>Müller & Pérez - Marketing & Performance</strong></p>
+            <p>Email: contacto@mulleryperez.cl | Web: www.mulleryperez.cl</p>
+            <p>Esta cotización es válida por 15 días desde la fecha de emisión</p>
+        </div>
+    </div>
+
+    <script>
+        function printCotizacion(num) {
+            // Ocultar todas las cotizaciones
+            document.querySelectorAll('.cotizacion').forEach(cot => {
+                cot.style.display = 'none';
+            });
+
+            // Mostrar solo la seleccionada
+            document.getElementById('cotizacion-' + num).style.display = 'block';
+
+            // Imprimir
+            window.print();
+
+            // Restaurar todas
+            document.querySelectorAll('.cotizacion').forEach(cot => {
+                cot.style.display = 'block';
+            });
+        }
+    </script>
+</body>
+</html>

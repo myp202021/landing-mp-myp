@@ -6,27 +6,89 @@
  */
 
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
+
+interface User {
+  id: string
+  email: string
+  nombre: string
+  rol: 'admin' | 'cliente'
+}
 
 export default function CRMNavigation() {
   const pathname = usePathname()
+  const router = useRouter()
+  const [user, setUser] = useState<User | null>(null)
+  const [loading, setLoading] = useState(true)
 
-  const links = [
-    { href: '/crm/leads', label: 'Dashboard', icon: '📊' },
-    { href: '/crm/upload', label: 'Subir Leads', icon: '📤' },
-    { href: '/crm/cargas', label: 'Historial', icon: '📁' },
-    { href: '/crm/admin', label: 'Admin', icon: '👥' },
-  ]
+  useEffect(() => {
+    checkSession()
+  }, [])
+
+  const checkSession = async () => {
+    try {
+      const res = await fetch('/api/auth/session')
+      if (res.ok) {
+        const data = await res.json()
+        setUser(data.user)
+      }
+    } catch (error) {
+      console.error('Error checking session:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/auth/logout', { method: 'POST' })
+      router.push('/crm/login')
+    } catch (error) {
+      console.error('Error logging out:', error)
+    }
+  }
+
+  // Links según rol del usuario
+  const links = user?.rol === 'admin'
+    ? [
+        { href: '/crm/leads', label: 'Dashboard', icon: '📊' },
+        { href: '/crm/upload', label: 'Subir Leads', icon: '📤' },
+        { href: '/crm/metricas', label: 'Métricas', icon: '📈' },
+        { href: '/crm/cargas', label: 'Historial', icon: '📁' },
+        { href: '/crm/admin', label: 'Admin', icon: '👥' },
+      ]
+    : [
+        { href: '/crm/upload', label: 'Subir Leads', icon: '📤' },
+        { href: '/crm/cargas', label: 'Mis Cargas', icon: '📁' },
+      ]
+
+  if (loading) {
+    return (
+      <nav className="bg-white border-b border-gray-200 shadow-sm">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="flex items-center justify-center h-16">
+            <span className="text-gray-500 text-sm">Cargando...</span>
+          </div>
+        </div>
+      </nav>
+    )
+  }
 
   return (
     <nav className="bg-white border-b border-gray-200 shadow-sm">
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center gap-2">
-            <Link href="/crm/leads" className="text-xl font-bold text-blue-600">
+            <Link
+              href={user?.rol === 'admin' ? '/crm/leads' : '/crm/upload'}
+              className="text-xl font-bold text-blue-600"
+            >
               M&P CRM
             </Link>
-            <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">Beta</span>
+            <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
+              {user?.rol === 'admin' ? 'Admin' : 'Cliente'}
+            </span>
           </div>
 
           <div className="flex items-center gap-1">
@@ -49,12 +111,19 @@ export default function CRMNavigation() {
             })}
           </div>
 
-          <Link
-            href="/"
-            className="text-sm text-gray-600 hover:text-gray-900 transition"
-          >
-            ← Volver al sitio
-          </Link>
+          <div className="flex items-center gap-4">
+            {user && (
+              <div className="text-sm text-gray-600">
+                {user.nombre || user.email}
+              </div>
+            )}
+            <button
+              onClick={handleLogout}
+              className="text-sm text-red-600 hover:text-red-800 transition font-medium"
+            >
+              Salir
+            </button>
+          </div>
         </div>
       </div>
     </nav>

@@ -17,7 +17,8 @@ export const dynamic = 'force-dynamic'
  *
  * Query params:
  *   - clientId: UUID (required)
- *   - mes: YYYY-MM (opcional)
+ *   - fecha_desde: YYYY-MM-DD (opcional)
+ *   - fecha_hasta: YYYY-MM-DD (opcional)
  *   - contactado: true/false (opcional)
  *   - vendido: true/false (opcional)
  *   - search: texto búsqueda (nombre, email, teléfono)
@@ -49,18 +50,26 @@ export async function GET(req: NextRequest) {
       .eq('cliente_id', clientId)
 
     // Filtros
-    const mes = searchParams.get('mes')
-    if (mes) {
-      query = query.eq('mes_ingreso', mes)
+    const fecha_desde = searchParams.get('fecha_desde')
+    if (fecha_desde) {
+      query = query.gte('fecha_ingreso', fecha_desde)
+    }
+
+    const fecha_hasta = searchParams.get('fecha_hasta')
+    if (fecha_hasta) {
+      // Agregar un día para incluir todo el día final
+      const fechaFin = new Date(fecha_hasta)
+      fechaFin.setDate(fechaFin.getDate() + 1)
+      query = query.lt('fecha_ingreso', fechaFin.toISOString().split('T')[0])
     }
 
     const contactado = searchParams.get('contactado')
-    if (contactado !== null) {
+    if (contactado !== null && contactado !== '') {
       query = query.eq('contactado', contactado === 'true')
     }
 
     const vendido = searchParams.get('vendido')
-    if (vendido !== null) {
+    if (vendido !== null && vendido !== '') {
       query = query.eq('vendido', vendido === 'true')
     }
 

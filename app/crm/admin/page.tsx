@@ -11,6 +11,10 @@ interface Cliente {
   id: string
   nombre: string
   rubro: string | null
+  meta_page_id: string | null
+  meta_form_id: string | null
+  sync_meta_activo: boolean
+  ultima_sync_meta: string | null
 }
 
 interface Usuario {
@@ -29,15 +33,26 @@ export default function AdminPage() {
   const [clientes, setClientes] = useState<Cliente[]>([])
   const [loading, setLoading] = useState(true)
   const [showNewUserForm, setShowNewUserForm] = useState(false)
+  const [showNewClientForm, setShowNewClientForm] = useState(false)
 
   // Form state
   const [newUser, setNewUser] = useState({
-    id: '',
     email: '',
+    password: '',
     nombre: '',
     cliente_id: '',
     rol: 'cliente' as 'admin' | 'cliente'
   })
+
+  const [newClient, setNewClient] = useState({
+    nombre: '',
+    rubro: '',
+    meta_page_id: '',
+    meta_form_id: '',
+    sync_meta_activo: false
+  })
+
+  const [editingCliente, setEditingCliente] = useState<Cliente | null>(null)
 
   // Cargar usuarios y clientes
   useEffect(() => {
@@ -68,8 +83,13 @@ export default function AdminPage() {
   const handleCreateUser = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    if (!newUser.id || !newUser.email || !newUser.cliente_id) {
-      alert('ID (auth_user_id), email y cliente son requeridos')
+    if (!newUser.email || !newUser.password || !newUser.cliente_id) {
+      alert('Email, password y cliente son requeridos')
+      return
+    }
+
+    if (newUser.password.length < 6) {
+      alert('El password debe tener al menos 6 caracteres')
       return
     }
 
@@ -87,7 +107,7 @@ export default function AdminPage() {
 
       alert('Usuario creado exitosamente')
       setShowNewUserForm(false)
-      setNewUser({ id: '', email: '', nombre: '', cliente_id: '', rol: 'cliente' })
+      setNewUser({ email: '', password: '', nombre: '', cliente_id: '', rol: 'cliente' })
       fetchData()
     } catch (error: any) {
       console.error('Error creating user:', error)
@@ -111,6 +131,113 @@ export default function AdminPage() {
     } catch (error) {
       console.error('Error toggling user status:', error)
       alert('Error actualizando usuario')
+    }
+  }
+
+  const handleCreateClient = async (e: React.FormEvent) => {
+    e.preventDefault()
+
+    if (!newClient.nombre) {
+      alert('El nombre del cliente es requerido')
+      return
+    }
+
+    try {
+      const res = await fetch('/api/crm/clientes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newClient)
+      })
+
+      if (!res.ok) {
+        const error = await res.json()
+        throw new Error(error.error)
+      }
+
+      alert('Cliente creado exitosamente')
+      setShowNewClientForm(false)
+      setNewClient({ nombre: '', rubro: '', meta_page_id: '', meta_form_id: '', sync_meta_activo: false })
+      fetchData()
+    } catch (error: any) {
+      console.error('Error creating client:', error)
+      alert('Error creando cliente: ' + error.message)
+    }
+  }
+
+  const handleUpdateCliente = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!editingCliente) return
+
+    try {
+      const res = await fetch('/api/crm/clientes', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: editingCliente.id,
+          nombre: editingCliente.nombre,
+          rubro: editingCliente.rubro,
+          meta_page_id: editingCliente.meta_page_id || null,
+          meta_form_id: editingCliente.meta_form_id || null,
+          sync_meta_activo: editingCliente.sync_meta_activo
+        })
+      })
+
+      if (!res.ok) {
+        const error = await res.json()
+        throw new Error(error.error)
+      }
+
+      alert('Cliente actualizado exitosamente')
+      setEditingCliente(null)
+      fetchData()
+    } catch (error: any) {
+      console.error('Error updating client:', error)
+      alert('Error actualizando cliente: ' + error.message)
+    }
+  }
+
+  const deleteAllLeads = async (clienteId: string, clienteNombre: string) => {
+    if (!confirm(`¿ELIMINAR TODOS LOS LEADS de "${clienteNombre}"? Esta acción NO se puede deshacer.`)) {
+      return
+    }
+
+    try {
+      const res = await fetch(`/api/crm/leads/bulk-delete?cliente_id=${clienteId}`, {
+        method: 'DELETE'
+      })
+
+      if (!res.ok) {
+        throw new Error('Error eliminando leads')
+      }
+
+      const data = await res.json()
+      alert(`${data.deleted} leads eliminados exitosamente`)
+      fetchData()
+    } catch (error: any) {
+      console.error('Error deleting leads:', error)
+      alert('Error eliminando leads: ' + error.message)
+    }
+  }
+
+  const deleteCliente = async (clienteId: string, clienteNombre: string) => {
+    if (!confirm(`¿Eliminar cliente "${clienteNombre}"? Esto también desactivará todos los usuarios asociados.`)) {
+      return
+    }
+
+    try {
+      const res = await fetch(`/api/crm/clientes?id=${clienteId}`, {
+        method: 'DELETE'
+      })
+
+      if (!res.ok) {
+        throw new Error('Error eliminando cliente')
+      }
+
+      alert('Cliente eliminado exitosamente')
+      fetchData()
+    } catch (error: any) {
+      console.error('Error deleting cliente:', error)
+      alert('Error eliminando cliente: ' + error.message)
     }
   }
 
@@ -147,23 +274,6 @@ export default function AdminPage() {
               <form onSubmit={handleCreateUser} className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    ID Usuario (auth_user_id de Supabase Auth) *
-                  </label>
-                  <input
-                    type="text"
-                    value={newUser.id}
-                    onChange={(e) => setNewUser({ ...newUser, id: e.target.value })}
-                    placeholder="00000000-0000-0000-0000-000000000000"
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2"
-                    required
-                  />
-                  <p className="text-xs text-gray-500 mt-1">
-                    UUID del usuario creado en Supabase Auth
-                  </p>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
                     Email *
                   </label>
                   <input
@@ -172,6 +282,21 @@ export default function AdminPage() {
                     onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
                     placeholder="usuario@ejemplo.com"
                     className="w-full border border-gray-300 rounded-lg px-3 py-2"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Password *
+                  </label>
+                  <input
+                    type="password"
+                    value={newUser.password}
+                    onChange={(e) => setNewUser({ ...newUser, password: e.target.value })}
+                    placeholder="Mínimo 6 caracteres"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2"
+                    minLength={6}
                     required
                   />
                 </div>
@@ -301,7 +426,278 @@ export default function AdminPage() {
               </div>
             )}
           </div>
+
+          {/* Sección Clientes */}
+          <div className="mt-8 pt-8 border-t border-gray-200">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-2xl font-bold text-gray-900">Gestión de Clientes</h2>
+              <button
+                onClick={() => setShowNewClientForm(!showNewClientForm)}
+                className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition"
+              >
+                {showNewClientForm ? 'Cancelar' : '+ Nuevo Cliente'}
+              </button>
+            </div>
+
+            {/* Formulario nuevo cliente */}
+            {showNewClientForm && (
+              <div className="bg-green-50 border border-green-200 rounded-lg p-6 mb-6">
+                <h3 className="text-xl font-semibold mb-4">Crear Nuevo Cliente</h3>
+                <form onSubmit={handleCreateClient} className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Nombre del Cliente *
+                    </label>
+                    <input
+                      type="text"
+                      value={newClient.nombre}
+                      onChange={(e) => setNewClient({ ...newClient, nombre: e.target.value })}
+                      placeholder="Empresa ABC Ltda."
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Rubro
+                    </label>
+                    <input
+                      type="text"
+                      value={newClient.rubro}
+                      onChange={(e) => setNewClient({ ...newClient, rubro: e.target.value })}
+                      placeholder="E-commerce, Servicios, etc."
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2"
+                    />
+                  </div>
+
+                  <div className="border-t border-gray-200 pt-4 mt-4">
+                    <h4 className="font-semibold text-gray-900 mb-3">Integración Meta Lead Ads (Opcional)</h4>
+                    <p className="text-sm text-gray-600 mb-4">
+                      Si llenas estos campos, el sistema sincronizará leads automáticamente desde Meta cada día a las 8am.
+                    </p>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Meta Page ID
+                        </label>
+                        <input
+                          type="text"
+                          value={newClient.meta_page_id}
+                          onChange={(e) => setNewClient({ ...newClient, meta_page_id: e.target.value })}
+                          placeholder="123456789"
+                          className="w-full border border-gray-300 rounded-lg px-3 py-2"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Meta Form ID
+                        </label>
+                        <input
+                          type="text"
+                          value={newClient.meta_form_id}
+                          onChange={(e) => setNewClient({ ...newClient, meta_form_id: e.target.value })}
+                          placeholder="987654321"
+                          className="w-full border border-gray-300 rounded-lg px-3 py-2"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="mt-3">
+                      <label className="flex items-center gap-2">
+                        <input
+                          type="checkbox"
+                          checked={newClient.sync_meta_activo}
+                          onChange={(e) => setNewClient({ ...newClient, sync_meta_activo: e.target.checked })}
+                          className="rounded border-gray-300"
+                        />
+                        <span className="text-sm text-gray-700">Activar sincronización automática</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition font-medium"
+                  >
+                    Crear Cliente
+                  </button>
+                </form>
+              </div>
+            )}
+
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Nombre</th>
+                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Rubro</th>
+                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Meta Sync</th>
+                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  {clientes.map((cliente) => (
+                    <tr key={cliente.id} className="hover:bg-gray-50">
+                      <td className="px-4 py-3 text-sm text-gray-900 font-medium">{cliente.nombre}</td>
+                      <td className="px-4 py-3 text-sm text-gray-700">{cliente.rubro || '-'}</td>
+                      <td className="px-4 py-3 text-sm">
+                        {cliente.sync_meta_activo ? (
+                          <span className="inline-flex items-center gap-1 px-2 py-1 rounded bg-green-100 text-green-800 text-xs font-medium">
+                            ✓ Activo
+                          </span>
+                        ) : cliente.meta_page_id ? (
+                          <span className="inline-flex items-center gap-1 px-2 py-1 rounded bg-gray-100 text-gray-600 text-xs">
+                            Configurado
+                          </span>
+                        ) : (
+                          <span className="text-gray-400 text-xs">Manual</span>
+                        )}
+                      </td>
+                      <td className="px-4 py-3 text-sm space-x-2">
+                        <button
+                          onClick={() => setEditingCliente(cliente)}
+                          className="px-3 py-1 rounded text-xs font-medium bg-purple-100 text-purple-700 hover:bg-purple-200"
+                        >
+                          Editar
+                        </button>
+                        <button
+                          onClick={() => window.location.href = `/crm/clientes/${cliente.id}`}
+                          className="px-3 py-1 rounded text-xs font-medium bg-blue-100 text-blue-700 hover:bg-blue-200"
+                        >
+                          Métricas
+                        </button>
+                        <button
+                          onClick={() => deleteAllLeads(cliente.id, cliente.nombre)}
+                          className="px-3 py-1 rounded text-xs font-medium bg-orange-100 text-orange-700 hover:bg-orange-200"
+                        >
+                          Limpiar
+                        </button>
+                        <button
+                          onClick={() => deleteCliente(cliente.id, cliente.nombre)}
+                          className="px-3 py-1 rounded text-xs font-medium bg-red-100 text-red-700 hover:bg-red-200"
+                        >
+                          Eliminar
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+
+              {clientes.length === 0 && (
+                <div className="text-center py-8 text-gray-500">
+                  No hay clientes registrados
+                </div>
+              )}
+            </div>
+          </div>
         </div>
+
+        {/* Modal Editar Cliente */}
+        {editingCliente && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+              <div className="p-6">
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">Editar Cliente</h2>
+                <form onSubmit={handleUpdateCliente} className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Nombre del Cliente *
+                    </label>
+                    <input
+                      type="text"
+                      value={editingCliente.nombre}
+                      onChange={(e) => setEditingCliente({ ...editingCliente, nombre: e.target.value })}
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Rubro
+                    </label>
+                    <input
+                      type="text"
+                      value={editingCliente.rubro || ''}
+                      onChange={(e) => setEditingCliente({ ...editingCliente, rubro: e.target.value })}
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2"
+                    />
+                  </div>
+
+                  <div className="border-t border-gray-200 pt-4 mt-4">
+                    <h4 className="font-semibold text-gray-900 mb-3">Integración Meta Lead Ads</h4>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Meta Page ID
+                        </label>
+                        <input
+                          type="text"
+                          value={editingCliente.meta_page_id || ''}
+                          onChange={(e) => setEditingCliente({ ...editingCliente, meta_page_id: e.target.value })}
+                          placeholder="123456789"
+                          className="w-full border border-gray-300 rounded-lg px-3 py-2"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Meta Form ID
+                        </label>
+                        <input
+                          type="text"
+                          value={editingCliente.meta_form_id || ''}
+                          onChange={(e) => setEditingCliente({ ...editingCliente, meta_form_id: e.target.value })}
+                          placeholder="987654321"
+                          className="w-full border border-gray-300 rounded-lg px-3 py-2"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="mt-3">
+                      <label className="flex items-center gap-2">
+                        <input
+                          type="checkbox"
+                          checked={editingCliente.sync_meta_activo}
+                          onChange={(e) => setEditingCliente({ ...editingCliente, sync_meta_activo: e.target.checked })}
+                          className="rounded border-gray-300"
+                        />
+                        <span className="text-sm text-gray-700">Activar sincronización automática</span>
+                      </label>
+                    </div>
+
+                    {editingCliente.ultima_sync_meta && (
+                      <div className="mt-3 text-sm text-gray-600">
+                        Última sincronización: {new Date(editingCliente.ultima_sync_meta).toLocaleString('es-CL')}
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="flex gap-3 pt-4">
+                    <button
+                      type="submit"
+                      className="flex-1 bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 transition font-medium"
+                    >
+                      Guardar Cambios
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setEditingCliente(null)}
+                      className="flex-1 bg-gray-200 text-gray-700 py-2 rounded-lg hover:bg-gray-300 transition font-medium"
+                    >
+                      Cancelar
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )

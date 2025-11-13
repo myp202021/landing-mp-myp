@@ -572,6 +572,15 @@ export default function LandingClient() {
               )}
             </div>
 
+            <Link
+              href="/login"
+              className="hidden lg:inline-flex items-center gap-2 px-5 py-2.5 border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white font-semibold transition-all duration-300 rounded-lg"
+              aria-label="Acceso Clientes - Portal CRM"
+            >
+              <Users className="w-4 h-4" aria-hidden="true" />
+              Acceso Clientes
+            </Link>
+
             <button
               onClick={() => document.getElementById('contacto')?.scrollIntoView({ behavior: 'smooth' })}
               className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold shadow-lg shadow-blue-600/20 hover:shadow-xl hover:shadow-blue-600/30 transition-all duration-300 rounded-lg"
@@ -1715,9 +1724,9 @@ export default function LandingClient() {
                   © {new Date().getFullYear()} Muller y Pérez. Todos los derechos reservados.
                 </p>
                 <p className="text-blue-400 text-xs mt-1">
-                  <Link href="/privacidad" className="hover:text-white transition-colors">Política de Privacidad</Link>
+                  <Link href="/privacy" className="hover:text-white transition-colors">Política de Privacidad</Link>
                   {' '} | {' '}
-                  <Link href="/terminos" className="hover:text-white transition-colors">Términos y Condiciones</Link>
+                  <Link href="/crm/login" className="hover:text-white transition-colors">Acceso Clientes</Link>
                 </p>
               </div>
             </div>

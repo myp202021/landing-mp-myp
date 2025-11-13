@@ -2,6 +2,12 @@
   "buildCommand": "next build",
   "framework": "nextjs",
   "regions": ["gru1"],
+  "crons": [
+    {
+      "path": "/api/cron/sync-meta-leads",
+      "schedule": "0 11 * * *"
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)",

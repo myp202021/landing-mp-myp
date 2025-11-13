@@ -48,11 +48,13 @@ export default function LeadsPage() {
   const [leads, setLeads] = useState<Lead[]>([])
   const [loading, setLoading] = useState(false)
   const [total, setTotal] = useState(0)
+  const [allLeads, setAllLeads] = useState<Lead[]>([])
 
   // Filtros
   const [filters, setFilters] = useState({
     search: '',
-    mes: '',
+    fecha_desde: '',
+    fecha_hasta: '',
     contactado: '',
     vendido: ''
   })
@@ -67,9 +69,19 @@ export default function LeadsPage() {
 
   useEffect(() => {
     if (selectedCliente) {
+      fetchAllLeads()
+      fetchLeads()
+    } else {
+      setAllLeads([])
+      setLeads([])
+    }
+  }, [selectedCliente])
+
+  useEffect(() => {
+    if (selectedCliente) {
       fetchLeads()
     }
-  }, [selectedCliente, filters])
+  }, [filters])
 
   const fetchClientes = async () => {
     try {
@@ -81,15 +93,36 @@ export default function LeadsPage() {
     }
   }
 
+  const fetchAllLeads = async () => {
+    if (!selectedCliente) return
+
+    try {
+      // Fetch ALL leads without filters for stats calculation
+      const params = new URLSearchParams({ clientId: selectedCliente, limit: '10000' })
+      const res = await fetch(`/api/crm/leads?${params}`)
+      const data = await res.json()
+      setAllLeads(data.leads || [])
+    } catch (error) {
+      console.error('Error fetching all leads:', error)
+    }
+  }
+
   const fetchLeads = async () => {
     if (!selectedCliente) return
 
     setLoading(true)
     try {
+      // Only include non-empty filters
       const params = new URLSearchParams({
         clientId: selectedCliente,
-        ...filters
+        limit: '10000' // Aumentar límite para mostrar todos los leads
       })
+
+      if (filters.search) params.append('search', filters.search)
+      if (filters.fecha_desde) params.append('fecha_desde', filters.fecha_desde)
+      if (filters.fecha_hasta) params.append('fecha_hasta', filters.fecha_hasta)
+      if (filters.contactado) params.append('contactado', filters.contactado)
+      if (filters.vendido) params.append('vendido', filters.vendido)
 
       const res = await fetch(`/api/crm/leads?${params}`)
       const data = await res.json()
@@ -101,6 +134,16 @@ export default function LeadsPage() {
     } finally {
       setLoading(false)
     }
+  }
+
+  const clearFilters = () => {
+    setFilters({
+      search: '',
+      fecha_desde: '',
+      fecha_hasta: '',
+      contactado: '',
+      vendido: ''
+    })
   }
 
   const startEdit = (lead: Lead) => {
@@ -129,15 +172,20 @@ export default function LeadsPage() {
       })
 
       if (!res.ok) {
-        throw new Error('Error actualizando lead')
+        const errorData = await res.json()
+        throw new Error(errorData.error || 'Error actualizando lead')
       }
+
+      const data = await res.json()
+      console.log('Lead actualizado:', data)
 
       setEditingLead(null)
       setEditValues({})
+      fetchAllLeads()
       fetchLeads()
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error saving:', error)
-      alert('Error guardando cambios')
+      alert(`Error guardando cambios: ${error.message}`)
     }
   }
 
@@ -153,6 +201,7 @@ export default function LeadsPage() {
         throw new Error('Error eliminando lead')
       }
 
+      fetchAllLeads()
       fetchLeads()
     } catch (error) {
       console.error('Error deleting:', error)
@@ -161,10 +210,11 @@ export default function LeadsPage() {
   }
 
   const getStats = () => {
-    const contactados = leads.filter(l => l.contactado).length
-    const vendidos = leads.filter(l => l.vendido).length
-    const sinContactar = leads.filter(l => !l.contactado).length
-    const totalVentas = leads
+    // Use allLeads for stats to show total stats regardless of filters
+    const contactados = allLeads.filter(l => l.contactado).length
+    const vendidos = allLeads.filter(l => l.vendido).length
+    const sinContactar = allLeads.filter(l => !l.contactado).length
+    const totalVentas = allLeads
       .filter(l => l.vendido && l.monto_vendido)
       .reduce((sum, l) => sum + (l.monto_vendido || 0), 0)
 
@@ -208,7 +258,7 @@ export default function LeadsPage() {
               <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
                 <div className="bg-blue-50 rounded-lg p-4">
                   <p className="text-xs text-blue-600 font-medium">Total Leads</p>
-                  <p className="text-3xl font-bold text-blue-900">{total}</p>
+                  <p className="text-3xl font-bold text-blue-900">{allLeads.length}</p>
                 </div>
                 <div className="bg-orange-50 rounded-lg p-4">
                   <p className="text-xs text-orange-600 font-medium">Sin Contactar</p>
@@ -232,7 +282,16 @@ export default function LeadsPage() {
 
               {/* Filtros */}
               <div className="bg-gray-50 rounded-lg p-4 mb-6">
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-sm font-semibold text-gray-700">Filtros</h3>
+                  <button
+                    onClick={clearFilters}
+                    className="text-xs text-blue-600 hover:underline"
+                  >
+                    Limpiar filtros
+                  </button>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
                   <input
                     type="text"
                     placeholder="Buscar por nombre, email, teléfono..."
@@ -241,10 +300,20 @@ export default function LeadsPage() {
                     className="border border-gray-300 rounded px-3 py-2 text-sm"
                   />
                   <input
-                    type="month"
-                    value={filters.mes}
-                    onChange={(e) => setFilters({ ...filters, mes: e.target.value })}
+                    type="date"
+                    placeholder="Desde"
+                    value={filters.fecha_desde}
+                    onChange={(e) => setFilters({ ...filters, fecha_desde: e.target.value })}
                     className="border border-gray-300 rounded px-3 py-2 text-sm"
+                    title="Fecha desde"
+                  />
+                  <input
+                    type="date"
+                    placeholder="Hasta"
+                    value={filters.fecha_hasta}
+                    onChange={(e) => setFilters({ ...filters, fecha_hasta: e.target.value })}
+                    className="border border-gray-300 rounded px-3 py-2 text-sm"
+                    title="Fecha hasta"
                   />
                   <select
                     value={filters.contactado}
@@ -265,6 +334,11 @@ export default function LeadsPage() {
                     <option value="false">No vendidos</option>
                   </select>
                 </div>
+                {(filters.search || filters.fecha_desde || filters.fecha_hasta || filters.contactado || filters.vendido) && (
+                  <div className="mt-3 text-xs text-gray-600">
+                    Mostrando {leads.length} de {allLeads.length} leads
+                  </div>
+                )}
               </div>
 
               {/* Tabla */}
@@ -281,6 +355,7 @@ export default function LeadsPage() {
                       <tr>
                         <th className="px-3 py-2 text-left font-semibold">ID</th>
                         <th className="px-3 py-2 text-left font-semibold">Nombre</th>
+                        <th className="px-3 py-2 text-left font-semibold">Empresa</th>
                         <th className="px-3 py-2 text-left font-semibold">Email</th>
                         <th className="px-3 py-2 text-left font-semibold">Teléfono</th>
                         <th className="px-3 py-2 text-left font-semibold">Campaña</th>
@@ -301,6 +376,7 @@ export default function LeadsPage() {
                             <td className="px-3 py-2 text-gray-900">
                               {lead.nombre} {lead.apellido}
                             </td>
+                            <td className="px-3 py-2 text-gray-700 font-medium">{lead.empresa || '-'}</td>
                             <td className="px-3 py-2 text-gray-700">{lead.email || '-'}</td>
                             <td className="px-3 py-2 text-gray-700">{lead.telefono || '-'}</td>
                             <td className="px-3 py-2 text-gray-600 text-xs">
@@ -387,6 +463,13 @@ export default function LeadsPage() {
                                 </div>
                               ) : (
                                 <div className="flex gap-1">
+                                  <button
+                                    onClick={() => window.location.href = `/crm/cotizar/${lead.id}`}
+                                    className="bg-green-600 text-white px-3 py-1 rounded text-xs hover:bg-green-700"
+                                    title="Crear cotización"
+                                  >
+                                    Cotizar
+                                  </button>
                                   <button
                                     onClick={() => startEdit(lead)}
                                     className="bg-blue-600 text-white px-3 py-1 rounded text-xs hover:bg-blue-700"
