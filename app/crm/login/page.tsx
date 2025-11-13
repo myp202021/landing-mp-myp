@@ -27,6 +27,12 @@ export default function LoginPage() {
     const response = await login(username, password)
 
     if (response.success && response.user) {
+      // Si debe cambiar password, redirigir a página de cambio
+      if (response.user.debe_cambiar_password) {
+        router.push('/crm/cambiar-password')
+        return
+      }
+
       // Redirigir según el rol del usuario
       if (response.user.role === 'admin') {
         router.push('/crm')

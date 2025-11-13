@@ -11,6 +11,7 @@ export interface User {
   role: UserRole
   nombre: string
   cliente_id?: string  // UUID del cliente para filtrar datos
+  debe_cambiar_password?: boolean  // Flag para forzar cambio de contraseña
 }
 
 export interface UserCredentials extends User {

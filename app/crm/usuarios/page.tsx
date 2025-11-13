@@ -29,6 +29,9 @@ export default function UsuariosPage() {
   const [loading, setLoading] = useState(true)
   const [showModal, setShowModal] = useState(false)
   const [editingUser, setEditingUser] = useState<Usuario | null>(null)
+  const [showResetPasswordModal, setShowResetPasswordModal] = useState(false)
+  const [resetPasswordUser, setResetPasswordUser] = useState<Usuario | null>(null)
+  const [newPassword, setNewPassword] = useState('')
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
 
@@ -216,6 +219,51 @@ export default function UsuariosPage() {
     setSuccess('')
   }
 
+  const handleResetPassword = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setError('')
+    setSuccess('')
+
+    if (!resetPasswordUser) return
+
+    if (newPassword.length < 8) {
+      setError('La nueva contraseña debe tener al menos 8 caracteres')
+      return
+    }
+
+    try {
+      const res = await fetch('/api/auth/reset-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          user_id: resetPasswordUser.id,
+          new_password: newPassword,
+          force_change: true
+        })
+      })
+
+      if (!res.ok) {
+        const error = await res.json()
+        throw new Error(error.error || 'Error reseteando contraseña')
+      }
+
+      setSuccess(`Contraseña reseteada para ${resetPasswordUser.username}. El usuario deberá cambiarla en su próximo login.`)
+      setShowResetPasswordModal(false)
+      setResetPasswordUser(null)
+      setNewPassword('')
+    } catch (error: any) {
+      setError(error.message)
+    }
+  }
+
+  const openResetPasswordModal = (usuario: Usuario) => {
+    setResetPasswordUser(usuario)
+    setNewPassword('')
+    setShowResetPasswordModal(true)
+    setError('')
+    setSuccess('')
+  }
+
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
@@ -321,6 +369,12 @@ export default function UsuariosPage() {
                   >
                     Editar
                   </button>
+                  <button
+                    onClick={() => openResetPasswordModal(usuario)}
+                    className="text-purple-600 hover:text-purple-800 font-semibold text-sm"
+                  >
+                    Reset Password
+                  </button>
                   {usuario.username !== 'admin' && (
                     <button
                       onClick={() => handleDelete(usuario)}
@@ -341,6 +395,61 @@ export default function UsuariosPage() {
           </div>
         )}
       </div>
+
+      {/* Modal de reset password */}
+      {showResetPasswordModal && resetPasswordUser && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8">
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">
+              Resetear Contraseña
+            </h2>
+            <p className="text-gray-600 mb-6">
+              Usuario: <span className="font-mono font-semibold text-gray-900">{resetPasswordUser.username}</span>
+            </p>
+
+            <form onSubmit={handleResetPassword} className="space-y-4">
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Nueva contraseña (mínimo 8 caracteres)
+                </label>
+                <input
+                  type="password"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  required
+                  minLength={8}
+                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:ring focus:ring-purple-200 transition text-gray-900"
+                  placeholder="••••••••"
+                  autoFocus
+                />
+                <p className="text-sm text-gray-500 mt-2">
+                  El usuario deberá cambiar esta contraseña en su próximo login.
+                </p>
+              </div>
+
+              <div className="flex gap-3 pt-4">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowResetPasswordModal(false)
+                    setResetPasswordUser(null)
+                    setNewPassword('')
+                  }}
+                  className="flex-1 px-6 py-3 border-2 border-gray-300 rounded-lg hover:bg-gray-50 transition font-semibold text-gray-700"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  className="flex-1 px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition font-semibold shadow-lg"
+                >
+                  Resetear
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
       {/* Modal de crear/editar */}
       {showModal && (

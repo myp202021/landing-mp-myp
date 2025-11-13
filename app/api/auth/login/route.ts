@@ -17,52 +17,39 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    // Buscar usuario por username
-    const { data: usuario, error } = await supabase
-      .from('usuarios')
-      .select(`
-        id,
-        username,
-        password_hash,
-        cliente_id,
-        rol,
-        nombre,
-        activo
-      `)
-      .eq('username', username)
-      .single()
+    // Usar función SQL verificar_login() que valida con bcrypt
+    const { data, error } = await supabase
+      .rpc('verificar_login', {
+        p_username: username,
+        p_password: password
+      })
 
-    if (error || !usuario) {
+    if (error) {
+      console.error('Error en verificar_login:', error)
+      return NextResponse.json(
+        { error: 'Error al verificar credenciales' },
+        { status: 500 }
+      )
+    }
+
+    // Si no hay datos, credenciales incorrectas
+    if (!data || data.length === 0) {
       return NextResponse.json(
         { error: 'Usuario o contraseña incorrectos' },
         { status: 401 }
       )
     }
 
-    // Verificar que el usuario esté activo
-    if (!usuario.activo) {
-      return NextResponse.json(
-        { error: 'Usuario deshabilitado' },
-        { status: 403 }
-      )
-    }
-
-    // Validar contraseña
-    // NOTA: En producción esto debería usar bcrypt.compare()
-    // Por ahora comparamos en texto plano
-    if (usuario.password_hash !== password) {
-      return NextResponse.json(
-        { error: 'Usuario o contraseña incorrectos' },
-        { status: 401 }
-      )
-    }
+    const usuario = data[0]
 
     // Autenticación exitosa
     const user = {
+      id: usuario.user_id,
       username: usuario.username,
-      role: usuario.rol, // Map 'rol' (DB) to 'role' (frontend)
+      role: usuario.rol,
       nombre: usuario.nombre,
-      cliente_id: usuario.cliente_id
+      cliente_id: usuario.cliente_id,
+      debe_cambiar_password: usuario.debe_cambiar_password
     }
 
     return NextResponse.json({

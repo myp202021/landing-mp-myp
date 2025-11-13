@@ -85,36 +85,49 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    // Verificar que el username no exista
-    const { data: existente } = await supabase
-      .from('usuarios')
-      .select('id')
-      .eq('username', username)
-      .single()
-
-    if (existente) {
+    // Validar longitud de contraseña
+    if (password.length < 8) {
       return NextResponse.json(
-        { error: 'El username ya existe' },
+        { error: 'La contraseña debe tener al menos 8 caracteres' },
         { status: 400 }
       )
     }
 
-    // Crear usuario
-    // NOTA: En producción, password debería hashearse con bcrypt
-    const { data: usuario, error } = await supabase
+    // Usar función SQL que hashea con bcrypt automáticamente
+    const { data, error } = await supabase.rpc('crear_usuario', {
+      p_username: username,
+      p_password: password,
+      p_nombre: nombre,
+      p_rol: rol,
+      p_cliente_id: rol === 'cliente' ? cliente_id : null
+    })
+
+    if (error) {
+      console.error('Error creando usuario:', error)
+      return NextResponse.json(
+        { error: error.message || 'Error creando usuario', details: error.hint },
+        { status: 400 }
+      )
+    }
+
+    // data contiene el ID del usuario creado
+    const user_id = data
+
+    // Obtener el usuario recién creado con información del cliente
+    const { data: usuario, error: fetchError } = await supabase
       .from('usuarios')
-      .insert({
-        username,
-        password_hash: password, // En producción: await bcrypt.hash(password, 10)
-        cliente_id: rol === 'cliente' ? cliente_id : null,
-        rol,
-        nombre,
-        activo: true
-      })
-      .select()
+      .select(`
+        *,
+        clientes (
+          id,
+          nombre,
+          rubro
+        )
+      `)
+      .eq('id', user_id)
       .single()
 
-    if (error) throw error
+    if (fetchError) throw fetchError
 
     return NextResponse.json(
       {
@@ -124,9 +137,10 @@ export async function POST(req: NextRequest) {
           username: usuario.username,
           nombre: usuario.nombre,
           rol: usuario.rol,
-          cliente_id: usuario.cliente_id
+          cliente_id: usuario.cliente_id,
+          clientes: usuario.clientes
         },
-        message: 'Usuario creado exitosamente'
+        message: 'Usuario creado exitosamente con contraseña hasheada'
       },
       { status: 201 }
     )
