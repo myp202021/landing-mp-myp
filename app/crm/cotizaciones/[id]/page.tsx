@@ -30,6 +30,8 @@ interface Cotizacion {
   creado_en: string
   enviada_en?: string
   aceptada_en?: string
+  logo_url?: string | null
+  plantilla_id?: number | null
   clientes?: {
     nombre: string
     rubro?: string
@@ -275,20 +277,23 @@ export default function CotizacionPage() {
                     Editar
                   </Button>
                   <Button
-                    onClick={() => generarPDFCotizacion({
-                      id: cotizacion.id,
-                      nombre_proyecto: cotizacion.nombre_proyecto,
-                      cliente_nombre: cotizacion.cliente_nombre,
-                      cliente_email: cotizacion.cliente_email,
-                      cliente_telefono: cotizacion.leads?.telefono,
-                      items: cotizacion.items,
-                      subtotal: cotizacion.subtotal,
-                      descuento: cotizacion.descuento,
-                      total: cotizacion.total,
-                      notas: cotizacion.notas,
-                      vigencia_dias: cotizacion.vigencia_dias,
-                      creado_en: cotizacion.creado_en
-                    })}
+                    onClick={async () => {
+                      await generarPDFCotizacion({
+                        id: cotizacion.id,
+                        nombre_proyecto: cotizacion.nombre_proyecto,
+                        cliente_nombre: cotizacion.cliente_nombre,
+                        cliente_email: cotizacion.cliente_email,
+                        cliente_telefono: cotizacion.leads?.telefono,
+                        items: cotizacion.items,
+                        subtotal: cotizacion.subtotal,
+                        descuento: cotizacion.descuento,
+                        total: cotizacion.total,
+                        notas: cotizacion.notas,
+                        vigencia_dias: cotizacion.vigencia_dias,
+                        creado_en: cotizacion.creado_en,
+                        logo_url: cotizacion.logo_url
+                      })
+                    }}
                     variant="success"
                     className="text-sm"
                   >

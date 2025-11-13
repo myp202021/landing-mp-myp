@@ -110,7 +110,9 @@ export async function POST(req: NextRequest) {
       descuento,
       total,
       notas,
-      vigencia_dias
+      vigencia_dias,
+      logo_url,
+      plantilla_id
     } = body
 
     if (!cliente_id || !nombre_proyecto) {
@@ -135,7 +137,9 @@ export async function POST(req: NextRequest) {
         total: total || 0,
         notas: notas || null,
         vigencia_dias: vigencia_dias || 30,
-        estado: 'borrador'
+        estado: 'borrador',
+        logo_url: logo_url || null,
+        plantilla_id: plantilla_id || null
       })
       .select()
       .single()

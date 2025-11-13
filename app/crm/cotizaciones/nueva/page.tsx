@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 import CRMLayout from '@/app/components/crm/CRMLayout'
 import Button from '@/app/components/crm/Button'
 
@@ -44,6 +45,8 @@ export default function NuevaCotizacionPage() {
   const [leads, setLeads] = useState<Lead[]>([])
   const [leadsFiltered, setLeadsFiltered] = useState<Lead[]>([])
   const [plantillas, setPlantillas] = useState<Plantilla[]>([])
+  const [plantillaAsignada, setPlantillaAsignada] = useState<Plantilla | null>(null)
+  const [clienteLogo, setClienteLogo] = useState<string | null>(null)
 
   const [clienteId, setClienteId] = useState('')
   const [leadId, setLeadId] = useState<number | null>(null)
@@ -104,6 +107,53 @@ export default function NuevaCotizacionPage() {
       }
     }
   }, [leadId, leads])
+
+  // Detectar plantilla asignada al cliente cuando se selecciona
+  useEffect(() => {
+    const fetchPlantillaCliente = async () => {
+      if (!clienteId) {
+        setPlantillaAsignada(null)
+        setClienteLogo(null)
+        return
+      }
+
+      try {
+        const res = await fetch(`/api/crm/plantillas/cliente?cliente_id=${clienteId}`)
+        const data = await res.json()
+
+        if (data.plantilla) {
+          setPlantillaAsignada(data.plantilla)
+          setClienteLogo(data.plantilla.logo_url || null)
+
+          // Auto-aplicar la plantilla asignada
+          if (data.plantilla.items_default && data.plantilla.items_default.length > 0) {
+            const itemsConvertidos = data.plantilla.items_default.map((item: any) => ({
+              descripcion: item.descripcion,
+              cantidad: item.cantidad,
+              precio_unitario: item.precio,
+              total: item.cantidad * item.precio
+            }))
+
+            setItems(itemsConvertidos)
+            setNotas(data.plantilla.notas_default || '')
+            setVigenciaDias(data.plantilla.vigencia_dias_default || 30)
+
+            // Calcular descuento en pesos
+            const subtotal = itemsConvertidos.reduce((sum: number, item: any) => sum + item.total, 0)
+            const descuentoPesos = (subtotal * (data.plantilla.descuento_default || 0)) / 100
+            setDescuento(descuentoPesos)
+          }
+        } else {
+          setPlantillaAsignada(null)
+          setClienteLogo(null)
+        }
+      } catch (error) {
+        console.error('Error obteniendo plantilla del cliente:', error)
+      }
+    }
+
+    fetchPlantillaCliente()
+  }, [clienteId])
 
   const loadData = async () => {
     setLoading(true)
@@ -215,7 +265,9 @@ export default function NuevaCotizacionPage() {
           total: calcularTotal(),
           notas: notas,
           vigencia_dias: vigenciaDias,
-          estado: enviar ? 'enviada' : 'borrador'
+          estado: enviar ? 'enviada' : 'borrador',
+          logo_url: clienteLogo || null,
+          plantilla_id: plantillaAsignada?.id || null
         })
       })
 
@@ -258,6 +310,40 @@ export default function NuevaCotizacionPage() {
 
           {/* Formulario */}
           <div className="p-6 space-y-6">
+            {/* Logo del cliente (si tiene plantilla asignada) */}
+            {clienteLogo && plantillaAsignada && (
+              <div className="bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200 rounded-lg p-5 shadow-sm">
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0 bg-white p-3 rounded-lg shadow-md">
+                    <Image
+                      src={clienteLogo}
+                      alt="Logo del cliente"
+                      width={200}
+                      height={75}
+                      className="max-w-full h-auto"
+                      style={{ objectFit: 'contain' }}
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-2">
+                      <svg className="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                      <h3 className="text-lg font-bold text-green-900">
+                        Plantilla Personalizada Detectada
+                      </h3>
+                    </div>
+                    <p className="text-green-800 text-sm mb-1">
+                      <strong>{plantillaAsignada.nombre}</strong>
+                    </p>
+                    <p className="text-green-700 text-xs">
+                      La plantilla personalizada de este cliente se ha aplicado automáticamente con {plantillaAsignada.items_default?.length || 0} items predefinidos.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Selector de plantilla */}
             {plantillas.length > 0 && (
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
@@ -283,7 +369,10 @@ export default function NuevaCotizacionPage() {
                   </Link>
                 </div>
                 <p className="text-xs text-blue-700 mt-2">
-                  Al seleccionar una plantilla, se llenarán automáticamente los items, notas y configuración.
+                  {plantillaAsignada
+                    ? 'Puedes cambiar a otra plantilla si lo necesitas.'
+                    : 'Al seleccionar una plantilla, se llenarán automáticamente los items, notas y configuración.'
+                  }
                 </p>
               </div>
             )}

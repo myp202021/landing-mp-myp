@@ -22,9 +22,34 @@ interface CotizacionData {
   notas?: string
   vigencia_dias?: number
   creado_en: string
+  logo_url?: string | null
 }
 
-export function generarPDFCotizacion(cotizacion: CotizacionData) {
+/**
+ * Convierte una URL de imagen a base64
+ */
+async function imageUrlToBase64(url: string): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const img = new Image()
+    img.crossOrigin = 'anonymous'
+    img.onload = () => {
+      const canvas = document.createElement('canvas')
+      canvas.width = img.width
+      canvas.height = img.height
+      const ctx = canvas.getContext('2d')
+      if (ctx) {
+        ctx.drawImage(img, 0, 0)
+        resolve(canvas.toDataURL('image/png'))
+      } else {
+        reject(new Error('No se pudo obtener contexto del canvas'))
+      }
+    }
+    img.onerror = () => reject(new Error('Error cargando imagen'))
+    img.src = url
+  })
+}
+
+export async function generarPDFCotizacion(cotizacion: CotizacionData) {
   const doc = new jsPDF()
 
   // Colores M&P - Usando colores del template HTML (#4A90E2)
@@ -37,13 +62,25 @@ export function generarPDFCotizacion(cotizacion: CotizacionData) {
 
   // HEADER - Fondo blanco con borde azul (estilo más profesional)
   doc.setFillColor(255, 255, 255)
-  doc.rect(0, 0, 210, 50, 'F')
+  doc.rect(0, 0, 210, 60, 'F') // Aumentado a 60 para dar espacio al logo
 
   // Línea decorativa superior
   doc.setFillColor(azulPrincipal.r, azulPrincipal.g, azulPrincipal.b)
   doc.rect(0, 0, 210, 3, 'F')
 
-  // Título principal
+  // Si hay logo del cliente, lo mostramos en la esquina superior izquierda
+  if (cotizacion.logo_url) {
+    try {
+      const logoBase64 = await imageUrlToBase64(cotizacion.logo_url)
+      // Logo del cliente en esquina superior izquierda
+      doc.addImage(logoBase64, 'PNG', 15, 8, 40, 15) // x, y, ancho, alto
+    } catch (error) {
+      console.error('Error cargando logo del cliente:', error)
+      // Continuar sin logo si hay error
+    }
+  }
+
+  // Título principal (ajustado para dar espacio al logo)
   doc.setTextColor(azulPrincipal.r, azulPrincipal.g, azulPrincipal.b)
   doc.setFontSize(28)
   doc.setFont('helvetica', 'bold')
@@ -60,7 +97,7 @@ export function generarPDFCotizacion(cotizacion: CotizacionData) {
 
   const fecha = new Date(cotizacion.creado_en).toLocaleDateString('es-CL')
 
-  yPos = 60
+  yPos = 70 // Aumentado para dar espacio al header expandido
 
   // Información de la cotización (estilo meta-info)
   doc.setTextColor(102, 102, 102) // #666
