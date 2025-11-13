@@ -18,28 +18,8 @@ export interface UserCredentials extends User {
   password: string
 }
 
-// Usuarios hardcodeados (en producción esto debería estar en base de datos con hashing)
-const USERS: UserCredentials[] = [
-  {
-    username: 'admin',
-    password: 'MYP@admin2025!',
-    role: 'admin',
-    nombre: 'Administrador MYP'
-  },
-  {
-    username: 'cliente1',
-    password: 'Cliente@2025!',
-    role: 'cliente',
-    nombre: 'Cliente Demo'
-  },
-  {
-    username: 'myp',
-    password: 'mypcliente2025',
-    role: 'cliente',
-    nombre: 'M&P Marketing y Performance',
-    cliente_id: 'bf1b925e-8799-4db4-bd12-d12fbd106020'
-  }
-]
+// NOTA: Usuarios hardcodeados eliminados por seguridad
+// Todos los usuarios ahora deben estar en la base de datos
 
 export interface AuthResponse {
   success: boolean
@@ -47,20 +27,8 @@ export interface AuthResponse {
   error?: string
 }
 
-// Función para autenticar usuario (ahora async)
+// Función para autenticar usuario contra base de datos
 export async function authenticateUser(username: string, password: string): Promise<AuthResponse> {
-  // PRIMERO: Intentar con usuarios hardcodeados (para que funcione siempre)
-  const userCred = USERS.find(u => u.username === username && u.password === password)
-
-  if (userCred) {
-    const { password: _, ...user } = userCred
-    return {
-      success: true,
-      user
-    }
-  }
-
-  // SEGUNDO: Si no está en hardcoded, intentar con base de datos
   try {
     const response = await fetch('/api/auth/login', {
       method: 'POST',
@@ -76,14 +44,22 @@ export async function authenticateUser(username: string, password: string): Prom
       }
     }
 
+    // Intentar obtener detalles del error
+    let errorMessage = 'Usuario o contraseña incorrectos'
+    try {
+      const errorData = await response.json()
+      if (errorData.error) errorMessage = errorData.error
+    } catch {}
+
     return {
       success: false,
-      error: 'Usuario o contraseña incorrectos'
+      error: errorMessage
     }
   } catch (error) {
+    console.error('Error en autenticación:', error)
     return {
       success: false,
-      error: 'Usuario o contraseña incorrectos'
+      error: 'Error de conexión. Intenta nuevamente.'
     }
   }
 }

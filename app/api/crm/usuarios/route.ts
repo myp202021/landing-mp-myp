@@ -172,11 +172,7 @@ export async function PATCH(req: NextRequest) {
     if (nombre !== undefined) updateData.nombre = nombre
     if (activo !== undefined) updateData.activo = activo
 
-    // Solo actualizar password si se proporciona uno nuevo
-    if (password) {
-      updateData.password_hash = password // En producción: await bcrypt.hash(password, 10)
-    }
-
+    // Actualizar campos básicos primero
     updateData.actualizado_en = new Date().toISOString()
 
     const { data: usuario, error } = await supabase
@@ -185,6 +181,21 @@ export async function PATCH(req: NextRequest) {
       .eq('id', id)
       .select()
       .single()
+
+    if (error) throw error
+
+    // Si se proporciona una nueva contraseña, actualizarla usando crypt()
+    if (password) {
+      const { error: pwdError } = await supabase.rpc('actualizar_password_usuario', {
+        p_user_id: parseInt(id),
+        p_new_password: password
+      })
+
+      if (pwdError) {
+        console.error('Error actualizando contraseña:', pwdError)
+        throw new Error('Error actualizando contraseña')
+      }
+    }
 
     if (error) throw error
 
