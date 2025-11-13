@@ -255,10 +255,11 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    // Validar tamaño
-    if (file.size > MAX_FILE_SIZE) {
+    // Validar tamaño (máximo 10MB)
+    const MAX_UPLOAD_SIZE = 10 * 1024 * 1024 // 10MB
+    if (file.size > MAX_UPLOAD_SIZE) {
       return NextResponse.json(
-        { error: `Archivo muy grande. Máximo ${MAX_FILE_SIZE / 1024 / 1024}MB` },
+        { error: `Archivo muy grande. Máximo 10MB` },
         { status: 400 }
       )
     }
@@ -272,8 +273,6 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       )
     }
-
-    console.log(`📁 Procesando ${filename} (${(file.size / 1024).toFixed(1)}KB)`)
 
     // Convertir a buffer
     const arrayBuffer = await file.arrayBuffer()
@@ -299,7 +298,6 @@ export async function POST(req: NextRequest) {
     }
 
     // Parsear archivo
-    console.log('📊 Parseando archivo...')
     const rows = await parseFile(buffer, filename)
 
     if (rows.length === 0) {
@@ -316,11 +314,8 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    console.log(`✅ ${rows.length} filas detectadas`)
-
     // Detectar columnas
     const columnas_detectadas = Object.keys(rows[0])
-    console.log(`📋 Columnas: ${columnas_detectadas.join(', ')}`)
 
     // Mapeo de campos aplicado
     const mapeo_campos: Record<string, string> = {}
@@ -330,55 +325,33 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Procesar filas
+    // Procesar filas en batches de 100
     const results = {
       ok: [] as any[],
       errors: [] as { row: number; error: string; data: any }[],
       duplicados: [] as { row: number; reason: string; data: any }[]
     }
 
+    const BATCH_SIZE = 100
+    const leadsToInsert: any[] = []
+    const validRows: { index: number; lead: any; originalRow: any }[] = []
+
+    // Primero validar todas las filas
     for (let i = 0; i < rows.length; i++) {
       const row = rows[i]
 
       try {
-        // Mapear a schema
         const lead = mapRowToLead(row, clientId, rubro)
-
-        // Validar
         const validation = validateLead(lead)
+
         if (!validation.valid) {
           results.errors.push({
-            row: i + 2, // +2 porque row 1 es header y arrays empiezan en 0
+            row: i + 2,
             error: validation.error!,
             data: row
           })
-          continue
-        }
-
-        // Intentar insertar (constraint unique detectará duplicados)
-        const { data, error } = await supabase
-          .from('leads')
-          .insert(lead)
-          .select()
-          .single()
-
-        if (error) {
-          // Detectar si es duplicado
-          if (error.code === '23505') { // unique_violation
-            results.duplicados.push({
-              row: i + 2,
-              reason: 'Email o teléfono ya existe para esta fecha',
-              data: row
-            })
-          } else {
-            results.errors.push({
-              row: i + 2,
-              error: error.message,
-              data: row
-            })
-          }
         } else {
-          results.ok.push(data)
+          validRows.push({ index: i, lead, originalRow: row })
         }
       } catch (err: any) {
         results.errors.push({
@@ -389,7 +362,84 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    console.log(`✅ OK: ${results.ok.length} | ❌ Errores: ${results.errors.length} | 🔁 Duplicados: ${results.duplicados.length}`)
+    // Insertar en batches
+    for (let i = 0; i < validRows.length; i += BATCH_SIZE) {
+      const batch = validRows.slice(i, i + BATCH_SIZE)
+      const leadsToInsertBatch = batch.map(r => r.lead)
+
+      try {
+        const { data, error } = await supabase
+          .from('leads')
+          .insert(leadsToInsertBatch)
+          .select()
+
+        if (error) {
+          // Si hay error en el batch, insertar uno por uno para detectar duplicados
+          for (const { index, lead, originalRow } of batch) {
+            const { data: singleData, error: singleError } = await supabase
+              .from('leads')
+              .insert(lead)
+              .select()
+              .single()
+
+            if (singleError) {
+              if (singleError.code === '23505') {
+                results.duplicados.push({
+                  row: index + 2,
+                  reason: 'Email o teléfono ya existe para esta fecha',
+                  data: originalRow
+                })
+              } else {
+                results.errors.push({
+                  row: index + 2,
+                  error: singleError.message,
+                  data: originalRow
+                })
+              }
+            } else {
+              results.ok.push(singleData)
+            }
+          }
+        } else {
+          results.ok.push(...(data || []))
+        }
+      } catch (err: any) {
+        // Fallback a inserción individual
+        for (const { index, lead, originalRow } of batch) {
+          try {
+            const { data: singleData, error: singleError } = await supabase
+              .from('leads')
+              .insert(lead)
+              .select()
+              .single()
+
+            if (singleError) {
+              if (singleError.code === '23505') {
+                results.duplicados.push({
+                  row: index + 2,
+                  reason: 'Email o teléfono ya existe para esta fecha',
+                  data: originalRow
+                })
+              } else {
+                results.errors.push({
+                  row: index + 2,
+                  error: singleError.message,
+                  data: originalRow
+                })
+              }
+            } else {
+              results.ok.push(singleData)
+            }
+          } catch (innerErr: any) {
+            results.errors.push({
+              row: index + 2,
+              error: innerErr.message,
+              data: originalRow
+            })
+          }
+        }
+      }
+    }
 
     // Crear registro de carga
     const { data: carga, error: cargaError } = await supabase

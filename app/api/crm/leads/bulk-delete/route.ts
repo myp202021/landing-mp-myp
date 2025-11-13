@@ -37,8 +37,6 @@ export async function DELETE(req: NextRequest) {
       )
     }
 
-    console.log(`🗑️  Eliminando todos los leads del cliente: ${cliente_id}`)
-
     // Primero contar cuántos leads hay
     const { count: totalLeads, error: countError } = await supabase
       .from('leads')
@@ -46,14 +44,19 @@ export async function DELETE(req: NextRequest) {
       .eq('cliente_id', cliente_id)
 
     if (countError) {
-      console.error('Error contando leads:', countError)
       return NextResponse.json(
         { error: 'Error contando leads' },
         { status: 500 }
       )
     }
 
-    console.log(`📊 Total leads a eliminar: ${totalLeads}`)
+    // Limitar a máximo 1000 leads por vez
+    if (totalLeads && totalLeads > 1000) {
+      return NextResponse.json(
+        { error: `Demasiados leads para eliminar (${totalLeads}). Máximo permitido: 1000 por operación` },
+        { status: 400 }
+      )
+    }
 
     // Eliminar todos los leads del cliente
     const { error: deleteError } = await supabase
@@ -62,14 +65,11 @@ export async function DELETE(req: NextRequest) {
       .eq('cliente_id', cliente_id)
 
     if (deleteError) {
-      console.error('Error eliminando leads:', deleteError)
       return NextResponse.json(
         { error: `Error eliminando leads: ${deleteError.message}` },
         { status: 500 }
       )
     }
-
-    console.log(`✅ ${totalLeads} leads eliminados exitosamente`)
 
     return NextResponse.json({
       success: true,

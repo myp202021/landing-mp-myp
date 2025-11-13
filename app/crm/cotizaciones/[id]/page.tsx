@@ -54,6 +54,8 @@ export default function CotizacionPage() {
   const [editing, setEditing] = useState(false)
   const [editedCotizacion, setEditedCotizacion] = useState<Cotizacion | null>(null)
   const [saving, setSaving] = useState(false)
+  const [changingStatus, setChangingStatus] = useState(false)
+  const [deleting, setDeleting] = useState(false)
 
   useEffect(() => {
     if (id) {
@@ -71,11 +73,12 @@ export default function CotizacionPage() {
         setCotizacion(data.cotizacion)
         setEditedCotizacion(data.cotizacion)
       } else {
-        alert('Error cargando cotizacion')
+        const errorMsg = data.error || 'Error cargando cotizacion'
+        alert(errorMsg)
       }
-    } catch (error) {
-      console.error('Error:', error)
-      alert('Error cargando cotizacion')
+    } catch (error: any) {
+      const errorMsg = error.message || 'Error cargando cotizacion'
+      alert(errorMsg)
     }
     setLoading(false)
   }
@@ -108,13 +111,16 @@ export default function CotizacionPage() {
         setEditing(false)
         await loadCotizacion()
       } else {
-        alert('Error actualizando cotizacion')
+        const data = await res.json()
+        const errorMsg = data.error || 'Error actualizando cotizacion'
+        alert(errorMsg)
       }
-    } catch (error) {
-      console.error('Error:', error)
-      alert('Error actualizando cotizacion')
+    } catch (error: any) {
+      const errorMsg = error.message || 'Error actualizando cotizacion'
+      alert(errorMsg)
+    } finally {
+      setSaving(false)
     }
-    setSaving(false)
   }
 
   const handleEstadoChange = async (nuevoEstado: string) => {
@@ -122,6 +128,7 @@ export default function CotizacionPage() {
 
     if (!confirm(`¿Cambiar estado a "${nuevoEstado}"?`)) return
 
+    setChangingStatus(true)
     try {
       const res = await fetch('/api/crm/cotizaciones', {
         method: 'PATCH',
@@ -136,11 +143,15 @@ export default function CotizacionPage() {
         alert('Estado actualizado')
         await loadCotizacion()
       } else {
-        alert('Error actualizando estado')
+        const data = await res.json()
+        const errorMsg = data.error || 'Error actualizando estado'
+        alert(errorMsg)
       }
-    } catch (error) {
-      console.error('Error:', error)
-      alert('Error actualizando estado')
+    } catch (error: any) {
+      const errorMsg = error.message || 'Error actualizando estado'
+      alert(errorMsg)
+    } finally {
+      setChangingStatus(false)
     }
   }
 
@@ -149,6 +160,7 @@ export default function CotizacionPage() {
 
     if (!confirm('¿Estas seguro de eliminar esta cotizacion? Esta accion no se puede deshacer.')) return
 
+    setDeleting(true)
     try {
       const res = await fetch(`/api/crm/cotizaciones?id=${cotizacion.id}`, {
         method: 'DELETE'
@@ -158,11 +170,15 @@ export default function CotizacionPage() {
         alert('Cotizacion eliminada')
         router.push('/crm/cotizaciones')
       } else {
-        alert('Error eliminando cotizacion')
+        const data = await res.json()
+        const errorMsg = data.error || 'Error eliminando cotizacion'
+        alert(errorMsg)
       }
-    } catch (error) {
-      console.error('Error:', error)
-      alert('Error eliminando cotizacion')
+    } catch (error: any) {
+      const errorMsg = error.message || 'Error eliminando cotizacion'
+      alert(errorMsg)
+    } finally {
+      setDeleting(false)
     }
   }
 
@@ -303,8 +319,8 @@ export default function CotizacionPage() {
                   <Button onClick={() => window.print()} variant="secondary" className="text-sm">
                     🖨️ Imprimir
                   </Button>
-                  <Button onClick={handleDelete} variant="danger" className="text-sm">
-                    Eliminar
+                  <Button onClick={handleDelete} variant="danger" className="text-sm" disabled={deleting}>
+                    {deleting ? 'Eliminando...' : 'Eliminar'}
                   </Button>
                 </>
               )}
@@ -326,17 +342,17 @@ export default function CotizacionPage() {
           {!editing && (
             <div className="flex gap-2">
               {cotizacion.estado === 'borrador' && (
-                <Button onClick={() => handleEstadoChange('enviada')} variant="primary" className="text-sm">
-                  Marcar como Enviada
+                <Button onClick={() => handleEstadoChange('enviada')} variant="primary" className="text-sm" disabled={changingStatus}>
+                  {changingStatus ? 'Actualizando...' : 'Marcar como Enviada'}
                 </Button>
               )}
               {cotizacion.estado === 'enviada' && (
                 <>
-                  <Button onClick={() => handleEstadoChange('aceptada')} variant="success" className="text-sm">
-                    Marcar como Aceptada
+                  <Button onClick={() => handleEstadoChange('aceptada')} variant="success" className="text-sm" disabled={changingStatus}>
+                    {changingStatus ? 'Actualizando...' : 'Marcar como Aceptada'}
                   </Button>
-                  <Button onClick={() => handleEstadoChange('rechazada')} variant="danger" className="text-sm">
-                    Marcar como Rechazada
+                  <Button onClick={() => handleEstadoChange('rechazada')} variant="danger" className="text-sm" disabled={changingStatus}>
+                    {changingStatus ? 'Actualizando...' : 'Marcar como Rechazada'}
                   </Button>
                 </>
               )}

@@ -176,6 +176,12 @@ export async function PATCH(req: NextRequest) {
 // DELETE: Eliminar un cliente (con manejo de todas las relaciones)
 export async function DELETE(req: NextRequest) {
   try {
+    // Verificar autenticación
+    const authHeader = req.headers.get('authorization')
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
+    }
+
     const { searchParams } = new URL(req.url)
     const id = searchParams.get('id')
 
@@ -186,67 +192,17 @@ export async function DELETE(req: NextRequest) {
       )
     }
 
-    console.log('🗑️ Intentando eliminar cliente:', id)
-
-    // Paso 1: Eliminar cotizaciones del cliente
-    try {
-      await supabase
-        .from('cotizaciones')
-        .delete()
-        .eq('cliente_id', id)
-    } catch (e) {
-      console.warn('⚠️  Error eliminando cotizaciones del cliente:', e)
-    }
-
-    // Paso 2: Obtener leads para eliminar sus cotizaciones
-    const { data: leadsData } = await supabase
-      .from('leads')
-      .select('id')
-      .eq('cliente_id', id)
-
-    const leadIds = leadsData?.map(l => l.id) || []
-
-    // Paso 3: Eliminar cotizaciones de los leads
-    if (leadIds.length > 0) {
-      try {
-        await supabase
-          .from('cotizaciones')
-          .delete()
-          .in('lead_id', leadIds)
-      } catch (e) {
-        console.warn('⚠️  Error eliminando cotizaciones de leads:', e)
-      }
-    }
-
-    // Paso 4: Eliminar todos los leads asociados
-    const { error: leadsError } = await supabase
-      .from('leads')
-      .delete()
-      .eq('cliente_id', id)
-
-    if (leadsError) {
-      console.error('❌ Error eliminando leads del cliente:', leadsError)
-      return NextResponse.json(
-        { error: 'Error eliminando leads del cliente', details: leadsError.message },
-        { status: 500 }
-      )
-    }
-
-    // Paso 5: Eliminar el cliente
-    const { error } = await supabase
-      .from('clientes')
-      .delete()
-      .eq('id', id)
+    // Usar la función SQL que creamos
+    const { error } = await supabase.rpc('eliminar_cliente_con_cascade', {
+      p_cliente_id: id
+    })
 
     if (error) {
-      console.error('❌ Error eliminando cliente:', error)
       return NextResponse.json(
         { error: 'Error eliminando cliente', details: error.message },
         { status: 500 }
       )
     }
-
-    console.log('✅ Cliente eliminado exitosamente:', id)
 
     return NextResponse.json({
       success: true,
@@ -254,7 +210,6 @@ export async function DELETE(req: NextRequest) {
     })
 
   } catch (error: any) {
-    console.error('❌ Error en DELETE /api/crm/clientes:', error)
     return NextResponse.json(
       { error: 'Error interno del servidor', details: error.message },
       { status: 500 }

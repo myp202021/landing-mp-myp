@@ -5,6 +5,7 @@
  */
 
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 
 interface Cliente {
   id: string
@@ -43,6 +44,7 @@ interface Lead {
 }
 
 export default function LeadsPage() {
+  const router = useRouter()
   const [clientes, setClientes] = useState<Cliente[]>([])
   const [selectedCliente, setSelectedCliente] = useState('')
   const [leads, setLeads] = useState<Lead[]>([])
@@ -193,6 +195,10 @@ export default function LeadsPage() {
     if (!confirm('¿Eliminar este lead?')) return
 
     try {
+      // Optimistic update: remover inmediatamente de la UI
+      setLeads(prevLeads => prevLeads.filter(l => l.id !== leadId))
+      setAllLeads(prevLeads => prevLeads.filter(l => l.id !== leadId))
+
       const res = await fetch(`/api/crm/leads?id=${leadId}`, {
         method: 'DELETE'
       })
@@ -201,11 +207,15 @@ export default function LeadsPage() {
         throw new Error('Error eliminando lead')
       }
 
+      // Recargar para confirmar
       fetchAllLeads()
       fetchLeads()
     } catch (error) {
       console.error('Error deleting:', error)
       alert('Error eliminando lead')
+      // Revertir optimistic update en caso de error
+      fetchAllLeads()
+      fetchLeads()
     }
   }
 
@@ -464,7 +474,7 @@ export default function LeadsPage() {
                               ) : (
                                 <div className="flex gap-1">
                                   <button
-                                    onClick={() => window.location.href = `/crm/cotizar/${lead.id}`}
+                                    onClick={() => router.push(`/crm/cotizar/${lead.id}`)}
                                     className="bg-green-600 text-white px-3 py-1 rounded text-xs hover:bg-green-700"
                                     title="Crear cotización"
                                   >

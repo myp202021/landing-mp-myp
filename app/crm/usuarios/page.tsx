@@ -79,7 +79,7 @@ export default function UsuariosPage() {
       const data = await res.json()
       setClientes(data.clientes || [])
     } catch (error: any) {
-      console.error('Error cargando clientes:', error)
+      setError('Error cargando clientes: ' + error.message)
     }
   }
 
@@ -110,7 +110,6 @@ export default function UsuariosPage() {
         setSuccess('Usuario actualizado exitosamente')
       } else {
         // Crear nuevo usuario
-        console.log('📤 Enviando datos:', formData)
         const res = await fetch('/api/crm/usuarios', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -118,7 +117,6 @@ export default function UsuariosPage() {
         })
 
         const responseData = await res.json()
-        console.log('📥 Respuesta del servidor:', responseData)
 
         if (!res.ok) {
           // Mostrar el error detallado del servidor

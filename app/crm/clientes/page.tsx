@@ -140,7 +140,15 @@ export default function ClientesPage() {
       return
     }
 
+    const [deletingButton] = document.querySelectorAll(`button[data-delete-id="${id}"]`)
+    const originalText = deletingButton?.textContent || 'Eliminar'
+
     try {
+      if (deletingButton) {
+        deletingButton.textContent = 'Eliminando...'
+        deletingButton.setAttribute('disabled', 'true')
+      }
+
       const res = await fetch(`/api/crm/clientes?id=${id}`, {
         method: 'DELETE'
       })
@@ -152,6 +160,11 @@ export default function ClientesPage() {
     } catch (error) {
       console.error('Error eliminando cliente:', error)
       alert('Error eliminando cliente')
+    } finally {
+      if (deletingButton) {
+        deletingButton.textContent = originalText
+        deletingButton.removeAttribute('disabled')
+      }
     }
   }
 
@@ -271,8 +284,9 @@ export default function ClientesPage() {
                         Editar
                       </button>
                       <button
+                        data-delete-id={cliente.id}
                         onClick={() => handleDelete(cliente.id, cliente.nombre)}
-                        className="text-red-600 hover:text-red-900 font-medium"
+                        className="text-red-600 hover:text-red-900 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         Eliminar
                       </button>

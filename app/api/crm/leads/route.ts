@@ -11,20 +11,19 @@ const supabase = createClient(
 // GET: Obtener todos los leads o filtrar por cliente_id
 export async function GET(req: NextRequest) {
   try {
+    // Verificar autenticación
+    const authHeader = req.headers.get('authorization')
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
+    }
+
     const { searchParams } = new URL(req.url)
     const cliente_id = searchParams.get('cliente_id')
     const limit = searchParams.get('limit') || '100'
 
     let query = supabase
       .from('leads')
-      .select(`
-        *,
-        clientes (
-          id,
-          nombre,
-          rubro
-        )
-      `)
+      .select('*')
       .order('fecha_ingreso', { ascending: false })
       .limit(parseInt(limit))
 
@@ -35,7 +34,6 @@ export async function GET(req: NextRequest) {
     const { data: leads, error } = await query
 
     if (error) {
-      console.error('❌ Error obteniendo leads:', error)
       return NextResponse.json(
         { error: 'Error obteniendo leads', details: error.message },
         { status: 500 }
@@ -45,7 +43,6 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ leads, total: leads.length })
 
   } catch (error: any) {
-    console.error('❌ Error en GET /api/crm/leads:', error)
     return NextResponse.json(
       { error: 'Error interno del servidor', details: error.message },
       { status: 500 }
@@ -75,14 +72,11 @@ export async function PATCH(req: NextRequest) {
       .single()
 
     if (error) {
-      console.error('❌ Error actualizando lead:', error)
       return NextResponse.json(
         { error: 'Error actualizando lead', details: error.message },
         { status: 500 }
       )
     }
-
-    console.log('✅ Lead actualizado:', id)
 
     return NextResponse.json({
       success: true,
@@ -111,24 +105,18 @@ export async function DELETE(req: NextRequest) {
       )
     }
 
-    console.log('🗑️ Intentando eliminar lead:', id)
-
     // Eliminar lead DIRECTAMENTE - las FK con CASCADE manejarán el resto
-    const { error, data } = await supabase
+    const { error } = await supabase
       .from('leads')
       .delete()
       .eq('id', id)
-      .select()
 
     if (error) {
-      console.error('❌ Error eliminando lead:', error)
       return NextResponse.json(
         { error: 'Error eliminando lead', details: error.message },
         { status: 500 }
       )
     }
-
-    console.log('✅ Lead eliminado exitosamente:', id, data)
 
     return NextResponse.json({
       success: true,
@@ -136,7 +124,6 @@ export async function DELETE(req: NextRequest) {
     })
 
   } catch (error: any) {
-    console.error('❌ Error en DELETE /api/crm/leads:', error)
     return NextResponse.json(
       { error: 'Error interno del servidor', details: error.message },
       { status: 500 }

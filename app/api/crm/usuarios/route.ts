@@ -184,8 +184,16 @@ export async function PATCH(req: NextRequest) {
 
     if (error) throw error
 
-    // Si se proporciona una nueva contraseña, actualizarla usando crypt()
+    // Si se proporciona una nueva contraseña, validar y actualizar
     if (password) {
+      // Validar longitud de contraseña
+      if (password.length < 8) {
+        return NextResponse.json(
+          { error: 'La contraseña debe tener al menos 8 caracteres' },
+          { status: 400 }
+        )
+      }
+
       const { error: pwdError } = await supabase.rpc('actualizar_password_usuario', {
         p_user_id: parseInt(id),
         p_new_password: password

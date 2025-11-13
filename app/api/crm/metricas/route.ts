@@ -35,10 +35,7 @@ export async function GET(req: NextRequest) {
       .eq('id', cliente_id)
       .single()
 
-    console.log('📊 Cliente obtenido:', { cliente_id, cliente, error: clienteError })
-
     if (clienteError || !cliente) {
-      console.error('❌ Error obteniendo cliente:', clienteError)
       return NextResponse.json(
         { error: 'Cliente no encontrado' },
         { status: 404 }
@@ -52,7 +49,6 @@ export async function GET(req: NextRequest) {
       .eq('cliente_id', cliente_id)
 
     if (leadsError) {
-      console.error('Error fetching leads:', leadsError)
       return NextResponse.json(
         { error: 'Error obteniendo leads' },
         { status: 500 }
@@ -72,25 +68,12 @@ export async function GET(req: NextRequest) {
       inversion = isNaN(parsed) ? 0 : parsed
     }
 
-    console.log('📈 Calculando métricas:', {
-      total_leads,
-      leads_contactados,
-      leads_vendidos,
-      total_ventas,
-      inversion_raw: cliente.inversion_mensual,
-      inversion_raw_type: typeof cliente.inversion_mensual,
-      inversion_parsed: inversion,
-      inversion_isNaN: isNaN(Number(cliente.inversion_mensual))
-    })
-
     // KPIs calculados
     const cpl = total_leads > 0 ? inversion / total_leads : 0 // Costo por lead
     const cpa = leads_vendidos > 0 ? inversion / leads_vendidos : 0 // Costo por adquisición
     const roas = inversion > 0 ? total_ventas / inversion : 0 // Return on ad spend
     const conversion_rate = total_leads > 0 ? (leads_vendidos / total_leads) * 100 : 0 // Tasa de conversión
     const contact_rate = total_leads > 0 ? (leads_contactados / total_leads) * 100 : 0 // Tasa de contacto
-
-    console.log('✅ KPIs calculados:', { cpl, cpa, roas, conversion_rate, contact_rate })
 
     const metricas = {
       total_leads,
