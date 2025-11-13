@@ -178,9 +178,6 @@ export default function LeadsPage() {
         throw new Error(errorData.error || 'Error actualizando lead')
       }
 
-      const data = await res.json()
-      console.log('Lead actualizado:', data)
-
       setEditingLead(null)
       setEditValues({})
       fetchAllLeads()
