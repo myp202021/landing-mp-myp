@@ -1,0 +1,207 @@
+========================================
+EJEMPLOS DE MENSAJES CON VARIABLES
+========================================
+
+EJEMPLO 1: BIENVENIDA A NUEVO LEAD
+----------------------------------
+
+Nombre: Bienvenida a Nuevos Leads
+Trigger: Al recibir nuevo lead
+Asunto: Gracias por contactarnos, {nombre}
+
+Mensaje:
+---
+Hola {nombre} {apellido},
+
+Gracias por contactarte con M&P - Muller y Perez desde {empresa}.
+
+Hemos recibido tu mensaje y lo hemos registrado correctamente en nuestro sistema.
+
+📧 Email de contacto: {email}
+📱 Telefono: {telefono}
+
+Nuestro equipo revisara tu solicitud y te contactaremos a la brevedad para brindarte la mejor solucion.
+
+¿Que sigue?
+1. Revisaremos tu solicitud en las proximas 24 horas
+2. Te contactaremos para agendar una reunion
+3. Te presentaremos una propuesta personalizada
+
+Mientras tanto, te invitamos a conocer mas sobre nuestros servicios en:
+https://mulleryperez.cl
+
+Saludos cordiales,
+
+Equipo M&P
+Marketing y Performance
+---
+
+
+EJEMPLO 2: SEGUIMIENTO RAPIDO
+------------------------------
+
+Nombre: Seguimiento Rapido 30min
+Trigger: Al recibir nuevo lead
+Asunto: {nombre}, hablemos sobre tu proyecto
+
+Mensaje:
+---
+Hola {nombre},
+
+Soy del equipo de M&P y acabo de ver tu mensaje desde {empresa}.
+
+Me gustaria conversar contigo sobre tu proyecto. ¿Tienes 30 minutos disponibles hoy o mañana?
+
+Responde este email o llamame directamente al +56 9 XXXX XXXX.
+
+Los datos que recibimos:
+- Email: {email}
+- Telefono: {telefono}
+- Empresa: {empresa}
+
+Espero tu respuesta.
+
+Saludos,
+[Tu Nombre]
+M&P Marketing y Performance
+---
+
+
+EJEMPLO 3: EMAIL FORMAL CORPORATIVO
+------------------------------------
+
+Nombre: Respuesta Formal Empresarial
+Trigger: Al recibir nuevo lead
+Asunto: Confirmacion de recepcion - Solicitud de {empresa}
+
+Mensaje:
+---
+Estimado/a {nombre} {apellido},
+
+Por medio de la presente confirmamos la recepcion de su solicitud de contacto.
+
+DATOS REGISTRADOS:
+------------------
+Empresa: {empresa}
+Email: {email}
+Telefono: {telefono}
+Fecha: [hoy]
+
+PROXIMOS PASOS:
+--------------
+1. Un ejecutivo comercial analizara su requerimiento
+2. Nos comunicaremos dentro de las proximas 48 horas habiles
+3. Agendaremos una reunion para presentar una propuesta
+
+Si necesita contactarnos con urgencia, puede llamar a nuestra oficina al +56 2 XXXX XXXX.
+
+Atentamente,
+
+Equipo Comercial
+M&P - Muller y Perez
+Marketing y Performance
+www.mulleryperez.cl
+---
+
+
+EJEMPLO 4: CASUAL Y AMIGABLE
+-----------------------------
+
+Nombre: Bienvenida Casual
+Trigger: Al recibir nuevo lead
+Asunto: ¡Hola {nombre}! Gracias por escribirnos
+
+Mensaje:
+---
+¡Hola {nombre}! 👋
+
+Gracias por contactarnos. Me alegra que {empresa} este interesada en nuestros servicios.
+
+Ya tenemos tus datos:
+✉️ {email}
+📞 {telefono}
+
+Te vamos a contactar muy pronto para contarte como podemos ayudarte a crecer.
+
+Mientras tanto, si tienes alguna pregunta urgente, escribe directamente a este email.
+
+¡Nos vemos pronto!
+
+Equipo M&P 🚀
+---
+
+
+EJEMPLO 5: CON CALL TO ACTION
+------------------------------
+
+Nombre: CTA Agendar Reunion
+Trigger: Al recibir nuevo lead
+Asunto: {nombre}, agenda tu reunion gratuita ahora
+
+Mensaje:
+---
+Hola {nombre},
+
+Gracias por contactar a M&P desde {empresa}.
+
+🎯 AGENDA TU REUNION GRATUITA:
+Haz click aqui para elegir el mejor horario para ti:
+[LINK A CALENDLY]
+
+En la reunion hablaremos sobre:
+✓ Tus objetivos de marketing
+✓ Estrategias personalizadas para {empresa}
+✓ Presupuesto y timeline
+✓ Casos de exito similares
+
+Tus datos de contacto:
+- Email: {email}
+- Telefono: {telefono}
+
+¿Prefieres que te llamemos nosotros?
+Responde este email con tu disponibilidad.
+
+Te espero en la reunion.
+
+Saludos,
+[Tu Nombre]
+Ejecutivo Comercial
+M&P Marketing y Performance
+---
+
+
+VARIABLES DISPONIBLES:
+----------------------
+{nombre}     → Nombre del lead
+{apellido}   → Apellido del lead
+{email}      → Email del lead
+{telefono}   → Telefono del lead
+{empresa}    → Empresa del lead
+
+
+TIPS PARA BUENOS MENSAJES:
+---------------------------
+1. Usa el nombre del lead para personalizacion
+2. Confirma los datos recibidos
+3. Explica claramente los proximos pasos
+4. Incluye un call to action
+5. Manten el tono acorde a tu marca
+6. No uses mas de 300 palabras
+7. Revisa ortografia y formato
+8. Prueba SIEMPRE antes de activar
+9. Evita spam triggers (GRATIS, URGENTE, etc)
+10. Incluye forma de contacto directo
+
+
+EJEMPLO DE PREVIEW:
+-------------------
+Cuando uses {nombre}, en el preview veras "Juan"
+Cuando uses {empresa}, en el preview veras "Empresa Ejemplo S.A."
+
+Esto te ayuda a visualizar como se vera el email final.
+
+
+========================================
+Fecha: 13 de Noviembre de 2025
+Proyecto: M&P CRM - Sprint 3
+========================================

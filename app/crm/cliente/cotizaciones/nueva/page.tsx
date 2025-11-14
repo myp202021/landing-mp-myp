@@ -1,24 +1,16 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useSimpleAuth } from '@/lib/auth/simple-auth'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
-import CRMLayout from '@/app/components/crm/CRMLayout'
-import Button from '@/app/components/crm/Button'
-
-interface Cliente {
-  id: string
-  nombre: string
-  rubro?: string
-}
 
 interface Lead {
   id: number
   nombre?: string
   email?: string
   telefono?: string
-  cliente_id: string
 }
 
 interface CotizacionItem {
@@ -36,6 +28,7 @@ interface Plantilla {
   notas_default?: string
   vigencia_dias_default: number
   descuento_default: number
+  logo_url?: string
 }
 
 interface PlanMYP {
@@ -48,21 +41,17 @@ interface PlanMYP {
   vigencia_dias: number
 }
 
-export default function NuevaCotizacionPage() {
+export default function ClienteNuevaCotizacionPage() {
+  const { user, isAuthenticated } = useSimpleAuth()
   const router = useRouter()
 
-  const [clientes, setClientes] = useState<Cliente[]>([])
   const [leads, setLeads] = useState<Lead[]>([])
-  const [leadsFiltered, setLeadsFiltered] = useState<Lead[]>([])
-  const [plantillas, setPlantillas] = useState<Plantilla[]>([])
   const [plantillaAsignada, setPlantillaAsignada] = useState<Plantilla | null>(null)
   const [clienteLogo, setClienteLogo] = useState<string | null>(null)
   const [planesMYP, setPlanesMYP] = useState<PlanMYP[]>([])
   const [planMYPSeleccionado, setPlanMYPSeleccionado] = useState<string>('')
 
-  const [clienteId, setClienteId] = useState('')
   const [leadId, setLeadId] = useState<number | null>(null)
-  const [initialLoadDone, setInitialLoadDone] = useState(false)
   const [nombreProyecto, setNombreProyecto] = useState('')
   const [clienteNombre, setClienteNombre] = useState('')
   const [clienteEmail, setClienteEmail] = useState('')
@@ -73,42 +62,72 @@ export default function NuevaCotizacionPage() {
   const [descuento, setDescuento] = useState(0)
   const [notas, setNotas] = useState('')
   const [vigenciaDias, setVigenciaDias] = useState(30)
-  const [estado, setEstado] = useState<'borrador' | 'enviada'>('borrador')
 
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
 
+  // Protección de acceso
   useEffect(() => {
+    if (!isAuthenticated || !user) {
+      router.push('/crm/login')
+      return
+    }
+
+    if (user.role !== 'cliente' || !user.cliente_id) {
+      router.push('/crm')
+      return
+    }
+
     loadData()
-  }, [])
+  }, [isAuthenticated, user, router])
 
-  // Cargar parámetros de URL cuando los datos estén listos
-  useEffect(() => {
-    if (!initialLoadDone && leads.length > 0 && clientes.length > 0) {
-      const searchParams = new URLSearchParams(window.location.search)
-      const urlLeadId = searchParams.get('lead_id')
-      const urlClienteId = searchParams.get('cliente_id')
+  const loadData = async () => {
+    if (!user?.cliente_id) return
 
-      if (urlClienteId) {
-        setClienteId(urlClienteId)
+    setLoading(true)
+    try {
+      // Cargar leads del cliente
+      const resLeads = await fetch('/api/crm/leads?limit=500')
+      const dataLeads = await resLeads.json()
+      const misLeads = (dataLeads.leads || []).filter((l: Lead & { cliente_id: string }) => l.cliente_id === user.cliente_id)
+      setLeads(misLeads)
+
+      // Cargar plantilla asignada al cliente
+      const resPlantilla = await fetch(`/api/crm/plantillas/cliente?cliente_id=${user.cliente_id}`)
+      const dataPlantilla = await resPlantilla.json()
+
+      if (dataPlantilla.plantilla) {
+        setPlantillaAsignada(dataPlantilla.plantilla)
+        setClienteLogo(dataPlantilla.plantilla.logo_url || null)
+
+        // Auto-aplicar plantilla
+        if (dataPlantilla.plantilla.items_default && dataPlantilla.plantilla.items_default.length > 0) {
+          const itemsConvertidos = dataPlantilla.plantilla.items_default.map((item: any) => ({
+            descripcion: item.descripcion,
+            cantidad: item.cantidad,
+            precio_unitario: item.precio,
+            total: item.cantidad * item.precio
+          }))
+
+          setItems(itemsConvertidos)
+          setNotas(dataPlantilla.plantilla.notas_default || '')
+          setVigenciaDias(dataPlantilla.plantilla.vigencia_dias_default || 30)
+
+          const subtotal = itemsConvertidos.reduce((sum: number, item: any) => sum + item.total, 0)
+          const descuentoPesos = (subtotal * (dataPlantilla.plantilla.descuento_default || 0)) / 100
+          setDescuento(descuentoPesos)
+        }
       }
 
-      if (urlLeadId) {
-        setLeadId(parseInt(urlLeadId))
-      }
-
-      setInitialLoadDone(true)
+      // Cargar planes M&P
+      const resPlanes = await fetch('/api/crm/planes-myp')
+      const dataPlanes = await resPlanes.json()
+      setPlanesMYP(dataPlanes.planes || [])
+    } catch (error) {
+      console.error('Error cargando datos:', error)
     }
-  }, [leads, clientes, initialLoadDone])
-
-  useEffect(() => {
-    if (clienteId) {
-      const filtered = leads.filter(l => l.cliente_id === clienteId)
-      setLeadsFiltered(filtered)
-    } else {
-      setLeadsFiltered([])
-    }
-  }, [clienteId, leads])
+    setLoading(false)
+  }
 
   useEffect(() => {
     if (leadId) {
@@ -120,78 +139,6 @@ export default function NuevaCotizacionPage() {
     }
   }, [leadId, leads])
 
-  // Detectar plantilla asignada al cliente cuando se selecciona
-  useEffect(() => {
-    const fetchPlantillaCliente = async () => {
-      if (!clienteId) {
-        setPlantillaAsignada(null)
-        setClienteLogo(null)
-        return
-      }
-
-      try {
-        const res = await fetch(`/api/crm/plantillas/cliente?cliente_id=${clienteId}`)
-        const data = await res.json()
-
-        if (data.plantilla) {
-          setPlantillaAsignada(data.plantilla)
-          setClienteLogo(data.plantilla.logo_url || null)
-
-          // Auto-aplicar la plantilla asignada
-          if (data.plantilla.items_default && data.plantilla.items_default.length > 0) {
-            const itemsConvertidos = data.plantilla.items_default.map((item: any) => ({
-              descripcion: item.descripcion,
-              cantidad: item.cantidad,
-              precio_unitario: item.precio,
-              total: item.cantidad * item.precio
-            }))
-
-            setItems(itemsConvertidos)
-            setNotas(data.plantilla.notas_default || '')
-            setVigenciaDias(data.plantilla.vigencia_dias_default || 30)
-
-            // Calcular descuento en pesos
-            const subtotal = itemsConvertidos.reduce((sum: number, item: any) => sum + item.total, 0)
-            const descuentoPesos = (subtotal * (data.plantilla.descuento_default || 0)) / 100
-            setDescuento(descuentoPesos)
-          }
-        } else {
-          setPlantillaAsignada(null)
-          setClienteLogo(null)
-        }
-      } catch (error) {
-        console.error('Error obteniendo plantilla del cliente:', error)
-      }
-    }
-
-    fetchPlantillaCliente()
-  }, [clienteId])
-
-  const loadData = async () => {
-    setLoading(true)
-    try {
-      const [resClientes, resLeads, resPlantillas, resPlanesMYP] = await Promise.all([
-        fetch('/api/crm/clientes'),
-        fetch('/api/crm/leads?limit=500'),
-        fetch('/api/crm/plantillas'),
-        fetch('/api/crm/planes-myp')
-      ])
-
-      const dataClientes = await resClientes.json()
-      const dataLeads = await resLeads.json()
-      const dataPlantillas = await resPlantillas.json()
-      const dataPlanesMYP = await resPlanesMYP.json()
-
-      setClientes(dataClientes.clientes || [])
-      setLeads(dataLeads.leads || [])
-      setPlantillas(dataPlantillas.plantillas || [])
-      setPlanesMYP(dataPlanesMYP.planes || [])
-    } catch (error) {
-      console.error('Error cargando datos:', error)
-    }
-    setLoading(false)
-  }
-
   const aplicarPlanMYP = (planId: string) => {
     if (!planId) {
       setPlanMYPSeleccionado('')
@@ -201,7 +148,6 @@ export default function NuevaCotizacionPage() {
     const plan = planesMYP.find(p => p.id === parseInt(planId))
     if (!plan) return
 
-    // Convertir items del plan al formato de cotización
     const itemsConvertidos = plan.items_incluidos.map(item => ({
       descripcion: item.descripcion,
       cantidad: item.cantidad,
@@ -212,7 +158,6 @@ export default function NuevaCotizacionPage() {
     setItems(itemsConvertidos)
     setVigenciaDias(plan.vigencia_dias)
 
-    // Calcular descuento en pesos
     const subtotal = itemsConvertidos.reduce((sum, item) => sum + item.total, 0)
     const descuentoPesos = (subtotal * plan.descuento_default) / 100
     setDescuento(descuentoPesos)
@@ -227,33 +172,6 @@ export default function NuevaCotizacionPage() {
     setNotas('')
     setVigenciaDias(30)
     setPlanMYPSeleccionado('')
-    alert('Formulario limpiado. Puedes empezar de cero.')
-  }
-
-  const aplicarPlantilla = (plantillaId: string) => {
-    if (!plantillaId) return
-
-    const plantilla = plantillas.find(p => p.id === parseInt(plantillaId))
-    if (!plantilla) return
-
-    // Convertir items de la plantilla al formato de cotización
-    const itemsConvertidos = plantilla.items_default.map(item => ({
-      descripcion: item.descripcion,
-      cantidad: item.cantidad,
-      precio_unitario: item.precio,
-      total: item.cantidad * item.precio
-    }))
-
-    setItems(itemsConvertidos)
-    setNotas(plantilla.notas_default || '')
-    setVigenciaDias(plantilla.vigencia_dias_default)
-
-    // Calcular descuento en pesos
-    const subtotal = itemsConvertidos.reduce((sum, item) => sum + item.total, 0)
-    const descuentoPesos = (subtotal * plantilla.descuento_default) / 100
-    setDescuento(descuentoPesos)
-
-    alert(`Plantilla "${plantilla.nombre}" aplicada correctamente`)
   }
 
   const addItem = () => {
@@ -284,8 +202,8 @@ export default function NuevaCotizacionPage() {
   }
 
   const handleSubmit = async (enviar: boolean = false) => {
-    if (!clienteId) {
-      alert('Selecciona un cliente')
+    if (!user?.cliente_id) {
+      alert('Error: No se pudo identificar tu cuenta de cliente')
       return
     }
 
@@ -306,7 +224,7 @@ export default function NuevaCotizacionPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          cliente_id: clienteId,
+          cliente_id: user.cliente_id,
           lead_id: leadId || null,
           nombre_proyecto: nombreProyecto,
           cliente_nombre: clienteNombre,
@@ -328,7 +246,7 @@ export default function NuevaCotizacionPage() {
 
       if (res.ok) {
         alert(enviar ? 'Cotizacion creada y enviada' : 'Cotizacion guardada como borrador')
-        router.push(`/crm/cotizaciones/${data.cotizacion.id}`)
+        router.push(`/crm/cliente/cotizaciones`)
       } else {
         alert('Error creando cotizacion: ' + (data.error || 'Error desconocido'))
       }
@@ -340,28 +258,52 @@ export default function NuevaCotizacionPage() {
     setSaving(false)
   }
 
+  if (!isAuthenticated || !user) {
+    return null
+  }
+
   if (loading) {
     return (
-      <CRMLayout title="Nueva Cotizacion">
-        <div className="text-center py-12">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
           <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-          <p className="text-white mt-4">Cargando...</p>
+          <p className="text-gray-600 mt-4">Cargando...</p>
         </div>
-      </CRMLayout>
+      </div>
     )
   }
 
   return (
-    <CRMLayout title="Nueva Cotizacion">
-      <div className="max-w-4xl mx-auto">
-        <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-          {/* Header */}
-          <div className="bg-gradient-to-r from-blue-900 to-blue-800 text-white p-6">
-            <h2 className="text-2xl font-bold">Crear Nueva Cotizacion</h2>
-            <p className="text-blue-200 text-sm mt-1">Completa los datos del proyecto y servicios</p>
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <div className="bg-gradient-to-r from-blue-900 to-blue-800 text-white shadow-lg">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold">Nueva Cotizacion</h1>
+              <p className="text-blue-200 mt-1">Sistema de Gestion de Clientes - M&P Marketing y Performance</p>
+            </div>
+            <div className="flex gap-3">
+              <button
+                onClick={() => router.push('/crm/cliente/cotizaciones')}
+                className="flex items-center gap-2 px-4 py-2 bg-blue-700 hover:bg-blue-600 rounded-lg transition"
+              >
+                Volver
+              </button>
+              <button
+                onClick={() => router.push('/crm/login')}
+                className="flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg transition"
+              >
+                Cerrar Sesion
+              </button>
+            </div>
           </div>
+        </div>
+      </div>
 
-          {/* Formulario */}
+      {/* Formulario */}
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="bg-white rounded-lg shadow-lg overflow-hidden">
           <div className="p-6 space-y-6">
             {/* Selector de Plan M&P */}
             {planesMYP.length > 0 && (
@@ -373,12 +315,12 @@ export default function NuevaCotizacionPage() {
                   <select
                     value={planMYPSeleccionado}
                     onChange={(e) => aplicarPlanMYP(e.target.value)}
-                    className="flex-1 px-4 py-3 border-2 border-emerald-400 rounded-md focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-gray-900 font-medium"
+                    className="flex-1 px-4 py-3 border-2 border-emerald-400 rounded-md focus:ring-2 focus:ring-emerald-500 text-gray-900 font-medium"
                   >
                     <option value="">Selecciona un plan M&P...</option>
                     {planesMYP.map(plan => (
                       <option key={plan.id} value={plan.id}>
-                        {plan.nombre} - ${plan.precio_base.toLocaleString('es-CL')} ({plan.items_incluidos.length} servicios incluidos)
+                        {plan.nombre} - ${plan.precio_base.toLocaleString('es-CL')} ({plan.items_incluidos.length} servicios)
                       </option>
                     ))}
                   </select>
@@ -386,18 +328,15 @@ export default function NuevaCotizacionPage() {
                     onClick={limpiarFormulario}
                     className="px-6 py-3 bg-slate-600 text-white rounded-md hover:bg-slate-700 transition font-semibold shadow-md whitespace-nowrap"
                   >
-                    Limpiar y empezar de cero
+                    Limpiar
                   </button>
                 </div>
-                <p className="text-xs text-emerald-800 mt-3 font-medium">
-                  Al seleccionar un plan M&P, se auto-llenarán los items predefinidos. Luego podrás editarlos según tus necesidades.
-                </p>
               </div>
             )}
 
-            {/* Logo del cliente (si tiene plantilla asignada) */}
+            {/* Logo del cliente */}
             {clienteLogo && plantillaAsignada && (
-              <div className="bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200 rounded-lg p-5 shadow-sm">
+              <div className="bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200 rounded-lg p-5">
                 <div className="flex items-start gap-4">
                   <div className="flex-shrink-0 bg-white p-3 rounded-lg shadow-md">
                     <Image
@@ -410,96 +349,34 @@ export default function NuevaCotizacionPage() {
                     />
                   </div>
                   <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-2">
-                      <svg className="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                      </svg>
-                      <h3 className="text-lg font-bold text-green-900">
-                        Plantilla Personalizada Detectada
-                      </h3>
-                    </div>
-                    <p className="text-green-800 text-sm mb-1">
+                    <h3 className="text-lg font-bold text-green-900 mb-1">
+                      Plantilla Personalizada Detectada
+                    </h3>
+                    <p className="text-green-800 text-sm">
                       <strong>{plantillaAsignada.nombre}</strong>
-                    </p>
-                    <p className="text-green-700 text-xs">
-                      La plantilla personalizada de este cliente se ha aplicado automáticamente con {plantillaAsignada.items_default?.length || 0} items predefinidos.
                     </p>
                   </div>
                 </div>
               </div>
             )}
 
-            {/* Selector de plantilla */}
-            {plantillas.length > 0 && (
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                <label className="block text-sm font-medium text-blue-900 mb-2">
-                  📋 Usar Plantilla (Opcional)
-                </label>
-                <div className="flex gap-3">
-                  <select
-                    onChange={(e) => aplicarPlantilla(e.target.value)}
-                    className="flex-1 px-3 py-2 border border-blue-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
-                  >
-                    <option value="">Selecciona una plantilla predefinida...</option>
-                    {plantillas.map(plantilla => (
-                      <option key={plantilla.id} value={plantilla.id}>
-                        {plantilla.nombre} - ${plantilla.items_default.reduce((sum, item) => sum + (item.cantidad * item.precio), 0).toLocaleString('es-CL')}
-                      </option>
-                    ))}
-                  </select>
-                  <Link href="/crm/plantillas">
-                    <Button variant="secondary" className="text-sm whitespace-nowrap">
-                      Gestionar
-                    </Button>
-                  </Link>
-                </div>
-                <p className="text-xs text-blue-700 mt-2">
-                  {plantillaAsignada
-                    ? 'Puedes cambiar a otra plantilla si lo necesitas.'
-                    : 'Al seleccionar una plantilla, se llenarán automáticamente los items, notas y configuración.'
-                  }
-                </p>
-              </div>
-            )}
-
-            {/* Seleccion de cliente y lead */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">
-                  Cliente *
-                </label>
-                <select
-                  value={clienteId}
-                  onChange={(e) => setClienteId(e.target.value)}
-                  className="w-full px-3 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                >
-                  <option value="">Selecciona un cliente</option>
-                  {clientes.map(cliente => (
-                    <option key={cliente.id} value={cliente.id}>
-                      {cliente.nombre} {cliente.rubro ? `- ${cliente.rubro}` : ''}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">
-                  Lead (Opcional)
-                </label>
-                <select
-                  value={leadId || ''}
-                  onChange={(e) => setLeadId(e.target.value ? parseInt(e.target.value) : null)}
-                  className="w-full px-3 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  disabled={!clienteId}
-                >
-                  <option value="">Sin lead asociado</option>
-                  {leadsFiltered.map(lead => (
-                    <option key={lead.id} value={lead.id}>
-                      {lead.nombre || lead.email || `Lead #${lead.id}`}
-                    </option>
-                  ))}
-                </select>
-              </div>
+            {/* Lead asociado */}
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-2">
+                Lead Asociado (Opcional)
+              </label>
+              <select
+                value={leadId || ''}
+                onChange={(e) => setLeadId(e.target.value ? parseInt(e.target.value) : null)}
+                className="w-full px-3 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="">Sin lead asociado</option>
+                {leads.map(lead => (
+                  <option key={lead.id} value={lead.id}>
+                    {lead.nombre || lead.email || `Lead #${lead.id}`}
+                  </option>
+                ))}
+              </select>
             </div>
 
             {/* Nombre del proyecto */}
@@ -511,7 +388,7 @@ export default function NuevaCotizacionPage() {
                 type="text"
                 value={nombreProyecto}
                 onChange={(e) => setNombreProyecto(e.target.value)}
-                className="w-full px-3 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500"
                 placeholder="Ej: Campana Google Ads Q1 2025"
               />
             </div>
@@ -521,9 +398,7 @@ export default function NuevaCotizacionPage() {
               <h3 className="text-lg font-semibold text-slate-900 mb-4">Datos del Cliente</h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">
-                    Nombre Contacto
-                  </label>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">Nombre Contacto</label>
                   <input
                     type="text"
                     value={clienteNombre}
@@ -533,9 +408,7 @@ export default function NuevaCotizacionPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">
-                    Email
-                  </label>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">Email</label>
                   <input
                     type="email"
                     value={clienteEmail}
@@ -545,9 +418,7 @@ export default function NuevaCotizacionPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">
-                    Empresa
-                  </label>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">Empresa</label>
                   <input
                     type="text"
                     value={clienteEmpresa}
@@ -563,9 +434,12 @@ export default function NuevaCotizacionPage() {
             <div className="border-t border-slate-200 pt-6">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-semibold text-slate-900">Servicios / Items</h3>
-                <Button onClick={addItem} variant="primary" className="text-sm">
+                <button
+                  onClick={addItem}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-sm font-medium"
+                >
                   + Agregar Item
-                </Button>
+                </button>
               </div>
 
               <div className="space-y-3">
@@ -577,7 +451,7 @@ export default function NuevaCotizacionPage() {
                           type="text"
                           value={item.descripcion}
                           onChange={(e) => updateItem(index, 'descripcion', e.target.value)}
-                          className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm focus:ring-2 focus:ring-blue-500"
+                          className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm"
                           placeholder="Descripcion del servicio"
                         />
                       </div>
@@ -586,7 +460,7 @@ export default function NuevaCotizacionPage() {
                           type="number"
                           value={item.cantidad}
                           onChange={(e) => updateItem(index, 'cantidad', parseFloat(e.target.value) || 0)}
-                          className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm focus:ring-2 focus:ring-blue-500"
+                          className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm"
                           placeholder="Cant."
                           min="0"
                         />
@@ -596,7 +470,7 @@ export default function NuevaCotizacionPage() {
                           type="number"
                           value={item.precio_unitario}
                           onChange={(e) => updateItem(index, 'precio_unitario', parseFloat(e.target.value) || 0)}
-                          className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm focus:ring-2 focus:ring-blue-500"
+                          className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm"
                           placeholder="Precio"
                           min="0"
                         />
@@ -612,7 +486,7 @@ export default function NuevaCotizacionPage() {
                             onClick={() => removeItem(index)}
                             className="text-red-600 hover:text-red-700 text-lg font-bold"
                           >
-                            ✕
+                            X
                           </button>
                         )}
                       </div>
@@ -638,7 +512,7 @@ export default function NuevaCotizacionPage() {
                       type="number"
                       value={descuento}
                       onChange={(e) => setDescuento(parseFloat(e.target.value) || 0)}
-                      className="w-32 px-2 py-1 border border-slate-300 rounded text-sm text-right focus:ring-2 focus:ring-blue-500"
+                      className="w-32 px-2 py-1 border border-slate-300 rounded text-sm text-right"
                       min="0"
                     />
                   </div>
@@ -662,7 +536,7 @@ export default function NuevaCotizacionPage() {
                   type="number"
                   value={vigenciaDias}
                   onChange={(e) => setVigenciaDias(parseInt(e.target.value) || 30)}
-                  className="w-full px-3 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-slate-300 rounded-md"
                   min="1"
                 />
               </div>
@@ -673,40 +547,40 @@ export default function NuevaCotizacionPage() {
                 <textarea
                   value={notas}
                   onChange={(e) => setNotas(e.target.value)}
-                  className="w-full px-3 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-slate-300 rounded-md"
                   rows={3}
-                  placeholder="Terminos y condiciones, notas adicionales..."
+                  placeholder="Terminos y condiciones..."
                 />
               </div>
             </div>
 
-            {/* Botones de accion */}
+            {/* Botones */}
             <div className="border-t border-slate-200 pt-6 flex justify-end gap-3">
-              <Button
-                onClick={() => router.push('/crm/cotizaciones')}
-                variant="secondary"
+              <button
+                onClick={() => router.push('/crm/cliente/cotizaciones')}
+                className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition"
                 disabled={saving}
               >
                 Cancelar
-              </Button>
-              <Button
+              </button>
+              <button
                 onClick={() => handleSubmit(false)}
-                variant="secondary"
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
                 disabled={saving}
               >
                 {saving ? 'Guardando...' : 'Guardar como Borrador'}
-              </Button>
-              <Button
+              </button>
+              <button
                 onClick={() => handleSubmit(true)}
-                variant="success"
+                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
                 disabled={saving}
               >
                 {saving ? 'Guardando...' : 'Crear y Enviar'}
-              </Button>
+              </button>
             </div>
           </div>
         </div>
       </div>
-    </CRMLayout>
+    </div>
   )
 }

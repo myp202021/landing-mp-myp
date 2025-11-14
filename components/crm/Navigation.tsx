@@ -56,11 +56,23 @@ export default function CRMNavigation() {
         { href: '/crm/upload', label: 'Subir Leads', icon: '📤' },
         { href: '/crm/metricas', label: 'Métricas', icon: '📈' },
         { href: '/crm/cargas', label: 'Historial', icon: '📁' },
-        { href: '/crm/admin', label: 'Admin', icon: '👥' },
+        { href: '/crm/cotizaciones', label: 'Cotizaciones', icon: '💰' },
+        { href: '/crm/clientes', label: 'Clientes', icon: '👥' },
+        { href: '/crm/plantillas', label: 'Plantillas', icon: '📋' },
+        { href: '/crm/contraseñas', label: 'Contraseñas', icon: '🔑' },
+        { href: '/crm/historial-integraciones', label: 'Integraciones', icon: '📜' },
+        { href: '/crm/admin', label: 'Admin', icon: '⚙️' },
+        { href: '/crm/cambiar-password', label: 'Cambiar Password', icon: '🔐' },
       ]
     : [
+        { href: '/crm/cliente/dashboard', label: 'Dashboard', icon: '🏠' },
+        { href: '/crm/cliente/cotizaciones', label: 'Cotizaciones', icon: '💰' },
+        { href: '/crm/cliente/plantillas', label: 'Plantillas', icon: '📋' },
+        { href: '/crm/cliente/historial', label: 'Historial', icon: '📊' },
+        { href: '/crm/cliente/respuestas-automaticas', label: 'Respuestas', icon: '✉️' },
         { href: '/crm/upload', label: 'Subir Leads', icon: '📤' },
-        { href: '/crm/cargas', label: 'Mis Cargas', icon: '📁' },
+        { href: '/crm/cargas', label: 'Cargas', icon: '📦' },
+        { href: '/crm/cambiar-password', label: 'Cambiar Password', icon: '🔐' },
       ]
 
   if (loading) {

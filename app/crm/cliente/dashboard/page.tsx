@@ -42,6 +42,11 @@ export default function ClienteDashboard() {
   const [leadHistorial, setLeadHistorial] = useState<any[]>([])
   const [loadingHistorial, setLoadingHistorial] = useState(false)
 
+  // Estados para filtros de fecha
+  const [fechaDesde, setFechaDesde] = useState<Date>(new Date(Date.now() - 30 * 24 * 60 * 60 * 1000))
+  const [fechaHasta, setFechaHasta] = useState<Date>(new Date())
+  const [filtrosAplicados, setFiltrosAplicados] = useState(false)
+
   // Redirigir si no es cliente
   useEffect(() => {
     if (!isAuthenticated) {
@@ -206,11 +211,30 @@ export default function ClienteDashboard() {
     )
   }
 
-  // Calcular métricas
-  const totalLeads = leads.length
-  const leadsContactados = leads.filter(l => l.contactado).length
-  const leadsVendidos = leads.filter(l => l.vendido).length
-  const totalVendido = leads.filter(l => l.monto_vendido).reduce((sum, l) => sum + Number(l.monto_vendido || 0), 0)
+  // Aplicar filtros de fecha a los leads
+  const aplicarFiltros = () => {
+    setFiltrosAplicados(true)
+  }
+
+  const limpiarFiltros = () => {
+    setFechaDesde(new Date(Date.now() - 30 * 24 * 60 * 60 * 1000))
+    setFechaHasta(new Date())
+    setFiltrosAplicados(false)
+  }
+
+  // Filtrar leads por fecha si los filtros están aplicados
+  const leadsFiltrados = filtrosAplicados
+    ? leads.filter(lead => {
+        const fechaLead = new Date(lead.fecha_ingreso)
+        return fechaLead >= fechaDesde && fechaLead <= fechaHasta
+      })
+    : leads
+
+  // Calcular métricas con leads filtrados
+  const totalLeads = leadsFiltrados.length
+  const leadsContactados = leadsFiltrados.filter(l => l.contactado).length
+  const leadsVendidos = leadsFiltrados.filter(l => l.vendido).length
+  const totalVendido = leadsFiltrados.filter(l => l.monto_vendido).reduce((sum, l) => sum + Number(l.monto_vendido || 0), 0)
   const tasaConversion = totalLeads > 0 ? ((leadsVendidos / totalLeads) * 100).toFixed(1) : '0'
 
   // CPF (Costo Por Formulario) = Inversión / N° Leads
@@ -226,14 +250,21 @@ export default function ClienteDashboard() {
     ? (((totalVendido - inversionMensual) / inversionMensual) * 100).toFixed(1)
     : '0.0'
 
-  // Ordenar leads por prioridad y fecha
-  const sortedLeads = [...leads].sort((a, b) => {
+  // Ordenar leads filtrados por prioridad y fecha
+  const sortedLeads = [...leadsFiltrados].sort((a, b) => {
     // Primero por prioridad (prioritarios arriba)
     if (a.prioridad && !b.prioridad) return -1
     if (!a.prioridad && b.prioridad) return 1
     // Luego por fecha (más recientes primero)
     return new Date(b.fecha_ingreso).getTime() - new Date(a.fecha_ingreso).getTime()
   })
+
+  const formatDateForInput = (date: Date): string => {
+    const year = date.getFullYear()
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const day = String(date.getDate()).padStart(2, '0')
+    return `${year}-${month}-${day}`
+  }
 
   return (
     <CRMLayout title="Dashboard Cliente - Muller y Perez" authenticated onRefresh={loadData}>
@@ -244,6 +275,65 @@ export default function ClienteDashboard() {
         </h2>
         <p className="text-gray-600 mt-2">
           Aquí puedes ver y gestionar tus leads de marketing
+        </p>
+      </div>
+
+      {/* Filtros de Fecha */}
+      <div className="bg-gradient-to-r from-purple-50 to-indigo-50 border-2 border-purple-300 rounded-xl p-6 mb-8 shadow-md">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-lg font-bold text-purple-900">
+            Filtros de Fecha para Métricas
+          </h3>
+          {filtrosAplicados && (
+            <span className="px-3 py-1 bg-purple-600 text-white text-xs font-semibold rounded-full">
+              Filtros Activos
+            </span>
+          )}
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-purple-900 mb-2">
+              Fecha Desde
+            </label>
+            <input
+              type="date"
+              value={formatDateForInput(fechaDesde)}
+              onChange={(e) => setFechaDesde(new Date(e.target.value))}
+              className="w-full px-3 py-2 border-2 border-purple-300 rounded-md focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-purple-900 mb-2">
+              Fecha Hasta
+            </label>
+            <input
+              type="date"
+              value={formatDateForInput(fechaHasta)}
+              onChange={(e) => setFechaHasta(new Date(e.target.value))}
+              className="w-full px-3 py-2 border-2 border-purple-300 rounded-md focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900"
+            />
+          </div>
+          <div className="flex items-end">
+            <button
+              onClick={aplicarFiltros}
+              className="w-full px-6 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition font-semibold shadow-md"
+            >
+              Aplicar Filtros
+            </button>
+          </div>
+          <div className="flex items-end">
+            <button
+              onClick={limpiarFiltros}
+              className="w-full px-6 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition font-semibold shadow-md"
+            >
+              Limpiar
+            </button>
+          </div>
+        </div>
+        <p className="text-xs text-purple-800 mt-3 font-medium">
+          {filtrosAplicados
+            ? `Mostrando métricas desde ${fechaDesde.toLocaleDateString('es-CL')} hasta ${fechaHasta.toLocaleDateString('es-CL')}`
+            : 'Por defecto: últimos 30 días. Aplica filtros para personalizar el rango de fechas.'}
         </p>
       </div>
 

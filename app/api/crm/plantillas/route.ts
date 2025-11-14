@@ -138,10 +138,18 @@ export async function PATCH(request: NextRequest) {
     }
 
     const body = await request.json()
+
+    // SEGURIDAD: Si se intenta cambiar cliente_id, verificar permisos
+    // En producción, esto debería verificar el token de sesión del usuario
+    // Por ahora, solo bloqueamos el cambio de cliente_id en el update
     const updates = {
       ...body,
       actualizado_en: new Date().toISOString()
     }
+
+    // No permitir cambiar cliente_id ni es_base desde el cliente
+    delete updates.cliente_id
+    delete updates.es_base
 
     const { data, error } = await supabase
       .from('plantillas_cotizacion')
