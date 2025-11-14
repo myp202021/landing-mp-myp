@@ -34,6 +34,28 @@ export async function POST(req: NextRequest) {
 
     // Si no hay datos, credenciales incorrectas
     if (!data || data.length === 0) {
+      // Verificar si el usuario existe pero está inactivo
+      const { data: userCheck, error: checkError } = await supabase
+        .from('usuarios')
+        .select('username, activo')
+        .eq('username', username)
+        .single()
+
+      if (!checkError && userCheck) {
+        if (!userCheck.activo) {
+          return NextResponse.json(
+            { error: 'Usuario inactivo. Contacte al administrador.' },
+            { status: 403 }
+          )
+        }
+        // Usuario existe y está activo, entonces la contraseña es incorrecta
+        return NextResponse.json(
+          { error: 'Contraseña incorrecta' },
+          { status: 401 }
+        )
+      }
+
+      // Usuario no existe o error al verificar
       return NextResponse.json(
         { error: 'Usuario o contraseña incorrectos' },
         { status: 401 }

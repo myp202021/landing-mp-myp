@@ -33,17 +33,23 @@ export default function PlantillasPage() {
   const [filtro, setFiltro] = useState<'todas' | 'base' | 'cliente'>('todas')
   const [loading, setLoading] = useState(true)
   const [expandedId, setExpandedId] = useState<number | null>(null)
+  const [mostrarInactivas, setMostrarInactivas] = useState(false)
 
   useEffect(() => {
     loadPlantillas()
-  }, [filtro])
+  }, [filtro, mostrarInactivas])
 
   const loadPlantillas = async () => {
     setLoading(true)
     try {
-      const url = filtro === 'todas'
+      let url = filtro === 'todas'
         ? '/api/crm/plantillas'
         : `/api/crm/plantillas?tipo=${filtro}`
+
+      // Agregar parámetro para incluir inactivas si está habilitado
+      if (mostrarInactivas) {
+        url += (url.includes('?') ? '&' : '?') + 'incluir_inactivas=true'
+      }
 
       const res = await fetch(url)
       const data = await res.json()
@@ -143,6 +149,26 @@ export default function PlantillasPage() {
         >
           Por Cliente ({plantillasCliente.length})
         </button>
+
+        {/* Toggle para mostrar inactivas */}
+        <div className="ml-auto flex items-center gap-2">
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={mostrarInactivas}
+              onChange={(e) => setMostrarInactivas(e.target.checked)}
+              className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+            />
+            <span className="text-sm font-medium text-gray-700">
+              Mostrar inactivas
+            </span>
+          </label>
+          {mostrarInactivas && (
+            <span className="px-2 py-1 text-xs font-bold bg-yellow-100 text-yellow-800 rounded">
+              DEBUG MODE
+            </span>
+          )}
+        </div>
       </div>
 
       {/* Métricas */}
@@ -223,6 +249,13 @@ export default function PlantillasPage() {
                               <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd" />
                             </svg>
                             Logo
+                          </span>
+                        )}
+
+                        {/* Badge de inactiva */}
+                        {!plantilla.activa && (
+                          <span className="px-3 py-1 rounded-full text-xs font-bold bg-red-100 text-red-800 flex items-center gap-1">
+                            ⚠️ INACTIVA
                           </span>
                         )}
                       </div>

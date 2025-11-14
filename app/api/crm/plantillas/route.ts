@@ -15,6 +15,7 @@ export async function GET(request: NextRequest) {
     const id = searchParams.get('id')
     const tipo = searchParams.get('tipo') // 'base', 'cliente', o null (todas)
     const cliente_id = searchParams.get('cliente_id')
+    const incluir_inactivas = searchParams.get('incluir_inactivas') === 'true'
 
     if (id) {
       // Obtener plantilla específica con información del cliente
@@ -46,7 +47,11 @@ export async function GET(request: NextRequest) {
           empresa
         )
       `)
-      .eq('activa', true)
+
+    // Filtrar por activas solo si no se solicita incluir inactivas
+    if (!incluir_inactivas) {
+      query = query.eq('activa', true)
+    }
 
     // Filtrar por tipo
     if (tipo === 'base') {

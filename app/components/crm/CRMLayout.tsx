@@ -31,7 +31,6 @@ export default function CRMLayout({ children, title, authenticated = true, onRef
     { href: '/crm/usuarios', label: 'Usuarios', icon: '🔐', adminOnly: true },
     { href: '/crm/plantillas', label: 'Plantillas', icon: '📋', adminOnly: true },
     { href: '/crm/metricas', label: 'Metricas', icon: '📊', adminOnly: true },
-    { href: '/crm/configuracion', label: 'Configuracion', icon: '⚙️', adminOnly: true },
     { href: '/crm/integraciones', label: 'Integraciones', icon: '🔌', adminOnly: true },
     { href: '/crm/cliente/dashboard', label: 'Dashboard', icon: '🏠', adminOnly: false },
     { href: '/crm/cliente/cotizaciones', label: 'Cotizaciones', icon: '📄', adminOnly: false },
