@@ -353,7 +353,7 @@ export default function ZapierWizardPage() {
               </div>
 
               <div className="mt-8 flex justify-end">
-                <Button onClick={() => setCurrentStep(2)}>
+                <Button onClick={() => setCurrentStep(2)} size="lg">
                   Comenzar Configuración →
                 </Button>
               </div>
@@ -671,7 +671,7 @@ export default function ZapierWizardPage() {
                   <Button
                     onClick={handleActivateIntegration}
                     disabled={saving}
-                   
+                    size="lg"
                     className="w-full"
                   >
                     {saving ? 'Activando...' : '✅ Activar Integración Zapier'}
