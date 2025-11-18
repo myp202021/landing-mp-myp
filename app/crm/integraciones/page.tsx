@@ -82,8 +82,7 @@ export default function IntegracionesPage() {
           cliente_id: clienteId,
           tipo: 'zapier',
           accion: 'desactivado',
-          descripcion: `Integración Zapier desactivada para ${clienteNombre}`,
-          user_id: user?.id
+          descripcion: `Integración Zapier desactivada para ${clienteNombre}`
         })
       })
 
