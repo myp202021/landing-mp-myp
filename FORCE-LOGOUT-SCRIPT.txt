@@ -1,0 +1,25 @@
+==================================================
+🔧 SCRIPT PARA VER TUS LEADS INMEDIATAMENTE
+==================================================
+
+PASO 1: Abre la consola del navegador
+  - Presiona F12 (o Cmd+Option+I en Mac)
+  - Ve a la pestaña "Console"
+
+PASO 2: Copia y pega este código:
+-------------------------------------------------
+localStorage.removeItem('crm_user');
+window.location.href = '/crm/login';
+-------------------------------------------------
+
+PASO 3: Presiona ENTER
+
+PASO 4: Vuelve a hacer login con:
+  Usuario: myp
+  Contraseña: mypcliente2025
+
+==================================================
+
+¡Verás tus 23 leads de Zapier inmediatamente!
+
+==================================================

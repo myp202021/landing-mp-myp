@@ -53,6 +53,12 @@ export default function ClienteDashboard() {
       router.push('/crm/login')
     } else if (user?.role !== 'cliente') {
       router.push('/crm')
+    } else if (!user?.cliente_id) {
+      // SI NO TIENE CLIENTE_ID, FORZAR RE-LOGIN PARA ACTUALIZAR SESIÓN
+      console.warn('⚠️ Usuario sin cliente_id - Forzando re-autenticación...')
+      localStorage.removeItem('crm_user')
+      alert('🔄 Tu sesión necesita actualizarse. Por favor vuelve a hacer login.')
+      router.push('/crm/login')
     } else {
       loadData()
     }
@@ -62,10 +68,13 @@ export default function ClienteDashboard() {
     setLoading(true)
     try {
       // Filtrar leads por cliente_id del usuario
-      let url = '/api/crm/leads?limit=500'
-      if (user?.cliente_id) {
-        url += `&cliente_id=${user.cliente_id}`
+      if (!user?.cliente_id) {
+        console.error('❌ No se puede cargar leads: cliente_id es null')
+        setLoading(false)
+        return
       }
+
+      let url = `/api/crm/leads?limit=500&cliente_id=${user.cliente_id}`
 
       const resLeads = await fetch(url)
       const dataLeads = await resLeads.json()
