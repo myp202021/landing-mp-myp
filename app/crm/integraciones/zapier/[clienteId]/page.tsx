@@ -144,7 +144,6 @@ export default function ZapierWizardPage() {
                   accion: 'test_exitoso',
                   descripcion: 'Prueba de conexión exitosa',
                   webhook_url: webhookUrl,
-                  user_id: user?.id,
                   metadata: { test_lead: testLead }
                 })
               })
@@ -169,7 +168,6 @@ export default function ZapierWizardPage() {
               accion: 'test_fallido',
               descripcion: 'La prueba de conexión no detectó el lead',
               webhook_url: webhookUrl,
-              user_id: user?.id,
               metadata: { test_lead: testLead }
             })
           })
@@ -213,7 +211,6 @@ export default function ZapierWizardPage() {
           accion: 'activado',
           descripcion: `Integración Zapier activada para ${cliente?.nombre}`,
           webhook_url: webhookUrl,
-          user_id: user?.id,
           metadata: {
             activated_from_wizard: true,
             test_status: testStatus
