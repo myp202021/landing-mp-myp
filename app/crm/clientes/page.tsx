@@ -140,7 +140,7 @@ export default function ClientesPage() {
       return
     }
 
-    const [deletingButton] = document.querySelectorAll(`button[data-delete-id="${id}"]`)
+    const deletingButton = document.querySelector(`button[data-delete-id="${id}"]`)
     const originalText = deletingButton?.textContent || 'Eliminar'
 
     try {
