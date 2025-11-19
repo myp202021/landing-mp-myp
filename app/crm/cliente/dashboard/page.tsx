@@ -47,21 +47,71 @@ export default function ClienteDashboard() {
   const [fechaHasta, setFechaHasta] = useState<Date>(new Date())
   const [filtrosAplicados, setFiltrosAplicados] = useState(false)
 
-  // Redirigir si no es cliente
+  // Redirigir si no es cliente Y VERIFICAR DATOS ACTUALIZADOS
   useEffect(() => {
-    if (!isAuthenticated) {
-      router.push('/crm/login')
-    } else if (user?.role !== 'cliente') {
-      router.push('/crm')
-    } else if (!user?.cliente_id) {
-      // SI NO TIENE CLIENTE_ID, FORZAR RE-LOGIN PARA ACTUALIZAR SESIÓN
-      console.warn('⚠️ Usuario sin cliente_id - Forzando re-autenticación...')
-      localStorage.removeItem('crm_user')
-      alert('🔄 Tu sesión necesita actualizarse. Por favor vuelve a hacer login.')
-      router.push('/crm/login')
-    } else {
+    async function checkAndLoadData() {
+      if (!isAuthenticated) {
+        router.push('/crm/login')
+        return
+      }
+
+      if (user?.role !== 'cliente') {
+        router.push('/crm')
+        return
+      }
+
+      // SIEMPRE refrescar datos desde Supabase al cargar el dashboard
+      console.log('🔄 Verificando datos actualizados del usuario desde Supabase...')
+
+      try {
+        const response = await fetch('/api/auth/session', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username: user.username })
+        })
+
+        if (response.ok) {
+          const data = await response.json()
+          if (data.success && data.user) {
+            // Actualizar localStorage con datos frescos
+            const updatedUser = data.user
+            localStorage.setItem('crm_user', JSON.stringify(updatedUser))
+            console.log('✅ Sesión actualizada:', updatedUser)
+
+            // Verificar si tiene cliente_id después de actualizar
+            if (!updatedUser.cliente_id) {
+              console.error('❌ Usuario no tiene cliente_id asignado')
+              alert('⚠️ Tu cuenta no tiene un cliente asignado. Contacta al administrador.')
+              router.push('/crm/login')
+              return
+            }
+
+            // Si el cliente_id cambió, recargar la página para que use los datos nuevos
+            if (user.cliente_id !== updatedUser.cliente_id) {
+              console.log('🔄 cliente_id actualizado, recargando página...')
+              window.location.reload()
+              return
+            }
+          }
+        } else {
+          console.warn('⚠️ No se pudo refrescar la sesión, continuando con datos locales')
+        }
+      } catch (error) {
+        console.error('Error refrescando sesión:', error)
+      }
+
+      // Verificar cliente_id antes de cargar datos
+      if (!user?.cliente_id) {
+        console.error('❌ Usuario sin cliente_id')
+        alert('⚠️ Tu cuenta no tiene un cliente asignado. Contacta al administrador.')
+        router.push('/crm/login')
+        return
+      }
+
       loadData()
     }
+
+    checkAndLoadData()
   }, [isAuthenticated, user, router])
 
   const loadData = async () => {
