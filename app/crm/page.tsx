@@ -77,6 +77,18 @@ export default function CRMAdmin() {
   const [cotizacionesLead, setCotizacionesLead] = useState<Cotizacion[]>([])
   const [leadSeleccionado, setLeadSeleccionado] = useState<Lead | null>(null)
 
+  // Modal para agregar lead manual
+  const [showAgregarLeadModal, setShowAgregarLeadModal] = useState(false)
+  const [nuevoLead, setNuevoLead] = useState({
+    cliente_id: '',
+    nombre: '',
+    email: '',
+    telefono: '',
+    empresa: '',
+    fuente: 'email', // default
+    observaciones: ''
+  })
+
   // Función para calcular horas desde ingreso
   const getHorasSinContacto = (lead: Lead): number => {
     if (lead.contactado) return 0
@@ -308,6 +320,50 @@ export default function CRMAdmin() {
     setLoading(false)
   }
 
+  const crearLeadManual = async () => {
+    // Validar campos requeridos
+    if (!nuevoLead.cliente_id) {
+      alert('Debes seleccionar un cliente')
+      return
+    }
+
+    if (!nuevoLead.nombre && !nuevoLead.email && !nuevoLead.telefono) {
+      alert('Debes proporcionar al menos nombre, email o teléfono')
+      return
+    }
+
+    try {
+      const res = await fetch('/api/crm/leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(nuevoLead)
+      })
+
+      const data = await res.json()
+
+      if (res.ok) {
+        alert(`Lead creado exitosamente desde ${nuevoLead.fuente}`)
+        setShowAgregarLeadModal(false)
+        // Resetear formulario
+        setNuevoLead({
+          cliente_id: '',
+          nombre: '',
+          email: '',
+          telefono: '',
+          empresa: '',
+          fuente: 'email',
+          observaciones: ''
+        })
+        await loadData()
+      } else {
+        alert(`Error creando lead: ${data.error}`)
+      }
+    } catch (error) {
+      console.error('Error creando lead:', error)
+      alert('Error creando lead')
+    }
+  }
+
   // Mostrar loading mientras se verifica autenticación
   if (!isAuthenticated) {
     return (
@@ -386,23 +442,36 @@ export default function CRMAdmin() {
         />
       </div>
 
-      {/* Filtro por cliente */}
+      {/* Filtro por cliente y boton agregar lead */}
       <div className="bg-white rounded-xl shadow-md p-6 mb-6 border border-gray-200">
-        <label className="block text-sm font-semibold text-gray-700 mb-2">
-          Filtrar por cliente
-        </label>
-        <select
-          value={selectedCliente}
-          onChange={(e) => setSelectedCliente(e.target.value)}
-          className="w-full max-w-xs px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 text-gray-900"
-        >
-          <option value="all">Todos los clientes</option>
-          {clientes.map(cliente => (
-            <option key={cliente.id} value={cliente.id}>
-              {cliente.nombre} - {cliente.rubro || 'Sin rubro'}
-            </option>
-          ))}
-        </select>
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+          <div className="flex-1">
+            <label className="block text-sm font-semibold text-gray-700 mb-2">
+              Filtrar por cliente
+            </label>
+            <select
+              value={selectedCliente}
+              onChange={(e) => setSelectedCliente(e.target.value)}
+              className="w-full max-w-xs px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 text-gray-900"
+            >
+              <option value="all">Todos los clientes</option>
+              {clientes.map(cliente => (
+                <option key={cliente.id} value={cliente.id}>
+                  {cliente.nombre} - {cliente.rubro || 'Sin rubro'}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <Button
+              onClick={() => setShowAgregarLeadModal(true)}
+              variant="primary"
+              className="whitespace-nowrap"
+            >
+              + Agregar Lead Manual
+            </Button>
+          </div>
+        </div>
       </div>
 
       {/* Barra de acciones para leads seleccionados */}
@@ -836,6 +905,163 @@ export default function CRMAdmin() {
                   variant="secondary"
                 >
                   Cerrar
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Agregar Lead Manual */}
+      {showAgregarLeadModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-xl">
+            <div className="bg-gradient-to-r from-green-900 to-green-800 text-white p-6 rounded-t-lg">
+              <h2 className="text-2xl font-bold">Agregar Lead Manual</h2>
+              <p className="text-green-200 text-sm mt-1">
+                Leads desde Email, WhatsApp u otras fuentes
+              </p>
+            </div>
+            <div className="p-6 space-y-4">
+              {/* Cliente */}
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1">
+                  Cliente *
+                </label>
+                <select
+                  value={nuevoLead.cliente_id}
+                  onChange={(e) => setNuevoLead({...nuevoLead, cliente_id: e.target.value})}
+                  className="w-full px-3 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-green-500 text-gray-900"
+                >
+                  <option value="">Seleccionar cliente...</option>
+                  {clientes.map(cliente => (
+                    <option key={cliente.id} value={cliente.id}>
+                      {cliente.nombre} - {cliente.rubro || 'Sin rubro'}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Fuente */}
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1">
+                  Fuente del Lead *
+                </label>
+                <select
+                  value={nuevoLead.fuente}
+                  onChange={(e) => setNuevoLead({...nuevoLead, fuente: e.target.value})}
+                  className="w-full px-3 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-green-500 text-gray-900"
+                >
+                  <option value="email">📧 Email</option>
+                  <option value="whatsapp">💬 WhatsApp</option>
+                  <option value="meta">📱 Meta (Facebook/Instagram)</option>
+                  <option value="zapier">⚡ Zapier</option>
+                </select>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                {/* Nombre */}
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">
+                    Nombre
+                  </label>
+                  <input
+                    type="text"
+                    value={nuevoLead.nombre}
+                    onChange={(e) => setNuevoLead({...nuevoLead, nombre: e.target.value})}
+                    className="w-full px-3 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-green-500"
+                    placeholder="Nombre del contacto"
+                  />
+                </div>
+
+                {/* Email */}
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">
+                    Email
+                  </label>
+                  <input
+                    type="email"
+                    value={nuevoLead.email}
+                    onChange={(e) => setNuevoLead({...nuevoLead, email: e.target.value})}
+                    className="w-full px-3 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-green-500"
+                    placeholder="email@ejemplo.com"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                {/* Telefono */}
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">
+                    Teléfono
+                  </label>
+                  <input
+                    type="tel"
+                    value={nuevoLead.telefono}
+                    onChange={(e) => setNuevoLead({...nuevoLead, telefono: e.target.value})}
+                    className="w-full px-3 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-green-500"
+                    placeholder="+56 9 1234 5678"
+                  />
+                </div>
+
+                {/* Empresa */}
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">
+                    Empresa
+                  </label>
+                  <input
+                    type="text"
+                    value={nuevoLead.empresa}
+                    onChange={(e) => setNuevoLead({...nuevoLead, empresa: e.target.value})}
+                    className="w-full px-3 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-green-500"
+                    placeholder="Nombre de la empresa"
+                  />
+                </div>
+              </div>
+
+              {/* Observaciones */}
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1">
+                  Observaciones
+                </label>
+                <textarea
+                  value={nuevoLead.observaciones}
+                  onChange={(e) => setNuevoLead({...nuevoLead, observaciones: e.target.value})}
+                  className="w-full px-3 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-green-500"
+                  rows={3}
+                  placeholder="Notas adicionales sobre este lead..."
+                />
+              </div>
+
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <p className="text-sm text-blue-800">
+                  <strong>Nota:</strong> Debes proporcionar al menos uno de los siguientes: nombre, email o teléfono.
+                </p>
+              </div>
+
+              <div className="flex justify-end space-x-3 pt-4">
+                <Button
+                  onClick={() => {
+                    setShowAgregarLeadModal(false)
+                    setNuevoLead({
+                      cliente_id: '',
+                      nombre: '',
+                      email: '',
+                      telefono: '',
+                      empresa: '',
+                      fuente: 'email',
+                      observaciones: ''
+                    })
+                  }}
+                  variant="secondary"
+                >
+                  Cancelar
+                </Button>
+                <Button
+                  onClick={crearLeadManual}
+                  variant="primary"
+                >
+                  Crear Lead
                 </Button>
               </div>
             </div>

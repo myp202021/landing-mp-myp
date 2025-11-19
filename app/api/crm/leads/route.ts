@@ -89,6 +89,84 @@ export async function PATCH(req: NextRequest) {
   }
 }
 
+// POST: Crear un nuevo lead manualmente
+export async function POST(req: NextRequest) {
+  try {
+    const body = await req.json()
+    const {
+      cliente_id,
+      nombre,
+      email,
+      telefono,
+      empresa,
+      fuente, // email, whatsapp, zapier, meta
+      observaciones
+    } = body
+
+    // Validar campos requeridos
+    if (!cliente_id) {
+      return NextResponse.json(
+        { error: 'cliente_id es requerido' },
+        { status: 400 }
+      )
+    }
+
+    if (!fuente) {
+      return NextResponse.json(
+        { error: 'fuente es requerida (email, whatsapp, zapier, meta)' },
+        { status: 400 }
+      )
+    }
+
+    if (!nombre && !email && !telefono) {
+      return NextResponse.json(
+        { error: 'Debe proporcionar al menos nombre, email o teléfono' },
+        { status: 400 }
+      )
+    }
+
+    // Crear el lead
+    const { data: lead, error } = await supabase
+      .from('leads')
+      .insert({
+        cliente_id,
+        nombre: nombre || null,
+        email: email || null,
+        telefono: telefono || null,
+        empresa: empresa || null,
+        fuente,
+        observaciones: observaciones || null,
+        contactado: false,
+        vendido: false,
+        fecha_ingreso: new Date().toISOString()
+      })
+      .select()
+      .single()
+
+    if (error) {
+      console.error('Error creando lead:', error)
+      return NextResponse.json(
+        { error: 'Error creando lead', details: error.message },
+        { status: 500 }
+      )
+    }
+
+    console.log(`✅ Lead creado manualmente: ${lead.id} - Fuente: ${fuente}`)
+
+    return NextResponse.json({
+      success: true,
+      lead
+    })
+
+  } catch (error: any) {
+    console.error('❌ Error en POST /api/crm/leads:', error)
+    return NextResponse.json(
+      { error: 'Error interno del servidor', details: error.message },
+      { status: 500 }
+    )
+  }
+}
+
 // DELETE: Eliminar un lead
 export async function DELETE(req: NextRequest) {
   try {
