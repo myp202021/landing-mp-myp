@@ -23,23 +23,24 @@ export default function MetricCard({
   // Determinar tamaño de fuente basado en longitud del valor
   const valueString = String(value)
   const getFontSize = () => {
-    if (valueString.length > 10) return 'text-xl' // Valores muy largos
-    if (valueString.length > 7) return 'text-2xl'  // Valores largos
-    return 'text-3xl' // Valores normales
+    if (valueString.length > 12) return 'text-base' // Valores muy largos
+    if (valueString.length > 9) return 'text-lg'   // Valores largos
+    if (valueString.length > 6) return 'text-xl'   // Valores medianos
+    return 'text-2xl' // Valores normales
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-md p-4 border border-gray-200 hover:shadow-lg transition-shadow duration-200 min-h-[140px] flex flex-col">
-      <div className="flex items-center justify-between mb-2">
-        <div className="text-xs font-semibold text-gray-600 uppercase tracking-wide">{title}</div>
-        {icon && <div className="text-xl">{icon}</div>}
+    <div className="bg-white rounded-xl shadow-md p-3 border border-gray-200 hover:shadow-lg transition-shadow duration-200 min-h-[120px] flex flex-col">
+      <div className="flex items-center justify-between mb-1.5">
+        <div className="text-[10px] font-semibold text-gray-600 uppercase tracking-wide truncate max-w-[80%]">{title}</div>
+        {icon && <div className="text-lg flex-shrink-0">{icon}</div>}
       </div>
       <div className="flex-1 flex flex-col justify-center overflow-hidden">
-        <div className={`${getFontSize()} font-bold text-gray-900 leading-tight mb-1 break-words`}>
+        <div className={`${getFontSize()} font-bold text-gray-900 leading-tight mb-0.5 break-words`}>
           {value}
         </div>
         {subtitle && (
-          <div className="text-xs text-gray-600 mt-1 line-clamp-2">{subtitle}</div>
+          <div className="text-[10px] text-gray-600 mt-0.5 line-clamp-1 truncate">{subtitle}</div>
         )}
       </div>
       {trend && (
