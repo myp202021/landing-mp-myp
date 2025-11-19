@@ -11,12 +11,6 @@ const supabase = createClient(
 // GET: Obtener cotizaciones
 export async function GET(req: NextRequest) {
   try {
-    // Verificar autenticación
-    const authHeader = req.headers.get('authorization')
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
-    }
-
     const { searchParams } = new URL(req.url)
     const cliente_id = searchParams.get('cliente_id')
     const lead_id = searchParams.get('lead_id')
