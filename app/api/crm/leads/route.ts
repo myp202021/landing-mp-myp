@@ -11,12 +11,6 @@ const supabase = createClient(
 // GET: Obtener todos los leads o filtrar por cliente_id
 export async function GET(req: NextRequest) {
   try {
-    // Verificar autenticación
-    const authHeader = req.headers.get('authorization')
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
-    }
-
     const { searchParams } = new URL(req.url)
     const cliente_id = searchParams.get('cliente_id')
     const limit = searchParams.get('limit') || '100'
@@ -34,11 +28,14 @@ export async function GET(req: NextRequest) {
     const { data: leads, error } = await query
 
     if (error) {
+      console.error('Error obteniendo leads:', error)
       return NextResponse.json(
         { error: 'Error obteniendo leads', details: error.message },
         { status: 500 }
       )
     }
+
+    console.log(`✅ Leads obtenidos: ${leads.length} (cliente_id: ${cliente_id || 'todos'})`)
 
     return NextResponse.json({ leads, total: leads.length })
 
