@@ -16,12 +16,18 @@ export async function GET(req: Request) {
 
     const supabase = createClient(supabaseUrl, supabaseServiceKey)
 
-    // Calcular rango de fechas
+    // Calcular rango de fechas (periodo actual)
     const fechaFin = new Date()
     const fechaInicio = new Date()
     fechaInicio.setDate(fechaInicio.getDate() - dias)
 
-    // Obtener métricas diarias
+    // Calcular rango de fechas (periodo anterior para comparación)
+    const fechaFinAnterior = new Date(fechaInicio)
+    fechaFinAnterior.setDate(fechaFinAnterior.getDate() - 1)
+    const fechaInicioAnterior = new Date(fechaFinAnterior)
+    fechaInicioAnterior.setDate(fechaInicioAnterior.getDate() - dias)
+
+    // Obtener métricas diarias (periodo actual)
     const { data: metricas, error: metricasError } = await supabase
       .from('ads_metrics_daily')
       .select('*')
@@ -34,6 +40,14 @@ export async function GET(req: Request) {
       console.error('Error obteniendo métricas:', metricasError)
       return NextResponse.json({ error: metricasError.message }, { status: 500 })
     }
+
+    // Obtener métricas del periodo anterior para comparación
+    const { data: metricasAnteriores } = await supabase
+      .from('ads_metrics_daily')
+      .select('*')
+      .eq('cliente_id', clienteId)
+      .gte('fecha', fechaInicioAnterior.toISOString().split('T')[0])
+      .lte('fecha', fechaFinAnterior.toISOString().split('T')[0])
 
     // Calcular resumen
     const resumen = {
@@ -75,6 +89,54 @@ export async function GET(req: Request) {
       resumen.cpmPromedio = (resumen.totalInversion / resumen.totalImpresiones) * 1000
     }
 
+    // Calcular resumen del periodo anterior
+    const resumenAnterior = {
+      totalInversion: 0,
+      totalClicks: 0,
+      totalImpresiones: 0,
+      totalConversiones: 0
+    }
+
+    metricasAnteriores?.forEach((metrica: any) => {
+      resumenAnterior.totalInversion += parseFloat(metrica.inversion || 0)
+      resumenAnterior.totalClicks += parseInt(metrica.clicks || 0)
+      resumenAnterior.totalImpresiones += parseInt(metrica.impresiones || 0)
+      resumenAnterior.totalConversiones += parseFloat(metrica.conversiones || 0)
+    })
+
+    // Calcular cambios porcentuales
+    const cambios = {
+      inversion: resumenAnterior.totalInversion > 0
+        ? ((resumen.totalInversion - resumenAnterior.totalInversion) / resumenAnterior.totalInversion) * 100
+        : 0,
+      clicks: resumenAnterior.totalClicks > 0
+        ? ((resumen.totalClicks - resumenAnterior.totalClicks) / resumenAnterior.totalClicks) * 100
+        : 0,
+      impresiones: resumenAnterior.totalImpresiones > 0
+        ? ((resumen.totalImpresiones - resumenAnterior.totalImpresiones) / resumenAnterior.totalImpresiones) * 100
+        : 0,
+      conversiones: resumenAnterior.totalConversiones > 0
+        ? ((resumen.totalConversiones - resumenAnterior.totalConversiones) / resumenAnterior.totalConversiones) * 100
+        : 0,
+      ctr: 0,
+      cpc: 0
+    }
+
+    // Calcular CTR y CPC anteriores para comparación
+    const ctrAnterior = resumenAnterior.totalImpresiones > 0
+      ? (resumenAnterior.totalClicks / resumenAnterior.totalImpresiones) * 100
+      : 0
+    const cpcAnterior = resumenAnterior.totalClicks > 0
+      ? resumenAnterior.totalInversion / resumenAnterior.totalClicks
+      : 0
+
+    if (ctrAnterior > 0) {
+      cambios.ctr = ((resumen.ctrPromedio - ctrAnterior) / ctrAnterior) * 100
+    }
+    if (cpcAnterior > 0) {
+      cambios.cpc = ((resumen.cpcPromedio - cpcAnterior) / cpcAnterior) * 100
+    }
+
     // Agrupar por campaña
     const campanasPorId = new Map<string, any>()
 
@@ -93,8 +155,7 @@ export async function GET(req: Request) {
           conversiones: 0,
           ctr: 0,
           cpc: 0,
-          cpm: 0,
-          dias: []
+          cpm: 0
         })
       }
 
@@ -103,13 +164,6 @@ export async function GET(req: Request) {
       campana.clicks += parseInt(metrica.clicks || 0)
       campana.impresiones += parseInt(metrica.impresiones || 0)
       campana.conversiones += parseFloat(metrica.conversiones || 0)
-      campana.dias.push({
-        fecha: metrica.fecha,
-        inversion: parseFloat(metrica.inversion || 0),
-        clicks: parseInt(metrica.clicks || 0),
-        impresiones: parseInt(metrica.impresiones || 0),
-        ctr: parseFloat(metrica.ctr || 0)
-      })
     })
 
     // Calcular métricas por campaña
@@ -129,24 +183,40 @@ export async function GET(req: Request) {
     // Ordenar por inversión descendente
     campanasArray.sort((a, b) => b.inversion - a.inversion)
 
-    // Preparar datos para gráfico (inversión por día)
-    const inversionPorDia = new Map<string, number>()
+    // Preparar datos para gráficos multi-serie (por día)
+    const metricasPorDia = new Map<string, any>()
 
     metricas?.forEach((metrica: any) => {
       const fecha = metrica.fecha
-      const inversion = parseFloat(metrica.inversion || 0)
 
-      if (!inversionPorDia.has(fecha)) {
-        inversionPorDia.set(fecha, 0)
+      if (!metricasPorDia.has(fecha)) {
+        metricasPorDia.set(fecha, {
+          fecha,
+          inversion: 0,
+          clicks: 0,
+          impresiones: 0,
+          conversiones: 0
+        })
       }
 
-      inversionPorDia.set(fecha, inversionPorDia.get(fecha)! + inversion)
+      const dia = metricasPorDia.get(fecha)
+      dia.inversion += parseFloat(metrica.inversion || 0)
+      dia.clicks += parseInt(metrica.clicks || 0)
+      dia.impresiones += parseInt(metrica.impresiones || 0)
+      dia.conversiones += parseFloat(metrica.conversiones || 0)
     })
 
-    const chartData = Array.from(inversionPorDia.entries())
-      .map(([fecha, inversion]) => ({
-        fecha,
-        inversion: Math.round(inversion)
+    // Datos para gráficos (con CTR y CPC calculados)
+    const chartData = Array.from(metricasPorDia.values())
+      .map(dia => ({
+        fecha: dia.fecha,
+        inversion: Math.round(dia.inversion),
+        clicks: dia.clicks,
+        impresiones: dia.impresiones,
+        conversiones: Math.round(dia.conversiones * 100) / 100,
+        ctr: dia.impresiones > 0 ? Math.round((dia.clicks / dia.impresiones) * 10000) / 100 : 0,
+        cpc: dia.clicks > 0 ? Math.round(dia.inversion / dia.clicks) : 0,
+        cpm: dia.impresiones > 0 ? Math.round((dia.inversion / dia.impresiones) * 1000) : 0
       }))
       .sort((a, b) => a.fecha.localeCompare(b.fecha))
 
@@ -161,8 +231,17 @@ export async function GET(req: Request) {
         cpmPromedio: Math.round(resumen.cpmPromedio),
         campanasActivas: resumen.campanasActivas
       },
+      cambios: {
+        inversion: Math.round(cambios.inversion * 10) / 10,
+        clicks: Math.round(cambios.clicks * 10) / 10,
+        impresiones: Math.round(cambios.impresiones * 10) / 10,
+        conversiones: Math.round(cambios.conversiones * 10) / 10,
+        ctr: Math.round(cambios.ctr * 10) / 10,
+        cpc: Math.round(cambios.cpc * 10) / 10
+      },
       campanas: campanasArray,
       chartData,
+      metricasPorDia: chartData, // Tabla detallada por día
       periodo: {
         dias,
         fechaInicio: fechaInicio.toISOString().split('T')[0],
