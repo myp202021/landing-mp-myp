@@ -512,6 +512,9 @@ export default function CRMAdmin() {
                   Lead
                 </th>
                 <th className="px-6 py-4 text-left text-xs font-semibold text-blue-900 uppercase tracking-wider">
+                  Teléfono
+                </th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-blue-900 uppercase tracking-wider">
                   Fuente
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-semibold text-blue-900 uppercase">
@@ -552,7 +555,10 @@ export default function CRMAdmin() {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm text-gray-900 font-medium">{lead.nombre || 'Sin nombre'}</div>
-                    <div className="text-sm text-gray-600">{lead.email || lead.telefono}</div>
+                    <div className="text-sm text-gray-600">{lead.email || '-'}</div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {lead.telefono || '-'}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                     {lead.fuente}<br/>
