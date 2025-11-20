@@ -31,17 +31,17 @@ console.log('══════════════════════�
 console.log('🔗 ASIGNAR CUENTA DE META ADS A CLIENTE')
 console.log('═══════════════════════════════════════════════════════════\n')
 
-// PASO 1: Buscar cliente "Muller y Perez"
-console.log('🔍 Buscando cliente "Muller y Perez"...\n')
+// PASO 1: Buscar cliente "M&P Marketing y Performance"
+console.log('🔍 Buscando cliente "M&P Marketing y Performance"...\n')
 
 const { data: cliente, error: clienteError } = await supabase
   .from('clientes')
   .select('*')
-  .ilike('nombre', '%muller%perez%')
+  .ilike('nombre', '%m&p%')
   .single()
 
 if (clienteError || !cliente) {
-  console.error('❌ Cliente "Muller y Perez" no encontrado')
+  console.error('❌ Cliente "M&P Marketing y Performance" no encontrado')
   console.error('   Verifica que existe en la tabla clientes')
   console.log('\n📋 Clientes disponibles:')
 
