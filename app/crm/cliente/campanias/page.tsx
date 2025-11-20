@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import CRMLayout from '@/app/components/crm/CRMLayout'
 import CampaignSummaryCards from '@/app/components/crm/CampaignSummaryCards'
 import CampaignsTable from '@/app/components/crm/CampaignsTable'
+import InvestmentChart from '@/app/components/crm/InvestmentChart'
 
 export default function ClienteCampaniasPage() {
   const { isAuthenticated, user } = useSimpleAuth()
@@ -120,19 +121,7 @@ export default function ClienteCampaniasPage() {
       <CampaignSummaryCards resumen={campanasData.resumen} />
 
       {/* Gráfico de inversión por día */}
-      {campanasData.chartData && campanasData.chartData.length > 0 && (
-        <div className="bg-white rounded-lg shadow p-6 mb-8">
-          <h3 className="text-xl font-bold text-gray-900 mb-4">
-            Inversión Diaria
-          </h3>
-          <div className="h-64 flex items-center justify-center text-gray-500">
-            <div className="text-center">
-              <p className="mb-2">Gráfico de inversión próximamente</p>
-              <p className="text-sm text-gray-400">(Datos disponibles: {campanasData.chartData.length} días)</p>
-            </div>
-          </div>
-        </div>
-      )}
+      <InvestmentChart data={campanasData.chartData || []} />
 
       {/* Tabla de campañas */}
       <div className="mb-8">
