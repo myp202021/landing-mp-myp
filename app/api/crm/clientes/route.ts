@@ -86,7 +86,16 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json()
-    const { nombre, email, rubro, telefono } = body
+    const {
+      nombre,
+      contacto_nombre,
+      contacto_email,
+      contacto_telefono,
+      rubro,
+      inversion_mensual,
+      zapier_webhook_url,
+      zapier_activo
+    } = body
 
     if (!nombre) {
       return NextResponse.json(
@@ -99,7 +108,13 @@ export async function POST(req: NextRequest) {
       .from('clientes')
       .insert({
         nombre,
+        contacto_nombre: contacto_nombre || null,
+        contacto_email: contacto_email || null,
+        contacto_telefono: contacto_telefono || null,
         rubro: rubro || null,
+        inversion_mensual: inversion_mensual || null,
+        zapier_webhook_url: zapier_webhook_url || null,
+        zapier_activo: zapier_activo || false,
         activo: true
       })
       .select()

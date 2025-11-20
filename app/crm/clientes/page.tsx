@@ -8,6 +8,9 @@ import Button from '@/app/components/crm/Button'
 interface Cliente {
   id: string  // UUID
   nombre: string
+  contacto_nombre?: string
+  contacto_email?: string
+  contacto_telefono?: string
   rubro?: string
   inversion_mensual?: number
   zapier_webhook_url?: string
@@ -24,6 +27,9 @@ export default function ClientesPage() {
   const [editingCliente, setEditingCliente] = useState<Cliente | null>(null)
   const [formData, setFormData] = useState({
     nombre: '',
+    contacto_nombre: '',
+    contacto_email: '',
+    contacto_telefono: '',
     rubro: '',
     inversion_mensual: '',
     zapier_webhook_url: '',
@@ -52,6 +58,9 @@ export default function ClientesPage() {
       setEditingCliente(cliente)
       setFormData({
         nombre: cliente.nombre,
+        contacto_nombre: cliente.contacto_nombre || '',
+        contacto_email: cliente.contacto_email || '',
+        contacto_telefono: cliente.contacto_telefono || '',
         rubro: cliente.rubro || '',
         inversion_mensual: cliente.inversion_mensual ? String(cliente.inversion_mensual) : '',
         zapier_webhook_url: cliente.zapier_webhook_url || '',
@@ -61,6 +70,9 @@ export default function ClientesPage() {
       setEditingCliente(null)
       setFormData({
         nombre: '',
+        contacto_nombre: '',
+        contacto_email: '',
+        contacto_telefono: '',
         rubro: '',
         inversion_mensual: '',
         zapier_webhook_url: '',
@@ -75,6 +87,9 @@ export default function ClientesPage() {
     setEditingCliente(null)
     setFormData({
       nombre: '',
+      contacto_nombre: '',
+      contacto_email: '',
+      contacto_telefono: '',
       rubro: '',
       inversion_mensual: '',
       zapier_webhook_url: '',
@@ -94,6 +109,9 @@ export default function ClientesPage() {
       // Preparar datos para enviar
       const dataToSend = {
         nombre: formData.nombre,
+        contacto_nombre: formData.contacto_nombre || null,
+        contacto_email: formData.contacto_email || null,
+        contacto_telefono: formData.contacto_telefono || null,
         rubro: formData.rubro,
         inversion_mensual: formData.inversion_mensual ? parseFloat(formData.inversion_mensual) : null,
         zapier_webhook_url: formData.zapier_webhook_url || null,
@@ -247,8 +265,19 @@ export default function ClientesPage() {
               <tbody className="bg-white divide-y divide-gray-200">
                 {clientes.map((cliente) => (
                   <tr key={cliente.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-6 py-4">
                       <div className="font-medium text-gray-900">{cliente.nombre}</div>
+                      {cliente.contacto_nombre && (
+                        <div className="text-sm text-gray-600 mt-1">
+                          👤 {cliente.contacto_nombre}
+                          {cliente.contacto_email && (
+                            <span className="ml-2">· {cliente.contacto_email}</span>
+                          )}
+                          {cliente.contacto_telefono && (
+                            <span className="ml-2">· {cliente.contacto_telefono}</span>
+                          )}
+                        </div>
+                      )}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className="text-gray-900">
@@ -313,7 +342,7 @@ export default function ClientesPage() {
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Nombre <span className="text-red-500">*</span>
+                    Nombre Empresa <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
@@ -321,8 +350,54 @@ export default function ClientesPage() {
                     onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                     required
-                    placeholder="Nombre del cliente"
+                    placeholder="Nombre de la empresa"
                   />
+                </div>
+
+                {/* Datos de Persona de Contacto */}
+                <div className="border-t border-gray-200 pt-4">
+                  <h4 className="text-sm font-semibold text-gray-900 mb-3">Persona de Contacto</h4>
+
+                  <div className="space-y-3">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Nombre Completo
+                      </label>
+                      <input
+                        type="text"
+                        value={formData.contacto_nombre}
+                        onChange={(e) => setFormData({ ...formData, contacto_nombre: e.target.value })}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                        placeholder="Ej: Juan Pérez"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Email
+                      </label>
+                      <input
+                        type="email"
+                        value={formData.contacto_email}
+                        onChange={(e) => setFormData({ ...formData, contacto_email: e.target.value })}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                        placeholder="contacto@empresa.cl"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Teléfono
+                      </label>
+                      <input
+                        type="tel"
+                        value={formData.contacto_telefono}
+                        onChange={(e) => setFormData({ ...formData, contacto_telefono: e.target.value })}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                        placeholder="+56 9 1234 5678"
+                      />
+                    </div>
+                  </div>
                 </div>
 
                 <div>
