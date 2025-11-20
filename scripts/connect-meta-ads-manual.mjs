@@ -42,9 +42,11 @@ console.log('🔗 CONECTAR META ADS AL CRM (MANUAL)')
 console.log('═══════════════════════════════════════════════════════════\n')
 
 console.log('📋 Antes de continuar, asegúrate de tener:')
-console.log('  1. ✅ Access Token de Meta (de Graph API Explorer)')
+console.log('  1. ✅ System User Token de Meta (Token permanente - NO expira)')
 console.log('  2. ✅ Ad Account ID (ejemplo: act_123456789)')
-console.log('  3. ✅ Aplicado la migración 004 en Supabase\n')
+console.log('  3. ✅ Aplicado la migración 004 en Supabase')
+console.log('\n💡 IMPORTANTE: Usa System User Token (no User Access Token)')
+console.log('   Ver guía: docs/META-ADS-SYSTEM-USER-TOKEN.md\n')
 
 const continuar = await question('¿Continuar? (y/n): ')
 
@@ -56,7 +58,7 @@ if (continuar.toLowerCase() !== 'y') {
 
 console.log('\n📝 Ingresa los datos de la conexión:\n')
 
-const accessToken = await question('🔑 Access Token de Meta: ')
+const accessToken = await question('🔑 System User Token de Meta (permanente): ')
 const accountId = await question('🆔 Ad Account ID (ej: act_123456789): ')
 const accountName = await question('📛 Nombre de la cuenta (ej: M&P Marketing - Principal): ')
 
@@ -117,7 +119,7 @@ try {
       account_name: accountName || `Meta Ads - ${accountId}`,
       access_token: accessToken,
       refresh_token: null, // Meta no usa refresh token
-      token_expiry: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000).toISOString(), // 60 días
+      token_expiry: null, // System User Token NO expira nunca (como Reportei)
       connected_by: 'admin@mulleryperez.cl',
       connected_at: new Date().toISOString(),
       last_sync: null,
