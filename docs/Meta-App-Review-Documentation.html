@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MULLER&PEREZ CRM - Meta App Review Documentation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 210mm;
+            margin: 0 auto;
+            padding: 20mm;
+            background: white;
+        }
+
+        .header {
+            text-align: center;
+            border-bottom: 4px solid #1877F2;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #1877F2;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .section {
+            margin-bottom: 30px;
+            page-break-inside: avoid;
+        }
+
+        .section h2 {
+            color: #1877F2;
+            font-size: 20px;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e4e6eb;
+        }
+
+        .section h3 {
+            color: #444;
+            font-size: 16px;
+            margin: 15px 0 10px 0;
+        }
+
+        .credentials-box {
+            background: #f0f2f5;
+            border-left: 4px solid #1877F2;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        .credentials-box p {
+            margin: 5px 0;
+        }
+
+        .feature-list {
+            list-style: none;
+            margin: 15px 0;
+        }
+
+        .feature-list li {
+            padding: 8px 0 8px 30px;
+            position: relative;
+        }
+
+        .feature-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #42b72a;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .api-endpoint {
+            background: #f7f7f7;
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            border-radius: 4px;
+        }
+
+        .step-box {
+            background: #e7f3ff;
+            border-left: 4px solid #1877F2;
+            padding: 15px;
+            margin: 10px 0;
+        }
+
+        .step-box h4 {
+            color: #1877F2;
+            margin-bottom: 10px;
+        }
+
+        .important {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .screenshot-placeholder {
+            border: 2px dashed #ccc;
+            padding: 40px;
+            text-align: center;
+            margin: 15px 0;
+            background: #f9f9f9;
+            color: #999;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+
+        table th {
+            background: #1877F2;
+            color: white;
+            padding: 10px;
+            text-align: left;
+        }
+
+        table td {
+            padding: 10px;
+            border-bottom: 1px solid #e4e6eb;
+        }
+
+        table tr:hover {
+            background: #f7f7f7;
+        }
+
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #e4e6eb;
+            text-align: center;
+            color: #666;
+            font-size: 12px;
+        }
+
+        @media print {
+            body {
+                padding: 10mm;
+            }
+
+            .section {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📱 MULLER&PEREZ CRM</h1>
+        <p>Documentación para Revisión de Aplicación Meta</p>
+        <p><strong>App ID:</strong> 1389537399297748 | <strong>Fecha:</strong> Noviembre 2024</p>
+    </div>
+
+    <!-- SECCIÓN 1: INFORMACIÓN GENERAL -->
+    <div class="section">
+        <h2>1. Información General de la Aplicación</h2>
+
+        <p><strong>Nombre:</strong> MULLER&PEREZ CRM</p>
+        <p><strong>Tipo:</strong> Aplicación Web (SaaS)</p>
+        <p><strong>URL:</strong> <a href="https://mulleryperez.cl">https://mulleryperez.cl</a></p>
+        <p><strong>Propósito:</strong> Sistema de gestión de relaciones con clientes (CRM) integrado con Meta Ads para visualización de métricas de campañas publicitarias y gestión de leads.</p>
+
+        <div class="important">
+            <strong>⚠️ Importante:</strong> Esta es una aplicación de uso interno para nuestros clientes de agencia de marketing digital. No es una app pública ni requiere instalación desde tiendas de aplicaciones.
+        </div>
+    </div>
+
+    <!-- SECCIÓN 2: CREDENCIALES DE ACCESO -->
+    <div class="section">
+        <h2>2. Credenciales de Acceso para Revisión</h2>
+
+        <h3>2.1 URL de Acceso</h3>
+        <div class="credentials-box">
+            <p><strong>URL Login:</strong> https://mulleryperez.cl/crm/login</p>
+        </div>
+
+        <h3>2.2 Credenciales de Prueba</h3>
+        <div class="credentials-box">
+            <p><strong>Usuario:</strong> demo@test.com</p>
+            <p><strong>Contraseña:</strong> Demo2024!</p>
+            <p><strong>Rol:</strong> Cliente con acceso completo</p>
+            <p><strong>Validez:</strong> 12 meses desde la fecha de envío</p>
+        </div>
+
+        <div class="important">
+            <strong>Nota:</strong> Esta cuenta está conectada a una cuenta de Meta Ads de prueba con datos de demostración. Todos los datos mostrados son ficticios para propósitos de revisión.
+        </div>
+    </div>
+
+    <!-- SECCIÓN 3: FLUJO DE NAVEGACIÓN -->
+    <div class="section">
+        <h2>3. Flujo de Navegación Paso a Paso</h2>
+
+        <div class="step-box">
+            <h4>Paso 1: Acceso al Sistema</h4>
+            <ol>
+                <li>Abrir navegador e ir a: <code>https://mulleryperez.cl/crm/login</code></li>
+                <li>Ingresar credenciales proporcionadas</li>
+                <li>Click en botón "Iniciar Sesión"</li>
+            </ol>
+            <div class="screenshot-placeholder">
+                [SCREENSHOT 1: Pantalla de login con credenciales visibles]
+            </div>
+        </div>
+
+        <div class="step-box">
+            <h4>Paso 2: Dashboard Principal</h4>
+            <p>Después del login, el usuario accede al dashboard principal que muestra:</p>
+            <ul>
+                <li>Resumen de métricas agregadas</li>
+                <li>Acceso rápido a secciones principales</li>
+                <li>Menú de navegación lateral</li>
+            </ul>
+            <div class="screenshot-placeholder">
+                [SCREENSHOT 2: Dashboard principal con menú visible]
+            </div>
+        </div>
+
+        <div class="step-box">
+            <h4>Paso 3: Visualización de Campañas de Meta Ads</h4>
+            <ol>
+                <li>En el menú lateral, click en "Campañas"</li>
+                <li>La página carga datos sincronizados desde Meta Marketing API</li>
+                <li>Se muestran múltiples visualizaciones:</li>
+            </ol>
+
+            <h3 style="margin-left: 20px;">3.1 Cards de Resumen</h3>
+            <p style="margin-left: 20px;">Métricas agregadas: inversión total, clicks, impresiones, conversiones, CTR, CPC</p>
+            <div class="screenshot-placeholder">
+                [SCREENSHOT 3: Cards de resumen con métricas]
+            </div>
+
+            <h3 style="margin-left: 20px;">3.2 Gráfico de Tendencias</h3>
+            <p style="margin-left: 20px;">Evolución de métricas en el tiempo</p>
+            <div class="screenshot-placeholder">
+                [SCREENSHOT 4: Gráfico multi-serie de tendencias]
+            </div>
+
+            <h3 style="margin-left: 20px;">3.3 Comparación por Plataforma</h3>
+            <p style="margin-left: 20px;">Desglose Instagram vs Facebook vs otras plataformas</p>
+            <div class="screenshot-placeholder">
+                [SCREENSHOT 5: Gráfico comparativo por plataforma]
+            </div>
+
+            <h3 style="margin-left: 20px;">3.4 Galería de Anuncios Individuales</h3>
+            <p style="margin-left: 20px;">Vista de grid con thumbnails, engagement y métricas por anuncio</p>
+            <div class="screenshot-placeholder">
+                [SCREENSHOT 6: Galería de anuncios con thumbnails]
+            </div>
+        </div>
+
+        <div class="step-box">
+            <h4>Paso 4: Gestión de Leads</h4>
+            <ol>
+                <li>En el menú lateral, click en "Leads"</li>
+                <li>Se muestra tabla con leads sincronizados desde Meta Lead Ads</li>
+                <li>Información capturada: nombre, email, teléfono, fecha de creación</li>
+            </ol>
+            <div class="screenshot-placeholder">
+                [SCREENSHOT 7: Tabla de leads]
+            </div>
+        </div>
+    </div>
+
+    <!-- SECCIÓN 4: FUNCIONALIDADES PRINCIPALES -->
+    <div class="section">
+        <h2>4. Funcionalidades Principales</h2>
+
+        <ul class="feature-list">
+            <li><strong>Dashboard de Métricas:</strong> Visualización en tiempo real de métricas de campañas de Meta Ads</li>
+            <li><strong>Comparación por Plataforma:</strong> Desglose de rendimiento por Instagram, Facebook, Audience Network y Messenger</li>
+            <li><strong>Análisis de Anuncios:</strong> Vista individual de cada anuncio con thumbnails, textos creativos y engagement</li>
+            <li><strong>Gestión de Leads:</strong> Sincronización automática de leads desde Meta Lead Ads</li>
+            <li><strong>Reportes Históricos:</strong> Acceso a datos históricos con diferentes períodos (7, 30, 90 días)</li>
+            <li><strong>Sistema de Cotizaciones:</strong> Generación de cotizaciones para clientes</li>
+            <li><strong>Multi-cliente:</strong> Gestión de múltiples clientes desde una sola plataforma</li>
+        </ul>
+    </div>
+
+    <!-- SECCIÓN 5: INTEGRACIÓN CON META APIs -->
+    <div class="section">
+        <h2>5. Integración con APIs de Meta</h2>
+
+        <h3>5.1 Permisos Solicitados</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Permiso</th>
+                    <th>Propósito</th>
+                    <th>Uso en la App</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>ads_read</code></td>
+                    <td>Leer datos de campañas y anuncios</td>
+                    <td>Obtener métricas de campañas, anuncios y creativos</td>
+                </tr>
+                <tr>
+                    <td><code>ads_management</code></td>
+                    <td>Gestionar campañas publicitarias</td>
+                    <td>Acceso completo a insights y métricas detalladas</td>
+                </tr>
+                <tr>
+                    <td><code>leads_retrieval</code></td>
+                    <td>Recuperar leads de formularios</td>
+                    <td>Sincronizar leads desde Meta Lead Ads</td>
+                </tr>
+                <tr>
+                    <td><code>pages_show_list</code></td>
+                    <td>Listar páginas asociadas</td>
+                    <td>Identificar páginas de Facebook/Instagram del cliente</td>
+                </tr>
+                <tr>
+                    <td><code>business_management</code></td>
+                    <td>Gestionar assets de negocio</td>
+                    <td>Acceder a cuentas publicitarias y assets asociados</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>5.2 Endpoints de Meta API Utilizados</h3>
+
+        <h4>Marketing API - Campañas</h4>
+        <div class="api-endpoint">
+GET /v21.0/act_{ad_account_id}/campaigns
+<br>Propósito: Obtener lista de campañas activas
+        </div>
+
+        <div class="api-endpoint">
+GET /v21.0/{campaign_id}/insights?fields=campaign_name,spend,impressions,clicks,reach,frequency,actions&breakdowns=publisher_platform&time_increment=1
+<br>Propósito: Obtener métricas de campaña con desglose por plataforma (Instagram/Facebook)
+        </div>
+
+        <h4>Marketing API - Anuncios</h4>
+        <div class="api-endpoint">
+GET /v21.0/{campaign_id}/ads?fields=name,status,creative
+<br>Propósito: Obtener lista de anuncios de una campaña
+        </div>
+
+        <div class="api-endpoint">
+GET /v21.0/{ad_id}/insights?fields=spend,impressions,clicks,actions,action_values&breakdowns=publisher_platform
+<br>Propósito: Obtener métricas detalladas por anuncio individual
+        </div>
+
+        <div class="api-endpoint">
+GET /v21.0/{ad_id}/creative?fields=thumbnail_url,body,link_url,title
+<br>Propósito: Obtener información del creativo (thumbnails, textos)
+        </div>
+
+        <h4>Lead Ads API</h4>
+        <div class="api-endpoint">
+GET /v21.0/{page_id}/leadgen_forms
+<br>Propósito: Obtener formularios de Lead Ads asociados a la página
+        </div>
+
+        <div class="api-endpoint">
+GET /v21.0/{form_id}/leads
+<br>Propósito: Obtener leads capturados desde formularios
+        </div>
+
+        <h3>5.3 Flujo de Sincronización</h3>
+        <ol>
+            <li><strong>Autenticación:</strong> La app utiliza System User Token o User Access Token para autenticarse</li>
+            <li><strong>Consulta de Campañas:</strong> Se obtienen las campañas del ad account del cliente</li>
+            <li><strong>Obtención de Insights:</strong> Para cada campaña, se consultan insights con breakdown por plataforma</li>
+            <li><strong>Datos de Anuncios:</strong> Se obtienen métricas a nivel de anuncio individual</li>
+            <li><strong>Creativos:</strong> Se descargan thumbnails y textos de los creativos</li>
+            <li><strong>Almacenamiento:</strong> Los datos se guardan en base de datos Supabase para consulta rápida</li>
+            <li><strong>Visualización:</strong> Los datos se presentan en dashboards interactivos</li>
+        </ol>
+    </div>
+
+    <!-- SECCIÓN 6: ARQUITECTURA TÉCNICA -->
+    <div class="section">
+        <h2>6. Arquitectura Técnica</h2>
+
+        <h3>6.1 Stack Tecnológico</h3>
+        <ul class="feature-list">
+            <li><strong>Frontend:</strong> Next.js 14 con TypeScript</li>
+            <li><strong>Backend:</strong> Next.js API Routes</li>
+            <li><strong>Base de Datos:</strong> Supabase (PostgreSQL)</li>
+            <li><strong>Hosting:</strong> Vercel</li>
+            <li><strong>Gráficos:</strong> Recharts</li>
+            <li><strong>Autenticación:</strong> Sistema custom con Supabase Auth</li>
+        </ul>
+
+        <h3>6.2 Estructura de Base de Datos</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Tabla</th>
+                    <th>Propósito</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>platform_integrations</code></td>
+                    <td>Almacena tokens de acceso y configuración de Meta</td>
+                </tr>
+                <tr>
+                    <td><code>ads_metrics_daily</code></td>
+                    <td>Métricas diarias agregadas por campaña y plataforma</td>
+                </tr>
+                <tr>
+                    <td><code>ads_metrics_by_ad</code></td>
+                    <td>Métricas detalladas por anuncio individual</td>
+                </tr>
+                <tr>
+                    <td><code>leads</code></td>
+                    <td>Leads sincronizados desde Meta Lead Ads</td>
+                </tr>
+                <tr>
+                    <td><code>clientes</code></td>
+                    <td>Información de clientes de la agencia</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>6.3 Seguridad y Privacidad</h3>
+        <ul class="feature-list">
+            <li>Tokens de acceso almacenados de forma segura con encriptación</li>
+            <li>Autenticación requerida para todas las rutas del CRM</li>
+            <li>Separación de datos por cliente (multi-tenancy)</li>
+            <li>HTTPS en todas las comunicaciones</li>
+            <li>Cumplimiento con política de privacidad de Meta</li>
+            <li>No se comparten datos entre clientes</li>
+        </ul>
+    </div>
+
+    <!-- SECCIÓN 7: CASOS DE USO -->
+    <div class="section">
+        <h2>7. Casos de Uso Típicos</h2>
+
+        <div class="step-box">
+            <h4>Caso de Uso 1: Revisión de Rendimiento de Campañas</h4>
+            <p><strong>Actor:</strong> Cliente de la agencia (ej: e-commerce)</p>
+            <p><strong>Flujo:</strong></p>
+            <ol>
+                <li>Cliente inicia sesión en el CRM</li>
+                <li>Accede a sección "Campañas"</li>
+                <li>Revisa métricas del último mes</li>
+                <li>Compara rendimiento Instagram vs Facebook</li>
+                <li>Identifica anuncios con mejor CTR</li>
+                <li>Descarga reporte para reunión interna</li>
+            </ol>
+        </div>
+
+        <div class="step-box">
+            <h4>Caso de Uso 2: Gestión de Leads</h4>
+            <p><strong>Actor:</strong> Equipo de ventas del cliente</p>
+            <p><strong>Flujo:</strong></p>
+            <ol>
+                <li>Sistema sincroniza automáticamente leads desde Meta Lead Ads</li>
+                <li>Usuario accede a sección "Leads"</li>
+                <li>Revisa nuevos leads del día</li>
+                <li>Exporta datos para CRM interno</li>
+                <li>Marca leads como contactados</li>
+            </ol>
+        </div>
+
+        <div class="step-box">
+            <h4>Caso de Uso 3: Análisis de Creativos</h4>
+            <p><strong>Actor:</strong> Equipo creativo</p>
+            <p><strong>Flujo:</strong></p>
+            <ol>
+                <li>Accede a galería de anuncios</li>
+                <li>Filtra por plataforma (Instagram)</li>
+                <li>Ordena por engagement</li>
+                <li>Identifica patrones en creativos exitosos</li>
+                <li>Toma decisiones para nuevas campañas</li>
+            </ol>
+        </div>
+    </div>
+
+    <!-- SECCIÓN 8: CONTACTO -->
+    <div class="section">
+        <h2>8. Información de Contacto</h2>
+
+        <table>
+            <tbody>
+                <tr>
+                    <td><strong>Empresa:</strong></td>
+                    <td>MULLER&PEREZ Marketing Digital</td>
+                </tr>
+                <tr>
+                    <td><strong>Sitio Web:</strong></td>
+                    <td><a href="https://mulleryperez.cl">https://mulleryperez.cl</a></td>
+                </tr>
+                <tr>
+                    <td><strong>Email de Soporte:</strong></td>
+                    <td>contacto@mulleryperez.cl</td>
+                </tr>
+                <tr>
+                    <td><strong>País:</strong></td>
+                    <td>Chile</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="important">
+            <strong>Para el equipo de revisión:</strong><br>
+            Si tienen alguna pregunta o necesitan acceso adicional durante el proceso de revisión, no duden en contactarnos. Estamos disponibles para proporcionar cualquier información adicional que requieran.
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+        <p><strong>Documento preparado para:</strong> Meta App Review Team</p>
+        <p><strong>Fecha de generación:</strong> Noviembre 2024</p>
+        <p><strong>Versión:</strong> 1.0</p>
+        <hr style="margin: 15px 0; border: none; border-top: 1px solid #e4e6eb;">
+        <p>© 2024 MULLER&PEREZ. Todos los derechos reservados.</p>
+    </div>
+</body>
+</html>

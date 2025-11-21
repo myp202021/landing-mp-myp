@@ -181,7 +181,7 @@ try {
             await supabase
               .from('ads_metrics_daily')
               .upsert(metricData, {
-                onConflict: 'cliente_id,integration_id,campaign_id,fecha'
+                onConflict: 'cliente_id,integration_id,campaign_id,fecha,publisher_platform'
               })
 
             totalCampaignMetrics++

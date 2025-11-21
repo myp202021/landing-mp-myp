@@ -15,6 +15,7 @@ interface Lead {
   email?: string
   telefono?: string
   empresa?: string
+  nombre_empresa?: string
   fuente: string
   campana_nombre?: string
   ad_nombre?: string
@@ -607,6 +608,9 @@ export default function ClienteDashboard() {
                     Lead
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-semibold text-blue-900 uppercase tracking-wider">
+                    Empresa
+                  </th>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-blue-900 uppercase tracking-wider">
                     Teléfono
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-semibold text-blue-900 uppercase tracking-wider">
@@ -640,6 +644,9 @@ export default function ClienteDashboard() {
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm text-gray-900 font-medium">{lead.nombre || 'Sin nombre'}</div>
                       <div className="text-sm text-gray-600">{lead.email || '-'}</div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {lead.nombre_empresa || lead.empresa || '-'}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                       {lead.telefono || '-'}
