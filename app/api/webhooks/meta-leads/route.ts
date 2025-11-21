@@ -48,12 +48,15 @@ export async function POST(req: NextRequest) {
     const body = await req.json()
 
     // Mapeo flexible de campos (Zapier puede enviar diferentes nombres)
+    const companyName = body.empresa || body.company || body.nombre_empresa || null
+
     const leadData = {
       cliente_id,
       nombre: body.nombre || body.full_name || body.name || 'Sin nombre',
       email: body.email || body.correo || null,
       telefono: body.telefono || body.phone || body.phone_number || null,
-      empresa: body.empresa || body.company || null,
+      empresa: companyName,
+      nombre_empresa: companyName, // Guardar en ambos campos
       cargo: body.cargo || body.job_title || null,
       mensaje: body.mensaje || body.message || body.comments || null,
       origen: 'Meta Ads (Zapier)',

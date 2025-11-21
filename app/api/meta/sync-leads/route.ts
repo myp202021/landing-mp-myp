@@ -140,6 +140,7 @@ export async function POST(req: NextRequest) {
             email: leadInfo.email || null,
             telefono: leadInfo.telefono || null,
             empresa: leadInfo.empresa || null,
+            nombre_empresa: leadInfo.empresa || null, // Guardar en ambos campos
             cargo: leadInfo.cargo || null,
             origen: `Facebook - ${page_name}`,
             facebook_lead_id: leadId,
