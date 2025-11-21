@@ -348,16 +348,64 @@ export default function IntegracionesPage() {
                 <p className="text-gray-600 text-sm">Datos de campañas de Facebook e Instagram</p>
               </div>
             </div>
-            <span className="px-4 py-2 bg-gray-200 text-gray-600 rounded-full text-sm font-semibold">
-              Próximamente
-            </span>
+            {resumen.clientesConMeta > 0 ? (
+              <span className="px-4 py-2 bg-green-100 text-green-700 rounded-full text-sm font-semibold border border-green-300">
+                ✓ {resumen.clientesConMeta} {resumen.clientesConMeta === 1 ? 'Cliente Conectado' : 'Clientes Conectados'}
+              </span>
+            ) : (
+              <span className="px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-semibold border border-blue-300">
+                Listo para Conectar
+              </span>
+            )}
           </div>
-          <p className="text-gray-600 mb-4">
-            Integración con Meta Business Manager para obtener métricas de campañas de Facebook e Instagram Ads.
-          </p>
-          <Button variant="secondary" disabled>
-            Próximamente
-          </Button>
+
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-5 mb-4">
+            <h3 className="text-blue-900 font-semibold mb-3 flex items-center gap-2">
+              <span>📊</span> Datos que obtendrás automáticamente:
+            </h3>
+            <ul className="text-gray-700 space-y-2 text-sm">
+              <li className="flex items-start gap-2">
+                <span className="text-green-600">•</span>
+                <span>Métricas por campaña desglosadas por plataforma (Instagram vs Facebook)</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-green-600">•</span>
+                <span>Análisis a nivel de ad individual con engagement (likes, comments, shares)</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-green-600">•</span>
+                <span>Leads desde Meta Lead Ads con sincronización automática</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-green-600">•</span>
+                <span>Tokens OAuth con refresh automático (sin expiración manual)</span>
+              </li>
+            </ul>
+          </div>
+
+          <div className="flex gap-3">
+            <Button
+              variant="primary"
+              onClick={() => {
+                // Obtener el primer cliente para conectar
+                // En el futuro podríamos permitir seleccionar el cliente
+                const firstCliente = clientes[0]
+                if (!firstCliente) {
+                  alert('Primero necesitas crear al menos un cliente')
+                  return
+                }
+                window.location.href = `/api/auth/meta/connect?cliente_id=${firstCliente.id}`
+              }}
+            >
+              🔗 Conectar Meta Ads
+            </Button>
+            <Button
+              variant="secondary"
+              onClick={() => router.push('/crm/cliente/campanias')}
+            >
+              Ver Dashboard
+            </Button>
+          </div>
         </div>
       </div>
     </CRMLayout>
