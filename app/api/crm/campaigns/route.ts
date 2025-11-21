@@ -220,6 +220,90 @@ export async function GET(req: Request) {
       }))
       .sort((a, b) => a.fecha.localeCompare(b.fecha))
 
+    // Obtener datos por plataforma (Instagram, Facebook, etc.)
+    const platformDataMap = new Map<string, any>()
+
+    metricas?.forEach((metrica: any) => {
+      const platform = metrica.publisher_platform || 'unknown'
+
+      if (!platformDataMap.has(platform)) {
+        platformDataMap.set(platform, {
+          platform,
+          inversion: 0,
+          clicks: 0,
+          impresiones: 0
+        })
+      }
+
+      const platformData = platformDataMap.get(platform)
+      platformData.inversion += parseFloat(metrica.inversion || 0)
+      platformData.clicks += parseInt(metrica.clicks || 0)
+      platformData.impresiones += parseInt(metrica.impresiones || 0)
+    })
+
+    // Calcular CTR y CPC por plataforma
+    const platformData = Array.from(platformDataMap.values()).map(platform => ({
+      ...platform,
+      ctr: platform.impresiones > 0 ? (platform.clicks / platform.impresiones) * 100 : 0,
+      cpc: platform.clicks > 0 ? platform.inversion / platform.clicks : 0
+    }))
+
+    // Obtener métricas de ads individuales
+    const { data: adsData } = await supabase
+      .from('ads_metrics_by_ad')
+      .select('*')
+      .eq('cliente_id', clienteId)
+      .gte('fecha', fechaInicio.toISOString().split('T')[0])
+      .lte('fecha', fechaFin.toISOString().split('T')[0])
+      .order('inversion', { ascending: false })
+
+    // Agrupar ads por ad_id para sumar métricas del periodo
+    const adsByIdMap = new Map<string, any>()
+
+    adsData?.forEach((ad: any) => {
+      const adId = ad.ad_id
+
+      if (!adsByIdMap.has(adId)) {
+        adsByIdMap.set(adId, {
+          ad_id: ad.ad_id,
+          ad_name: ad.ad_name,
+          ad_status: ad.ad_status,
+          campaign_name: ad.campaign_name,
+          publisher_platform: ad.publisher_platform,
+          ad_creative_thumbnail_url: ad.ad_creative_thumbnail_url,
+          ad_creative_body: ad.ad_creative_body,
+          ad_creative_link_url: ad.ad_creative_link_url,
+          inversion: 0,
+          impresiones: 0,
+          clicks: 0,
+          conversiones: 0,
+          likes: 0,
+          comments: 0,
+          shares: 0,
+          video_views: 0,
+          reach: 0
+        })
+      }
+
+      const adData = adsByIdMap.get(adId)
+      adData.inversion += parseFloat(ad.inversion || 0)
+      adData.impresiones += parseInt(ad.impresiones || 0)
+      adData.clicks += parseInt(ad.clicks || 0)
+      adData.conversiones += parseFloat(ad.conversiones || 0)
+      adData.likes += parseInt(ad.likes || 0)
+      adData.comments += parseInt(ad.comments || 0)
+      adData.shares += parseInt(ad.shares || 0)
+      adData.video_views += parseInt(ad.video_views || 0)
+      adData.reach += parseInt(ad.reach || 0)
+    })
+
+    // Calcular CTR y CPC por ad
+    const adsArray = Array.from(adsByIdMap.values()).map(ad => ({
+      ...ad,
+      ctr: ad.impresiones > 0 ? (ad.clicks / ad.impresiones) * 100 : 0,
+      cpc: ad.clicks > 0 ? ad.inversion / ad.clicks : 0
+    }))
+
     return NextResponse.json({
       resumen: {
         totalInversion: Math.round(resumen.totalInversion),
@@ -242,6 +326,8 @@ export async function GET(req: Request) {
       campanas: campanasArray,
       chartData,
       metricasPorDia: chartData, // Tabla detallada por día
+      platformData, // Datos por plataforma (Instagram, Facebook, etc.)
+      adsData: adsArray, // Anuncios individuales con engagement
       periodo: {
         dias,
         fechaInicio: fechaInicio.toISOString().split('T')[0],

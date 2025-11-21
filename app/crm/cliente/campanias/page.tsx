@@ -7,6 +7,8 @@ import CRMLayout from '@/app/components/crm/CRMLayout'
 import CampaignSummaryCards from '@/app/components/crm/CampaignSummaryCards'
 import CampaignsTable from '@/app/components/crm/CampaignsTable'
 import MultiSeriesChart from '@/app/components/crm/MultiSeriesChart'
+import PlatformComparisonChart from '@/app/components/crm/PlatformComparisonChart'
+import AdsGallery from '@/app/components/crm/AdsGallery'
 
 export default function ClienteCampaniasPage() {
   const { isAuthenticated, user } = useSimpleAuth()
@@ -125,6 +127,16 @@ export default function ClienteCampaniasPage() {
 
       {/* Gráfico multi-serie */}
       <MultiSeriesChart data={campanasData.chartData || []} />
+
+      {/* Comparación por Plataforma (Instagram vs Facebook) */}
+      {campanasData.platformData && campanasData.platformData.length > 0 && (
+        <PlatformComparisonChart data={campanasData.platformData} />
+      )}
+
+      {/* Galería de Anuncios Individuales */}
+      {campanasData.adsData && campanasData.adsData.length > 0 && (
+        <AdsGallery ads={campanasData.adsData} />
+      )}
 
       {/* Tabla de campañas */}
       <div className="mb-8">
