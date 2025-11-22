@@ -31,6 +31,17 @@ const nextConfig = {
     ],
   },
 
+  // Redirects for old URLs
+  async redirects() {
+    return [
+      {
+        source: '/predictor-unicornio',
+        destination: '/labs/predictor',
+        permanent: true,
+      },
+    ]
+  },
+
   // Headers for security, SEO and cache
   async headers() {
     return [
