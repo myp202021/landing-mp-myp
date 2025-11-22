@@ -74,7 +74,8 @@ export default function PredictorClient() {
           </p>
 
           <Link
-            href="/predictor-unicornio"
+            href="https://wa.me/56944460270?text=Hola!%20Quiero%20calcular%20mi%20predicción%20de%20Google%20Ads"
+            target="_blank"
             className="inline-flex items-center gap-3 bg-gradient-to-r from-indigo-600 to-indigo-700 text-white px-10 py-5 rounded-2xl text-lg font-bold hover:from-indigo-700 hover:to-indigo-800 transition-all shadow-2xl shadow-indigo-500/30 hover:scale-105 active:scale-95"
           >
             <Zap className="w-6 h-6" />
@@ -230,7 +231,8 @@ export default function PredictorClient() {
           </p>
 
           <Link
-            href="/predictor-unicornio"
+            href="https://wa.me/56944460270?text=Hola!%20Quiero%20calcular%20mi%20predicción%20de%20Google%20Ads"
+            target="_blank"
             className="inline-flex items-center gap-3 bg-white text-indigo-600 px-10 py-5 rounded-2xl text-lg font-bold hover:bg-indigo-50 transition-all shadow-2xl hover:scale-105 active:scale-95"
           >
             <Sparkles className="w-6 h-6" />
@@ -272,7 +274,7 @@ export default function PredictorClient() {
             <div>
               <h3 className="font-bold text-white mb-4">Herramientas</h3>
               <ul className="space-y-2 text-sm">
-                <li><a href="/predictor-unicornio" className="hover:text-white">Predictor Google Ads</a></li>
+                <li><a href="https://wa.me/56944460270?text=Hola!%20Quiero%20calcular%20mi%20predicción%20de%20Google%20Ads" target="_blank" className="hover:text-white">Predictor Google Ads</a></li>
                 <li><a href="https://mulleryperez.cl" className="hover:text-white">Servicios</a></li>
                 <li><a href="https://mulleryperez.cl" className="hover:text-white">Casos de éxito</a></li>
               </ul>
