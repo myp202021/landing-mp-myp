@@ -744,6 +744,14 @@ export default function PredictorUnicornio() {
       console.log('✅ Prediction successful:', data)
       setResult(data)
 
+      // Scroll automático a resultados
+      setTimeout(() => {
+        const resultsSection = document.getElementById('results')
+        if (resultsSection) {
+          resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        }
+      }, 100)
+
       // Guardar log de la predicción
       try {
         const logResponse = await fetch('/api/predictions/log', {
