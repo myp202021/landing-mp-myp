@@ -669,6 +669,7 @@ export default function PredictorUnicornio() {
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState<any>(null)
   const [logId, setLogId] = useState<string | null>(null)
+  const [error, setError] = useState<string | null>(null)
   const [feedback, setFeedback] = useState<{ rating: number | null, comentario: string, submitted: boolean }>({
     rating: null,
     comentario: '',
@@ -706,9 +707,15 @@ export default function PredictorUnicornio() {
   const isFormValid = formData.presupuesto && formData.ticket && formData.tasaCierre
 
   const handlePredict = async () => {
+    console.log('🎯 handlePredict called!')
+    console.log('📊 Form data:', formData)
+    console.log('✅ isFormValid:', isFormValid)
+
     setLoading(true)
+    setError(null)
 
     try {
+      console.log('📡 Sending request to API...')
       const response = await fetch('/api/predictions/motor-2025', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -726,7 +733,15 @@ export default function PredictorUnicornio() {
         })
       })
 
+      console.log('📥 Response status:', response.status)
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}))
+        throw new Error(errorData.error || `Error del servidor: ${response.status}`)
+      }
+
       const data = await response.json()
+      console.log('✅ Prediction successful:', data)
       setResult(data)
 
       // Guardar log de la predicción
@@ -756,8 +771,9 @@ export default function PredictorUnicornio() {
         console.error('Error guardando log:', logError)
       }
 
-    } catch (error) {
-      console.error('Error:', error)
+    } catch (error: any) {
+      console.error('❌ Error en predicción:', error)
+      setError(error.message || 'Error al generar la predicción. Por favor intenta nuevamente.')
     } finally {
       setLoading(false)
     }
@@ -766,6 +782,7 @@ export default function PredictorUnicornio() {
   const handleNuevaPredicion = () => {
     setResult(null)
     setLogId(null)
+    setError(null)
     setFeedback({ rating: null, comentario: '', submitted: false })
     setFormData({
       presupuesto: '',
@@ -1106,6 +1123,30 @@ ${window.location.href}`
                 >
                   {loading ? 'Calculando predicción...' : 'Generar Predicción'}
                 </PrimaryButton>
+
+                {/* Error Message */}
+                {error && (
+                  <div className="mt-4 p-4 bg-red-50 border-2 border-red-200 rounded-xl flex items-start gap-3">
+                    <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <p className="font-semibold text-red-900 mb-1">Error al generar predicción</p>
+                      <p className="text-sm text-red-700">{error}</p>
+                    </div>
+                  </div>
+                )}
+
+                {/* Form Validation Help */}
+                {!isFormValid && (
+                  <div className="mt-4 p-4 bg-blue-50 border-2 border-blue-200 rounded-xl flex items-start gap-3">
+                    <Info className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <p className="font-semibold text-blue-900 mb-1">Completa todos los campos requeridos</p>
+                      <p className="text-sm text-blue-700">
+                        Debes ingresar: Presupuesto Mensual, Ticket Promedio y Tasa de Cierre
+                      </p>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </Card>
