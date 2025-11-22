@@ -7,7 +7,7 @@ import type { Benchmark } from '@/lib/types/intelligence'
 import { INDUSTRY_LABELS } from '@/lib/types/intelligence'
 import BenchmarkChart from './BenchmarkChart'
 import PercentileRing from '../ui/PercentileRing'
-import Badge, { BadgeShowcase, BadgeType } from '../ui/Badge'
+import Badge, { BadgeShowcase, BadgeType } from '../ui/gamification-badge'
 import { MetricTooltip } from '../ui/Tooltip'
 import { generateInsights } from '@/lib/intelligence-insights'
 
