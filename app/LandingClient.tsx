@@ -1447,7 +1447,7 @@ export default function LandingClient() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             {/* Caso 1 - López Mateo */}
             <div className="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all">
               <div className="aspect-video">
@@ -1473,14 +1473,6 @@ export default function LandingClient() {
               </div>
               <div className="p-4">
                 <p className="text-sm text-gray-600 font-semibold">Caso de Éxito: Power Energy</p>
-              </div>
-            </div>
-
-            {/* Placeholder para futuro tercer caso */}
-            <div className="bg-white rounded-xl overflow-hidden shadow-lg border-2 border-dashed border-gray-300 flex items-center justify-center min-h-[200px]">
-              <div className="text-center p-6">
-                <Award className="w-12 h-12 text-gray-400 mx-auto mb-3" />
-                <p className="text-gray-500 font-semibold">Próximo caso de éxito</p>
               </div>
             </div>
           </div>
