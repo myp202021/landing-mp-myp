@@ -919,7 +919,7 @@ ${window.location.href}`
           <div className="flex items-center gap-8">
             {/* Logo M&P */}
             <a href="/" className="flex items-center gap-3 group">
-              <img src="/logo-mp.png" alt="Muller y Pérez - Marketing & Performance" className="h-12 transition-transform group-hover:scale-105" />
+              <img src="/logo-myp.png" alt="Muller y Pérez - Marketing & Performance" className="h-12 transition-transform group-hover:scale-105" />
             </a>
 
             <div className="h-8 w-px bg-gray-200"></div>
