@@ -94,6 +94,17 @@ const nextConfig = {
         ],
       },
     ]
+  },
+
+  // Redirects for URL changes
+  async redirects() {
+    return [
+      {
+        source: '/predictor-unicornio',
+        destination: '/predictor',
+        permanent: true, // 308 permanent redirect
+      },
+    ]
   }
 }
 
