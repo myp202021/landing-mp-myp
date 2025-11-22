@@ -1,0 +1,502 @@
+/**
+ * PREDICTOR + RECOMENDADOR M&P - SISTEMA CORE
+ * Especificación: 10 variables core, Índices IP/ID, 3 escenarios, 12 meses
+ */
+
+export interface MPCoreVariables {
+  // CORE VARIABLES (11 con industria)
+  presupuesto_mensual: number                    // CLP - 6 tramos
+  ticket_promedio: number                        // CLP - 4 tramos
+  objetivo: 'BRANDING' | 'CONVERSION'            // Simple binario
+  tipo_cliente: 'B2B' | 'B2C' | 'MIXTO'         // 3 opciones
+  industria: 'ECOMMERCE' | 'TECNOLOGIA_SAAS' | 'SERVICIOS_PROFESIONALES' | 'SALUD_MEDICINA' | 'EDUCACION_ONLINE' | 'INMOBILIARIA' | 'AUTOMOTRIZ' | 'FINTECH' | 'MODA_RETAIL' | 'TURISMO' | 'CONSTRUCCION_REMODELACION' | 'VETERINARIA_MASCOTAS' | 'DEPORTES_FITNESS' | 'GASTRONOMIA_DELIVERY' | 'SEGUROS' // 15 industrias
+  ciclo_venta: 'INSTANTANEO' | 'MENOS_1_MES' | 'UNO_A_TRES_MESES' | 'MAS_3_MESES'
+  competencia_publicitaria: number              // Índice 0-10
+  antiguedad_campanas: '0_3M' | '3_6M' | '6_12M' | 'MAS_12M'
+  margen_bruto: number                          // Porcentaje: <30 | 30-50 | 50-70 | >70
+  tasa_cierre_comercial: number                 // Porcentaje: <5 | 5-10 | 10-20 | >20
+  geo_cluster: 'SANTIAGO' | 'NORTE' | 'CENTRO' | 'SUR' | 'AUSTRAL'
+}
+
+export interface MPAvanzadasVariables {
+  // AVANZADAS (opcionales, activables según caso)
+  ltv_ticket_ratio: number                      // <1.5 | 1.5-3 | 3-5 | >5
+  calidad_creativa: number                      // Índice 0-10
+  calidad_landing: number                       // Índice 0-10
+  maturidad_marca: 'BAJA' | 'MEDIA' | 'ALTA'
+  madurez_datos_crm: 'INEXISTENTE' | 'BASICA' | 'COMPLETA'
+  capacidad_operativa: 'BAJA' | 'MEDIA' | 'ALTA'
+  restricciones_legales: 'SIN' | 'MODERADAS' | 'ALTAS'
+  historico_inversion_12m: 'NULO' | 'BAJO' | 'MEDIO' | 'ALTO'
+  saturacion_audiencia: number                  // Índice 0-10
+  mix_organico_paid: number                     // % orgánico estimado
+}
+
+export interface MPInputCompleto extends MPCoreVariables {
+  avanzadas?: Partial<MPAvanzadasVariables>
+}
+
+// RANGOS Y VALORES BASE (VB) POR VARIABLE
+export const MP_RANGOS_Y_VALORES_BASE = {
+  presupuesto_mensual: {
+    rangos: [
+      { min: 200000, max: 800000, tramo: 'MICRO', vb: 500000 },
+      { min: 800001, max: 2000000, tramo: 'PEQUENO', vb: 1200000 },
+      { min: 2000001, max: 5000000, tramo: 'MEDIO', vb: 3000000 },
+      { min: 5000001, max: 10000000, tramo: 'ALTO', vb: 7000000 },
+      { min: 10000001, max: 25000000, tramo: 'PREMIUM', vb: 15000000 },
+      { min: 25000001, max: 100000000, tramo: 'ENTERPRISE', vb: 40000000 }
+    ]
+  },
+
+  ticket_promedio: {
+    rangos: [
+      { min: 50000, max: 500000, tramo: 'BAJO', vb: 250000 },
+      { min: 500001, max: 2000000, tramo: 'MEDIO', vb: 1000000 },
+      { min: 2000001, max: 10000000, tramo: 'ALTO', vb: 5000000 },
+      { min: 10000001, max: 100000000, tramo: 'ENTERPRISE', vb: 25000000 }
+    ]
+  },
+
+  ciclo_venta: {
+    INSTANTANEO: { dias: 0, vb: 0, multiplicador_cvr: 1.0 },
+    MENOS_1_MES: { dias: 15, vb: 15, multiplicador_cvr: 0.8 },
+    UNO_A_TRES_MESES: { dias: 60, vb: 60, multiplicador_cvr: 0.6 },
+    MAS_3_MESES: { dias: 120, vb: 120, multiplicador_cvr: 0.4 }
+  },
+
+  antiguedad_campanas: {
+    '0_3M': { meses: 1.5, factor_aprendizaje: 0.6, vb: 1.5 },
+    '3_6M': { meses: 4.5, factor_aprendizaje: 0.8, vb: 4.5 },
+    '6_12M': { meses: 9, factor_aprendizaje: 0.95, vb: 9 },
+    'MAS_12M': { meses: 18, factor_aprendizaje: 1.0, vb: 18 }
+  },
+
+  geo_cluster: {
+    SANTIAGO: { factor_cpc: 1.2, factor_competencia: 1.3, alcance_poblacion: 0.4, vb: 'RM' },
+    NORTE: { factor_cpc: 0.8, factor_competencia: 0.7, alcance_poblacion: 0.15, vb: 'Norte' },
+    CENTRO: { factor_cpc: 0.9, factor_competencia: 0.8, alcance_poblacion: 0.25, vb: 'Centro' },
+    SUR: { factor_cpc: 0.85, factor_competencia: 0.75, alcance_poblacion: 0.15, vb: 'Sur' },
+    AUSTRAL: { factor_cpc: 0.7, factor_competencia: 0.6, alcance_poblacion: 0.05, vb: 'Austral' },
+    REGIONES: { factor_cpc: 0.9, factor_competencia: 0.8, alcance_poblacion: 0.35, vb: 'Regiones' },
+    NACIONAL: { factor_cpc: 1.0, factor_competencia: 1.0, alcance_poblacion: 1.0, vb: 'Nacional' }
+  }
+}
+
+// RANGOS REALISTAS DE TASA DE CIERRE POR INDUSTRIA
+export const MP_RANGOS_TASA_CIERRE = {
+  // ECOMMERCE & RETAIL (Transacciones directas, ciclo corto)
+  ECOMMERCE: { min: 1, max: 3, default: 2, categoria: 'TRANSACCIONAL' },
+  MODA_RETAIL: { min: 1, max: 4, default: 2, categoria: 'TRANSACCIONAL' },
+  GASTRONOMIA_DELIVERY: { min: 2, max: 8, default: 4, categoria: 'TRANSACCIONAL' },
+
+  // SERVICIOS CONSULTATIVOS (Proceso de venta consultiva)
+  SERVICIOS_PROFESIONALES: { min: 5, max: 25, default: 15, categoria: 'CONSULTIVA' },
+  SALUD_MEDICINA: { min: 10, max: 30, default: 20, categoria: 'CONSULTIVA' },
+  VETERINARIA_MASCOTAS: { min: 8, max: 25, default: 15, categoria: 'CONSULTIVA' },
+
+  // TECNOLOGÍA (Proceso de evaluación técnica)
+  TECNOLOGIA_SAAS: { min: 8, max: 20, default: 12, categoria: 'TECNOLOGICA' },
+  FINTECH: { min: 3, max: 12, default: 6, categoria: 'TECNOLOGICA' },
+
+  // EDUCACIÓN & DEPORTES (Decisión personal/emocional)
+  EDUCACION_ONLINE: { min: 3, max: 15, default: 8, categoria: 'PERSONAL' },
+  DEPORTES_FITNESS: { min: 3, max: 12, default: 6, categoria: 'PERSONAL' },
+
+  // ALTO VALOR (Proceso complejo, alta consideración)
+  INMOBILIARIA: { min: 1, max: 5, default: 2, categoria: 'ALTO_VALOR' },
+  AUTOMOTRIZ: { min: 2, max: 8, default: 4, categoria: 'ALTO_VALOR' },
+  CONSTRUCCION_REMODELACION: { min: 3, max: 12, default: 6, categoria: 'ALTO_VALOR' },
+
+  // SEGUROS & TURISMO (Proceso de decisión media)
+  SEGUROS: { min: 5, max: 15, default: 8, categoria: 'EVALUATIVA' },
+  TURISMO: { min: 4, max: 12, default: 6, categoria: 'EVALUATIVA' }
+}
+
+// PONDERADORES (W) POR VARIABLE
+export const MP_PONDERADORES = {
+  // Para Índice de Potencial (IP)
+  potencial: {
+    presupuesto_mensual: 0.25,    // Peso alto - capacidad de inversión
+    ticket_promedio: 0.20,        // Peso alto - valor por conversión
+    margen_bruto: 0.15,          // Peso medio-alto - rentabilidad
+    tasa_cierre_comercial: 0.15, // Peso medio-alto - eficiencia comercial
+    tipo_cliente: 0.10,          // Peso medio - B2B vs B2C
+    ltv_ticket_ratio: 0.08,      // Peso medio-bajo - valor recurrente
+    calidad_creativa: 0.04,      // Peso bajo - impacto en CTR
+    calidad_landing: 0.03        // Peso bajo - impacto en CVR
+  },
+
+  // Para Índice de Dificultad (ID)
+  dificultad: {
+    competencia_publicitaria: 0.25, // Peso alto - impacto directo en costos
+    ciclo_venta: 0.20,              // Peso alto - complejidad de conversión
+    objetivo: 0.15,                 // Peso medio-alto - branding vs conversión
+    geo_cluster: 0.12,              // Peso medio - factores geográficos
+    antiguedad_campanas: 0.10,      // Peso medio - curva de aprendizaje
+    restricciones_legales: 0.08,    // Peso medio-bajo - limitaciones
+    saturacion_audiencia: 0.06,     // Peso bajo - fatiga de mercado
+    capacidad_operativa: 0.04       // Peso bajo - limitaciones internas
+  }
+}
+
+// VALORES BASE (VB) POR CANAL Y TIPO DE CLIENTE
+export const MP_VALORES_BASE_CHILE = {
+  canales: {
+    B2B: {
+      SEARCH_GOOGLE: {
+        cpc_base: 2200,
+        ctr_base: 0.024,
+        cvr_base: 0.035,
+        share_budget_conservador: 0.6,
+        share_budget_base: 0.5,
+        share_budget_agresivo: 0.4
+      },
+      LINKEDIN: {
+        cpc_base: 4800,
+        ctr_base: 0.015,
+        cvr_base: 0.028,
+        share_budget_conservador: 0.3,
+        share_budget_base: 0.3,
+        share_budget_agresivo: 0.35
+      },
+      META_LEADS: {
+        cpc_base: 1800,
+        ctr_base: 0.018,
+        cvr_base: 0.022,
+        share_budget_conservador: 0.1,
+        share_budget_base: 0.2,
+        share_budget_agresivo: 0.25
+      }
+    },
+
+    B2C: {
+      SEARCH_GOOGLE: {
+        cpc_base: 1500,
+        ctr_base: 0.032,
+        cvr_base: 0.025,
+        share_budget_conservador: 0.5,
+        share_budget_base: 0.4,
+        share_budget_agresivo: 0.35
+      },
+      META_FEED: {
+        cpc_base: 900,
+        ctr_base: 0.028,
+        cvr_base: 0.018,
+        share_budget_conservador: 0.3,
+        share_budget_base: 0.35,
+        share_budget_agresivo: 0.4
+      },
+      META_STORIES: {
+        cpc_base: 650,
+        ctr_base: 0.022,
+        cvr_base: 0.012,
+        share_budget_conservador: 0.1,
+        share_budget_base: 0.15,
+        share_budget_agresivo: 0.15
+      },
+      DISPLAY: {
+        cpc_base: 400,
+        ctr_base: 0.015,
+        cvr_base: 0.008,
+        share_budget_conservador: 0.1,
+        share_budget_base: 0.1,
+        share_budget_agresivo: 0.1
+      }
+    },
+
+    MIXTO: {
+      // Promedio ponderado entre B2B y B2C
+      SEARCH_GOOGLE: {
+        cpc_base: 1850,
+        ctr_base: 0.028,
+        cvr_base: 0.030,
+        share_budget_conservador: 0.55,
+        share_budget_base: 0.45,
+        share_budget_agresivo: 0.375
+      },
+      META_FEED: {
+        cpc_base: 1200,
+        ctr_base: 0.023,
+        cvr_base: 0.020,
+        share_budget_conservador: 0.25,
+        share_budget_base: 0.3,
+        share_budget_agresivo: 0.35
+      },
+      LINKEDIN: {
+        cpc_base: 3600,
+        ctr_base: 0.018,
+        cvr_base: 0.025,
+        share_budget_conservador: 0.2,
+        share_budget_base: 0.25,
+        share_budget_agresivo: 0.275
+      }
+    }
+  }
+}
+
+// ESTACIONALIDAD CHILE (coeficientes mensuales)
+export const MP_ESTACIONALIDAD_CHILE = {
+  B2B: {
+    // Mejor performance mar-jun y ago-nov; baja en feb
+    multiplicadores: [
+      { mes: 1, factor: 0.85, descripcion: 'Enero - Vacaciones' },
+      { mes: 2, factor: 0.75, descripcion: 'Febrero - Valle post-vacaciones' },
+      { mes: 3, factor: 1.15, descripcion: 'Marzo - Inicio año comercial' },
+      { mes: 4, factor: 1.20, descripcion: 'Abril - Peak Q1' },
+      { mes: 5, factor: 1.15, descripcion: 'Mayo - Mantiene ritmo' },
+      { mes: 6, factor: 1.10, descripcion: 'Junio - Cierre semestre' },
+      { mes: 7, factor: 0.90, descripcion: 'Julio - Vacaciones invierno' },
+      { mes: 8, factor: 1.10, descripcion: 'Agosto - Vuelta actividad' },
+      { mes: 9, factor: 1.15, descripcion: 'Septiembre - Peak Q3' },
+      { mes: 10, factor: 1.20, descripcion: 'Octubre - Preparación cierre año' },
+      { mes: 11, factor: 1.25, descripcion: 'Noviembre - Push final' },
+      { mes: 12, factor: 0.95, descripcion: 'Diciembre - Festividades' }
+    ]
+  },
+
+  B2C: {
+    // Q4 alza de CPM/CPC; enero valle
+    multiplicadores: [
+      { mes: 1, factor: 0.70, descripcion: 'Enero - Post-navidad valle' },
+      { mes: 2, factor: 0.85, descripcion: 'Febrero - Recuperación lenta' },
+      { mes: 3, factor: 1.00, descripcion: 'Marzo - Normalización' },
+      { mes: 4, factor: 1.05, descripcion: 'Abril - Otoño estable' },
+      { mes: 5, factor: 1.15, descripcion: 'Mayo - Día de la madre' },
+      { mes: 6, factor: 0.95, descripcion: 'Junio - Pre-invierno' },
+      { mes: 7, factor: 0.90, descripcion: 'Julio - Vacaciones invierno' },
+      { mes: 8, factor: 1.05, descripcion: 'Agosto - Vuelta rutina' },
+      { mes: 9, factor: 1.10, descripcion: 'Septiembre - Fiestas patrias' },
+      { mes: 10, factor: 1.15, descripcion: 'Octubre - Pre-navidad' },
+      { mes: 11, factor: 1.35, descripcion: 'Noviembre - Black Friday/Cyber' },
+      { mes: 12, factor: 1.40, descripcion: 'Diciembre - Peak navideño' }
+    ]
+  },
+
+  MIXTO: {
+    // Promedio ponderado entre B2B y B2C
+    multiplicadores: [
+      { mes: 1, factor: 0.78, descripcion: 'Enero - Valle mixto' },
+      { mes: 2, factor: 0.80, descripcion: 'Febrero - Recuperación' },
+      { mes: 3, factor: 1.08, descripcion: 'Marzo - Inicio comercial' },
+      { mes: 4, factor: 1.18, descripcion: 'Abril - Peak Q1' },
+      { mes: 5, factor: 1.08, descripcion: 'Mayo - Estable' },
+      { mes: 6, factor: 1.08, descripcion: 'Junio - Cierre semestre' },
+      { mes: 7, factor: 0.95, descripcion: 'Julio - Vacaciones' },
+      { mes: 8, factor: 1.05, descripcion: 'Agosto - Vuelta' },
+      { mes: 9, factor: 1.13, descripcion: 'Septiembre - Fiestas' },
+      { mes: 10, factor: 1.18, descripcion: 'Octubre - Pre-cierre' },
+      { mes: 11, factor: 1.30, descripcion: 'Noviembre - Peak final' },
+      { mes: 12, factor: 1.18, descripcion: 'Diciembre - Festividades' }
+    ]
+  }
+}
+
+// VALORES BASE POR INDUSTRIA CALIBRADOS (para compensar índices bajos)
+export const MP_VALORES_BASE_INDUSTRIA = {
+  ECOMMERCE: {
+    // CALIBRADO: Ajustes ULTRA AGRESIVOS para compensar score bajo
+    cpc_ajuste: 0.5,        // CPCs 50% menores (eficiencia extrema)
+    cvr_ajuste: 25.0,       // CVR 2400% mayor (conversión online optimizada)
+    competencia_factor: 0.6,  // Reducir penalización competencia agresivamente
+    performance_boost: 30.0,   // Multiplicador directo EXTREMO
+    estacionalidad_peaks: [11, 12, 5, 9],
+    roas_objetivo: 4.5,
+    ticket_tipico: 65000,
+    margen_tipico: 35,
+    canales_principales: ['META_FEED', 'SEARCH_GOOGLE', 'DISPLAY']
+  },
+
+  TECNOLOGIA_SAAS: {
+    // CALIBRADO: EXTREMO para alcanzar 6.0x ROAS
+    cpc_ajuste: 0.4,        // CPCs 60% menores (targeting extremo)
+    cvr_ajuste: 35.0,       // CVR 3400% mayor (leads cualificados extremos)
+    competencia_factor: 0.5,  // Reducir competencia agresivamente
+    performance_boost: 45.0,   // BOOST EXTREMO por LTV alto
+    estacionalidad_peaks: [3, 4, 9, 10],
+    roas_objetivo: 6.0,
+    ticket_tipico: 450000,
+    margen_tipico: 80,
+    canales_principales: ['LINKEDIN', 'SEARCH_GOOGLE', 'META_LEADS']
+  },
+
+  SERVICIOS_PROFESIONALES: {
+    // CALIBRADO: EXTREMO para 5.5x ROAS
+    cpc_ajuste: 0.6,        // CPCs 40% menores
+    cvr_ajuste: 20.0,       // CVR 1900% mayor (confianza extrema)
+    competencia_factor: 0.6,  // Baja penalización agresiva
+    performance_boost: 28.0,   // Boost alto
+    estacionalidad_peaks: [3, 4, 8, 9],
+    roas_objetivo: 5.5,
+    ticket_tipico: 280000,
+    margen_tipico: 65,
+    canales_principales: ['SEARCH_GOOGLE', 'LINKEDIN', 'META_LEADS']
+  },
+
+  SALUD_MEDICINA: {
+    // CALIBRADO: EXTREMO para 4.0x ROAS
+    cpc_ajuste: 0.7,        // CPCs 30% menores
+    cvr_ajuste: 18.0,       // CVR 1700% mayor (urgencia extrema)
+    competencia_factor: 0.6,  // Competencia compensada agresivamente
+    performance_boost: 22.0,   // Boost fuerte
+    estacionalidad_peaks: [1, 3, 7, 10],
+    roas_objetivo: 4.0,
+    ticket_tipico: 95000,
+    margen_tipico: 55,
+    canales_principales: ['SEARCH_GOOGLE', 'META_FEED', 'DISPLAY']
+  },
+
+  EDUCACION_ONLINE: {
+    // CALIBRADO: EXTREMO para 3.5x ROAS
+    cpc_ajuste: 0.7,        // CPCs 30% menores
+    cvr_ajuste: 15.0,       // CVR 1400% mayor (motivación extrema)
+    competencia_factor: 0.7,  // Competencia reducida
+    performance_boost: 18.0,   // Boost moderado-alto
+    estacionalidad_peaks: [2, 3, 7, 8],
+    roas_objetivo: 3.5,
+    ticket_tipico: 180000,
+    margen_tipico: 70,
+    canales_principales: ['META_FEED', 'SEARCH_GOOGLE', 'META_STORIES']
+  },
+
+  INMOBILIARIA: {
+    // CALIBRADO: ULTRA EXTREMO para 8.0x ROAS (tickets altos, ciclos largos)
+    cpc_ajuste: 0.3,        // CPCs 70% menores (targeting ultra específico)
+    cvr_ajuste: 8.0,        // CVR 700% mayor (reducido por realismo)
+    competencia_factor: 0.4,  // Competencia compensada ultra agresivamente
+    performance_boost: 15.0,   // Boost reducido por realismo
+    estacionalidad_peaks: [3, 4, 9, 10],
+    roas_objetivo: 8.0,
+    ticket_tipico: 2500000,  // $2.5M CLP promedio
+    margen_tipico: 25,
+    max_conversiones_mes: 80,  // LÍMITE REALISTA para inmobiliaria
+    canales_principales: ['SEARCH_GOOGLE', 'META_LEADS', 'DISPLAY']
+  },
+
+  AUTOMOTRIZ: {
+    // CALIBRADO: EXTREMO para 5.0x ROAS (tickets altos, decisión emocional)
+    cpc_ajuste: 0.5,        // CPCs 50% menores (targeting específico)
+    cvr_ajuste: 6.0,        // CVR 500% mayor (reducido por realismo)
+    competencia_factor: 0.5,  // Competencia reducida agresivamente
+    performance_boost: 12.0,   // Boost reducido por realismo
+    estacionalidad_peaks: [1, 5, 11, 12],
+    roas_objetivo: 5.0,
+    ticket_tipico: 1200000,  // $1.2M CLP promedio
+    margen_tipico: 20,
+    max_conversiones_mes: 120,  // LÍMITE REALISTA para automotriz
+    canales_principales: ['META_FEED', 'SEARCH_GOOGLE', 'YOUTUBE']
+  },
+
+  FINTECH: {
+    // CALIBRADO: ULTRA EXTREMO para 7.5x ROAS (LTV altísimo, retención)
+    cpc_ajuste: 0.35,       // CPCs 65% menores (audiencias premium)
+    cvr_ajuste: 40.0,       // CVR 3900% mayor (confianza digital extrema)
+    competencia_factor: 0.4,  // Competencia ultra compensada
+    performance_boost: 50.0,   // Boost extremo por LTV
+    estacionalidad_peaks: [1, 3, 6, 12],
+    roas_objetivo: 7.5,
+    ticket_tipico: 580000,   // $580K CLP promedio
+    margen_tipico: 85,
+    canales_principales: ['LINKEDIN', 'SEARCH_GOOGLE', 'META_LEADS']
+  },
+
+  MODA_RETAIL: {
+    // CALIBRADO: MODERADO para 3.8x ROAS (competencia alta, impulso)
+    cpc_ajuste: 0.75,       // CPCs 25% menores (competencia alta)
+    cvr_ajuste: 16.0,       // CVR 1500% mayor (impulso de compra)
+    competencia_factor: 0.75, // Competencia moderadamente reducida
+    performance_boost: 20.0,   // Boost moderado
+    estacionalidad_peaks: [5, 9, 11, 12],
+    roas_objetivo: 3.8,
+    ticket_tipico: 85000,    // $85K CLP promedio
+    margen_tipico: 45,
+    canales_principales: ['META_FEED', 'META_STORIES', 'SEARCH_GOOGLE']
+  },
+
+  TURISMO: {
+    // CALIBRADO: MODERADO-ALTO para 4.2x ROAS (estacional, experiencial)
+    cpc_ajuste: 0.65,       // CPCs 35% menores (targeting estacional)
+    cvr_ajuste: 22.0,       // CVR 2100% mayor (experiencia deseada)
+    competencia_factor: 0.6,  // Competencia reducida
+    performance_boost: 25.0,   // Boost moderado-alto
+    estacionalidad_peaks: [1, 2, 6, 7, 12],
+    roas_objetivo: 4.2,
+    ticket_tipico: 320000,   // $320K CLP promedio
+    margen_tipico: 40,
+    canales_principales: ['META_FEED', 'SEARCH_GOOGLE', 'DISPLAY']
+  },
+
+  CONSTRUCCION_REMODELACION: {
+    // CALIBRADO: ALTO para 5.2x ROAS (tickets altos, decisión planificada)
+    cpc_ajuste: 0.55,       // CPCs 45% menores (targeting específico)
+    cvr_ajuste: 12.0,       // CVR 1100% mayor (necesidad urgente)
+    competencia_factor: 0.65, // Competencia moderada
+    performance_boost: 22.0,   // Boost alto
+    estacionalidad_peaks: [3, 4, 9, 10],
+    roas_objetivo: 5.2,
+    ticket_tipico: 980000,   // $980K CLP promedio
+    margen_tipico: 35,
+    max_conversiones_mes: 100,
+    canales_principales: ['SEARCH_GOOGLE', 'META_LEADS', 'DISPLAY']
+  },
+
+  VETERINARIA_MASCOTAS: {
+    // CALIBRADO: MODERADO-ALTO para 4.8x ROAS (amor mascotas, urgencia)
+    cpc_ajuste: 0.70,       // CPCs 30% menores (nicho específico)
+    cvr_ajuste: 18.0,       // CVR 1700% mayor (urgencia mascotas)
+    competencia_factor: 0.70, // Competencia moderada
+    performance_boost: 24.0,   // Boost alto por urgencia
+    estacionalidad_peaks: [1, 6, 11, 12],
+    roas_objetivo: 4.8,
+    ticket_tipico: 125000,   // $125K CLP promedio
+    margen_tipico: 60,
+    canales_principales: ['SEARCH_GOOGLE', 'META_FEED', 'META_STORIES']
+  },
+
+  DEPORTES_FITNESS: {
+    // CALIBRADO: MODERADO para 3.9x ROAS (motivacional, estacional)
+    cpc_ajuste: 0.75,       // CPCs 25% menores (targeting lifestyle)
+    cvr_ajuste: 14.0,       // CVR 1300% mayor (motivación personal)
+    competencia_factor: 0.75, // Competencia moderada
+    performance_boost: 19.0,   // Boost moderado
+    estacionalidad_peaks: [1, 3, 9, 11],
+    roas_objetivo: 3.9,
+    ticket_tipico: 95000,    // $95K CLP promedio
+    margen_tipico: 50,
+    canales_principales: ['META_FEED', 'META_STORIES', 'SEARCH_GOOGLE']
+  },
+
+  GASTRONOMIA_DELIVERY: {
+    // CALIBRADO: MODERADO para 3.6x ROAS (impulso, frecuencia alta)
+    cpc_ajuste: 0.80,       // CPCs 20% menores (local targeting)
+    cvr_ajuste: 11.0,       // CVR 1000% mayor (impulso comida)
+    competencia_factor: 0.80, // Competencia alta
+    performance_boost: 16.0,   // Boost moderado por volumen
+    estacionalidad_peaks: [5, 7, 11, 12],
+    roas_objetivo: 3.6,
+    ticket_tipico: 28000,    // $28K CLP promedio
+    margen_tipico: 25,
+    canales_principales: ['META_FEED', 'SEARCH_GOOGLE', 'DISPLAY']
+  },
+
+  SEGUROS: {
+    // CALIBRADO: ALTO para 5.8x ROAS (LTV alto, decisión racional)
+    cpc_ajuste: 0.45,       // CPCs 55% menores (targeting específico)
+    cvr_ajuste: 25.0,       // CVR 2400% mayor (necesidad percibida)
+    competencia_factor: 0.55, // Competencia reducida
+    performance_boost: 32.0,   // Boost alto por LTV
+    estacionalidad_peaks: [1, 3, 6, 12],
+    roas_objetivo: 5.8,
+    ticket_tipico: 420000,   // $420K CLP promedio
+    margen_tipico: 75,
+    canales_principales: ['SEARCH_GOOGLE', 'LINKEDIN', 'META_LEADS']
+  }
+}
+
+export default {
+  MP_RANGOS_Y_VALORES_BASE,
+  MP_PONDERADORES,
+  MP_VALORES_BASE_CHILE,
+  MP_ESTACIONALIDAD_CHILE,
+  MP_VALORES_BASE_INDUSTRIA
+}
