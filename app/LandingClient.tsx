@@ -23,6 +23,7 @@ import {
   BarChart3,
   Target,
   ArrowRight,
+  Award,
 } from 'lucide-react'
 import { generateAISearchSchema } from '@/lib/ai-search-optimization'
 import YouTubeLite from '@/components/YouTubeLite'
@@ -1426,6 +1427,91 @@ export default function LandingClient() {
                 <p className="text-sm text-gray-600 font-semibold">Árbol de decisión: M&P Agencia Digital</p>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Casos de Éxito */}
+      <section className="py-24 bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center gap-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-2.5 rounded-full text-sm font-bold mb-6 shadow-lg">
+              <Award className="w-4 h-4" />
+              Casos de Éxito Reales
+            </div>
+            <h2 className="text-4xl lg:text-5xl font-black text-gray-900 mb-4">
+              Resultados que <span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">Hablan por Sí Solos</span>
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Clientes reales compartiendo su experiencia trabajando con Muller y Pérez
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+            {/* Caso 1 - López Mateo */}
+            <div className="bg-white rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 border-2 border-indigo-100 hover:border-indigo-300">
+              <div className="aspect-[9/16] bg-black">
+                <YouTubeLite
+                  videoId="vTn18twKalI"
+                  title="Caso de Éxito: López Mateo - Muller y Pérez"
+                  thumbnailQuality="maxresdefault"
+                />
+              </div>
+              <div className="p-6">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-full flex items-center justify-center">
+                    <Users className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <p className="font-bold text-gray-900 text-lg">López Mateo</p>
+                    <p className="text-sm text-gray-600">Cliente M&P</p>
+                  </div>
+                </div>
+                <p className="text-gray-700 leading-relaxed">
+                  Testimonio real de resultados alcanzados con estrategia de marketing digital basada en datos.
+                </p>
+              </div>
+            </div>
+
+            {/* Caso 2 - Power Energy */}
+            <div className="bg-white rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 border-2 border-purple-100 hover:border-purple-300">
+              <div className="aspect-[9/16] bg-black">
+                <YouTubeLite
+                  videoId="8VZd4Sckm58"
+                  title="Caso de Éxito: Power Energy - Muller y Pérez"
+                  thumbnailQuality="maxresdefault"
+                />
+              </div>
+              <div className="p-6">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
+                    <TrendingUp className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <p className="font-bold text-gray-900 text-lg">Power Energy</p>
+                    <p className="text-sm text-gray-600">Cliente M&P</p>
+                  </div>
+                </div>
+                <p className="text-gray-700 leading-relaxed">
+                  Caso de éxito en optimización de campañas y crecimiento sostenible con ROI medible.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* CTA */}
+          <div className="text-center mt-12">
+            <p className="text-gray-600 mb-6">¿Quieres ser nuestro próximo caso de éxito?</p>
+            <a
+              href="https://wa.me/56944460270?text=Hola!%20Quiero%20ser%20un%20caso%20de%20%C3%A9xito%20con%20M%26P"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-8 py-4 rounded-xl font-bold hover:from-indigo-700 hover:to-purple-700 transition-all hover:scale-105 shadow-lg"
+            >
+              <MessageSquare className="w-5 h-5" />
+              Conversemos
+              <ArrowRight className="w-5 h-5" />
+            </a>
           </div>
         </div>
       </section>
