@@ -1432,14 +1432,14 @@ export default function LandingClient() {
       </section>
 
       {/* Casos de Éxito */}
-      <section className="py-24 bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-12">
+      <section className="py-20 px-6 bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
             <div className="inline-flex items-center gap-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-2.5 rounded-full text-sm font-bold mb-6 shadow-lg">
               <Award className="w-4 h-4" />
               Casos de Éxito Reales
             </div>
-            <h2 className="text-4xl lg:text-5xl font-black text-gray-900 mb-4">
+            <h2 className="text-4xl md:text-5xl font-black text-gray-900 mb-6">
               Resultados que <span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">Hablan por Sí Solos</span>
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
@@ -1447,54 +1447,40 @@ export default function LandingClient() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {/* Caso 1 - López Mateo */}
-            <div className="bg-white rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 border-2 border-indigo-100 hover:border-indigo-300">
-              <div className="aspect-[9/16] bg-black">
+            <div className="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all">
+              <div className="aspect-video">
                 <YouTubeLite
                   videoId="vTn18twKalI"
                   title="Caso de Éxito: López Mateo - Muller y Pérez"
-                  thumbnailQuality="maxresdefault"
+                  thumbnailQuality="hqdefault"
                 />
               </div>
-              <div className="p-6">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-full flex items-center justify-center">
-                    <Users className="w-6 h-6 text-white" />
-                  </div>
-                  <div>
-                    <p className="font-bold text-gray-900 text-lg">López Mateo</p>
-                    <p className="text-sm text-gray-600">Cliente M&P</p>
-                  </div>
-                </div>
-                <p className="text-gray-700 leading-relaxed">
-                  Testimonio real de resultados alcanzados con estrategia de marketing digital basada en datos.
-                </p>
+              <div className="p-4">
+                <p className="text-sm text-gray-600 font-semibold">Caso de Éxito: López Mateo</p>
               </div>
             </div>
 
             {/* Caso 2 - Power Energy */}
-            <div className="bg-white rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 border-2 border-purple-100 hover:border-purple-300">
-              <div className="aspect-[9/16] bg-black">
+            <div className="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all">
+              <div className="aspect-video">
                 <YouTubeLite
                   videoId="8VZd4Sckm58"
                   title="Caso de Éxito: Power Energy - Muller y Pérez"
-                  thumbnailQuality="maxresdefault"
+                  thumbnailQuality="hqdefault"
                 />
               </div>
-              <div className="p-6">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
-                    <TrendingUp className="w-6 h-6 text-white" />
-                  </div>
-                  <div>
-                    <p className="font-bold text-gray-900 text-lg">Power Energy</p>
-                    <p className="text-sm text-gray-600">Cliente M&P</p>
-                  </div>
-                </div>
-                <p className="text-gray-700 leading-relaxed">
-                  Caso de éxito en optimización de campañas y crecimiento sostenible con ROI medible.
-                </p>
+              <div className="p-4">
+                <p className="text-sm text-gray-600 font-semibold">Caso de Éxito: Power Energy</p>
+              </div>
+            </div>
+
+            {/* Placeholder para futuro tercer caso */}
+            <div className="bg-white rounded-xl overflow-hidden shadow-lg border-2 border-dashed border-gray-300 flex items-center justify-center min-h-[200px]">
+              <div className="text-center p-6">
+                <Award className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+                <p className="text-gray-500 font-semibold">Próximo caso de éxito</p>
               </div>
             </div>
           </div>
