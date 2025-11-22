@@ -978,34 +978,34 @@ ${window.location.href}`
       </nav>
 
       {/* Main content */}
-      <main className="max-w-7xl mx-auto px-8 py-12">
+      <main className="max-w-7xl mx-auto px-8 py-6">
 
         {/* Header */}
-        <div className="mb-12">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="p-3 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl shadow-lg shadow-indigo-500/30">
-              <Zap className="w-7 h-7 text-white" />
+        <div className="mb-6">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="p-2.5 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl shadow-lg shadow-indigo-500/20">
+              <Zap className="w-6 h-6 text-white" />
             </div>
-            <Badge className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold px-4 py-1.5 text-sm">
+            <Badge className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold px-3 py-1 text-xs">
               Motor 2025 v2025.1.0
             </Badge>
           </div>
-          <h2 className="text-5xl font-bold text-gray-900 mb-4">
+          <h2 className="text-4xl font-bold text-gray-900 mb-3">
             Predicción de Performance
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl leading-relaxed">
+          <p className="text-lg text-gray-600 max-w-3xl leading-relaxed">
             Sistema de predicción calibrado con benchmarks 2025 de <span className="font-semibold text-gray-900">WordStream</span>, <span className="font-semibold text-gray-900">Triple Whale</span> y <span className="font-semibold text-gray-900">Databox</span> para el mercado chileno.
           </p>
         </div>
 
         {/* Form section */}
-        <div id="input" className="mb-16">
-          <Card className="border-2 border-gray-200 shadow-lg rounded-3xl overflow-hidden">
-            <div className="bg-gradient-to-r from-gray-50 to-gray-100 px-8 py-6 border-b-2 border-gray-200">
-              <h3 className="text-2xl font-bold text-gray-900">Datos de entrada</h3>
+        <div id="input" className="mb-8">
+          <Card className="border-2 border-gray-200 shadow-lg rounded-2xl overflow-hidden">
+            <div className="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 border-b-2 border-gray-200">
+              <h3 className="text-xl font-bold text-gray-900">Datos de entrada</h3>
             </div>
 
-            <div className="p-8">
+            <div className="p-6">
               {/* Primera fila: Presupuesto, Ticket, Industria, Tipo Cliente */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <FormInput
@@ -1396,17 +1396,17 @@ ${window.location.href}`
 
         {/* Empty state */}
         {!result && !loading && (
-          <div className="text-center py-24">
-            <div className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-3xl mb-6 shadow-lg">
-              <Sparkles className="w-12 h-12 text-indigo-600" />
+          <div className="text-center py-8">
+            <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-2xl mb-4 shadow-md">
+              <Sparkles className="w-10 h-10 text-indigo-600" />
             </div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-3">Listo para comenzar</h3>
-            <p className="text-gray-600 text-lg mb-8 max-w-md mx-auto">
+            <h3 className="text-xl font-bold text-gray-900 mb-2">Listo para comenzar</h3>
+            <p className="text-gray-600 mb-6 max-w-md mx-auto">
               Completa el formulario con los datos de tu negocio y genera tu predicción personalizada
             </p>
-            <a href="#input" className="inline-flex items-center gap-2 text-indigo-600 font-bold hover:text-indigo-700 text-lg group">
+            <a href="#input" className="inline-flex items-center gap-2 text-indigo-600 font-semibold hover:text-indigo-700 group">
               Ir al formulario
-              <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </a>
           </div>
         )}
@@ -1414,7 +1414,7 @@ ${window.location.href}`
       </main>
 
       {/* Sección de Contacto y WhatsApp */}
-      <section id="contacto" className="max-w-7xl mx-auto px-8 py-24">
+      <section id="contacto" className="max-w-7xl mx-auto px-8 py-8">
         <div className="grid md:grid-cols-2 gap-8">
 
           {/* Formulario de Contacto */}
