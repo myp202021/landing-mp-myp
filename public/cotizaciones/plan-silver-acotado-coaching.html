@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plan Silver Acotado - Comunicación & Generación de Leads</title>
+    <style>
+        @media print {
+            body { margin: 0; }
+            .page-break { page-break-before: always; }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 60px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding-bottom: 30px;
+            border-bottom: 3px solid #4A90E2;
+        }
+
+        .header .logo {
+            max-width: 200px;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #4A90E2;
+            font-size: 36px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header h2 {
+            color: #666;
+            font-size: 24px;
+            font-weight: 400;
+        }
+
+        .meta-info {
+            text-align: right;
+            margin-bottom: 40px;
+            color: #666;
+        }
+
+        .meta-info p {
+            margin: 5px 0;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            color: #4A90E2;
+            font-size: 24px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #4A90E2;
+            font-weight: 600;
+        }
+
+        .subsection-title {
+            color: #333;
+            font-size: 20px;
+            margin: 25px 0 15px 0;
+            font-weight: 600;
+        }
+
+        .client-box {
+            background: #f8f9fa;
+            padding: 20px;
+            border-left: 4px solid #4A90E2;
+            margin-bottom: 30px;
+        }
+
+        .plan-box {
+            background: #f8f9fa;
+            padding: 30px;
+            margin: 30px 0;
+            border-radius: 8px;
+            border: 2px solid #4A90E2;
+        }
+
+        .plan-box.recommended {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+        }
+
+        .plan-box.recommended h3,
+        .plan-box.recommended h4,
+        .plan-box.recommended strong {
+            color: white;
+        }
+
+        .plan-box h3 {
+            color: #4A90E2;
+            font-size: 26px;
+            margin-bottom: 10px;
+        }
+
+        .plan-box h4 {
+            color: #666;
+            font-size: 18px;
+            margin-bottom: 20px;
+            font-weight: 400;
+        }
+
+        .price-box {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .plan-box.recommended .price-box {
+            background: rgba(255,255,255,0.95);
+            color: #333;
+        }
+
+        .plan-box.recommended .price-box strong {
+            color: #667eea;
+        }
+
+        .total-price {
+            font-size: 32px;
+            color: #4A90E2;
+            font-weight: 700;
+            margin-top: 10px;
+        }
+
+        .plan-box.recommended .total-price {
+            color: #667eea;
+        }
+
+        ul {
+            margin: 15px 0 15px 25px;
+        }
+
+        ul li {
+            margin: 8px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        table th {
+            background: #4A90E2;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        table tr:last-child td {
+            font-weight: 600;
+            background: #e3f2fd;
+        }
+
+        .highlight-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px 20px;
+            margin: 20px 0;
+        }
+
+        .recommendation-box {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .contact-box {
+            text-align: center;
+            padding: 30px;
+            background: #4A90E2;
+            color: white;
+            border-radius: 8px;
+            margin-top: 40px;
+        }
+
+        .contact-box h3 {
+            margin-bottom: 15px;
+        }
+
+        .contact-box p {
+            margin: 5px 0;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #ddd;
+            color: #666;
+            font-style: italic;
+        }
+
+        .services-list {
+            counter-reset: service-counter;
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .services-list li {
+            counter-increment: service-counter;
+            margin: 15px 0;
+            padding-left: 35px;
+            position: relative;
+        }
+
+        .services-list li:before {
+            content: counter(service-counter) ".";
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+            color: #4A90E2;
+        }
+
+        strong {
+            color: #4A90E2;
+        }
+
+        .emoji {
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="logo-color.png" alt="Marketing y Performance" class="logo">
+            <h1>PLAN SILVER ACOTADO</h1>
+            <h2>Comunicación & Generación de Leads</h2>
+        </div>
+
+        <div class="meta-info">
+            <p><strong>N°:</strong> PROP-SILVER-11-2025</p>
+            <p><strong>Fecha:</strong> 24 de Noviembre de 2025</p>
+            <p><strong>Válida hasta:</strong> 24 de Diciembre de 2025</p>
+        </div>
+
+        <div class="client-box">
+            <p><strong>Cliente:</strong> Coach Ejecutivo y Facilitador de Talleres Corporativos</p>
+            <p><strong>Especialización:</strong> Sector Minería, Energía y Rubros Intensivos</p>
+            <p><strong>Alcance LinkedIn:</strong> 5,000 Seguidores</p>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">OBJETIVO</h2>
+            <p>El propósito de este plan es <strong>mantener presencia digital constante y profesional</strong>, combinando comunicación ejecutiva en LinkedIn con campañas de Google Ads orientadas a <strong>captar leads calificados</strong> de empresas mineras e industriales interesadas en coaching ejecutivo y talleres corporativos.</p>
+            <p style="margin-top: 15px;">Este enfoque integrado permite posicionar autoridad profesional mientras se genera un flujo controlado de oportunidades comerciales tangibles, trabajando en dos frentes complementarios: <strong>presencia orgánica + captación paga</strong>.</p>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">ALCANCE DEL PLAN SILVER ACOTADO</h2>
+            <table>
+                <tr>
+                    <th>Área</th>
+                    <th>Entregable</th>
+                    <th>Detalle</th>
+                </tr>
+                <tr>
+                    <td><strong>Comunicación Estratégica</strong></td>
+                    <td>3 publicaciones semanales (LinkedIn)</td>
+                    <td>Redacción y planificación editorial con enfoque en liderazgo, propósito, cohesión y desarrollo ejecutivo.</td>
+                </tr>
+                <tr>
+                    <td><strong>Diseño Gráfico</strong></td>
+                    <td>Línea visual + plantillas</td>
+                    <td>Diseño coherente con la marca + 2 plantillas de mailing corporativo (newsletter e invitación).</td>
+                </tr>
+                <tr>
+                    <td><strong>Campañas Google Ads</strong></td>
+                    <td>2 campañas activas</td>
+                    <td>Una para Coaching 1:1 y otra para Talleres Corporativos, con seguimiento y optimización mensual.</td>
+                </tr>
+                <tr>
+                    <td><strong>Publicación y Seguimiento</strong></td>
+                    <td>Gestión de redes y pauta</td>
+                    <td>Publicación semanal en LinkedIn y monitoreo básico de engagement y performance de campañas.</td>
+                </tr>
+                <tr>
+                    <td><strong>Reunión mensual</strong></td>
+                    <td>Coordinación y revisión estratégica</td>
+                    <td>Ajuste de línea comunicacional, revisión de resultados y definición de próximos focos.</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="section page-break">
+            <h2 class="section-title">ESTRATEGIA DE EJECUCIÓN</h2>
+
+            <div class="plan-box recommended">
+                <h3>ENFOQUE INTEGRADO: COMUNICACIÓN + PERFORMANCE <span class="emoji">⭐</span></h3>
+
+                <h4 style="margin-top: 25px; color: white;">LinkedIn – Contenido de Autoridad</h4>
+                <ul>
+                    <li>Publicaciones de autoridad y reflexión ejecutiva con enfoque sectorial (minería, energía, rubros intensivos).</li>
+                    <li>Tono profesional, sin frases motivacionales vacías. Enfoque en casos reales y aprendizajes aplicables.</li>
+                    <li>Formato: posts reflexivos, carruseles con insights, publicaciones con imágenes profesionales.</li>
+                    <li>Hashtags técnicos: #LiderazgoMinero #CoachingEjecutivo #DesarrolloOrganizacional #GestiónDeEquipos</li>
+                </ul>
+
+                <h4 style="margin-top: 25px; color: white;">Google Ads – Captación de Leads</h4>
+                <ul>
+                    <li><strong>Campaña 1 – Coaching Ejecutivo:</strong> Búsqueda segmentada con keywords como "coaching ejecutivo minería", "liderazgo mandos medios", "desarrollo ejecutivos minería".</li>
+                    <li><strong>Campaña 2 – Talleres Corporativos:</strong> Términos como "talleres de propósito empresarial", "talleres trabajo en equipo minería", "capacitación liderazgo corporativo".</li>
+                    <li>Segmentación geográfica: Chile, con foco en regiones mineras (Antofagasta, Atacama, Coquimbo).</li>
+                    <li>Landing pages optimizadas con formularios de contacto para captura de leads cualificados.</li>
+                </ul>
+
+                <h4 style="margin-top: 25px; color: white;">Sistema Integrado</h4>
+                <p style="color: white;">Comunicación + pauta funcionan como un sistema integrado de <strong>posicionamiento y generación de oportunidades cualificadas</strong>.</p>
+                <p style="margin-top: 10px; color: white;">Ciclo de trabajo: <strong>estrategia → contenido → campañas → seguimiento → optimización</strong>.</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">ENTREGABLES MENSUALES DETALLADOS</h2>
+
+            <h3 class="subsection-title">Comunicación & Contenidos</h3>
+            <ul class="services-list">
+                <li><strong>12-14 publicaciones LinkedIn:</strong> Redacción completa (copy + bajada + hashtags técnicos) con propuesta visual por pieza.</li>
+                <li><strong>Calendario editorial semanal:</strong> Planificación estratégica con fechas y horarios óptimos de publicación.</li>
+                <li><strong>2 plantillas de mailing corporativo:</strong> Newsletter + invitación comercial, diseñadas en Canva editable y PDF exportable.</li>
+                <li><strong>Línea gráfica base:</strong> Identidad visual consistente (paleta de colores, tipografías, estilo de imágenes).</li>
+            </ul>
+
+            <h3 class="subsection-title">Google Ads & Performance</h3>
+            <ul class="services-list">
+                <li><strong>Configuración de 2 campañas:</strong> Setup completo en Google Ads con estructura de grupos de anuncios, keywords y extensiones.</li>
+                <li><strong>Redacción de anuncios:</strong> Mínimo 3 variaciones por campaña para A/B testing.</li>
+                <li><strong>Seguimiento y optimización:</strong> Monitoreo semanal de métricas clave (CTR, CPC, conversiones), ajustes de pujas y keywords.</li>
+                <li><strong>Reporte mensual de performance:</strong> Dashboard con métricas de campañas: impresiones, clics, leads generados, CPL, conversiones.</li>
+            </ul>
+
+            <h3 class="subsection-title">Gestión & Coordinación</h3>
+            <ul class="services-list">
+                <li><strong>Publicación directa en LinkedIn:</strong> Subida y calendarización semanal de contenidos.</li>
+                <li><strong>Supervisión de engagement:</strong> Monitoreo de alcance, interacciones y comentarios.</li>
+                <li><strong>Reunión mensual de coordinación:</strong> 30 minutos para revisión de resultados, ajustes estratégicos y planificación del mes siguiente.</li>
+            </ul>
+        </div>
+
+        <div class="section page-break">
+            <h2 class="section-title">EQUIPO M&P ASIGNADO</h2>
+            <table>
+                <tr>
+                    <th>Rol</th>
+                    <th>Función</th>
+                </tr>
+                <tr>
+                    <td><strong>Director de Estrategia</strong></td>
+                    <td>Supervisión general, definición de narrativa mensual y lineamientos estratégicos</td>
+                </tr>
+                <tr>
+                    <td><strong>Paid Media Manager</strong></td>
+                    <td>Configuración, análisis y optimización continua de campañas Google Ads</td>
+                </tr>
+                <tr>
+                    <td><strong>Redactor & Diseñador</strong></td>
+                    <td>Creación de contenidos LinkedIn, redacción de anuncios y desarrollo de línea visual</td>
+                </tr>
+            </table>
+
+            <div class="highlight-box">
+                <p><strong>📌 Equipo completo de 3 personas</strong> trabajando de forma coordinada en comunicación y performance.</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">VALOR Y CONDICIONES</h2>
+            <table>
+                <tr>
+                    <th>Concepto</th>
+                    <th>Valor</th>
+                </tr>
+                <tr>
+                    <td><strong>Plan Silver Acotado</strong><br>(Contenidos + Campañas Google)</td>
+                    <td><strong>$550.000 / mes</strong></td>
+                </tr>
+                <tr>
+                    <td>Incluye equipo completo M&P (3 personas)</td>
+                    <td>✔️</td>
+                </tr>
+                <tr>
+                    <td>Duración mínima del contrato</td>
+                    <td>6 meses</td>
+                </tr>
+                <tr>
+                    <td>Forma de pago</td>
+                    <td>Mensual anticipado</td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="text-align: center; background: #e3f2fd;">
+                        <strong>Subtotal:</strong> $550.000<br>
+                        <strong>IVA (19%):</strong> $104.500<br>
+                        <span class="total-price" style="font-size: 24px; display: block; margin-top: 10px;">TOTAL MENSUAL: $654.500</span>
+                    </td>
+                </tr>
+            </table>
+
+            <div class="highlight-box">
+                <p><strong>⚠️ Importante:</strong> La inversión publicitaria en Google Ads es independiente del valor de gestión. Se sugiere un presupuesto de pauta de <strong>$300.000 - $500.000/mes</strong> para resultados óptimos.</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">CONDICIONES COMERCIALES DETALLADAS</h2>
+
+            <p><strong>Forma de pago:</strong> Mensual anticipado, vía transferencia o factura electrónica</p>
+            <p><strong>Duración mínima:</strong> 6 meses (para asegurar curva de aprendizaje de campañas y construcción de autoridad)</p>
+            <p><strong>Renovación:</strong> Automática mes a mes con aviso de 30 días para término</p>
+
+            <p style="margin-top: 20px;"><strong>Incluye:</strong></p>
+            <ul>
+                <li>✅ Equipo completo de 3 personas (Estrategia, Paid Media, Redacción & Diseño)</li>
+                <li>✅ Herramientas de diseño (Canva, Adobe), planificación y análisis</li>
+                <li>✅ Publicación directa en LinkedIn</li>
+                <li>✅ Configuración, gestión y optimización de Google Ads</li>
+                <li>✅ Almacenamiento en nube de todos los archivos</li>
+                <li>✅ Reportes mensuales de performance</li>
+            </ul>
+
+            <p style="margin-top: 20px;"><strong>No incluye:</strong></p>
+            <ul>
+                <li>❌ Inversión en pauta publicitaria (presupuesto directo en Google Ads)</li>
+                <li>❌ Producción audiovisual profesional (grabación de videos)</li>
+                <li>❌ Gestión de otras plataformas (Instagram, YouTube, TikTok, Meta Ads)</li>
+                <li>❌ Servicios de CRM o automatización de ventas</li>
+                <li>❌ Desarrollo de landing pages (se trabajará con páginas existentes)</li>
+            </ul>
+        </div>
+
+        <div class="section page-break">
+            <h2 class="section-title">RESULTADOS ESPERADOS (6 MESES)</h2>
+            <table>
+                <tr>
+                    <th>Objetivo</th>
+                    <th>Indicador</th>
+                    <th>Meta</th>
+                </tr>
+                <tr>
+                    <td>Visibilidad LinkedIn</td>
+                    <td>Alcance mensual</td>
+                    <td>+40% vs mes 1</td>
+                </tr>
+                <tr>
+                    <td>Autoridad Profesional</td>
+                    <td>Engagement rate</td>
+                    <td>>3% (likes, comentarios, shares)</td>
+                </tr>
+                <tr>
+                    <td>Conexiones Cualificadas</td>
+                    <td>Solicitudes de conexión</td>
+                    <td>+20-30 mensuales</td>
+                </tr>
+                <tr>
+                    <td>Leads Google Ads (Coaching)</td>
+                    <td>Formularios completados</td>
+                    <td>8-12 leads/mes</td>
+                </tr>
+                <tr>
+                    <td>Leads Google Ads (Talleres)</td>
+                    <td>Consultas corporativas</td>
+                    <td>5-8 leads/mes</td>
+                </tr>
+                <tr>
+                    <td>CPL (Costo por Lead)</td>
+                    <td>Costo promedio</td>
+                    <td>$30.000 - $50.000</td>
+                </tr>
+                <tr>
+                    <td>Conversión Consultas</td>
+                    <td>Reuniones comerciales</td>
+                    <td>3-5 reuniones/mes</td>
+                </tr>
+            </table>
+
+            <div class="recommendation-box">
+                <p><strong>💡 Este plan combina comunicación ejecutiva, diseño y performance</strong> para sostener una presencia digital inteligente, capaz de posicionar y generar oportunidades reales en industrias donde <strong>la confianza y la autoridad pesan más que la cantidad</strong>.</p>
+                <p style="margin-top: 15px;">No buscamos viralidad ni métricas vanidosas, sino <strong>leads cualificados y conversaciones comerciales tangibles</strong> con decisores corporativos.</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">CRONOGRAMA DE IMPLEMENTACIÓN</h2>
+            <table>
+                <tr>
+                    <th>Fase</th>
+                    <th>Actividades</th>
+                    <th>Duración</th>
+                </tr>
+                <tr>
+                    <td><strong>Semana 1 – Kick-off</strong></td>
+                    <td>Reunión inicial, definición de tono y estilo, levantamiento de casos, configuración de accesos Google Ads</td>
+                    <td>1 semana</td>
+                </tr>
+                <tr>
+                    <td><strong>Semana 2 – Setup</strong></td>
+                    <td>Desarrollo de línea gráfica, creación de primeras 3 publicaciones, setup completo de campañas Google Ads</td>
+                    <td>1 semana</td>
+                </tr>
+                <tr>
+                    <td><strong>Semanas 3-4 – Lanzamiento</strong></td>
+                    <td>Inicio de publicación semanal LinkedIn, lanzamiento de campañas Google Ads, monitoreo inicial</td>
+                    <td>2 semanas</td>
+                </tr>
+                <tr>
+                    <td><strong>Mes 2-3 – Optimización</strong></td>
+                    <td>Refinamiento de contenidos según performance, optimización de keywords y pujas, A/B testing de anuncios</td>
+                    <td>2 meses</td>
+                </tr>
+                <tr>
+                    <td><strong>Mes 4-6 – Escalamiento</strong></td>
+                    <td>Intensificación de campañas exitosas, ajuste de presupuestos, escalamiento de leads cualificados</td>
+                    <td>3 meses</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="section page-break">
+            <h2 class="section-title">PRESUPUESTO SUGERIDO GOOGLE ADS</h2>
+            <table>
+                <tr>
+                    <th>Campaña</th>
+                    <th>Inversión Mensual Sugerida</th>
+                    <th>Leads Esperados</th>
+                </tr>
+                <tr>
+                    <td><strong>Coaching Ejecutivo 1:1</strong></td>
+                    <td>$250.000 - $350.000</td>
+                    <td>8-12 leads/mes</td>
+                </tr>
+                <tr>
+                    <td><strong>Talleres Corporativos</strong></td>
+                    <td>$150.000 - $250.000</td>
+                    <td>5-8 leads/mes</td>
+                </tr>
+                <tr>
+                    <td colspan="3" style="background: #e3f2fd; font-weight: bold;">
+                        TOTAL SUGERIDO: $400.000 - $600.000/mes (independiente del valor de gestión)
+                    </td>
+                </tr>
+            </table>
+
+            <div class="highlight-box">
+                <p><strong>📌 La inversión en pauta es fundamental</strong> para generar volumen de leads suficiente. Con menor presupuesto, los resultados serán proporcionalmente menores.</p>
+                <p style="margin-top: 10px;"><strong>Recomendación M&P:</strong> Iniciar con $400.000/mes y escalar según performance de primeros 2-3 meses.</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">PRÓXIMOS PASOS</h2>
+            <ol>
+                <li>Reunión de validación del alcance y ajuste de estrategia</li>
+                <li>Firma de contrato comercial (6 meses mínimo)</li>
+                <li>Reunión de kick-off para levantamiento de casos y configuración de accesos</li>
+                <li>Entrega de accesos a LinkedIn y Google Ads (Business Manager)</li>
+                <li>Definición de presupuesto de pauta Google Ads</li>
+                <li>Inicio de producción de contenidos y configuración de campañas (semana 1)</li>
+            </ol>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">¿POR QUÉ M&P PARA ESTE PROYECTO?</h2>
+            <ul>
+                <li><strong>✓ Enfoque data-driven y ejecutivo:</strong> Sin marketing de humo. Metodología estructurada con resultados medibles.</li>
+                <li><strong>✓ Experiencia en B2B industrial:</strong> Entendemos el lenguaje y timing de decisores en minería y sectores técnicos.</li>
+                <li><strong>✓ Integración comunicación + performance:</strong> No solo contenido ni solo pauta. Sistema completo de posicionamiento y generación de leads.</li>
+                <li><strong>✓ Optimización continua:</strong> Ajustes semanales de campañas para maximizar CPL y calidad de leads.</li>
+                <li><strong>✓ Equipo completo dedicado:</strong> 3 personas especializadas trabajando en tu proyecto mes a mes.</li>
+            </ul>
+        </div>
+
+        <div class="contact-box">
+            <h3>Müller & Pérez - Marketing & Performance</h3>
+            <p>📧 Email: contacto@mulleryperez.cl</p>
+            <p>🌐 Web: www.mulleryperez.cl</p>
+            <p>📱 Instagram: @mktdigital.myp</p>
+        </div>
+
+        <div class="footer">
+            <p>"Menos improvisación. Más performance."</p>
+            <p style="margin-top: 10px;"><strong>Propuesta válida por 30 días desde la fecha de emisión.</strong></p>
+            <p>Todos los valores expresados en pesos chilenos + IVA.</p>
+        </div>
+    </div>
+</body>
+</html>

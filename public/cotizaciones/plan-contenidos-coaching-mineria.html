@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plan de Contenidos y Comunicación Ejecutiva - Coaching Minería</title>
+    <style>
+        @media print {
+            body { margin: 0; }
+            .page-break { page-break-before: always; }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 60px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding-bottom: 30px;
+            border-bottom: 3px solid #4A90E2;
+        }
+
+        .header .logo {
+            max-width: 200px;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #4A90E2;
+            font-size: 36px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header h2 {
+            color: #666;
+            font-size: 24px;
+            font-weight: 400;
+        }
+
+        .meta-info {
+            text-align: right;
+            margin-bottom: 40px;
+            color: #666;
+        }
+
+        .meta-info p {
+            margin: 5px 0;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            color: #4A90E2;
+            font-size: 24px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #4A90E2;
+            font-weight: 600;
+        }
+
+        .subsection-title {
+            color: #333;
+            font-size: 20px;
+            margin: 25px 0 15px 0;
+            font-weight: 600;
+        }
+
+        .client-box {
+            background: #f8f9fa;
+            padding: 20px;
+            border-left: 4px solid #4A90E2;
+            margin-bottom: 30px;
+        }
+
+        .plan-box {
+            background: #f8f9fa;
+            padding: 30px;
+            margin: 30px 0;
+            border-radius: 8px;
+            border: 2px solid #4A90E2;
+        }
+
+        .plan-box.recommended {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+        }
+
+        .plan-box.recommended h3,
+        .plan-box.recommended h4,
+        .plan-box.recommended strong {
+            color: white;
+        }
+
+        .plan-box h3 {
+            color: #4A90E2;
+            font-size: 26px;
+            margin-bottom: 10px;
+        }
+
+        .plan-box h4 {
+            color: #666;
+            font-size: 18px;
+            margin-bottom: 20px;
+            font-weight: 400;
+        }
+
+        .price-box {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .plan-box.recommended .price-box {
+            background: rgba(255,255,255,0.95);
+            color: #333;
+        }
+
+        .plan-box.recommended .price-box strong {
+            color: #667eea;
+        }
+
+        .total-price {
+            font-size: 32px;
+            color: #4A90E2;
+            font-weight: 700;
+            margin-top: 10px;
+        }
+
+        .plan-box.recommended .total-price {
+            color: #667eea;
+        }
+
+        ul {
+            margin: 15px 0 15px 25px;
+        }
+
+        ul li {
+            margin: 8px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        table th {
+            background: #4A90E2;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        table tr:last-child td {
+            font-weight: 600;
+            background: #e3f2fd;
+        }
+
+        .highlight-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px 20px;
+            margin: 20px 0;
+        }
+
+        .recommendation-box {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .contact-box {
+            text-align: center;
+            padding: 30px;
+            background: #4A90E2;
+            color: white;
+            border-radius: 8px;
+            margin-top: 40px;
+        }
+
+        .contact-box h3 {
+            margin-bottom: 15px;
+        }
+
+        .contact-box p {
+            margin: 5px 0;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #ddd;
+            color: #666;
+            font-style: italic;
+        }
+
+        .services-list {
+            counter-reset: service-counter;
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .services-list li {
+            counter-increment: service-counter;
+            margin: 15px 0;
+            padding-left: 35px;
+            position: relative;
+        }
+
+        .services-list li:before {
+            content: counter(service-counter) ".";
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+            color: #4A90E2;
+        }
+
+        strong {
+            color: #4A90E2;
+        }
+
+        .emoji {
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="logo-color.png" alt="Marketing y Performance" class="logo">
+            <h1>PLAN DE CONTENIDOS Y COMUNICACIÓN EJECUTIVA</h1>
+            <h2>Coaching Minería</h2>
+        </div>
+
+        <div class="meta-info">
+            <p><strong>N°:</strong> PROP-COACHING-11-2025</p>
+            <p><strong>Fecha:</strong> 24 de Noviembre de 2025</p>
+            <p><strong>Válida hasta:</strong> 24 de Diciembre de 2025</p>
+        </div>
+
+        <div class="client-box">
+            <p><strong>Cliente:</strong> Coach Ejecutivo y Facilitador de Talleres Corporativos</p>
+            <p><strong>Especialización:</strong> Sector Minería, Energía y Rubros Intensivos</p>
+            <p><strong>Alcance LinkedIn:</strong> 5,000 Seguidores</p>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">OBJETIVO DEL PLAN</h2>
+            <p>Desarrollar un plan mensual de comunicación y contenidos en LinkedIn y canales complementarios, orientado a <strong>posicionar la marca personal del cliente como referente en liderazgo, propósito y desarrollo ejecutivo en minería</strong>, manteniendo coherencia, diseño profesional y publicación constante que genere visibilidad, autoridad y conversión sutil.</p>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">CONTEXTO DEL NEGOCIO</h2>
+            <p>Servicio de coaching para ejecutivos de nivel medio-alto, con especialización en sector minero, energía y rubros intensivos.</p>
+
+            <h3 class="subsection-title">Servicios Ofrecidos</h3>
+            <ul>
+                <li><strong>Coaching 1:1</strong> para mandos medios y altos → 10 sesiones por $2.200.000</li>
+                <li><strong>Talleres presenciales</strong> para máximo 10 personas → $8-10 millones por grupo</li>
+                <li>Temáticas: propósito, trabajo en equipo y presentaciones efectivas</li>
+            </ul>
+
+            <h3 class="subsection-title">Experiencia Digital</h3>
+            <ul>
+                <li>✅ Campañas exitosas previas con Walaxy para LinkedIn</li>
+                <li>📊 Estacionalidad: baches relativos en febrero, septiembre y diciembre</li>
+                <li>📍 Formato: talleres presenciales, coaching online</li>
+            </ul>
+        </div>
+
+        <div class="section page-break">
+            <h2 class="section-title">ENFOQUE ESTRATÉGICO</h2>
+            <ul class="services-list">
+                <li><strong>Tono profesional, humano y sin frases motivacionales vacías.</strong> Estilo reflexivo y aplicado desde la experiencia real en terreno.</li>
+                <li><strong>Segmentación precisa:</strong> RR.HH., DO, Operaciones, Business Partners, mandos medios y altos del sector minero, energía e industrias intensivas.</li>
+                <li><strong>Objetivo comunicacional cuádruple:</strong> visibilidad constante + autoridad profesional + conexión genuina + conversión sutil.</li>
+                <li><strong>Lenguaje directo y ejecutivo:</strong> sin marketing de humo, enfocado en casos reales y aprendizajes aplicables.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">ALCANCE DEL PLAN</h2>
+
+            <div class="plan-box recommended">
+                <h3>PLAN MENSUAL DE CONTENIDOS <span class="emoji">⭐</span></h3>
+                <h4>Comunicación ejecutiva para LinkedIn y canales complementarios</h4>
+
+                <h4 style="margin-top: 25px; color: white;">DETALLE DE SERVICIOS</h4>
+                <ul class="services-list">
+                    <li><strong>Publicaciones en LinkedIn:</strong> 3 publicaciones semanales (12–14 publicaciones mensuales). Enfoque temático: liderazgo, propósito, cohesión, toma de decisiones, casos reales de coaching y talleres. Incluye redacción completa (copy + bajada + hashtags técnicos) y propuesta visual por pieza.</li>
+                    <li><strong>Calendario editorial semanal:</strong> Planificación estratégica de contenidos con fechas y horarios óptimos de publicación, alineados con comportamiento de audiencia ejecutiva.</li>
+                    <li><strong>Diseño de plantillas de mailing corporativo:</strong> Creación y desarrollo de 2 plantillas editables (newsletter corporativo + invitación comercial) con línea gráfica coherente con marca personal.</li>
+                    <li><strong>Línea gráfica base:</strong> Desarrollo de identidad visual consistente para LinkedIn, incluyendo paleta de colores, tipografías y estilo de imágenes. Entregables en Canva editable y PDF exportable.</li>
+                    <li><strong>Gestión de publicación:</strong> M&P gestiona la subida y calendarización semanal de contenidos en LinkedIn, asegurando coherencia y frecuencia constante.</li>
+                    <li><strong>Supervisión de engagement:</strong> Monitoreo de métricas iniciales (alcance, interacciones, comentarios) y ajustes según performance para maximizar visibilidad.</li>
+                    <li><strong>Reunión mensual de coordinación:</strong> Sesión de 30 minutos para revisión de resultados, ajustes estratégicos y planificación del mes siguiente.</li>
+                </ul>
+
+                <p style="margin-top: 20px;"><strong>Equipo M&P asignado:</strong> Director de estrategia (línea narrativa), Redactor B2B (desarrollo de contenidos), Diseñador gráfico (plantillas y línea visual), Community manager (publicación y seguimiento).</p>
+
+                <div class="price-box">
+                    <p><strong>Subtotal Plan Mensual:</strong> $600.000</p>
+                    <p><strong>IVA (19%):</strong> $114.000</p>
+                    <p class="total-price">TOTAL MENSUAL: $714.000</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">ENTREGABLES MENSUALES</h2>
+            <table>
+                <tr>
+                    <th>Entregable</th>
+                    <th>Cantidad</th>
+                    <th>Descripción</th>
+                </tr>
+                <tr>
+                    <td><strong>Estrategia mensual</strong></td>
+                    <td>1 documento</td>
+                    <td>Línea narrativa y enfoque temático del mes</td>
+                </tr>
+                <tr>
+                    <td><strong>Publicaciones LinkedIn</strong></td>
+                    <td>12–14 posts</td>
+                    <td>Textos completos + visual sugerido + hashtags</td>
+                </tr>
+                <tr>
+                    <td><strong>Plantillas de mailing</strong></td>
+                    <td>2 plantillas</td>
+                    <td>Newsletter + invitación comercial (Canva + PDF)</td>
+                </tr>
+                <tr>
+                    <td><strong>Calendario editorial</strong></td>
+                    <td>1 calendario</td>
+                    <td>Planificación semanal con fechas y horarios</td>
+                </tr>
+                <tr>
+                    <td><strong>Publicación en redes</strong></td>
+                    <td>12–14 publicaciones</td>
+                    <td>Subida y calendarización directa en LinkedIn</td>
+                </tr>
+                <tr>
+                    <td><strong>Reunión de coordinación</strong></td>
+                    <td>1 reunión (30 min)</td>
+                    <td>Revisión de resultados y planificación</td>
+                </tr>
+                <tr>
+                    <td colspan="3" style="text-align: center;"><strong>VALOR MENSUAL + IVA: $714.000</strong></td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="section page-break">
+            <h2 class="section-title">TEMAS Y LÍNEAS NARRATIVAS</h2>
+            <p>Los contenidos se estructuran en <strong>4 pilares temáticos</strong> que se rotan semanalmente para mantener variedad y profundidad:</p>
+
+            <table>
+                <tr>
+                    <th>Pilar</th>
+                    <th>Temas</th>
+                    <th>Objetivo</th>
+                </tr>
+                <tr>
+                    <td><strong>Liderazgo Ejecutivo</strong></td>
+                    <td>Toma de decisiones bajo presión, liderazgo en minería, gestión de equipos remotos</td>
+                    <td>Posicionar autoridad en liderazgo</td>
+                </tr>
+                <tr>
+                    <td><strong>Propósito y Cohesión</strong></td>
+                    <td>Propósito organizacional, trabajo en equipo, cultura corporativa en rubros intensivos</td>
+                    <td>Conectar con valores de RR.HH. y DO</td>
+                </tr>
+                <tr>
+                    <td><strong>Casos Reales</strong></td>
+                    <td>Aprendizajes de coaching, historias de talleres, insights desde la práctica</td>
+                    <td>Demostrar experiencia y resultados</td>
+                </tr>
+                <tr>
+                    <td><strong>Comunicación Efectiva</strong></td>
+                    <td>Presentaciones de impacto, storytelling ejecutivo, comunicación de liderazgo</td>
+                    <td>Atraer demanda para talleres</td>
+                </tr>
+            </table>
+
+            <div class="highlight-box">
+                <p><strong>📌 Importante:</strong> Todos los contenidos evitan frases motivacionales genéricas y se enfocan en reflexiones aplicadas y experiencias reales del sector.</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">FORMATO Y ESTILO DE CONTENIDOS</h2>
+            <ul>
+                <li><strong>Publicaciones largas:</strong> 800-1,200 caracteres, reflexivas y con ganchos desde la primera línea</li>
+                <li><strong>Carruseles:</strong> 6-8 slides con insights ejecutivos, casos y aprendizajes aplicables</li>
+                <li><strong>Publicaciones cortas:</strong> 300-500 caracteres con imagen impactante y call-to-action sutil</li>
+                <li><strong>Hashtags técnicos:</strong> #LiderazgoMinero #CoachingEjecutivo #DesarrolloOrganizacional #GestiónDeEquipos (4-6 hashtags por post)</li>
+                <li><strong>Visual:</strong> Imágenes profesionales, minimalistas y ejecutivas. Sin exceso de texto ni colores estridentes</li>
+            </ul>
+        </div>
+
+        <div class="section page-break">
+            <h2 class="section-title">CONDICIONES COMERCIALES</h2>
+            <p><strong>Valor mensual:</strong> $600.000 + IVA = <strong>$714.000 por mes</strong></p>
+            <p><strong>Duración mínima sugerida:</strong> 3 meses (para construir consistencia y autoridad)</p>
+            <p><strong>Forma de pago:</strong> Mensual anticipado, vía transferencia o factura electrónica</p>
+            <p><strong>Renovación:</strong> Automática mes a mes con aviso de 15 días para término</p>
+            <p style="margin-top: 20px;"><strong>Incluye:</strong></p>
+            <ul>
+                <li>✅ Equipo completo de diseño, redacción y community management</li>
+                <li>✅ Herramientas de diseño (Canva, Adobe) y planificación</li>
+                <li>✅ Publicación directa en LinkedIn</li>
+                <li>✅ Almacenamiento en nube de todos los archivos</li>
+            </ul>
+
+            <p style="margin-top: 20px;"><strong>No incluye:</strong></p>
+            <ul>
+                <li>❌ Inversión en pauta publicitaria (LinkedIn Ads)</li>
+                <li>❌ Producción audiovisual (grabación de videos profesionales)</li>
+                <li>❌ Gestión de otras plataformas (Instagram, YouTube, TikTok)</li>
+                <li>❌ Servicios de CRM o automatización de ventas</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">RESULTADOS ESPERADOS (3-6 MESES)</h2>
+            <table>
+                <tr>
+                    <th>Objetivo</th>
+                    <th>Indicador</th>
+                    <th>Meta</th>
+                </tr>
+                <tr>
+                    <td>Visibilidad</td>
+                    <td>Alcance mensual LinkedIn</td>
+                    <td>+40% vs mes 1</td>
+                </tr>
+                <tr>
+                    <td>Autoridad</td>
+                    <td>Engagement rate</td>
+                    <td>>3% (likes, comentarios, shares)</td>
+                </tr>
+                <tr>
+                    <td>Conexión</td>
+                    <td>Solicitudes de conexión cualificadas</td>
+                    <td>+20-30 mensuales</td>
+                </tr>
+                <tr>
+                    <td>Conversión</td>
+                    <td>Consultas por coaching/talleres</td>
+                    <td>2-4 consultas mensuales</td>
+                </tr>
+                <tr>
+                    <td>Posicionamiento</td>
+                    <td>Reconocimiento en sector</td>
+                    <td>Referente en liderazgo minero</td>
+                </tr>
+            </table>
+
+            <div class="recommendation-box">
+                <p><strong>💡 Este plan busca construir una presencia ejecutiva sólida</strong>, que genere confianza, coherencia visual y conversaciones reales con quienes toman decisiones en la industria.</p>
+                <p style="margin-top: 15px;">No buscamos viralidad ni métricas vanidosas, sino <strong>construir autoridad profesional sostenible</strong> que derive naturalmente en oportunidades de negocio.</p>
+            </div>
+        </div>
+
+        <div class="section page-break">
+            <h2 class="section-title">CRONOGRAMA DE IMPLEMENTACIÓN</h2>
+            <table>
+                <tr>
+                    <th>Fase</th>
+                    <th>Actividades</th>
+                    <th>Duración</th>
+                </tr>
+                <tr>
+                    <td><strong>Semana 1 – Kick-off</strong></td>
+                    <td>Reunión inicial, definición de tono y estilo, levantamiento de casos y experiencias clave para contenidos</td>
+                    <td>1 semana</td>
+                </tr>
+                <tr>
+                    <td><strong>Semana 2 – Setup</strong></td>
+                    <td>Desarrollo de línea gráfica, creación de primeras 3 publicaciones, diseño de plantillas de mailing</td>
+                    <td>1 semana</td>
+                </tr>
+                <tr>
+                    <td><strong>Semanas 3-4 – Lanzamiento</strong></td>
+                    <td>Inicio de publicación semanal (3 posts/semana), monitoreo de engagement, ajustes según feedback</td>
+                    <td>2 semanas</td>
+                </tr>
+                <tr>
+                    <td><strong>Mes 2-3 – Optimización</strong></td>
+                    <td>Refinamiento de temas según performance, A/B testing de formatos, intensificación de conversaciones</td>
+                    <td>2 meses</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">PRÓXIMOS PASOS</h2>
+            <ol>
+                <li>Reunión de validación del alcance y ajuste de tono/estilo</li>
+                <li>Firma de contrato comercial</li>
+                <li>Reunión de kick-off para levantamiento de casos y experiencias</li>
+                <li>Entrega de accesos a LinkedIn (Business Manager si aplica)</li>
+                <li>Inicio de producción de contenidos (semana 1 del proyecto)</li>
+            </ol>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">¿POR QUÉ M&P PARA ESTE PROYECTO?</h2>
+            <ul>
+                <li><strong>✓ Enfoque ingenieril y ejecutivo:</strong> Sin marketing de humo, con metodología estructurada y resultados medibles.</li>
+                <li><strong>✓ Experiencia en B2B:</strong> Entendemos el lenguaje y timing de decisores corporativos en LinkedIn.</li>
+                <li><strong>✓ Conocimiento del sector minero:</strong> Experiencia trabajando con industrias intensivas y rubros técnicos.</li>
+                <li><strong>✓ Construcción de autoridad profesional:</strong> No buscamos likes, sino posicionamiento real y oportunidades de negocio.</li>
+            </ul>
+        </div>
+
+        <div class="contact-box">
+            <h3>Müller & Pérez - Marketing & Performance</h3>
+            <p>📧 Email: contacto@mulleryperez.cl</p>
+            <p>🌐 Web: www.mulleryperez.cl</p>
+            <p>📱 Instagram: @mktdigital.myp</p>
+        </div>
+
+        <div class="footer">
+            <p>"Menos improvisación. Más performance."</p>
+            <p style="margin-top: 10px;"><strong>Propuesta válida por 30 días desde la fecha de emisión.</strong></p>
+            <p>Todos los valores expresados en pesos chilenos + IVA.</p>
+        </div>
+    </div>
+</body>
+</html>

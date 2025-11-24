@@ -28,9 +28,53 @@ interface Usuario {
   cliente?: Cliente
 }
 
+interface PlantillaCotizacion {
+  id: string
+  nombre: string
+  contenido: {
+    titulo: string
+    subtitulo: string
+    cliente: {
+      nombre: string
+      contacto: string
+      website: string
+      telefono: string
+    }
+    objetivo: string
+    alcance: Array<{
+      area: string
+      entregable: string
+      detalle: string
+    }>
+    kpis: Array<{
+      nombre: string
+      frecuencia: string
+    }>
+    equipo: Array<{
+      rol: string
+      funcion: string
+    }>
+    precio: {
+      concepto: string
+      valor_mensual: number
+      iva: number
+      duracion_minima_meses: number
+      forma_pago: string
+    }
+  }
+  activo: boolean
+  creado_en: string
+  actualizado_en: string
+}
+
+type TabType = 'usuarios' | 'clientes' | 'cotizaciones'
+
 export default function AdminPage() {
+  const [activeTab, setActiveTab] = useState<TabType>('usuarios')
   const [usuarios, setUsuarios] = useState<Usuario[]>([])
   const [clientes, setClientes] = useState<Cliente[]>([])
+  const [plantillas, setPlantillas] = useState<PlantillaCotizacion[]>([])
+  const [selectedPlantilla, setSelectedPlantilla] = useState<PlantillaCotizacion | null>(null)
   const [loading, setLoading] = useState(true)
   const [showNewUserForm, setShowNewUserForm] = useState(false)
   const [showNewClientForm, setShowNewClientForm] = useState(false)
@@ -62,16 +106,19 @@ export default function AdminPage() {
   const fetchData = async () => {
     try {
       setLoading(true)
-      const [usuariosRes, clientesRes] = await Promise.all([
+      const [usuariosRes, clientesRes, plantillasRes] = await Promise.all([
         fetch('/api/crm/usuarios'),
-        fetch('/api/crm/clientes')
+        fetch('/api/crm/clientes'),
+        fetch('/api/crm/plantillas-cotizacion')
       ])
 
       const usuariosData = await usuariosRes.json()
       const clientesData = await clientesRes.json()
+      const plantillasData = await plantillasRes.json()
 
       setUsuarios(usuariosData.usuarios || [])
       setClientes(clientesData.clientes || [])
+      setPlantillas(plantillasData.plantillas || [])
     } catch (error) {
       console.error('Error fetching data:', error)
       alert('Error cargando datos')
@@ -241,6 +288,35 @@ export default function AdminPage() {
     }
   }
 
+  const handleUpdatePlantilla = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!selectedPlantilla) return
+
+    try {
+      const res = await fetch('/api/crm/plantillas-cotizacion', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: selectedPlantilla.id,
+          nombre: selectedPlantilla.nombre,
+          contenido: selectedPlantilla.contenido
+        })
+      })
+
+      if (!res.ok) {
+        const error = await res.json()
+        throw new Error(error.error)
+      }
+
+      alert('Plantilla actualizada exitosamente')
+      setSelectedPlantilla(null)
+      fetchData()
+    } catch (error: any) {
+      console.error('Error updating plantilla:', error)
+      alert('Error actualizando plantilla: ' + error.message)
+    }
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -254,18 +330,59 @@ export default function AdminPage() {
       <div className="max-w-6xl mx-auto">
         <div className="bg-white rounded-lg shadow-lg p-6">
           {/* Header */}
-          <div className="flex justify-between items-center mb-6">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">Gestión de Usuarios</h1>
-              <p className="text-gray-600 mt-1">Panel de administración M&P</p>
-            </div>
-            <button
-              onClick={() => setShowNewUserForm(!showNewUserForm)}
-              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
-            >
-              {showNewUserForm ? 'Cancelar' : '+ Nuevo Usuario'}
-            </button>
+          <div className="mb-6">
+            <h1 className="text-3xl font-bold text-gray-900">Panel de Administración M&P</h1>
+            <p className="text-gray-600 mt-1">Gestión de usuarios, clientes y cotizaciones</p>
           </div>
+
+          {/* Tabs */}
+          <div className="border-b border-gray-200 mb-6">
+            <nav className="-mb-px flex space-x-8">
+              <button
+                onClick={() => setActiveTab('usuarios')}
+                className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                  activeTab === 'usuarios'
+                    ? 'border-blue-500 text-blue-600'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                }`}
+              >
+                👥 Usuarios
+              </button>
+              <button
+                onClick={() => setActiveTab('clientes')}
+                className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                  activeTab === 'clientes'
+                    ? 'border-blue-500 text-blue-600'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                }`}
+              >
+                🏢 Clientes
+              </button>
+              <button
+                onClick={() => setActiveTab('cotizaciones')}
+                className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                  activeTab === 'cotizaciones'
+                    ? 'border-blue-500 text-blue-600'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                }`}
+              >
+                📄 Cotizaciones M&P
+              </button>
+            </nav>
+          </div>
+
+          {/* Tab Content - Usuarios */}
+          {activeTab === 'usuarios' && (
+            <div>
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-2xl font-bold text-gray-900">Gestión de Usuarios</h2>
+                <button
+                  onClick={() => setShowNewUserForm(!showNewUserForm)}
+                  className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+                >
+                  {showNewUserForm ? 'Cancelar' : '+ Nuevo Usuario'}
+                </button>
+              </div>
 
           {/* Formulario nuevo usuario */}
           {showNewUserForm && (
@@ -426,11 +543,14 @@ export default function AdminPage() {
               </div>
             )}
           </div>
+            </div>
+          )}
 
-          {/* Sección Clientes */}
-          <div className="mt-8 pt-8 border-t border-gray-200">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-2xl font-bold text-gray-900">Gestión de Clientes</h2>
+          {/* Tab Content - Clientes */}
+          {activeTab === 'clientes' && (
+            <div>
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-2xl font-bold text-gray-900">Gestión de Clientes</h2>
               <button
                 onClick={() => setShowNewClientForm(!showNewClientForm)}
                 className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition"
@@ -593,7 +713,266 @@ export default function AdminPage() {
                 </div>
               )}
             </div>
-          </div>
+            </div>
+          )}
+
+          {/* Tab Content - Cotizaciones M&P */}
+          {activeTab === 'cotizaciones' && (
+            <div>
+              <div className="mb-6">
+                <h2 className="text-2xl font-bold text-gray-900">Plantillas de Cotización M&P</h2>
+                <p className="text-gray-600 mt-1">Gestiona y edita plantillas para cotizaciones</p>
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {/* Lista de plantillas */}
+                <div className="lg:col-span-1">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-3">Plantillas Disponibles</h3>
+                  <div className="space-y-2">
+                    {plantillas.map((plantilla) => (
+                      <button
+                        key={plantilla.id}
+                        onClick={() => setSelectedPlantilla(JSON.parse(JSON.stringify(plantilla)))}
+                        className={`w-full text-left p-4 rounded-lg border transition ${
+                          selectedPlantilla?.id === plantilla.id
+                            ? 'border-blue-500 bg-blue-50'
+                            : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                        }`}
+                      >
+                        <div className="font-medium text-gray-900">{plantilla.nombre}</div>
+                        <div className="text-sm text-gray-500 mt-1">
+                          {plantilla.contenido.titulo}
+                        </div>
+                        <div className="text-xs text-gray-400 mt-2">
+                          Actualizado: {new Date(plantilla.actualizado_en).toLocaleDateString('es-CL')}
+                        </div>
+                      </button>
+                    ))}
+                    {plantillas.length === 0 && (
+                      <div className="text-center py-8 text-gray-500 text-sm">
+                        No hay plantillas disponibles
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Editor de plantilla */}
+                <div className="lg:col-span-2">
+                  {selectedPlantilla ? (
+                    <div className="bg-gray-50 rounded-lg p-6">
+                      <div className="flex justify-between items-center mb-4">
+                        <h3 className="text-lg font-semibold text-gray-900">Editar Plantilla</h3>
+                        <button
+                          onClick={() => setSelectedPlantilla(null)}
+                          className="text-gray-500 hover:text-gray-700"
+                        >
+                          ✕
+                        </button>
+                      </div>
+
+                      <form onSubmit={handleUpdatePlantilla} className="space-y-4">
+                        {/* Nombre de la plantilla */}
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                            Nombre de la Plantilla
+                          </label>
+                          <input
+                            type="text"
+                            value={selectedPlantilla.nombre}
+                            onChange={(e) => setSelectedPlantilla({
+                              ...selectedPlantilla,
+                              nombre: e.target.value
+                            })}
+                            className="w-full border border-gray-300 rounded-lg px-3 py-2"
+                          />
+                        </div>
+
+                        {/* Título */}
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                            Título de la Cotización
+                          </label>
+                          <input
+                            type="text"
+                            value={selectedPlantilla.contenido.titulo}
+                            onChange={(e) => setSelectedPlantilla({
+                              ...selectedPlantilla,
+                              contenido: {
+                                ...selectedPlantilla.contenido,
+                                titulo: e.target.value
+                              }
+                            })}
+                            className="w-full border border-gray-300 rounded-lg px-3 py-2"
+                          />
+                        </div>
+
+                        {/* Subtítulo */}
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                            Subtítulo
+                          </label>
+                          <input
+                            type="text"
+                            value={selectedPlantilla.contenido.subtitulo}
+                            onChange={(e) => setSelectedPlantilla({
+                              ...selectedPlantilla,
+                              contenido: {
+                                ...selectedPlantilla.contenido,
+                                subtitulo: e.target.value
+                              }
+                            })}
+                            className="w-full border border-gray-300 rounded-lg px-3 py-2"
+                          />
+                        </div>
+
+                        {/* Objetivo */}
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                            Objetivo
+                          </label>
+                          <textarea
+                            value={selectedPlantilla.contenido.objetivo}
+                            onChange={(e) => setSelectedPlantilla({
+                              ...selectedPlantilla,
+                              contenido: {
+                                ...selectedPlantilla.contenido,
+                                objetivo: e.target.value
+                              }
+                            })}
+                            rows={3}
+                            className="w-full border border-gray-300 rounded-lg px-3 py-2"
+                          />
+                        </div>
+
+                        {/* Precio */}
+                        <div className="border-t border-gray-300 pt-4 mt-4">
+                          <h4 className="font-semibold text-gray-900 mb-3">Información de Precio</h4>
+
+                          <div className="grid grid-cols-2 gap-4">
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Concepto
+                              </label>
+                              <input
+                                type="text"
+                                value={selectedPlantilla.contenido.precio.concepto}
+                                onChange={(e) => setSelectedPlantilla({
+                                  ...selectedPlantilla,
+                                  contenido: {
+                                    ...selectedPlantilla.contenido,
+                                    precio: {
+                                      ...selectedPlantilla.contenido.precio,
+                                      concepto: e.target.value
+                                    }
+                                  }
+                                })}
+                                className="w-full border border-gray-300 rounded-lg px-3 py-2"
+                              />
+                            </div>
+
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Valor Mensual (CLP)
+                              </label>
+                              <input
+                                type="number"
+                                value={selectedPlantilla.contenido.precio.valor_mensual}
+                                onChange={(e) => setSelectedPlantilla({
+                                  ...selectedPlantilla,
+                                  contenido: {
+                                    ...selectedPlantilla.contenido,
+                                    precio: {
+                                      ...selectedPlantilla.contenido.precio,
+                                      valor_mensual: parseInt(e.target.value)
+                                    }
+                                  }
+                                })}
+                                className="w-full border border-gray-300 rounded-lg px-3 py-2"
+                              />
+                            </div>
+
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Duración Mínima (meses)
+                              </label>
+                              <input
+                                type="number"
+                                value={selectedPlantilla.contenido.precio.duracion_minima_meses}
+                                onChange={(e) => setSelectedPlantilla({
+                                  ...selectedPlantilla,
+                                  contenido: {
+                                    ...selectedPlantilla.contenido,
+                                    precio: {
+                                      ...selectedPlantilla.contenido.precio,
+                                      duracion_minima_meses: parseInt(e.target.value)
+                                    }
+                                  }
+                                })}
+                                className="w-full border border-gray-300 rounded-lg px-3 py-2"
+                              />
+                            </div>
+
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Forma de Pago
+                              </label>
+                              <input
+                                type="text"
+                                value={selectedPlantilla.contenido.precio.forma_pago}
+                                onChange={(e) => setSelectedPlantilla({
+                                  ...selectedPlantilla,
+                                  contenido: {
+                                    ...selectedPlantilla.contenido,
+                                    precio: {
+                                      ...selectedPlantilla.contenido.precio,
+                                      forma_pago: e.target.value
+                                    }
+                                  }
+                                })}
+                                className="w-full border border-gray-300 rounded-lg px-3 py-2"
+                              />
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Botones */}
+                        <div className="flex gap-3 pt-4">
+                          <button
+                            type="submit"
+                            className="flex-1 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition font-medium"
+                          >
+                            Guardar Cambios
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setSelectedPlantilla(null)}
+                            className="flex-1 bg-gray-200 text-gray-700 py-2 rounded-lg hover:bg-gray-300 transition font-medium"
+                          >
+                            Cancelar
+                          </button>
+                        </div>
+
+                        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mt-4">
+                          <p className="text-sm text-yellow-800">
+                            <strong>Nota:</strong> Esta versión permite editar los campos básicos.
+                            Los campos avanzados (alcance, KPIs, equipo) se pueden editar en versiones futuras
+                            o directamente en la base de datos.
+                          </p>
+                        </div>
+                      </form>
+                    </div>
+                  ) : (
+                    <div className="bg-gray-50 rounded-lg p-12 text-center">
+                      <div className="text-gray-400 mb-2">📄</div>
+                      <p className="text-gray-600">
+                        Selecciona una plantilla de la lista para editarla
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Modal Editar Cliente */}
