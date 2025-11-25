@@ -6,6 +6,7 @@
  */
 
 import { useState, useEffect } from 'react'
+import QuotationRenderer from '../../components/QuotationRenderer'
 
 interface Cliente {
   id: string
@@ -75,6 +76,7 @@ export default function AdminPage() {
   const [clientes, setClientes] = useState<Cliente[]>([])
   const [plantillas, setPlantillas] = useState<PlantillaCotizacion[]>([])
   const [selectedPlantilla, setSelectedPlantilla] = useState<PlantillaCotizacion | null>(null)
+  const [showPreview, setShowPreview] = useState(false)
   const [loading, setLoading] = useState(true)
   const [showNewUserForm, setShowNewUserForm] = useState(false)
   const [showNewClientForm, setShowNewClientForm] = useState(false)
@@ -938,17 +940,24 @@ export default function AdminPage() {
                         {/* Botones */}
                         <div className="flex gap-3 pt-4">
                           <button
+                            type="button"
+                            onClick={() => setShowPreview(true)}
+                            className="flex-1 bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 transition font-medium"
+                          >
+                            👁️ Preview
+                          </button>
+                          <button
                             type="submit"
                             className="flex-1 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition font-medium"
                           >
-                            Guardar Cambios
+                            💾 Guardar
                           </button>
                           <button
                             type="button"
                             onClick={() => setSelectedPlantilla(null)}
                             className="flex-1 bg-gray-200 text-gray-700 py-2 rounded-lg hover:bg-gray-300 transition font-medium"
                           >
-                            Cancelar
+                            ✕ Cancelar
                           </button>
                         </div>
 
@@ -1073,6 +1082,44 @@ export default function AdminPage() {
                     </button>
                   </div>
                 </form>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Modal Preview Cotización */}
+        {showPreview && selectedPlantilla && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-lg shadow-xl w-full max-w-5xl max-h-[90vh] overflow-y-auto">
+              <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center z-10">
+                <h2 className="text-2xl font-bold text-gray-900">
+                  👁️ Preview: {selectedPlantilla.nombre}
+                </h2>
+                <button
+                  onClick={() => setShowPreview(false)}
+                  className="text-gray-500 hover:text-gray-700 text-2xl font-bold"
+                >
+                  ✕
+                </button>
+              </div>
+              <div className="p-6">
+                <QuotationRenderer data={selectedPlantilla.contenido} />
+              </div>
+              <div className="sticky bottom-0 bg-gray-50 border-t border-gray-200 px-6 py-4 flex justify-end gap-3">
+                <button
+                  onClick={() => setShowPreview(false)}
+                  className="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition font-medium"
+                >
+                  Cerrar
+                </button>
+                <button
+                  onClick={() => {
+                    window.print()
+                  }}
+                  className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-medium"
+                >
+                  🖨️ Imprimir / PDF
+                </button>
               </div>
             </div>
           </div>
