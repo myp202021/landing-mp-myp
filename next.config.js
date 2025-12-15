@@ -16,9 +16,6 @@ const nextConfig = {
     optimizePackageImports: ['lucide-react'],
   },
 
-  // Transpile packages for compatibility
-  transpilePackages: ['destack', '@supabase/supabase-js', '@supabase/ssr'],
-
   // Image optimization
   images: {
     formats: ['image/avif', 'image/webp'],
