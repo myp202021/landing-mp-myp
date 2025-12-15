@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { createClient } from '@/utils/supabase/client'
+import { supabase } from '@/lib/supabase'
 import { Plus, Eye, Edit2, Trash2, ExternalLink } from 'lucide-react'
 import CRMLayout from '@/app/components/crm/CRMLayout'
 
@@ -20,7 +20,6 @@ export default function ClienteLandingsPage() {
   const [landings, setLandings] = useState<Landing[]>([])
   const [loading, setLoading] = useState(true)
   const [user, setUser] = useState<any>(null)
-  const supabase = createClient()
 
   useEffect(() => {
     loadUser()

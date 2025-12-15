@@ -11,8 +11,8 @@
   "dependencies": {
     "@portabletext/react": "^4.0.3",
     "@sanity/client": "^6.24.1",
-    "@supabase/ssr": "0.5.1",
-    "@supabase/supabase-js": "2.45.4",
+    "@supabase/ssr": "0.8.0",
+    "@supabase/supabase-js": "2.76.1",
     "@vercel/speed-insights": "^1.2.0",
     "bcryptjs": "^3.0.3",
     "destack": "^3.0.8",

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
-import { createClient } from '@/utils/supabase/client'
+import { supabase } from '@/lib/supabase'
 // @ts-ignore - Destack no tiene tipos TypeScript
 import { ContentProvider } from 'destack'
 import 'grapesjs/dist/css/grapes.min.css'
@@ -12,7 +12,6 @@ export default function EditLandingPage() {
   const router = useRouter()
   const [landing, setLanding] = useState<any>(null)
   const [loading, setLoading] = useState(true)
-  const supabase = createClient()
 
   useEffect(() => {
     loadLanding()

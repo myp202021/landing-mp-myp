@@ -1,8 +1,12 @@
-import { createClient } from '@/utils/supabase/server'
+import { createClient } from '@supabase/supabase-js'
 import { notFound } from 'next/navigation'
 
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+)
+
 export async function generateMetadata({ params }: { params: { clientId: string, slug: string } }) {
-  const supabase = await createClient()
 
   const { data: landing } = await supabase
     .from('client_landings')
@@ -29,8 +33,6 @@ export default async function PublicLandingPage({
 }: {
   params: { clientId: string; slug: string }
 }) {
-  const supabase = await createClient()
-
   // Obtener landing de la base de datos
   const { data: landing, error } = await supabase
     .from('client_landings')
