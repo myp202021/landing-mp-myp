@@ -1,6 +1,5 @@
 import { createClient } from '@/utils/supabase/server'
 import { notFound } from 'next/navigation'
-import { renderStatic } from 'destack/build/server'
 
 export async function generateMetadata({ params }: { params: { clientId: string, slug: string } }) {
   const supabase = await createClient()
@@ -48,32 +47,23 @@ export default async function PublicLandingPage({
   // Incrementar contador de vistas (async, sin esperar)
   supabase.rpc('increment_landing_view', { landing_uuid: landing.id }).then()
 
-  // Renderizar HTML estático desde la configuración de Destack
-  const html = await renderStatic(landing.destack_config || {})
+  // Renderizar HTML desde la configuración de Destack
+  // Destack guarda el contenido en formato HTML en destack_config
+  const htmlContent = landing.destack_config?.html || landing.destack_config || ''
 
   return (
     <div className="min-h-screen">
-      <div dangerouslySetInnerHTML={{ __html: html }} />
+      {htmlContent && (
+        <div dangerouslySetInnerHTML={{ __html: htmlContent }} />
+      )}
+      {!htmlContent && (
+        <div className="flex items-center justify-center min-h-screen">
+          <p className="text-gray-600">Esta landing aún no tiene contenido</p>
+        </div>
+      )}
     </div>
   )
 }
 
-// Generar rutas estáticas para las landings publicadas
-export async function generateStaticParams() {
-  const supabase = await createClient()
-
-  const { data: landings } = await supabase
-    .from('client_landings')
-    .select('client_id, slug')
-    .eq('published', true)
-
-  if (!landings) return []
-
-  return landings.map((landing) => ({
-    clientId: landing.client_id,
-    slug: landing.slug,
-  }))
-}
-
-// Revalidar cada 60 segundos
-export const revalidate = 60
+// Hacer esta página dinámica para analytics en tiempo real
+export const dynamic = 'force-dynamic'

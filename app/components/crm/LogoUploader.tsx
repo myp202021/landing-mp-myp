@@ -11,7 +11,7 @@
  */
 
 import { useState, useRef, ChangeEvent } from 'react'
-import { createClient } from '@supabase/supabase-js'
+import { createClient } from '@/utils/supabase/client'
 import Image from 'next/image'
 
 interface LogoUploaderProps {
@@ -23,10 +23,7 @@ interface LogoUploaderProps {
 }
 
 // Configurar cliente Supabase
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-)
+const supabase = createClient()
 
 export default function LogoUploader({
   currentLogoUrl,

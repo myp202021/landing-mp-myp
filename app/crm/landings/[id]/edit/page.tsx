@@ -3,7 +3,8 @@
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { createClient } from '@/utils/supabase/client'
-import ContentProvider from 'destack/build/browser/ContentProvider'
+// @ts-ignore - Destack no tiene tipos TypeScript
+import { ContentProvider } from 'destack'
 import 'grapesjs/dist/css/grapes.min.css'
 
 export default function EditLandingPage() {
