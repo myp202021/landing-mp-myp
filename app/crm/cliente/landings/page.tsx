@@ -49,8 +49,13 @@ export default function ClienteLandingsPage() {
 
   async function createNewLanding() {
     try {
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) return
+      console.log('🎯 createNewLanding clicked!')
+      console.log('User from hook:', user)
+
+      if (!user) {
+        alert('Error: No estás autenticado. Por favor recarga la página.')
+        return
+      }
 
       const name = prompt('Nombre de la landing:')
       if (!name) return
@@ -59,6 +64,8 @@ export default function ClienteLandingsPage() {
         .toLowerCase()
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/^-+|-+$/g, '')
+
+      console.log('Creating landing:', { client_id: user.id, name, slug })
 
       const { data, error } = await supabase
         .from('client_landings')
@@ -72,15 +79,19 @@ export default function ClienteLandingsPage() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {
+        console.error('Supabase error:', error)
+        throw error
+      }
 
+      console.log('Landing created successfully:', data)
       router.push(`/crm/cliente/landings/${data.id}/edit`)
     } catch (error: any) {
       console.error('Error creating landing:', error)
       if (error.code === '23505') {
         alert('Ya existe una landing con ese nombre. Usa otro.')
       } else {
-        alert('Error al crear landing')
+        alert(`Error al crear landing: ${error.message || 'Desconocido'}`)
       }
     }
   }
