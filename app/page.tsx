@@ -8,15 +8,15 @@ import { Metadata } from 'next'
 import LandingClient from './LandingClient'
 
 export const metadata: Metadata = {
-  title: 'Muller y Pérez - Agencia Marketing Digital y Performance Chile 2025',
-  description: 'Agencia de marketing y performance líder en marketing de datos en Chile expertos en Google Ads Meta y campañas digitales',
+  title: 'Agencia Marketing Digital y Performance en Chile | M&P - Data Driven Marketing',
+  description: 'Agencia de marketing digital y performance en Chile especializada en Google Ads, Meta Ads y estrategias basadas en datos. ROI +380% promedio. ¡Cotiza gratis!',
   keywords: 'agencia marketing digital chile, agencia marketing datos chile, google ads chile, meta ads chile, performance marketing chile, ROI, ROAS, CPL, CPA, CAC, agencia publicidad digital, marketing digital santiago',
   alternates: {
     canonical: 'https://www.mulleryperez.cl/'
   },
   openGraph: {
-    title: 'Muller y Pérez - Agencia Marketing Digital y Performance Chile 2025',
-    description: 'Agencia de marketing y performance líder en marketing de datos en Chile expertos en Google Ads Meta y campañas digitales',
+    title: 'Agencia Marketing Digital y Performance en Chile | M&P - Data Driven Marketing',
+    description: 'Agencia de marketing digital y performance en Chile especializada en Google Ads, Meta Ads y estrategias basadas en datos. ROI +380% promedio. ¡Cotiza gratis!',
     type: 'website',
     url: 'https://www.mulleryperez.cl',
     locale: 'es_CL',
@@ -31,8 +31,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Muller y Pérez - Agencia Marketing Digital y Performance Chile 2025',
-    description: 'Agencia de marketing y performance líder en marketing de datos en Chile expertos en Google Ads Meta y campañas digitales',
+    title: 'Agencia Marketing Digital y Performance en Chile | M&P - Data Driven Marketing',
+    description: 'Agencia de marketing digital y performance en Chile especializada en Google Ads, Meta Ads y estrategias basadas en datos. ROI +380% promedio. ¡Cotiza gratis!',
     images: ['https://www.mulleryperez.cl/og-image.svg']
   }
 }
