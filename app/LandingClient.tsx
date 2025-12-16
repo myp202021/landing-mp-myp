@@ -337,30 +337,6 @@ export default function LandingClient() {
           '@type': 'Answer',
           text: 'Entregamos reportería ejecutiva semanal con KPIs clave y reportes mensuales completos que incluyen métricas de negocio, benchmark de competencia y plan para el próximo mes. También ofrecemos acceso 24/7 a las cuentas publicitarias para total transparencia.'
         }
-      },
-      {
-        '@type': 'Question',
-        name: '¿Qué es una agencia de performance marketing?',
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: 'Una agencia de performance marketing es aquella que cobra y optimiza basándose en resultados medibles como conversiones, ventas o leads. En M&P trabajamos con modelo de performance, donde tu inversión está directamente ligada a resultados reales de negocio, no a métricas de vanidad.'
-        }
-      },
-      {
-        '@type': 'Question',
-        name: '¿Cuánto cuesta una agencia de marketing digital en Chile en 2025?',
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: 'Los costos de una agencia de marketing digital en Chile varían desde $650.000/mes hasta $1.5M+/mes dependiendo del alcance y nivel de servicio. En M&P ofrecemos planes Silver ($650k), Gold ($980k) y Platinum ($1.5M+), todos con equipo dedicado de 3 profesionales y reportería semanal incluida.'
-        }
-      },
-      {
-        '@type': 'Question',
-        name: '¿Qué es marketing basado en datos o data-driven marketing?',
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: 'El marketing basado en datos (data-driven marketing) usa información real de comportamiento de usuarios para tomar decisiones estratégicas. En lugar de confiar en intuición o métricas como "me gusta" o "impresiones", nos enfocamos en CPL, CPA, CAC y ROAS para optimizar cada peso invertido en publicidad digital.'
-        }
       }
     ]
   }
@@ -639,12 +615,6 @@ export default function LandingClient() {
                 no es tu agencia.
               </span>
             </h1>
-
-            <p className="text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed mb-8">
-              Somos una <strong className="text-white">agencia de marketing digital en Chile</strong> especializada en{' '}
-              <strong className="text-white">performance marketing</strong> y{' '}
-              <strong className="text-white">estrategias basadas en datos</strong>. Trabajamos con empresas B2B y B2C en Santiago y toda Latinoamérica, entregando resultados medibles en Google Ads, Meta Ads, LinkedIn Ads y más.
-            </p>
 
             <p className="text-lg md:text-xl text-blue-100/90 mb-14 max-w-3xl mx-auto leading-relaxed font-light">
               En 2025, los costos de campañas subieron y la efectividad bajó. Si no tienes visibilidad real de tus números,
