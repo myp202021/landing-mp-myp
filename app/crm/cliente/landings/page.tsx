@@ -19,17 +19,13 @@ export default function ClienteLandingsPage() {
   const router = useRouter()
   const [landings, setLandings] = useState<Landing[]>([])
   const [loading, setLoading] = useState(true)
-  const [user, setUser] = useState<any>(null)
+  const { user } = useSimpleAuth()
 
   useEffect(() => {
-    loadUser()
+    console.log('🔍 User from useSimpleAuth:', user)
+    console.log('🔍 User in localStorage:', localStorage.getItem('crm_user'))
     loadLandings()
-  }, [])
-
-  async function loadUser() {
-    const { data: { user } } = await supabase.auth.getUser()
-    setUser(user)
-  }
+  }, [user])
 
   async function loadLandings() {
     try {
