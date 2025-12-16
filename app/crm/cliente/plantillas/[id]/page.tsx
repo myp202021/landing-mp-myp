@@ -31,7 +31,7 @@ export default function EditarPlantillaClientePage() {
   const { isAuthenticated, user } = useSimpleAuth()
   const router = useRouter()
   const params = useParams()
-  const plantillaId = params.id as string
+  const plantillaId = params?.id as string
 
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)

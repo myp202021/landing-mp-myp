@@ -12,7 +12,7 @@ export async function generateMetadata({ params }: { params: { clientId: string,
     .from('client_landings')
     .select('name, meta_title, meta_description')
     .eq('client_id', params.clientId)
-    .eq('slug', params.slug)
+    .eq('slug', params?.slug)
     .eq('published', true)
     .single()
 
@@ -38,7 +38,7 @@ export default async function PublicLandingPage({
     .from('client_landings')
     .select('*')
     .eq('client_id', params.clientId)
-    .eq('slug', params.slug)
+    .eq('slug', params?.slug)
     .eq('published', true)
     .single()
 

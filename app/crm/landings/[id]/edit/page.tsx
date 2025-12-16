@@ -15,14 +15,14 @@ export default function EditLandingPage() {
 
   useEffect(() => {
     loadLanding()
-  }, [params.id])
+  }, [params?.id])
 
   async function loadLanding() {
     try {
       const { data, error } = await supabase
         .from('client_landings')
         .select('*')
-        .eq('id', params.id)
+        .eq('id', params?.id)
         .single()
 
       if (error) throw error
@@ -45,7 +45,7 @@ export default function EditLandingPage() {
           destack_config: data,
           updated_at: new Date().toISOString()
         })
-        .eq('id', params.id)
+        .eq('id', params?.id)
 
       if (error) throw error
 

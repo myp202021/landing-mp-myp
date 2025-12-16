@@ -23,7 +23,7 @@ export default function ZapierWizardPage() {
   const params = useParams()
   const router = useRouter()
   const { user } = useSimpleAuth()
-  const clienteId = params.clienteId as string
+  const clienteId = params?.clienteId as string
 
   const [loading, setLoading] = useState(true)
   const [cliente, setCliente] = useState<Cliente | null>(null)

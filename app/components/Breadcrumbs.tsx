@@ -18,7 +18,7 @@ export default function Breadcrumbs() {
   const pathname = usePathname()
 
   // No mostrar breadcrumbs en la homepage
-  if (pathname === '/') return null
+  if (!pathname || pathname === '/') return null
 
   // Generar breadcrumbs desde la URL
   const segments = pathname.split('/').filter(Boolean)

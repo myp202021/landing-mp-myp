@@ -36,7 +36,7 @@ interface Plantilla {
 export default function EditarPlantillaPage() {
   const router = useRouter()
   const params = useParams()
-  const plantillaId = params.id as string
+  const plantillaId = params?.id as string
 
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)

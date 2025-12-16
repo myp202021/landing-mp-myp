@@ -40,10 +40,10 @@ export default function PDFViewPage() {
   const [error, setError] = useState('')
 
   useEffect(() => {
-    if (params.id) {
+    if (params?.id) {
       fetchCotizacion()
     }
-  }, [params.id])
+  }, [params?.id])
 
   const fetchCotizacion = async () => {
     try {
@@ -54,7 +54,7 @@ export default function PDFViewPage() {
         throw new Error(data.error || 'Error al cargar cotización')
       }
 
-      const found = data.cotizaciones.find((c: Cotizacion) => c.id === params.id)
+      const found = data.cotizaciones.find((c: Cotizacion) => c.id === params?.id)
       if (!found) {
         throw new Error('Cotización no encontrada')
       }

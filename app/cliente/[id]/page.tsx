@@ -43,7 +43,7 @@ interface Estadisticas {
 
 export default function ClientePortal() {
   const params = useParams()
-  const clienteId = params.id as string
+  const clienteId = params?.id as string
 
   const [cliente, setCliente] = useState<ClienteInfo | null>(null)
   const [estadisticas, setEstadisticas] = useState<Estadisticas | null>(null)

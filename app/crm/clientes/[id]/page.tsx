@@ -41,7 +41,7 @@ interface MetricasMensual {
 export default function ClienteMetricasPage() {
   const params = useParams()
   const router = useRouter()
-  const clienteId = params.id as string
+  const clienteId = params?.id as string
 
   const [cliente, setCliente] = useState<Cliente | null>(null)
   const [inversiones, setInversiones] = useState<Inversion[]>([])
