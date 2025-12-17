@@ -640,16 +640,30 @@ export default function LandingClient() {
               </span>
             </h1>
 
-            <p className="text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed mb-8">
-              Somos una <strong className="text-white">agencia de marketing digital en Chile</strong> especializada en{' '}
-              <strong className="text-white">performance marketing</strong> y{' '}
-              <strong className="text-white">estrategias basadas en datos</strong>. Trabajamos con empresas B2B y B2C en Santiago y toda Latinoamérica, entregando resultados medibles en Google Ads, Meta Ads, LinkedIn Ads y más.
+            <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto leading-relaxed mb-12">
+              Performance marketing basado en datos.
+              <span className="text-white font-semibold"> Con CRM integrado.</span>
             </p>
 
-            <p className="text-lg md:text-xl text-blue-100/90 mb-14 max-w-3xl mx-auto leading-relaxed font-light">
-              En 2025, los costos de campañas subieron y la efectividad bajó. Si no tienes visibilidad real de tus números,
-              <span className="block mt-3 text-white font-semibold">el problema no es el mercado: es cómo están gestionando tu marketing.</span>
-            </p>
+            {/* Value Props Visuales */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto mb-14">
+              <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 text-center">
+                <div className="text-3xl mb-2">📊</div>
+                <div className="text-sm text-blue-100 font-medium">ROI +380%</div>
+              </div>
+              <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 text-center">
+                <div className="text-3xl mb-2">🎯</div>
+                <div className="text-sm text-blue-100 font-medium">Google & Meta Ads</div>
+              </div>
+              <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 text-center">
+                <div className="text-3xl mb-2">💼</div>
+                <div className="text-sm text-blue-100 font-medium">CRM Incluido</div>
+              </div>
+              <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 text-center">
+                <div className="text-3xl mb-2">📈</div>
+                <div className="text-sm text-blue-100 font-medium">Data Real-Time</div>
+              </div>
+            </div>
 
             <div className="flex flex-col sm:flex-row gap-5 justify-center items-center">
               <button
