@@ -1023,6 +1023,204 @@ export default function LandingClient() {
         </div>
       </section>
 
+      {/* Por eso vinculamos las 3 áreas */}
+      <section className="py-24 px-6 bg-gradient-to-br from-blue-50 via-purple-50 to-indigo-50 relative overflow-hidden">
+        {/* Background decoration */}
+        <div className="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))] -z-10"></div>
+
+        <div className="max-w-7xl mx-auto relative z-10">
+          {/* Header */}
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-full text-sm font-bold mb-6 shadow-lg shadow-blue-600/30">
+              <Users className="w-5 h-5" />
+              La Diferencia M&P
+            </div>
+            <h2 className="text-4xl md:text-6xl font-black text-gray-900 mb-6 leading-tight">
+              Por eso{' '}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600">
+                vinculamos las 3 áreas
+              </span>
+            </h2>
+            <p className="text-xl md:text-2xl text-gray-700 max-w-4xl mx-auto font-medium">
+              CRM único + Métricas compartidas = <span className="text-blue-600 font-bold">Decisiones alineadas</span>
+            </p>
+          </div>
+
+          {/* 3 Columnas - Qué ve cada stakeholder */}
+          <div className="grid md:grid-cols-3 gap-8 mb-16">
+            {/* Dueño/CEO */}
+            <div className="bg-white rounded-3xl p-8 shadow-2xl border-2 border-blue-200 hover:border-blue-400 transition-all duration-300 hover:scale-105">
+              <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-blue-700 rounded-2xl flex items-center justify-center mb-6 shadow-xl shadow-blue-600/40">
+                <Target className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">Dueño/CEO ve:</h3>
+              <ul className="space-y-4">
+                <li className="flex items-start gap-3">
+                  <div className="w-2 h-2 bg-blue-600 rounded-full mt-2 flex-shrink-0"></div>
+                  <div>
+                    <div className="font-bold text-gray-900">ROI consolidado</div>
+                    <div className="text-sm text-gray-600">Por canal y campaña</div>
+                  </div>
+                </li>
+                <li className="flex items-start gap-3">
+                  <div className="w-2 h-2 bg-blue-600 rounded-full mt-2 flex-shrink-0"></div>
+                  <div>
+                    <div className="font-bold text-gray-900">Proyección de ventas</div>
+                    <div className="text-sm text-gray-600">Basada en CAC real</div>
+                  </div>
+                </li>
+                <li className="flex items-start gap-3">
+                  <div className="w-2 h-2 bg-blue-600 rounded-full mt-2 flex-shrink-0"></div>
+                  <div>
+                    <div className="font-bold text-gray-900">CAC promedio ponderado</div>
+                    <div className="text-sm text-gray-600">Todos los canales</div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+
+            {/* Gerente Comercial */}
+            <div className="bg-white rounded-3xl p-8 shadow-2xl border-2 border-purple-200 hover:border-purple-400 transition-all duration-300 hover:scale-105">
+              <div className="w-16 h-16 bg-gradient-to-br from-purple-600 to-purple-700 rounded-2xl flex items-center justify-center mb-6 shadow-xl shadow-purple-600/40">
+                <Calculator className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">Gerente Comercial ve:</h3>
+              <ul className="space-y-4">
+                <li className="flex items-start gap-3">
+                  <div className="w-2 h-2 bg-purple-600 rounded-full mt-2 flex-shrink-0"></div>
+                  <div>
+                    <div className="font-bold text-gray-900">Pipeline en tiempo real</div>
+                    <div className="text-sm text-gray-600">Leads por etapa</div>
+                  </div>
+                </li>
+                <li className="flex items-start gap-3">
+                  <div className="w-2 h-2 bg-purple-600 rounded-full mt-2 flex-shrink-0"></div>
+                  <div>
+                    <div className="font-bold text-gray-900">Conversión por fuente</div>
+                    <div className="text-sm text-gray-600">Google, Meta, Orgánico</div>
+                  </div>
+                </li>
+                <li className="flex items-start gap-3">
+                  <div className="w-2 h-2 bg-purple-600 rounded-full mt-2 flex-shrink-0"></div>
+                  <div>
+                    <div className="font-bold text-gray-900">Proyección de cierre</div>
+                    <div className="text-sm text-gray-600">Por tipo de lead</div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+
+            {/* Gerente Marketing */}
+            <div className="bg-white rounded-3xl p-8 shadow-2xl border-2 border-indigo-200 hover:border-indigo-400 transition-all duration-300 hover:scale-105">
+              <div className="w-16 h-16 bg-gradient-to-br from-indigo-600 to-indigo-700 rounded-2xl flex items-center justify-center mb-6 shadow-xl shadow-indigo-600/40">
+                <TrendingUp className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">Gerente Marketing ve:</h3>
+              <ul className="space-y-4">
+                <li className="flex items-start gap-3">
+                  <div className="w-2 h-2 bg-indigo-600 rounded-full mt-2 flex-shrink-0"></div>
+                  <div>
+                    <div className="font-bold text-gray-900">Performance por campaña</div>
+                    <div className="text-sm text-gray-600">CPL, CPA, ROAS</div>
+                  </div>
+                </li>
+                <li className="flex items-start gap-3">
+                  <div className="w-2 h-2 bg-indigo-600 rounded-full mt-2 flex-shrink-0"></div>
+                  <div>
+                    <div className="font-bold text-gray-900">Benchmarks vs competencia</div>
+                    <div className="text-sm text-gray-600">Industria y región</div>
+                  </div>
+                </li>
+                <li className="flex items-start gap-3">
+                  <div className="w-2 h-2 bg-indigo-600 rounded-full mt-2 flex-shrink-0"></div>
+                  <div>
+                    <div className="font-bold text-gray-900">Optimización sugerida</div>
+                    <div className="text-sm text-gray-600">Basada en datos</div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          {/* CRM Integration Visual */}
+          <div className="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 rounded-3xl p-10 md:p-16 shadow-2xl">
+            <div className="grid md:grid-cols-2 gap-12 items-center">
+              <div>
+                <div className="inline-flex items-center gap-2 bg-blue-500/20 text-blue-300 px-4 py-2 rounded-full text-sm font-bold mb-6">
+                  <BarChart3 className="w-4 h-4" />
+                  CRM Integrado
+                </div>
+                <h3 className="text-3xl md:text-4xl font-black text-white mb-6 leading-tight">
+                  Todos mirando el{' '}
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">
+                    mismo dashboard
+                  </span>
+                </h3>
+                <p className="text-xl text-blue-100 mb-8 leading-relaxed">
+                  Todos hablando el mismo idioma: <span className="font-bold text-white">números.</span>
+                </p>
+                <ul className="space-y-4">
+                  <li className="flex items-start gap-3">
+                    <CheckCircle2 className="w-6 h-6 text-green-400 mt-1 flex-shrink-0" />
+                    <span className="text-blue-100"><span className="font-bold text-white">Sincronización automática:</span> Marketing registra lead → Comercial lo ve al instante → CEO ve el costo</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <CheckCircle2 className="w-6 h-6 text-green-400 mt-1 flex-shrink-0" />
+                    <span className="text-blue-100"><span className="font-bold text-white">Métricas unificadas:</span> CAC, ROAS, LTV calculados en tiempo real para todos</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <CheckCircle2 className="w-6 h-6 text-green-400 mt-1 flex-shrink-0" />
+                    <span className="text-blue-100"><span className="font-bold text-white">Decisiones alineadas:</span> Cuando todos ven los mismos números, se acabaron los conflictos</span>
+                  </li>
+                </ul>
+              </div>
+
+              <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 border border-white/20">
+                <div className="text-sm text-blue-300 font-mono mb-4">Dashboard M&P - Vista en tiempo real</div>
+                <div className="space-y-4">
+                  <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+                    <div className="flex justify-between items-center">
+                      <span className="text-blue-200 text-sm">Leads totales (hoy)</span>
+                      <span className="text-white font-bold text-2xl">47</span>
+                    </div>
+                  </div>
+                  <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+                    <div className="flex justify-between items-center">
+                      <span className="text-blue-200 text-sm">CAC promedio</span>
+                      <span className="text-green-400 font-bold text-2xl">$42.100</span>
+                    </div>
+                  </div>
+                  <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+                    <div className="flex justify-between items-center">
+                      <span className="text-blue-200 text-sm">ROAS consolidado</span>
+                      <span className="text-cyan-400 font-bold text-2xl">4.8x</span>
+                    </div>
+                  </div>
+                  <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+                    <div className="flex justify-between items-center">
+                      <span className="text-blue-200 text-sm">Proyección mes</span>
+                      <span className="text-purple-400 font-bold text-2xl">~1.240 leads</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom CTA */}
+          <div className="mt-16 text-center">
+            <div className="inline-block bg-white rounded-2xl px-10 py-6 shadow-2xl border-2 border-blue-200">
+              <p className="text-2xl font-bold text-gray-900 mb-2">
+                Esto es <span className="text-blue-600">vincular Marketing con Comercial.</span>
+              </p>
+              <p className="text-gray-600">
+                No promesas. Datos. Transparencia. Alineación.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Team M&P - Christopher Müller */}
       <section className="py-20 px-6 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-white">
         <div className="max-w-6xl mx-auto">
@@ -1321,105 +1519,6 @@ export default function LandingClient() {
         </div>
       </section>
 
-      {/* Problema vs Solución */}
-      <section className="py-20 px-6 bg-gradient-to-b from-white to-gray-50" aria-labelledby="problema-solucion">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-14">
-            <h2 id="problema-solucion" className="text-4xl md:text-5xl font-bold text-gray-900 mb-5 tracking-tight">
-              La mayoría de agencias venden humo
-            </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              En M&P no trabajamos con humo, <span className="font-semibold text-gray-900">trabajamos con datos</span>
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
-            {/* Problemas */}
-            <div className="bg-gradient-to-br from-red-50 to-red-50/50 rounded-2xl p-8 border border-red-100 shadow-sm hover:shadow-md transition-shadow duration-300">
-              <div className="flex items-center gap-3 mb-8">
-                <div className="w-12 h-12 bg-red-500 rounded-xl flex items-center justify-center shadow-lg shadow-red-500/30">
-                  <XCircle className="w-6 h-6 text-white" />
-                </div>
-                <h3 className="text-2xl font-bold text-gray-900">Agencias tradicionales</h3>
-              </div>
-
-              <div className="space-y-3">
-                {problemasAgencias.map((problema, idx) => (
-                  <div key={idx} className="flex items-start gap-3 p-4 bg-white/80 rounded-xl border border-red-100/50 backdrop-blur-sm">
-                    <XCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
-                    <p className="text-gray-700 text-sm leading-relaxed">{problema}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Solución */}
-            <div className="bg-gradient-to-br from-emerald-50 to-emerald-50/50 rounded-2xl p-8 border border-emerald-100 shadow-sm hover:shadow-md transition-shadow duration-300">
-              <div className="flex items-center gap-3 mb-8">
-                <div className="w-12 h-12 bg-emerald-500 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-500/30">
-                  <CheckCircle2 className="w-6 h-6 text-white" />
-                </div>
-                <h3 className="text-2xl font-bold text-gray-900">Metodología M&P</h3>
-              </div>
-
-              <div className="space-y-3">
-                {solucionMP.map((solucion, idx) => (
-                  <div key={idx} className="flex items-start gap-3 p-4 bg-white/80 rounded-xl border border-emerald-100/50 backdrop-blur-sm">
-                    <CheckCircle2 className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" />
-                    <p className="text-gray-700 text-sm leading-relaxed">{solucion}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Equipo */}
-      <section className="py-20 px-6 bg-white" aria-labelledby="equipo-dedicado">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-14">
-            <div className="inline-flex items-center gap-2 mb-4 px-4 py-2 rounded-full bg-blue-50 border border-blue-100" role="note">
-              <span className="text-blue-700 text-sm font-semibold">TIEMPO CERO - Primera Reunión</span>
-            </div>
-            <h2 id="equipo-dedicado" className="text-4xl md:text-5xl font-bold text-gray-900 mb-5 tracking-tight">
-              Tu equipo dedicado de 3 áreas
-            </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              A cada cliente se le asignan 3 personas especializadas que estarán 100% enfocadas en hacer crecer tu negocio
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-6">
-            {equipoRoles.map((rol, idx) => {
-              const IconComponent = rol.icon
-              return (
-                <div key={idx} className="group bg-white rounded-2xl p-8 border border-gray-200 hover:border-blue-300 hover:shadow-xl transition-all duration-300">
-                  <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mb-6 shadow-lg shadow-blue-500/30 group-hover:shadow-blue-500/50 transition-all duration-300">
-                    <IconComponent className="w-8 h-8 text-white" />
-                  </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-5">{rol.titulo}</h3>
-                  <div className="space-y-3">
-                    {rol.responsabilidades.map((resp, ridx) => (
-                      <div key={ridx} className="flex items-start gap-2.5">
-                        <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0 mt-0.5" />
-                        <p className="text-gray-700 text-sm leading-relaxed">{resp}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-
-          <div className="mt-12 text-center">
-            <div className="inline-block px-8 py-5 bg-gradient-to-r from-blue-600 to-blue-700 rounded-2xl shadow-xl shadow-blue-600/30">
-              <p className="text-white text-base font-medium">Este equipo dedicado es lo que te permite tener orden, consistencia y resultados que escalan.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Metodología */}
       <section className="py-20 px-6 bg-gradient-to-b from-gray-50 to-white" aria-labelledby="metodologia">
         <div className="max-w-5xl mx-auto">
@@ -1512,57 +1611,6 @@ export default function LandingClient() {
               <span className="font-semibold text-white">CPA</span> = Costo por Adquisición |{' '}
               <span className="font-semibold text-white">ROAS</span> = Retorno de Inversión Publicitaria
             </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Comunicación */}
-      <section className="py-20 px-6 bg-white" aria-labelledby="comunicacion">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 id="comunicacion" className="text-4xl md:text-5xl font-bold text-gray-900 mb-5 tracking-tight">
-              Comunicación constante y transparente
-            </h2>
-            <p className="text-lg text-gray-600">Siempre sabrás qué está pasando con tus campañas</p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {comunicacion.map((canal, idx) => (
-              <div key={idx} className="bg-gradient-to-br from-gray-50 to-white rounded-2xl p-6 border border-gray-200 hover:border-blue-300 hover:shadow-lg transition-all duration-300">
-                <h3 className="text-lg font-bold text-gray-900 mb-4">{canal.titulo}</h3>
-                <ul className="space-y-2.5">
-                  {canal.items.map((item, iidx) => (
-                    <li key={iidx} className="flex items-start gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-blue-500 flex-shrink-0 mt-0.5" />
-                      <span className="text-gray-700 text-sm leading-relaxed">{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Diferenciadores */}
-      <section className="py-20 px-6 bg-gradient-to-b from-gray-50 to-white" aria-labelledby="diferenciadores">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 id="diferenciadores" className="text-4xl md:text-5xl font-bold text-gray-900 mb-5 tracking-tight">
-              Por qué elegir M&P
-            </h2>
-            <p className="text-lg text-gray-600">Claridad, resultados y equipo dedicado</p>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-5">
-            {diferenciadores.map((diferenciador, idx) => (
-              <div key={idx} className="flex items-start gap-3.5 p-5 bg-white rounded-xl border border-gray-200 hover:border-blue-300 hover:shadow-md transition-all duration-300">
-                <div className="w-6 h-6 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <CheckCircle2 className="w-4 h-4 text-blue-600" />
-                </div>
-                <p className="text-gray-800 text-sm leading-relaxed font-medium">{diferenciador}</p>
-              </div>
-            ))}
           </div>
         </div>
       </section>
