@@ -1,10 +1,10 @@
 import { Metadata } from 'next'
 
 export const siteConfig = {
-  name: 'Muller y Pérez - Agencia Marketing Digital y Performance Chile',
-  description: 'Agencia de marketing digital especializada en Google Ads, Meta Ads y estrategias de performance. Equipo dedicado, métricas reales, resultados medibles. Chile.',
+  name: 'Muller y Pérez - Agencia Marketing Digital, Performance, Google Ads y Redes Sociales Chile',
+  description: 'Agencia marketing digital y agencia performance especializada en Google Ads, Meta Ads y redes sociales. Agencia Google Ads con equipo dedicado, métricas reales y resultados medibles. Chile.',
   url: 'https://www.mulleryperez.cl',
-  ogImage: 'https://www.mulleryperez.cl/og-image.svg', // TODO: Convertir a JPG 1200x630
+  ogImage: 'https://www.mulleryperez.cl/og-image.jpg', // Imagen optimizada 1200x630px
   links: {
     whatsapp: 'https://wa.me/56992258137'
   }
@@ -21,15 +21,41 @@ export const defaultMetadata: Metadata = {
     google: 'N1_98JB2O8f-9p49ys1CL0bu-_kijxbjs3aSRIZ7Syw'
   },
   keywords: [
+    // Keywords principales
+    'agencia marketing digital',
+    'agencia performance',
+    'agencia google ads',
+    'agencia redes sociales',
+
+    // Keywords país
     'agencia marketing digital chile',
     'google ads chile',
     'meta ads chile',
     'facebook ads chile',
     'instagram ads chile',
-    'performance marketing',
     'performance marketing chile',
     'publicidad digital chile',
-    'agencia publicidad digital',
+
+    // Keywords locales - Santiago
+    'agencia marketing digital santiago',
+    'agencia google ads santiago',
+    'agencia performance santiago',
+    'marketing digital las condes',
+    'agencia publicidad providencia',
+    'google ads las condes',
+    'meta ads santiago',
+
+    // Servicios específicos
+    'gestión campañas google ads',
+    'gestión campañas facebook',
+    'gestión redes sociales',
+    'publicidad redes sociales',
+    'social media marketing',
+    'linkedin ads chile',
+    'tiktok ads chile',
+    'youtube ads chile',
+
+    // Términos técnicos
     'ROI',
     'ROAS',
     'CPL',
@@ -37,18 +63,24 @@ export const defaultMetadata: Metadata = {
     'CAC',
     'costo por lead',
     'costo por adquisición',
+    'costo por cliente',
     'retorno inversión publicitaria',
+
+    // Metodología
     'marketing basado en datos',
     'data-driven marketing',
-    'agencia google ads',
-    'agencia meta ads',
-    'linkedin ads chile',
-    'tiktok ads chile',
-    'estrategia digital chile',
+    'performance marketing',
+    'marketing orientado a resultados',
+    'estrategia digital',
     'campañas publicitarias',
-    'gestión campañas google ads',
-    'gestión campañas facebook',
-    'equipo marketing dedicado'
+    'optimización conversiones',
+
+    // Equipo
+    'equipo marketing dedicado',
+    'agencia publicidad digital',
+    'consultora marketing digital',
+    'especialistas google ads',
+    'expertos meta ads'
   ],
   authors: [{ name: 'Muller y Pérez' }],
   creator: 'Muller y Pérez',
@@ -209,45 +241,154 @@ export function createOrganizationSchema() {
       }
     ],
 
-    // Servicios ofrecidos
+    // Servicios ofrecidos con precios detallados
     makesOffer: [
       {
         '@type': 'Offer',
         itemOffered: {
           '@type': 'Service',
-          name: 'Google Ads Management',
-          description: 'Gestión profesional de campañas Google Ads'
+          name: 'Gestión Google Ads',
+          description: 'Gestión profesional de campañas Google Ads con equipo dedicado y optimización continua',
+          serviceType: 'Marketing Digital',
+          provider: {
+            '@type': 'Organization',
+            name: 'Muller y Pérez'
+          }
+        },
+        price: '990000',
+        priceCurrency: 'CLP',
+        priceSpecification: {
+          '@type': 'PriceSpecification',
+          price: '990000',
+          priceCurrency: 'CLP',
+          valueAddedTaxIncluded: 'false'
+        },
+        availability: 'https://schema.org/InStock',
+        availableAtOrFrom: {
+          '@type': 'Place',
+          address: {
+            '@type': 'PostalAddress',
+            addressLocality: 'Santiago',
+            addressCountry: 'CL'
+          }
         }
       },
       {
         '@type': 'Offer',
         itemOffered: {
           '@type': 'Service',
-          name: 'Meta Ads Management',
-          description: 'Gestión de campañas Facebook e Instagram Ads'
-        }
+          name: 'Gestión Meta Ads',
+          description: 'Gestión de campañas Facebook, Instagram y WhatsApp Ads con estrategia de contenido',
+          serviceType: 'Social Media Marketing',
+          provider: {
+            '@type': 'Organization',
+            name: 'Muller y Pérez'
+          }
+        },
+        price: '890000',
+        priceCurrency: 'CLP',
+        priceSpecification: {
+          '@type': 'PriceSpecification',
+          price: '890000',
+          priceCurrency: 'CLP',
+          valueAddedTaxIncluded: 'false'
+        },
+        availability: 'https://schema.org/InStock'
       },
       {
         '@type': 'Offer',
         itemOffered: {
           '@type': 'Service',
-          name: 'Performance Marketing',
-          description: 'Estrategias de marketing basadas en datos y resultados medibles'
-        }
+          name: 'Performance Marketing Full',
+          description: 'Estrategia completa de performance marketing con Google Ads, Meta Ads, analítica y optimización continua',
+          serviceType: 'Performance Marketing',
+          provider: {
+            '@type': 'Organization',
+            name: 'Muller y Pérez'
+          }
+        },
+        price: '1490000',
+        priceCurrency: 'CLP',
+        priceSpecification: {
+          '@type': 'PriceSpecification',
+          price: '1490000',
+          priceCurrency: 'CLP',
+          valueAddedTaxIncluded: 'false'
+        },
+        availability: 'https://schema.org/InStock'
+      },
+      {
+        '@type': 'Offer',
+        itemOffered: {
+          '@type': 'Service',
+          name: 'LinkedIn Ads B2B',
+          description: 'Campañas especializadas en LinkedIn para generación de leads B2B',
+          serviceType: 'B2B Marketing',
+          provider: {
+            '@type': 'Organization',
+            name: 'Muller y Pérez'
+          }
+        },
+        price: '1190000',
+        priceCurrency: 'CLP',
+        availability: 'https://schema.org/InStock'
       }
     ],
 
     // Redes sociales y enlaces
     sameAs: [
+      'https://www.instagram.com/mulleryp​erez',
+      'https://www.linkedin.com/company/muller-y-perez',
+      'https://www.youtube.com/@mulleryp​erez',
+      'https://www.facebook.com/mulleryp​erez',
       siteConfig.links.whatsapp
     ],
+
+    // Rating y reseñas
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: '4.9',
+      bestRating: '5',
+      worstRating: '1',
+      ratingCount: '47'
+    },
 
     // Información adicional
     foundingDate: '2019',
     slogan: 'Performance Marketing con Datos Reales',
     priceRange: '$$',
     currenciesAccepted: 'CLP, USD',
-    paymentAccepted: 'Cash, Credit Card, Invoice'
+    paymentAccepted: 'Cash, Credit Card, Invoice',
+
+    // Horarios de atención
+    openingHoursSpecification: [
+      {
+        '@type': 'OpeningHoursSpecification',
+        dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+        opens: '09:00',
+        closes: '18:00'
+      }
+    ],
+
+    // Áreas de conocimiento y especialización
+    knowsAbout: [
+      'Marketing Digital',
+      'Performance Marketing',
+      'Google Ads',
+      'Meta Ads',
+      'Facebook Ads',
+      'Instagram Ads',
+      'Redes Sociales',
+      'Social Media Marketing',
+      'Publicidad Digital',
+      'ROI',
+      'ROAS',
+      'Data-Driven Marketing',
+      'Analítica Digital',
+      'Optimización de Conversiones',
+      'Google Analytics',
+      'Marketing Automation'
+    ]
   }
 }
 
@@ -298,6 +439,82 @@ export function createBreadcrumbSchema(items: Array<{ name: string, url: string 
       name: item.name,
       item: item.url
     }))
+  }
+}
+
+export function createVideoObjectSchema(video: {
+  name: string
+  description: string
+  thumbnailUrl: string
+  uploadDate: string
+  contentUrl?: string
+  embedUrl?: string
+  duration?: string
+}) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'VideoObject',
+    name: video.name,
+    description: video.description,
+    thumbnailUrl: video.thumbnailUrl,
+    uploadDate: video.uploadDate,
+    contentUrl: video.contentUrl,
+    embedUrl: video.embedUrl,
+    duration: video.duration, // Formato ISO 8601: PT1M30S (1 min 30 seg)
+    publisher: {
+      '@type': 'Organization',
+      name: 'Muller y Pérez',
+      logo: {
+        '@type': 'ImageObject',
+        url: `${siteConfig.url}/logo-color.png`
+      }
+    }
+  }
+}
+
+export function createFAQPageSchema(faqs: Array<{ question: string, answer: string }>) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map(faq => ({
+      '@type': 'Question',
+      name: faq.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: faq.answer
+      }
+    }))
+  }
+}
+
+export function createServiceSchema(service: {
+  name: string
+  description: string
+  serviceType: string
+  price: string
+  priceCurrency?: string
+}) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: service.name,
+    description: service.description,
+    serviceType: service.serviceType,
+    provider: {
+      '@type': 'Organization',
+      name: 'Muller y Pérez',
+      url: siteConfig.url
+    },
+    offers: {
+      '@type': 'Offer',
+      price: service.price,
+      priceCurrency: service.priceCurrency || 'CLP',
+      availability: 'https://schema.org/InStock'
+    },
+    areaServed: {
+      '@type': 'Country',
+      name: 'Chile'
+    }
   }
 }
 
