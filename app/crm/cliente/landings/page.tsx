@@ -212,7 +212,7 @@ export default function ClienteLandingsPage() {
                   </div>
 
                   <p className="text-sm text-gray-600 mb-4 truncate">
-                    /l/{user?.id?.slice(0, 8)}/{landing.slug}
+                    /l/{(user?.cliente_id || user?.username || 'arturo').slice(0, 8)}/{landing.slug}
                   </p>
 
                   <div className="text-xs text-gray-500 mb-4">
@@ -231,7 +231,7 @@ export default function ClienteLandingsPage() {
 
                     {landing.published && (
                       <a
-                        href={`/l/${user?.id}/${landing.slug}`}
+                        href={`/l/${user?.cliente_id || user?.username || 'arturo'}/${landing.slug}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex items-center justify-center gap-2 bg-gray-100 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-200 transition-colors text-sm font-medium"
