@@ -442,6 +442,26 @@ export default function LandingClient() {
             />
           </Link>
           <nav className="flex items-center gap-6" role="navigation" aria-label="Navegación principal">
+            {/* Vínculos principales */}
+            <button
+              onClick={() => document.getElementById('planes')?.scrollIntoView({ behavior: 'smooth' })}
+              className="hidden md:block text-sm font-semibold text-gray-700 hover:text-blue-600 transition-all duration-200"
+            >
+              Planes
+            </button>
+            <button
+              onClick={() => document.getElementById('nosotros')?.scrollIntoView({ behavior: 'smooth' })}
+              className="hidden md:block text-sm font-semibold text-gray-700 hover:text-blue-600 transition-all duration-200"
+            >
+              Nosotros
+            </button>
+            <button
+              onClick={() => document.getElementById('casos-exito')?.scrollIntoView({ behavior: 'smooth' })}
+              className="hidden md:block text-sm font-semibold text-gray-700 hover:text-blue-600 transition-all duration-200"
+            >
+              Casos de Éxito
+            </button>
+
             {/* M&P Labs Dropdown */}
             <div
               className="relative hidden md:block"
@@ -633,7 +653,7 @@ export default function LandingClient() {
               <span className="text-blue-200 text-sm font-medium">Performance Marketing con Datos Reales</span>
             </div>
 
-            <h1 className="text-5xl md:text-7xl font-bold mb-10 leading-[1.1] tracking-tight text-white">
+            <h1 className="text-4xl md:text-5xl font-bold mb-10 leading-[1.1] tracking-tight text-white">
               LA AGENCIA QUE VINCULA<br />Y COORDINA MARKETING<br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400">
                 CON COMERCIAL
@@ -644,30 +664,6 @@ export default function LandingClient() {
               El primer paso es tener un número: <span className="text-white font-bold">el costo de adquisición por tipo de campaña.</span>
               <br />Con ese dato puedes proyectar ventas y corregir errores.
             </p>
-
-            {/* Value Props Visuales */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-5xl mx-auto mb-14">
-              <div className="bg-gradient-to-br from-blue-500/20 to-purple-500/20 backdrop-blur-md border-2 border-blue-400/50 rounded-2xl p-6 text-center hover:scale-105 transition-transform duration-300 shadow-xl">
-                <div className="text-4xl mb-3">📊</div>
-                <div className="text-lg text-white font-bold">ROI +380%</div>
-                <div className="text-xs text-blue-200 mt-1">Casos reales</div>
-              </div>
-              <div className="bg-gradient-to-br from-emerald-500/20 to-cyan-500/20 backdrop-blur-md border-2 border-emerald-400/50 rounded-2xl p-6 text-center hover:scale-105 transition-transform duration-300 shadow-xl">
-                <div className="text-4xl mb-3">🎯</div>
-                <div className="text-lg text-white font-bold">Google & Meta</div>
-                <div className="text-xs text-emerald-200 mt-1">Expertos certificados</div>
-              </div>
-              <div className="bg-gradient-to-br from-purple-500/20 to-pink-500/20 backdrop-blur-md border-2 border-purple-400/50 rounded-2xl p-6 text-center hover:scale-105 transition-transform duration-300 shadow-xl">
-                <div className="text-4xl mb-3">💼</div>
-                <div className="text-lg text-white font-bold">CRM Incluido</div>
-                <div className="text-xs text-purple-200 mt-1">Sin costo extra</div>
-              </div>
-              <div className="bg-gradient-to-br from-orange-500/20 to-red-500/20 backdrop-blur-md border-2 border-orange-400/50 rounded-2xl p-6 text-center hover:scale-105 transition-transform duration-300 shadow-xl">
-                <div className="text-4xl mb-3">📈</div>
-                <div className="text-lg text-white font-bold">Data Real-Time</div>
-                <div className="text-xs text-orange-200 mt-1">Dashboards 24/7</div>
-              </div>
-            </div>
 
             <div className="flex flex-col sm:flex-row gap-5 justify-center items-center">
               <button
@@ -1254,7 +1250,7 @@ export default function LandingClient() {
       </section>
 
       {/* Team M&P - Christopher Müller */}
-      <section className="py-20 px-6 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-white">
+      <section id="nosotros" className="py-20 px-6 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-white">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-4xl md:text-5xl font-bold mb-6">
@@ -1654,7 +1650,7 @@ export default function LandingClient() {
       </section>
 
       {/* Pricing */}
-      <section className="py-20 px-6 bg-white" aria-labelledby="planes-precios">
+      <section id="planes" className="py-20 px-6 bg-white" aria-labelledby="planes-precios">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
             <h2 id="planes-precios" className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 tracking-tight">
@@ -2019,7 +2015,7 @@ export default function LandingClient() {
       </section>
 
       {/* Casos de Éxito */}
-      <section className="py-20 px-6 bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50">
+      <section id="casos-exito" className="py-20 px-6 bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <div className="inline-flex items-center gap-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-2.5 rounded-full text-sm font-bold mb-6 shadow-lg">
