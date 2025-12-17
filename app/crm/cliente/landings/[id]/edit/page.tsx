@@ -3,15 +3,33 @@
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
+import dynamic from 'next/dynamic'
+
+// Cargar Destack solo en el cliente para evitar errores SSR
 // @ts-ignore - Destack no tiene tipos TypeScript
-import { ContentProvider } from 'destack'
-import 'grapesjs/dist/css/grapes.min.css'
+const DestackEditor: any = dynamic(
+  // @ts-ignore
+  () => import('destack').then((mod) => mod.ContentProvider),
+  { ssr: false }
+)
 
 export default function EditClienteLandingPage() {
   const params = useParams()
   const router = useRouter()
   const [landing, setLanding] = useState<any>(null)
   const [loading, setLoading] = useState(true)
+
+  // Cargar CSS de GrapesJS
+  useEffect(() => {
+    const link = document.createElement('link')
+    link.rel = 'stylesheet'
+    link.href = 'https://unpkg.com/grapesjs/dist/css/grapes.min.css'
+    document.head.appendChild(link)
+
+    return () => {
+      document.head.removeChild(link)
+    }
+  }, [])
 
   useEffect(() => {
     loadLanding()
@@ -105,7 +123,7 @@ export default function EditClienteLandingPage() {
 
       {/* Destack Editor */}
       <div className="flex-1 overflow-hidden">
-        <ContentProvider
+        <DestackEditor
           data={landing.destack_config || {}}
           onSave={handleSave}
           standaloneServer={false}
