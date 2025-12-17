@@ -633,16 +633,14 @@ export default function LandingClient() {
             </div>
 
             <h1 className="text-5xl md:text-7xl font-bold mb-10 leading-[1.1] tracking-tight">
-              Si tu agencia no te habla<br />
-              de negocios,{' '}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-500">
-                no es tu agencia.
+                LA AGENCIA QUE VINCULA<br />Y COORDINA MARKETING<br />CON COMERCIAL
               </span>
             </h1>
 
             <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto leading-relaxed mb-12">
-              Performance marketing basado en datos.
-              <span className="text-white font-semibold"> Con CRM integrado.</span>
+              El primer paso es tener un número: <span className="text-white font-semibold">el costo de adquisición por tipo de campaña.</span>
+              <br />Con ese dato puedes proyectar ventas y corregir errores.
             </p>
 
             {/* Value Props Visuales */}
@@ -703,6 +701,465 @@ export default function LandingClient() {
                 <div className="text-xs md:text-sm text-blue-200/80 font-medium">{stat.label}</div>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* La Verdad Sobre Promesas */}
+      <section className="py-20 px-6 bg-white">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+              La Verdad Sobre las Promesas de{' '}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
+                2x y 3x
+              </span>
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Nuestra metodología es ingeniería, no magia
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8 mb-12">
+            {/* Cuándo SÍ es posible */}
+            <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-8 border-2 border-green-200">
+              <div className="flex items-center gap-3 mb-6">
+                <CheckCircle2 className="w-8 h-8 text-green-600" />
+                <h3 className="text-2xl font-bold text-gray-900">Cuándo SÍ es posible 2x o 3x</h3>
+              </div>
+              <ul className="space-y-4">
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 className="w-5 h-5 text-green-600 mt-1 flex-shrink-0" />
+                  <span className="text-gray-700">Tienes presupuesto pequeño y puedes escalarlo x3</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 className="w-5 h-5 text-green-600 mt-1 flex-shrink-0" />
+                  <span className="text-gray-700">Tu margen de contribución permite subir inversión publicitaria</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 className="w-5 h-5 text-green-600 mt-1 flex-shrink-0" />
+                  <span className="text-gray-700">Hay demanda no saturada en el mercado</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 className="w-5 h-5 text-green-600 mt-1 flex-shrink-0" />
+                  <span className="text-gray-700">Tu producto/servicio tiene capacidad de escalar</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Cuándo NO es posible */}
+            <div className="bg-gradient-to-br from-red-50 to-orange-50 rounded-2xl p-8 border-2 border-red-200">
+              <div className="flex items-center gap-3 mb-6">
+                <XCircle className="w-8 h-8 text-red-600" />
+                <h3 className="text-2xl font-bold text-gray-900">Cuándo NO es posible</h3>
+              </div>
+              <ul className="space-y-4">
+                <li className="flex items-start gap-3">
+                  <XCircle className="w-5 h-5 text-red-600 mt-1 flex-shrink-0" />
+                  <span className="text-gray-700">Mercado saturado con mucha competencia</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <XCircle className="w-5 h-5 text-red-600 mt-1 flex-shrink-0" />
+                  <span className="text-gray-700">Ya estás gastando mucho y cerca del punto de saturación</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <XCircle className="w-5 h-5 text-red-600 mt-1 flex-shrink-0" />
+                  <span className="text-gray-700">Tu margen no soporta más inversión publicitaria</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <XCircle className="w-5 h-5 text-red-600 mt-1 flex-shrink-0" />
+                  <span className="text-gray-700">Limitaciones operativas para crecer rápido</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="bg-blue-50 rounded-2xl p-8 border-2 border-blue-200 text-center">
+            <p className="text-lg text-gray-800 font-medium">
+              <span className="text-blue-600 font-bold">En M&P no hacemos promesas vacías.</span>
+              {' '}Te decimos la verdad desde el día 1: qué esperar, cuándo esperarlo, y con qué números vamos a medir el éxito.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Para el Dueño/CEO */}
+      <section className="py-20 px-6 bg-gradient-to-br from-slate-50 to-blue-50">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <div>
+              <div className="inline-flex items-center gap-2 bg-blue-100 text-blue-700 px-4 py-2 rounded-full text-sm font-bold mb-6">
+                <Target className="w-4 h-4" />
+                Para el Dueño / CEO
+              </div>
+              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+                ¿Cuánto te cuesta{' '}
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
+                  conseguir un cliente?
+                </span>
+              </h2>
+              <p className="text-xl text-gray-700 mb-6">
+                Si no tienes ese número, estás invirtiendo a ciegas.
+              </p>
+              <div className="space-y-4">
+                <div className="flex items-start gap-3">
+                  <CheckCircle2 className="w-6 h-6 text-blue-600 mt-1 flex-shrink-0" />
+                  <p className="text-gray-700">
+                    <span className="font-bold">Proyección de ventas confiable:</span> Con CAC definido puedes proyectar cuántos clientes obtendrás con X presupuesto
+                  </p>
+                </div>
+                <div className="flex items-start gap-3">
+                  <CheckCircle2 className="w-6 h-6 text-blue-600 mt-1 flex-shrink-0" />
+                  <p className="text-gray-700">
+                    <span className="font-bold">ROI predecible:</span> Sabes cuánto invertir para crecer de forma sostenible
+                  </p>
+                </div>
+                <div className="flex items-start gap-3">
+                  <CheckCircle2 className="w-6 h-6 text-blue-600 mt-1 flex-shrink-0" />
+                  <p className="text-gray-700">
+                    <span className="font-bold">Decisiones basadas en datos:</span> No en corazonadas o "feeling"
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="bg-white rounded-2xl p-8 shadow-2xl border border-gray-200">
+              <div className="text-sm text-gray-500 mb-4 font-mono">Dashboard Comercial M&P</div>
+              <div className="space-y-6">
+                <div className="border-l-4 border-blue-600 pl-4">
+                  <div className="text-sm text-gray-600">CAC Promedio</div>
+                  <div className="text-3xl font-bold text-gray-900">$47.200</div>
+                  <div className="text-sm text-green-600">↓ 18% vs mes anterior</div>
+                </div>
+                <div className="border-l-4 border-purple-600 pl-4">
+                  <div className="text-sm text-gray-600">ROAS (Return on Ad Spend)</div>
+                  <div className="text-3xl font-bold text-gray-900">4.2x</div>
+                  <div className="text-sm text-green-600">↑ +0.8x vs mes anterior</div>
+                </div>
+                <div className="border-l-4 border-green-600 pl-4">
+                  <div className="text-sm text-gray-600">Clientes Proyectados (próximo mes)</div>
+                  <div className="text-3xl font-bold text-gray-900">127</div>
+                  <div className="text-sm text-gray-600">Con presupuesto actual</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Para el Gerente Comercial */}
+      <section className="py-20 px-6 bg-white">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <div className="order-2 md:order-1 bg-gradient-to-br from-blue-50 to-purple-50 rounded-2xl p-8 shadow-xl border border-gray-200">
+              <div className="text-sm text-gray-700 font-bold mb-6">Tabla CAC por Tipo de Campaña</div>
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b-2 border-gray-300">
+                    <th className="text-left py-3 text-sm font-bold text-gray-700">Tipo de Campaña</th>
+                    <th className="text-right py-3 text-sm font-bold text-gray-700">CAC</th>
+                    <th className="text-right py-3 text-sm font-bold text-gray-700">Conv. %</th>
+                  </tr>
+                </thead>
+                <tbody className="text-sm">
+                  <tr className="border-b border-gray-200">
+                    <td className="py-3 text-gray-700">Google Search - Marca</td>
+                    <td className="text-right font-mono font-bold text-green-600">$28.400</td>
+                    <td className="text-right font-mono text-gray-700">8.2%</td>
+                  </tr>
+                  <tr className="border-b border-gray-200">
+                    <td className="py-3 text-gray-700">Google Search - Genérico</td>
+                    <td className="text-right font-mono font-bold text-blue-600">$52.100</td>
+                    <td className="text-right font-mono text-gray-700">4.1%</td>
+                  </tr>
+                  <tr className="border-b border-gray-200">
+                    <td className="py-3 text-gray-700">Meta - Retargeting</td>
+                    <td className="text-right font-mono font-bold text-green-600">$31.800</td>
+                    <td className="text-right font-mono text-gray-700">6.5%</td>
+                  </tr>
+                  <tr className="border-b border-gray-200">
+                    <td className="py-3 text-gray-700">Meta - Prospecting</td>
+                    <td className="text-right font-mono font-bold text-orange-600">$89.200</td>
+                    <td className="text-right font-mono text-gray-700">2.3%</td>
+                  </tr>
+                </tbody>
+              </table>
+              <div className="mt-6 pt-6 border-t-2 border-gray-300">
+                <div className="flex justify-between items-center">
+                  <span className="font-bold text-gray-700">CAC Ponderado</span>
+                  <span className="text-2xl font-bold text-blue-600">$47.200</span>
+                </div>
+              </div>
+            </div>
+            <div className="order-1 md:order-2">
+              <div className="inline-flex items-center gap-2 bg-purple-100 text-purple-700 px-4 py-2 rounded-full text-sm font-bold mb-6">
+                <Calculator className="w-4 h-4" />
+                Para el Gerente Comercial
+              </div>
+              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+                Con estas tablas{' '}
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
+                  proyectas ventas
+                </span>
+              </h2>
+              <p className="text-xl text-gray-700 mb-6">
+                Sabes exactamente cuántos leads necesitas para cerrar X ventas, y cuánto cuesta generarlos.
+              </p>
+              <div className="space-y-4">
+                <div className="flex items-start gap-3">
+                  <CheckCircle2 className="w-6 h-6 text-purple-600 mt-1 flex-shrink-0" />
+                  <p className="text-gray-700">
+                    <span className="font-bold">Proyección de pipeline:</span> "Si invierto $5M en Google Search, obtengo ~96 leads, cierro ~24 ventas"
+                  </p>
+                </div>
+                <div className="flex items-start gap-3">
+                  <CheckCircle2 className="w-6 h-6 text-purple-600 mt-1 flex-shrink-0" />
+                  <p className="text-gray-700">
+                    <span className="font-bold">Optimización de presupuesto:</span> Asignas más a canales con mejor CAC
+                  </p>
+                </div>
+                <div className="flex items-start gap-3">
+                  <CheckCircle2 className="w-6 h-6 text-purple-600 mt-1 flex-shrink-0" />
+                  <p className="text-gray-700">
+                    <span className="font-bold">Corrección rápida:</span> Si CAC sube, detectas el problema en días, no en meses
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Para el Gerente de Marketing */}
+      <section className="py-20 px-6 bg-gradient-to-br from-blue-50 to-indigo-50">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center gap-2 bg-indigo-100 text-indigo-700 px-4 py-2 rounded-full text-sm font-bold mb-6">
+              <TrendingUp className="w-4 h-4" />
+              Para el Gerente de Marketing
+            </div>
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+              No trabajas con un{' '}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
+                freelancer
+              </span>
+              <br />
+              Trabajas con <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">3 áreas especializadas</span>
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Cada cliente tiene 3 profesionales asignados, uno de cada área
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8 mb-12">
+            {equipoRoles.map((rol, idx) => {
+              const IconComponent = rol.icon
+              return (
+                <div key={idx} className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all">
+                  <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center mb-6">
+                    <IconComponent className="w-8 h-8 text-white" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-4">{rol.titulo}</h3>
+                  <ul className="space-y-3">
+                    {rol.responsabilidades.map((resp, i) => (
+                      <li key={i} className="flex items-start gap-2">
+                        <CheckCircle2 className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
+                        <span className="text-gray-700">{resp}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )
+            })}
+          </div>
+
+          <div className="bg-white rounded-2xl p-8 shadow-xl border-2 border-blue-200">
+            <div className="grid md:grid-cols-2 gap-8 items-center">
+              <div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-4">Metodología de Ingeniería</h3>
+                <ul className="space-y-3">
+                  <li className="flex items-start gap-3">
+                    <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <span className="text-blue-600 font-bold">1</span>
+                    </div>
+                    <div>
+                      <div className="font-bold text-gray-900">Árbol de decisión de campaña</div>
+                      <div className="text-sm text-gray-600">Qué hacer en cada escenario</div>
+                    </div>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <span className="text-blue-600 font-bold">2</span>
+                    </div>
+                    <div>
+                      <div className="font-bold text-gray-900">Benchmark de competencia</div>
+                      <div className="text-sm text-gray-600">Qué está haciendo el mercado</div>
+                    </div>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <span className="text-blue-600 font-bold">3</span>
+                    </div>
+                    <div>
+                      <div className="font-bold text-gray-900">Dashboard comercial integrado</div>
+                      <div className="text-sm text-gray-600">CAC, CPA, ROAS en tiempo real</div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-6">
+                <div className="text-center mb-4">
+                  <div className="text-sm text-gray-600 mb-2">Tu equipo asignado</div>
+                  <div className="text-5xl font-bold text-blue-600">3</div>
+                  <div className="text-sm text-gray-600 mt-1">profesionales</div>
+                </div>
+                <div className="text-center pt-4 border-t border-gray-300">
+                  <div className="text-sm text-gray-600 mb-2">Equipo completo M&P</div>
+                  <div className="text-4xl font-bold text-purple-600">+20</div>
+                  <div className="text-sm text-gray-600 mt-1">especialistas</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Team M&P - Christopher Müller */}
+      <section className="py-20 px-6 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-white">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+              M&P = <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">Marketing & Performance</span>
+            </h2>
+            <p className="text-xl text-blue-200 max-w-3xl mx-auto">
+              20+ años de experiencia en empresas que viven de números, no de likes
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <div>
+              <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
+                <h3 className="text-3xl font-bold mb-6">Christopher Müller</h3>
+                <p className="text-blue-200 text-lg mb-6">
+                  Fundador y Director de Estrategia
+                </p>
+                <div className="space-y-4 text-blue-100">
+                  <div className="flex items-start gap-3">
+                    <Award className="w-6 h-6 text-blue-400 mt-1 flex-shrink-0" />
+                    <div>
+                      <div className="font-bold text-white">+20 años de experiencia</div>
+                      <div className="text-sm">En marketing con foco en performance y ROI</div>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <Award className="w-6 h-6 text-blue-400 mt-1 flex-shrink-0" />
+                    <div>
+                      <div className="font-bold text-white">Ex Cencosud, Transbank, Banco Internacional</div>
+                      <div className="text-sm">Empresas donde cada decisión se mide en millones</div>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <Award className="w-6 h-6 text-blue-400 mt-1 flex-shrink-0" />
+                    <div>
+                      <div className="font-bold text-white">Metodología de ingeniería aplicada al marketing</div>
+                      <div className="text-sm">Árboles de decisión, benchmarks, dashboards comerciales</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <div className="space-y-6">
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+                  <div className="text-5xl font-bold text-blue-400 mb-2">3</div>
+                  <div className="text-lg font-bold text-white mb-1">Áreas especializadas</div>
+                  <div className="text-blue-200 text-sm">Paid Media, Publicista, Diseñador</div>
+                </div>
+
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+                  <div className="text-5xl font-bold text-cyan-400 mb-2">+20</div>
+                  <div className="text-lg font-bold text-white mb-1">Profesionales en equipo</div>
+                  <div className="text-blue-200 text-sm">Cada cliente recibe 3 asignados (uno por área)</div>
+                </div>
+
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+                  <div className="text-5xl font-bold text-purple-400 mb-2">6+</div>
+                  <div className="text-lg font-bold text-white mb-1">Años en el mercado</div>
+                  <div className="text-blue-200 text-sm">Gestionando +$800M en inversión publicitaria</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Fair Play & Orden */}
+      <section className="py-20 px-6 bg-white">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+              Fair Play &{' '}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
+                Orden
+              </span>
+            </h2>
+            <p className="text-xl text-gray-600">
+              Así trabajamos contigo
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8">
+            <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl p-8 border-2 border-blue-200">
+              <div className="text-3xl mb-4">📋</div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">Todo Tiene Orden</h3>
+              <ul className="space-y-3 text-gray-700">
+                <li className="flex items-start gap-2">
+                  <CheckCircle2 className="w-5 h-5 text-blue-600 mt-1 flex-shrink-0" />
+                  <span>Reuniones semanales o quincenales según el plan</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle2 className="w-5 h-5 text-blue-600 mt-1 flex-shrink-0" />
+                  <span>Grupo de WhatsApp para consultas rápidas</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle2 className="w-5 h-5 text-blue-600 mt-1 flex-shrink-0" />
+                  <span>Acceso a CRM para ver el estado de tus leads en tiempo real</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle2 className="w-5 h-5 text-blue-600 mt-1 flex-shrink-0" />
+                  <span>Reportes ejecutivos semanales y mensuales automáticos</span>
+                </li>
+              </ul>
+            </div>
+
+            <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-2xl p-8 border-2 border-green-200">
+              <div className="text-3xl mb-4">⚖️</div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">Fair Play en Cobros</h3>
+              <ul className="space-y-3 text-gray-700">
+                <li className="flex items-start gap-2">
+                  <CheckCircle2 className="w-5 h-5 text-green-600 mt-1 flex-shrink-0" />
+                  <span><span className="font-bold">Trabajos adicionales fuera del plan:</span> Se cobran aparte</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle2 className="w-5 h-5 text-green-600 mt-1 flex-shrink-0" />
+                  <span>Ej: Diseñar menú para restaurant, folleto para evento, video institucional</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle2 className="w-5 h-5 text-green-600 mt-1 flex-shrink-0" />
+                  <span>Siempre avisamos antes de hacer trabajos extra</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle2 className="w-5 h-5 text-green-600 mt-1 flex-shrink-0" />
+                  <span>Presupuestos claros y anticipados</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="mt-8 bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-8 border-2 border-blue-200 text-center">
+            <p className="text-lg text-gray-800">
+              <span className="font-bold text-blue-600">Transparencia total.</span> Sabes qué estás pagando, qué incluye, y qué queda fuera.
+            </p>
           </div>
         </div>
       </section>
