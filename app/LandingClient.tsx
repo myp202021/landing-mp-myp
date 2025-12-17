@@ -18,6 +18,7 @@ import {
   Palette,
   ChevronDown,
   TrendingUp,
+  TrendingDown,
   Users,
   Calculator,
   BarChart3,
@@ -386,17 +387,17 @@ export default function LandingClient() {
           name: 'Plan Silver',
           price: '650000',
           priceCurrency: 'CLP',
-          description: '2 campañas mensuales, 20 contenidos orgánicos, media jornada grabación/mes'
+          description: '2 campañas mensuales, 20 contenidos orgánicos en todas las redes, media jornada grabación/mes'
         },
         {
           '@type': 'Offer',
           name: 'Plan Gold',
-          description: '4 campañas mensuales, 28 contenidos orgánicos, email marketing incluido'
+          description: '4 campañas mensuales, 30 contenidos orgánicos en todas las redes, email marketing incluido'
         },
         {
           '@type': 'Offer',
           name: 'Plan Platinum',
-          description: '6 campañas mensuales, 44 contenidos orgánicos, gestión de influencers'
+          description: '6 campañas mensuales, 45 contenidos orgánicos en todas las redes, gestión de influencers'
         }
       ]
     }
@@ -632,34 +633,39 @@ export default function LandingClient() {
               <span className="text-blue-200 text-sm font-medium">Performance Marketing con Datos Reales</span>
             </div>
 
-            <h1 className="text-5xl md:text-7xl font-bold mb-10 leading-[1.1] tracking-tight">
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-500">
-                LA AGENCIA QUE VINCULA<br />Y COORDINA MARKETING<br />CON COMERCIAL
+            <h1 className="text-5xl md:text-7xl font-bold mb-10 leading-[1.1] tracking-tight text-white">
+              LA AGENCIA QUE VINCULA<br />Y COORDINA MARKETING<br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400">
+                CON COMERCIAL
               </span>
             </h1>
 
-            <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto leading-relaxed mb-12">
-              El primer paso es tener un número: <span className="text-white font-semibold">el costo de adquisición por tipo de campaña.</span>
+            <p className="text-xl md:text-2xl text-gray-200 max-w-3xl mx-auto leading-relaxed mb-12">
+              El primer paso es tener un número: <span className="text-white font-bold">el costo de adquisición por tipo de campaña.</span>
               <br />Con ese dato puedes proyectar ventas y corregir errores.
             </p>
 
             {/* Value Props Visuales */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto mb-14">
-              <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 text-center">
-                <div className="text-3xl mb-2">📊</div>
-                <div className="text-sm text-blue-100 font-medium">ROI +380%</div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-5xl mx-auto mb-14">
+              <div className="bg-gradient-to-br from-blue-500/20 to-purple-500/20 backdrop-blur-md border-2 border-blue-400/50 rounded-2xl p-6 text-center hover:scale-105 transition-transform duration-300 shadow-xl">
+                <div className="text-4xl mb-3">📊</div>
+                <div className="text-lg text-white font-bold">ROI +380%</div>
+                <div className="text-xs text-blue-200 mt-1">Casos reales</div>
               </div>
-              <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 text-center">
-                <div className="text-3xl mb-2">🎯</div>
-                <div className="text-sm text-blue-100 font-medium">Google & Meta Ads</div>
+              <div className="bg-gradient-to-br from-emerald-500/20 to-cyan-500/20 backdrop-blur-md border-2 border-emerald-400/50 rounded-2xl p-6 text-center hover:scale-105 transition-transform duration-300 shadow-xl">
+                <div className="text-4xl mb-3">🎯</div>
+                <div className="text-lg text-white font-bold">Google & Meta</div>
+                <div className="text-xs text-emerald-200 mt-1">Expertos certificados</div>
               </div>
-              <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 text-center">
-                <div className="text-3xl mb-2">💼</div>
-                <div className="text-sm text-blue-100 font-medium">CRM Incluido</div>
+              <div className="bg-gradient-to-br from-purple-500/20 to-pink-500/20 backdrop-blur-md border-2 border-purple-400/50 rounded-2xl p-6 text-center hover:scale-105 transition-transform duration-300 shadow-xl">
+                <div className="text-4xl mb-3">💼</div>
+                <div className="text-lg text-white font-bold">CRM Incluido</div>
+                <div className="text-xs text-purple-200 mt-1">Sin costo extra</div>
               </div>
-              <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 text-center">
-                <div className="text-3xl mb-2">📈</div>
-                <div className="text-sm text-blue-100 font-medium">Data Real-Time</div>
+              <div className="bg-gradient-to-br from-orange-500/20 to-red-500/20 backdrop-blur-md border-2 border-orange-400/50 rounded-2xl p-6 text-center hover:scale-105 transition-transform duration-300 shadow-xl">
+                <div className="text-4xl mb-3">📈</div>
+                <div className="text-lg text-white font-bold">Data Real-Time</div>
+                <div className="text-xs text-orange-200 mt-1">Dashboards 24/7</div>
               </div>
             </div>
 
@@ -710,13 +716,13 @@ export default function LandingClient() {
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-              La Verdad Sobre las Promesas de{' '}
+              La Verdad Sobre{' '}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
-                2x y 3x
+                Duplicar o Triplicar Ventas
               </span>
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Nuestra metodología es ingeniería, no magia
+              Nuestra metodología es ingeniería, no magia. Seamos claros sobre cuándo sí y cuándo no.
             </p>
           </div>
 
@@ -725,7 +731,7 @@ export default function LandingClient() {
             <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-8 border-2 border-green-200">
               <div className="flex items-center gap-3 mb-6">
                 <CheckCircle2 className="w-8 h-8 text-green-600" />
-                <h3 className="text-2xl font-bold text-gray-900">Cuándo SÍ es posible 2x o 3x</h3>
+                <h3 className="text-2xl font-bold text-gray-900">Cuándo SÍ es posible duplicar o triplicar</h3>
               </div>
               <ul className="space-y-4">
                 <li className="flex items-start gap-3">
@@ -1175,33 +1181,59 @@ export default function LandingClient() {
                 </ul>
               </div>
 
-              <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 border border-white/20">
-                <div className="text-sm text-blue-300 font-mono mb-4">Dashboard M&P - Vista en tiempo real</div>
-                <div className="space-y-4">
-                  <div className="bg-white/5 rounded-xl p-4 border border-white/10">
-                    <div className="flex justify-between items-center">
-                      <span className="text-blue-200 text-sm">Leads totales (hoy)</span>
-                      <span className="text-white font-bold text-2xl">47</span>
+              <div className="bg-gradient-to-br from-white/15 via-white/10 to-white/5 backdrop-blur-lg rounded-2xl p-8 border-2 border-white/30 shadow-2xl">
+                <div className="text-sm text-cyan-300 font-mono mb-6 flex items-center gap-2">
+                  <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                  Dashboard M&P - Vista en tiempo real
+                </div>
+                <div className="grid grid-cols-2 gap-4 mb-6">
+                  <div className="bg-gradient-to-br from-emerald-500/20 to-green-500/10 rounded-xl p-5 border-2 border-emerald-400/50 hover:scale-105 transition-transform">
+                    <div className="flex flex-col">
+                      <span className="text-emerald-200 text-xs font-medium mb-2">COSTO POR LEAD</span>
+                      <span className="text-white font-black text-3xl">$12.400</span>
+                      <div className="flex items-center gap-1 mt-2">
+                        <TrendingDown className="w-3 h-3 text-emerald-400" />
+                        <span className="text-emerald-300 text-xs font-bold">-18% vs mes anterior</span>
+                      </div>
                     </div>
                   </div>
-                  <div className="bg-white/5 rounded-xl p-4 border border-white/10">
-                    <div className="flex justify-between items-center">
-                      <span className="text-blue-200 text-sm">CAC promedio</span>
-                      <span className="text-green-400 font-bold text-2xl">$42.100</span>
+                  <div className="bg-gradient-to-br from-blue-500/20 to-cyan-500/10 rounded-xl p-5 border-2 border-blue-400/50 hover:scale-105 transition-transform">
+                    <div className="flex flex-col">
+                      <span className="text-blue-200 text-xs font-medium mb-2">COSTO POR CLIENTE</span>
+                      <span className="text-white font-black text-3xl">$89.500</span>
+                      <div className="flex items-center gap-1 mt-2">
+                        <TrendingDown className="w-3 h-3 text-blue-400" />
+                        <span className="text-blue-300 text-xs font-bold">-12% optimizado</span>
+                      </div>
                     </div>
                   </div>
-                  <div className="bg-white/5 rounded-xl p-4 border border-white/10">
-                    <div className="flex justify-between items-center">
-                      <span className="text-blue-200 text-sm">ROAS consolidado</span>
-                      <span className="text-cyan-400 font-bold text-2xl">4.8x</span>
+                  <div className="bg-gradient-to-br from-purple-500/20 to-pink-500/10 rounded-xl p-5 border-2 border-purple-400/50 hover:scale-105 transition-transform">
+                    <div className="flex flex-col">
+                      <span className="text-purple-200 text-xs font-medium mb-2">PROYECCIÓN VENTAS</span>
+                      <span className="text-white font-black text-3xl">$14.8M</span>
+                      <div className="flex items-center gap-1 mt-2">
+                        <TrendingUp className="w-3 h-3 text-purple-400" />
+                        <span className="text-purple-300 text-xs font-bold">Este mes</span>
+                      </div>
                     </div>
                   </div>
-                  <div className="bg-white/5 rounded-xl p-4 border border-white/10">
-                    <div className="flex justify-between items-center">
-                      <span className="text-blue-200 text-sm">Proyección mes</span>
-                      <span className="text-purple-400 font-bold text-2xl">~1.240 leads</span>
+                  <div className="bg-gradient-to-br from-orange-500/20 to-yellow-500/10 rounded-xl p-5 border-2 border-orange-400/50 hover:scale-105 transition-transform">
+                    <div className="flex flex-col">
+                      <span className="text-orange-200 text-xs font-medium mb-2">MARGEN BRUTO</span>
+                      <span className="text-white font-black text-3xl">42%</span>
+                      <div className="flex items-center gap-1 mt-2">
+                        <TrendingUp className="w-3 h-3 text-orange-400" />
+                        <span className="text-orange-300 text-xs font-bold">Sobre ventas</span>
+                      </div>
                     </div>
                   </div>
+                </div>
+                <div className="bg-white/5 rounded-xl p-4 border border-white/20">
+                  <p className="text-xs text-blue-200 leading-relaxed">
+                    <span className="font-bold text-white">💡 Explicación:</span> Con estos 4 números puedes tomar decisiones informadas.
+                    El costo por lead te dice cuánto pagas por contacto, el costo por cliente cuánto inviertes en cada venta cerrada.
+                    La proyección de ventas te muestra hacia dónde vas este mes, y el margen bruto te confirma si el negocio es rentable.
+                  </p>
                 </div>
               </div>
             </div>
@@ -1233,57 +1265,63 @@ export default function LandingClient() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div>
-              <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
-                <h3 className="text-3xl font-bold mb-6">Christopher Müller</h3>
-                <p className="text-blue-200 text-lg mb-6">
+          {/* Christopher Müller Profile */}
+          <div className="bg-white/10 backdrop-blur-sm rounded-3xl p-10 border border-white/20 mb-12">
+            <div className="grid md:grid-cols-2 gap-10 items-start">
+              <div>
+                <h3 className="text-4xl font-bold mb-4">Christopher Müller</h3>
+                <p className="text-cyan-300 text-xl mb-8 font-medium">
                   Fundador y Director de Estrategia
                 </p>
-                <div className="space-y-4 text-blue-100">
-                  <div className="flex items-start gap-3">
-                    <Award className="w-6 h-6 text-blue-400 mt-1 flex-shrink-0" />
+                <div className="space-y-5">
+                  <div className="flex items-start gap-4">
+                    <Award className="w-7 h-7 text-cyan-400 mt-1 flex-shrink-0" />
                     <div>
-                      <div className="font-bold text-white">+20 años de experiencia</div>
-                      <div className="text-sm">En marketing con foco en performance y ROI</div>
+                      <div className="font-bold text-white text-lg">Ingeniero Civil Industrial, Universidad de Chile</div>
+                      <div className="text-blue-200">MBA + Experto en Marketing Digital y Herramientas de IA</div>
                     </div>
                   </div>
-                  <div className="flex items-start gap-3">
-                    <Award className="w-6 h-6 text-blue-400 mt-1 flex-shrink-0" />
+                  <div className="flex items-start gap-4">
+                    <Award className="w-7 h-7 text-cyan-400 mt-1 flex-shrink-0" />
                     <div>
-                      <div className="font-bold text-white">Ex Cencosud, Transbank, Banco Internacional</div>
-                      <div className="text-sm">Empresas donde cada decisión se mide en millones</div>
+                      <div className="font-bold text-white text-lg">Ex Mayo - Premium Partner de Google</div>
+                      <div className="text-blue-200">Hibu (empresa inglesa líder en marketing digital)</div>
                     </div>
                   </div>
-                  <div className="flex items-start gap-3">
-                    <Award className="w-6 h-6 text-blue-400 mt-1 flex-shrink-0" />
+                  <div className="flex items-start gap-4">
+                    <Award className="w-7 h-7 text-cyan-400 mt-1 flex-shrink-0" />
                     <div>
-                      <div className="font-bold text-white">Metodología de ingeniería aplicada al marketing</div>
-                      <div className="text-sm">Árboles de decisión, benchmarks, dashboards comerciales</div>
+                      <div className="font-bold text-white text-lg">Ex Cencosud, Transbank, Banco Internacional</div>
+                      <div className="text-blue-200">Empresas donde cada decisión se mide en millones</div>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-4">
+                    <Award className="w-7 h-7 text-cyan-400 mt-1 flex-shrink-0" />
+                    <div>
+                      <div className="font-bold text-white text-lg">+20 años de experiencia</div>
+                      <div className="text-blue-200">Marketing con foco en performance, ROI y metodología de ingeniería</div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            <div>
-              <div className="space-y-6">
-                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
-                  <div className="text-5xl font-bold text-blue-400 mb-2">3</div>
-                  <div className="text-lg font-bold text-white mb-1">Áreas especializadas</div>
-                  <div className="text-blue-200 text-sm">Paid Media, Publicista, Diseñador</div>
+              <div className="space-y-5">
+                <div className="bg-gradient-to-br from-blue-600/30 to-blue-700/30 backdrop-blur-sm rounded-2xl p-7 border-2 border-blue-400/50 shadow-xl">
+                  <div className="text-6xl font-black text-white mb-3">3</div>
+                  <div className="text-xl font-bold text-white mb-2">Áreas especializadas</div>
+                  <div className="text-blue-100 text-base">Paid Media, Publicista, Diseñador</div>
                 </div>
 
-                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
-                  <div className="text-5xl font-bold text-cyan-400 mb-2">+20</div>
-                  <div className="text-lg font-bold text-white mb-1">Profesionales en equipo</div>
-                  <div className="text-blue-200 text-sm">Cada cliente recibe 3 asignados (uno por área)</div>
+                <div className="bg-gradient-to-br from-cyan-600/30 to-cyan-700/30 backdrop-blur-sm rounded-2xl p-7 border-2 border-cyan-400/50 shadow-xl">
+                  <div className="text-6xl font-black text-white mb-3">+20</div>
+                  <div className="text-xl font-bold text-white mb-2">Profesionales en equipo</div>
+                  <div className="text-cyan-100 text-base">Cada cliente recibe 3 asignados (uno por área)</div>
                 </div>
 
-                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
-                  <div className="text-5xl font-bold text-purple-400 mb-2">6+</div>
-                  <div className="text-lg font-bold text-white mb-1">Años en el mercado</div>
-                  <div className="text-blue-200 text-sm">Gestionando +$800M en inversión publicitaria</div>
+                <div className="bg-gradient-to-br from-purple-600/30 to-purple-700/30 backdrop-blur-sm rounded-2xl p-7 border-2 border-purple-400/50 shadow-xl">
+                  <div className="text-6xl font-black text-white mb-3">6+</div>
+                  <div className="text-xl font-bold text-white mb-2">Años en el mercado</div>
+                  <div className="text-purple-100 text-base">Gestionando +$800M en inversión publicitaria</div>
                 </div>
               </div>
             </div>
@@ -1640,7 +1678,7 @@ export default function LandingClient() {
                 </li>
                 <li className="flex items-start gap-2 text-sm text-gray-700">
                   <CheckCircle2 className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
-                  <span>20 contenidos orgánicos</span>
+                  <span>20 contenidos orgánicos en todas las redes</span>
                 </li>
                 <li className="flex items-start gap-2 text-sm text-gray-700">
                   <CheckCircle2 className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
@@ -1680,7 +1718,7 @@ export default function LandingClient() {
                 </li>
                 <li className="flex items-start gap-2 text-sm text-white">
                   <CheckCircle2 className="w-4 h-4 text-emerald-300 flex-shrink-0 mt-0.5" />
-                  <span>28 contenidos orgánicos</span>
+                  <span>30 contenidos orgánicos en todas las redes</span>
                 </li>
                 <li className="flex items-start gap-2 text-sm text-white">
                   <CheckCircle2 className="w-4 h-4 text-emerald-300 flex-shrink-0 mt-0.5" />
@@ -1717,7 +1755,7 @@ export default function LandingClient() {
                 </li>
                 <li className="flex items-start gap-2 text-sm text-gray-700">
                   <CheckCircle2 className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
-                  <span>44 contenidos orgánicos</span>
+                  <span>45 contenidos orgánicos en todas las redes</span>
                 </li>
                 <li className="flex items-start gap-2 text-sm text-gray-700">
                   <CheckCircle2 className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
