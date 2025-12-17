@@ -17,6 +17,9 @@ export const defaultMetadata: Metadata = {
     template: `%s | ${siteConfig.name}`
   },
   description: siteConfig.description,
+  alternates: {
+    canonical: '/'
+  },
   verification: {
     google: 'N1_98JB2O8f-9p49ys1CL0bu-_kijxbjs3aSRIZ7Syw'
   },
@@ -182,7 +185,7 @@ export function createOrganizationSchema() {
     legalName: 'Muller y Perez SPA',
     url: siteConfig.url,
     logo: `${siteConfig.url}/logo-color.png`,
-    image: `${siteConfig.url}/og-image.svg`,
+    image: siteConfig.ogImage,
     description: siteConfig.description,
 
     // Dirección principal - Las Condes
