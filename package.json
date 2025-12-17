@@ -17,6 +17,8 @@
     "bcryptjs": "^3.0.3",
     "destack": "^3.0.8",
     "framer-motion": "^12.23.24",
+    "grapesjs": "^0.22.14",
+    "grapesjs-preset-webpage": "^1.0.3",
     "jspdf": "^3.0.3",
     "jspdf-autotable": "^5.0.2",
     "lucide-react": "^0.263.1",
