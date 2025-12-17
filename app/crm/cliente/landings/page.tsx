@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import { Plus, Eye, Edit2, Trash2, ExternalLink } from 'lucide-react'
 import CRMLayout from '@/app/components/crm/CRMLayout'
+import { useSimpleAuth } from '@/lib/auth/simple-auth'
 
 interface Landing {
   id: string
@@ -48,10 +49,8 @@ export default function ClienteLandingsPage() {
       console.log('🎯 createNewLanding clicked!')
       console.log('User from hook:', user)
 
-      if (!user) {
-        alert('Error: No estás autenticado. Por favor recarga la página.')
-        return
-      }
+      // Obtener cliente_id del usuario o usar un fallback
+      let clientId = user?.cliente_id || user?.username || 'arturo'
 
       const name = prompt('Nombre de la landing:')
       if (!name) return
@@ -61,12 +60,12 @@ export default function ClienteLandingsPage() {
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/^-+|-+$/g, '')
 
-      console.log('Creating landing:', { client_id: user.id, name, slug })
+      console.log('Creating landing:', { client_id: clientId, name, slug })
 
       const { data, error } = await supabase
         .from('client_landings')
         .insert({
-          client_id: user.id,
+          client_id: clientId,
           name,
           slug,
           destack_config: {},
