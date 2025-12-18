@@ -40,7 +40,7 @@ export default function WhatsAppChatbotPage() {
       const { data: clientData, error: clientError } = await supabase
         .from('clients')
         .select('id')
-        .eq('user_id', user?.id)
+        .eq('username', user?.username)
         .single()
 
       if (clientError) throw clientError
