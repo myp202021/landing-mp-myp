@@ -41,6 +41,7 @@ export default function LandingClient() {
     enviado: false
   })
 
+  const [serviciosDropdown, setServiciosDropdown] = useState(false)
   const [labsDropdown, setLabsDropdown] = useState(false)
   const [utilidadesDropdown, setUtilidadesDropdown] = useState(false)
   const [noticiasDropdown, setNoticiasDropdown] = useState(false)
@@ -553,6 +554,57 @@ export default function LandingClient() {
             >
               Casos de Éxito
             </button>
+
+            {/* Servicios Dropdown */}
+            <div
+              className="relative hidden md:block"
+              onMouseEnter={() => setServiciosDropdown(true)}
+              onMouseLeave={() => setServiciosDropdown(false)}
+            >
+              <Link
+                href="/servicios"
+                className="flex items-center gap-1 text-sm font-semibold text-gray-700 hover:text-blue-600 transition-all duration-200"
+                aria-expanded={serviciosDropdown}
+                aria-haspopup="true"
+                aria-label="Ir a Servicios"
+              >
+                Servicios
+                <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${serviciosDropdown ? 'rotate-180' : ''}`} aria-hidden="true" />
+              </Link>
+              {serviciosDropdown && (
+                <div className="absolute top-full mt-1 left-0 bg-white rounded-xl shadow-2xl border border-gray-100 py-2 min-w-[280px] animate-in fade-in slide-in-from-top-2 duration-200">
+                  <Link
+                    href="/servicios/google-ads-chile"
+                    className="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
+                  >
+                    <div className="font-semibold">🎯 Google Ads Chile</div>
+                    <div className="text-xs text-gray-500 mt-0.5">Campañas de búsqueda alto rendimiento</div>
+                  </Link>
+                  <Link
+                    href="/servicios/meta-ads-chile"
+                    className="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
+                  >
+                    <div className="font-semibold">📱 Meta Ads Chile</div>
+                    <div className="text-xs text-gray-500 mt-0.5">Facebook, Instagram y WhatsApp</div>
+                  </Link>
+                  <Link
+                    href="/servicios/performance-marketing"
+                    className="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
+                  >
+                    <div className="font-semibold">🚀 Performance Marketing</div>
+                    <div className="text-xs text-gray-500 mt-0.5">Estrategia completa multicanal</div>
+                  </Link>
+                  <div className="border-t border-gray-100 mt-2 pt-2">
+                    <Link
+                      href="/servicios"
+                      className="block px-4 py-2 text-sm text-blue-600 hover:text-blue-700 font-semibold transition-colors"
+                    >
+                      Ver todos los servicios →
+                    </Link>
+                  </div>
+                </div>
+              )}
+            </div>
 
             {/* M&P Labs Dropdown */}
             <div
@@ -2360,23 +2412,33 @@ export default function LandingClient() {
               </a>
             </div>
 
-            {/* Columna 2: Planes */}
+            {/* Columna 2: Servicios */}
             <div>
-              <h3 className="text-white font-bold mb-4">Planes</h3>
+              <h3 className="text-white font-bold mb-4">Servicios</h3>
               <ul className="space-y-3 text-sm">
                 <li>
-                  <Link href="/planes#silver" className="text-blue-200 hover:text-white transition-colors">
-                    Plan Silver
+                  <Link href="/servicios" className="text-blue-200 hover:text-white transition-colors">
+                    Todos los Servicios
                   </Link>
                 </li>
                 <li>
-                  <Link href="/planes#gold" className="text-blue-200 hover:text-white transition-colors">
-                    Plan Gold ⭐
+                  <Link href="/servicios/google-ads-chile" className="text-blue-200 hover:text-white transition-colors">
+                    🎯 Google Ads Chile
                   </Link>
                 </li>
                 <li>
-                  <Link href="/planes#platinum" className="text-blue-200 hover:text-white transition-colors">
-                    Plan Platinum
+                  <Link href="/servicios/meta-ads-chile" className="text-blue-200 hover:text-white transition-colors">
+                    📱 Meta Ads Chile
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/servicios/performance-marketing" className="text-blue-200 hover:text-white transition-colors">
+                    🚀 Performance Marketing
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/agencia-marketing-digital-chile" className="text-blue-200 hover:text-white transition-colors">
+                    Sobre la Agencia
                   </Link>
                 </li>
               </ul>

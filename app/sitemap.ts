@@ -77,6 +77,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'monthly',
       priority: 0.95,
     },
+    // Servicios Hub
+    {
+      url: `${baseUrl}/servicios`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.9,
+    },
     // Páginas de Servicio
     {
       url: `${baseUrl}/servicios/google-ads-chile`,
