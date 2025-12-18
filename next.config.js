@@ -99,10 +99,58 @@ const nextConfig = {
   // Redirects for URL changes
   async redirects() {
     return [
+      // Old URLs
       {
         source: '/predictor-unicornio',
         destination: '/predictor',
-        permanent: true, // 308 permanent redirect
+        permanent: true,
+      },
+      // Fix 404s
+      {
+        source: '/login',
+        destination: '/crm/login',
+        permanent: true,
+      },
+      {
+        source: '/recursos',
+        destination: '/recursos/ebook-marketing-datos-2025',
+        permanent: false, // temporary until we create recursos hub page
+      },
+      {
+        source: '/contacto',
+        destination: '/#contact',
+        permanent: true,
+      },
+      {
+        source: '/contacto/',
+        destination: '/#contact',
+        permanent: true,
+      },
+      {
+        source: '/blog/cuanto-cuesta-agencia-marketing-digital-chile-2025',
+        destination: '/blog',
+        permanent: false, // temporary, could create this blog post later
+      },
+      {
+        source: '/privacidad',
+        destination: '/#contact', // or create a privacy page
+        permanent: false,
+      },
+      {
+        source: '/terminos',
+        destination: '/#contact', // or create a terms page
+        permanent: false,
+      },
+      // Fix trailing slashes
+      {
+        source: '/labs/',
+        destination: '/labs',
+        permanent: true,
+      },
+      {
+        source: '/predictor/',
+        destination: '/predictor',
+        permanent: true,
       },
     ]
   }
