@@ -37,6 +37,7 @@ export default function CRMLayout({ children, title, authenticated = true, onRef
     { href: '/crm/cliente/dashboard', label: 'Dashboard', icon: '🏠', adminOnly: false },
     { href: '/crm/cliente/campanias', label: 'Campañas', icon: '📊', adminOnly: false },
     { href: '/crm/cliente/cotizaciones', label: 'Cotizaciones', icon: '📄', adminOnly: false },
+    { href: '/crm/cliente/whatsapp', label: 'WhatsApp Bot', icon: '💬', adminOnly: false },
   ]
 
   const navItems = allNavItems.filter(item => isAdmin ? item.adminOnly : !item.adminOnly)

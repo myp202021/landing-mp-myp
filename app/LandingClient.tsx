@@ -122,10 +122,102 @@ export default function LandingClient() {
   ]
 
   const reporteData = [
-    { plataforma: 'Google Ads', campana: 'Search - Keywords Comerciales', objetivo: 'Lead Gen', cpl: '$18.500', conversiones: 87, cpa: '$34.200', roas: '4.2x' },
-    { plataforma: 'Meta Ads', campana: 'Retargeting - Carritos', objetivo: 'Ventas', cpl: '-', conversiones: 142, cpa: '$12.800', roas: '6.8x' },
-    { plataforma: 'LinkedIn Ads', campana: 'Prospecting B2B - Gerentes', objetivo: 'Lead Gen', cpl: '$45.300', conversiones: 23, cpa: '$67.900', roas: '2.1x' },
-    { plataforma: 'TikTok Ads', campana: 'Awareness - Video UGC', objetivo: 'Engagement', cpl: '$8.200', conversiones: 312, cpa: '$15.400', roas: '3.4x' }
+    {
+      plataforma: 'Google Search',
+      inversion: '$1.609.500',
+      leads: 87,
+      costoLead: '$18.500',
+      ventasNum: 42,
+      ventasMonto: '$6.762.000',
+      costoCliente: '$38.320',
+      proyeccion: '+15%',
+      accion: 'incrementar',
+      color: 'blue'
+    },
+    {
+      plataforma: 'Google PMax',
+      inversion: '$2.124.800',
+      leads: 134,
+      costoLead: '$15.860',
+      ventasNum: 67,
+      ventasMonto: '$10.454.000',
+      costoCliente: '$31.700',
+      proyeccion: '+22%',
+      accion: 'incrementar',
+      color: 'blue'
+    },
+    {
+      plataforma: 'Google Remarketing',
+      inversion: '$892.300',
+      leads: 56,
+      costoLead: '$15.930',
+      ventasNum: 34,
+      ventasMonto: '$5.168.000',
+      costoCliente: '$26.240',
+      proyeccion: '+8%',
+      accion: 'modificar',
+      color: 'blue'
+    },
+    {
+      plataforma: 'Meta Formularios',
+      inversion: '$1.456.200',
+      leads: 203,
+      costoLead: '$7.170',
+      ventasNum: 89,
+      ventasMonto: '$13.568.000',
+      costoCliente: '$16.360',
+      proyeccion: '+18%',
+      accion: 'incrementar',
+      color: 'purple'
+    },
+    {
+      plataforma: 'Meta WhatsApp',
+      inversion: '$1.817.600',
+      leads: 312,
+      costoLead: '$5.820',
+      ventasNum: 142,
+      ventasMonto: '$21.624.000',
+      costoCliente: '$12.800',
+      proyeccion: '+25%',
+      accion: 'incrementar',
+      color: 'purple'
+    },
+    {
+      plataforma: 'Meta Remarketing',
+      inversion: '$1.103.400',
+      leads: 178,
+      costoLead: '$6.200',
+      ventasNum: 98,
+      ventasMonto: '$14.896.000',
+      costoCliente: '$11.260',
+      proyeccion: '+12%',
+      accion: 'incrementar',
+      color: 'purple'
+    },
+    {
+      plataforma: 'LinkedIn Ads',
+      inversion: '$1.041.900',
+      leads: 23,
+      costoLead: '$45.300',
+      ventasNum: 12,
+      ventasMonto: '$4.896.000',
+      costoCliente: '$86.820',
+      proyeccion: '-5%',
+      accion: 'pausar',
+      color: 'cyan'
+    },
+    {
+      plataforma: 'TikTok Ads',
+      inversion: '$2.558.400',
+      leads: 312,
+      costoLead: '$8.200',
+      ventasNum: 124,
+      ventasMonto: '$18.848.000',
+      costoCliente: '$20.630',
+      proyeccion: '+30%',
+      accion: 'incrementar',
+      color: 'pink'
+    }
   ]
 
   const comunicacion = [
@@ -653,14 +745,18 @@ export default function LandingClient() {
               <span className="text-blue-200 text-sm font-medium">Performance Marketing con Datos Reales</span>
             </div>
 
-            <h1 className="text-4xl md:text-5xl font-bold mb-10 leading-[1.1] tracking-tight text-white">
+            <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-[1.1] tracking-tight text-white">
               LA AGENCIA QUE VINCULA<br />Y COORDINA MARKETING<br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400">
                 CON COMERCIAL
               </span>
             </h1>
 
-            <p className="text-xl md:text-2xl text-gray-200 max-w-3xl mx-auto leading-relaxed mb-12">
+            <p className="text-lg md:text-xl text-blue-200 max-w-3xl mx-auto mb-6 font-medium">
+              Agencia marketing digital y agencia performance especializada en Google Ads y redes sociales
+            </p>
+
+            <p className="text-lg md:text-xl text-blue-200 max-w-3xl mx-auto leading-relaxed mb-12 font-medium">
               El primer paso es tener un número: <span className="text-white font-bold">el costo de adquisición por tipo de campaña.</span>
               <br />Con ese dato puedes proyectar ventas y corregir errores.
             </p>
@@ -1055,7 +1151,7 @@ export default function LandingClient() {
               <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-blue-700 rounded-2xl flex items-center justify-center mb-6 shadow-xl shadow-blue-600/40">
                 <Target className="w-8 h-8 text-white" />
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">Dueño/CEO ve:</h3>
+              <h3 className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-800 mb-6">Para el Dueño / CEO</h3>
               <ul className="space-y-4">
                 <li className="flex items-start gap-3">
                   <div className="w-2 h-2 bg-blue-600 rounded-full mt-2 flex-shrink-0"></div>
@@ -1086,7 +1182,7 @@ export default function LandingClient() {
               <div className="w-16 h-16 bg-gradient-to-br from-purple-600 to-purple-700 rounded-2xl flex items-center justify-center mb-6 shadow-xl shadow-purple-600/40">
                 <Calculator className="w-8 h-8 text-white" />
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">Gerente Comercial ve:</h3>
+              <h3 className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-purple-800 mb-6">Para el Gerente Comercial</h3>
               <ul className="space-y-4">
                 <li className="flex items-start gap-3">
                   <div className="w-2 h-2 bg-purple-600 rounded-full mt-2 flex-shrink-0"></div>
@@ -1117,7 +1213,7 @@ export default function LandingClient() {
               <div className="w-16 h-16 bg-gradient-to-br from-indigo-600 to-indigo-700 rounded-2xl flex items-center justify-center mb-6 shadow-xl shadow-indigo-600/40">
                 <TrendingUp className="w-8 h-8 text-white" />
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">Gerente Marketing ve:</h3>
+              <h3 className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-indigo-800 mb-6">Para el Gerente de Marketing</h3>
               <ul className="space-y-4">
                 <li className="flex items-start gap-3">
                   <div className="w-2 h-2 bg-indigo-600 rounded-full mt-2 flex-shrink-0"></div>
@@ -1280,15 +1376,8 @@ export default function LandingClient() {
                   <div className="flex items-start gap-4">
                     <Award className="w-7 h-7 text-cyan-400 mt-1 flex-shrink-0" />
                     <div>
-                      <div className="font-bold text-white text-lg">Ex Mayo - Premium Partner de Google</div>
+                      <div className="font-bold text-white text-lg">Ex Cencosud, Transbank, Banco Internacional y Hibu</div>
                       <div className="text-blue-200">Hibu (empresa inglesa líder en marketing digital)</div>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-4">
-                    <Award className="w-7 h-7 text-cyan-400 mt-1 flex-shrink-0" />
-                    <div>
-                      <div className="font-bold text-white text-lg">Ex Cencosud, Transbank, Banco Internacional</div>
-                      <div className="text-blue-200">Empresas donde cada decisión se mide en millones</div>
                     </div>
                   </div>
                   <div className="flex items-start gap-4">
@@ -1301,23 +1390,23 @@ export default function LandingClient() {
                 </div>
               </div>
 
-              <div className="space-y-5">
-                <div className="bg-gradient-to-br from-blue-600/30 to-blue-700/30 backdrop-blur-sm rounded-2xl p-7 border-2 border-blue-400/50 shadow-xl">
-                  <div className="text-6xl font-black text-white mb-3">3</div>
-                  <div className="text-xl font-bold text-white mb-2">Áreas especializadas</div>
-                  <div className="text-blue-100 text-base">Paid Media, Publicista, Diseñador</div>
+              <div className="space-y-4">
+                <div className="bg-gradient-to-br from-blue-600/30 to-blue-700/30 backdrop-blur-sm rounded-2xl p-5 border-2 border-blue-400/50 shadow-xl">
+                  <div className="text-4xl font-black text-white mb-2">3</div>
+                  <div className="text-lg font-bold text-white mb-1">Áreas especializadas</div>
+                  <div className="text-blue-100 text-sm">Paid Media, Publicista, Diseñador</div>
                 </div>
 
-                <div className="bg-gradient-to-br from-cyan-600/30 to-cyan-700/30 backdrop-blur-sm rounded-2xl p-7 border-2 border-cyan-400/50 shadow-xl">
-                  <div className="text-6xl font-black text-white mb-3">+20</div>
-                  <div className="text-xl font-bold text-white mb-2">Profesionales en equipo</div>
-                  <div className="text-cyan-100 text-base">Cada cliente recibe 3 asignados (uno por área)</div>
+                <div className="bg-gradient-to-br from-cyan-600/30 to-cyan-700/30 backdrop-blur-sm rounded-2xl p-5 border-2 border-cyan-400/50 shadow-xl">
+                  <div className="text-4xl font-black text-white mb-2">+20</div>
+                  <div className="text-lg font-bold text-white mb-1">Profesionales en equipo</div>
+                  <div className="text-cyan-100 text-sm">Cada cliente recibe 3 asignados (uno por área)</div>
                 </div>
 
-                <div className="bg-gradient-to-br from-purple-600/30 to-purple-700/30 backdrop-blur-sm rounded-2xl p-7 border-2 border-purple-400/50 shadow-xl">
-                  <div className="text-6xl font-black text-white mb-3">6+</div>
-                  <div className="text-xl font-bold text-white mb-2">Años en el mercado</div>
-                  <div className="text-purple-100 text-base">Gestionando +$800M en inversión publicitaria</div>
+                <div className="bg-gradient-to-br from-purple-600/30 to-purple-700/30 backdrop-blur-sm rounded-2xl p-5 border-2 border-purple-400/50 shadow-xl">
+                  <div className="text-4xl font-black text-white mb-2">6+</div>
+                  <div className="text-lg font-bold text-white mb-1">Años en el mercado</div>
+                  <div className="text-purple-100 text-sm">Gestionando +$800M en inversión publicitaria</div>
                 </div>
               </div>
             </div>
@@ -1608,42 +1697,107 @@ export default function LandingClient() {
             </p>
           </div>
 
-          <div className="bg-white rounded-2xl overflow-hidden shadow-2xl border-2 border-blue-400/50">
-            <div className="overflow-x-auto">
-              <table className="w-full" role="table" aria-label="Tabla de métricas de campañas publicitarias">
-                <thead>
-                  <tr className="bg-slate-900 text-white">
-                    <th className="px-5 py-4 text-left text-sm font-bold" scope="col">Plataforma</th>
-                    <th className="px-5 py-4 text-left text-sm font-bold" scope="col">Campaña</th>
-                    <th className="px-5 py-4 text-left text-sm font-bold" scope="col">Objetivo</th>
-                    <th className="px-5 py-4 text-right text-sm font-bold" scope="col">CPL</th>
-                    <th className="px-5 py-4 text-right text-sm font-bold" scope="col">Conv.</th>
-                    <th className="px-5 py-4 text-right text-sm font-bold" scope="col">CPA</th>
-                    <th className="px-5 py-4 text-right text-sm font-bold" scope="col">ROAS</th>
+          <div className="overflow-x-auto bg-white rounded-2xl shadow-2xl border-2 border-gray-200">
+            <table className="w-full">
+              <thead>
+                <tr className="bg-gradient-to-r from-blue-600 to-blue-700">
+                  <th className="px-4 py-4 text-left text-white font-bold text-sm border-r border-blue-500">PLATAFORMA</th>
+                  <th className="px-4 py-4 text-right text-white font-bold text-sm border-r border-blue-500">INVERSIÓN</th>
+                  <th className="px-4 py-4 text-center text-white font-bold text-sm border-r border-blue-500">LEADS</th>
+                  <th className="px-4 py-4 text-right text-white font-bold text-sm border-r border-blue-500">COSTO/LEAD</th>
+                  <th className="px-4 py-4 text-center text-white font-bold text-sm border-r border-blue-500">VENTA #</th>
+                  <th className="px-4 py-4 text-right text-white font-bold text-sm border-r border-blue-500">VENTA $</th>
+                  <th className="px-4 py-4 text-right text-white font-bold text-sm border-r border-blue-500">COSTO/CLIENTE</th>
+                  <th className="px-4 py-4 text-center text-white font-bold text-sm border-r border-blue-500">PROYECCIÓN</th>
+                  <th className="px-4 py-4 text-center text-white font-bold text-sm">ACCIÓN</th>
+                </tr>
+              </thead>
+              <tbody>
+                {reporteData.map((row, idx) => (
+                  <tr key={idx} className={`border-b border-gray-200 hover:bg-blue-50 transition-colors ${
+                    idx % 2 === 0 ? 'bg-gray-50' : 'bg-white'
+                  }`}>
+                    <td className="px-4 py-4 border-r border-gray-200">
+                      <div className="flex items-center gap-2">
+                        <div className={`w-3 h-3 rounded-full ${
+                          row.color === 'blue' ? 'bg-blue-600' :
+                          row.color === 'purple' ? 'bg-purple-600' :
+                          row.color === 'cyan' ? 'bg-cyan-600' :
+                          'bg-pink-600'
+                        }`}></div>
+                        <span className="font-semibold text-gray-900">{row.plataforma}</span>
+                      </div>
+                    </td>
+                    <td className="px-4 py-4 text-right font-semibold text-blue-600 border-r border-gray-200">
+                      {row.inversion}
+                    </td>
+                    <td className="px-4 py-4 text-center font-bold text-gray-900 border-r border-gray-200">
+                      {row.leads}
+                    </td>
+                    <td className="px-4 py-4 text-right font-semibold text-emerald-600 border-r border-gray-200">
+                      {row.costoLead}
+                    </td>
+                    <td className="px-4 py-4 text-center font-bold text-gray-900 border-r border-gray-200">
+                      {row.ventasNum}
+                    </td>
+                    <td className="px-4 py-4 text-right font-semibold text-blue-700 border-r border-gray-200">
+                      {row.ventasMonto}
+                    </td>
+                    <td className="px-4 py-4 text-right font-semibold text-orange-600 border-r border-gray-200">
+                      {row.costoCliente}
+                    </td>
+                    <td className="px-4 py-4 text-center border-r border-gray-200">
+                      <span className={`px-3 py-1 rounded-full text-sm font-bold ${
+                        row.proyeccion.startsWith('+') ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                      }`}>
+                        {row.proyeccion}
+                      </span>
+                    </td>
+                    <td className="px-4 py-4">
+                      <div className="flex items-center justify-center gap-2">
+                        {row.accion === 'incrementar' && (
+                          <button className="px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white text-xs font-semibold rounded-lg transition-colors">
+                            ↑ Incrementar
+                          </button>
+                        )}
+                        {row.accion === 'pausar' && (
+                          <button className="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white text-xs font-semibold rounded-lg transition-colors">
+                            ⏸ Pausar
+                          </button>
+                        )}
+                        {row.accion === 'modificar' && (
+                          <button className="px-3 py-1.5 bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold rounded-lg transition-colors">
+                            ⚙ Modificar
+                          </button>
+                        )}
+                      </div>
+                    </td>
                   </tr>
-                </thead>
-                <tbody className="text-gray-900">
-                  {reporteData.map((row, idx) => (
-                    <tr key={idx} className="border-b border-gray-100 hover:bg-blue-50/50 transition-colors">
-                      <td className="px-5 py-4 font-semibold text-sm">{row.plataforma}</td>
-                      <td className="px-5 py-4 text-sm">{row.campana}</td>
-                      <td className="px-5 py-4 text-sm">{row.objetivo}</td>
-                      <td className="px-5 py-4 text-right text-sm font-medium">{row.cpl}</td>
-                      <td className="px-5 py-4 text-right text-sm font-bold text-blue-600">{row.conversiones}</td>
-                      <td className="px-5 py-4 text-right text-sm font-medium">{row.cpa}</td>
-                      <td className="px-5 py-4 text-right text-sm font-bold text-emerald-600">{row.roas}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                ))}
+              </tbody>
+              <tfoot>
+                <tr className="bg-gradient-to-r from-gray-800 to-gray-900">
+                  <td className="px-4 py-4 text-left text-white font-bold border-r border-gray-700">TOTAL</td>
+                  <td className="px-4 py-4 text-right text-white font-bold border-r border-gray-700">$12.604.100</td>
+                  <td className="px-4 py-4 text-center text-white font-bold border-r border-gray-700">1.305</td>
+                  <td className="px-4 py-4 text-right text-white font-bold border-r border-gray-700">-</td>
+                  <td className="px-4 py-4 text-center text-white font-bold border-r border-gray-700">608</td>
+                  <td className="px-4 py-4 text-right text-white font-bold border-r border-gray-700">$96.216.000</td>
+                  <td className="px-4 py-4 text-right text-white font-bold border-r border-gray-700">$20.730</td>
+                  <td className="px-4 py-4 text-center text-white font-bold border-r border-gray-700">+16%</td>
+                  <td className="px-4 py-4"></td>
+                </tr>
+              </tfoot>
+            </table>
           </div>
 
-          <div className="mt-10 text-center">
-            <p className="text-blue-200 text-sm max-w-2xl mx-auto">
+          <div className="mt-10 bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+            <p className="text-blue-200 text-sm max-w-4xl mx-auto leading-relaxed">
               <span className="font-semibold text-white">CPL</span> = Costo por Lead |{' '}
-              <span className="font-semibold text-white">CPA</span> = Costo por Adquisición |{' '}
-              <span className="font-semibold text-white">ROAS</span> = Retorno de Inversión Publicitaria
+              <span className="font-semibold text-white">Venta #</span> = Número de Ventas Cerradas |{' '}
+              <span className="font-semibold text-white">Venta $</span> = Monto Total de Ventas |{' '}
+              <span className="font-semibold text-white">Costo/Cliente</span> = Costo de Adquisición por Cliente |{' '}
+              <span className="font-semibold text-white">Proyección</span> = Crecimiento proyectado mes siguiente
             </p>
           </div>
         </div>

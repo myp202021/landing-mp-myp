@@ -70,6 +70,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'weekly',
       priority: 1.0,
     },
+    // Página Pilar SEO - Agencia Marketing Digital Chile
+    {
+      url: `${baseUrl}/agencia-marketing-digital-chile`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.95,
+    },
     // M&P Labs Hub
     {
       url: `${baseUrl}/labs`,

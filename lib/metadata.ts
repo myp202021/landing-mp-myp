@@ -24,42 +24,81 @@ export const defaultMetadata: Metadata = {
     google: 'N1_98JB2O8f-9p49ys1CL0bu-_kijxbjs3aSRIZ7Syw'
   },
   keywords: [
-    // Keywords principales
+    // Keywords principales (Tier 1 - Alta prioridad)
     'agencia marketing digital',
+    'agencia de marketing digital',
+    'agencia marketing digital chile',
+    'agencia marketing digital santiago',
+    'mejor agencia marketing digital',
+    'agencia marketing digital las condes',
+    'agencia marketing digital providencia',
     'agencia performance',
+    'agencia performance marketing',
     'agencia google ads',
     'agencia redes sociales',
 
-    // Keywords país
-    'agencia marketing digital chile',
+    // Keywords de intención comercial (Tier 2)
+    'contratar agencia marketing digital',
+    'contratar agencia marketing digital chile',
+    'cuanto cuesta agencia marketing digital',
+    'precios agencia marketing digital chile',
+    'presupuesto agencia marketing digital',
+    'planes agencia marketing digital',
+    'servicios agencia marketing digital',
+    'cotizar agencia marketing digital',
+
+    // Keywords país y locales
     'google ads chile',
     'meta ads chile',
     'facebook ads chile',
     'instagram ads chile',
     'performance marketing chile',
     'publicidad digital chile',
-
-    // Keywords locales - Santiago
-    'agencia marketing digital santiago',
     'agencia google ads santiago',
     'agencia performance santiago',
     'marketing digital las condes',
     'agencia publicidad providencia',
     'google ads las condes',
     'meta ads santiago',
+    'publicidad online chile',
+    'agencia publicidad online chile',
+
+    // Keywords por tipo de cliente
+    'agencia marketing digital para pymes',
+    'agencia marketing digital pymes chile',
+    'agencia marketing digital b2b',
+    'agencia marketing digital b2b chile',
+    'agencia marketing digital ecommerce',
+    'agencia marketing digital ecommerce chile',
+    'agencia marketing digital empresas',
+    'agencia marketing digital retail',
 
     // Servicios específicos
     'gestión campañas google ads',
+    'gestión campañas google ads chile',
     'gestión campañas facebook',
+    'gestión campañas meta ads',
     'gestión redes sociales',
+    'gestión redes sociales chile',
     'publicidad redes sociales',
     'social media marketing',
+    'social media marketing chile',
     'linkedin ads chile',
     'tiktok ads chile',
     'youtube ads chile',
+    'mejor agencia google ads chile',
+    'mejor agencia meta ads chile',
 
-    // Términos técnicos
-    'ROI',
+    // Keywords comparativas y diferenciadoras
+    'agencia marketing digital vs tradicional',
+    'agencia performance vs agencia tradicional',
+    'mejor agencia marketing digital chile',
+    'agencia marketing digital con resultados',
+    'agencia marketing digital especializada',
+    'agencia marketing digital equipo dedicado',
+
+    // Términos técnicos y metodología
+    'ROI marketing digital',
     'ROAS',
     'CPL',
     'CPA',
@@ -68,8 +107,6 @@ export const defaultMetadata: Metadata = {
     'costo por adquisición',
     'costo por cliente',
     'retorno inversión publicitaria',
-
-    // Metodología
     'marketing basado en datos',
     'data-driven marketing',
     'performance marketing',
@@ -77,13 +114,18 @@ export const defaultMetadata: Metadata = {
     'estrategia digital',
     'campañas publicitarias',
     'optimización conversiones',
+    'atribución marketing',
+    'métricas marketing digital',
 
-    // Equipo
+    // Equipo y diferenciadores
     'equipo marketing dedicado',
     'agencia publicidad digital',
     'consultora marketing digital',
     'especialistas google ads',
-    'expertos meta ads'
+    'expertos meta ads',
+    'agencia marketing digital transparente',
+    'agencia marketing digital con reportes',
+    'agencia marketing digital acceso full'
   ],
   authors: [{ name: 'Muller y Pérez' }],
   creator: 'Muller y Pérez',
