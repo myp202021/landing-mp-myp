@@ -103,6 +103,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'monthly',
       priority: 0.9,
     },
+    // Recursos - Ranking Agencias
+    {
+      url: `${baseUrl}/recursos/ranking-agencias-performance-marketing-chile-2025`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.95,
+    },
     // M&P Labs Hub
     {
       url: `${baseUrl}/labs`,
