@@ -103,9 +103,21 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'monthly',
       priority: 0.9,
     },
-    // Recursos - Ranking Agencias
+    // Recursos - Rankings Agencias
     {
       url: `${baseUrl}/recursos/ranking-agencias-performance-marketing-chile-2025`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.95,
+    },
+    {
+      url: `${baseUrl}/recursos/mejores-agencias-google-ads-chile-2025`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.95,
+    },
+    {
+      url: `${baseUrl}/recursos/mejores-agencias-meta-ads-chile-2025`,
       lastModified: currentDate,
       changeFrequency: 'monthly',
       priority: 0.95,
