@@ -90,7 +90,7 @@ export default function ClienteCampaniasPage() {
           Campañas Publicitarias
         </h2>
         <p className="text-gray-600 mt-2">
-          Visualiza el rendimiento de tus campañas en Meta Ads
+          Visualiza el rendimiento de tus campañas en Meta Ads y Google Ads
         </p>
       </div>
 
