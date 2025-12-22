@@ -1,13 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
+import { createClient } from '@supabase/supabase-js'
 
 // Force dynamic rendering for this route
 export const dynamic = 'force-dynamic'
 
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { nombre, empresa, email, telefono, solicitud, destinatario } = body
+    const { nombre, empresa, email, telefono, solicitud, destinatario, fuente } = body
 
     // Validar campos requeridos
     if (!nombre || !empresa || !email || !telefono || !solicitud) {
@@ -132,7 +136,58 @@ Fecha: ${new Date().toLocaleString('es-CL')}
       // No fallar si Google Sheets falla
     }
     */
-    console.log('📝 Contacto capturado (solo email por ahora):', { nombre, empresa, email, telefono });
+    console.log('📝 Contacto capturado:', { nombre, empresa, email, telefono });
+
+    // ========================================
+    // GUARDAR LEAD EN CRM (Supabase)
+    // ========================================
+    let leadCreated = null
+    try {
+      const supabase = createClient(supabaseUrl, supabaseKey)
+
+      // Buscar cliente Muller y Perez (cliente principal de la web)
+      const { data: clienteData } = await supabase
+        .from('clientes')
+        .select('id')
+        .or('nombre.ilike.%muller%,nombre.ilike.%m&p%,nombre.ilike.%myp%')
+        .single()
+
+      if (clienteData) {
+        // Crear el lead
+        const leadData = {
+          cliente_id: clienteData.id,
+          nombre: nombre,
+          email: email,
+          telefono: telefono,
+          nombre_empresa: empresa,
+          fuente: fuente || 'formulario_web',
+          form_nombre: 'Formulario Web M&P',
+          observaciones: solicitud,
+          contactado: false,
+          vendido: false,
+          fecha_ingreso: new Date().toISOString(),
+          mes_ingreso: new Date().toISOString().substring(0, 7)
+        }
+
+        const { data: leadInserted, error: leadError } = await supabase
+          .from('leads')
+          .insert([leadData])
+          .select()
+          .single()
+
+        if (leadError) {
+          console.error('⚠️ Error creando lead en CRM:', leadError)
+        } else {
+          leadCreated = leadInserted
+          console.log('✅ Lead creado en CRM:', leadInserted.id)
+        }
+      } else {
+        console.warn('⚠️ Cliente Muller y Perez no encontrado en CRM')
+      }
+    } catch (crmError) {
+      console.error('⚠️ Error conectando con CRM:', crmError)
+      // No fallar si el CRM falla, seguir con el email
+    }
 
     // Verificar si hay API key configurada
     if (!process.env.RESEND_API_KEY) {
@@ -173,7 +228,8 @@ Fecha: ${new Date().toLocaleString('es-CL')}
     return NextResponse.json({
       success: true,
       message: 'Solicitud enviada correctamente',
-      emailId: data?.id
+      emailId: data?.id,
+      leadId: leadCreated?.id || null
     })
 
   } catch (error) {
