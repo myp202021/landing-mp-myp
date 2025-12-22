@@ -577,13 +577,106 @@ export default function ClienteDashboard() {
       <div className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-200">
         <div className="bg-blue-900 px-6 py-4 flex items-center justify-between">
           <h3 className="text-xl font-bold text-white">Mis Leads</h3>
-          <Button
-            onClick={() => setShowAgregarLeadModal(true)}
-            variant="primary"
-            className="bg-green-600 hover:bg-green-700 text-white font-semibold"
-          >
-            + Agregar Lead Manual
-          </Button>
+          <div className="flex gap-2">
+            {/* Botón Exportar CSV */}
+            <button
+              onClick={() => {
+                const csvContent = [
+                  ['Fecha', 'Nombre', 'Email', 'Teléfono', 'Empresa', 'Fuente', 'Estado', 'Monto Vendido', 'Observaciones'].join(','),
+                  ...sortedLeads.map(lead => [
+                    new Date(lead.fecha_ingreso).toLocaleDateString('es-CL'),
+                    `"${(lead.nombre || '').replace(/"/g, '""')}"`,
+                    lead.email || '',
+                    lead.telefono || '',
+                    `"${(lead.nombre_empresa || lead.empresa || '').replace(/"/g, '""')}"`,
+                    lead.fuente || '',
+                    lead.vendido ? 'Vendido' : lead.contactado ? 'Contactado' : 'Nuevo',
+                    lead.monto_vendido || '',
+                    `"${(lead.observaciones || '').replace(/"/g, '""')}"`
+                  ].join(','))
+                ].join('\n')
+
+                const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' })
+                const link = document.createElement('a')
+                link.href = URL.createObjectURL(blob)
+                link.download = `leads_${new Date().toISOString().split('T')[0]}.csv`
+                link.click()
+              }}
+              className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-semibold text-sm flex items-center gap-2 transition"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              CSV
+            </button>
+
+            {/* Botón Exportar vCard (Contactos) */}
+            <button
+              onClick={() => {
+                const vcards = sortedLeads
+                  .filter(lead => lead.telefono || lead.email)
+                  .map(lead => {
+                    let tel = (lead.telefono || '').replace(/\s/g, '').replace(/-/g, '')
+                    if (tel && !tel.startsWith('+')) {
+                      tel = tel.startsWith('56') ? '+' + tel : '+56' + tel
+                    }
+
+                    const lines = [
+                      'BEGIN:VCARD',
+                      'VERSION:3.0',
+                      `FN:${lead.nombre || lead.nombre_empresa || lead.empresa || 'Lead'}`,
+                    ]
+
+                    if (lead.nombre_empresa || lead.empresa) {
+                      lines.push(`ORG:${lead.nombre_empresa || lead.empresa}`)
+                    }
+                    if (tel) {
+                      lines.push(`TEL;TYPE=WORK:${tel}`)
+                    }
+                    if (lead.email) {
+                      lines.push(`EMAIL;TYPE=WORK:${lead.email}`)
+                    }
+
+                    const notas = []
+                    if (lead.fuente) notas.push(`Fuente: ${lead.fuente}`)
+                    if (lead.observaciones) notas.push(lead.observaciones)
+                    if (notas.length > 0) {
+                      lines.push(`NOTE:${notas.join(' | ')}`)
+                    }
+
+                    lines.push('END:VCARD')
+                    return lines.join('\n')
+                  })
+
+                if (vcards.length === 0) {
+                  alert('No hay leads con teléfono o email para exportar')
+                  return
+                }
+
+                const blob = new Blob([vcards.join('\n')], { type: 'text/vcard;charset=utf-8' })
+                const link = document.createElement('a')
+                link.href = URL.createObjectURL(blob)
+                link.download = `contactos_leads_${new Date().toISOString().split('T')[0]}.vcf`
+                link.click()
+
+                alert(`Se exportaron ${vcards.length} contactos. Abre el archivo .vcf para importarlos a tus contactos.`)
+              }}
+              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold text-sm flex items-center gap-2 transition"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+              Contactos
+            </button>
+
+            <Button
+              onClick={() => setShowAgregarLeadModal(true)}
+              variant="primary"
+              className="bg-green-600 hover:bg-green-700 text-white font-semibold"
+            >
+              + Agregar Lead
+            </Button>
+          </div>
         </div>
 
         {sortedLeads.length === 0 ? (
