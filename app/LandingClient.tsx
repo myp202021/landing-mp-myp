@@ -2415,7 +2415,7 @@ export default function LandingClient() {
             {/* Columna 2: Servicios */}
             <div>
               <h3 className="text-white font-bold mb-4">Servicios</h3>
-              <ul className="space-y-3 text-sm">
+              <ul className="space-y-2 text-sm">
                 <li>
                   <Link href="/servicios" className="text-blue-200 hover:text-white transition-colors">
                     Todos los Servicios
@@ -2423,44 +2423,44 @@ export default function LandingClient() {
                 </li>
                 <li>
                   <Link href="/servicios/google-ads-chile" className="text-blue-200 hover:text-white transition-colors">
-                    🎯 Google Ads Chile
+                    Google Ads Chile
                   </Link>
                 </li>
                 <li>
                   <Link href="/servicios/meta-ads-chile" className="text-blue-200 hover:text-white transition-colors">
-                    📱 Meta Ads Chile
+                    Meta Ads Chile
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/servicios/seo-chile" className="text-blue-200 hover:text-white transition-colors">
+                    SEO Chile
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/servicios/facebook-ads-chile" className="text-blue-200 hover:text-white transition-colors">
+                    Facebook Ads Chile
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/servicios/instagram-ads-chile" className="text-blue-200 hover:text-white transition-colors">
+                    Instagram Ads Chile
                   </Link>
                 </li>
                 <li>
                   <Link href="/servicios/performance-marketing" className="text-blue-200 hover:text-white transition-colors">
-                    🚀 Performance Marketing
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/agencia-marketing-digital-chile" className="text-blue-200 hover:text-white transition-colors">
-                    Sobre la Agencia
+                    Performance Marketing
                   </Link>
                 </li>
               </ul>
             </div>
 
-            {/* Columna 3: Recursos */}
+            {/* Columna 3: Recursos y Ubicaciones */}
             <div>
               <h3 className="text-white font-bold mb-4">Recursos</h3>
-              <ul className="space-y-3 text-sm">
+              <ul className="space-y-2 text-sm mb-6">
                 <li>
                   <Link href="/blog" className="text-blue-200 hover:text-white transition-colors">
                     Blog
-                  </Link>
-                </li>
-                <li>
-                  <a href="#capsulas-youtube" className="text-blue-200 hover:text-white transition-colors">
-                    Cápsulas YouTube
-                  </a>
-                </li>
-                <li>
-                  <Link href="/benchmarks" className="text-blue-200 hover:text-white transition-colors">
-                    Benchmarks 2025
                   </Link>
                 </li>
                 <li>
@@ -2471,6 +2471,30 @@ export default function LandingClient() {
                 <li>
                   <Link href="/utilidades" className="text-blue-200 hover:text-white transition-colors">
                     Utilidades
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/agencia-marketing-digital-chile" className="text-blue-200 hover:text-white transition-colors">
+                    Sobre la Agencia
+                  </Link>
+                </li>
+              </ul>
+
+              <h3 className="text-white font-bold mb-4">Ubicaciones</h3>
+              <ul className="space-y-2 text-sm">
+                <li>
+                  <Link href="/agencia-marketing-digital-santiago" className="text-blue-200 hover:text-white transition-colors">
+                    Santiago
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/agencia-marketing-digital-vina-del-mar" className="text-blue-200 hover:text-white transition-colors">
+                    Viña del Mar
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/agencia-marketing-digital-concepcion" className="text-blue-200 hover:text-white transition-colors">
+                    Concepción
                   </Link>
                 </li>
               </ul>
