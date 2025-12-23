@@ -45,11 +45,12 @@ export default function ConsultoraMarketingDigitalChilePage() {
     { name: 'Consultoría Marketing Digital Chile', url: 'https://www.mulleryperez.cl/consultora-marketing-digital-chile' }
   ])
 
-  const serviceSchema = createServiceSchema(
-    'Consultoría de Marketing Digital',
-    'Servicios de consultoría especializada en marketing digital: auditorías estratégicas, planes de optimización, capacitación a equipos internos y acompañamiento consultivo para empresas en Chile.',
-    'https://www.mulleryperez.cl/consultora-marketing-digital-chile'
-  )
+  const serviceSchema = createServiceSchema({
+    name: 'Consultoría de Marketing Digital',
+    description: 'Servicios de consultoría especializada en marketing digital: auditorías estratégicas, planes de optimización, capacitación a equipos internos y acompañamiento consultivo para empresas en Chile.',
+    serviceType: 'Consultoría Marketing Digital',
+    price: '890000'
+  })
 
   const faqSchema = createFAQPageSchema([
     {

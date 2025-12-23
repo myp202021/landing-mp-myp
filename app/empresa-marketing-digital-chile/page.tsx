@@ -49,11 +49,12 @@ export default function EmpresaMarketingDigitalChilePage() {
 
   const organizationSchema = createOrganizationSchema()
 
-  const serviceSchema = createServiceSchema(
-    'Servicios de Marketing Digital Corporativo',
-    'Servicios profesionales de marketing digital para empresas establecidas en Chile: Google Ads, Meta Ads, LinkedIn Ads, analytics avanzado y estrategia digital integral',
-    'https://www.mulleryperez.cl/empresa-marketing-digital-chile'
-  )
+  const serviceSchema = createServiceSchema({
+    name: 'Servicios de Marketing Digital Corporativo',
+    description: 'Servicios profesionales de marketing digital para empresas establecidas en Chile: Google Ads, Meta Ads, LinkedIn Ads, analytics avanzado y estrategia digital integral',
+    serviceType: 'Marketing Digital Corporativo',
+    price: '980000'
+  })
 
   const faqSchema = createFAQPageSchema([
     {
