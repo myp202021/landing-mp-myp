@@ -5,7 +5,7 @@
 
 import { Metadata } from 'next'
 import Link from 'next/link'
-import { createMetadata, createArticleSchema, createBreadcrumbSchema } from '@/lib/metadata'
+import { createMetadata, createWebPageSchema, createBreadcrumbSchema } from '@/lib/metadata'
 
 export const metadata: Metadata = createMetadata({
   title: 'Cuánto Invertir en Publicidad Digital en Chile 2025 | Guía de Presupuestos',
@@ -21,14 +21,11 @@ export const metadata: Metadata = createMetadata({
 })
 
 export default function CuantoInvertirPublicidadPage() {
-  const articleSchema = createArticleSchema({
-    headline: 'Cuánto Invertir en Publicidad Digital en Chile 2025',
-    description: 'Guía de presupuestos para publicidad digital. Google Ads, Meta Ads y más según tu industria.',
-    datePublished: '2025-01-15',
-    dateModified: '2025-01-15',
-    author: 'Equipo M&P',
-    image: 'https://www.mulleryperez.cl/og-image.png'
-  })
+  const articleSchema = createWebPageSchema(
+    'Cuánto Invertir en Publicidad Digital en Chile 2025',
+    'Guía de presupuestos para publicidad digital. Google Ads, Meta Ads y más según tu industria.',
+    'https://www.mulleryperez.cl/blog/cuanto-invertir-publicidad-digital-chile-2025'
+  )
 
   const breadcrumbSchema = createBreadcrumbSchema([
     { name: 'Inicio', url: 'https://www.mulleryperez.cl' },

@@ -5,7 +5,7 @@
 
 import { Metadata } from 'next'
 import Link from 'next/link'
-import { createMetadata, createArticleSchema, createBreadcrumbSchema } from '@/lib/metadata'
+import { createMetadata, createWebPageSchema, createBreadcrumbSchema } from '@/lib/metadata'
 
 export const metadata: Metadata = createMetadata({
   title: 'Guía de Marketing Digital para Pymes en Chile 2025 | Estrategias y Presupuestos',
@@ -21,14 +21,11 @@ export const metadata: Metadata = createMetadata({
 })
 
 export default function MarketingDigitalPymesPage() {
-  const articleSchema = createArticleSchema({
-    headline: 'Guía de Marketing Digital para Pymes en Chile 2025',
-    description: 'Estrategias efectivas de marketing digital para pymes chilenas con presupuestos ajustados.',
-    datePublished: '2025-01-15',
-    dateModified: '2025-01-15',
-    author: 'Equipo M&P',
-    image: 'https://www.mulleryperez.cl/og-image.png'
-  })
+  const articleSchema = createWebPageSchema(
+    'Guía de Marketing Digital para Pymes en Chile 2025',
+    'Estrategias efectivas de marketing digital para pymes chilenas con presupuestos ajustados.',
+    'https://www.mulleryperez.cl/blog/guia-marketing-digital-pymes-chile-2025'
+  )
 
   const breadcrumbSchema = createBreadcrumbSchema([
     { name: 'Inicio', url: 'https://www.mulleryperez.cl' },
