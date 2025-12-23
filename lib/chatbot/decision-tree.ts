@@ -60,9 +60,8 @@ export const chatTree: Record<string, ChatNode> = {
 
   'plan_campanas': {
     id: 'plan_campanas',
-    type: 'response',
-    text: '',
-    response: `**Plan Campañas - $490.000 + IVA/mes**
+    type: 'menu',
+    text: `**Plan Campañas - $490.000 + IVA/mes**
 
 Ideal para empresas que necesitan solo publicidad pagada.
 
@@ -82,16 +81,19 @@ Ideal para empresas que necesitan solo publicidad pagada.
 • Proyección de rendimiento al tercer mes
 
 *Landing pages se cotizan aparte si es necesario.*`,
-    nextNode: 'planes_menu',
+    options: [
+      { id: 'agendar', label: 'Agendar reunión', emoji: '📅', nextNodeId: 'agendar_reunion' },
+      { id: 'otros_planes', label: 'Ver otros planes', nextNodeId: 'planes_menu' },
+      { id: 'volver', label: '← Menú principal', nextNodeId: 'root' }
+    ],
     category: 'planes',
     subcategory: 'plan_campanas'
   },
 
   'plan_contenidos': {
     id: 'plan_contenidos',
-    type: 'response',
-    text: '',
-    response: `**Plan Contenidos - $650.000 + IVA/mes**
+    type: 'menu',
+    text: `**Plan Contenidos - $650.000 + IVA/mes**
 
 Ideal para gestión de redes sociales orgánicas.
 
@@ -112,16 +114,19 @@ Ideal para gestión de redes sociales orgánicas.
 • Proyección de rendimiento al tercer mes
 
 *No incluye campañas de publicidad pagada.*`,
-    nextNode: 'planes_menu',
+    options: [
+      { id: 'agendar', label: 'Agendar reunión', emoji: '📅', nextNodeId: 'agendar_reunion' },
+      { id: 'otros_planes', label: 'Ver otros planes', nextNodeId: 'planes_menu' },
+      { id: 'volver', label: '← Menú principal', nextNodeId: 'root' }
+    ],
     category: 'planes',
     subcategory: 'plan_contenidos'
   },
 
   'plan_silver': {
     id: 'plan_silver',
-    type: 'response',
-    text: '',
-    response: `**Plan Silver - $750.000 + IVA/mes**
+    type: 'menu',
+    text: `**Plan Silver - $750.000 + IVA/mes** ⭐ Más popular
 
 Combina campañas pagadas + contenido orgánico.
 
@@ -141,16 +146,19 @@ Combina campañas pagadas + contenido orgánico.
 • Diagnóstico, benchmarking y proyecciones
 
 *Es nuestro plan más popular para empresas que están partiendo.*`,
-    nextNode: 'planes_menu',
+    options: [
+      { id: 'agendar', label: 'Agendar reunión', emoji: '📅', nextNodeId: 'agendar_reunion' },
+      { id: 'otros_planes', label: 'Ver otros planes', nextNodeId: 'planes_menu' },
+      { id: 'volver', label: '← Menú principal', nextNodeId: 'root' }
+    ],
     category: 'planes',
     subcategory: 'plan_silver'
   },
 
   'plan_gold': {
     id: 'plan_gold',
-    type: 'response',
-    text: '',
-    response: `**Plan Gold - $1.200.000 + IVA/mes**
+    type: 'menu',
+    text: `**Plan Gold - $1.200.000 + IVA/mes**
 
 Para empresas que necesitan más volumen y email marketing.
 
@@ -171,16 +179,19 @@ Para empresas que necesitan más volumen y email marketing.
 • Diagnóstico, benchmarking y proyecciones
 
 *Ideal para empresas en crecimiento con base de datos activa.*`,
-    nextNode: 'planes_menu',
+    options: [
+      { id: 'agendar', label: 'Agendar reunión', emoji: '📅', nextNodeId: 'agendar_reunion' },
+      { id: 'otros_planes', label: 'Ver otros planes', nextNodeId: 'planes_menu' },
+      { id: 'volver', label: '← Menú principal', nextNodeId: 'root' }
+    ],
     category: 'planes',
     subcategory: 'plan_gold'
   },
 
   'plan_platinum': {
     id: 'plan_platinum',
-    type: 'response',
-    text: '',
-    response: `**Plan Platinum - $1.900.000 + IVA/mes**
+    type: 'menu',
+    text: `**Plan Platinum - $1.900.000 + IVA/mes**
 
 Nuestro plan más completo para empresas grandes.
 
@@ -201,9 +212,67 @@ Nuestro plan más completo para empresas grandes.
 • Equipo completo dedicado
 
 *Para empresas que necesitan presencia digital intensiva.*`,
-    nextNode: 'planes_menu',
+    options: [
+      { id: 'agendar', label: 'Agendar reunión', emoji: '📅', nextNodeId: 'agendar_reunion' },
+      { id: 'otros_planes', label: 'Ver otros planes', nextNodeId: 'planes_menu' },
+      { id: 'volver', label: '← Menú principal', nextNodeId: 'root' }
+    ],
     category: 'planes',
     subcategory: 'plan_platinum'
+  },
+
+  // ========================================
+  // NODO: AGENDAR REUNIÓN (CTA principal)
+  // ========================================
+  'agendar_reunion': {
+    id: 'agendar_reunion',
+    type: 'capture_lead',
+    text: `**¡Perfecto! Agenda tu reunión con M&P**
+
+Déjanos tus datos y un ejecutivo te contactará en menos de 24 horas para coordinar una reunión sin compromiso.
+
+*En la reunión analizaremos tu caso y te daremos recomendaciones personalizadas.*`,
+    captureFields: ['nombre', 'empresa', 'email', 'telefono', 'interes'],
+    nextNode: 'agendar_confirmacion',
+    category: 'conversion',
+    subcategory: 'agendar_reunion'
+  },
+
+  'agendar_confirmacion': {
+    id: 'agendar_confirmacion',
+    type: 'menu',
+    text: `**¡Listo! Tu solicitud fue enviada**
+
+Un ejecutivo de M&P te contactará dentro de las próximas 24 horas hábiles.
+
+📧 También recibirás un email de confirmación.
+
+Mientras tanto, ¿hay algo más en lo que pueda ayudarte?`,
+    options: [
+      { id: 'planes', label: 'Ver planes', emoji: '📌', nextNodeId: 'planes_menu' },
+      { id: 'metodologia', label: 'Cómo trabajamos', emoji: '🧠', nextNodeId: 'metodologia_menu' },
+      { id: 'finalizar', label: 'Cerrar chat', emoji: '👋', nextNodeId: 'despedida' }
+    ],
+    category: 'conversion',
+    subcategory: 'confirmacion'
+  },
+
+  'despedida': {
+    id: 'despedida',
+    type: 'response',
+    text: '',
+    response: `**¡Gracias por tu interés en M&P!**
+
+Si tienes más preguntas, estaré aquí cuando me necesites.
+
+🌐 www.mulleryperez.cl
+📧 contacto@mulleryperez.cl
+📱 +56 9 9225 8137
+
+¡Hasta pronto!`,
+    nextNode: 'root',
+    category: 'cierre',
+    subcategory: 'despedida'
   },
 
   // ========================================

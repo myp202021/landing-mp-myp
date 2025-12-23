@@ -38,6 +38,7 @@ interface LeadData {
   empresa: string
   email: string
   telefono: string
+  interes: string
 }
 
 // ============================================
@@ -56,7 +57,8 @@ export default function ChatBot() {
     nombre: '',
     empresa: '',
     email: '',
-    telefono: ''
+    telefono: '',
+    interes: ''
   })
   const [formSubmitting, setFormSubmitting] = useState(false)
   const [hasUnread, setHasUnread] = useState(false)
@@ -253,21 +255,34 @@ export default function ChatBot() {
     setFormSubmitting(true)
 
     try {
+      // Guardar en Supabase
       await updateSessionLead(leadData)
+
+      // Enviar email via API
+      await fetch('/api/chatbot/lead', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...leadData,
+          sessionId,
+          source: 'chatbot'
+        })
+      })
 
       setShowLeadForm(false)
 
       // Show confirmation
-      const confirmNode = getNode('contacto_confirmacion')
+      const confirmNode = getNode('agendar_confirmacion')
       if (confirmNode) {
         setMessages(prev => [...prev, {
           id: `bot-confirm-${Date.now()}`,
           role: 'assistant',
-          content: confirmNode.response || confirmNode.text,
-          options: [{ id: 'volver', label: '← Volver al menú', emoji: '', nextNodeId: 'root' }],
-          nodeId: 'contacto_confirmacion'
+          content: confirmNode.text,
+          options: confirmNode.options,
+          nodeId: 'agendar_confirmacion'
         }])
-        setCurrentNodeId('contacto_confirmacion')
+        setCurrentNodeId('agendar_confirmacion')
+        saveMessage('assistant', confirmNode.text, 'agendar_confirmacion', undefined, 'conversion', 'confirmacion')
       }
     } catch (err) {
       console.error('Error submitting lead:', err)
@@ -463,11 +478,24 @@ export default function ChatBot() {
                     />
                     <input
                       type="tel"
-                      placeholder="Teléfono"
+                      placeholder="Telefono"
                       value={leadData.telefono}
                       onChange={(e) => setLeadData(prev => ({ ...prev, telefono: e.target.value }))}
                       className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
+                    <select
+                      value={leadData.interes}
+                      onChange={(e) => setLeadData(prev => ({ ...prev, interes: e.target.value }))}
+                      className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700"
+                    >
+                      <option value="">¿Que plan te interesa?</option>
+                      <option value="Plan Campanas">Plan Campanas ($490K)</option>
+                      <option value="Plan Contenidos">Plan Contenidos ($650K)</option>
+                      <option value="Plan Silver">Plan Silver ($750K)</option>
+                      <option value="Plan Gold">Plan Gold ($1.2M)</option>
+                      <option value="Plan Platinum">Plan Platinum ($1.9M)</option>
+                      <option value="No estoy seguro">No estoy seguro aun</option>
+                    </select>
                     <button
                       type="submit"
                       disabled={formSubmitting}
