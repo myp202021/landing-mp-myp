@@ -60,6 +60,63 @@ const services = [
     ]
   },
   {
+    slug: 'seo-chile',
+    title: 'SEO',
+    subtitle: 'Posicionamiento web orgánico',
+    description: 'Posiciona tu sitio en los primeros resultados de Google de forma orgánica. SEO técnico, contenido optimizado y link building para resultados sostenibles.',
+    icon: '🔍',
+    features: [
+      { label: 'Servicios', value: 'SEO técnico, On-page, Off-page, Local' },
+      { label: 'Resultados', value: 'Mediano-largo plazo, sostenibles' },
+      { label: 'Mejor para', value: 'Empresas que buscan tráfico orgánico' },
+      { label: 'Equipo asignado', value: 'Especialista SEO + Redactor + Analista' }
+    ],
+    benefits: [
+      'Tráfico sostenible sin pagar por click',
+      'Mayor autoridad y confianza de marca',
+      'ROI creciente mes a mes',
+      'Combinamos SEO + Paid Media para resultados rápidos'
+    ]
+  },
+  {
+    slug: 'facebook-ads-chile',
+    title: 'Facebook Ads',
+    subtitle: 'Publicidad en la red social más grande',
+    description: 'Campañas de Facebook Ads optimizadas para conversión. Llega a millones de usuarios chilenos con segmentación avanzada y remarketing.',
+    icon: '📘',
+    features: [
+      { label: 'Formatos', value: 'Feed, Stories, Reels, Marketplace' },
+      { label: 'Segmentación', value: 'Demográfica, intereses, comportamiento' },
+      { label: 'Mejor para', value: 'B2C, eCommerce, generación de leads' },
+      { label: 'Equipo asignado', value: 'Paid Media Planner + Publicista + Diseñador' }
+    ],
+    benefits: [
+      'Alcance masivo en Chile',
+      'Segmentación detallada por intereses',
+      'Remarketing a visitantes del sitio',
+      'Integración con WhatsApp Business'
+    ]
+  },
+  {
+    slug: 'instagram-ads-chile',
+    title: 'Instagram Ads',
+    subtitle: 'Publicidad visual de alto impacto',
+    description: 'Campañas de Instagram Ads con contenido visual atractivo. Stories, Reels y Feed optimizados para engagement y conversiones.',
+    icon: '📸',
+    features: [
+      { label: 'Formatos', value: 'Feed, Stories, Reels, Explore' },
+      { label: 'Audiencia', value: '18-45 años, alto engagement' },
+      { label: 'Mejor para', value: 'Moda, lifestyle, eCommerce, servicios' },
+      { label: 'Equipo asignado', value: 'Paid Media Planner + Publicista + Diseñador' }
+    ],
+    benefits: [
+      'Contenido visual de alto impacto',
+      'Audiencia altamente comprometida',
+      'Shopping integrado para eCommerce',
+      'Influencer marketing y colaboraciones'
+    ]
+  },
+  {
     slug: 'performance-marketing',
     title: 'Performance Marketing',
     subtitle: 'Estrategia completa basada en datos',
