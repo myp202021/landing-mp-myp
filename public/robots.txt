@@ -14,6 +14,16 @@ Disallow: /admin/
 Disallow: /crm/
 Disallow: /labs/mp-intelligence/internal-stats
 
+# Block WordPress legacy URLs (cleanup)
+Disallow: /*?page_id=
+Disallow: /*?p=
+Disallow: /*?m=
+Disallow: /*?cat=
+Disallow: /*?trk=
+Disallow: /*?preview=
+Disallow: /*?s=
+Disallow: /*?attachment_id=
+
 # Allow all tools and blog
 Allow: /labs/
 Allow: /utilidades/

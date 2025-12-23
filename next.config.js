@@ -99,7 +99,42 @@ const nextConfig = {
   // Redirects for URL changes
   async redirects() {
     return [
+      // ========================================
+      // WordPress legacy URLs (cleanup for SEO)
+      // ========================================
+      {
+        source: '/',
+        has: [{ type: 'query', key: 'page_id' }],
+        destination: '/',
+        permanent: true,
+      },
+      {
+        source: '/',
+        has: [{ type: 'query', key: 'm' }],
+        destination: '/blog',
+        permanent: true,
+      },
+      {
+        source: '/',
+        has: [{ type: 'query', key: 'trk' }],
+        destination: '/',
+        permanent: true,
+      },
+      {
+        source: '/',
+        has: [{ type: 'query', key: 'p' }],
+        destination: '/',
+        permanent: true,
+      },
+      {
+        source: '/',
+        has: [{ type: 'query', key: 'cat' }],
+        destination: '/blog',
+        permanent: true,
+      },
+      // ========================================
       // Old URLs
+      // ========================================
       {
         source: '/predictor-unicornio',
         destination: '/predictor',
