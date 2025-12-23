@@ -4,6 +4,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import Breadcrumbs from "./components/Breadcrumbs";
 import ThirdPartyScripts from "@/components/ThirdPartyScripts";
 import ResourceHints from "@/components/ResourceHints";
+import ChatBotWrapper from "@/components/ChatBot/ChatBotWrapper";
 import "./globals.css";
 
 export const metadata: Metadata = defaultMetadata;
@@ -35,6 +36,7 @@ export default function RootLayout({
       <body>
         <Breadcrumbs />
         {children}
+        <ChatBotWrapper />
         <ThirdPartyScripts />
         <SpeedInsights />
       </body>
