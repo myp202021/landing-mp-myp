@@ -1659,24 +1659,24 @@ export default function LandingClient() {
               </div>
             </Link>
 
-            {/* Radar Industrias */}
+            {/* Simulador de Inversion */}
             <Link
-              href="/labs/radar-industrias"
-              className="group bg-white rounded-2xl p-6 border-2 border-gray-200 hover:border-indigo-500 hover:shadow-xl transition-all duration-300"
+              href="/labs/simulador-inversion"
+              className="group bg-white rounded-2xl p-6 border-2 border-gray-200 hover:border-slate-500 hover:shadow-xl transition-all duration-300"
             >
               <div className="flex items-start justify-between mb-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-                  <Target className="w-6 h-6 text-white" />
+                <div className="w-12 h-12 bg-gradient-to-br from-slate-600 to-slate-800 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                  <Calculator className="w-6 h-6 text-white" />
                 </div>
-                <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-indigo-600 group-hover:translate-x-1 transition-all" />
+                <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-slate-600 group-hover:translate-x-1 transition-all" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Radar Industrias</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Simulador Inversion</h3>
               <p className="text-sm text-gray-600 mb-3">
-                Descubre oportunidades y benchmarks específicos de tu industria en Chile 2025.
+                Evalua si tu negocio esta listo para invertir en marketing digital. Anti-humo.
               </p>
-              <div className="flex items-center gap-2 text-xs text-indigo-600 font-semibold">
-                <span className="px-2 py-1 bg-indigo-50 rounded-full">15 Sectores</span>
-                <span className="px-2 py-1 bg-purple-50 rounded-full">Data 2025</span>
+              <div className="flex items-center gap-2 text-xs text-slate-600 font-semibold">
+                <span className="px-2 py-1 bg-slate-50 rounded-full">Score M&P</span>
+                <span className="px-2 py-1 bg-slate-100 rounded-full">Stress Test</span>
               </div>
             </Link>
           </div>
