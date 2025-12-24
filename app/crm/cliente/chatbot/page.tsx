@@ -8,7 +8,6 @@
 
 import React, { useState, useEffect } from 'react'
 import CRMLayout from '@/app/components/crm/CRMLayout'
-import { supabase } from '@/lib/supabase'
 import {
   MessageSquare,
   Users,
@@ -91,59 +90,29 @@ export default function ClienteChatbotPage() {
     setError(null)
 
     try {
-      // Calculate date range
-      const now = new Date()
-      let startDate = new Date()
-      switch (dateFilter) {
-        case '24h':
-          startDate.setHours(startDate.getHours() - 24)
-          break
-        case '7d':
-          startDate.setDate(startDate.getDate() - 7)
-          break
-        case '30d':
-          startDate.setDate(startDate.getDate() - 30)
-          break
-        case 'all':
-          startDate = new Date('2024-01-01')
-          break
+      // Map filter to days
+      const daysMap: { [key: string]: number } = {
+        '24h': 1,
+        '7d': 7,
+        '30d': 30,
+        'all': -1
+      }
+      const days = daysMap[dateFilter] || 7
+
+      const response = await fetch(`/api/chatbot/sessions?days=${days}&limit=100`)
+      const result = await response.json()
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Error al cargar sesiones')
       }
 
-      const { data, error: fetchError } = await supabase
-        .from('chat_sessions')
-        .select('*')
-        .gte('started_at', startDate.toISOString())
-        .order('started_at', { ascending: false })
-        .limit(100)
-
-      if (fetchError) {
-        // Si la tabla no existe, mostrar mensaje amigable
-        if (fetchError.code === 'PGRST205') {
-          setError('Las tablas del ChatBot no están configuradas. Contacta al administrador.')
-          setSessions([])
-          return
-        }
-        throw fetchError
-      }
-
-      setSessions(data || [])
-
-      // Calculate stats
-      if (data) {
-        const totalSessions = data.length
-        const totalLeads = data.filter(s => s.email).length
-        const intentAlto = data.filter(s => s.intent_score === 'alto').length
-        const avgTurns = totalSessions > 0
-          ? data.reduce((sum, s) => sum + (s.total_turns || 0), 0) / totalSessions
-          : 0
-
-        setStats({
-          totalSessions,
-          totalLeads,
-          intentAlto,
-          avgTurns: Math.round(avgTurns * 10) / 10
-        })
-      }
+      setSessions(result.sessions || [])
+      setStats(result.stats || {
+        totalSessions: 0,
+        totalLeads: 0,
+        intentAlto: 0,
+        avgTurns: 0
+      })
 
     } catch (err: any) {
       console.error('Error fetching sessions:', err)
@@ -155,15 +124,14 @@ export default function ClienteChatbotPage() {
 
   const fetchSessionMessages = async (sessionId: string) => {
     try {
-      const { data, error } = await supabase
-        .from('chat_messages')
-        .select('*')
-        .eq('session_id', sessionId)
-        .order('created_at', { ascending: true })
+      const response = await fetch(`/api/chatbot/messages?sessionId=${sessionId}`)
+      const result = await response.json()
 
-      if (error) throw error
+      if (!response.ok) {
+        throw new Error(result.error || 'Error al cargar mensajes')
+      }
 
-      setSessionMessages(data || [])
+      setSessionMessages(result.messages || [])
       setSelectedSession(sessionId)
     } catch (err) {
       console.error('Error fetching messages:', err)

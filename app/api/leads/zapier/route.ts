@@ -112,11 +112,10 @@ export async function POST(req: NextRequest) {
       campana_nombre: extractField(body, 'campaign_name', 'campaignName', 'campaign_id'),
       meta_lead_id: extractField(body, 'form_id', 'lead_id', 'leadId'),
       fuente: 'zapier',
-      origen: 'Google Ads (Zapier)',
       contactado: false,
       vendido: false,
       monto_vendido: null,
-      observaciones: `Datos originales recibidos: ${JSON.stringify(body)}`,
+      observaciones: null,
       fecha_ingreso: new Date().toISOString(),
       mes_ingreso: new Date().toISOString().substring(0, 7)
     }
