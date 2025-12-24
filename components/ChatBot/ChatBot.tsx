@@ -16,7 +16,6 @@ import {
   ExternalLink
 } from 'lucide-react'
 import { chatTree, getNode, getRootNode, ChatNode, ChatOption } from '@/lib/chatbot/decision-tree'
-import { supabase } from '@/lib/supabase'
 
 // ============================================
 // TYPES
@@ -138,18 +137,19 @@ export default function ChatBot() {
 
   const initSession = async () => {
     try {
-      const { data, error } = await supabase
-        .from('chat_sessions')
-        .insert({
+      const response = await fetch('/api/chatbot/session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
           user_agent: navigator.userAgent,
           landing_page: window.location.href,
           referrer: document.referrer || null
         })
-        .select('id')
-        .single()
+      })
 
-      if (data && !error) {
-        setSessionId(data.id)
+      const data = await response.json()
+      if (data.sessionId) {
+        setSessionId(data.sessionId)
       }
     } catch (err) {
       console.error('Error creating chat session:', err)
@@ -167,25 +167,19 @@ export default function ChatBot() {
     if (!sessionId) return
 
     try {
-      await supabase.from('chat_messages').insert({
-        session_id: sessionId,
-        role,
-        content,
-        node_id: nodeId,
-        option_selected: optionSelected,
-        categoria,
-        subcategoria
-      })
-
-      await supabase
-        .from('chat_sessions')
-        .update({
-          total_messages: messages.length + 1,
-          total_turns: Math.floor((messages.length + 1) / 2),
-          categoria: categoria || undefined,
-          subcategoria: subcategoria || undefined
+      await fetch('/api/chatbot/message', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sessionId,
+          role,
+          content,
+          nodeId,
+          optionSelected,
+          categoria,
+          subcategoria
         })
-        .eq('id', sessionId)
+      })
     } catch (err) {
       console.error('Error saving message:', err)
     }
@@ -195,16 +189,18 @@ export default function ChatBot() {
     if (!sessionId) return
 
     try {
-      await supabase
-        .from('chat_sessions')
-        .update({
+      await fetch('/api/chatbot/session', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sessionId,
           nombre: data.nombre,
           empresa: data.empresa,
           email: data.email,
           telefono: data.telefono,
           intent_score: 'alto'
         })
-        .eq('id', sessionId)
+      })
     } catch (err) {
       console.error('Error updating session lead:', err)
     }
@@ -360,10 +356,14 @@ export default function ChatBot() {
   const handleClose = async () => {
     if (sessionId) {
       try {
-        await supabase
-          .from('chat_sessions')
-          .update({ ended_at: new Date().toISOString() })
-          .eq('id', sessionId)
+        await fetch('/api/chatbot/session', {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            sessionId,
+            ended_at: new Date().toISOString()
+          })
+        })
       } catch (err) {
         console.error('Error closing session:', err)
       }
