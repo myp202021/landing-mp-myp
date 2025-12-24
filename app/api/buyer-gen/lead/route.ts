@@ -153,7 +153,7 @@ export async function POST(request: Request) {
     const { error: emailError } = await resend.emails.send({
       from: 'M&P Labs <noreply@mulleryperez.cl>',
       to: ['contacto@mulleryperez.cl'],
-      replyTo: data.email,
+      reply_to: data.email,
       subject: `Nuevo Lead Buyer Gen: ${data.nombre} - ${industryLabel}`,
       html: emailHtml
     })
