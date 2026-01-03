@@ -77,6 +77,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'monthly',
       priority: 0.95,
     },
+    // Hub Pages - Industrias y Recursos
+    {
+      url: `${baseUrl}/industrias`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/recursos`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: 0.9,
+    },
     // Landing Pages SEO - Variaciones de Keywords
     {
       url: `${baseUrl}/agencia-marketing-digital-santiago`,
