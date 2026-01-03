@@ -163,6 +163,25 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'monthly',
       priority: 0.95,
     },
+    // Páginas por Industria - Alto Intent Comercial
+    {
+      url: `${baseUrl}/marketing-digital-ecommerce-chile`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/marketing-digital-b2b-chile`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/marketing-digital-saas-chile`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.9,
+    },
     // Servicios Hub
     {
       url: `${baseUrl}/servicios`,

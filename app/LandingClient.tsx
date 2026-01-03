@@ -2490,6 +2490,25 @@ export default function LandingClient() {
                 </li>
               </ul>
 
+              <h3 className="text-white font-bold mb-4">Por Industria</h3>
+              <ul className="space-y-2 text-sm mb-6">
+                <li>
+                  <Link href="/marketing-digital-ecommerce-chile" className="text-blue-200 hover:text-white transition-colors">
+                    Ecommerce
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/marketing-digital-b2b-chile" className="text-blue-200 hover:text-white transition-colors">
+                    B2B / Empresas
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/marketing-digital-saas-chile" className="text-blue-200 hover:text-white transition-colors">
+                    SaaS / Software
+                  </Link>
+                </li>
+              </ul>
+
               <h3 className="text-white font-bold mb-4">Ubicaciones</h3>
               <ul className="space-y-2 text-sm">
                 <li>
