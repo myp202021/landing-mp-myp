@@ -146,11 +146,7 @@ const nextConfig = {
         destination: '/crm/login',
         permanent: true,
       },
-      {
-        source: '/recursos',
-        destination: '/recursos/ebook-marketing-datos-2025',
-        permanent: false, // temporary until we create recursos hub page
-      },
+      // Redirect removido - ahora existe hub page /recursos
       {
         source: '/contacto',
         destination: '/#contact',
