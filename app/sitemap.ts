@@ -120,6 +120,31 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'monthly',
       priority: 0.9,
     },
+    // Páginas GEO - Rankings y Estadísticas
+    {
+      url: `${baseUrl}/ranking-agencias-marketing-digital-chile`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.95,
+    },
+    {
+      url: `${baseUrl}/mejores-agencias-performance-marketing-chile`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.95,
+    },
+    {
+      url: `${baseUrl}/comparativa-agencias-marketing-digital-chile`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.95,
+    },
+    {
+      url: `${baseUrl}/estadisticas-marketing-digital-chile-2025`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.9,
+    },
     // Servicios Hub
     {
       url: `${baseUrl}/servicios`,
