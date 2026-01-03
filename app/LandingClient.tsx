@@ -2488,6 +2488,16 @@ export default function LandingClient() {
                     Guía de Contratación
                   </Link>
                 </li>
+                <li>
+                  <Link href="/google-ads-vs-meta-ads-chile" className="text-blue-200 hover:text-white transition-colors">
+                    Google Ads vs Meta Ads
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/agencia-marketing-digital-vs-inhouse" className="text-blue-200 hover:text-white transition-colors">
+                    Agencia vs In-House
+                  </Link>
+                </li>
               </ul>
 
               <h3 className="text-white font-bold mb-4">Por Industria</h3>
@@ -2505,6 +2515,21 @@ export default function LandingClient() {
                 <li>
                   <Link href="/marketing-digital-saas-chile" className="text-blue-200 hover:text-white transition-colors">
                     SaaS / Software
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/marketing-digital-inmobiliario-chile" className="text-blue-200 hover:text-white transition-colors">
+                    Inmobiliario
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/marketing-digital-salud-chile" className="text-blue-200 hover:text-white transition-colors">
+                    Salud / Clínicas
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/marketing-digital-educacion-chile" className="text-blue-200 hover:text-white transition-colors">
+                    Educación
                   </Link>
                 </li>
               </ul>
