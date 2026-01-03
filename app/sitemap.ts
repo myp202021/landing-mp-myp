@@ -145,6 +145,24 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'monthly',
       priority: 0.9,
     },
+    {
+      url: `${baseUrl}/precios-agencia-marketing-digital-chile`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.95,
+    },
+    {
+      url: `${baseUrl}/guia-contratar-agencia-marketing-digital`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/cuanto-cuesta-agencia-marketing-digital-chile`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.95,
+    },
     // Servicios Hub
     {
       url: `${baseUrl}/servicios`,

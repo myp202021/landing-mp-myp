@@ -2474,8 +2474,18 @@ export default function LandingClient() {
                   </Link>
                 </li>
                 <li>
-                  <Link href="/agencia-marketing-digital-chile" className="text-blue-200 hover:text-white transition-colors">
-                    Sobre la Agencia
+                  <Link href="/ranking-agencias-marketing-digital-chile" className="text-blue-200 hover:text-white transition-colors">
+                    Ranking Agencias Chile
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/precios-agencia-marketing-digital-chile" className="text-blue-200 hover:text-white transition-colors">
+                    Precios Agencias
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/guia-contratar-agencia-marketing-digital" className="text-blue-200 hover:text-white transition-colors">
+                    Guía de Contratación
                   </Link>
                 </li>
               </ul>

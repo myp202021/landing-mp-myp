@@ -68,6 +68,7 @@ export async function POST(req: NextRequest) {
 
     const email = extractField(body,
       'email', 'Email', 'EMAIL',
+      'mail', 'Mail', 'MAIL',
       'correo', 'Correo', 'e-mail', 'E-mail',
       'email_address', 'emailAddress'
     )
@@ -99,25 +100,32 @@ export async function POST(req: NextRequest) {
       nombreCompleto = 'Lead Google Ads'
     }
 
-    // Insertar el lead
+    // Construir observaciones con info adicional de la campaña
+    const formName = extractField(body, 'form_name', 'formName', 'form_id')
+    const adName = extractField(body, 'ad_name', 'adName', 'ad_id')
+    const campaignName = extractField(body, 'campaign_name', 'campaignName', 'campaign_id')
+    const ciudad = extractField(body, 'ciudad', 'city', 'City', 'CITY')
+    const facturacion = extractField(body, 'facturación_mensual_empresa', 'facturacion_mensual_empresa', 'monthly_revenue', 'revenue')
+
+    const observacionesParts: string[] = []
+    if (campaignName) observacionesParts.push(`Campaña: ${campaignName}`)
+    if (adName) observacionesParts.push(`Anuncio: ${adName}`)
+    if (formName) observacionesParts.push(`Formulario: ${formName}`)
+    if (ciudad) observacionesParts.push(`Ciudad: ${ciudad}`)
+    if (facturacion) observacionesParts.push(`Facturación: ${facturacion}`)
+
+    // Insertar el lead - SOLO campos que existen en la tabla
     const leadData = {
       cliente_id: body.client_id,
       nombre: nombreCompleto.trim(),
       email: email,
       telefono: telefono,
       empresa: empresa,
-      nombre_empresa: empresa,
-      form_nombre: extractField(body, 'form_name', 'formName', 'form_id'),
-      ad_nombre: extractField(body, 'ad_name', 'adName', 'ad_id'),
-      campana_nombre: extractField(body, 'campaign_name', 'campaignName', 'campaign_id'),
-      meta_lead_id: extractField(body, 'form_id', 'lead_id', 'leadId'),
       fuente: 'zapier',
       contactado: false,
       vendido: false,
-      monto_vendido: null,
-      observaciones: null,
-      fecha_ingreso: new Date().toISOString(),
-      mes_ingreso: new Date().toISOString().substring(0, 7)
+      observaciones: observacionesParts.length > 0 ? observacionesParts.join(' | ') : null,
+      fecha_ingreso: new Date().toISOString()
     }
 
     console.log('📝 Datos del lead a insertar:', {

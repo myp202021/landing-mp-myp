@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { defaultMetadata, createOrganizationSchema } from "@/lib/metadata";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import Breadcrumbs from "./components/Breadcrumbs";
 import ThirdPartyScripts from "@/components/ThirdPartyScripts";
 import ResourceHints from "@/components/ResourceHints";
 import ChatBotWrapper from "@/components/ChatBot/ChatBotWrapper";
+import PopupBalance2025 from "@/components/PopupBalance2025";
 import "./globals.css";
 
 export const metadata: Metadata = defaultMetadata;
@@ -32,10 +34,25 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
         />
+
+        {/* Google Ads Tag (gtag.js) */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=AW-17056298226"
+          strategy="afterInteractive"
+        />
+        <Script id="google-ads" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'AW-17056298226');
+          `}
+        </Script>
       </head>
       <body>
         <Breadcrumbs />
         {children}
+        <PopupBalance2025 />
         <ChatBotWrapper />
         <ThirdPartyScripts />
         <SpeedInsights />
