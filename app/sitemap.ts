@@ -226,6 +226,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'monthly',
       priority: 0.9,
     },
+    // Páginas de Conversión
+    {
+      url: `${baseUrl}/cotizador`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.95,
+    },
+    {
+      url: `${baseUrl}/benchmarks`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.85,
+    },
     // Servicios Hub
     {
       url: `${baseUrl}/servicios`,
