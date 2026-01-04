@@ -536,207 +536,14 @@ export default function LandingClient() {
               priority
             />
           </Link>
-          <nav className="flex items-center gap-6" role="navigation" aria-label="Navegación principal">
-            {/* Vínculos principales */}
+          <nav className="flex items-center gap-5" role="navigation" aria-label="Navegación principal">
+            {/* Planes */}
             <button
               onClick={() => document.getElementById('planes')?.scrollIntoView({ behavior: 'smooth' })}
               className="hidden md:block text-sm font-semibold text-gray-700 hover:text-blue-600 transition-all duration-200"
             >
               Planes
             </button>
-            <button
-              onClick={() => document.getElementById('nosotros')?.scrollIntoView({ behavior: 'smooth' })}
-              className="hidden md:block text-sm font-semibold text-gray-700 hover:text-blue-600 transition-all duration-200"
-            >
-              Nosotros
-            </button>
-            <button
-              onClick={() => document.getElementById('casos-exito')?.scrollIntoView({ behavior: 'smooth' })}
-              className="hidden md:block text-sm font-semibold text-gray-700 hover:text-blue-600 transition-all duration-200"
-            >
-              Casos de Éxito
-            </button>
-
-            {/* Servicios Dropdown */}
-            <div
-              className="relative hidden md:block"
-              onMouseEnter={() => setServiciosDropdown(true)}
-              onMouseLeave={() => setServiciosDropdown(false)}
-            >
-              <Link
-                href="/servicios"
-                className="flex items-center gap-1 text-sm font-semibold text-gray-700 hover:text-blue-600 transition-all duration-200"
-                aria-expanded={serviciosDropdown}
-                aria-haspopup="true"
-                aria-label="Ir a Servicios"
-              >
-                Servicios
-                <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${serviciosDropdown ? 'rotate-180' : ''}`} aria-hidden="true" />
-              </Link>
-              {serviciosDropdown && (
-                <div className="absolute top-full mt-1 left-0 bg-white rounded-xl shadow-2xl border border-gray-100 py-2 min-w-[280px] animate-in fade-in slide-in-from-top-2 duration-200">
-                  <Link
-                    href="/servicios/google-ads-chile"
-                    className="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
-                  >
-                    <div className="font-semibold">🎯 Google Ads Chile</div>
-                    <div className="text-xs text-gray-500 mt-0.5">Campañas de búsqueda alto rendimiento</div>
-                  </Link>
-                  <Link
-                    href="/servicios/meta-ads-chile"
-                    className="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
-                  >
-                    <div className="font-semibold">📱 Meta Ads Chile</div>
-                    <div className="text-xs text-gray-500 mt-0.5">Facebook, Instagram y WhatsApp</div>
-                  </Link>
-                  <Link
-                    href="/servicios/performance-marketing"
-                    className="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
-                  >
-                    <div className="font-semibold">🚀 Performance Marketing</div>
-                    <div className="text-xs text-gray-500 mt-0.5">Estrategia completa multicanal</div>
-                  </Link>
-                  <div className="border-t border-gray-100 mt-2 pt-2">
-                    <Link
-                      href="/servicios"
-                      className="block px-4 py-2 text-sm text-blue-600 hover:text-blue-700 font-semibold transition-colors"
-                    >
-                      Ver todos los servicios →
-                    </Link>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Industrias Dropdown */}
-            <div
-              className="relative hidden md:block"
-              onMouseEnter={() => setIndustriasDropdown(true)}
-              onMouseLeave={() => setIndustriasDropdown(false)}
-            >
-              <Link
-                href="/industrias"
-                className="flex items-center gap-1 text-sm font-semibold text-gray-700 hover:text-blue-600 transition-all duration-200"
-                aria-expanded={industriasDropdown}
-                aria-haspopup="true"
-                aria-label="Ir a Industrias"
-              >
-                Industrias
-                <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${industriasDropdown ? 'rotate-180' : ''}`} aria-hidden="true" />
-              </Link>
-              {industriasDropdown && (
-                <div className="absolute top-full mt-1 left-0 bg-white rounded-xl shadow-2xl border border-gray-100 py-2 min-w-[260px] animate-in fade-in slide-in-from-top-2 duration-200">
-                  <Link
-                    href="/marketing-digital-ecommerce-chile"
-                    className="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
-                  >
-                    <div className="font-semibold">Ecommerce</div>
-                    <div className="text-xs text-gray-500 mt-0.5">Tiendas online y marketplaces</div>
-                  </Link>
-                  <Link
-                    href="/marketing-digital-b2b-chile"
-                    className="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
-                  >
-                    <div className="font-semibold">B2B / Empresas</div>
-                    <div className="text-xs text-gray-500 mt-0.5">Generación de leads corporativos</div>
-                  </Link>
-                  <Link
-                    href="/marketing-digital-saas-chile"
-                    className="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
-                  >
-                    <div className="font-semibold">SaaS / Software</div>
-                    <div className="text-xs text-gray-500 mt-0.5">Growth marketing tecnológico</div>
-                  </Link>
-                  <Link
-                    href="/marketing-digital-inmobiliario-chile"
-                    className="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
-                  >
-                    <div className="font-semibold">Inmobiliario</div>
-                    <div className="text-xs text-gray-500 mt-0.5">Corredoras y proyectos</div>
-                  </Link>
-                  <Link
-                    href="/marketing-digital-salud-chile"
-                    className="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
-                  >
-                    <div className="font-semibold">Salud / Clínicas</div>
-                    <div className="text-xs text-gray-500 mt-0.5">Marketing médico ético</div>
-                  </Link>
-                  <Link
-                    href="/marketing-digital-educacion-chile"
-                    className="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
-                  >
-                    <div className="font-semibold">Educación</div>
-                    <div className="text-xs text-gray-500 mt-0.5">Matrículas y cursos online</div>
-                  </Link>
-                  <div className="border-t border-gray-100 mt-2 pt-2">
-                    <Link
-                      href="/industrias"
-                      className="block px-4 py-2 text-sm text-blue-600 hover:text-blue-700 font-semibold transition-colors"
-                    >
-                      Ver todas las industrias →
-                    </Link>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Recursos Dropdown */}
-            <div
-              className="relative hidden md:block"
-              onMouseEnter={() => setRecursosDropdown(true)}
-              onMouseLeave={() => setRecursosDropdown(false)}
-            >
-              <Link
-                href="/recursos"
-                className="flex items-center gap-1 text-sm font-semibold text-gray-700 hover:text-blue-600 transition-all duration-200"
-                aria-expanded={recursosDropdown}
-                aria-haspopup="true"
-                aria-label="Ir a Recursos"
-              >
-                Recursos
-                <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${recursosDropdown ? 'rotate-180' : ''}`} aria-hidden="true" />
-              </Link>
-              {recursosDropdown && (
-                <div className="absolute top-full mt-1 left-0 bg-white rounded-xl shadow-2xl border border-gray-100 py-2 min-w-[280px] animate-in fade-in slide-in-from-top-2 duration-200">
-                  <Link
-                    href="/ranking-agencias-marketing-digital-chile"
-                    className="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
-                  >
-                    <div className="font-semibold">Ranking Agencias Chile</div>
-                    <div className="text-xs text-gray-500 mt-0.5">Las mejores agencias evaluadas</div>
-                  </Link>
-                  <Link
-                    href="/precios-agencia-marketing-digital-chile"
-                    className="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
-                  >
-                    <div className="font-semibold">Precios de Agencias</div>
-                    <div className="text-xs text-gray-500 mt-0.5">Cuánto cobran en Chile 2025</div>
-                  </Link>
-                  <Link
-                    href="/google-ads-vs-meta-ads-chile"
-                    className="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
-                  >
-                    <div className="font-semibold">Google Ads vs Meta Ads</div>
-                    <div className="text-xs text-gray-500 mt-0.5">Comparativa para Chile</div>
-                  </Link>
-                  <Link
-                    href="/agencia-marketing-digital-vs-inhouse"
-                    className="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
-                  >
-                    <div className="font-semibold">Agencia vs In-House</div>
-                    <div className="text-xs text-gray-500 mt-0.5">Costos reales comparados</div>
-                  </Link>
-                  <div className="border-t border-gray-100 mt-2 pt-2">
-                    <Link
-                      href="/recursos"
-                      className="block px-4 py-2 text-sm text-blue-600 hover:text-blue-700 font-semibold transition-colors"
-                    >
-                      Ver todos los recursos →
-                    </Link>
-                  </div>
-                </div>
-              )}
-            </div>
 
             {/* M&P Labs Dropdown */}
             <div
@@ -894,9 +701,73 @@ export default function LandingClient() {
               )}
             </div>
 
+            {/* Servicios Mega Dropdown */}
+            <div
+              className="relative hidden md:block"
+              onMouseEnter={() => setServiciosDropdown(true)}
+              onMouseLeave={() => setServiciosDropdown(false)}
+            >
+              <Link
+                href="/servicios"
+                className="flex items-center gap-1 text-sm font-semibold text-gray-700 hover:text-blue-600 transition-all duration-200"
+                aria-expanded={serviciosDropdown}
+                aria-haspopup="true"
+                aria-label="Ver servicios"
+              >
+                Servicios
+                <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${serviciosDropdown ? 'rotate-180' : ''}`} aria-hidden="true" />
+              </Link>
+              {serviciosDropdown && (
+                <div className="absolute top-full mt-1 right-0 bg-white rounded-xl shadow-2xl border border-gray-100 p-6 min-w-[720px] animate-in fade-in slide-in-from-top-2 duration-200">
+                  <div className="grid grid-cols-3 gap-6">
+                    {/* Columna Servicios */}
+                    <div>
+                      <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Servicios</h3>
+                      <div className="space-y-1">
+                        <Link href="/servicios/google-ads-chile" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">Google Ads Chile</Link>
+                        <Link href="/servicios/meta-ads-chile" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">Meta Ads Chile</Link>
+                        <Link href="/servicios/performance-marketing" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">Performance Marketing</Link>
+                        <Link href="/servicios/seo-chile" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">SEO Chile</Link>
+                        <div className="pt-2 border-t border-gray-100 mt-2">
+                          <Link href="/servicios" className="text-sm text-blue-600 hover:text-blue-700 font-semibold">Ver todos →</Link>
+                        </div>
+                      </div>
+                    </div>
+                    {/* Columna Industrias */}
+                    <div>
+                      <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Por Industria</h3>
+                      <div className="space-y-1">
+                        <Link href="/marketing-digital-ecommerce-chile" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">Ecommerce</Link>
+                        <Link href="/marketing-digital-b2b-chile" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">B2B / Empresas</Link>
+                        <Link href="/marketing-digital-saas-chile" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">SaaS / Software</Link>
+                        <Link href="/marketing-digital-inmobiliario-chile" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">Inmobiliario</Link>
+                        <Link href="/marketing-digital-salud-chile" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">Salud / Clínicas</Link>
+                        <div className="pt-2 border-t border-gray-100 mt-2">
+                          <Link href="/industrias" className="text-sm text-blue-600 hover:text-blue-700 font-semibold">Ver todas →</Link>
+                        </div>
+                      </div>
+                    </div>
+                    {/* Columna Recursos */}
+                    <div>
+                      <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Recursos</h3>
+                      <div className="space-y-1">
+                        <Link href="/ranking-agencias-marketing-digital-chile" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">Ranking Agencias</Link>
+                        <Link href="/precios-agencia-marketing-digital-chile" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">Precios Agencias</Link>
+                        <Link href="/google-ads-vs-meta-ads-chile" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">Google vs Meta Ads</Link>
+                        <Link href="/agencia-marketing-digital-vs-inhouse" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">Agencia vs In-House</Link>
+                        <div className="pt-2 border-t border-gray-100 mt-2">
+                          <Link href="/recursos" className="text-sm text-blue-600 hover:text-blue-700 font-semibold">Ver todos →</Link>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
             <Link
               href="/crm/login"
-              className="inline-flex items-center gap-2 px-5 py-2.5 border-2 border-blue-600 text-blue-600 font-semibold hover:bg-blue-50 transition-all duration-300 rounded-lg"
+              className="hidden md:inline-flex items-center gap-2 px-4 py-2 border-2 border-blue-600 text-blue-600 font-semibold hover:bg-blue-50 transition-all duration-300 rounded-lg text-sm"
               aria-label="Acceso clientes"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -907,7 +778,7 @@ export default function LandingClient() {
 
             <button
               onClick={() => document.getElementById('contacto')?.scrollIntoView({ behavior: 'smooth' })}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold shadow-lg shadow-blue-600/20 hover:shadow-xl hover:shadow-blue-600/30 transition-all duration-300 rounded-lg"
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold shadow-lg shadow-blue-600/20 hover:shadow-xl hover:shadow-blue-600/30 transition-all duration-300 rounded-lg text-sm"
               aria-label="Agendar reunión con Muller y Pérez"
             >
               <Calendar className="w-4 h-4" aria-hidden="true" />
@@ -2515,29 +2386,27 @@ export default function LandingClient() {
       {/* Footer Mejorado */}
       <footer className="bg-slate-900 text-white py-16 px-6" role="contentinfo">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
-            {/* Columna 1: Sobre M&P */}
-            <div>
+          <div className="grid grid-cols-2 md:grid-cols-6 gap-8 mb-12">
+            {/* Columna 1: Sobre M&P (span 2) */}
+            <div className="col-span-2">
               <Image
                 src="/logo-blanco.png"
                 alt="Muller y Pérez - Agencia de Marketing Digital"
-                width={160}
-                height={50}
-                className="h-12 w-auto mb-4"
+                width={140}
+                height={45}
+                className="h-10 w-auto mb-4"
                 loading="lazy"
               />
-              <p className="text-blue-200 text-sm mb-6 leading-relaxed">
-                Agencia de Performance Marketing especializada en Google Ads, Meta Ads y estrategias data-driven. Resultados medibles desde 2019.
+              <p className="text-blue-200 text-sm mb-5 leading-relaxed max-w-xs">
+                Agencia de Performance Marketing especializada en Google Ads, Meta Ads y estrategias data-driven.
               </p>
-
-              {/* Botón WhatsApp */}
               <a
                 href="https://wa.me/56992258137?text=Hola%20M%26P%2C%20quiero%20mejorar%20mis%20resultados%20en%20marketing%20digital"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-bold transition-all hover:scale-105 shadow-lg"
+                className="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-5 py-2.5 rounded-lg font-semibold text-sm transition-all"
               >
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L0 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
                 </svg>
                 Conversemos
@@ -2546,185 +2415,63 @@ export default function LandingClient() {
 
             {/* Columna 2: Servicios */}
             <div>
-              <h3 className="text-white font-bold mb-4">Servicios</h3>
+              <h3 className="text-white font-bold text-sm mb-4">Servicios</h3>
               <ul className="space-y-2 text-sm">
-                <li>
-                  <Link href="/servicios" className="text-blue-200 hover:text-white transition-colors">
-                    Todos los Servicios
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/servicios/google-ads-chile" className="text-blue-200 hover:text-white transition-colors">
-                    Google Ads Chile
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/servicios/meta-ads-chile" className="text-blue-200 hover:text-white transition-colors">
-                    Meta Ads Chile
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/servicios/seo-chile" className="text-blue-200 hover:text-white transition-colors">
-                    SEO Chile
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/servicios/facebook-ads-chile" className="text-blue-200 hover:text-white transition-colors">
-                    Facebook Ads Chile
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/servicios/instagram-ads-chile" className="text-blue-200 hover:text-white transition-colors">
-                    Instagram Ads Chile
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/servicios/performance-marketing" className="text-blue-200 hover:text-white transition-colors">
-                    Performance Marketing
-                  </Link>
-                </li>
+                <li><Link href="/servicios/google-ads-chile" className="text-blue-200 hover:text-white transition-colors">Google Ads</Link></li>
+                <li><Link href="/servicios/meta-ads-chile" className="text-blue-200 hover:text-white transition-colors">Meta Ads</Link></li>
+                <li><Link href="/servicios/performance-marketing" className="text-blue-200 hover:text-white transition-colors">Performance</Link></li>
+                <li><Link href="/servicios/seo-chile" className="text-blue-200 hover:text-white transition-colors">SEO</Link></li>
+                <li className="pt-1"><Link href="/servicios" className="text-blue-400 hover:text-white transition-colors font-medium">Ver todos →</Link></li>
               </ul>
             </div>
 
-            {/* Columna 3: Recursos y Ubicaciones */}
+            {/* Columna 3: Por Industria */}
             <div>
-              <h3 className="text-white font-bold mb-4">Recursos</h3>
-              <ul className="space-y-2 text-sm mb-6">
-                <li>
-                  <Link href="/blog" className="text-blue-200 hover:text-white transition-colors">
-                    Blog
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/labs" className="text-blue-200 hover:text-white transition-colors">
-                    M&P Labs
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/utilidades" className="text-blue-200 hover:text-white transition-colors">
-                    Utilidades
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/ranking-agencias-marketing-digital-chile" className="text-blue-200 hover:text-white transition-colors">
-                    Ranking Agencias Chile
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/precios-agencia-marketing-digital-chile" className="text-blue-200 hover:text-white transition-colors">
-                    Precios Agencias
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/guia-contratar-agencia-marketing-digital" className="text-blue-200 hover:text-white transition-colors">
-                    Guía de Contratación
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/google-ads-vs-meta-ads-chile" className="text-blue-200 hover:text-white transition-colors">
-                    Google Ads vs Meta Ads
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/agencia-marketing-digital-vs-inhouse" className="text-blue-200 hover:text-white transition-colors">
-                    Agencia vs In-House
-                  </Link>
-                </li>
-              </ul>
-
-              <h3 className="text-white font-bold mb-4">Por Industria</h3>
-              <ul className="space-y-2 text-sm mb-6">
-                <li>
-                  <Link href="/marketing-digital-ecommerce-chile" className="text-blue-200 hover:text-white transition-colors">
-                    Ecommerce
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/marketing-digital-b2b-chile" className="text-blue-200 hover:text-white transition-colors">
-                    B2B / Empresas
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/marketing-digital-saas-chile" className="text-blue-200 hover:text-white transition-colors">
-                    SaaS / Software
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/marketing-digital-inmobiliario-chile" className="text-blue-200 hover:text-white transition-colors">
-                    Inmobiliario
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/marketing-digital-salud-chile" className="text-blue-200 hover:text-white transition-colors">
-                    Salud / Clínicas
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/marketing-digital-educacion-chile" className="text-blue-200 hover:text-white transition-colors">
-                    Educación
-                  </Link>
-                </li>
-              </ul>
-
-              <h3 className="text-white font-bold mb-4">Ubicaciones</h3>
+              <h3 className="text-white font-bold text-sm mb-4">Por Industria</h3>
               <ul className="space-y-2 text-sm">
-                <li>
-                  <Link href="/agencia-marketing-digital-santiago" className="text-blue-200 hover:text-white transition-colors">
-                    Santiago
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/agencia-marketing-digital-vina-del-mar" className="text-blue-200 hover:text-white transition-colors">
-                    Viña del Mar
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/agencia-marketing-digital-concepcion" className="text-blue-200 hover:text-white transition-colors">
-                    Concepción
-                  </Link>
-                </li>
+                <li><Link href="/marketing-digital-ecommerce-chile" className="text-blue-200 hover:text-white transition-colors">Ecommerce</Link></li>
+                <li><Link href="/marketing-digital-b2b-chile" className="text-blue-200 hover:text-white transition-colors">B2B</Link></li>
+                <li><Link href="/marketing-digital-saas-chile" className="text-blue-200 hover:text-white transition-colors">SaaS</Link></li>
+                <li><Link href="/marketing-digital-inmobiliario-chile" className="text-blue-200 hover:text-white transition-colors">Inmobiliario</Link></li>
+                <li><Link href="/marketing-digital-salud-chile" className="text-blue-200 hover:text-white transition-colors">Salud</Link></li>
+                <li className="pt-1"><Link href="/industrias" className="text-blue-400 hover:text-white transition-colors font-medium">Ver todas →</Link></li>
               </ul>
             </div>
 
-            {/* Columna 4: Contacto */}
+            {/* Columna 4: Recursos */}
             <div>
-              <h3 className="text-white font-bold mb-4">Contacto</h3>
-              <ul className="space-y-4 text-sm">
-                <li>
-                  <div className="text-blue-200">
-                    <strong className="text-white block mb-1">Oficina Las Condes</strong>
-                    Badajoz 100, Of 523<br />
-                    Las Condes, Santiago
-                  </div>
+              <h3 className="text-white font-bold text-sm mb-4">Recursos</h3>
+              <ul className="space-y-2 text-sm">
+                <li><Link href="/blog" className="text-blue-200 hover:text-white transition-colors">Blog</Link></li>
+                <li><Link href="/labs" className="text-blue-200 hover:text-white transition-colors">M&P Labs</Link></li>
+                <li><Link href="/utilidades" className="text-blue-200 hover:text-white transition-colors">Utilidades</Link></li>
+                <li><Link href="/ranking-agencias-marketing-digital-chile" className="text-blue-200 hover:text-white transition-colors">Ranking Agencias</Link></li>
+                <li><Link href="/precios-agencia-marketing-digital-chile" className="text-blue-200 hover:text-white transition-colors">Precios</Link></li>
+                <li className="pt-1"><Link href="/recursos" className="text-blue-400 hover:text-white transition-colors font-medium">Ver todos →</Link></li>
+              </ul>
+            </div>
+
+            {/* Columna 5: Contacto */}
+            <div>
+              <h3 className="text-white font-bold text-sm mb-4">Contacto</h3>
+              <ul className="space-y-3 text-sm">
+                <li className="text-blue-200">
+                  <strong className="text-white block">Las Condes</strong>
+                  Badajoz 100, Of 523
                 </li>
                 <li>
-                  <a
-                    href="mailto:contacto@mulleryperez.cl"
-                    className="text-blue-200 hover:text-white transition-colors flex items-center gap-2"
-                  >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                    </svg>
+                  <a href="mailto:contacto@mulleryperez.cl" className="text-blue-200 hover:text-white transition-colors">
                     contacto@mulleryperez.cl
                   </a>
                 </li>
                 <li>
-                  <a
-                    href="tel:+56992258137"
-                    className="text-blue-200 hover:text-white transition-colors flex items-center gap-2"
-                  >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                    </svg>
+                  <a href="tel:+56992258137" className="text-blue-200 hover:text-white transition-colors">
                     +56 9 9225 8137
                   </a>
                 </li>
-                <li>
-                  <div className="text-blue-200">
-                    <strong className="text-white block mb-1">Horario de atención</strong>
-                    Lun a Jue de 09:00 a 18:00<br />
-                    Vie de 09:00 a 15:00
-                  </div>
+                <li className="text-blue-200 text-xs">
+                  Lun-Jue 09:00-18:00<br />
+                  Vie 09:00-15:00
                 </li>
               </ul>
             </div>
