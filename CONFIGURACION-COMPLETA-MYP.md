@@ -307,7 +307,229 @@ git add -A && git commit -m "mensaje" && git push origin main
 
 ---
 
-## 13. PARA RETOMAR EL PROYECTO
+## 15. SISTEMA CRM COMPLETO
+
+### Estructura del CRM
+
+**Acceso:** `www.mulleryperez.cl/crm`
+
+#### Roles de Usuario
+1. **Admin** - Acceso total a todas las funciones
+2. **Cliente** - Acceso limitado a su dashboard y cotizaciones
+
+#### Menú Admin
+| Sección | Ruta | Función |
+|---------|------|---------|
+| Dashboard | `/crm/leads` | Vista general de leads con semáforo de urgencia |
+| Subir Leads | `/crm/upload` | Carga masiva de leads CSV |
+| Métricas | `/crm/metricas` | KPIs y gráficos |
+| Historial | `/crm/cargas` | Histórico de cargas |
+| Cotizaciones | `/crm/cotizaciones` | Gestión de cotizaciones |
+| Clientes | `/crm/clientes` | Gestión de clientes |
+| Plantillas | `/crm/plantillas` | Templates de cotizaciones |
+| Contraseñas | `/crm/contraseñas` | Gestión de accesos |
+| Integraciones | `/crm/historial-integraciones` | Logs de integración |
+| Admin | `/crm/admin` | Configuración avanzada |
+
+#### Sistema de Semáforo de Leads
+- **Verde:** Lead ingresado hace menos de 24h
+- **Amarillo:** Lead sin contactar entre 24-48h
+- **Rojo:** Lead sin contactar más de 48h
+
+#### Fuentes de Leads Soportadas
+- `facebook_lead_ads` - Facebook Lead Ads (Meta)
+- `manual` - Ingreso manual
+- `email` - Desde correo
+- `whatsapp` - Desde WhatsApp
+- `zapier` - Via Zapier
+
+---
+
+## 16. SISTEMA DE COTIZACIONES
+
+### Flujo de Cotizaciones
+1. Crear desde lead o desde cero
+2. Seleccionar Plan M&P o plantilla personalizada
+3. Agregar/editar items
+4. Aplicar descuento
+5. Guardar como borrador o enviar
+
+### Estados de Cotización
+- `borrador` - En edición
+- `enviada` - Enviada al cliente
+- `aceptada` - Cliente aceptó
+- `rechazada` - Cliente rechazó
+
+### Estructura de Items (JSON)
+```json
+{
+  "descripcion": "Gestión Google Ads",
+  "cantidad": 1,
+  "precio_unitario": 350000,
+  "total": 350000
+}
+```
+
+### Tabla: planes_myp (Planes Predefinidos)
+```sql
+id (serial, primary key)
+nombre (text)              -- 'Plan Silver', 'Plan Gold', etc.
+descripcion (text)
+items_incluidos (jsonb)    -- Array de items con precios
+precio_base (numeric)
+descuento_default (numeric) -- % descuento
+vigencia_dias (int)
+activo (boolean)
+creado_en (timestamptz)
+actualizado_en (timestamptz)
+```
+
+### Planes M&P Típicos
+
+#### Plan Silver (~$450.000/mes)
+- Gestión Google Ads
+- Setup inicial
+- Reportes mensuales
+
+#### Plan Gold (~$750.000/mes)
+- Todo Silver +
+- Gestión Meta Ads
+- Optimización semanal
+
+#### Plan Platinum (~$1.200.000/mes)
+- Todo Gold +
+- SEO básico
+- Landing pages
+- Reuniones quincenales
+
+---
+
+## 17. BENCHMARKS POR INDUSTRIA (Chile 2024)
+
+### Fuentes de Datos
+- WordStream 2024
+- Triple Whale 2024
+- Databox 2024
+- XYZLab Chile
+- Ubersuggest Chile (333 keywords ponderadas por volumen)
+
+### CPCs Calibrados Chile (Promedio Ponderado)
+
+| Industria | CPC Google | CPC Meta | Factor Chile |
+|-----------|------------|----------|--------------|
+| E-commerce | $248 CLP | $198 CLP | 0.7 |
+| Inmobiliaria | $215 CLP | $193 CLP | 0.8 |
+| Turismo | $421 CLP | $295 CLP | 0.6 |
+| Gastronomía | $162 CLP | $138 CLP | 0.5 |
+| Automotriz | $248 CLP | $236 CLP | 0.9 |
+| Salud/Medicina | $369 CLP | $314 CLP | 0.8 |
+| Educación | $146 CLP | $109 CLP | 0.7 |
+| Moda/Retail | $128 CLP | $115 CLP | 0.8 |
+| Fintech | $479 CLP | $455 CLP | 1.0 |
+| Servicios Legales | $391 CLP | $313 CLP | 0.9 |
+| Belleza/Personal | $251 CLP | $226 CLP | 0.8 |
+| Tecnología/SaaS | $39 CLP | $46 CLP | 1.0 |
+
+### CTR y CVR por Industria
+
+| Industria | CTR Google | CTR Meta | CVR Web |
+|-----------|------------|----------|---------|
+| E-commerce | 2.81% | 1.57% | 2.81% |
+| Inmobiliaria | 1.80% | 2.60% | 1.2% |
+| Turismo | 3.17% | 2.20% | 6.96% |
+| Gastronomía | 3.17% | 1.57% | 18.25% |
+| Automotriz | 3.17% | 1.57% | 12.96% |
+| Salud/Medicina | 3.17% | 0.73% | 4.81% |
+| Educación | 3.17% | 1.57% | 10.05% |
+| Fintech | 1.90% | 0.88% | 4.74% |
+
+### Límites Realistas por Industria
+
+| Industria | Max Conv/Mes | ROAS Máximo | CPA Mínimo |
+|-----------|--------------|-------------|------------|
+| E-commerce | 800 | 15x | $5.000 |
+| Inmobiliaria | 60 | 25x | $50.000 |
+| Turismo | 200 | 12x | $15.000 |
+| Gastronomía | 500 | 6x | $3.000 |
+| Automotriz | 120 | 20x | $80.000 |
+| Salud/Medicina | 200 | 15x | $25.000 |
+| Educación | 250 | 12x | $20.000 |
+| Fintech | 150 | 15x | $40.000 |
+
+### Archivo de Benchmarks
+`/lib/engine/benchmarks-2024-verificados.ts`
+
+### Archivo de CPCs Calibrados
+`/lib/config/cpc-calibrado-chile.ts`
+
+---
+
+## 18. SISTEMA DE AUTENTICACIÓN
+
+### Archivo Principal
+`/lib/auth/simple-auth.tsx`
+
+### Flujo de Login
+1. Usuario ingresa credenciales en `/crm/login`
+2. POST a `/api/auth/login`
+3. Validación contra Supabase
+4. Guardado en localStorage (`crm_user`)
+5. Redirección según rol
+
+### Permisos por Rol
+
+#### Admin
+```javascript
+canViewLeads: true
+canEditLeads: true
+canDeleteLeads: true
+canViewClientes: true
+canEditClientes: true
+canViewCotizaciones: true
+canCreateCotizaciones: true
+canEditCotizaciones: true
+canDeleteCotizaciones: true
+canViewPlantillas: true
+canEditPlantillas: true
+canViewDashboard: true
+canExportPDF: true
+```
+
+#### Cliente
+```javascript
+canViewLeads: false
+canViewCotizaciones: true  // Solo las suyas
+canExportPDF: true
+// Resto: false
+```
+
+---
+
+## 19. TONO DE COMUNICACIÓN M&P
+
+### Estilo de Escritura
+- **Profesional pero cercano**
+- Sin jerga técnica innecesaria
+- Enfocado en resultados y ROI
+- Datos concretos, no promesas vacías
+
+### Frases Típicas en Cotizaciones
+- "Inversión mensual" (no "costo")
+- "Retorno estimado basado en benchmarks reales de Chile"
+- "Gestión integral" (no "administración")
+- "Optimización continua" (no "mejoras")
+
+### Valores de Referencia para Cotizar
+- Fee de gestión Google Ads: 15-20% de inversión (mín. $250.000)
+- Fee de gestión Meta Ads: 15-20% de inversión (mín. $200.000)
+- Setup inicial: $150.000 - $350.000
+- Auditoría inicial: $200.000 - $500.000
+- Landing page: $250.000 - $600.000
+- SEO mensual: desde $400.000
+
+---
+
+## 20. PARA RETOMAR EL PROYECTO
 
 1. **Abrir nueva sesión de Claude**
 2. **Decir:**
@@ -320,7 +542,7 @@ git add -A && git commit -m "mensaje" && git push origin main
 
 ---
 
-## 14. CONTACTO
+## 21. CONTACTO
 
 - **Email nuevo:** christopher@mulleryperez.cl
 - **Email anterior:** christopher@mulleryperez.com
@@ -330,3 +552,4 @@ git add -A && git commit -m "mensaje" && git push origin main
 ---
 
 *Documento generado automáticamente para continuidad del proyecto.*
+*Última actualización: Enero 2026*
