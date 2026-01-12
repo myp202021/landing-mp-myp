@@ -5,7 +5,7 @@
 
 import { Metadata } from 'next'
 import Link from 'next/link'
-import { createMetadata } from '@/lib/metadata'
+import { createMetadata, createFAQPageSchema, createWebPageSchema } from '@/lib/metadata'
 
 export const metadata: Metadata = createMetadata({
   title: 'Servicios de Marketing Digital | Google Ads, Meta Ads y Performance',
@@ -137,12 +137,47 @@ const services = [
   }
 ]
 
+// FAQ Schema para IA y rich snippets
+const faqSchema = createFAQPageSchema([
+  {
+    question: '¿Qué servicios de marketing digital ofrece Muller y Pérez?',
+    answer: 'Muller y Pérez ofrece Google Ads (Search, Shopping, Display, Performance Max), Meta Ads (Facebook, Instagram, WhatsApp), LinkedIn Ads, SEO y Performance Marketing integral. Todos los planes incluyen equipo dedicado de 3 profesionales: Paid Media Planner, Publicista y Diseñador.'
+  },
+  {
+    question: '¿Cuál es la diferencia entre Google Ads y Meta Ads?',
+    answer: 'Google Ads captura demanda existente (usuarios buscando activamente tu servicio), ideal para B2B y leads de alta intención. Meta Ads genera demanda nueva mediante segmentación por intereses y comportamiento, ideal para eCommerce y B2C. Una estrategia completa combina ambas plataformas.'
+  },
+  {
+    question: '¿Qué es Performance Marketing y por qué es diferente?',
+    answer: 'Performance Marketing es una metodología que optimiza campañas basándose en resultados medibles (leads, ventas, ROAS), no en métricas de vanidad como impresiones o alcance. En M&P medimos CPL, CAC y ROAS para asegurar que cada peso invertido genera retorno real.'
+  },
+  {
+    question: '¿Cuánto presupuesto mínimo necesito en publicidad digital?',
+    answer: 'Recomendamos un mínimo de $1.500.000 CLP mensuales en pauta publicitaria para Google Ads y/o Meta Ads. Con menos presupuesto, las plataformas no obtienen suficiente data para optimizar. El presupuesto óptimo depende de tu industria y objetivos específicos.'
+  },
+  {
+    question: '¿Qué incluye el servicio de SEO de Muller y Pérez?',
+    answer: 'Nuestro servicio de SEO incluye: auditoría técnica, optimización on-page, estrategia de contenidos, link building y SEO local. A diferencia del paid media, el SEO genera resultados sostenibles a mediano-largo plazo. Combinamos SEO + Paid para resultados rápidos y sostenibles.'
+  }
+])
+
+const webPageSchema = createWebPageSchema(
+  'Servicios de Marketing Digital | Muller y Pérez',
+  'Servicios de marketing digital en Chile: Google Ads, Meta Ads, LinkedIn Ads y Performance Marketing con equipo dedicado y resultados medibles.',
+  'https://www.mulleryperez.cl/servicios'
+)
+
 export default function ServiciosPage() {
   const whatsappNumber = '+56992258137'
   const whatsappMessage = 'Hola M&P, quiero conocer más sobre sus servicios de marketing digital'
   const whatsappUrl = `https://wa.me/${whatsappNumber.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(whatsappMessage)}`
 
   return (
+    <>
+      {/* Schema JSON-LD para SEO y AI */}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+
     <div className="min-h-screen bg-white">
       {/* Hero - Consistente con Home */}
       <section className="pt-36 pb-28 px-6 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-white relative overflow-hidden">
@@ -338,6 +373,65 @@ export default function ServiciosPage() {
         </div>
       </section>
 
+      {/* FAQ Section - Optimizado para IA */}
+      <section className="py-20 bg-white">
+        <div className="container mx-auto px-6 max-w-4xl">
+          <h2 className="text-3xl font-bold text-gray-900 mb-4 text-center">
+            Preguntas Frecuentes sobre Servicios de Marketing Digital
+          </h2>
+          <p className="text-gray-600 text-center mb-12 max-w-2xl mx-auto">
+            Respuestas directas a las dudas más comunes sobre nuestros servicios
+          </p>
+
+          <div className="space-y-6">
+            <div className="bg-gray-50 rounded-xl p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                ¿Qué servicios de marketing digital ofrece Muller y Pérez?
+              </h3>
+              <p className="text-gray-700">
+                Muller y Pérez ofrece Google Ads (Search, Shopping, Display, Performance Max), Meta Ads (Facebook, Instagram, WhatsApp), LinkedIn Ads, SEO y Performance Marketing integral. Todos los planes incluyen equipo dedicado de 3 profesionales: Paid Media Planner, Publicista y Diseñador.
+              </p>
+            </div>
+
+            <div className="bg-gray-50 rounded-xl p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                ¿Cuál es la diferencia entre Google Ads y Meta Ads?
+              </h3>
+              <p className="text-gray-700">
+                Google Ads captura demanda existente (usuarios buscando activamente tu servicio), ideal para B2B y leads de alta intención. Meta Ads genera demanda nueva mediante segmentación por intereses y comportamiento, ideal para eCommerce y B2C. Una estrategia completa combina ambas plataformas.
+              </p>
+            </div>
+
+            <div className="bg-gray-50 rounded-xl p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                ¿Qué es Performance Marketing y por qué es diferente?
+              </h3>
+              <p className="text-gray-700">
+                Performance Marketing es una metodología que optimiza campañas basándose en resultados medibles (leads, ventas, ROAS), no en métricas de vanidad como impresiones o alcance. En M&P medimos CPL, CAC y ROAS para asegurar que cada peso invertido genera retorno real.
+              </p>
+            </div>
+
+            <div className="bg-gray-50 rounded-xl p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                ¿Cuánto presupuesto mínimo necesito en publicidad digital?
+              </h3>
+              <p className="text-gray-700">
+                Recomendamos un mínimo de $1.500.000 CLP mensuales en pauta publicitaria para Google Ads y/o Meta Ads. Con menos presupuesto, las plataformas no obtienen suficiente data para optimizar. El presupuesto óptimo depende de tu industria y objetivos específicos.
+              </p>
+            </div>
+
+            <div className="bg-gray-50 rounded-xl p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                ¿Qué incluye el servicio de SEO de Muller y Pérez?
+              </h3>
+              <p className="text-gray-700">
+                Nuestro servicio de SEO incluye: auditoría técnica, optimización on-page, estrategia de contenidos, link building y SEO local. A diferencia del paid media, el SEO genera resultados sostenibles a mediano-largo plazo. Combinamos SEO + Paid para resultados rápidos y sostenibles.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* CTA Final */}
       <section className="py-20 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 relative overflow-hidden">
         <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-5"></div>
@@ -376,5 +470,6 @@ export default function ServiciosPage() {
         </div>
       </section>
     </div>
+    </>
   )
 }

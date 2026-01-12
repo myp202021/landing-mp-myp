@@ -990,6 +990,54 @@ export default function MarketingDigitalPymesChilePage() {
           </section>
         </article>
 
+        {/* Servicios Relacionados */}
+        <section className="py-16 bg-white">
+          <div className="container mx-auto px-6 max-w-5xl">
+            <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">Servicios para PYMEs</h2>
+            <div className="grid md:grid-cols-3 gap-6">
+              <Link href="/servicios/google-ads-chile" className="group block bg-gray-50 hover:bg-emerald-50 rounded-xl p-6 transition-all border border-gray-100">
+                <h3 className="font-bold text-gray-900 group-hover:text-emerald-600 transition-colors mb-2">Google Ads para PYMEs</h3>
+                <p className="text-gray-600 text-sm mb-3">Campañas de búsqueda optimizadas para presupuestos acotados</p>
+                <span className="inline-flex items-center gap-1 text-sm text-emerald-600 font-medium">Ver servicio →</span>
+              </Link>
+              <Link href="/servicios/meta-ads-chile" className="group block bg-gray-50 hover:bg-emerald-50 rounded-xl p-6 transition-all border border-gray-100">
+                <h3 className="font-bold text-gray-900 group-hover:text-emerald-600 transition-colors mb-2">Meta Ads para PYMEs</h3>
+                <p className="text-gray-600 text-sm mb-3">Facebook e Instagram Ads con remarketing incluido</p>
+                <span className="inline-flex items-center gap-1 text-sm text-emerald-600 font-medium">Ver servicio →</span>
+              </Link>
+              <Link href="/servicios/performance-marketing" className="group block bg-gray-50 hover:bg-emerald-50 rounded-xl p-6 transition-all border border-gray-100">
+                <h3 className="font-bold text-gray-900 group-hover:text-emerald-600 transition-colors mb-2">Performance Marketing</h3>
+                <p className="text-gray-600 text-sm mb-3">Estrategia completa enfocada en resultados medibles</p>
+                <span className="inline-flex items-center gap-1 text-sm text-emerald-600 font-medium">Ver servicio →</span>
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* Blog Posts Relacionados */}
+        <section className="py-16 bg-gray-50">
+          <div className="container mx-auto px-6 max-w-5xl">
+            <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">Artículos para PYMEs</h2>
+            <div className="grid md:grid-cols-3 gap-6">
+              <Link href="/blog/guia-marketing-digital-pymes-chile-2025" className="group block bg-white hover:bg-emerald-50 rounded-xl p-6 transition-all shadow-sm">
+                <span className="inline-block px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-xs font-semibold mb-3">Guía</span>
+                <h3 className="font-bold text-gray-900 group-hover:text-emerald-600 transition-colors mb-2">Guía Marketing Digital PYMEs 2025</h3>
+                <span className="text-sm text-emerald-600 font-medium">Leer más →</span>
+              </Link>
+              <Link href="/blog/presupuesto-marketing-digital-chile-2025" className="group block bg-white hover:bg-emerald-50 rounded-xl p-6 transition-all shadow-sm">
+                <span className="inline-block px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-semibold mb-3">Presupuesto</span>
+                <h3 className="font-bold text-gray-900 group-hover:text-emerald-600 transition-colors mb-2">Cómo Planificar tu Presupuesto</h3>
+                <span className="text-sm text-emerald-600 font-medium">Leer más →</span>
+              </Link>
+              <Link href="/blog/errores-comunes-campanas-digitales-chile" className="group block bg-white hover:bg-emerald-50 rounded-xl p-6 transition-all shadow-sm">
+                <span className="inline-block px-3 py-1 bg-red-100 text-red-700 rounded-full text-xs font-semibold mb-3">Errores</span>
+                <h3 className="font-bold text-gray-900 group-hover:text-emerald-600 transition-colors mb-2">Errores Comunes en Campañas</h3>
+                <span className="text-sm text-emerald-600 font-medium">Leer más →</span>
+              </Link>
+            </div>
+          </div>
+        </section>
+
         {/* Footer */}
         <footer className="bg-gray-900 text-white py-12">
           <div className="container mx-auto px-6 text-center">

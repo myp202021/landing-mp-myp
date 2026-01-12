@@ -472,6 +472,54 @@ export default function MarketingB2BPage() {
           </div>
         </section>
 
+        {/* Servicios Relacionados */}
+        <section className="py-16 bg-white">
+          <div className="container mx-auto px-4 max-w-5xl">
+            <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">Servicios para B2B</h2>
+            <div className="grid md:grid-cols-3 gap-6">
+              <Link href="/servicios/google-ads-chile" className="group block bg-gray-50 hover:bg-blue-50 rounded-xl p-6 transition-all border border-gray-100">
+                <h3 className="font-bold text-gray-900 group-hover:text-blue-600 transition-colors mb-2">Google Ads B2B</h3>
+                <p className="text-gray-600 text-sm mb-3">Campañas de búsqueda para capturar demanda activa de empresas</p>
+                <span className="inline-flex items-center gap-1 text-sm text-blue-600 font-medium">Ver servicio <ArrowRight className="w-4 h-4" /></span>
+              </Link>
+              <Link href="/servicios/meta-ads-chile" className="group block bg-gray-50 hover:bg-blue-50 rounded-xl p-6 transition-all border border-gray-100">
+                <h3 className="font-bold text-gray-900 group-hover:text-blue-600 transition-colors mb-2">LinkedIn Ads</h3>
+                <p className="text-gray-600 text-sm mb-3">Targeting por cargo, industria y empresa para leads calificados</p>
+                <span className="inline-flex items-center gap-1 text-sm text-blue-600 font-medium">Ver servicio <ArrowRight className="w-4 h-4" /></span>
+              </Link>
+              <Link href="/servicios/seo-chile" className="group block bg-gray-50 hover:bg-blue-50 rounded-xl p-6 transition-all border border-gray-100">
+                <h3 className="font-bold text-gray-900 group-hover:text-blue-600 transition-colors mb-2">SEO B2B</h3>
+                <p className="text-gray-600 text-sm mb-3">Posicionamiento para palabras clave de alta intención comercial</p>
+                <span className="inline-flex items-center gap-1 text-sm text-blue-600 font-medium">Ver servicio <ArrowRight className="w-4 h-4" /></span>
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* Blog Posts Relacionados */}
+        <section className="py-16 bg-gray-50">
+          <div className="container mx-auto px-4 max-w-5xl">
+            <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">Artículos sobre Marketing B2B</h2>
+            <div className="grid md:grid-cols-3 gap-6">
+              <Link href="/blog/marketing-b2b-agencia-marketing-digital-chile-2025" className="group block bg-white hover:bg-blue-50 rounded-xl p-6 transition-all shadow-sm">
+                <span className="inline-block px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-semibold mb-3">B2B</span>
+                <h3 className="font-bold text-gray-900 group-hover:text-blue-600 transition-colors mb-2">Marketing B2B en Chile 2025</h3>
+                <span className="inline-flex items-center gap-1 text-sm text-blue-600 font-medium">Leer más <ArrowRight className="w-4 h-4" /></span>
+              </Link>
+              <Link href="/blog/linkedin-ads-b2b-chile-2025" className="group block bg-white hover:bg-blue-50 rounded-xl p-6 transition-all shadow-sm">
+                <span className="inline-block px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-xs font-semibold mb-3">LinkedIn</span>
+                <h3 className="font-bold text-gray-900 group-hover:text-blue-600 transition-colors mb-2">LinkedIn Ads para B2B Chile 2025</h3>
+                <span className="inline-flex items-center gap-1 text-sm text-blue-600 font-medium">Leer más <ArrowRight className="w-4 h-4" /></span>
+              </Link>
+              <Link href="/blog/que-es-cac-como-calcularlo-reducirlo" className="group block bg-white hover:bg-blue-50 rounded-xl p-6 transition-all shadow-sm">
+                <span className="inline-block px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-semibold mb-3">Métricas</span>
+                <h3 className="font-bold text-gray-900 group-hover:text-blue-600 transition-colors mb-2">Qué es CAC y Cómo Reducirlo</h3>
+                <span className="inline-flex items-center gap-1 text-sm text-blue-600 font-medium">Leer más <ArrowRight className="w-4 h-4" /></span>
+              </Link>
+            </div>
+          </div>
+        </section>
+
         {/* CTA */}
         <section className="py-20 bg-gradient-to-br from-slate-900 to-blue-900 text-white">
           <div className="container mx-auto px-4">

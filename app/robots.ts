@@ -44,6 +44,42 @@ export default function robots(): MetadataRoute.Robots {
         allow: '/',
         disallow: ['/api/', '/admin/', '/crm/', '/login/'],
       },
+      // Bots AI adicionales para AEO
+      {
+        userAgent: 'Cohere-ai',
+        allow: '/',
+        disallow: ['/api/', '/admin/', '/crm/', '/login/'],
+      },
+      {
+        userAgent: 'YouBot',
+        allow: '/',
+        disallow: ['/api/', '/admin/', '/crm/', '/login/'],
+      },
+      {
+        userAgent: 'CCBot',
+        allow: '/',
+        disallow: ['/api/', '/admin/', '/crm/', '/login/'],
+      },
+      {
+        userAgent: 'Applebot-Extended',
+        allow: '/',
+        disallow: ['/api/', '/admin/', '/crm/', '/login/'],
+      },
+      {
+        userAgent: 'Meta-ExternalAgent',
+        allow: '/',
+        disallow: ['/api/', '/admin/', '/crm/', '/login/'],
+      },
+      {
+        userAgent: 'Amazonbot',
+        allow: '/',
+        disallow: ['/api/', '/admin/', '/crm/', '/login/'],
+      },
+      {
+        userAgent: 'OAI-SearchBot',
+        allow: '/',
+        disallow: ['/api/', '/admin/', '/crm/', '/login/'],
+      },
     ],
     sitemap: 'https://www.mulleryperez.cl/sitemap.xml',
   }

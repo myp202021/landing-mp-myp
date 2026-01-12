@@ -455,6 +455,54 @@ export default function MarketingEcommercePage() {
           </div>
         </section>
 
+        {/* Servicios Relacionados */}
+        <section className="py-16 bg-white">
+          <div className="container mx-auto px-4 max-w-5xl">
+            <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">Servicios para Ecommerce</h2>
+            <div className="grid md:grid-cols-3 gap-6">
+              <Link href="/servicios/google-ads-chile" className="group block bg-gray-50 hover:bg-blue-50 rounded-xl p-6 transition-all border border-gray-100">
+                <h3 className="font-bold text-gray-900 group-hover:text-blue-600 transition-colors mb-2">Google Shopping</h3>
+                <p className="text-gray-600 text-sm mb-3">Campañas de Shopping y Performance Max para tu catálogo de productos</p>
+                <span className="inline-flex items-center gap-1 text-sm text-blue-600 font-medium">Ver servicio <ArrowRight className="w-4 h-4" /></span>
+              </Link>
+              <Link href="/servicios/meta-ads-chile" className="group block bg-gray-50 hover:bg-blue-50 rounded-xl p-6 transition-all border border-gray-100">
+                <h3 className="font-bold text-gray-900 group-hover:text-blue-600 transition-colors mb-2">Meta Ads</h3>
+                <p className="text-gray-600 text-sm mb-3">Facebook e Instagram Ads con catálogo dinámico y remarketing</p>
+                <span className="inline-flex items-center gap-1 text-sm text-blue-600 font-medium">Ver servicio <ArrowRight className="w-4 h-4" /></span>
+              </Link>
+              <Link href="/servicios/performance-marketing" className="group block bg-gray-50 hover:bg-blue-50 rounded-xl p-6 transition-all border border-gray-100">
+                <h3 className="font-bold text-gray-900 group-hover:text-blue-600 transition-colors mb-2">Performance Marketing</h3>
+                <p className="text-gray-600 text-sm mb-3">Estrategia integral multicanal para maximizar ventas y ROAS</p>
+                <span className="inline-flex items-center gap-1 text-sm text-blue-600 font-medium">Ver servicio <ArrowRight className="w-4 h-4" /></span>
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* Blog Posts Relacionados */}
+        <section className="py-16 bg-gray-50">
+          <div className="container mx-auto px-4 max-w-5xl">
+            <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">Artículos sobre Ecommerce</h2>
+            <div className="grid md:grid-cols-3 gap-6">
+              <Link href="/blog/estrategia-meta-ads-ecommerce-chile" className="group block bg-white hover:bg-blue-50 rounded-xl p-6 transition-all shadow-sm">
+                <span className="inline-block px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-semibold mb-3">Meta Ads</span>
+                <h3 className="font-bold text-gray-900 group-hover:text-blue-600 transition-colors mb-2">Estrategia Meta Ads para Ecommerce Chile</h3>
+                <span className="inline-flex items-center gap-1 text-sm text-blue-600 font-medium">Leer más <ArrowRight className="w-4 h-4" /></span>
+              </Link>
+              <Link href="/blog/optimizar-roas-meta-ads-2025" className="group block bg-white hover:bg-blue-50 rounded-xl p-6 transition-all shadow-sm">
+                <span className="inline-block px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-semibold mb-3">ROAS</span>
+                <h3 className="font-bold text-gray-900 group-hover:text-blue-600 transition-colors mb-2">Cómo Optimizar ROAS en Meta Ads 2025</h3>
+                <span className="inline-flex items-center gap-1 text-sm text-blue-600 font-medium">Leer más <ArrowRight className="w-4 h-4" /></span>
+              </Link>
+              <Link href="/blog/marketing-retail-ecommerce-agencia-marketing-digital-chile-2025" className="group block bg-white hover:bg-blue-50 rounded-xl p-6 transition-all shadow-sm">
+                <span className="inline-block px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-semibold mb-3">Industria</span>
+                <h3 className="font-bold text-gray-900 group-hover:text-blue-600 transition-colors mb-2">Marketing Retail y Ecommerce 2025</h3>
+                <span className="inline-flex items-center gap-1 text-sm text-blue-600 font-medium">Leer más <ArrowRight className="w-4 h-4" /></span>
+              </Link>
+            </div>
+          </div>
+        </section>
+
         {/* CTA Final */}
         <section className="py-20 bg-gradient-to-br from-blue-900 to-indigo-900 text-white">
           <div className="container mx-auto px-4">

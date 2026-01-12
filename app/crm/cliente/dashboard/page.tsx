@@ -54,6 +54,11 @@ export default function ClienteDashboard() {
     observaciones: ''
   })
 
+  // Estados para selección y eliminación de leads
+  const [selectedLeads, setSelectedLeads] = useState<number[]>([])
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+  const [deletingLeads, setDeletingLeads] = useState(false)
+
   // Estados para filtros de fecha
   const [fechaDesde, setFechaDesde] = useState<Date>(new Date(Date.now() - 30 * 24 * 60 * 60 * 1000))
   const [fechaHasta, setFechaHasta] = useState<Date>(new Date())
@@ -317,6 +322,52 @@ export default function ClienteDashboard() {
     } catch (error) {
       console.error('Error creando lead:', error)
       alert('❌ Error creando lead')
+    }
+  }
+
+  // Función para eliminar leads seleccionados
+  const eliminarLeadsSeleccionados = async () => {
+    if (selectedLeads.length === 0) return
+
+    setDeletingLeads(true)
+    try {
+      const res = await fetch(`/api/crm/leads?ids=${selectedLeads.join(',')}`, {
+        method: 'DELETE'
+      })
+
+      const data = await res.json()
+
+      if (res.ok) {
+        alert(`✅ ${selectedLeads.length} lead(s) eliminado(s) exitosamente`)
+        setSelectedLeads([])
+        setShowDeleteConfirm(false)
+        await loadData() // Recargar datos para actualizar métricas
+      } else {
+        alert(`❌ Error eliminando leads: ${data.error}`)
+      }
+    } catch (error) {
+      console.error('Error eliminando leads:', error)
+      alert('❌ Error eliminando leads')
+    } finally {
+      setDeletingLeads(false)
+    }
+  }
+
+  // Toggle selección de un lead
+  const toggleLeadSelection = (leadId: number) => {
+    setSelectedLeads(prev =>
+      prev.includes(leadId)
+        ? prev.filter(id => id !== leadId)
+        : [...prev, leadId]
+    )
+  }
+
+  // Seleccionar/deseleccionar todos los leads visibles
+  const toggleSelectAll = () => {
+    if (selectedLeads.length === sortedLeads.length) {
+      setSelectedLeads([])
+    } else {
+      setSelectedLeads(sortedLeads.map(lead => lead.id))
     }
   }
 
@@ -676,6 +727,18 @@ export default function ClienteDashboard() {
             >
               + Agregar Lead
             </Button>
+
+            {selectedLeads.length > 0 && (
+              <button
+                onClick={() => setShowDeleteConfirm(true)}
+                className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold text-sm flex items-center gap-2 transition"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+                Eliminar ({selectedLeads.length})
+              </button>
+            )}
           </div>
         </div>
 
@@ -694,6 +757,14 @@ export default function ClienteDashboard() {
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-blue-50">
                 <tr>
+                  <th className="px-4 py-4 text-center w-12">
+                    <input
+                      type="checkbox"
+                      checked={sortedLeads.length > 0 && selectedLeads.length === sortedLeads.length}
+                      onChange={toggleSelectAll}
+                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded cursor-pointer"
+                    />
+                  </th>
                   <th className="px-6 py-4 text-left text-xs font-semibold text-blue-900 uppercase tracking-wider">
                     Fecha
                   </th>
@@ -729,8 +800,16 @@ export default function ClienteDashboard() {
                     key={lead.id}
                     className={`border-b border-gray-200 hover:bg-gray-50 transition-colors ${
                       lead.prioridad ? 'bg-yellow-50 border-l-4 border-l-yellow-500' : ''
-                    }`}
+                    } ${selectedLeads.includes(lead.id) ? 'bg-blue-50' : ''}`}
                   >
+                    <td className="px-4 py-4 text-center w-12">
+                      <input
+                        type="checkbox"
+                        checked={selectedLeads.includes(lead.id)}
+                        onChange={() => toggleLeadSelection(lead.id)}
+                        className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded cursor-pointer"
+                      />
+                    </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                       {new Date(lead.fecha_ingreso).toLocaleDateString('es-CL')}
                     </td>
@@ -805,6 +884,58 @@ export default function ClienteDashboard() {
           </div>
         )}
       </div>
+
+      {/* Modal de confirmación de eliminación */}
+      {showDeleteConfirm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-lg shadow-xl max-w-md w-full">
+            <div className="bg-gradient-to-r from-red-600 to-red-700 text-white p-6 rounded-t-lg">
+              <h2 className="text-xl font-bold flex items-center gap-2">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                Confirmar eliminación
+              </h2>
+            </div>
+            <div className="p-6">
+              <p className="text-gray-700 mb-4">
+                ¿Estás seguro de que deseas eliminar <span className="font-bold text-red-600">{selectedLeads.length} lead(s)</span>?
+              </p>
+              <p className="text-sm text-gray-500 mb-6">
+                Esta acción no se puede deshacer. Los leads serán eliminados permanentemente y las métricas del dashboard se actualizarán.
+              </p>
+              <div className="flex justify-end gap-3">
+                <button
+                  onClick={() => setShowDeleteConfirm(false)}
+                  className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg font-medium transition"
+                  disabled={deletingLeads}
+                >
+                  Cancelar
+                </button>
+                <button
+                  onClick={eliminarLeadsSeleccionados}
+                  disabled={deletingLeads}
+                  className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition flex items-center gap-2"
+                >
+                  {deletingLeads ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                      Eliminando...
+                    </>
+                  ) : (
+                    <>
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      </svg>
+                      Eliminar
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Modal de edición de lead */}
       {editingLead && (

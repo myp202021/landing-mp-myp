@@ -453,6 +453,54 @@ export default function MarketingSaludPage() {
           </div>
         </section>
 
+        {/* Servicios Relacionados */}
+        <section className="py-16 bg-white">
+          <div className="container mx-auto px-4 max-w-5xl">
+            <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">Servicios para Salud</h2>
+            <div className="grid md:grid-cols-3 gap-6">
+              <Link href="/servicios/google-ads-chile" className="group block bg-gray-50 hover:bg-red-50 rounded-xl p-6 transition-all border border-gray-100">
+                <h3 className="font-bold text-gray-900 group-hover:text-red-600 transition-colors mb-2">Google Ads Médico</h3>
+                <p className="text-gray-600 text-sm mb-3">Campañas de búsqueda para capturar pacientes buscando especialidades</p>
+                <span className="inline-flex items-center gap-1 text-sm text-red-600 font-medium">Ver servicio <ArrowRight className="w-4 h-4" /></span>
+              </Link>
+              <Link href="/servicios/meta-ads-chile" className="group block bg-gray-50 hover:bg-red-50 rounded-xl p-6 transition-all border border-gray-100">
+                <h3 className="font-bold text-gray-900 group-hover:text-red-600 transition-colors mb-2">Meta Ads para Clínicas</h3>
+                <p className="text-gray-600 text-sm mb-3">Awareness, remarketing y Lead Ads para generar consultas</p>
+                <span className="inline-flex items-center gap-1 text-sm text-red-600 font-medium">Ver servicio <ArrowRight className="w-4 h-4" /></span>
+              </Link>
+              <Link href="/servicios/seo-chile" className="group block bg-gray-50 hover:bg-red-50 rounded-xl p-6 transition-all border border-gray-100">
+                <h3 className="font-bold text-gray-900 group-hover:text-red-600 transition-colors mb-2">SEO Local Médico</h3>
+                <p className="text-gray-600 text-sm mb-3">Posicionamiento en Google Maps y búsquedas locales de salud</p>
+                <span className="inline-flex items-center gap-1 text-sm text-red-600 font-medium">Ver servicio <ArrowRight className="w-4 h-4" /></span>
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* Blog Posts Relacionados */}
+        <section className="py-16 bg-gray-50">
+          <div className="container mx-auto px-4 max-w-5xl">
+            <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">Artículos sobre Marketing Salud</h2>
+            <div className="grid md:grid-cols-3 gap-6">
+              <Link href="/blog/marketing-salud-agencia-marketing-digital-chile-2025" className="group block bg-white hover:bg-red-50 rounded-xl p-6 transition-all shadow-sm">
+                <span className="inline-block px-3 py-1 bg-red-100 text-red-700 rounded-full text-xs font-semibold mb-3">Salud</span>
+                <h3 className="font-bold text-gray-900 group-hover:text-red-600 transition-colors mb-2">Marketing para Salud Chile 2025</h3>
+                <span className="inline-flex items-center gap-1 text-sm text-red-600 font-medium">Leer más <ArrowRight className="w-4 h-4" /></span>
+              </Link>
+              <Link href="/blog/costo-google-ads-chile-2025" className="group block bg-white hover:bg-red-50 rounded-xl p-6 transition-all shadow-sm">
+                <span className="inline-block px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-semibold mb-3">Google Ads</span>
+                <h3 className="font-bold text-gray-900 group-hover:text-red-600 transition-colors mb-2">Costo Google Ads Chile 2025</h3>
+                <span className="inline-flex items-center gap-1 text-sm text-red-600 font-medium">Leer más <ArrowRight className="w-4 h-4" /></span>
+              </Link>
+              <Link href="/blog/que-es-cac-como-calcularlo-reducirlo" className="group block bg-white hover:bg-red-50 rounded-xl p-6 transition-all shadow-sm">
+                <span className="inline-block px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-semibold mb-3">Métricas</span>
+                <h3 className="font-bold text-gray-900 group-hover:text-red-600 transition-colors mb-2">CAC en Salud: Cómo Optimizarlo</h3>
+                <span className="inline-flex items-center gap-1 text-sm text-red-600 font-medium">Leer más <ArrowRight className="w-4 h-4" /></span>
+              </Link>
+            </div>
+          </div>
+        </section>
+
         {/* CTA */}
         <section className="py-20 bg-gradient-to-br from-red-900 to-pink-900 text-white">
           <div className="container mx-auto px-4">

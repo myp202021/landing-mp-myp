@@ -6,8 +6,10 @@
  */
 
 import React, { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
+import { trackLead, trackWhatsAppClick } from '@/lib/meta-pixel'
 import {
   CheckCircle2,
   XCircle,
@@ -28,8 +30,10 @@ import {
 } from 'lucide-react'
 import { generateAISearchSchema } from '@/lib/ai-search-optimization'
 import YouTubeLite from '@/components/YouTubeLite'
+import { ClientLogosGrid } from '@/components/ClientLogos'
 
 export default function LandingClient() {
+  const router = useRouter()
   const aiSearchSchema = generateAISearchSchema()
   const [formData, setFormData] = useState({
     nombre: '',
@@ -259,7 +263,17 @@ export default function LandingClient() {
       })
 
       if (response.ok) {
-        setFormData(prev => ({ ...prev, enviado: true, enviando: false }))
+        // Track Lead en Meta Pixel con valor estimado para optimización B2B
+        trackLead({
+          nombre: formData.nombre,
+          empresa: formData.empresa,
+          cargo: formData.cargo,
+          email: formData.email,
+          telefono: formData.telefono,
+          servicio: 'performance-marketing',
+          fuente: 'landing-principal'
+        })
+        router.push('/gracias')
       } else {
         alert('Error al enviar. Intenta nuevamente.')
         setFormData(prev => ({ ...prev, enviando: false }))
@@ -838,6 +852,7 @@ export default function LandingClient() {
                 href="https://wa.me/56992258137?text=Hola%2C%20quiero%20información%20sobre%20servicios%20M%26P"
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() => trackWhatsAppClick({ page: 'hero', servicio: 'general' })}
                 className="inline-flex items-center gap-3 px-8 py-4 bg-emerald-500 hover:bg-emerald-600 text-white font-semibold text-base rounded-full shadow-lg shadow-emerald-500/30 hover:shadow-xl hover:shadow-emerald-500/40 transition-all duration-300"
                 aria-label="Contactar por WhatsApp para información sobre servicios"
               >
@@ -2151,6 +2166,7 @@ export default function LandingClient() {
                   href="https://wa.me/56992258137?text=Hola%2C%20quiero%20información%20sobre%20servicios%20M%26P"
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={() => trackWhatsAppClick({ page: 'formulario', servicio: 'contacto' })}
                   className="inline-flex items-center gap-3 px-6 py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-semibold rounded-xl transition-all duration-300 shadow-lg shadow-emerald-500/30"
                 >
                   <MessageSquare className="w-5 h-5" />
@@ -2342,12 +2358,9 @@ export default function LandingClient() {
             </div>
           </div>
 
-          {/* Clientes - Temporalmente oculto para depuración */}
+          {/* Clientes - Se activará cuando tengamos los logos en /public/clientes/ */}
           {/* <div className="mb-20">
-            <h3 className="text-center text-sm font-bold text-gray-500 uppercase tracking-wider mb-8">
-              Confían en nosotros
-            </h3>
-            TODO: Agregar carrusel con 42 clientes del PDF
+            <ClientLogosGrid />
           </div> */}
 
           {/* Industrias - 10 con colores vivos */}
@@ -2412,6 +2425,7 @@ export default function LandingClient() {
                 href="https://wa.me/56992258137?text=Hola%20M%26P%2C%20quiero%20mejorar%20mis%20resultados%20en%20marketing%20digital"
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() => trackWhatsAppClick({ page: 'footer', servicio: 'general' })}
                 className="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-5 py-2.5 rounded-lg font-semibold text-sm transition-all"
               >
                 <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
@@ -2450,11 +2464,11 @@ export default function LandingClient() {
             <div>
               <h3 className="text-white font-bold text-sm mb-4">Recursos</h3>
               <ul className="space-y-2 text-sm">
+                <li><Link href="/nosotros" className="text-blue-200 hover:text-white transition-colors">Quiénes Somos</Link></li>
                 <li><Link href="/blog" className="text-blue-200 hover:text-white transition-colors">Blog</Link></li>
                 <li><Link href="/labs" className="text-blue-200 hover:text-white transition-colors">M&P Labs</Link></li>
                 <li><Link href="/utilidades" className="text-blue-200 hover:text-white transition-colors">Utilidades</Link></li>
-                <li><Link href="/ranking-agencias-marketing-digital-chile" className="text-blue-200 hover:text-white transition-colors">Ranking Agencias</Link></li>
-                <li><Link href="/precios-agencia-marketing-digital-chile" className="text-blue-200 hover:text-white transition-colors">Precios</Link></li>
+                <li><Link href="/comparativa/muller-perez-vs-agencias-chile" className="text-blue-200 hover:text-white transition-colors">M&P vs Agencias</Link></li>
                 <li className="pt-1"><Link href="/recursos" className="text-blue-400 hover:text-white transition-colors font-medium">Ver todos →</Link></li>
               </ul>
             </div>

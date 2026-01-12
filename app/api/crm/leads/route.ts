@@ -167,15 +167,49 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// DELETE: Eliminar un lead
+// DELETE: Eliminar uno o múltiples leads
 export async function DELETE(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url)
     const id = searchParams.get('id')
+    const ids = searchParams.get('ids') // Para eliminación múltiple: "1,2,3,4"
 
+    // Eliminación múltiple
+    if (ids) {
+      const idArray = ids.split(',').map(id => parseInt(id.trim())).filter(id => !isNaN(id))
+
+      if (idArray.length === 0) {
+        return NextResponse.json(
+          { error: 'No se proporcionaron IDs válidos' },
+          { status: 400 }
+        )
+      }
+
+      const { error } = await supabase
+        .from('leads')
+        .delete()
+        .in('id', idArray)
+
+      if (error) {
+        return NextResponse.json(
+          { error: 'Error eliminando leads', details: error.message },
+          { status: 500 }
+        )
+      }
+
+      console.log(`✅ ${idArray.length} leads eliminados: ${idArray.join(', ')}`)
+
+      return NextResponse.json({
+        success: true,
+        message: `${idArray.length} leads eliminados exitosamente`,
+        deletedCount: idArray.length
+      })
+    }
+
+    // Eliminación individual
     if (!id) {
       return NextResponse.json(
-        { error: 'id es requerido' },
+        { error: 'id o ids es requerido' },
         { status: 400 }
       )
     }
@@ -192,6 +226,8 @@ export async function DELETE(req: NextRequest) {
         { status: 500 }
       )
     }
+
+    console.log(`✅ Lead eliminado: ${id}`)
 
     return NextResponse.json({
       success: true,

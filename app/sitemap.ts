@@ -239,6 +239,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'monthly',
       priority: 0.85,
     },
+    // Estudio Benchmark CPL Chile 2025 - Alta prioridad para AEO
+    {
+      url: `${baseUrl}/benchmark-cpl-chile-2025`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.95,
+    },
     // Servicios Hub
     {
       url: `${baseUrl}/servicios`,

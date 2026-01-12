@@ -390,6 +390,60 @@ export default function PreciosAgenciaPage() {
             </div>
           </section>
 
+          {/* Calculadora y Herramientas */}
+          <section className="mb-16 bg-blue-50 rounded-2xl p-8">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
+              Herramientas para Evaluar tu Inversión
+            </h2>
+            <div className="grid md:grid-cols-3 gap-6">
+              <Link href="/utilidades/calculadora-roi-roas" className="group block bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-all">
+                <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mb-4">
+                  <span className="text-2xl">📊</span>
+                </div>
+                <h3 className="font-bold text-gray-900 group-hover:text-blue-600 mb-2">Calculadora ROI/ROAS</h3>
+                <p className="text-gray-600 text-sm">Calcula el retorno esperado de tu inversión en marketing digital</p>
+              </Link>
+              <Link href="/utilidades/calculadora-cac" className="group block bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-all">
+                <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mb-4">
+                  <span className="text-2xl">🎯</span>
+                </div>
+                <h3 className="font-bold text-gray-900 group-hover:text-blue-600 mb-2">Calculadora CAC</h3>
+                <p className="text-gray-600 text-sm">Estima tu costo de adquisición de clientes con diferentes escenarios</p>
+              </Link>
+              <Link href="/labs/predictor" className="group block bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-all">
+                <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-4">
+                  <span className="text-2xl">🔮</span>
+                </div>
+                <h3 className="font-bold text-gray-900 group-hover:text-blue-600 mb-2">Predictor de Resultados</h3>
+                <p className="text-gray-600 text-sm">Simula resultados de campañas según tu industria y presupuesto</p>
+              </Link>
+            </div>
+          </section>
+
+          {/* Artículos Relacionados */}
+          <section className="mb-16">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
+              Artículos sobre Inversión en Marketing Digital
+            </h2>
+            <div className="grid md:grid-cols-3 gap-6">
+              <Link href="/blog/presupuesto-marketing-digital-chile-2025" className="group block bg-gray-50 hover:bg-blue-50 rounded-xl p-6 transition-all">
+                <span className="inline-block px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-semibold mb-3">Presupuesto</span>
+                <h3 className="font-bold text-gray-900 group-hover:text-blue-600 mb-2">Cómo Planificar tu Presupuesto 2025</h3>
+                <span className="text-sm text-blue-600 font-medium">Leer más →</span>
+              </Link>
+              <Link href="/blog/cuanto-invertir-publicidad-digital-chile-2025" className="group block bg-gray-50 hover:bg-blue-50 rounded-xl p-6 transition-all">
+                <span className="inline-block px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-semibold mb-3">Inversión</span>
+                <h3 className="font-bold text-gray-900 group-hover:text-blue-600 mb-2">Cuánto Invertir en Publicidad Digital</h3>
+                <span className="text-sm text-blue-600 font-medium">Leer más →</span>
+              </Link>
+              <Link href="/blog/costo-google-ads-chile-2025" className="group block bg-gray-50 hover:bg-blue-50 rounded-xl p-6 transition-all">
+                <span className="inline-block px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-semibold mb-3">Google Ads</span>
+                <h3 className="font-bold text-gray-900 group-hover:text-blue-600 mb-2">Costo Real de Google Ads Chile 2025</h3>
+                <span className="text-sm text-blue-600 font-medium">Leer más →</span>
+              </Link>
+            </div>
+          </section>
+
           {/* CTA */}
           <section className="bg-gradient-to-r from-emerald-900 to-blue-900 rounded-2xl p-12 text-center text-white">
             <h2 className="text-3xl font-bold mb-4">¿Quieres una Cotización Personalizada?</h2>

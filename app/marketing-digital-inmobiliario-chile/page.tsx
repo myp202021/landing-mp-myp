@@ -468,28 +468,50 @@ export default function MarketingInmobiliarioPage() {
           </div>
         </section>
 
-        {/* Páginas Relacionadas */}
-        <section className="py-12 bg-emerald-900 text-white">
-          <div className="container mx-auto px-4">
-            <div className="max-w-4xl mx-auto">
-              <h3 className="text-lg font-bold mb-4">También te puede interesar:</h3>
-              <div className="flex flex-wrap gap-3">
-                <Link href="/marketing-digital-b2b-chile" className="bg-white/10 hover:bg-white/20 px-4 py-2 rounded-lg text-sm transition-colors">
-                  Marketing B2B
-                </Link>
-                <Link href="/servicios/google-ads-chile" className="bg-white/10 hover:bg-white/20 px-4 py-2 rounded-lg text-sm transition-colors">
-                  Google Ads Chile
-                </Link>
-                <Link href="/servicios/meta-ads-chile" className="bg-white/10 hover:bg-white/20 px-4 py-2 rounded-lg text-sm transition-colors">
-                  Meta Ads Chile
-                </Link>
-                <Link href="/precios-agencia-marketing-digital-chile" className="bg-white/10 hover:bg-white/20 px-4 py-2 rounded-lg text-sm transition-colors">
-                  Precios Agencias
-                </Link>
-                <Link href="/ranking-agencias-marketing-digital-chile" className="bg-white/10 hover:bg-white/20 px-4 py-2 rounded-lg text-sm transition-colors">
-                  Ranking Agencias
-                </Link>
-              </div>
+        {/* Servicios Relacionados */}
+        <section className="py-16 bg-white">
+          <div className="container mx-auto px-4 max-w-5xl">
+            <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">Servicios para Inmobiliarias</h2>
+            <div className="grid md:grid-cols-3 gap-6">
+              <Link href="/servicios/google-ads-chile" className="group block bg-gray-50 hover:bg-emerald-50 rounded-xl p-6 transition-all border border-gray-100">
+                <h3 className="font-bold text-gray-900 group-hover:text-emerald-600 transition-colors mb-2">Google Ads Inmobiliario</h3>
+                <p className="text-gray-600 text-sm mb-3">Campañas de búsqueda para capturar compradores activos</p>
+                <span className="inline-flex items-center gap-1 text-sm text-emerald-600 font-medium">Ver servicio <ArrowRight className="w-4 h-4" /></span>
+              </Link>
+              <Link href="/servicios/meta-ads-chile" className="group block bg-gray-50 hover:bg-emerald-50 rounded-xl p-6 transition-all border border-gray-100">
+                <h3 className="font-bold text-gray-900 group-hover:text-emerald-600 transition-colors mb-2">Meta Ads Propiedades</h3>
+                <p className="text-gray-600 text-sm mb-3">Carruseles, video tours y Lead Ads para inmobiliarias</p>
+                <span className="inline-flex items-center gap-1 text-sm text-emerald-600 font-medium">Ver servicio <ArrowRight className="w-4 h-4" /></span>
+              </Link>
+              <Link href="/servicios/performance-marketing" className="group block bg-gray-50 hover:bg-emerald-50 rounded-xl p-6 transition-all border border-gray-100">
+                <h3 className="font-bold text-gray-900 group-hover:text-emerald-600 transition-colors mb-2">Performance Marketing</h3>
+                <p className="text-gray-600 text-sm mb-3">Estrategia multicanal para maximizar leads calificados</p>
+                <span className="inline-flex items-center gap-1 text-sm text-emerald-600 font-medium">Ver servicio <ArrowRight className="w-4 h-4" /></span>
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* Blog Posts Relacionados */}
+        <section className="py-16 bg-gray-50">
+          <div className="container mx-auto px-4 max-w-5xl">
+            <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">Artículos sobre Marketing Inmobiliario</h2>
+            <div className="grid md:grid-cols-3 gap-6">
+              <Link href="/blog/marketing-inmobiliario-agencia-marketing-digital-chile-2025" className="group block bg-white hover:bg-emerald-50 rounded-xl p-6 transition-all shadow-sm">
+                <span className="inline-block px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-xs font-semibold mb-3">Inmobiliario</span>
+                <h3 className="font-bold text-gray-900 group-hover:text-emerald-600 transition-colors mb-2">Marketing Inmobiliario Chile 2025</h3>
+                <span className="inline-flex items-center gap-1 text-sm text-emerald-600 font-medium">Leer más <ArrowRight className="w-4 h-4" /></span>
+              </Link>
+              <Link href="/blog/como-aumentar-conversiones-google-ads" className="group block bg-white hover:bg-emerald-50 rounded-xl p-6 transition-all shadow-sm">
+                <span className="inline-block px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-semibold mb-3">Google Ads</span>
+                <h3 className="font-bold text-gray-900 group-hover:text-emerald-600 transition-colors mb-2">Aumentar Conversiones en Google Ads</h3>
+                <span className="inline-flex items-center gap-1 text-sm text-emerald-600 font-medium">Leer más <ArrowRight className="w-4 h-4" /></span>
+              </Link>
+              <Link href="/blog/retargeting-agencia-marketing-digital-chile-2025" className="group block bg-white hover:bg-emerald-50 rounded-xl p-6 transition-all shadow-sm">
+                <span className="inline-block px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-semibold mb-3">Retargeting</span>
+                <h3 className="font-bold text-gray-900 group-hover:text-emerald-600 transition-colors mb-2">Retargeting para Inmobiliarias</h3>
+                <span className="inline-flex items-center gap-1 text-sm text-emerald-600 font-medium">Leer más <ArrowRight className="w-4 h-4" /></span>
+              </Link>
             </div>
           </div>
         </section>

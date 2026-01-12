@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Script from "next/script";
 import { defaultMetadata, createOrganizationSchema } from "@/lib/metadata";
+import { generateAISearchSchema } from "@/lib/ai-search-optimization";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import Breadcrumbs from "./components/Breadcrumbs";
 import ThirdPartyScripts from "@/components/ThirdPartyScripts";
@@ -16,6 +17,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const organizationSchema = createOrganizationSchema();
+  const aiSearchSchema = generateAISearchSchema();
 
   return (
     <html lang="es">
@@ -32,6 +34,12 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+        />
+
+        {/* AI Search Schema (AEO) - Optimizado para ChatGPT, Claude, Perplexity, Gemini */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(aiSearchSchema) }}
         />
 
         {/* Google Ads Tag (gtag.js) */}

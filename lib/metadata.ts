@@ -563,6 +563,49 @@ export function createServiceSchema(service: {
   }
 }
 
+// Article Schema para blog posts - SEO Rich Snippets
+export function createArticleSchema(article: {
+  title: string
+  description: string
+  url: string
+  publishedTime: string
+  modifiedTime?: string
+  author?: string
+  image?: string
+  section?: string
+}) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: article.title,
+    description: article.description,
+    url: article.url,
+    datePublished: article.publishedTime,
+    dateModified: article.modifiedTime || article.publishedTime,
+    author: {
+      '@type': 'Organization',
+      name: article.author || 'Muller y Pérez',
+      url: siteConfig.url
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Muller y Pérez',
+      url: siteConfig.url,
+      logo: {
+        '@type': 'ImageObject',
+        url: `${siteConfig.url}/logo-color.png`
+      }
+    },
+    image: article.image || siteConfig.ogImage,
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': article.url
+    },
+    articleSection: article.section || 'Marketing Digital',
+    inLanguage: 'es-CL'
+  }
+}
+
 // Helper para agregar canonical link en client components
 export function addCanonicalLink(path: string) {
   if (typeof window === 'undefined') return

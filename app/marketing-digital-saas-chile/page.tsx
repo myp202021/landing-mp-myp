@@ -474,6 +474,54 @@ export default function MarketingSaaSPage() {
           </div>
         </section>
 
+        {/* Servicios Relacionados */}
+        <section className="py-16 bg-white">
+          <div className="container mx-auto px-4 max-w-5xl">
+            <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">Servicios para SaaS</h2>
+            <div className="grid md:grid-cols-3 gap-6">
+              <Link href="/servicios/google-ads-chile" className="group block bg-gray-50 hover:bg-purple-50 rounded-xl p-6 transition-all border border-gray-100">
+                <h3 className="font-bold text-gray-900 group-hover:text-purple-600 transition-colors mb-2">Google Ads para SaaS</h3>
+                <p className="text-gray-600 text-sm mb-3">Captura demanda de usuarios buscando soluciones como la tuya</p>
+                <span className="inline-flex items-center gap-1 text-sm text-purple-600 font-medium">Ver servicio <ArrowRight className="w-4 h-4" /></span>
+              </Link>
+              <Link href="/servicios/meta-ads-chile" className="group block bg-gray-50 hover:bg-purple-50 rounded-xl p-6 transition-all border border-gray-100">
+                <h3 className="font-bold text-gray-900 group-hover:text-purple-600 transition-colors mb-2">Meta Ads para SaaS</h3>
+                <p className="text-gray-600 text-sm mb-3">Awareness, trials y remarketing para activation</p>
+                <span className="inline-flex items-center gap-1 text-sm text-purple-600 font-medium">Ver servicio <ArrowRight className="w-4 h-4" /></span>
+              </Link>
+              <Link href="/servicios/performance-marketing" className="group block bg-gray-50 hover:bg-purple-50 rounded-xl p-6 transition-all border border-gray-100">
+                <h3 className="font-bold text-gray-900 group-hover:text-purple-600 transition-colors mb-2">Growth Marketing</h3>
+                <p className="text-gray-600 text-sm mb-3">Estrategia integral enfocada en CAC, LTV y unit economics</p>
+                <span className="inline-flex items-center gap-1 text-sm text-purple-600 font-medium">Ver servicio <ArrowRight className="w-4 h-4" /></span>
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* Blog Posts Relacionados */}
+        <section className="py-16 bg-gray-50">
+          <div className="container mx-auto px-4 max-w-5xl">
+            <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">Artículos sobre Marketing SaaS</h2>
+            <div className="grid md:grid-cols-3 gap-6">
+              <Link href="/blog/marketing-saas-agencia-marketing-digital-chile-2025" className="group block bg-white hover:bg-purple-50 rounded-xl p-6 transition-all shadow-sm">
+                <span className="inline-block px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-semibold mb-3">SaaS</span>
+                <h3 className="font-bold text-gray-900 group-hover:text-purple-600 transition-colors mb-2">Marketing SaaS en Chile 2025</h3>
+                <span className="inline-flex items-center gap-1 text-sm text-purple-600 font-medium">Leer más <ArrowRight className="w-4 h-4" /></span>
+              </Link>
+              <Link href="/blog/inbound-marketing-agencia-marketing-digital-chile-2025" className="group block bg-white hover:bg-purple-50 rounded-xl p-6 transition-all shadow-sm">
+                <span className="inline-block px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-semibold mb-3">Inbound</span>
+                <h3 className="font-bold text-gray-900 group-hover:text-purple-600 transition-colors mb-2">Inbound Marketing para SaaS</h3>
+                <span className="inline-flex items-center gap-1 text-sm text-purple-600 font-medium">Leer más <ArrowRight className="w-4 h-4" /></span>
+              </Link>
+              <Link href="/blog/que-es-cac-como-calcularlo-reducirlo" className="group block bg-white hover:bg-purple-50 rounded-xl p-6 transition-all shadow-sm">
+                <span className="inline-block px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-semibold mb-3">Métricas</span>
+                <h3 className="font-bold text-gray-900 group-hover:text-purple-600 transition-colors mb-2">CAC y LTV: Optimización SaaS</h3>
+                <span className="inline-flex items-center gap-1 text-sm text-purple-600 font-medium">Leer más <ArrowRight className="w-4 h-4" /></span>
+              </Link>
+            </div>
+          </div>
+        </section>
+
         {/* CTA */}
         <section className="py-20 bg-gradient-to-br from-purple-900 to-indigo-900 text-white">
           <div className="container mx-auto px-4">

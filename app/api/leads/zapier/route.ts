@@ -77,14 +77,16 @@ export async function POST(req: NextRequest) {
       'phone_number', 'phoneNumber', 'PHONE_NUMBER',
       'phone', 'Phone', 'PHONE',
       'telefono', 'Telefono', 'TELEFONO',
-      'tel', 'mobile', 'celular', 'Celular'
+      'tel', 'mobile', 'celular', 'Celular',
+      'número_de_teléfono', 'numero_de_telefono'
     )
 
     const empresa = extractField(body,
       'company', 'Company', 'COMPANY',
       'empresa', 'Empresa', 'EMPRESA',
       'company_name', 'companyName', 'business',
-      'nombre_empresa', 'Nombre de empresa'
+      'nombre_empresa', 'Nombre de empresa',
+      'nombre_de_la_empresa', 'Nombre de la empresa'
     )
 
     // Construir nombre completo

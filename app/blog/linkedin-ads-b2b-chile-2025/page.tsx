@@ -18,9 +18,48 @@ export const metadata: Metadata = {
   }
 }
 
+
+  // Article Schema JSON-LD
+  const articleSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: 'LinkedIn Ads para B2B de Alto Ticket en Chile: Segmentaciones, Costos y Playbooks',
+    description: 'Aprende a usar LinkedIn Ads en Chile 2025 para negocios B2B de alto ticket. Segmentaciones, costos reales y playbooks de campañas exitosas.',
+    url: 'https://www.mulleryperez.cl/blog/linkedin-ads-b2b-chile-2025',
+    datePublished: '2025-10-09T00:00:00.000Z',
+    dateModified: '2025-10-09T00:00:00.000Z',
+    author: {
+      '@type': 'Organization',
+      name: 'Muller y Pérez',
+      url: 'https://www.mulleryperez.cl'
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Muller y Pérez',
+      url: 'https://www.mulleryperez.cl',
+      logo: {
+        '@type': 'ImageObject',
+        url: 'https://www.mulleryperez.cl/logo-color.png'
+      }
+    },
+    image: 'https://www.mulleryperez.cl/og-image.jpg',
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': 'https://www.mulleryperez.cl/blog/linkedin-ads-b2b-chile-2025'
+    },
+    articleSection: 'Marketing Digital',
+    inLanguage: 'es-CL'
+  }
+
 export default function ArticlePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-white">
+      {/* Article Schema JSON-LD */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
+
       <header className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-xl border-b border-gray-100 z-50">
         <div className="max-w-7xl mx-auto px-6 lg:px-8 py-5 flex items-center justify-between">
           <Link href="/"><img src="/logo-color.png" alt="Muller y Pérez" className="h-11 w-auto" /></Link>
