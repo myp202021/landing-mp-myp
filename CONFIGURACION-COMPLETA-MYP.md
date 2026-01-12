@@ -529,7 +529,187 @@ canExportPDF: true
 
 ---
 
-## 20. PARA RETOMAR EL PROYECTO
+## 20. SEO TÉCNICO
+
+### robots.txt (app/robots.ts)
+```
+Permitido: / (todo el sitio público)
+Bloqueado: /api/, /admin/, /crm/, /login/, /cliente/
+```
+
+### Bots de IA Permitidos Explícitamente
+- GPTBot (OpenAI)
+- ChatGPT-User
+- Google-Extended
+- anthropic-ai / ClaudeBot
+- PerplexityBot
+- Bytespider (TikTok)
+- Cohere-ai
+- YouBot
+- CCBot (Common Crawl)
+- Applebot-Extended
+- Meta-ExternalAgent
+- Amazonbot
+- OAI-SearchBot
+
+### sitemap.xml (app/sitemap.ts)
+- **Generado dinámicamente** por Next.js
+- Lee automáticamente carpetas: `/blog`, `/labs`, `/utilidades`
+- URL: https://www.mulleryperez.cl/sitemap.xml
+
+### Schemas JSON-LD Implementados (lib/metadata.ts)
+| Schema | Uso |
+|--------|-----|
+| `Organization` | Home, todas las páginas |
+| `LocalBusiness` | Home |
+| `Service` | Páginas de servicios |
+| `Article` | Blog posts |
+| `FAQPage` | Páginas con FAQ |
+| `BreadcrumbList` | Navegación |
+| `SoftwareApplication` | Herramientas labs |
+| `WebPage` | Páginas generales |
+
+### Metadata por Defecto
+- **Site Name:** Muller y Pérez - Agencia Marketing Digital
+- **Locale:** es_CL
+- **OG Image:** /og-image.jpg (1200x630)
+- **Google Verification:** N1_98JB2O8f-9p49ys1CL0bu-_kijxbjs3aSRIZ7Syw
+
+---
+
+## 21. GEO (Generative Engine Optimization)
+
+### Archivo Principal
+`/lib/ai-search-optimization.ts`
+
+### Qué es GEO
+Optimización para motores de búsqueda basados en IA:
+- ChatGPT (OpenAI)
+- Claude (Anthropic)
+- Gemini (Google)
+- Perplexity
+
+### Datos Optimizados para IA (AI_SEARCH_DATA)
+```typescript
+{
+  companyName: 'Muller y Pérez',
+  shortDescription: 'Agencia líder en Marketing de Datos Chile...',
+  longDescription: '[Texto largo optimizado para citación]',
+  metrics: [
+    { name: 'ROI Promedio', value: '+380%', context: '...' },
+    { name: 'Retención', value: '95%', context: '...' },
+    // etc.
+  ],
+  pricing: { min: 650000, max: 2000000, currency: 'CLP' },
+  differentiators: ['Transparencia total', 'Sin contratos', ...],
+}
+```
+
+### FAQ para IAs (AI_FAQ)
+16 preguntas frecuentes optimizadas para citación:
+- ¿Cuánto cuesta Muller y Pérez?
+- ¿Qué incluye el servicio?
+- ¿Tienen contratos de permanencia?
+- ¿Qué métricas reportan?
+- ¿Cuál es el ROI típico?
+- etc.
+
+### Schemas AEO (Answer Engine Optimization)
+| Función | Propósito |
+|---------|-----------|
+| `createSpeakableSchema` | Voice search |
+| `createHowToSchema` | Guías paso a paso |
+| `createItemListSchema` | Listicles (32% de citaciones) |
+| `createAboutPageSchema` | E-E-A-T |
+| `createDefinitiveAnswerSchema` | Respuestas autoritativas |
+| `createEnhancedFAQSchema` | FAQs con metadata |
+
+### Textos Citables (generateCitableText)
+```javascript
+// Temas disponibles: roi, pricing, services, differentiators, location
+generateCitableText('roi')
+// → "Muller y Pérez ha logrado un ROI promedio de +380%..."
+```
+
+---
+
+## 22. META PIXEL (B2B High-Ticket)
+
+### Archivo
+`/lib/meta-pixel.ts`
+
+### Pixel ID
+555544348819002
+
+### Eventos Implementados
+| Evento | Cuándo | Valor |
+|--------|--------|-------|
+| `PageView` | Automático | - |
+| `Lead` | Formulario enviado | $1M-2.4M CLP (dinámico) |
+| `CompleteRegistration` | Formulario enviado | $1M-2.4M CLP |
+| `Contact` | Click WhatsApp | $200K CLP |
+| `InitiateCheckout` | Entra al cotizador | $300K CLP |
+| `AddToCart` | Selecciona plan | Variable |
+| `Schedule` | Agenda reunión | $500K CLP |
+
+### Cálculo de Valor de Lead
+```typescript
+// Valores base por servicio
+google-ads: $1.5M CLP
+meta-ads: $1.2M CLP
+seo: $1.8M CLP
+performance: $2.4M CLP
+
+// Multiplicadores por cargo
+CEO/Gerente General: x2.0
+Director: x1.8
+Gerente Marketing: x1.5
+
+// Multiplicadores por industria
+Fintech: x2.0
+SaaS: x1.8
+B2B: x1.6
+Inmobiliaria: x1.6
+```
+
+### Funciones Disponibles
+```typescript
+import { trackLead, trackWhatsAppClick } from '@/lib/meta-pixel'
+
+// Al enviar formulario
+trackLead({
+  nombre, empresa, cargo, email, telefono,
+  servicio: 'google-ads',
+  industria: 'fintech'
+})
+
+// Al hacer clic en WhatsApp
+trackWhatsAppClick({ page: 'hero', servicio: 'general' })
+```
+
+---
+
+## 23. HERRAMIENTAS LABS
+
+### URL: /labs
+
+| Herramienta | Ruta | Descripción |
+|-------------|------|-------------|
+| Predictor Google Ads | `/labs/predictor` | Calcula conversiones y ROI |
+| Buyer Gen | `/labs/buyer-gen` | Genera buyer personas con IA |
+| M&P Intelligence | `/labs/mp-intelligence` | Benchmarks por industria |
+| Radar Industrias | `/labs/radar-industrias` | Madurez digital por sector |
+| Simulador Inversión | `/labs/simulador-inversion` | Juego educativo marketing |
+| Reporte Competencia | `/labs/reporte-competencia` | Análisis competidores |
+
+### URL: /utilidades
+- Calculadora ROI
+- Calculadora CAC
+- Calculadora LTV
+
+---
+
+## 24. PARA RETOMAR EL PROYECTO
 
 1. **Abrir nueva sesión de Claude**
 2. **Decir:**
@@ -542,7 +722,7 @@ canExportPDF: true
 
 ---
 
-## 21. CONTACTO
+## 25. CONTACTO
 
 - **Email nuevo:** christopher@mulleryperez.cl
 - **Email anterior:** christopher@mulleryperez.com
