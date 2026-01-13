@@ -587,10 +587,13 @@ export default function LandingClient() {
                 <div className="absolute top-full mt-1 left-0 bg-white rounded-xl shadow-2xl border border-gray-100 py-2 min-w-[240px] animate-in fade-in slide-in-from-top-2 duration-200">
                   <Link
                     href="/labs/predictor"
-                    className="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
+                    className="block px-4 py-3 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors bg-gradient-to-r from-indigo-50/30 to-transparent"
                   >
-                    <div className="font-semibold">Predictor Google Ads</div>
-                    <div className="text-xs text-gray-500 mt-0.5">Calcula conversiones y ROAS</div>
+                    <div className="font-semibold flex items-center gap-2">
+                      Predictor + Diagnóstico
+                      <span className="px-1.5 py-0.5 bg-emerald-500 text-white text-[10px] font-bold rounded">NUEVO</span>
+                    </div>
+                    <div className="text-xs text-gray-500 mt-0.5">Google vs Meta vs LinkedIn</div>
                   </Link>
                   <Link
                     href="/labs/buyer-gen"
@@ -1622,24 +1625,28 @@ export default function LandingClient() {
               </div>
             </Link>
 
-            {/* Predictor Google Ads */}
+            {/* Predictor Marketing Digital v2 - DESTACADO */}
             <Link
               href="/labs/predictor"
-              className="group bg-white rounded-2xl p-6 border-2 border-gray-200 hover:border-green-500 hover:shadow-xl transition-all duration-300"
+              className="group bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl p-6 border-2 border-indigo-300 hover:border-indigo-500 hover:shadow-xl transition-all duration-300 relative overflow-hidden"
             >
-              <div className="flex items-start justify-between mb-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-                  <TrendingUp className="w-6 h-6 text-white" />
-                </div>
-                <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-green-600 group-hover:translate-x-1 transition-all" />
+              <div className="absolute top-3 right-3 px-2 py-1 bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-xs font-bold rounded-full">
+                NUEVO v2
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Predictor Google Ads</h3>
+              <div className="flex items-start justify-between mb-4">
+                <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                  <Target className="w-6 h-6 text-white" />
+                </div>
+                <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-indigo-600 group-hover:translate-x-1 transition-all" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Predictor + Diagnóstico</h3>
               <p className="text-sm text-gray-600 mb-3">
-                Calcula conversiones, revenue y ROI de tus campañas con data real de +200 campañas Chile.
+                Analiza tu negocio y descubre si Google, Meta o LinkedIn es mejor para ti. Proyección de ROAS y alertas de viabilidad.
               </p>
-              <div className="flex items-center gap-2 text-xs text-green-600 font-semibold">
-                <span className="px-2 py-1 bg-green-50 rounded-full">ROI/ROAS</span>
-                <span className="px-2 py-1 bg-emerald-50 rounded-full">15 Industrias</span>
+              <div className="flex flex-wrap items-center gap-2 text-xs text-indigo-600 font-semibold">
+                <span className="px-2 py-1 bg-indigo-100 rounded-full">12 Industrias</span>
+                <span className="px-2 py-1 bg-purple-100 rounded-full">Diagnóstico</span>
+                <span className="px-2 py-1 bg-emerald-100 rounded-full">Gratis</span>
               </div>
             </Link>
 
