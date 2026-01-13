@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 
 export const siteConfig = {
   name: 'Muller y Pérez - Agencia Marketing Digital, Performance, Google Ads y Redes Sociales Chile',
-  description: 'Agencia marketing digital y agencia performance especializada en Google Ads, Meta Ads y redes sociales. Agencia Google Ads con equipo dedicado, métricas reales y resultados medibles. Chile.',
+  description: 'Agencia de marketing digital y performance que convierte tu inversión en clientes reales. Google Ads, Meta Ads y redes sociales con equipo dedicado y resultados medibles. Chile.',
   url: 'https://www.mulleryperez.cl',
   ogImage: 'https://www.mulleryperez.cl/og-image.jpg', // Imagen optimizada 1200x630px
   links: {

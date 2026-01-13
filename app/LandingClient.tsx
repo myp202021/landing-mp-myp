@@ -833,7 +833,7 @@ export default function LandingClient() {
             </h1>
 
             <p className="text-lg md:text-xl text-blue-200 max-w-3xl mx-auto mb-6 font-medium">
-              Agencia marketing digital y agencia performance especializada en Google Ads y redes sociales
+              Agencia de marketing digital y performance que convierte tu inversión en clientes reales
             </p>
 
             <p className="text-lg md:text-xl text-blue-200 max-w-3xl mx-auto leading-relaxed mb-12 font-medium">
