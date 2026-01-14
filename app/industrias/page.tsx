@@ -1,6 +1,6 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
-import { ArrowRight, ShoppingCart, Building2, Cloud, Home, Heart, GraduationCap } from 'lucide-react'
+import { ArrowRight, ShoppingCart, Building2, Cloud, Home, Heart, GraduationCap, CreditCard, Briefcase } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'Marketing Digital por Industria en Chile | Soluciones Especializadas | M&P',
@@ -45,6 +45,22 @@ const industrias = [
     stats: { label: 'Reducción CAC', value: '-40%' },
   },
   {
+    titulo: 'Fintech',
+    descripcion: 'Adquisición de clientes para servicios financieros digitales con compliance CMF.',
+    href: '/marketing-digital-fintech-chile',
+    icon: CreditCard,
+    color: 'teal',
+    stats: { label: 'LTV:CAC', value: '4.5x' },
+  },
+  {
+    titulo: 'Servicios Profesionales',
+    descripcion: 'Leads para consultoras, contadores, arquitectos y estudios profesionales.',
+    href: '/marketing-digital-servicios-profesionales-chile',
+    icon: Briefcase,
+    color: 'cyan',
+    stats: { label: 'ROI Promedio', value: '5.2x' },
+  },
+  {
     titulo: 'Inmobiliario',
     descripcion: 'Leads calificados para corredoras, inmobiliarias y proyectos.',
     href: '/marketing-digital-inmobiliario-chile',
@@ -75,6 +91,8 @@ const colorClasses: Record<string, { bg: string; icon: string; hover: string }> 
   slate: { bg: 'bg-slate-50', icon: 'text-slate-600', hover: 'hover:border-slate-300' },
   purple: { bg: 'bg-purple-50', icon: 'text-purple-600', hover: 'hover:border-purple-300' },
   emerald: { bg: 'bg-emerald-50', icon: 'text-emerald-600', hover: 'hover:border-emerald-300' },
+  teal: { bg: 'bg-teal-50', icon: 'text-teal-600', hover: 'hover:border-teal-300' },
+  cyan: { bg: 'bg-cyan-50', icon: 'text-cyan-600', hover: 'hover:border-cyan-300' },
   red: { bg: 'bg-red-50', icon: 'text-red-600', hover: 'hover:border-red-300' },
   indigo: { bg: 'bg-indigo-50', icon: 'text-indigo-600', hover: 'hover:border-indigo-300' },
 }

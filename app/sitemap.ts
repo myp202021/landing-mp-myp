@@ -196,6 +196,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
     },
     {
+      url: `${baseUrl}/marketing-digital-fintech-chile`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/marketing-digital-servicios-profesionales-chile`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.9,
+    },
+    {
       url: `${baseUrl}/marketing-digital-inmobiliario-chile`,
       lastModified: currentDate,
       changeFrequency: 'monthly',
