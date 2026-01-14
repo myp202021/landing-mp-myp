@@ -765,6 +765,8 @@ export default function LandingClient() {
                         <Link href="/marketing-digital-ecommerce-chile" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">Ecommerce</Link>
                         <Link href="/marketing-digital-b2b-chile" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">B2B / Empresas</Link>
                         <Link href="/marketing-digital-saas-chile" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">SaaS / Software</Link>
+                        <Link href="/marketing-digital-fintech-chile" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">Fintech</Link>
+                        <Link href="/marketing-digital-servicios-profesionales-chile" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">Servicios Profesionales</Link>
                         <Link href="/marketing-digital-inmobiliario-chile" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">Inmobiliario</Link>
                         <Link href="/marketing-digital-salud-chile" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">Salud / Clínicas</Link>
                         <div className="pt-2 border-t border-gray-100 mt-2">
@@ -2461,6 +2463,8 @@ export default function LandingClient() {
                 <li><Link href="/marketing-digital-ecommerce-chile" className="text-blue-200 hover:text-white transition-colors">Ecommerce</Link></li>
                 <li><Link href="/marketing-digital-b2b-chile" className="text-blue-200 hover:text-white transition-colors">B2B</Link></li>
                 <li><Link href="/marketing-digital-saas-chile" className="text-blue-200 hover:text-white transition-colors">SaaS</Link></li>
+                <li><Link href="/marketing-digital-fintech-chile" className="text-blue-200 hover:text-white transition-colors">Fintech</Link></li>
+                <li><Link href="/marketing-digital-servicios-profesionales-chile" className="text-blue-200 hover:text-white transition-colors">Serv. Profesionales</Link></li>
                 <li><Link href="/marketing-digital-inmobiliario-chile" className="text-blue-200 hover:text-white transition-colors">Inmobiliario</Link></li>
                 <li><Link href="/marketing-digital-salud-chile" className="text-blue-200 hover:text-white transition-colors">Salud</Link></li>
                 <li className="pt-1"><Link href="/industrias" className="text-blue-400 hover:text-white transition-colors font-medium">Ver todas →</Link></li>
