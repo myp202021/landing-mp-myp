@@ -1,16 +1,16 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
-import { ArrowRight, Cloud, Rocket, Target, BarChart3, Users, CheckCircle, TrendingUp, Zap, DollarSign } from 'lucide-react'
+import { ArrowRight, Code2, Rocket, Target, BarChart3, Users, CheckCircle, TrendingUp, Zap, Globe } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Marketing Digital para SaaS en Chile | Growth Marketing | M&P',
-  description: 'Agencia especializada en marketing para empresas SaaS en Chile. Reducimos CAC, aumentamos trials y optimizamos conversión a paid. Especialistas en PLG y SLG.',
-  keywords: 'marketing saas chile, growth marketing saas, reducir cac saas, aumentar trials, marketing software chile, plg marketing chile',
+  title: 'Marketing Digital para SaaS en Chile | Adquisición de Usuarios | M&P',
+  description: 'Agencia especializada en marketing para empresas SaaS y tecnología en Chile. Generamos trials, demos y usuarios con Google Ads, LinkedIn y Content Marketing. CAC promedio -40% vs industria.',
+  keywords: 'marketing saas chile, marketing digital tecnologia, growth marketing chile, adquisicion usuarios saas, marketing b2b saas, demand generation saas chile',
   openGraph: {
     title: 'Marketing Digital para SaaS en Chile | M&P',
-    description: 'Growth marketing especializado para SaaS. Reducimos CAC y aumentamos conversión.',
+    description: 'Especialistas en adquisición de usuarios para SaaS. Google Ads, LinkedIn y estrategias de content marketing.',
     url: 'https://www.mulleryperez.cl/marketing-digital-saas-chile',
-    siteName: 'Müller & Pérez',
+    siteName: 'Muller y Pérez',
     locale: 'es_CL',
     type: 'website',
   },
@@ -27,13 +27,14 @@ const jsonLd = {
       '@id': 'https://www.mulleryperez.cl/marketing-digital-saas-chile',
       url: 'https://www.mulleryperez.cl/marketing-digital-saas-chile',
       name: 'Marketing Digital para SaaS en Chile',
-      description: 'Agencia especializada en growth marketing para empresas SaaS.',
+      description: 'Agencia especializada en marketing digital para empresas SaaS y tecnología en Chile.',
+      isPartOf: { '@id': 'https://www.mulleryperez.cl/#website' },
     },
     {
       '@type': 'Service',
-      name: 'Marketing Digital SaaS',
-      description: 'Growth marketing especializado para empresas de software',
-      provider: { '@type': 'Organization', name: 'Müller & Pérez' },
+      name: 'Marketing Digital para SaaS',
+      description: 'Servicio de marketing digital especializado para empresas de software y tecnología',
+      provider: { '@type': 'Organization', name: 'Muller y Pérez' },
       areaServed: { '@type': 'Country', name: 'Chile' },
     },
     {
@@ -41,26 +42,26 @@ const jsonLd = {
       mainEntity: [
         {
           '@type': 'Question',
-          name: '¿Cuál es un buen CAC para SaaS en Chile?',
+          name: '¿Cuánto cuesta adquirir un usuario SaaS en Chile?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'El CAC ideal depende de tu LTV. La regla general es CAC:LTV de 1:3 o mejor. Para SaaS B2B en Chile, el CAC promedio es $80.000-150.000 CLP. Para SaaS B2C/SMB, $15.000-40.000 CLP.',
+            text: 'El CAC para SaaS en Chile varía según el modelo: Self-serve $15.000-40.000 CLP, Sales-assisted $80.000-200.000 CLP, Enterprise $500.000+. El factor clave es el ratio LTV:CAC que debe ser mayor a 3:1.',
           },
         },
         {
           '@type': 'Question',
-          name: '¿PLG o SLG para mi SaaS?',
+          name: '¿Google Ads o LinkedIn para SaaS B2B?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'Product-Led Growth (PLG) funciona mejor con tickets bajos, productos self-service y usuarios técnicos. Sales-Led Growth (SLG) es mejor para enterprise, tickets altos y productos complejos. La mayoría de SaaS exitosos combinan ambos.',
+            text: 'Depende de tu modelo: Google Ads para capturar demanda activa (búsquedas de solución), LinkedIn para ABM y targeting por cargo/empresa. La combinación ideal es Google para bottom-funnel y LinkedIn para top/mid funnel.',
           },
         },
         {
           '@type': 'Question',
-          name: '¿Cómo aumentar la conversión de trial a paid?',
+          name: '¿Qué métricas de marketing son clave para SaaS?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'La conversión promedio trial-to-paid es 15-25%. Para mejorarla: onboarding optimizado, emails de activación, identificar el \'aha moment\', reducir fricción en upgrade, y targeting de usuarios con fit correcto desde el inicio.',
+            text: 'Las métricas SaaS esenciales son: CAC (Costo de Adquisición), LTV (Lifetime Value), Trial-to-Paid Conversion, MRR de nuevos clientes, Payback Period. El marketing debe trackear contribución a cada una.',
           },
         },
       ],
@@ -78,43 +79,43 @@ export default function MarketingSaaSPage() {
 
       <main className="min-h-screen bg-white">
         {/* Hero */}
-        <section className="bg-gradient-to-br from-purple-900 via-indigo-900 to-blue-900 text-white py-20">
+        <section className="bg-gradient-to-br from-violet-900 via-purple-800 to-indigo-900 text-white py-20">
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto text-center">
               <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur px-4 py-2 rounded-full mb-6">
-                <Cloud className="w-5 h-5 text-purple-400" />
-                <span className="text-sm font-medium">Growth Marketing SaaS</span>
+                <Code2 className="w-5 h-5 text-violet-300" />
+                <span className="text-sm font-medium">Marketing para SaaS</span>
               </div>
 
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
                 Marketing Digital para{' '}
-                <span className="text-purple-400">SaaS</span> en Chile
+                <span className="text-violet-300">SaaS</span> en Chile
               </h1>
 
-              <p className="text-xl text-indigo-200 mb-8 max-w-3xl mx-auto">
-                Reducimos tu CAC, aumentamos trials y optimizamos la conversión a paid.
-                Especialistas en Product-Led Growth y Sales-Led Growth.
+              <p className="text-xl text-purple-200 mb-8 max-w-3xl mx-auto">
+                Generamos trials, demos y usuarios calificados para tu software.
+                Estrategias de growth probadas en startups y scale-ups de tecnología.
               </p>
 
               <div className="flex flex-wrap justify-center gap-4 mb-12">
                 <div className="bg-white/10 backdrop-blur px-6 py-3 rounded-lg">
-                  <div className="text-3xl font-bold text-purple-400">-40%</div>
-                  <div className="text-sm text-indigo-200">Reducción CAC</div>
+                  <div className="text-3xl font-bold text-violet-300">-40%</div>
+                  <div className="text-sm text-purple-200">CAC vs Industria</div>
                 </div>
                 <div className="bg-white/10 backdrop-blur px-6 py-3 rounded-lg">
-                  <div className="text-3xl font-bold text-purple-400">+85%</div>
-                  <div className="text-sm text-indigo-200">Más Trials</div>
+                  <div className="text-3xl font-bold text-violet-300">12%</div>
+                  <div className="text-sm text-purple-200">Trial-to-Paid</div>
                 </div>
                 <div className="bg-white/10 backdrop-blur px-6 py-3 rounded-lg">
-                  <div className="text-3xl font-bold text-purple-400">28%</div>
-                  <div className="text-sm text-indigo-200">Trial-to-Paid</div>
+                  <div className="text-3xl font-bold text-violet-300">4.2x</div>
+                  <div className="text-sm text-purple-200">LTV:CAC Ratio</div>
                 </div>
               </div>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link
                   href="/cotizador"
-                  className="inline-flex items-center justify-center gap-2 bg-purple-500 hover:bg-purple-400 text-white font-bold px-8 py-4 rounded-lg transition-colors"
+                  className="inline-flex items-center justify-center gap-2 bg-violet-500 hover:bg-violet-400 text-white font-bold px-8 py-4 rounded-lg transition-colors"
                 >
                   Cotizar Growth Plan
                   <ArrowRight className="w-5 h-5" />
@@ -123,295 +124,337 @@ export default function MarketingSaaSPage() {
                   href="/labs/predictor"
                   className="inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 text-white font-semibold px-8 py-4 rounded-lg transition-colors"
                 >
-                  Simular CAC/LTV
+                  Simular CAC para mi SaaS
                 </Link>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Métricas SaaS */}
+        {/* Desafíos SaaS */}
         <section className="py-20">
           <div className="container mx-auto px-4">
             <div className="max-w-6xl mx-auto">
               <div className="text-center mb-16">
                 <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                  Hablamos tu Idioma: Métricas SaaS
+                  Entendemos los Desafíos del Marketing SaaS
                 </h2>
                 <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                  No nos enfocamos en vanity metrics. Optimizamos las métricas que importan para tu MRR.
-                </p>
-              </div>
-
-              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div className="bg-gradient-to-br from-purple-50 to-purple-100 p-6 rounded-xl text-center">
-                  <DollarSign className="w-10 h-10 text-purple-600 mx-auto mb-3" />
-                  <div className="text-2xl font-bold text-gray-900 mb-1">CAC</div>
-                  <div className="text-sm text-gray-600">Customer Acquisition Cost</div>
-                  <div className="mt-3 text-purple-600 font-medium">Reducimos en promedio 40%</div>
-                </div>
-
-                <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-xl text-center">
-                  <TrendingUp className="w-10 h-10 text-blue-600 mx-auto mb-3" />
-                  <div className="text-2xl font-bold text-gray-900 mb-1">LTV:CAC</div>
-                  <div className="text-sm text-gray-600">Lifetime Value Ratio</div>
-                  <div className="mt-3 text-blue-600 font-medium">Objetivo mínimo 3:1</div>
-                </div>
-
-                <div className="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-xl text-center">
-                  <Users className="w-10 h-10 text-green-600 mx-auto mb-3" />
-                  <div className="text-2xl font-bold text-gray-900 mb-1">Trial-to-Paid</div>
-                  <div className="text-sm text-gray-600">Conversión a cliente</div>
-                  <div className="mt-3 text-green-600 font-medium">+28% promedio clientes</div>
-                </div>
-
-                <div className="bg-gradient-to-br from-orange-50 to-orange-100 p-6 rounded-xl text-center">
-                  <Rocket className="w-10 h-10 text-orange-600 mx-auto mb-3" />
-                  <div className="text-2xl font-bold text-gray-900 mb-1">Activation</div>
-                  <div className="text-sm text-gray-600">Usuarios que llegan al aha moment</div>
-                  <div className="mt-3 text-orange-600 font-medium">Optimización de onboarding</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* PLG vs SLG */}
-        <section className="py-20 bg-gray-50">
-          <div className="container mx-auto px-4">
-            <div className="max-w-6xl mx-auto">
-              <div className="text-center mb-16">
-                <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                  PLG + SLG: El Modelo Híbrido
-                </h2>
-                <p className="text-xl text-gray-600">
-                  Combinamos Product-Led y Sales-Led Growth según tu producto y mercado
+                  El marketing para software es diferente. Freemiums, trials, onboarding,
+                  churn... necesitas un partner que hable tu idioma.
                 </p>
               </div>
 
               <div className="grid md:grid-cols-2 gap-8">
-                <div className="bg-white p-8 rounded-xl shadow-sm">
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
-                      <Zap className="w-6 h-6 text-purple-600" />
-                    </div>
-                    <h3 className="text-2xl font-bold text-gray-900">Product-Led Growth</h3>
-                  </div>
-                  <p className="text-gray-600 mb-6">
-                    El producto es el principal driver de adquisición, conversión y expansión.
-                  </p>
-                  <div className="space-y-4">
-                    <div className="flex items-start gap-3">
-                      <CheckCircle className="w-5 h-5 text-green-500 mt-0.5" />
-                      <div>
-                        <div className="font-medium text-gray-900">Freemium / Free Trial</div>
-                        <div className="text-sm text-gray-600">Usuarios prueban antes de comprar</div>
-                      </div>
-                    </div>
-                    <div className="flex items-start gap-3">
-                      <CheckCircle className="w-5 h-5 text-green-500 mt-0.5" />
-                      <div>
-                        <div className="font-medium text-gray-900">Self-Service</div>
-                        <div className="text-sm text-gray-600">Onboarding y upgrade sin fricción</div>
-                      </div>
-                    </div>
-                    <div className="flex items-start gap-3">
-                      <CheckCircle className="w-5 h-5 text-green-500 mt-0.5" />
-                      <div>
-                        <div className="font-medium text-gray-900">Viral Loops</div>
-                        <div className="text-sm text-gray-600">El uso genera referidos naturales</div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="mt-6 p-4 bg-purple-50 rounded-lg">
-                    <div className="text-sm font-medium text-purple-800">Ideal para:</div>
-                    <div className="text-sm text-purple-700">Tickets bajos, usuarios técnicos, productos simples</div>
-                  </div>
+                <div className="bg-red-50 border border-red-100 p-6 rounded-xl">
+                  <h3 className="text-lg font-bold text-red-800 mb-4">Problemas Típicos</h3>
+                  <ul className="space-y-3">
+                    <li className="flex items-start gap-3 text-red-700">
+                      <span className="text-red-500 mt-1">✗</span>
+                      Trials que no convierten a paid
+                    </li>
+                    <li className="flex items-start gap-3 text-red-700">
+                      <span className="text-red-500 mt-1">✗</span>
+                      CAC muy alto para el LTV actual
+                    </li>
+                    <li className="flex items-start gap-3 text-red-700">
+                      <span className="text-red-500 mt-1">✗</span>
+                      Agencias que no entienden métricas SaaS
+                    </li>
+                    <li className="flex items-start gap-3 text-red-700">
+                      <span className="text-red-500 mt-1">✗</span>
+                      Leads de baja calidad que no activan
+                    </li>
+                  </ul>
                 </div>
 
-                <div className="bg-white p-8 rounded-xl shadow-sm">
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
-                      <Users className="w-6 h-6 text-blue-600" />
-                    </div>
-                    <h3 className="text-2xl font-bold text-gray-900">Sales-Led Growth</h3>
-                  </div>
-                  <p className="text-gray-600 mb-6">
-                    El equipo de ventas guía al prospecto a través del proceso de compra.
-                  </p>
-                  <div className="space-y-4">
-                    <div className="flex items-start gap-3">
-                      <CheckCircle className="w-5 h-5 text-green-500 mt-0.5" />
-                      <div>
-                        <div className="font-medium text-gray-900">Demo Personalizada</div>
-                        <div className="text-sm text-gray-600">Llamadas de discovery y demo</div>
-                      </div>
-                    </div>
-                    <div className="flex items-start gap-3">
-                      <CheckCircle className="w-5 h-5 text-green-500 mt-0.5" />
-                      <div>
-                        <div className="font-medium text-gray-900">Enterprise Sales</div>
-                        <div className="text-sm text-gray-600">Ciclos largos, múltiples stakeholders</div>
-                      </div>
-                    </div>
-                    <div className="flex items-start gap-3">
-                      <CheckCircle className="w-5 h-5 text-green-500 mt-0.5" />
-                      <div>
-                        <div className="font-medium text-gray-900">Custom Pricing</div>
-                        <div className="text-sm text-gray-600">Negociación y contratos anuales</div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-                    <div className="text-sm font-medium text-blue-800">Ideal para:</div>
-                    <div className="text-sm text-blue-700">Tickets altos, enterprise, productos complejos</div>
-                  </div>
+                <div className="bg-green-50 border border-green-100 p-6 rounded-xl">
+                  <h3 className="text-lg font-bold text-green-800 mb-4">Nuestra Solución</h3>
+                  <ul className="space-y-3">
+                    <li className="flex items-start gap-3 text-green-700">
+                      <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                      Optimización full-funnel: signup → activation → paid
+                    </li>
+                    <li className="flex items-start gap-3 text-green-700">
+                      <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                      Unit economics como norte (LTV:CAC, Payback)
+                    </li>
+                    <li className="flex items-start gap-3 text-green-700">
+                      <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                      Equipo con experiencia en startups tech
+                    </li>
+                    <li className="flex items-start gap-3 text-green-700">
+                      <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                      ICP scoring + intent data para calidad
+                    </li>
+                  </ul>
                 </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Servicios SaaS */}
+        {/* Estrategias SaaS */}
+        <section className="py-20 bg-gray-50">
+          <div className="container mx-auto px-4">
+            <div className="max-w-6xl mx-auto">
+              <div className="text-center mb-16">
+                <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                  Estrategias de Growth para SaaS
+                </h2>
+                <p className="text-xl text-gray-600">
+                  Combinamos paid, content y product marketing para crecimiento sostenible
+                </p>
+              </div>
+
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div className="bg-white p-8 rounded-xl shadow-sm">
+                  <div className="w-14 h-14 bg-violet-100 rounded-xl flex items-center justify-center mb-6">
+                    <Target className="w-7 h-7 text-violet-600" />
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-3">Google Ads para SaaS</h3>
+                  <p className="text-gray-600 mb-4">
+                    Captura de demanda activa con keywords de alta intención.
+                    Estructura por buyer journey y competencia.
+                  </p>
+                  <ul className="space-y-2 text-sm text-gray-600">
+                    <li className="flex items-center gap-2">
+                      <CheckCircle className="w-4 h-4 text-green-500" />
+                      Búsquedas de solución específica
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle className="w-4 h-4 text-green-500" />
+                      Comparativas y alternativas
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle className="w-4 h-4 text-green-500" />
+                      Remarketing por engagement de producto
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="bg-white p-8 rounded-xl shadow-sm">
+                  <div className="w-14 h-14 bg-blue-100 rounded-xl flex items-center justify-center mb-6">
+                    <Users className="w-7 h-7 text-blue-600" />
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-3">LinkedIn para B2B SaaS</h3>
+                  <p className="text-gray-600 mb-4">
+                    ABM y targeting por cargo para llegar a decisores.
+                    Ideal para Enterprise y Mid-Market.
+                  </p>
+                  <ul className="space-y-2 text-sm text-gray-600">
+                    <li className="flex items-center gap-2">
+                      <CheckCircle className="w-4 h-4 text-green-500" />
+                      Segmentación por cargo y empresa
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle className="w-4 h-4 text-green-500" />
+                      Lead Gen Forms nativos
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle className="w-4 h-4 text-green-500" />
+                      Thought leadership ads
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="bg-white p-8 rounded-xl shadow-sm">
+                  <div className="w-14 h-14 bg-green-100 rounded-xl flex items-center justify-center mb-6">
+                    <BarChart3 className="w-7 h-7 text-green-600" />
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-3">Content + SEO</h3>
+                  <p className="text-gray-600 mb-4">
+                    Contenido que rankea y convierte. Blog posts, comparativas,
+                    y recursos que generan pipeline orgánico.
+                  </p>
+                  <ul className="space-y-2 text-sm text-gray-600">
+                    <li className="flex items-center gap-2">
+                      <CheckCircle className="w-4 h-4 text-green-500" />
+                      Artículos bottom-funnel
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle className="w-4 h-4 text-green-500" />
+                      Páginas de comparativa
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle className="w-4 h-4 text-green-500" />
+                      Lead magnets técnicos
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="bg-white p-8 rounded-xl shadow-sm">
+                  <div className="w-14 h-14 bg-orange-100 rounded-xl flex items-center justify-center mb-6">
+                    <Rocket className="w-7 h-7 text-orange-600" />
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-3">Product-Led Growth</h3>
+                  <p className="text-gray-600 mb-4">
+                    Marketing que soporta el modelo PLG. Optimización de
+                    signup, onboarding y activación.
+                  </p>
+                  <ul className="space-y-2 text-sm text-gray-600">
+                    <li className="flex items-center gap-2">
+                      <CheckCircle className="w-4 h-4 text-green-500" />
+                      Optimización de trial flow
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle className="w-4 h-4 text-green-500" />
+                      In-app messaging
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle className="w-4 h-4 text-green-500" />
+                      Upgrade campaigns
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="bg-white p-8 rounded-xl shadow-sm">
+                  <div className="w-14 h-14 bg-red-100 rounded-xl flex items-center justify-center mb-6">
+                    <Zap className="w-7 h-7 text-red-600" />
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-3">Demand Generation</h3>
+                  <p className="text-gray-600 mb-4">
+                    Crear demanda donde no existe. Webinars, eventos virtuales,
+                    y contenido de thought leadership.
+                  </p>
+                  <ul className="space-y-2 text-sm text-gray-600">
+                    <li className="flex items-center gap-2">
+                      <CheckCircle className="w-4 h-4 text-green-500" />
+                      Webinars con partners
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle className="w-4 h-4 text-green-500" />
+                      Contenido educativo
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle className="w-4 h-4 text-green-500" />
+                      Community building
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="bg-white p-8 rounded-xl shadow-sm">
+                  <div className="w-14 h-14 bg-indigo-100 rounded-xl flex items-center justify-center mb-6">
+                    <Globe className="w-7 h-7 text-indigo-600" />
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-3">Expansión Regional</h3>
+                  <p className="text-gray-600 mb-4">
+                    Estrategias para expandir tu SaaS en LATAM desde Chile.
+                    Localización y go-to-market regional.
+                  </p>
+                  <ul className="space-y-2 text-sm text-gray-600">
+                    <li className="flex items-center gap-2">
+                      <CheckCircle className="w-4 h-4 text-green-500" />
+                      Campañas multi-país
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle className="w-4 h-4 text-green-500" />
+                      Localización de contenido
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle className="w-4 h-4 text-green-500" />
+                      Pricing por mercado
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Benchmarks SaaS */}
         <section className="py-20">
           <div className="container mx-auto px-4">
             <div className="max-w-6xl mx-auto">
               <h2 className="text-3xl font-bold text-gray-900 text-center mb-12">
-                Servicios de Growth Marketing para SaaS
+                Benchmarks SaaS Chile 2025
               </h2>
 
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <div className="bg-white border border-gray-200 p-6 rounded-xl hover:shadow-lg transition-shadow">
-                  <h3 className="text-xl font-bold text-gray-900 mb-3">Paid Acquisition</h3>
-                  <p className="text-gray-600 mb-4">
-                    Google Ads y LinkedIn optimizados para signups y demos.
-                    Targeting por intent y job titles.
-                  </p>
-                  <ul className="space-y-2 text-sm text-gray-600">
-                    <li>• Google Search para keywords de solución</li>
-                    <li>• LinkedIn para targeting B2B</li>
-                    <li>• Retargeting de visitantes y trials</li>
-                  </ul>
-                </div>
-
-                <div className="bg-white border border-gray-200 p-6 rounded-xl hover:shadow-lg transition-shadow">
-                  <h3 className="text-xl font-bold text-gray-900 mb-3">Content & SEO</h3>
-                  <p className="text-gray-600 mb-4">
-                    Contenido que atrae tráfico orgánico calificado
-                    y posiciona tu expertise.
-                  </p>
-                  <ul className="space-y-2 text-sm text-gray-600">
-                    <li>• SEO para keywords de problema</li>
-                    <li>• Comparativas vs competencia</li>
-                    <li>• Contenido de thought leadership</li>
-                  </ul>
-                </div>
-
-                <div className="bg-white border border-gray-200 p-6 rounded-xl hover:shadow-lg transition-shadow">
-                  <h3 className="text-xl font-bold text-gray-900 mb-3">Activation & Onboarding</h3>
-                  <p className="text-gray-600 mb-4">
-                    Optimización del onboarding para llevar
-                    usuarios al aha moment más rápido.
-                  </p>
-                  <ul className="space-y-2 text-sm text-gray-600">
-                    <li>• Email sequences de activación</li>
-                    <li>• In-app messaging</li>
-                    <li>• A/B testing de onboarding flows</li>
-                  </ul>
-                </div>
-
-                <div className="bg-white border border-gray-200 p-6 rounded-xl hover:shadow-lg transition-shadow">
-                  <h3 className="text-xl font-bold text-gray-900 mb-3">Conversion Optimization</h3>
-                  <p className="text-gray-600 mb-4">
-                    Mejora de trial-to-paid y expansión de cuentas existentes.
-                  </p>
-                  <ul className="space-y-2 text-sm text-gray-600">
-                    <li>• Optimización de pricing page</li>
-                    <li>• Upgrade prompts inteligentes</li>
-                    <li>• Expansion revenue strategies</li>
-                  </ul>
-                </div>
-
-                <div className="bg-white border border-gray-200 p-6 rounded-xl hover:shadow-lg transition-shadow">
-                  <h3 className="text-xl font-bold text-gray-900 mb-3">Product Marketing</h3>
-                  <p className="text-gray-600 mb-4">
-                    Positioning, messaging y go-to-market
-                    para features y productos.
-                  </p>
-                  <ul className="space-y-2 text-sm text-gray-600">
-                    <li>• Competitive positioning</li>
-                    <li>• Feature launch campaigns</li>
-                    <li>• Sales enablement content</li>
-                  </ul>
-                </div>
-
-                <div className="bg-white border border-gray-200 p-6 rounded-xl hover:shadow-lg transition-shadow">
-                  <h3 className="text-xl font-bold text-gray-900 mb-3">Analytics & Attribution</h3>
-                  <p className="text-gray-600 mb-4">
-                    Tracking completo del funnel desde
-                    first touch hasta revenue.
-                  </p>
-                  <ul className="space-y-2 text-sm text-gray-600">
-                    <li>• Multi-touch attribution</li>
-                    <li>• Cohort analysis</li>
-                    <li>• Revenue por canal y campaña</li>
-                  </ul>
-                </div>
+              <div className="overflow-x-auto">
+                <table className="w-full bg-white rounded-xl shadow-sm">
+                  <thead>
+                    <tr className="bg-violet-50">
+                      <th className="px-6 py-4 text-left font-bold text-gray-900">Modelo SaaS</th>
+                      <th className="px-6 py-4 text-center font-bold text-gray-900">CAC Típico</th>
+                      <th className="px-6 py-4 text-center font-bold text-gray-900">Trial-to-Paid</th>
+                      <th className="px-6 py-4 text-center font-bold text-gray-900">Payback</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-100">
+                    <tr>
+                      <td className="px-6 py-4 font-medium">Self-Serve / PLG</td>
+                      <td className="px-6 py-4 text-center">$15.000 - $40.000</td>
+                      <td className="px-6 py-4 text-center">8-15%</td>
+                      <td className="px-6 py-4 text-center">2-4 meses</td>
+                    </tr>
+                    <tr className="bg-gray-50">
+                      <td className="px-6 py-4 font-medium">SMB Sales-Assisted</td>
+                      <td className="px-6 py-4 text-center">$80.000 - $200.000</td>
+                      <td className="px-6 py-4 text-center">15-25%</td>
+                      <td className="px-6 py-4 text-center">4-8 meses</td>
+                    </tr>
+                    <tr>
+                      <td className="px-6 py-4 font-medium">Mid-Market</td>
+                      <td className="px-6 py-4 text-center">$300.000 - $800.000</td>
+                      <td className="px-6 py-4 text-center">20-35%</td>
+                      <td className="px-6 py-4 text-center">8-14 meses</td>
+                    </tr>
+                    <tr className="bg-gray-50">
+                      <td className="px-6 py-4 font-medium">Enterprise</td>
+                      <td className="px-6 py-4 text-center">$1.000.000+</td>
+                      <td className="px-6 py-4 text-center">25-40%</td>
+                      <td className="px-6 py-4 text-center">12-18 meses</td>
+                    </tr>
+                    <tr className="bg-violet-50 font-bold">
+                      <td className="px-6 py-4">M&P Promedio</td>
+                      <td className="px-6 py-4 text-center text-violet-600">-40% vs benchmark</td>
+                      <td className="px-6 py-4 text-center text-violet-600">+3pp vs benchmark</td>
+                      <td className="px-6 py-4 text-center text-violet-600">-25% vs industria</td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Benchmarks */}
-        <section className="py-20 bg-gray-50">
+        {/* Métricas que Importan */}
+        <section className="py-20 bg-violet-900 text-white">
           <div className="container mx-auto px-4">
-            <div className="max-w-4xl mx-auto">
-              <h2 className="text-3xl font-bold text-gray-900 text-center mb-12">
-                Benchmarks SaaS Chile/LATAM 2025
+            <div className="max-w-6xl mx-auto">
+              <h2 className="text-3xl font-bold text-center mb-12">
+                Las Métricas que Importan en SaaS
               </h2>
 
-              <div className="bg-white rounded-xl shadow-sm overflow-hidden">
-                <table className="w-full">
-                  <thead>
-                    <tr className="bg-purple-100">
-                      <th className="px-6 py-4 text-left font-bold text-gray-900">Métrica</th>
-                      <th className="px-6 py-4 text-center font-bold text-gray-900">Promedio</th>
-                      <th className="px-6 py-4 text-center font-bold text-gray-900">Top 25%</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-100">
-                    <tr>
-                      <td className="px-6 py-4 font-medium">CAC B2B SaaS</td>
-                      <td className="px-6 py-4 text-center">$120.000 CLP</td>
-                      <td className="px-6 py-4 text-center text-green-600 font-medium">$65.000 CLP</td>
-                    </tr>
-                    <tr className="bg-gray-50">
-                      <td className="px-6 py-4 font-medium">CAC SMB SaaS</td>
-                      <td className="px-6 py-4 text-center">$35.000 CLP</td>
-                      <td className="px-6 py-4 text-center text-green-600 font-medium">$18.000 CLP</td>
-                    </tr>
-                    <tr>
-                      <td className="px-6 py-4 font-medium">Trial-to-Paid</td>
-                      <td className="px-6 py-4 text-center">15%</td>
-                      <td className="px-6 py-4 text-center text-green-600 font-medium">25%+</td>
-                    </tr>
-                    <tr className="bg-gray-50">
-                      <td className="px-6 py-4 font-medium">Free-to-Paid (Freemium)</td>
-                      <td className="px-6 py-4 text-center">3%</td>
-                      <td className="px-6 py-4 text-center text-green-600 font-medium">5%+</td>
-                    </tr>
-                    <tr>
-                      <td className="px-6 py-4 font-medium">LTV:CAC Ratio</td>
-                      <td className="px-6 py-4 text-center">2.5:1</td>
-                      <td className="px-6 py-4 text-center text-green-600 font-medium">4:1+</td>
-                    </tr>
-                    <tr className="bg-gray-50">
-                      <td className="px-6 py-4 font-medium">Payback Period</td>
-                      <td className="px-6 py-4 text-center">18 meses</td>
-                      <td className="px-6 py-4 text-center text-green-600 font-medium">&lt;12 meses</td>
-                    </tr>
-                  </tbody>
-                </table>
+              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="bg-white/10 backdrop-blur p-6 rounded-xl">
+                  <h3 className="text-lg font-bold text-violet-300 mb-2">CAC</h3>
+                  <p className="text-purple-200 text-sm">
+                    Costo de Adquisición de Cliente. Incluye marketing + ventas.
+                    Debe ser recuperable en menos de 12 meses.
+                  </p>
+                </div>
+                <div className="bg-white/10 backdrop-blur p-6 rounded-xl">
+                  <h3 className="text-lg font-bold text-violet-300 mb-2">LTV:CAC</h3>
+                  <p className="text-purple-200 text-sm">
+                    Ratio entre valor de vida y costo de adquisición.
+                    Saludable: mayor a 3:1. Ideal: mayor a 5:1.
+                  </p>
+                </div>
+                <div className="bg-white/10 backdrop-blur p-6 rounded-xl">
+                  <h3 className="text-lg font-bold text-violet-300 mb-2">Trial-to-Paid</h3>
+                  <p className="text-purple-200 text-sm">
+                    % de trials que convierten a clientes pagos.
+                    Benchmark: 8-15% self-serve, 20-35% sales-assisted.
+                  </p>
+                </div>
+                <div className="bg-white/10 backdrop-blur p-6 rounded-xl">
+                  <h3 className="text-lg font-bold text-violet-300 mb-2">MRR de Marketing</h3>
+                  <p className="text-purple-200 text-sm">
+                    Revenue mensual atribuible a marketing.
+                    Clave para medir ROI real de campañas.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -426,128 +469,104 @@ export default function MarketingSaaSPage() {
               </h2>
 
               <div className="space-y-6">
-                <div className="bg-gray-50 p-6 rounded-xl">
+                <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
                   <h3 className="text-lg font-bold text-gray-900 mb-3">
-                    ¿Cuál es un buen CAC para SaaS en Chile?
+                    ¿Cuánto cuesta adquirir un usuario SaaS en Chile?
                   </h3>
                   <p className="text-gray-600">
-                    Depende de tu LTV. La regla es <strong>CAC:LTV de 1:3 o mejor</strong>. Para SaaS B2B en Chile,
-                    el CAC promedio es $80.000-150.000 CLP. Para SaaS B2C/SMB, $15.000-40.000 CLP.
-                    El payback period ideal es menor a 12 meses.
+                    El CAC varía según el modelo: <strong>Self-serve $15.000-40.000</strong>,
+                    SMB sales-assisted $80.000-200.000, Enterprise $1.000.000+.
+                    Lo importante es que el <strong>LTV:CAC sea mayor a 3:1</strong>.
                   </p>
                 </div>
 
-                <div className="bg-gray-50 p-6 rounded-xl">
+                <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
                   <h3 className="text-lg font-bold text-gray-900 mb-3">
-                    ¿PLG o SLG para mi SaaS?
+                    ¿Google Ads o LinkedIn para SaaS B2B?
                   </h3>
                   <p className="text-gray-600">
-                    <strong>PLG</strong> funciona mejor con tickets bajos (&lt;$50 USD/mes), productos self-service
-                    y usuarios técnicos. <strong>SLG</strong> es mejor para enterprise, tickets altos y productos
-                    complejos. La mayoría de SaaS exitosos combinan ambos modelos.
+                    <strong>Ambos son complementarios:</strong> Google para capturar demanda activa
+                    (personas buscando solución), LinkedIn para ABM y crear demanda en cuentas específicas.
+                    El mix depende de tu ACV y ciclo de venta.
                   </p>
                 </div>
 
-                <div className="bg-gray-50 p-6 rounded-xl">
+                <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
                   <h3 className="text-lg font-bold text-gray-900 mb-3">
-                    ¿Cómo aumentar la conversión de trial a paid?
+                    ¿Qué es Product-Led Growth y cómo se complementa con marketing?
                   </h3>
                   <p className="text-gray-600">
-                    La conversión promedio trial-to-paid es 15-25%. Para mejorarla: <strong>onboarding optimizado</strong>,
-                    emails de activación, identificar el &apos;aha moment&apos;, reducir fricción en upgrade,
-                    y targeting de usuarios con fit correcto desde el inicio.
+                    PLG usa el producto como canal principal de adquisición (freemium, trials).
+                    El marketing en PLG se enfoca en <strong>generar signups calificados y optimizar
+                    activación</strong>, no solo leads.
                   </p>
                 </div>
 
-                <div className="bg-gray-50 p-6 rounded-xl">
+                <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
                   <h3 className="text-lg font-bold text-gray-900 mb-3">
-                    ¿En qué canales debería invertir primero?
+                    ¿Cómo miden el éxito en campañas SaaS?
                   </h3>
                   <p className="text-gray-600">
-                    Para SaaS B2B: <strong>Google Search (bottom funnel) + LinkedIn (targeting)</strong>.
-                    Para SaaS SMB: Google Search + Content/SEO. El SEO es fundamental para SaaS por
-                    el efecto compuesto a largo plazo.
+                    No solo leads. Medimos: <strong>Signups calificados, tasa de activación,
+                    trial-to-paid, CAC por canal, MRR atribuible a marketing</strong>, y payback period.
+                    Integramos con tu stack (Segment, Amplitude, etc.).
                   </p>
                 </div>
               </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Servicios Relacionados */}
-        <section className="py-16 bg-white">
-          <div className="container mx-auto px-4 max-w-5xl">
-            <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">Servicios para SaaS</h2>
-            <div className="grid md:grid-cols-3 gap-6">
-              <Link href="/servicios/google-ads-chile" className="group block bg-gray-50 hover:bg-purple-50 rounded-xl p-6 transition-all border border-gray-100">
-                <h3 className="font-bold text-gray-900 group-hover:text-purple-600 transition-colors mb-2">Google Ads para SaaS</h3>
-                <p className="text-gray-600 text-sm mb-3">Captura demanda de usuarios buscando soluciones como la tuya</p>
-                <span className="inline-flex items-center gap-1 text-sm text-purple-600 font-medium">Ver servicio <ArrowRight className="w-4 h-4" /></span>
-              </Link>
-              <Link href="/servicios/meta-ads-chile" className="group block bg-gray-50 hover:bg-purple-50 rounded-xl p-6 transition-all border border-gray-100">
-                <h3 className="font-bold text-gray-900 group-hover:text-purple-600 transition-colors mb-2">Meta Ads para SaaS</h3>
-                <p className="text-gray-600 text-sm mb-3">Awareness, trials y remarketing para activation</p>
-                <span className="inline-flex items-center gap-1 text-sm text-purple-600 font-medium">Ver servicio <ArrowRight className="w-4 h-4" /></span>
-              </Link>
-              <Link href="/servicios/performance-marketing" className="group block bg-gray-50 hover:bg-purple-50 rounded-xl p-6 transition-all border border-gray-100">
-                <h3 className="font-bold text-gray-900 group-hover:text-purple-600 transition-colors mb-2">Growth Marketing</h3>
-                <p className="text-gray-600 text-sm mb-3">Estrategia integral enfocada en CAC, LTV y unit economics</p>
-                <span className="inline-flex items-center gap-1 text-sm text-purple-600 font-medium">Ver servicio <ArrowRight className="w-4 h-4" /></span>
-              </Link>
-            </div>
-          </div>
-        </section>
-
-        {/* Blog Posts Relacionados */}
-        <section className="py-16 bg-gray-50">
-          <div className="container mx-auto px-4 max-w-5xl">
-            <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">Artículos sobre Marketing SaaS</h2>
-            <div className="grid md:grid-cols-3 gap-6">
-              <Link href="/blog/marketing-saas-agencia-marketing-digital-chile-2025" className="group block bg-white hover:bg-purple-50 rounded-xl p-6 transition-all shadow-sm">
-                <span className="inline-block px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-semibold mb-3">SaaS</span>
-                <h3 className="font-bold text-gray-900 group-hover:text-purple-600 transition-colors mb-2">Marketing SaaS en Chile 2025</h3>
-                <span className="inline-flex items-center gap-1 text-sm text-purple-600 font-medium">Leer más <ArrowRight className="w-4 h-4" /></span>
-              </Link>
-              <Link href="/blog/inbound-marketing-agencia-marketing-digital-chile-2025" className="group block bg-white hover:bg-purple-50 rounded-xl p-6 transition-all shadow-sm">
-                <span className="inline-block px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-semibold mb-3">Inbound</span>
-                <h3 className="font-bold text-gray-900 group-hover:text-purple-600 transition-colors mb-2">Inbound Marketing para SaaS</h3>
-                <span className="inline-flex items-center gap-1 text-sm text-purple-600 font-medium">Leer más <ArrowRight className="w-4 h-4" /></span>
-              </Link>
-              <Link href="/blog/que-es-cac-como-calcularlo-reducirlo" className="group block bg-white hover:bg-purple-50 rounded-xl p-6 transition-all shadow-sm">
-                <span className="inline-block px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-semibold mb-3">Métricas</span>
-                <h3 className="font-bold text-gray-900 group-hover:text-purple-600 transition-colors mb-2">CAC y LTV: Optimización SaaS</h3>
-                <span className="inline-flex items-center gap-1 text-sm text-purple-600 font-medium">Leer más <ArrowRight className="w-4 h-4" /></span>
-              </Link>
             </div>
           </div>
         </section>
 
         {/* CTA */}
-        <section className="py-20 bg-gradient-to-br from-purple-900 to-indigo-900 text-white">
+        <section className="py-20 bg-gradient-to-br from-violet-900 to-indigo-900 text-white">
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto text-center">
               <h2 className="text-3xl md:text-4xl font-bold mb-6">
                 ¿Listo para Escalar tu SaaS?
               </h2>
-              <p className="text-xl text-indigo-200 mb-8">
-                Agenda una sesión de growth strategy. Analizamos tu funnel,
-                métricas actuales y oportunidades de mejora.
+              <p className="text-xl text-purple-200 mb-8">
+                Agenda una sesión de growth. Analizamos tus unit economics
+                y diseñamos un plan de adquisición rentable.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link
                   href="/cotizador"
-                  className="inline-flex items-center justify-center gap-2 bg-purple-500 hover:bg-purple-400 text-white font-bold px-8 py-4 rounded-lg transition-colors"
+                  className="inline-flex items-center justify-center gap-2 bg-violet-500 hover:bg-violet-400 text-white font-bold px-8 py-4 rounded-lg transition-colors"
                 >
-                  Solicitar Growth Audit
+                  Solicitar Growth Plan
                   <ArrowRight className="w-5 h-5" />
                 </Link>
                 <Link
-                  href="/utilidades/calculadora-cac"
+                  href="/labs/predictor"
                   className="inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 text-white font-semibold px-8 py-4 rounded-lg transition-colors"
                 >
-                  Calcular mi CAC/LTV
+                  Simular CAC en Predictor
                 </Link>
               </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Links internos */}
+        <section className="py-16 bg-gray-50">
+          <div className="container mx-auto px-4 max-w-5xl">
+            <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">Recursos para SaaS</h2>
+            <div className="grid md:grid-cols-3 gap-6">
+              <Link href="/marketing-digital-b2b-chile" className="group block bg-white hover:bg-violet-50 rounded-xl p-6 transition-all border border-gray-100">
+                <h3 className="font-bold text-gray-900 group-hover:text-violet-600 transition-colors mb-2">Marketing B2B Chile</h3>
+                <p className="text-gray-600 text-sm mb-3">Estrategias generales para empresas B2B</p>
+                <span className="inline-flex items-center gap-1 text-sm text-violet-600 font-medium">Ver más <ArrowRight className="w-4 h-4" /></span>
+              </Link>
+              <Link href="/labs/predictor" className="group block bg-white hover:bg-violet-50 rounded-xl p-6 transition-all border border-gray-100">
+                <h3 className="font-bold text-gray-900 group-hover:text-violet-600 transition-colors mb-2">Predictor de Marketing</h3>
+                <p className="text-gray-600 text-sm mb-3">Simula CAC y ROI para tu SaaS</p>
+                <span className="inline-flex items-center gap-1 text-sm text-violet-600 font-medium">Usar herramienta <ArrowRight className="w-4 h-4" /></span>
+              </Link>
+              <Link href="/marketing-digital-fintech-chile" className="group block bg-white hover:bg-violet-50 rounded-xl p-6 transition-all border border-gray-100">
+                <h3 className="font-bold text-gray-900 group-hover:text-violet-600 transition-colors mb-2">Marketing Fintech</h3>
+                <p className="text-gray-600 text-sm mb-3">Estrategias para fintech y servicios financieros</p>
+                <span className="inline-flex items-center gap-1 text-sm text-violet-600 font-medium">Ver más <ArrowRight className="w-4 h-4" /></span>
+              </Link>
             </div>
           </div>
         </section>
