@@ -112,16 +112,16 @@ export default function AgenciaMarketingDigitalVinaDelMarPage() {
 
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link
-                  href="/#contact"
+                  href="/cotizador"
                   className="px-8 py-4 bg-cyan-500 text-white rounded-lg hover:bg-cyan-600 transition font-semibold shadow-lg text-center"
                 >
-                  Solicitar Cotización
+                  Solicitar Propuesta Gratis
                 </Link>
                 <Link
-                  href="/servicios"
+                  href="/labs/predictor"
                   className="px-8 py-4 bg-white/10 backdrop-blur border border-white/20 text-white rounded-lg hover:bg-white/20 transition font-semibold text-center"
                 >
-                  Ver Servicios
+                  Simular ROI
                 </Link>
               </div>
             </div>
@@ -375,16 +375,16 @@ export default function AgenciaMarketingDigitalVinaDelMarPage() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
-                href="/#contact"
+                href="/cotizador"
                 className="inline-block px-8 py-4 bg-white text-blue-600 rounded-lg hover:bg-gray-100 transition font-semibold text-lg shadow-lg"
               >
-                Solicitar Cotización
+                Solicitar Propuesta Gratis
               </Link>
               <Link
-                href="/agencia-marketing-digital-chile"
+                href="/labs/predictor"
                 className="inline-block px-8 py-4 bg-white/10 backdrop-blur border border-white/20 text-white rounded-lg hover:bg-white/20 transition font-semibold text-lg"
               >
-                Ver Más Sobre M&P
+                Simular ROI en V Región
               </Link>
             </div>
           </div>

@@ -28,6 +28,16 @@ const jsonLd = {
       url: 'https://www.mulleryperez.cl/marketing-digital-inmobiliario-chile',
       name: 'Marketing Digital Inmobiliario en Chile',
       description: 'Agencia especializada en marketing digital para el sector inmobiliario en Chile.',
+      isPartOf: { '@id': 'https://www.mulleryperez.cl/#website' },
+    },
+    {
+      '@type': 'BreadcrumbList',
+      '@id': 'https://www.mulleryperez.cl/marketing-digital-inmobiliario-chile#breadcrumb',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, item: { '@id': 'https://www.mulleryperez.cl/', name: 'Inicio' } },
+        { '@type': 'ListItem', position: 2, item: { '@id': 'https://www.mulleryperez.cl/industrias', name: 'Industrias' } },
+        { '@type': 'ListItem', position: 3, item: { name: 'Marketing Digital Inmobiliario' } },
+      ],
     },
     {
       '@type': 'Service',
@@ -511,6 +521,30 @@ export default function MarketingInmobiliarioPage() {
                 <span className="inline-block px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-semibold mb-3">Retargeting</span>
                 <h3 className="font-bold text-gray-900 group-hover:text-emerald-600 transition-colors mb-2">Retargeting para Inmobiliarias</h3>
                 <span className="inline-flex items-center gap-1 text-sm text-emerald-600 font-medium">Leer más <ArrowRight className="w-4 h-4" /></span>
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* Industrias Relacionadas */}
+        <section className="py-16 bg-white">
+          <div className="container mx-auto px-4 max-w-5xl">
+            <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">Industrias Relacionadas</h2>
+            <div className="grid md:grid-cols-3 gap-6">
+              <Link href="/marketing-digital-servicios-profesionales-chile" className="group block bg-cyan-50 hover:bg-cyan-100 rounded-xl p-6 transition-all border border-cyan-100">
+                <h3 className="font-bold text-gray-900 group-hover:text-cyan-600 transition-colors mb-2">Servicios Profesionales</h3>
+                <p className="text-gray-600 text-sm mb-3">Arquitectos, ingenieros y tasadores que trabajan con inmobiliarias</p>
+                <span className="inline-flex items-center gap-1 text-sm text-cyan-600 font-medium">Ver industria <ArrowRight className="w-4 h-4" /></span>
+              </Link>
+              <Link href="/marketing-digital-b2b-chile" className="group block bg-slate-50 hover:bg-slate-100 rounded-xl p-6 transition-all border border-slate-100">
+                <h3 className="font-bold text-gray-900 group-hover:text-slate-600 transition-colors mb-2">B2B / Empresas</h3>
+                <p className="text-gray-600 text-sm mb-3">Constructoras, desarrolladoras y proveedores del sector</p>
+                <span className="inline-flex items-center gap-1 text-sm text-slate-600 font-medium">Ver industria <ArrowRight className="w-4 h-4" /></span>
+              </Link>
+              <Link href="/marketing-digital-fintech-chile" className="group block bg-teal-50 hover:bg-teal-100 rounded-xl p-6 transition-all border border-teal-100">
+                <h3 className="font-bold text-gray-900 group-hover:text-teal-600 transition-colors mb-2">Fintech</h3>
+                <p className="text-gray-600 text-sm mb-3">Créditos hipotecarios digitales y financiamiento inmobiliario</p>
+                <span className="inline-flex items-center gap-1 text-sm text-teal-600 font-medium">Ver industria <ArrowRight className="w-4 h-4" /></span>
               </Link>
             </div>
           </div>

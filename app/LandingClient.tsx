@@ -2367,10 +2367,10 @@ export default function LandingClient() {
             </div>
           </div>
 
-          {/* Clientes - Se activará cuando tengamos los logos en /public/clientes/ */}
-          {/* <div className="mb-20">
+          {/* Clientes */}
+          <div className="mb-20">
             <ClientLogosGrid />
-          </div> */}
+          </div>
 
           {/* Industrias - 10 con colores vivos */}
           <div className="text-center">

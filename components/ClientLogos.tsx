@@ -1,60 +1,50 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
+import Image from 'next/image'
 
-// Lista de 48 clientes del PDF comercial M&P 2026
+// Lista de clientes con logos reales - optimizados para SEO
 const clients = [
-  // Fila 1
-  { name: 'DEZAR', industry: 'Automotriz' },
-  { name: 'Antartic', industry: 'Refrigeración' },
-  { name: 'Le Harriot', industry: 'Hotelería' },
-  { name: 'IMESTRE', industry: 'Construcción' },
-  { name: 'ADIMAC', industry: 'Maquinaria' },
-  { name: "O'HIGGINS", industry: 'Herramientas' },
-  { name: 'WOO Earplugs', industry: 'Productos' },
-  // Fila 2
-  { name: 'qiiip', industry: 'Tecnología' },
-  { name: 'BOMBAS BRAUN', industry: 'Industrial' },
-  { name: 'eLock', industry: 'Seguridad' },
-  { name: 'RIOCLARO', industry: 'Minería' },
-  { name: 'QUALIS', industry: 'Calidad' },
-  { name: 'SAFETECK', industry: 'Seguridad' },
-  // Fila 3
-  { name: 'Genera', industry: 'SaaS' },
-  { name: 'GRANAROLO', industry: 'Alimentos' },
-  { name: 'Fundación Proacogida', industry: 'ONG' },
-  { name: 'DEKASA', industry: 'Retail' },
-  { name: 'ELITSOFT', industry: 'Software' },
-  { name: 'VIP Parking', industry: 'Servicios' },
-  { name: 'Holdo', industry: 'Fintech' },
-  // Fila 4
-  { name: 'Corregal', industry: 'Deportes' },
-  { name: 'PHERSU', industry: 'Seguros' },
-  { name: 'Grupo BT', industry: 'Tecnología' },
-  { name: 'CHECK', industry: 'Fintech' },
-  { name: 'INVAS', industry: 'Logística' },
-  { name: 'ROCCA', industry: 'Construcción' },
-  { name: 'Klapp', industry: 'Educación' },
-  // Fila 5
-  { name: 'FIRST PACK', industry: 'Logística' },
-  { name: 'BESTON', industry: 'Muebles' },
-  { name: 'Power Energy', industry: 'Iluminación' },
-  { name: 'PlusRRHH', industry: 'RRHH' },
-  { name: 'ZERO', industry: 'Tecnología' },
-  { name: 'Hualpen', industry: 'Transporte' },
-  { name: 'INGEWATER', industry: 'Ingeniería' },
-  // Fila 6
-  { name: 'LIMCHILE', industry: 'Limpieza' },
-  { name: 'Sistemáticos', industry: 'Tecnología' },
-  { name: 'Evalc', industry: 'Electromovilidad' },
-  { name: 'REES', industry: 'Automotriz' },
-  { name: 'Medical VIP', industry: 'Salud' },
-  { name: 'Cousiño', industry: 'Vinos' },
-  // Adicionales vistos en otras páginas del PDF
-  { name: 'López Mateo', industry: 'Clínica Dental' },
-  { name: 'GN Motors', industry: 'Automotriz' },
-  { name: 'Stocks.cl', industry: 'Inmobiliaria' },
-  { name: 'Ebox Fulfillment', industry: 'Logística' },
+  { name: 'DEZAR', logo: '/clientes/dezar.png', industry: 'Rent a Car' },
+  { name: 'Antartic', logo: '/clientes/antartic.png', industry: 'Refrigeración' },
+  { name: 'Charriot', logo: '/clientes/charriot.png', industry: 'Hotelería' },
+  { name: 'IMESTRE', logo: '/clientes/imestre.png', industry: 'Construcción' },
+  { name: 'ADIMAC', logo: '/clientes/adimac.png', industry: 'Maquinaria' },
+  { name: "O'Higgins", logo: '/clientes/ohiggins.png', industry: 'Herramientas' },
+  { name: 'qiiip', logo: '/clientes/qiiip.png', industry: 'Tecnología' },
+  { name: 'Bombas Braun', logo: '/clientes/bombas-braun.png', industry: 'Industrial' },
+  { name: 'eLock', logo: '/clientes/elock.png', industry: 'Seguridad' },
+  { name: 'QUALIS', logo: '/clientes/qualis.png', industry: 'Calidad' },
+  { name: 'SAFETECK', logo: '/clientes/safeteck.png', industry: 'Seguridad' },
+  { name: 'GRANAROLO', logo: '/clientes/granarolo.png', industry: 'Alimentos' },
+  { name: 'Fundación Proacogida', logo: '/clientes/fundacion.png', industry: 'ONG' },
+  { name: 'DEKASA', logo: '/clientes/dekasa.png', industry: 'Retail' },
+  { name: 'ELITSOFT', logo: '/clientes/elitsoft.png', industry: 'Software' },
+  { name: 'Holdo', logo: '/clientes/holdo.png', industry: 'Fintech' },
+  { name: 'PHERSU', logo: '/clientes/phersu.png', industry: 'Seguros' },
+  { name: 'CHECK', logo: '/clientes/check.png', industry: 'Fintech' },
+  { name: 'INVAS', logo: '/clientes/invas.png', industry: 'Logística' },
+  { name: 'ROCCA', logo: '/clientes/rocca.png', industry: 'Construcción' },
+  { name: 'Klapp', logo: '/clientes/klapp.png', industry: 'Educación' },
+  { name: 'First Pack', logo: '/clientes/firstpack.png', industry: 'Logística' },
+  { name: 'BESTON', logo: '/clientes/beston.png', industry: 'Muebles' },
+  { name: 'Power Energy', logo: '/clientes/power-energy.png', industry: 'Iluminación' },
+  { name: 'Plus RRHH', logo: '/clientes/plus-rrhh.png', industry: 'RRHH' },
+  { name: 'Zero Water', logo: '/clientes/zerowater.png', industry: 'Tecnología' },
+  { name: 'LIM Chile', logo: '/clientes/lim.png', industry: 'Limpieza' },
+  { name: 'Sistemáticos', logo: '/clientes/sistematicos.png', industry: 'Tecnología' },
+  { name: 'Evalc', logo: '/clientes/evalc.png', industry: 'Electromovilidad' },
+  { name: 'REES', logo: '/clientes/rees.png', industry: 'Automotriz' },
+  { name: 'Praxis', logo: '/clientes/praxis.png', industry: 'Educación' },
+  { name: 'Pellet', logo: '/clientes/pellet.png', industry: 'Energía' },
+  { name: 'Forestal', logo: '/clientes/forestal.png', industry: 'Forestal' },
+  { name: 'Cleaning Pro', logo: '/clientes/cleaning.png', industry: 'Limpieza' },
+  { name: 'Bodevir', logo: '/clientes/bodevir.png', industry: 'Vinos' },
+  { name: 'El Boletín', logo: '/clientes/boletin.png', industry: 'Medios' },
+  { name: 'Ingefire', logo: '/clientes/ingefire.png', industry: 'Seguridad' },
+  { name: 'Intranet Corp', logo: '/clientes/intranet-corporativa.png', industry: 'Software' },
+  { name: 'LB Consulting', logo: '/clientes/lb.png', industry: 'Consultoría' },
+  { name: 'Cobreloa', logo: '/clientes/cobreloa.png', industry: 'Deportes' },
 ]
 
 export default function ClientLogos() {
@@ -82,87 +72,89 @@ export default function ClientLogos() {
     return () => cancelAnimationFrame(animationId)
   }, [])
 
-  // Duplicar para efecto infinito
   const duplicatedClients = [...clients, ...clients]
 
   return (
-    <div className="w-full overflow-hidden py-8">
+    <div className="w-full overflow-hidden py-8 relative">
       <div className="text-center mb-8">
         <p className="text-sm font-bold text-gray-500 uppercase tracking-wider">
-          +45 empresas confían en nosotros
+          +40 empresas confían en nosotros
         </p>
       </div>
 
       <div
         ref={scrollRef}
-        className="flex gap-8 overflow-hidden whitespace-nowrap"
+        className="flex gap-6 overflow-hidden whitespace-nowrap"
         style={{ scrollBehavior: 'auto' }}
       >
         {duplicatedClients.map((client, index) => (
           <div
             key={`${client.name}-${index}`}
-            className="flex-shrink-0 px-6 py-4 bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow group"
+            className="flex-shrink-0 w-32 h-20 bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow flex items-center justify-center p-3"
           >
-            <div className="flex items-center gap-3">
-              {/* Placeholder logo - círculo con inicial */}
-              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-lg">
-                {client.name.charAt(0)}
-              </div>
-              <div>
-                <span className="text-gray-800 font-semibold text-sm block">
-                  {client.name}
-                </span>
-                <span className="text-gray-400 text-xs">
-                  {client.industry}
-                </span>
-              </div>
-            </div>
+            <Image
+              src={client.logo}
+              alt={`Logo ${client.name} - Cliente M&P`}
+              width={100}
+              height={60}
+              loading="lazy"
+              className="object-contain max-h-14 w-auto grayscale hover:grayscale-0 transition-all duration-300"
+            />
           </div>
         ))}
       </div>
 
-      {/* Gradientes de fade en los bordes */}
       <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-white to-transparent z-10" />
       <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-white to-transparent z-10" />
     </div>
   )
 }
 
-// Versión estática en grid para secciones que no necesitan animación
+// Versión estática en grid - optimizada para SEO y PageSpeed
 export function ClientLogosGrid() {
   return (
-    <div className="w-full py-8">
-      <div className="text-center mb-10">
-        <h3 className="text-2xl font-bold text-gray-900 mb-2">
-          Clientes que Respaldan Nuestro Trabajo
-        </h3>
-        <p className="text-gray-600">
-          +45 empresas de distintas industrias confían en M&P
+    <section
+      className="py-16 px-6 bg-gray-50 border-t border-gray-100"
+      aria-label="Clientes de Muller y Pérez"
+    >
+      <div className="max-w-7xl mx-auto">
+        <header className="text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            Han Confiado en Nosotros
+          </h2>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            Más de 40 empresas de diferentes industrias han elegido M&P para potenciar su marketing digital
+          </p>
+        </header>
+
+        <ul
+          className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8 gap-4 list-none p-0"
+          role="list"
+          aria-label="Logos de clientes"
+        >
+          {clients.map((client) => (
+            <li
+              key={client.name}
+              className="flex items-center justify-center p-4 bg-white rounded-xl border border-gray-200 hover:border-blue-300 hover:shadow-lg transition-all duration-300 aspect-square"
+              title={`${client.name} - ${client.industry}`}
+            >
+              <Image
+                src={client.logo}
+                alt={`Logo de ${client.name}, cliente de Muller y Pérez en ${client.industry}`}
+                width={80}
+                height={80}
+                loading="lazy"
+                sizes="(max-width: 640px) 80px, (max-width: 768px) 70px, 80px"
+                className="object-contain max-h-16 w-auto grayscale hover:grayscale-0 transition-all duration-300"
+              />
+            </li>
+          ))}
+        </ul>
+
+        <p className="text-center mt-10 text-gray-500">
+          Y sumamos nuevos clientes cada mes
         </p>
       </div>
-
-      <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-4">
-        {clients.slice(0, 40).map((client) => (
-          <div
-            key={client.name}
-            className="flex flex-col items-center justify-center p-4 bg-white rounded-xl border border-gray-100 hover:border-blue-200 hover:shadow-md transition-all group"
-          >
-            {/* Placeholder logo */}
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-gray-100 to-gray-200 group-hover:from-blue-50 group-hover:to-purple-50 flex items-center justify-center text-gray-600 group-hover:text-blue-600 font-bold text-xl mb-2 transition-colors">
-              {client.name.charAt(0)}
-            </div>
-            <span className="text-gray-700 font-medium text-xs text-center leading-tight">
-              {client.name}
-            </span>
-          </div>
-        ))}
-      </div>
-
-      <div className="text-center mt-8">
-        <p className="text-sm text-gray-500">
-          Y más de 5 nuevos clientes cada mes
-        </p>
-      </div>
-    </div>
+    </section>
   )
 }

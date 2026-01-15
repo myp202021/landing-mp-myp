@@ -31,6 +31,15 @@ const jsonLd = {
       isPartOf: { '@id': 'https://www.mulleryperez.cl/#website' },
     },
     {
+      '@type': 'BreadcrumbList',
+      '@id': 'https://www.mulleryperez.cl/marketing-digital-b2b-chile#breadcrumb',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, item: { '@id': 'https://www.mulleryperez.cl/', name: 'Inicio' } },
+        { '@type': 'ListItem', position: 2, item: { '@id': 'https://www.mulleryperez.cl/industrias', name: 'Industrias' } },
+        { '@type': 'ListItem', position: 3, item: { name: 'Marketing Digital B2B' } },
+      ],
+    },
+    {
       '@type': 'Service',
       name: 'Marketing Digital B2B',
       description: 'Servicio de marketing digital especializado para empresas B2B',
@@ -515,6 +524,30 @@ export default function MarketingB2BPage() {
                 <span className="inline-block px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-semibold mb-3">Métricas</span>
                 <h3 className="font-bold text-gray-900 group-hover:text-blue-600 transition-colors mb-2">Qué es CAC y Cómo Reducirlo</h3>
                 <span className="inline-flex items-center gap-1 text-sm text-blue-600 font-medium">Leer más <ArrowRight className="w-4 h-4" /></span>
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* Industrias B2B Relacionadas */}
+        <section className="py-16 bg-white">
+          <div className="container mx-auto px-4 max-w-5xl">
+            <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">Industrias B2B Relacionadas</h2>
+            <div className="grid md:grid-cols-3 gap-6">
+              <Link href="/marketing-digital-saas-chile" className="group block bg-purple-50 hover:bg-purple-100 rounded-xl p-6 transition-all border border-purple-100">
+                <h3 className="font-bold text-gray-900 group-hover:text-purple-600 transition-colors mb-2">SaaS / Software</h3>
+                <p className="text-gray-600 text-sm mb-3">Growth marketing para empresas de software y tecnología</p>
+                <span className="inline-flex items-center gap-1 text-sm text-purple-600 font-medium">Ver más <ArrowRight className="w-4 h-4" /></span>
+              </Link>
+              <Link href="/marketing-digital-fintech-chile" className="group block bg-teal-50 hover:bg-teal-100 rounded-xl p-6 transition-all border border-teal-100">
+                <h3 className="font-bold text-gray-900 group-hover:text-teal-600 transition-colors mb-2">Fintech</h3>
+                <p className="text-gray-600 text-sm mb-3">Adquisición de clientes para servicios financieros digitales</p>
+                <span className="inline-flex items-center gap-1 text-sm text-teal-600 font-medium">Ver más <ArrowRight className="w-4 h-4" /></span>
+              </Link>
+              <Link href="/marketing-digital-servicios-profesionales-chile" className="group block bg-cyan-50 hover:bg-cyan-100 rounded-xl p-6 transition-all border border-cyan-100">
+                <h3 className="font-bold text-gray-900 group-hover:text-cyan-600 transition-colors mb-2">Servicios Profesionales</h3>
+                <p className="text-gray-600 text-sm mb-3">Leads para consultoras, contadores y estudios</p>
+                <span className="inline-flex items-center gap-1 text-sm text-cyan-600 font-medium">Ver más <ArrowRight className="w-4 h-4" /></span>
               </Link>
             </div>
           </div>

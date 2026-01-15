@@ -112,16 +112,16 @@ export default function AgenciaMarketingDigitalConcepcionPage() {
 
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link
-                  href="/#contact"
+                  href="/cotizador"
                   className="px-8 py-4 bg-teal-500 text-white rounded-lg hover:bg-teal-600 transition font-semibold shadow-lg text-center"
                 >
-                  Solicitar Cotización
+                  Solicitar Propuesta Gratis
                 </Link>
                 <Link
-                  href="/servicios"
+                  href="/labs/predictor"
                   className="px-8 py-4 bg-white/10 backdrop-blur border border-white/20 text-white rounded-lg hover:bg-white/20 transition font-semibold text-center"
                 >
-                  Ver Servicios
+                  Simular ROI
                 </Link>
               </div>
             </div>
@@ -375,16 +375,16 @@ export default function AgenciaMarketingDigitalConcepcionPage() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
-                href="/#contact"
+                href="/cotizador"
                 className="inline-block px-8 py-4 bg-white text-emerald-600 rounded-lg hover:bg-gray-100 transition font-semibold text-lg shadow-lg"
               >
-                Solicitar Cotización
+                Solicitar Propuesta Gratis
               </Link>
               <Link
-                href="/agencia-marketing-digital-chile"
+                href="/labs/predictor"
                 className="inline-block px-8 py-4 bg-white/10 backdrop-blur border border-white/20 text-white rounded-lg hover:bg-white/20 transition font-semibold text-lg"
               >
-                Ver Más Sobre M&P
+                Simular ROI en Biobío
               </Link>
             </div>
           </div>

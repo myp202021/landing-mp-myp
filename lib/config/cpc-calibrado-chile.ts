@@ -125,6 +125,97 @@ export const CPC_CALIBRADO_CHILE = {
     total_volumen: 16600,
     nota: 'Ponderado -9.9% vs simple (hoteles y tours equilibrados)'
   },
+  // ===== NUEVAS INDUSTRIAS 2025 =====
+  CONSTRUCCION_REMODELACION: {
+    cpc_promedio: 385.00,
+    cpc_mediano: 320.00,
+    cpc_min: 45.00,
+    cpc_max: 890.00,
+    keywords_con_data: 28,
+    total_volumen: 8500,
+    nota: 'Estimado basado en servicios profesionales + inmobiliaria'
+  },
+  DEPORTES_FITNESS: {
+    cpc_promedio: 195.00,
+    cpc_mediano: 165.00,
+    cpc_min: 25.00,
+    cpc_max: 650.00,
+    keywords_con_data: 22,
+    total_volumen: 15200,
+    nota: 'Gimnasios y fitness tienen alto volumen, CPC moderado'
+  },
+  VETERINARIA_MASCOTAS: {
+    cpc_promedio: 175.00,
+    cpc_mediano: 140.00,
+    cpc_min: 20.00,
+    cpc_max: 520.00,
+    keywords_con_data: 18,
+    total_volumen: 9800,
+    nota: 'Servicios veterinarios y tiendas mascotas'
+  },
+  MANUFACTURA_INDUSTRIAL: {
+    cpc_promedio: 425.00,
+    cpc_mediano: 380.00,
+    cpc_min: 85.00,
+    cpc_max: 950.00,
+    keywords_con_data: 15,
+    total_volumen: 3200,
+    nota: 'B2B industrial, bajo volumen alto CPC'
+  },
+  LOGISTICA_TRANSPORTE: {
+    cpc_promedio: 310.00,
+    cpc_mediano: 275.00,
+    cpc_min: 55.00,
+    cpc_max: 780.00,
+    keywords_con_data: 20,
+    total_volumen: 6100,
+    nota: 'Servicios logísticos y transporte de carga'
+  },
+  SEGUROS: {
+    cpc_promedio: 520.00,
+    cpc_mediano: 485.00,
+    cpc_min: 120.00,
+    cpc_max: 980.00,
+    keywords_con_data: 24,
+    total_volumen: 18500,
+    nota: 'Industria competitiva, CPCs premium'
+  },
+  AGRICULTURA_AGROINDUSTRIA: {
+    cpc_promedio: 185.00,
+    cpc_mediano: 150.00,
+    cpc_min: 30.00,
+    cpc_max: 480.00,
+    keywords_con_data: 12,
+    total_volumen: 2800,
+    nota: 'Insumos agrícolas y maquinaria'
+  },
+  SERVICIOS_PROFESIONALES: {
+    cpc_promedio: 295.00,
+    cpc_mediano: 260.00,
+    cpc_min: 45.00,
+    cpc_max: 720.00,
+    keywords_con_data: 25,
+    total_volumen: 7500,
+    nota: 'Contabilidad, consultoría, RRHH'
+  },
+  ENERGIA_UTILITIES: {
+    cpc_promedio: 450.00,
+    cpc_mediano: 410.00,
+    cpc_min: 95.00,
+    cpc_max: 920.00,
+    keywords_con_data: 10,
+    total_volumen: 2100,
+    nota: 'Energía solar, eficiencia energética B2B'
+  },
+  HOGAR_DECORACION: {
+    cpc_promedio: 165.00,
+    cpc_mediano: 135.00,
+    cpc_min: 28.00,
+    cpc_max: 580.00,
+    keywords_con_data: 32,
+    total_volumen: 14200,
+    nota: 'Muebles, decoración, mejoras del hogar'
+  },
 } as const;
 
 /**

@@ -60,7 +60,13 @@ import {
   MessageSquare,
   Send,
   Share2,
-  Mail
+  Mail,
+  Lock,
+  Unlock,
+  X,
+  User,
+  Building2,
+  Phone
 } from 'lucide-react'
 
 // ============================================================================
@@ -68,6 +74,7 @@ import {
 // ============================================================================
 
 const RANGOS_TASA_CIERRE = {
+  // Industrias originales
   ECOMMERCE: { min: 1, max: 15, default: 5 },
   TECNOLOGIA_SAAS: { min: 3, max: 15, default: 10 },
   FINTECH: { min: 1, max: 8, default: 3 },
@@ -80,6 +87,17 @@ const RANGOS_TASA_CIERRE = {
   MODA_RETAIL: { min: 2, max: 12, default: 6 },
   SERVICIOS_LEGALES: { min: 3, max: 15, default: 8 },
   BELLEZA_PERSONAL: { min: 15, max: 50, default: 25 },
+  // Nuevas industrias 2025
+  CONSTRUCCION_REMODELACION: { min: 2, max: 12, default: 5 },
+  DEPORTES_FITNESS: { min: 10, max: 40, default: 20 },
+  VETERINARIA_MASCOTAS: { min: 20, max: 60, default: 35 },
+  MANUFACTURA_INDUSTRIAL: { min: 1, max: 8, default: 3 },
+  LOGISTICA_TRANSPORTE: { min: 2, max: 12, default: 5 },
+  SEGUROS: { min: 2, max: 10, default: 4 },
+  AGRICULTURA_AGROINDUSTRIA: { min: 3, max: 15, default: 6 },
+  SERVICIOS_PROFESIONALES: { min: 5, max: 20, default: 10 },
+  ENERGIA_UTILITIES: { min: 2, max: 10, default: 4 },
+  HOGAR_DECORACION: { min: 3, max: 15, default: 7 },
 }
 
 const CICLOS_VENTA = [
@@ -676,6 +694,17 @@ export default function PredictorUnicornio() {
     submitted: false
   })
 
+  // Estado para captura de leads
+  const [leadForm, setLeadForm] = useState({
+    nombre: '',
+    email: '',
+    empresa: '',
+    telefono: '',
+  })
+  const [leadCaptured, setLeadCaptured] = useState(false)
+  const [showLeadModal, setShowLeadModal] = useState(false)
+  const [savingLead, setSavingLead] = useState(false)
+
   const [formData, setFormData] = useState({
     presupuesto: '',
     ticket: '',
@@ -743,6 +772,11 @@ export default function PredictorUnicornio() {
       const data = await response.json()
       console.log('✅ Prediction successful:', data)
       setResult(data)
+
+      // Mostrar modal de captura de lead si no hay lead capturado
+      if (!leadCaptured) {
+        setShowLeadModal(true)
+      }
 
       // Scroll automático a resultados
       setTimeout(() => {
@@ -826,6 +860,56 @@ export default function PredictorUnicornio() {
     } catch (error) {
       console.error('Error enviando feedback:', error)
     }
+  }
+
+  // Guardar lead y desbloquear resultados
+  const handleSaveLead = async () => {
+    if (!leadForm.email || !leadForm.nombre) return
+
+    setSavingLead(true)
+    try {
+      // Guardar en la API de contacto
+      await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          nombre: leadForm.nombre,
+          email: leadForm.email,
+          empresa: leadForm.empresa || 'No especificada',
+          telefono: leadForm.telefono || 'No especificado',
+          solicitud: `Lead desde Predictor - Industria: ${formData.industria}, Presupuesto: $${parseInt(formData.presupuesto).toLocaleString('es-CL')}, Tipo: ${formData.tipoCliente}`,
+          destinatario: 'contacto@mulleryperez.cl',
+          fuente: 'predictor'
+        })
+      })
+
+      // Actualizar el log con datos del lead si existe
+      if (logId) {
+        await fetch('/api/predictions/log', {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            log_id: logId,
+            lead_nombre: leadForm.nombre,
+            lead_email: leadForm.email,
+            lead_empresa: leadForm.empresa,
+            lead_telefono: leadForm.telefono
+          })
+        })
+      }
+
+      setLeadCaptured(true)
+      setShowLeadModal(false)
+    } catch (error) {
+      console.error('Error guardando lead:', error)
+    } finally {
+      setSavingLead(false)
+    }
+  }
+
+  // Saltar captura de lead (ver solo preview)
+  const handleSkipLead = () => {
+    setShowLeadModal(false)
   }
 
   const handleCompartirWhatsApp = () => {
@@ -1057,18 +1141,31 @@ ${window.location.href}`
                   onChange={(v: string) => setFormData({ ...formData, industria: v })}
                   tooltip="Cada industria tiene benchmarks específicos de tasa de cierre, CPC y conversión"
                   options={[
+                    // B2C / Consumo
                     { value: 'ECOMMERCE', label: '🛒 E-commerce' },
-                    { value: 'TECNOLOGIA_SAAS', label: '💻 Tecnología / SaaS' },
-                    { value: 'FINTECH', label: '💳 Fintech' },
-                    { value: 'INMOBILIARIA', label: '🏠 Inmobiliaria' },
+                    { value: 'MODA_RETAIL', label: '👔 Moda / Retail' },
+                    { value: 'GASTRONOMIA', label: '🍽️ Gastronomía' },
+                    { value: 'TURISMO', label: '✈️ Turismo' },
+                    { value: 'BELLEZA_PERSONAL', label: '💅 Belleza / Personal' },
+                    { value: 'DEPORTES_FITNESS', label: '🏋️ Deportes / Fitness' },
+                    { value: 'VETERINARIA_MASCOTAS', label: '🐾 Veterinaria / Mascotas' },
+                    { value: 'HOGAR_DECORACION', label: '🏡 Hogar / Decoración' },
+                    // Servicios profesionales
                     { value: 'SALUD_MEDICINA', label: '⚕️ Salud / Medicina' },
                     { value: 'EDUCACION', label: '📚 Educación' },
-                    { value: 'TURISMO', label: '✈️ Turismo' },
-                    { value: 'GASTRONOMIA', label: '🍽️ Gastronomía' },
-                    { value: 'AUTOMOTRIZ', label: '🚗 Automotriz' },
-                    { value: 'MODA_RETAIL', label: '👔 Moda / Retail' },
                     { value: 'SERVICIOS_LEGALES', label: '⚖️ Servicios Legales' },
-                    { value: 'BELLEZA_PERSONAL', label: '💅 Belleza / Personal' },
+                    { value: 'INMOBILIARIA', label: '🏠 Inmobiliaria' },
+                    { value: 'AUTOMOTRIZ', label: '🚗 Automotriz' },
+                    { value: 'SEGUROS', label: '🛡️ Seguros' },
+                    { value: 'CONSTRUCCION_REMODELACION', label: '🔨 Construcción / Remodelación' },
+                    // B2B / Tech
+                    { value: 'TECNOLOGIA_SAAS', label: '💻 Tecnología / SaaS' },
+                    { value: 'FINTECH', label: '💳 Fintech' },
+                    { value: 'SERVICIOS_PROFESIONALES', label: '💼 Servicios Profesionales B2B' },
+                    { value: 'MANUFACTURA_INDUSTRIAL', label: '🏭 Manufactura / Industrial' },
+                    { value: 'LOGISTICA_TRANSPORTE', label: '🚚 Logística / Transporte' },
+                    { value: 'ENERGIA_UTILITIES', label: '⚡ Energía / Utilities' },
+                    { value: 'AGRICULTURA_AGROINDUSTRIA', label: '🌾 Agricultura / Agroindustria' },
                   ]}
                 />
 
@@ -1649,6 +1746,136 @@ ${window.location.href}`
           </div>
         </div>
       </footer>
+
+      {/* Modal de captura de leads */}
+      {showLeadModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl animate-in zoom-in-95 duration-300">
+            {/* Header con gradiente */}
+            <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-t-3xl p-6 text-white">
+              <button
+                onClick={handleSkipLead}
+                className="absolute top-4 right-4 p-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+              <div className="flex items-center gap-3 mb-3">
+                <div className="p-3 bg-white/20 rounded-xl">
+                  <Unlock className="w-7 h-7" />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-bold">Desbloquea tu Análisis Completo</h3>
+                  <p className="text-white/80 text-sm">Accede a proyecciones, escenarios y recomendaciones</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Preview de métricas (teaser) */}
+            <div className="p-6 border-b border-gray-100">
+              <p className="text-sm text-gray-600 mb-4">Tu predicción está lista. Incluye:</p>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="flex items-center gap-2 text-sm text-gray-700">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                  <span>KPIs principales</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-gray-700">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                  <span>3 escenarios</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-gray-700">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                  <span>Proyección 12 meses</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-gray-700">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                  <span>Mix de campañas</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Formulario */}
+            <div className="p-6 space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label className="text-sm font-semibold text-gray-700 flex items-center gap-2 mb-2">
+                    <User className="w-4 h-4 text-gray-400" />
+                    Nombre *
+                  </Label>
+                  <Input
+                    value={leadForm.nombre}
+                    onChange={(e) => setLeadForm(prev => ({ ...prev, nombre: e.target.value }))}
+                    placeholder="Tu nombre"
+                    className="h-11 rounded-xl border-2 border-gray-200 focus:border-indigo-500"
+                  />
+                </div>
+                <div>
+                  <Label className="text-sm font-semibold text-gray-700 flex items-center gap-2 mb-2">
+                    <Mail className="w-4 h-4 text-gray-400" />
+                    Email *
+                  </Label>
+                  <Input
+                    type="email"
+                    value={leadForm.email}
+                    onChange={(e) => setLeadForm(prev => ({ ...prev, email: e.target.value }))}
+                    placeholder="tu@email.com"
+                    className="h-11 rounded-xl border-2 border-gray-200 focus:border-indigo-500"
+                  />
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label className="text-sm font-semibold text-gray-700 flex items-center gap-2 mb-2">
+                    <Building2 className="w-4 h-4 text-gray-400" />
+                    Empresa
+                  </Label>
+                  <Input
+                    value={leadForm.empresa}
+                    onChange={(e) => setLeadForm(prev => ({ ...prev, empresa: e.target.value }))}
+                    placeholder="Nombre empresa"
+                    className="h-11 rounded-xl border-2 border-gray-200 focus:border-indigo-500"
+                  />
+                </div>
+                <div>
+                  <Label className="text-sm font-semibold text-gray-700 flex items-center gap-2 mb-2">
+                    <Phone className="w-4 h-4 text-gray-400" />
+                    Teléfono
+                  </Label>
+                  <Input
+                    type="tel"
+                    value={leadForm.telefono}
+                    onChange={(e) => setLeadForm(prev => ({ ...prev, telefono: e.target.value }))}
+                    placeholder="+56 9 1234 5678"
+                    className="h-11 rounded-xl border-2 border-gray-200 focus:border-indigo-500"
+                  />
+                </div>
+              </div>
+
+              {/* Botones */}
+              <div className="flex gap-3 pt-2">
+                <button
+                  onClick={handleSaveLead}
+                  disabled={!leadForm.nombre || !leadForm.email || savingLead}
+                  className="flex-1 inline-flex items-center justify-center gap-2 px-6 h-12 rounded-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:from-indigo-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-indigo-500/30"
+                >
+                  {savingLead ? (
+                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  ) : (
+                    <Unlock className="w-5 h-5" />
+                  )}
+                  {savingLead ? 'Desbloqueando...' : 'Ver Análisis Completo'}
+                </button>
+              </div>
+
+              <button
+                onClick={handleSkipLead}
+                className="w-full text-center text-sm text-gray-500 hover:text-gray-700 py-2"
+              >
+                Ver solo métricas básicas →
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

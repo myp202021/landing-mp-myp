@@ -503,6 +503,30 @@ export default function MarketingEcommercePage() {
           </div>
         </section>
 
+        {/* Industrias Relacionadas */}
+        <section className="py-16 bg-white">
+          <div className="container mx-auto px-4 max-w-5xl">
+            <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">Industrias Relacionadas</h2>
+            <div className="grid md:grid-cols-3 gap-6">
+              <Link href="/marketing-digital-fintech-chile" className="group block bg-teal-50 hover:bg-teal-100 rounded-xl p-6 transition-all border border-teal-100">
+                <h3 className="font-bold text-gray-900 group-hover:text-teal-600 transition-colors mb-2">Fintech</h3>
+                <p className="text-gray-600 text-sm mb-3">Pasarelas de pago, billeteras digitales y servicios financieros para ecommerce</p>
+                <span className="inline-flex items-center gap-1 text-sm text-teal-600 font-medium">Ver industria <ArrowRight className="w-4 h-4" /></span>
+              </Link>
+              <Link href="/marketing-digital-b2b-chile" className="group block bg-slate-50 hover:bg-slate-100 rounded-xl p-6 transition-all border border-slate-100">
+                <h3 className="font-bold text-gray-900 group-hover:text-slate-600 transition-colors mb-2">B2B / Mayoristas</h3>
+                <p className="text-gray-600 text-sm mb-3">Ecommerce B2B, catálogos mayoristas y portales de distribución</p>
+                <span className="inline-flex items-center gap-1 text-sm text-slate-600 font-medium">Ver industria <ArrowRight className="w-4 h-4" /></span>
+              </Link>
+              <Link href="/marketing-digital-saas-chile" className="group block bg-purple-50 hover:bg-purple-100 rounded-xl p-6 transition-all border border-purple-100">
+                <h3 className="font-bold text-gray-900 group-hover:text-purple-600 transition-colors mb-2">SaaS / Plataformas</h3>
+                <p className="text-gray-600 text-sm mb-3">Software de ecommerce, ERPs, CRMs y herramientas de gestión</p>
+                <span className="inline-flex items-center gap-1 text-sm text-purple-600 font-medium">Ver industria <ArrowRight className="w-4 h-4" /></span>
+              </Link>
+            </div>
+          </div>
+        </section>
+
         {/* CTA Final */}
         <section className="py-20 bg-gradient-to-br from-blue-900 to-indigo-900 text-white">
           <div className="container mx-auto px-4">

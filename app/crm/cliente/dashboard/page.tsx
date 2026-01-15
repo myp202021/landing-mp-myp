@@ -624,6 +624,117 @@ export default function ClienteDashboard() {
         />
       </div>
 
+      {/* Leads por Fuente */}
+      {(() => {
+        // Agrupar leads por fuente
+        const leadsPorFuente = leadsFiltrados.reduce((acc: Record<string, { total: number, contactados: number, vendidos: number }>, lead) => {
+          const fuente = lead.fuente || 'sin_fuente'
+          if (!acc[fuente]) {
+            acc[fuente] = { total: 0, contactados: 0, vendidos: 0 }
+          }
+          acc[fuente].total++
+          if (lead.contactado) acc[fuente].contactados++
+          if (lead.vendido) acc[fuente].vendidos++
+          return acc
+        }, {})
+
+        // Ordenar por cantidad de leads (mayor a menor)
+        const fuentesOrdenadas = Object.entries(leadsPorFuente).sort((a, b) => b[1].total - a[1].total)
+
+        // Función para obtener emoji e icono por fuente
+        const getFuenteInfo = (fuente: string): { emoji: string, color: string, label: string } => {
+          const fuenteLower = fuente.toLowerCase()
+
+          // === FUENTES PAGADAS ===
+          // Google Ads (pagado)
+          if (fuenteLower === 'google_ads' || fuenteLower === 'googleads') {
+            return { emoji: '🎯', color: 'bg-red-500', label: 'Google Ads' }
+          }
+          // Meta Ads (pagado) - incluye zapier que trae leads de Meta
+          if (fuenteLower === 'meta_ads' || fuenteLower.includes('zapier') || fuenteLower.includes('meta')) {
+            return { emoji: '📱', color: 'bg-blue-600', label: 'Meta Ads' }
+          }
+
+          // === FUENTES ORGÁNICAS ===
+          // Búsqueda orgánica
+          if (fuenteLower === 'organico' || fuenteLower === 'organic') {
+            return { emoji: '🔍', color: 'bg-green-600', label: 'Orgánico' }
+          }
+          // Tráfico directo
+          if (fuenteLower === 'directo' || fuenteLower === 'direct') {
+            return { emoji: '🌐', color: 'bg-slate-600', label: 'Directo' }
+          }
+          // Referido
+          if (fuenteLower === 'referido' || fuenteLower.includes('referral')) {
+            return { emoji: '👥', color: 'bg-pink-500', label: 'Referido' }
+          }
+
+          // === CANALES DE CONTACTO ===
+          if (fuenteLower.includes('whatsapp')) {
+            return { emoji: '💬', color: 'bg-green-500', label: 'WhatsApp' }
+          }
+          if (fuenteLower.includes('email') || fuenteLower.includes('correo')) {
+            return { emoji: '📧', color: 'bg-gray-500', label: 'Email' }
+          }
+          if (fuenteLower.includes('chatbot') || fuenteLower.includes('karen') || fuenteLower.includes('mutante')) {
+            return { emoji: '🤖', color: 'bg-purple-500', label: 'ChatBot' }
+          }
+          if (fuenteLower.includes('landing') || fuenteLower.includes('web') || fuenteLower.includes('formulario')) {
+            return { emoji: '📝', color: 'bg-indigo-500', label: 'Formulario Web' }
+          }
+          if (fuenteLower.includes('agenda') || fuenteLower.includes('reunion')) {
+            return { emoji: '📅', color: 'bg-teal-500', label: 'Agenda Reunión' }
+          }
+          if (fuenteLower.includes('linkedin')) {
+            return { emoji: '💼', color: 'bg-blue-700', label: 'LinkedIn' }
+          }
+
+          return { emoji: '📋', color: 'bg-slate-500', label: fuente }
+        }
+
+        if (fuentesOrdenadas.length === 0) return null
+
+        return (
+          <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 mb-8">
+            <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+              <span>📊</span> Leads por Fuente
+              {filtrosAplicados && (
+                <span className="text-xs font-normal text-gray-500 ml-2">(filtrado por fecha)</span>
+              )}
+            </h3>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+              {fuentesOrdenadas.map(([fuente, stats]) => {
+                const info = getFuenteInfo(fuente)
+                const porcentaje = totalLeads > 0 ? ((stats.total / totalLeads) * 100).toFixed(1) : '0'
+                return (
+                  <div
+                    key={fuente}
+                    className="bg-gradient-to-br from-slate-50 to-slate-100 rounded-lg p-4 border border-slate-200 hover:shadow-md transition-shadow"
+                  >
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className={`w-8 h-8 ${info.color} rounded-full flex items-center justify-center text-white text-sm`}>
+                        {info.emoji}
+                      </span>
+                      <span className="text-sm font-medium text-gray-700 truncate" title={info.label}>
+                        {info.label}
+                      </span>
+                    </div>
+                    <div className="text-2xl font-bold text-gray-900">{stats.total}</div>
+                    <div className="text-xs text-gray-500 mt-1">
+                      {porcentaje}% del total
+                    </div>
+                    <div className="flex gap-2 mt-2 text-xs">
+                      <span className="text-yellow-600" title="Contactados">📞 {stats.contactados}</span>
+                      <span className="text-green-600" title="Vendidos">✅ {stats.vendidos}</span>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        )
+      })()}
+
       {/* Tabla de Leads */}
       <div className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-200">
         <div className="bg-blue-900 px-6 py-4 flex items-center justify-between">
@@ -1115,10 +1226,23 @@ export default function ClienteDashboard() {
                   onChange={(e) => setNuevoLead({...nuevoLead, fuente: e.target.value})}
                   className="w-full px-3 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-green-500 text-gray-900"
                 >
-                  <option value="email">📧 Email</option>
-                  <option value="whatsapp">💬 WhatsApp</option>
-                  <option value="meta">📱 Meta (Facebook/Instagram)</option>
-                  <option value="zapier">⚡ Zapier</option>
+                  <optgroup label="Pagado">
+                    <option value="google_ads">🎯 Google Ads</option>
+                    <option value="meta_ads">📱 Meta Ads</option>
+                    <option value="linkedin">💼 LinkedIn Ads</option>
+                  </optgroup>
+                  <optgroup label="Orgánico">
+                    <option value="organico">🔍 Búsqueda Orgánica</option>
+                    <option value="directo">🌐 Tráfico Directo</option>
+                    <option value="referido">👥 Referido</option>
+                  </optgroup>
+                  <optgroup label="Canales">
+                    <option value="email">📧 Email</option>
+                    <option value="whatsapp">💬 WhatsApp</option>
+                    <option value="chatbot">🤖 ChatBot</option>
+                    <option value="formulario">📝 Formulario Web</option>
+                    <option value="agenda">📅 Agenda Reunión</option>
+                  </optgroup>
                 </select>
               </div>
 

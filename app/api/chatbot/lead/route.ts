@@ -9,6 +9,16 @@ const supabaseAdmin = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 )
 
+interface TrackingInfo {
+  source_type: string
+  source_detail: string
+  utm_source?: string | null
+  utm_medium?: string | null
+  utm_campaign?: string | null
+  gclid?: string | null
+  fbclid?: string | null
+}
+
 interface LeadData {
   nombre: string
   empresa?: string
@@ -17,6 +27,8 @@ interface LeadData {
   interes?: string
   sessionId?: string
   source?: string
+  tracking?: TrackingInfo | null
+  fuente_clasificada?: string
 }
 
 export async function POST(request: Request) {
@@ -44,6 +56,90 @@ export async function POST(request: Request) {
           updated_at: new Date().toISOString()
         })
         .eq('id', data.sessionId)
+    }
+
+    // 1.5 TAMBIÉN guardar en tabla leads del CRM
+    let leadCreated = null
+    try {
+      // Buscar cliente Muller y Perez
+      const { data: clienteData } = await supabaseAdmin
+        .from('clientes')
+        .select('id')
+        .or('nombre.ilike.%muller%,nombre.ilike.%m&p%,nombre.ilike.%myp%')
+        .single()
+
+      if (clienteData) {
+        // Determinar fuente clasificada basada en tracking
+        let fuenteFinal = data.fuente_clasificada || 'chatbot_karen'
+        let observacionesExtra = ''
+
+        if (data.tracking) {
+          // Si viene de Google Ads
+          if (data.tracking.source_type === 'google_ads') {
+            fuenteFinal = 'google_ads'
+            observacionesExtra = `[Google Ads] ${data.tracking.source_detail}`
+            if (data.tracking.utm_campaign) {
+              observacionesExtra += ` | Campaña: ${data.tracking.utm_campaign}`
+            }
+          }
+          // Si viene de Meta Ads
+          else if (data.tracking.source_type === 'meta_ads') {
+            fuenteFinal = 'meta_ads'
+            observacionesExtra = `[Meta Ads] ${data.tracking.source_detail}`
+          }
+          // Orgánico
+          else if (data.tracking.source_type === 'organic') {
+            fuenteFinal = 'organico'
+            observacionesExtra = `[Orgánico] ${data.tracking.source_detail}`
+          }
+          // Directo
+          else if (data.tracking.source_type === 'direct') {
+            fuenteFinal = 'directo'
+            observacionesExtra = '[Tráfico directo]'
+          }
+          // Referido
+          else if (data.tracking.source_type === 'referral') {
+            fuenteFinal = 'referido'
+            observacionesExtra = `[Referido] ${data.tracking.source_detail}`
+          }
+        }
+
+        // Construir observaciones completas
+        const observacionesParts = []
+        if (data.interes) observacionesParts.push(data.interes)
+        if (observacionesExtra) observacionesParts.push(observacionesExtra)
+        observacionesParts.push('Fuente: ChatBot Mutante')
+
+        const leadData = {
+          cliente_id: clienteData.id,
+          nombre: data.nombre,
+          email: data.email,
+          telefono: data.telefono || null,
+          nombre_empresa: data.empresa || null,
+          fuente: fuenteFinal,
+          form_nombre: 'ChatBot Mutante',
+          observaciones: observacionesParts.join(' | '),
+          contactado: false,
+          vendido: false,
+          fecha_ingreso: new Date().toISOString(),
+          mes_ingreso: new Date().toISOString().substring(0, 7)
+        }
+
+        const { data: leadInserted, error: leadError } = await supabaseAdmin
+          .from('leads')
+          .insert([leadData])
+          .select()
+          .single()
+
+        if (leadError) {
+          console.error('Error creando lead en CRM:', leadError)
+        } else {
+          leadCreated = leadInserted
+          console.log('✅ Lead ChatBot guardado en CRM:', leadInserted.id)
+        }
+      }
+    } catch (crmError) {
+      console.error('Error guardando en CRM:', crmError)
     }
 
     // 2. Enviar email a M&P

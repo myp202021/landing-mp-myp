@@ -52,6 +52,15 @@ export interface IndustryBenchmark {
 
   // Mix de plataformas recomendado
   plataformas_recomendadas: string[]
+
+  // Recomendaciones específicas para la industria
+  recomendaciones: {
+    estrategia_principal: string
+    tipo_campana_recomendada: string
+    creatividades: string
+    audiencias: string
+    tip_conversion: string
+  }
 }
 
 export const BENCHMARKS_INDUSTRIAS_2024: Record<string, IndustryBenchmark> = {
@@ -75,7 +84,14 @@ export const BENCHMARKS_INDUSTRIAS_2024: Record<string, IndustryBenchmark> = {
     roas_maximo: 15,
     cpa_minimo: 5000,
     tasa_cierre_explicacion: "% de carritos de compra que completan el checkout y pago exitoso",
-    plataformas_recomendadas: ["GOOGLE_SEARCH", "META_ADS", "GOOGLE_SHOPPING", "TIKTOK", "GOOGLE_DISPLAY"]
+    plataformas_recomendadas: ["GOOGLE_SEARCH", "META_ADS", "GOOGLE_SHOPPING", "TIKTOK", "GOOGLE_DISPLAY"],
+    recomendaciones: {
+      estrategia_principal: "Combina Google Shopping para intención de compra con Meta Ads para descubrimiento. Remarketing dinámico es esencial.",
+      tipo_campana_recomendada: "Performance Max + Advantage+ Shopping en Meta. Prioriza catálogo dinámico.",
+      creatividades: "Videos cortos de producto (15-30s), carruseles con precios, UGC de clientes reales. Muestra envío gratis y garantías.",
+      audiencias: "Lookalikes de compradores, remarketing carrito abandonado (1-7 días), intereses en marcas competidoras.",
+      tip_conversion: "Implementa abandoned cart emails + remarketing agresivo en primeras 24h. Ofrece descuento por primera compra."
+    }
   },
 
   INMOBILIARIA: {
@@ -97,7 +113,14 @@ export const BENCHMARKS_INDUSTRIAS_2024: Record<string, IndustryBenchmark> = {
     roas_maximo: 25,
     cpa_minimo: 50000,
     tasa_cierre_explicacion: "% de formularios de contacto que se convierten en ventas cerradas",
-    plataformas_recomendadas: ["GOOGLE_SEARCH", "META_ADS", "LINKEDIN", "GOOGLE_DISPLAY"]
+    plataformas_recomendadas: ["GOOGLE_SEARCH", "META_ADS", "LINKEDIN", "GOOGLE_DISPLAY"],
+    recomendaciones: {
+      estrategia_principal: "Google Search para búsquedas activas + Meta para awareness de proyectos. El ciclo largo requiere nurturing constante.",
+      tipo_campana_recomendada: "Search con keywords de ubicación + Lead Ads en Meta con formularios precargados.",
+      creatividades: "Tours virtuales 360°, videos de drone del sector, renders de alta calidad. Destaca m², ubicación y financiamiento.",
+      audiencias: "Segmentos de ingresos altos, intereses en inversión, lookalikes de compradores previos, remarketing largo (30-90 días).",
+      tip_conversion: "Ofrece asesoría gratuita de financiamiento. Implementa WhatsApp Business para respuesta inmediata a leads."
+    }
   },
 
   TURISMO: {
@@ -318,6 +341,230 @@ export const BENCHMARKS_INDUSTRIAS_2024: Record<string, IndustryBenchmark> = {
     cpa_minimo: 50000,
     tasa_cierre_explicacion: "% de demos o trials que se convierten en suscripciones pagadas",
     plataformas_recomendadas: ["GOOGLE_SEARCH", "LINKEDIN", "META_ADS", "YOUTUBE", "GOOGLE_DISPLAY"]
+  },
+
+  // ============================================================================
+  // NUEVAS INDUSTRIAS 2025
+  // ============================================================================
+
+  CONSTRUCCION_REMODELACION: {
+    nombre: "Construcción y Remodelación",
+    codigo: "CONSTRUCCION_REMODELACION",
+    fuentes: ["wordstream_2024", "ubersuggest_chile_2024"],
+    google_search: {
+      cpc_base: getCPCCalibrado('CONSTRUCCION_REMODELACION'),
+      ctr_base: 2.5,
+      cvr_web: 4.2
+    },
+    meta_ads: {
+      cpc_base: Math.round(getCPCCalibrado('CONSTRUCCION_REMODELACION') * 0.85),
+      ctr_base: 1.2,
+      cvr_web: 6.5
+    },
+    chile_factor: 0.85,
+    max_conversiones_mes: 80,
+    roas_maximo: 18,
+    cpa_minimo: 120000,
+    tasa_cierre_explicacion: "% de cotizaciones que se convierten en proyectos contratados",
+    plataformas_recomendadas: ["GOOGLE_SEARCH", "META_ADS", "GOOGLE_LOCAL", "GOOGLE_DISPLAY"]
+  },
+
+  DEPORTES_FITNESS: {
+    nombre: "Deportes y Fitness",
+    codigo: "DEPORTES_FITNESS",
+    fuentes: ["wordstream_2024", "triplewhale_2024", "ubersuggest_chile_2024"],
+    google_search: {
+      cpc_base: getCPCCalibrado('DEPORTES_FITNESS'),
+      ctr_base: 3.5,
+      cvr_web: 8.2
+    },
+    meta_ads: {
+      cpc_base: Math.round(getCPCCalibrado('DEPORTES_FITNESS') * 0.75),
+      ctr_base: 1.8,
+      cvr_web: 12.5
+    },
+    chile_factor: 0.7,
+    max_conversiones_mes: 350,
+    roas_maximo: 10,
+    cpa_minimo: 15000,
+    tasa_cierre_explicacion: "% de pruebas gratis o consultas que se convierten en membresías",
+    plataformas_recomendadas: ["META_ADS", "GOOGLE_SEARCH", "TIKTOK", "YOUTUBE", "GOOGLE_LOCAL"]
+  },
+
+  VETERINARIA_MASCOTAS: {
+    nombre: "Veterinaria y Mascotas",
+    codigo: "VETERINARIA_MASCOTAS",
+    fuentes: ["wordstream_2024", "ubersuggest_chile_2024"],
+    google_search: {
+      cpc_base: getCPCCalibrado('VETERINARIA_MASCOTAS'),
+      ctr_base: 3.8,
+      cvr_web: 9.5
+    },
+    meta_ads: {
+      cpc_base: Math.round(getCPCCalibrado('VETERINARIA_MASCOTAS') * 0.8),
+      ctr_base: 2.1,
+      cvr_web: 14.2
+    },
+    chile_factor: 0.65,
+    max_conversiones_mes: 400,
+    roas_maximo: 8,
+    cpa_minimo: 8000,
+    tasa_cierre_explicacion: "% de consultas que se convierten en citas o compras",
+    plataformas_recomendadas: ["GOOGLE_SEARCH", "META_ADS", "GOOGLE_LOCAL", "GOOGLE_SHOPPING"]
+  },
+
+  MANUFACTURA_INDUSTRIAL: {
+    nombre: "Manufactura e Industrial",
+    codigo: "MANUFACTURA_INDUSTRIAL",
+    fuentes: ["wordstream_2024", "ubersuggest_chile_2024"],
+    google_search: {
+      cpc_base: getCPCCalibrado('MANUFACTURA_INDUSTRIAL'),
+      ctr_base: 2.2,
+      cvr_web: 3.5
+    },
+    meta_ads: {
+      cpc_base: Math.round(getCPCCalibrado('MANUFACTURA_INDUSTRIAL') * 0.95),
+      ctr_base: 0.65,
+      cvr_web: 5.2
+    },
+    chile_factor: 0.95,
+    max_conversiones_mes: 40,
+    roas_maximo: 25,
+    cpa_minimo: 250000,
+    tasa_cierre_explicacion: "% de RFQs o cotizaciones que se convierten en órdenes de compra",
+    plataformas_recomendadas: ["GOOGLE_SEARCH", "LINKEDIN", "GOOGLE_DISPLAY"]
+  },
+
+  LOGISTICA_TRANSPORTE: {
+    nombre: "Logística y Transporte",
+    codigo: "LOGISTICA_TRANSPORTE",
+    fuentes: ["wordstream_2024", "ubersuggest_chile_2024"],
+    google_search: {
+      cpc_base: getCPCCalibrado('LOGISTICA_TRANSPORTE'),
+      ctr_base: 2.8,
+      cvr_web: 4.8
+    },
+    meta_ads: {
+      cpc_base: Math.round(getCPCCalibrado('LOGISTICA_TRANSPORTE') * 0.9),
+      ctr_base: 0.85,
+      cvr_web: 6.8
+    },
+    chile_factor: 0.9,
+    max_conversiones_mes: 60,
+    roas_maximo: 20,
+    cpa_minimo: 150000,
+    tasa_cierre_explicacion: "% de cotizaciones de flete que se convierten en contratos",
+    plataformas_recomendadas: ["GOOGLE_SEARCH", "LINKEDIN", "META_ADS", "GOOGLE_DISPLAY"]
+  },
+
+  SEGUROS: {
+    nombre: "Seguros",
+    codigo: "SEGUROS",
+    fuentes: ["wordstream_2024", "promodo_fintech", "ubersuggest_chile_2024"],
+    google_search: {
+      cpc_base: getCPCCalibrado('SEGUROS'),
+      ctr_base: 2.0,
+      cvr_web: 3.8
+    },
+    meta_ads: {
+      cpc_base: Math.round(getCPCCalibrado('SEGUROS') * 0.9),
+      ctr_base: 0.75,
+      cvr_web: 7.5
+    },
+    chile_factor: 1.0,
+    max_conversiones_mes: 100,
+    roas_maximo: 18,
+    cpa_minimo: 80000,
+    tasa_cierre_explicacion: "% de cotizaciones que se convierten en pólizas contratadas",
+    plataformas_recomendadas: ["GOOGLE_SEARCH", "META_ADS", "LINKEDIN", "GOOGLE_DISPLAY"]
+  },
+
+  AGRICULTURA_AGROINDUSTRIA: {
+    nombre: "Agricultura y Agroindustria",
+    codigo: "AGRICULTURA_AGROINDUSTRIA",
+    fuentes: ["wordstream_2024", "ubersuggest_chile_2024"],
+    google_search: {
+      cpc_base: getCPCCalibrado('AGRICULTURA_AGROINDUSTRIA'),
+      ctr_base: 2.6,
+      cvr_web: 5.5
+    },
+    meta_ads: {
+      cpc_base: Math.round(getCPCCalibrado('AGRICULTURA_AGROINDUSTRIA') * 0.85),
+      ctr_base: 1.1,
+      cvr_web: 8.2
+    },
+    chile_factor: 0.75,
+    max_conversiones_mes: 50,
+    roas_maximo: 15,
+    cpa_minimo: 100000,
+    tasa_cierre_explicacion: "% de cotizaciones de insumos/maquinaria que se convierten en compras",
+    plataformas_recomendadas: ["GOOGLE_SEARCH", "META_ADS", "LINKEDIN", "YOUTUBE"]
+  },
+
+  SERVICIOS_PROFESIONALES: {
+    nombre: "Servicios Profesionales B2B",
+    codigo: "SERVICIOS_PROFESIONALES",
+    fuentes: ["wordstream_2024", "ubersuggest_chile_2024"],
+    google_search: {
+      cpc_base: getCPCCalibrado('SERVICIOS_PROFESIONALES'),
+      ctr_base: 2.9,
+      cvr_web: 5.8
+    },
+    meta_ads: {
+      cpc_base: Math.round(getCPCCalibrado('SERVICIOS_PROFESIONALES') * 0.85),
+      ctr_base: 0.9,
+      cvr_web: 9.2
+    },
+    chile_factor: 0.85,
+    max_conversiones_mes: 80,
+    roas_maximo: 18,
+    cpa_minimo: 80000,
+    tasa_cierre_explicacion: "% de reuniones o consultas que se convierten en contratos",
+    plataformas_recomendadas: ["GOOGLE_SEARCH", "LINKEDIN", "META_ADS", "GOOGLE_DISPLAY"]
+  },
+
+  ENERGIA_UTILITIES: {
+    nombre: "Energía y Utilities",
+    codigo: "ENERGIA_UTILITIES",
+    fuentes: ["wordstream_2024", "ubersuggest_chile_2024"],
+    google_search: {
+      cpc_base: getCPCCalibrado('ENERGIA_UTILITIES'),
+      ctr_base: 2.3,
+      cvr_web: 4.0
+    },
+    meta_ads: {
+      cpc_base: Math.round(getCPCCalibrado('ENERGIA_UTILITIES') * 0.9),
+      ctr_base: 0.7,
+      cvr_web: 6.5
+    },
+    chile_factor: 0.95,
+    max_conversiones_mes: 35,
+    roas_maximo: 22,
+    cpa_minimo: 200000,
+    tasa_cierre_explicacion: "% de cotizaciones de proyectos energéticos que se convierten en contratos",
+    plataformas_recomendadas: ["GOOGLE_SEARCH", "LINKEDIN", "GOOGLE_DISPLAY"]
+  },
+
+  HOGAR_DECORACION: {
+    nombre: "Hogar y Decoración",
+    codigo: "HOGAR_DECORACION",
+    fuentes: ["wordstream_2024", "triplewhale_2024", "ubersuggest_chile_2024"],
+    google_search: {
+      cpc_base: getCPCCalibrado('HOGAR_DECORACION'),
+      ctr_base: 3.2,
+      cvr_web: 6.8
+    },
+    meta_ads: {
+      cpc_base: Math.round(getCPCCalibrado('HOGAR_DECORACION') * 0.85),
+      ctr_base: 1.65,
+      cvr_web: 10.5
+    },
+    chile_factor: 0.75,
+    max_conversiones_mes: 250,
+    roas_maximo: 12,
+    cpa_minimo: 18000,
+    tasa_cierre_explicacion: "% de carritos o cotizaciones que se convierten en compras",
+    plataformas_recomendadas: ["META_ADS", "GOOGLE_SEARCH", "GOOGLE_SHOPPING", "TIKTOK", "GOOGLE_DISPLAY"]
   }
 }
 

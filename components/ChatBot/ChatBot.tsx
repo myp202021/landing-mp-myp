@@ -16,6 +16,7 @@ import {
   ExternalLink
 } from 'lucide-react'
 import { chatTree, getNode, getRootNode, ChatNode, ChatOption } from '@/lib/chatbot/decision-tree'
+import { initTracking, TrackingData, getFuenteForDB } from '@/lib/utils/utm-tracking'
 
 // ============================================
 // TYPES
@@ -98,6 +99,7 @@ export default function ChatBot() {
   })
   const [formSubmitting, setFormSubmitting] = useState(false)
   const [hasUnread, setHasUnread] = useState(false)
+  const [trackingData, setTrackingData] = useState<TrackingData | null>(null)
 
   // Refs
   const messagesEndRef = useRef<HTMLDivElement>(null)
@@ -105,6 +107,13 @@ export default function ChatBot() {
   // ============================================
   // EFFECTS
   // ============================================
+
+  // Inicializar tracking de UTM/gclid al montar
+  useEffect(() => {
+    const data = initTracking()
+    setTrackingData(data)
+    console.log('📊 Tracking inicializado:', data.source_type, data.source_detail)
+  }, [])
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -311,14 +320,26 @@ export default function ChatBot() {
       // Guardar en Supabase
       await updateSessionLead(leadData)
 
-      // Enviar email via API
+      // Enviar email via API con datos de tracking
+      const fuente = trackingData ? getFuenteForDB(trackingData) : 'chatbot_karen'
       await fetch('/api/chatbot/lead', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...leadData,
           sessionId,
-          source: 'mutante_chatbot'
+          source: 'mutante_chatbot',
+          // Datos de tracking para clasificación
+          tracking: trackingData ? {
+            source_type: trackingData.source_type,
+            source_detail: trackingData.source_detail,
+            utm_source: trackingData.utm_source,
+            utm_medium: trackingData.utm_medium,
+            utm_campaign: trackingData.utm_campaign,
+            gclid: trackingData.gclid,
+            fbclid: trackingData.fbclid
+          } : null,
+          fuente_clasificada: fuente
         })
       })
 

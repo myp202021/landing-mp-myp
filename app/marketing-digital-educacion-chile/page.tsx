@@ -27,6 +27,17 @@ const jsonLd = {
       '@id': 'https://www.mulleryperez.cl/marketing-digital-educacion-chile',
       url: 'https://www.mulleryperez.cl/marketing-digital-educacion-chile',
       name: 'Marketing Digital para Educación en Chile',
+      description: 'Agencia especializada en marketing digital para el sector educación en Chile.',
+      isPartOf: { '@id': 'https://www.mulleryperez.cl/#website' },
+    },
+    {
+      '@type': 'BreadcrumbList',
+      '@id': 'https://www.mulleryperez.cl/marketing-digital-educacion-chile#breadcrumb',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, item: { '@id': 'https://www.mulleryperez.cl/', name: 'Inicio' } },
+        { '@type': 'ListItem', position: 2, item: { '@id': 'https://www.mulleryperez.cl/industrias', name: 'Industrias' } },
+        { '@type': 'ListItem', position: 3, item: { name: 'Marketing Digital Educación' } },
+      ],
     },
     {
       '@type': 'Service',
@@ -462,6 +473,30 @@ export default function MarketingEducacionPage() {
                 <span className="inline-block px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-semibold mb-3">Inbound</span>
                 <h3 className="font-bold text-gray-900 group-hover:text-indigo-600 transition-colors mb-2">Inbound Marketing Educación</h3>
                 <span className="inline-flex items-center gap-1 text-sm text-indigo-600 font-medium">Leer más <ArrowRight className="w-4 h-4" /></span>
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* Industrias Relacionadas */}
+        <section className="py-16 bg-white">
+          <div className="container mx-auto px-4 max-w-5xl">
+            <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">Industrias Relacionadas</h2>
+            <div className="grid md:grid-cols-3 gap-6">
+              <Link href="/marketing-digital-saas-chile" className="group block bg-purple-50 hover:bg-purple-100 rounded-xl p-6 transition-all border border-purple-100">
+                <h3 className="font-bold text-gray-900 group-hover:text-purple-600 transition-colors mb-2">SaaS / EdTech</h3>
+                <p className="text-gray-600 text-sm mb-3">Plataformas e-learning, LMS y software educativo</p>
+                <span className="inline-flex items-center gap-1 text-sm text-purple-600 font-medium">Ver industria <ArrowRight className="w-4 h-4" /></span>
+              </Link>
+              <Link href="/marketing-digital-salud-chile" className="group block bg-red-50 hover:bg-red-100 rounded-xl p-6 transition-all border border-red-100">
+                <h3 className="font-bold text-gray-900 group-hover:text-red-600 transition-colors mb-2">Salud</h3>
+                <p className="text-gray-600 text-sm mb-3">Formación médica, postgrados en salud y educación continua</p>
+                <span className="inline-flex items-center gap-1 text-sm text-red-600 font-medium">Ver industria <ArrowRight className="w-4 h-4" /></span>
+              </Link>
+              <Link href="/marketing-digital-b2b-chile" className="group block bg-slate-50 hover:bg-slate-100 rounded-xl p-6 transition-all border border-slate-100">
+                <h3 className="font-bold text-gray-900 group-hover:text-slate-600 transition-colors mb-2">B2B / Capacitación</h3>
+                <p className="text-gray-600 text-sm mb-3">Formación corporativa, capacitaciones y cursos in-company</p>
+                <span className="inline-flex items-center gap-1 text-sm text-slate-600 font-medium">Ver industria <ArrowRight className="w-4 h-4" /></span>
               </Link>
             </div>
           </div>

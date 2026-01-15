@@ -2,6 +2,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { MotorCalculo2024 } from '../../../../lib/engine/motor-calculo-2024'
 import { InputCliente2024 } from '../../../../lib/engine/interfaces-cliente-2024'
+import { getRecomendacionesIndustria } from '../../../../lib/engine/recomendaciones-industria'
 
 /**
  * API MOTOR 2024 - SISTEMA VALIDADO CON 120 CASOS
@@ -204,37 +205,54 @@ export async function POST(request: NextRequest) {
         explicacion: 'Predicción conservadora basada en variables ingresadas y contexto actual'
       },
 
-      // Recomendaciones de negocio específicas por industria
+      // Recomendaciones específicas por industria
+      recomendaciones_industria: getRecomendacionesIndustria(inputMotor2024.industria),
+
+      // Recomendaciones de negocio generales
       recommendations: [
         {
-          categoria: 'MOTOR_2024',
-          titulo: 'Sistema Validado con 120 Casos',
-          descripcion: `Análisis con Motor 2024 para ${inputMotor2024.industria}. Diferenciación por industria completamente funcional.`,
+          categoria: 'ESTRATEGIA',
+          titulo: 'Estrategia Principal',
+          descripcion: getRecomendacionesIndustria(inputMotor2024.industria)?.estrategia_principal || `Análisis con Motor 2025 para ${inputMotor2024.industria}`,
           impacto_esperado: `ROAS esperado: ${resultado.escenarios.base.roas.toFixed(2)}x (Óptimo: ${resultado.escenarios.agresivo.roas.toFixed(2)}x)`,
           prioridad: 'ALTA' as const
         },
         {
-          categoria: 'BENCHMARKS_2024',
-          titulo: 'Benchmarks Verificados',
-          descripcion: 'Datos calibrados con fuentes WordStream, Triple Whale, Databox 2024 para el mercado chileno.',
-          impacto_esperado: 'Predicciones basadas en datos reales verificados',
-          prioridad: 'ALTA' as const
-        },
-        {
-          categoria: 'MIX_CAMPANAS',
-          titulo: 'Mix Óptimo de Campañas',
-          descripcion: `Distribución recomendada: ${Object.keys(resultado.mix_campanas).map(p => `${p} ${resultado.mix_campanas[p].porcentaje_presupuesto}%`).join(', ')}`,
+          categoria: 'CAMPANAS',
+          titulo: 'Tipo de Campaña Recomendada',
+          descripcion: getRecomendacionesIndustria(inputMotor2024.industria)?.tipo_campana_recomendada || 'Performance Max + Lead Ads',
           impacto_esperado: 'Maximiza conversiones por plataforma',
           prioridad: 'ALTA' as const
         },
         {
-          categoria: 'DIFERENCIACION',
-          titulo: 'Diferenciación por Industria',
-          descripcion: `Tasa de cierre típica para ${inputMotor2024.industria}: ${inputMotor2024.Y_tasa_cierre}%`,
-          impacto_esperado: 'Precisión mejorada vs sistema genérico',
+          categoria: 'CREATIVIDADES',
+          titulo: 'Creatividades que Funcionan',
+          descripcion: getRecomendacionesIndustria(inputMotor2024.industria)?.creatividades || 'Videos cortos, carruseles, UGC',
+          impacto_esperado: 'CTR y engagement optimizados',
+          prioridad: 'ALTA' as const
+        },
+        {
+          categoria: 'AUDIENCIAS',
+          titulo: 'Audiencias Recomendadas',
+          descripcion: getRecomendacionesIndustria(inputMotor2024.industria)?.audiencias || 'Lookalikes de compradores, remarketing',
+          impacto_esperado: 'Mejor segmentación = menor CPA',
           prioridad: 'MEDIA' as const
         },
-        ...resultado.validaciones.alertas.slice(0, 3).map((alerta: string) => ({
+        {
+          categoria: 'CONVERSION',
+          titulo: 'Tip de Conversión',
+          descripcion: getRecomendacionesIndustria(inputMotor2024.industria)?.tip_conversion || 'Remarketing agresivo + ofertas de primera compra',
+          impacto_esperado: 'Aumenta tasa de cierre',
+          prioridad: 'ALTA' as const
+        },
+        {
+          categoria: 'MIX_CAMPANAS',
+          titulo: 'Mix Óptimo de Plataformas',
+          descripcion: `Distribución recomendada: ${Object.keys(resultado.mix_campanas).map(p => `${p} ${resultado.mix_campanas[p].porcentaje_presupuesto}%`).join(', ')}`,
+          impacto_esperado: 'Presupuesto optimizado por canal',
+          prioridad: 'MEDIA' as const
+        },
+        ...resultado.validaciones.alertas.slice(0, 2).map((alerta: string) => ({
           categoria: 'ALERTA_NEGOCIO' as const,
           titulo: 'Alerta del Sistema',
           descripcion: alerta,
@@ -286,13 +304,20 @@ export async function POST(request: NextRequest) {
 
 export async function GET() {
   return NextResponse.json({
-    status: 'Motor 2024 API',
-    version: '2024.1',
+    status: 'Motor 2025 API',
+    version: '2025.1',
     industrias_disponibles: [
+      // Originales (12)
       'ECOMMERCE', 'INMOBILIARIA', 'TURISMO', 'GASTRONOMIA',
       'AUTOMOTRIZ', 'SALUD_MEDICINA', 'EDUCACION', 'MODA_RETAIL',
-      'FINTECH', 'SERVICIOS_LEGALES', 'BELLEZA_PERSONAL', 'TECNOLOGIA_SAAS'
+      'FINTECH', 'SERVICIOS_LEGALES', 'BELLEZA_PERSONAL', 'TECNOLOGIA_SAAS',
+      // Nuevas 2025 (10)
+      'CONSTRUCCION_REMODELACION', 'DEPORTES_FITNESS', 'VETERINARIA_MASCOTAS',
+      'MANUFACTURA_INDUSTRIAL', 'LOGISTICA_TRANSPORTE', 'SEGUROS',
+      'AGRICULTURA_AGROINDUSTRIA', 'SERVICIOS_PROFESIONALES',
+      'ENERGIA_UTILITIES', 'HOGAR_DECORACION'
     ],
+    total_industrias: 22,
     casos_validados: 120,
     tasa_exito: '100%'
   })

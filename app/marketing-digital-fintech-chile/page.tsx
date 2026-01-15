@@ -31,6 +31,15 @@ const jsonLd = {
       isPartOf: { '@id': 'https://www.mulleryperez.cl/#website' },
     },
     {
+      '@type': 'BreadcrumbList',
+      '@id': 'https://www.mulleryperez.cl/marketing-digital-fintech-chile#breadcrumb',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, item: { '@id': 'https://www.mulleryperez.cl/', name: 'Inicio' } },
+        { '@type': 'ListItem', position: 2, item: { '@id': 'https://www.mulleryperez.cl/industrias', name: 'Industrias' } },
+        { '@type': 'ListItem', position: 3, item: { name: 'Marketing Digital Fintech' } },
+      ],
+    },
+    {
       '@type': 'Service',
       name: 'Marketing Digital para Fintech',
       description: 'Servicio de marketing digital especializado para empresas fintech y servicios financieros',

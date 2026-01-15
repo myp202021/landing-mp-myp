@@ -31,6 +31,15 @@ const jsonLd = {
       isPartOf: { '@id': 'https://www.mulleryperez.cl/#website' },
     },
     {
+      '@type': 'BreadcrumbList',
+      '@id': 'https://www.mulleryperez.cl/marketing-digital-saas-chile#breadcrumb',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, item: { '@id': 'https://www.mulleryperez.cl/', name: 'Inicio' } },
+        { '@type': 'ListItem', position: 2, item: { '@id': 'https://www.mulleryperez.cl/industrias', name: 'Industrias' } },
+        { '@type': 'ListItem', position: 3, item: { name: 'Marketing Digital SaaS' } },
+      ],
+    },
+    {
       '@type': 'Service',
       name: 'Marketing Digital para SaaS',
       description: 'Servicio de marketing digital especializado para empresas de software y tecnología',

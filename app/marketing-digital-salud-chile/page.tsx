@@ -27,6 +27,17 @@ const jsonLd = {
       '@id': 'https://www.mulleryperez.cl/marketing-digital-salud-chile',
       url: 'https://www.mulleryperez.cl/marketing-digital-salud-chile',
       name: 'Marketing Digital para Salud en Chile',
+      description: 'Agencia especializada en marketing digital para el sector salud en Chile.',
+      isPartOf: { '@id': 'https://www.mulleryperez.cl/#website' },
+    },
+    {
+      '@type': 'BreadcrumbList',
+      '@id': 'https://www.mulleryperez.cl/marketing-digital-salud-chile#breadcrumb',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, item: { '@id': 'https://www.mulleryperez.cl/', name: 'Inicio' } },
+        { '@type': 'ListItem', position: 2, item: { '@id': 'https://www.mulleryperez.cl/industrias', name: 'Industrias' } },
+        { '@type': 'ListItem', position: 3, item: { name: 'Marketing Digital Salud' } },
+      ],
     },
     {
       '@type': 'Service',
@@ -496,6 +507,30 @@ export default function MarketingSaludPage() {
                 <span className="inline-block px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-semibold mb-3">Métricas</span>
                 <h3 className="font-bold text-gray-900 group-hover:text-red-600 transition-colors mb-2">CAC en Salud: Cómo Optimizarlo</h3>
                 <span className="inline-flex items-center gap-1 text-sm text-red-600 font-medium">Leer más <ArrowRight className="w-4 h-4" /></span>
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* Industrias Relacionadas */}
+        <section className="py-16 bg-white">
+          <div className="container mx-auto px-4 max-w-5xl">
+            <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">Industrias Relacionadas</h2>
+            <div className="grid md:grid-cols-3 gap-6">
+              <Link href="/marketing-digital-educacion-chile" className="group block bg-indigo-50 hover:bg-indigo-100 rounded-xl p-6 transition-all border border-indigo-100">
+                <h3 className="font-bold text-gray-900 group-hover:text-indigo-600 transition-colors mb-2">Educación</h3>
+                <p className="text-gray-600 text-sm mb-3">Formación médica, diplomados de especialización y cursos de salud</p>
+                <span className="inline-flex items-center gap-1 text-sm text-indigo-600 font-medium">Ver industria <ArrowRight className="w-4 h-4" /></span>
+              </Link>
+              <Link href="/marketing-digital-servicios-profesionales-chile" className="group block bg-cyan-50 hover:bg-cyan-100 rounded-xl p-6 transition-all border border-cyan-100">
+                <h3 className="font-bold text-gray-900 group-hover:text-cyan-600 transition-colors mb-2">Servicios Profesionales</h3>
+                <p className="text-gray-600 text-sm mb-3">Kinesiólogos, nutricionistas y especialistas independientes</p>
+                <span className="inline-flex items-center gap-1 text-sm text-cyan-600 font-medium">Ver industria <ArrowRight className="w-4 h-4" /></span>
+              </Link>
+              <Link href="/marketing-digital-saas-chile" className="group block bg-purple-50 hover:bg-purple-100 rounded-xl p-6 transition-all border border-purple-100">
+                <h3 className="font-bold text-gray-900 group-hover:text-purple-600 transition-colors mb-2">SaaS / HealthTech</h3>
+                <p className="text-gray-600 text-sm mb-3">Software médico, telemedicina y gestión de clínicas</p>
+                <span className="inline-flex items-center gap-1 text-sm text-purple-600 font-medium">Ver industria <ArrowRight className="w-4 h-4" /></span>
               </Link>
             </div>
           </div>

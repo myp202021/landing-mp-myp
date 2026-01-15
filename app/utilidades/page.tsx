@@ -1,166 +1,213 @@
 'use client'
 
 /**
- * Utilidades M&P - Herramientas prácticas de marketing
- * Calculadoras y herramientas de análisis
+ * Utilidades M&P - Calculadoras y herramientas prácticas
+ * Diseño consistente con www.mulleryperez.cl
  */
 
-import React, { useEffect } from 'react'
+import React from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Calculator, Gauge, GitBranch, Gamepad2, BookOpen, TrendingUp, Users } from 'lucide-react'
-import { createSoftwareAppSchema } from '@/lib/metadata'
+import {
+  Calculator,
+  Gauge,
+  GitBranch,
+  Gamepad2,
+  BookOpen,
+  TrendingUp,
+  Users,
+  ArrowRight,
+  Wrench,
+  Download
+} from 'lucide-react'
 
 export default function Utilidades() {
-  useEffect(() => {
-    document.title = 'Utilidades Marketing Digital - Calculadoras Gratis Chile | M&P'
+  const destacado = {
+    nombre: 'Ebook: Marketing de Datos 2025',
+    descripcion: 'Descarga gratis la guía definitiva del marketing basado en datos e IA. 50+ páginas con estrategias, frameworks y casos reales.',
+    icono: BookOpen,
+    url: '/recursos/ebook-marketing-datos-2025',
+    gradient: 'from-violet-600 to-fuchsia-600'
+  }
 
-    const metaDescription = document.querySelector('meta[name="description"]')
-    if (metaDescription) {
-      metaDescription.setAttribute('content', 'Herramientas prácticas de marketing digital: calculadoras CAC, ROI/ROAS, LTV, comparador web, generador funnels CRM y simulador estrategias. Gratis.')
-    } else {
-      const meta = document.createElement('meta')
-      meta.name = 'description'
-      meta.content = 'Herramientas prácticas de marketing digital: calculadoras CAC, ROI/ROAS, LTV, comparador web, generador funnels CRM y simulador estrategias. Gratis.'
-      document.head.appendChild(meta)
-    }
-  }, [])
-
-  const utilidadesSchema = createSoftwareAppSchema(
-    'Utilidades M&P - Herramientas de Marketing Digital',
-    'Hub de herramientas prácticas para marketing digital: calculadora de CAC (costo de adquisición de cliente), comparador de velocidad web, generador de funnels para CRM y simulador de estrategias de marketing.',
-    'https://www.mulleryperez.cl/utilidades'
-  )
-
-  const herramientas = [
-    {
-      nombre: 'Ebook: Marketing de Datos 2025',
-      descripcion: 'Descarga gratis la guía definitiva del marketing basado en datos e IA',
-      icono: BookOpen,
-      url: '/recursos/ebook-marketing-datos-2025',
-      color: 'from-violet-600 to-fuchsia-600',
-      destacado: true
-    },
+  const calculadoras = [
     {
       nombre: 'Calculadora de CAC',
-      descripcion: 'Calcula tu Costo de Adquisición de Cliente de forma precisa',
+      descripcion: 'Calcula tu Costo de Adquisición de Cliente por canal de forma precisa.',
       icono: Calculator,
       url: '/utilidades/calculadora-cac',
-      color: 'from-emerald-600 to-teal-600'
+      gradient: 'from-emerald-500 to-teal-600'
     },
     {
       nombre: 'Calculadora ROI / ROAS',
-      descripcion: 'Mide la rentabilidad real de tus campañas publicitarias',
+      descripcion: 'Mide la rentabilidad real de tus campañas publicitarias.',
       icono: TrendingUp,
       url: '/utilidades/calculadora-roi-roas',
-      color: 'from-blue-600 to-cyan-600'
+      gradient: 'from-blue-500 to-cyan-600'
     },
     {
       nombre: 'Calculadora LTV',
-      descripcion: 'Calcula el valor de vida de tus clientes y proyecta ingresos',
+      descripcion: 'Calcula el valor de vida de tus clientes y proyecta ingresos futuros.',
       icono: Users,
       url: '/utilidades/calculadora-ltv',
-      color: 'from-purple-600 to-indigo-600'
-    },
+      gradient: 'from-purple-500 to-indigo-600'
+    }
+  ]
+
+  const herramientas = [
     {
       nombre: 'Comparador de Velocidad Web',
-      descripcion: 'Compara la velocidad de tu sitio contra la competencia',
+      descripcion: 'Compara la velocidad de tu sitio contra la competencia con Core Web Vitals.',
       icono: Gauge,
       url: '/utilidades/comparador-web',
-      color: 'from-orange-600 to-amber-600'
+      gradient: 'from-orange-500 to-amber-600'
     },
     {
       nombre: 'Generador de Funnels CRM',
-      descripcion: 'Crea funnels personalizados para tu sistema CRM',
+      descripcion: 'Crea funnels de venta personalizados para tu sistema CRM.',
       icono: GitBranch,
       url: '/utilidades/generador-funnels',
-      color: 'from-purple-600 to-pink-600'
+      gradient: 'from-pink-500 to-rose-600'
     },
     {
       nombre: 'Juega y Aprende con M&P',
-      descripcion: 'Simulador interactivo de estrategias de marketing digital',
+      descripcion: 'Simulador interactivo de estrategias de marketing digital.',
       icono: Gamepad2,
       url: '/utilidades/juega-aprende',
-      color: 'from-blue-600 to-indigo-600'
+      gradient: 'from-indigo-500 to-blue-600'
     }
   ]
 
   return (
-    <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(utilidadesSchema) }}
-      />
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-        {/* Header */}
-      <header className="border-b border-white/10 backdrop-blur-xl bg-white/5">
-        <div className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
-            <Image src="/logo-blanco.png" alt="M&P Logo" width={120} height={32} className="h-8 w-auto" />
+    <div className="min-h-screen bg-white">
+      {/* Header - Consistente con home */}
+      <header className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-xl border-b border-gray-100 z-50">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 py-5 flex items-center justify-between">
+          <Link href="/" className="hover:opacity-80 transition-opacity">
+            <Image
+              src="/logo-color.png"
+              alt="Muller y Pérez"
+              width={140}
+              height={45}
+              className="h-11 w-auto"
+              priority
+            />
           </Link>
-          <Link href="/" className="text-white font-semibold text-sm hover:text-purple-300 transition-colors">
-            ← Volver
-          </Link>
+          <div className="flex items-center gap-4">
+            <Link
+              href="/labs"
+              className="hidden md:block text-sm font-semibold text-gray-600 hover:text-blue-600 transition-colors"
+            >
+              M&P Labs
+            </Link>
+            <Link
+              href="/"
+              className="text-sm font-semibold text-gray-600 hover:text-blue-600 transition-colors"
+            >
+              ← Volver al inicio
+            </Link>
+          </div>
         </div>
       </header>
 
-      {/* Hero */}
-      <section className="pt-20 pb-16 px-6">
-        <div className="max-w-6xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 mb-6 px-5 py-2.5 rounded-full bg-purple-500/20 border border-purple-400/30">
-            <Calculator className="w-4 h-4 text-purple-300" />
-            <span className="text-purple-200 text-sm font-medium">Utilidades M&P</span>
+      {/* Hero - Estilo consistente con home */}
+      <section className="pt-36 pb-20 px-6 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-white relative overflow-hidden">
+        <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-5"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/50 to-transparent"></div>
+
+        <div className="max-w-5xl mx-auto relative z-10 text-center">
+          <div className="inline-flex items-center gap-2 mb-8 px-5 py-2.5 rounded-full bg-blue-500/10 border border-blue-400/20 backdrop-blur-sm">
+            <Wrench className="w-4 h-4 text-blue-400" />
+            <span className="text-blue-200 text-sm font-medium">Utilidades M&P</span>
           </div>
 
-          <h1 className="text-5xl md:text-6xl font-bold text-white mb-6 leading-tight">
-            Herramientas prácticas<br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-orange-400">
-              para tu negocio digital
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+            Calculadoras y Herramientas{' '}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400">
+              Prácticas
             </span>
           </h1>
 
-          <p className="text-xl text-purple-100 max-w-3xl mx-auto leading-relaxed">
-            Calculadoras y herramientas de análisis para tomar mejores decisiones de marketing
+          <p className="text-xl text-blue-200 max-w-3xl mx-auto leading-relaxed mb-8">
+            Herramientas simples para calcular métricas clave de tu negocio digital
           </p>
+
+          <div className="flex flex-wrap justify-center gap-6 text-sm">
+            <div className="flex items-center gap-2 text-blue-300">
+              <Calculator className="w-4 h-4" />
+              <span>CAC, LTV, ROI</span>
+            </div>
+            <div className="flex items-center gap-2 text-blue-300">
+              <Gauge className="w-4 h-4" />
+              <span>Core Web Vitals</span>
+            </div>
+            <div className="flex items-center gap-2 text-blue-300">
+              <Download className="w-4 h-4" />
+              <span>Recursos gratis</span>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* Herramientas Grid */}
-      <section className="pb-20 px-6">
+      {/* Ebook Destacado */}
+      <section className="py-12 px-6 bg-gradient-to-r from-violet-50 to-fuchsia-50 border-b border-violet-100">
+        <div className="max-w-5xl mx-auto">
+          <Link
+            href={destacado.url}
+            className="group flex flex-col md:flex-row items-center gap-8 p-8 bg-white rounded-2xl border border-violet-200 hover:border-violet-400 hover:shadow-xl hover:shadow-violet-500/10 transition-all duration-300"
+          >
+            <div className={`w-20 h-20 bg-gradient-to-br ${destacado.gradient} rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300 flex-shrink-0`}>
+              <BookOpen className="w-10 h-10 text-white" />
+            </div>
+            <div className="flex-1 text-center md:text-left">
+              <div className="inline-flex items-center gap-2 mb-2 px-3 py-1 bg-gradient-to-r from-emerald-500 to-green-500 text-white text-xs font-bold rounded-full">
+                <Download className="w-3 h-3" />
+                GRATIS
+              </div>
+              <h2 className="text-2xl font-bold text-gray-900 mb-2 group-hover:text-violet-600 transition-colors">
+                {destacado.nombre}
+              </h2>
+              <p className="text-gray-600">
+                {destacado.descripcion}
+              </p>
+            </div>
+            <div className="flex items-center gap-2 text-violet-600 font-semibold group-hover:gap-3 transition-all duration-300">
+              <span>Descargar</span>
+              <ArrowRight className="w-5 h-5" />
+            </div>
+          </Link>
+        </div>
+      </section>
+
+      {/* Calculadoras */}
+      <section className="py-16 px-6 bg-white">
         <div className="max-w-7xl mx-auto">
-          <div className="grid md:grid-cols-2 gap-6">
-            {herramientas.map((herramienta, idx) => {
-              const IconComponent = herramienta.icono
+          <div className="mb-10">
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">Calculadoras de Métricas</h2>
+            <p className="text-gray-600">Calcula las métricas más importantes de tu negocio</p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6">
+            {calculadoras.map((tool, idx) => {
+              const IconComponent = tool.icono
               return (
                 <Link
                   key={idx}
-                  href={herramienta.url}
-                  className="group relative bg-white/5 backdrop-blur-sm rounded-2xl p-8 border border-white/10 hover:border-white/20 hover:bg-white/10 transition-all duration-300"
+                  href={tool.url}
+                  className="group bg-white rounded-2xl p-6 border border-gray-200 hover:border-blue-300 hover:shadow-xl hover:shadow-blue-500/10 transition-all duration-300"
                 >
-                  {/* Badge GRATIS para el ebook */}
-                  {herramienta.destacado && (
-                    <div className="absolute top-4 right-4 bg-gradient-to-r from-green-500 to-emerald-500 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg animate-pulse">
-                      GRATIS
-                    </div>
-                  )}
-
-                  {/* Icon */}
-                  <div className={`w-16 h-16 bg-gradient-to-br ${herramienta.color} rounded-xl flex items-center justify-center mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300`}>
-                    <IconComponent className="w-8 h-8 text-white" />
+                  <div className={`w-12 h-12 bg-gradient-to-br ${tool.gradient} rounded-xl flex items-center justify-center mb-4 shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+                    <IconComponent className="w-6 h-6 text-white" />
                   </div>
-
-                  {/* Content */}
-                  <h3 className="text-2xl font-bold text-white mb-3 group-hover:text-purple-300 transition-colors">
-                    {herramienta.nombre}
+                  <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
+                    {tool.nombre}
                   </h3>
-                  <p className="text-purple-200 leading-relaxed">
-                    {herramienta.descripcion}
+                  <p className="text-gray-600 text-sm leading-relaxed">
+                    {tool.descripcion}
                   </p>
-
-                  {/* Arrow */}
-                  <div className="mt-6 flex items-center gap-2 text-purple-300 font-semibold group-hover:gap-4 transition-all duration-300">
-                    <span>{herramienta.destacado ? 'Descargar ahora' : 'Usar ahora'}</span>
-                    <span>→</span>
+                  <div className="mt-4 flex items-center gap-2 text-blue-600 font-semibold text-sm group-hover:gap-3 transition-all duration-300">
+                    <span>Calcular</span>
+                    <ArrowRight className="w-4 h-4" />
                   </div>
                 </Link>
               )
@@ -169,13 +216,86 @@ export default function Utilidades() {
         </div>
       </section>
 
+      {/* Otras Herramientas */}
+      <section className="py-16 px-6 bg-gray-50 border-t border-gray-100">
+        <div className="max-w-7xl mx-auto">
+          <div className="mb-10">
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">Otras Herramientas</h2>
+            <p className="text-gray-600">Herramientas adicionales para optimizar tu estrategia</p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6">
+            {herramientas.map((tool, idx) => {
+              const IconComponent = tool.icono
+              return (
+                <Link
+                  key={idx}
+                  href={tool.url}
+                  className="group bg-white rounded-2xl p-6 border border-gray-200 hover:border-blue-300 hover:shadow-xl hover:shadow-blue-500/10 transition-all duration-300"
+                >
+                  <div className={`w-12 h-12 bg-gradient-to-br ${tool.gradient} rounded-xl flex items-center justify-center mb-4 shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+                    <IconComponent className="w-6 h-6 text-white" />
+                  </div>
+                  <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
+                    {tool.nombre}
+                  </h3>
+                  <p className="text-gray-600 text-sm leading-relaxed">
+                    {tool.descripcion}
+                  </p>
+                  <div className="mt-4 flex items-center gap-2 text-blue-600 font-semibold text-sm group-hover:gap-3 transition-all duration-300">
+                    <span>Usar</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </div>
+                </Link>
+              )
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-16 px-6 bg-white border-t border-gray-100">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
+            ¿Buscas herramientas más avanzadas?
+          </h2>
+          <p className="text-gray-600 mb-8 max-w-2xl mx-auto">
+            Visita M&P Labs para acceder a predictores, comparadores y herramientas con IA.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link
+              href="/labs"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-lg shadow-blue-600/20 transition-all duration-300"
+            >
+              Ir a M&P Labs
+            </Link>
+            <Link
+              href="/#contacto"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 border-2 border-gray-300 hover:border-blue-600 text-gray-700 hover:text-blue-600 font-semibold rounded-lg transition-all duration-300"
+            >
+              Hablar con un experto
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* Footer */}
-      <footer className="border-t border-white/10 py-8 px-6">
-        <div className="max-w-7xl mx-auto text-center text-purple-300 text-sm">
-          <p>© 2024 Muller y Pérez · Utilidades</p>
+      <footer className="border-t border-gray-200 py-8 px-6 bg-white">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+          <p className="text-gray-500 text-sm">© 2025 Muller y Pérez · Utilidades</p>
+          <div className="flex gap-6 text-sm">
+            <Link href="/labs" className="text-gray-500 hover:text-blue-600 transition-colors">
+              M&P Labs
+            </Link>
+            <Link href="/blog" className="text-gray-500 hover:text-blue-600 transition-colors">
+              Blog
+            </Link>
+            <Link href="/" className="text-gray-500 hover:text-blue-600 transition-colors">
+              Inicio
+            </Link>
+          </div>
         </div>
       </footer>
-      </div>
-    </>
+    </div>
   )
 }

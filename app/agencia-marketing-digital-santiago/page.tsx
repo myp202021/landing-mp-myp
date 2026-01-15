@@ -120,13 +120,13 @@ export default function AgenciaMarketingDigitalSantiagoPage() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <Link
-                href="/#contact"
+                href="/cotizador"
                 className="px-8 py-4 bg-green-500 text-white rounded-lg hover:bg-green-600 transition font-semibold text-center text-lg"
               >
-                Agendar Reunión en Las Condes
+                Solicitar Propuesta Gratis
               </Link>
               <Link
-                href="/#pricing"
+                href="/labs/predictor"
                 className="px-8 py-4 bg-white text-blue-900 rounded-lg hover:bg-blue-50 transition font-semibold text-center text-lg"
               >
                 Ver Planes y Precios
@@ -564,31 +564,58 @@ export default function AgenciaMarketingDigitalSantiagoPage() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
-                href="/#contact"
+                href="/cotizador"
                 className="px-8 py-4 bg-green-500 text-white rounded-lg hover:bg-green-600 transition font-semibold text-lg"
               >
-                Agendar Reunión en Las Condes
+                Solicitar Propuesta Gratis
               </Link>
               <Link
-                href="/"
+                href="/labs/predictor"
                 className="px-8 py-4 bg-white text-blue-900 rounded-lg hover:bg-blue-50 transition font-semibold text-lg"
               >
-                Volver al Inicio
+                Simular ROI en Santiago
               </Link>
             </div>
           </section>
         </article>
 
+        {/* Links Internos */}
+        <section className="bg-gray-100 py-16">
+          <div className="container mx-auto px-6 max-w-5xl">
+            <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">Explora Nuestros Servicios</h2>
+            <div className="grid md:grid-cols-4 gap-6">
+              <Link href="/servicios/google-ads-chile" className="group block bg-white hover:bg-blue-50 rounded-xl p-5 transition-all border border-gray-200">
+                <h3 className="font-bold text-gray-900 group-hover:text-blue-600 transition-colors mb-1">Google Ads</h3>
+                <p className="text-gray-600 text-sm">Campañas SEM en Santiago</p>
+              </Link>
+              <Link href="/servicios/meta-ads-chile" className="group block bg-white hover:bg-blue-50 rounded-xl p-5 transition-all border border-gray-200">
+                <h3 className="font-bold text-gray-900 group-hover:text-blue-600 transition-colors mb-1">Meta Ads</h3>
+                <p className="text-gray-600 text-sm">Facebook e Instagram</p>
+              </Link>
+              <Link href="/industrias" className="group block bg-white hover:bg-blue-50 rounded-xl p-5 transition-all border border-gray-200">
+                <h3 className="font-bold text-gray-900 group-hover:text-blue-600 transition-colors mb-1">Industrias</h3>
+                <p className="text-gray-600 text-sm">Soluciones por sector</p>
+              </Link>
+              <Link href="/cotizador" className="group block bg-white hover:bg-blue-50 rounded-xl p-5 transition-all border border-gray-200">
+                <h3 className="font-bold text-gray-900 group-hover:text-blue-600 transition-colors mb-1">Cotizador</h3>
+                <p className="text-gray-600 text-sm">Propuesta personalizada</p>
+              </Link>
+            </div>
+          </div>
+        </section>
+
         {/* Footer simple */}
         <footer className="bg-gray-900 text-white py-12">
           <div className="container mx-auto px-6 text-center">
             <p className="text-gray-400 mb-4">
-              © 2025 Muller y Pérez - Agencia de Marketing Digital Santiago | Oficinas en Las Condes | Todos los derechos reservados
+              © 2025 Muller y Pérez - Agencia de Marketing Digital Santiago | Oficinas en Las Condes
             </p>
-            <div className="flex justify-center gap-6 text-sm text-gray-400">
+            <div className="flex flex-wrap justify-center gap-4 text-sm text-gray-400">
               <Link href="/" className="hover:text-white transition">Inicio</Link>
-              <Link href="/#pricing" className="hover:text-white transition">Planes</Link>
-              <Link href="/#contact" className="hover:text-white transition">Contacto</Link>
+              <Link href="/servicios" className="hover:text-white transition">Servicios</Link>
+              <Link href="/industrias" className="hover:text-white transition">Industrias</Link>
+              <Link href="/cotizador" className="hover:text-white transition">Cotizador</Link>
+              <Link href="/labs/predictor" className="hover:text-white transition">Predictor</Link>
             </div>
           </div>
         </footer>

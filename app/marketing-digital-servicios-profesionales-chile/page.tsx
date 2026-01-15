@@ -31,6 +31,15 @@ const jsonLd = {
       isPartOf: { '@id': 'https://www.mulleryperez.cl/#website' },
     },
     {
+      '@type': 'BreadcrumbList',
+      '@id': 'https://www.mulleryperez.cl/marketing-digital-servicios-profesionales-chile#breadcrumb',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, item: { '@id': 'https://www.mulleryperez.cl/', name: 'Inicio' } },
+        { '@type': 'ListItem', position: 2, item: { '@id': 'https://www.mulleryperez.cl/industrias', name: 'Industrias' } },
+        { '@type': 'ListItem', position: 3, item: { name: 'Marketing Servicios Profesionales' } },
+      ],
+    },
+    {
       '@type': 'Service',
       name: 'Marketing Digital para Servicios Profesionales',
       description: 'Marketing digital para consultoras, contadores, arquitectos y estudios profesionales',
