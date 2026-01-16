@@ -36,6 +36,8 @@ interface LeadData {
   empresa: string
   email: string
   telefono: string
+  presupuesto: string
+  timeline: string
   interes: string
 }
 
@@ -95,6 +97,8 @@ export default function ChatBot() {
     empresa: '',
     email: '',
     telefono: '',
+    presupuesto: '',
+    timeline: '',
     interes: ''
   })
   const [formSubmitting, setFormSubmitting] = useState(false)
@@ -365,6 +369,8 @@ export default function ChatBot() {
         empresa: '',
         email: '',
         telefono: '',
+        presupuesto: '',
+        timeline: '',
         interes: ''
       })
     } catch (err) {
@@ -566,6 +572,30 @@ export default function ChatBot() {
                       onChange={(e) => setLeadData(prev => ({ ...prev, telefono: e.target.value }))}
                       className="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                     />
+                    <select
+                      value={leadData.presupuesto}
+                      onChange={(e) => setLeadData(prev => ({ ...prev, presupuesto: e.target.value }))}
+                      className="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-700"
+                    >
+                      <option value="">Presupuesto mensual aprox.</option>
+                      <option value="< $500.000">Menos de $500.000</option>
+                      <option value="$500.000 - $1.000.000">$500.000 - $1.000.000</option>
+                      <option value="$1.000.000 - $2.000.000">$1.000.000 - $2.000.000</option>
+                      <option value="$2.000.000 - $5.000.000">$2.000.000 - $5.000.000</option>
+                      <option value="> $5.000.000">Mas de $5.000.000</option>
+                    </select>
+                    <select
+                      value={leadData.timeline}
+                      onChange={(e) => setLeadData(prev => ({ ...prev, timeline: e.target.value }))}
+                      className="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-700"
+                    >
+                      <option value="">¿Cuando quieres empezar?</option>
+                      <option value="Inmediato">Inmediato (esta semana)</option>
+                      <option value="Este mes">Este mes</option>
+                      <option value="Proximo mes">El proximo mes</option>
+                      <option value="En 2-3 meses">En 2-3 meses</option>
+                      <option value="Solo explorando">Solo estoy explorando</option>
+                    </select>
                     <select
                       value={leadData.interes}
                       onChange={(e) => setLeadData(prev => ({ ...prev, interes: e.target.value }))}

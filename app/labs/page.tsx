@@ -19,7 +19,8 @@ import {
   ArrowRight,
   Beaker,
   Zap,
-  PenTool
+  PenTool,
+  Search
 } from 'lucide-react'
 
 export default function MPLabs() {
@@ -86,6 +87,15 @@ export default function MPLabs() {
       tag: 'Beta',
       tagColor: 'bg-orange-500',
       gradient: 'from-cyan-500 to-blue-600'
+    },
+    {
+      nombre: 'Auditoría SEO',
+      descripcion: 'Analiza cualquier sitio web gratis. Revisa meta tags, headings, imágenes, velocidad y schema markup.',
+      icono: Search,
+      url: '/labs/auditoria-seo',
+      tag: 'Nuevo',
+      tagColor: 'bg-emerald-500',
+      gradient: 'from-green-500 to-emerald-600'
     }
   ]
 

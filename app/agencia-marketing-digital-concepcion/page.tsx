@@ -9,7 +9,9 @@ import {
   createMetadata,
   createWebPageSchema,
   createFAQPageSchema,
-  createBreadcrumbSchema
+  createBreadcrumbSchema,
+  createLocalBusinessSchema,
+  cityData
 } from '@/lib/metadata'
 
 export const metadata: Metadata = createMetadata({
@@ -43,6 +45,9 @@ export default function AgenciaMarketingDigitalConcepcionPage() {
     { name: 'Inicio', url: 'https://www.mulleryperez.cl' },
     { name: 'Agencia Marketing Digital Concepción', url: 'https://www.mulleryperez.cl/agencia-marketing-digital-concepcion' }
   ])
+
+  // LocalBusiness Schema para Concepción
+  const localBusinessSchema = createLocalBusinessSchema(cityData.concepcion)
 
   const faqSchema = createFAQPageSchema([
     {
@@ -80,6 +85,10 @@ export default function AgenciaMarketingDigitalConcepcionPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }}
       />
 
       <div className="min-h-screen bg-white">

@@ -2942,7 +2942,7 @@ Resultado:
 Dejame tus datos y un especialista de M&P te contactara en menos de 24 horas.
 
 Te haremos preguntas para entender tu negocio y darte recomendaciones personalizadas (sin compromiso).`,
-    captureFields: ['nombre', 'empresa', 'email', 'telefono', 'interes'],
+    captureFields: ['nombre', 'empresa', 'email', 'telefono', 'presupuesto', 'timeline', 'interes'],
     nextNode: 'contacto_confirmacion',
     category: 'conversion',
     subcategory: 'lead'

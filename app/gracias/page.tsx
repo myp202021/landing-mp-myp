@@ -1,7 +1,8 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
-import { CheckCircle2, Calendar, MessageSquare, ArrowRight } from 'lucide-react'
+import Script from 'next/script'
+import { CheckCircle2, MessageSquare, ArrowRight, Download, Star } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'Gracias por Contactarnos | Muller y Pérez',
@@ -14,6 +15,18 @@ export const metadata: Metadata = {
 
 export default function GraciasPage() {
   return (
+    <>
+      {/* Google Ads Conversion Tracking */}
+      <Script id="google-ads-conversion" strategy="afterInteractive">
+        {`
+          gtag('event', 'conversion', {
+            'send_to': 'AW-17056298226/lead_form',
+            'value': 1.0,
+            'currency': 'CLP'
+          });
+        `}
+      </Script>
+
     <main className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
       {/* Header simple */}
       <header className="bg-white shadow-sm">
@@ -104,9 +117,49 @@ export default function GraciasPage() {
           </div>
         </div>
 
+        {/* Bonus: eBook gratis */}
+        <div className="mt-8 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl shadow-xl p-8 text-white">
+          <div className="flex flex-col md:flex-row items-center gap-6">
+            <div className="w-16 h-16 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
+              <Download className="w-8 h-8" />
+            </div>
+            <div className="flex-1 text-center md:text-left">
+              <h3 className="text-xl font-bold mb-2">Mientras esperas, descarga gratis</h3>
+              <p className="text-blue-100 mb-4">
+                eBook: Marketing con Datos 2025 - Guía completa para tomar decisiones basadas en datos reales
+              </p>
+              <a
+                href="/recursos/ebook-marketing-datos-2025.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 bg-white text-blue-600 px-6 py-3 rounded-xl font-semibold hover:bg-blue-50 transition-all"
+              >
+                <Download className="w-5 h-5" />
+                Descargar eBook Gratis
+              </a>
+            </div>
+          </div>
+        </div>
+
+        {/* Social Proof */}
+        <div className="mt-8 bg-white rounded-xl p-6 shadow-lg">
+          <div className="flex items-center justify-center gap-2 mb-4">
+            {[1, 2, 3, 4, 5].map((i) => (
+              <Star key={i} className="w-5 h-5 text-yellow-400 fill-yellow-400" />
+            ))}
+            <span className="font-semibold text-gray-800 ml-2">4.9/5</span>
+          </div>
+          <p className="text-gray-600 text-center italic">
+            &ldquo;M&P nos ayudó a reducir nuestro costo por lead en un 45%. Su enfoque basado en datos realmente funciona.&rdquo;
+          </p>
+          <p className="text-sm text-gray-500 text-center mt-2">
+            — Cliente del sector SaaS
+          </p>
+        </div>
+
         {/* Recursos adicionales */}
-        <div className="mt-12 text-center">
-          <p className="text-gray-500 mb-4">Mientras tanto, explora nuestras herramientas gratuitas:</p>
+        <div className="mt-8 text-center">
+          <p className="text-gray-500 mb-4">Explora nuestras herramientas gratuitas:</p>
           <div className="flex flex-wrap justify-center gap-3">
             <Link
               href="/labs/predictor"
@@ -139,5 +192,6 @@ export default function GraciasPage() {
         </div>
       </footer>
     </main>
+    </>
   )
 }

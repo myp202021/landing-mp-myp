@@ -766,12 +766,28 @@ export default function LandingClient() {
                         <Link href="/marketing-digital-b2b-chile" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">B2B / Empresas</Link>
                         <Link href="/marketing-digital-saas-chile" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">SaaS / Software</Link>
                         <Link href="/marketing-digital-fintech-chile" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">Fintech</Link>
-                        <Link href="/marketing-digital-servicios-profesionales-chile" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">Servicios Profesionales</Link>
-                        <Link href="/marketing-digital-inmobiliario-chile" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">Inmobiliario</Link>
-                        <Link href="/marketing-digital-salud-chile" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">Salud / Clínicas</Link>
+                        <Link href="/marketing-digital-legal-chile" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">Legal / Abogados</Link>
+                        <Link href="/marketing-digital-seguros-chile" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">Seguros</Link>
+                        <Link href="/marketing-digital-turismo-chile" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">Turismo</Link>
+                        <Link href="/marketing-digital-manufactura-chile" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">Manufactura</Link>
                         <div className="pt-2 border-t border-gray-100 mt-2">
                           <Link href="/industrias" className="text-sm text-blue-600 hover:text-blue-700 font-semibold">Ver todas →</Link>
                         </div>
+                      </div>
+                    </div>
+                    {/* Columna Ciudades */}
+                    <div>
+                      <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Por Ciudad</h3>
+                      <div className="space-y-1">
+                        <Link href="/agencia-marketing-digital-santiago" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">Santiago</Link>
+                        <Link href="/agencia-marketing-digital-vina-del-mar" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">Viña del Mar</Link>
+                        <Link href="/agencia-marketing-digital-concepcion" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">Concepción</Link>
+                        <Link href="/agencia-marketing-digital-valparaiso" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">Valparaíso</Link>
+                        <Link href="/agencia-marketing-digital-antofagasta" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">Antofagasta</Link>
+                        <Link href="/agencia-marketing-digital-temuco" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">Temuco</Link>
+                        <Link href="/agencia-marketing-digital-puerto-montt" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">Puerto Montt</Link>
+                        <Link href="/agencia-marketing-digital-las-condes" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">Las Condes</Link>
+                        <Link href="/agencia-marketing-digital-vitacura" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">Vitacura</Link>
                       </div>
                     </div>
                     {/* Columna Recursos */}
@@ -2416,9 +2432,9 @@ export default function LandingClient() {
       {/* Footer Mejorado */}
       <footer className="bg-slate-900 text-white py-16 px-6" role="contentinfo">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-2 md:grid-cols-6 gap-8 mb-12">
-            {/* Columna 1: Sobre M&P (span 2) */}
-            <div className="col-span-2">
+          <div className="grid grid-cols-2 md:grid-cols-7 gap-8 mb-12">
+            {/* Columna 1: Sobre M&P */}
+            <div className="col-span-2 md:col-span-1">
               <Image
                 src="/logo-blanco.png"
                 alt="Muller y Pérez - Agencia de Marketing Digital"
@@ -2463,15 +2479,30 @@ export default function LandingClient() {
                 <li><Link href="/marketing-digital-ecommerce-chile" className="text-blue-200 hover:text-white transition-colors">Ecommerce</Link></li>
                 <li><Link href="/marketing-digital-b2b-chile" className="text-blue-200 hover:text-white transition-colors">B2B</Link></li>
                 <li><Link href="/marketing-digital-saas-chile" className="text-blue-200 hover:text-white transition-colors">SaaS</Link></li>
-                <li><Link href="/marketing-digital-fintech-chile" className="text-blue-200 hover:text-white transition-colors">Fintech</Link></li>
-                <li><Link href="/marketing-digital-servicios-profesionales-chile" className="text-blue-200 hover:text-white transition-colors">Serv. Profesionales</Link></li>
-                <li><Link href="/marketing-digital-inmobiliario-chile" className="text-blue-200 hover:text-white transition-colors">Inmobiliario</Link></li>
-                <li><Link href="/marketing-digital-salud-chile" className="text-blue-200 hover:text-white transition-colors">Salud</Link></li>
+                <li><Link href="/marketing-digital-legal-chile" className="text-blue-200 hover:text-white transition-colors">Legal</Link></li>
+                <li><Link href="/marketing-digital-seguros-chile" className="text-blue-200 hover:text-white transition-colors">Seguros</Link></li>
+                <li><Link href="/marketing-digital-turismo-chile" className="text-blue-200 hover:text-white transition-colors">Turismo</Link></li>
+                <li><Link href="/marketing-digital-manufactura-chile" className="text-blue-200 hover:text-white transition-colors">Manufactura</Link></li>
                 <li className="pt-1"><Link href="/industrias" className="text-blue-400 hover:text-white transition-colors font-medium">Ver todas →</Link></li>
               </ul>
             </div>
 
-            {/* Columna 4: Recursos */}
+            {/* Columna 4: Por Ciudad */}
+            <div>
+              <h3 className="text-white font-bold text-sm mb-4">Por Ciudad</h3>
+              <ul className="space-y-2 text-sm">
+                <li><Link href="/agencia-marketing-digital-santiago" className="text-blue-200 hover:text-white transition-colors">Santiago</Link></li>
+                <li><Link href="/agencia-marketing-digital-concepcion" className="text-blue-200 hover:text-white transition-colors">Concepción</Link></li>
+                <li><Link href="/agencia-marketing-digital-valparaiso" className="text-blue-200 hover:text-white transition-colors">Valparaíso</Link></li>
+                <li><Link href="/agencia-marketing-digital-antofagasta" className="text-blue-200 hover:text-white transition-colors">Antofagasta</Link></li>
+                <li><Link href="/agencia-marketing-digital-puerto-montt" className="text-blue-200 hover:text-white transition-colors">Puerto Montt</Link></li>
+                <li><Link href="/agencia-marketing-digital-las-condes" className="text-blue-200 hover:text-white transition-colors">Las Condes</Link></li>
+                <li><Link href="/agencia-marketing-digital-vitacura" className="text-blue-200 hover:text-white transition-colors">Vitacura</Link></li>
+                <li><Link href="/agencia-marketing-digital-la-dehesa" className="text-blue-200 hover:text-white transition-colors">La Dehesa</Link></li>
+              </ul>
+            </div>
+
+            {/* Columna 5: Recursos */}
             <div>
               <h3 className="text-white font-bold text-sm mb-4">Recursos</h3>
               <ul className="space-y-2 text-sm">

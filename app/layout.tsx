@@ -7,6 +7,7 @@ import Breadcrumbs from "./components/Breadcrumbs";
 import ThirdPartyScripts from "@/components/ThirdPartyScripts";
 import ResourceHints from "@/components/ResourceHints";
 import ChatBotWrapper from "@/components/ChatBot/ChatBotWrapper";
+import ExitIntentWrapper from "@/components/ExitIntentWrapper";
 import "./globals.css";
 
 export const metadata: Metadata = defaultMetadata;
@@ -60,6 +61,7 @@ export default function RootLayout({
         <Breadcrumbs />
         {children}
         <ChatBotWrapper />
+        <ExitIntentWrapper />
         <ThirdPartyScripts />
         <SpeedInsights />
       </body>

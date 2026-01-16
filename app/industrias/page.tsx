@@ -1,6 +1,6 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
-import { ArrowRight, ShoppingCart, Building2, Cloud, Home, Heart, GraduationCap, CreditCard, Briefcase } from 'lucide-react'
+import { ArrowRight, ShoppingCart, Building2, Cloud, Home, Heart, GraduationCap, CreditCard, Briefcase, Scale, Shield, Plane, Factory } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'Marketing Digital por Industria en Chile | Soluciones Especializadas | M&P',
@@ -84,6 +84,38 @@ const industrias = [
     color: 'indigo',
     stats: { label: 'Lead-to-Matrícula', value: '12%' },
   },
+  {
+    titulo: 'Legal / Abogados',
+    descripcion: 'Leads calificados para estudios jurídicos y abogados independientes.',
+    href: '/marketing-digital-legal-chile',
+    icon: Scale,
+    color: 'amber',
+    stats: { label: 'CPL Promedio', value: '$22.000' },
+  },
+  {
+    titulo: 'Seguros',
+    descripcion: 'Cotizaciones para corredores de seguros, aseguradoras y agentes.',
+    href: '/marketing-digital-seguros-chile',
+    icon: Shield,
+    color: 'emerald',
+    stats: { label: 'CPL Auto', value: '$12.000' },
+  },
+  {
+    titulo: 'Turismo',
+    descripcion: 'Reservas directas para hoteles, agencias de viajes y tours.',
+    href: '/marketing-digital-turismo-chile',
+    icon: Plane,
+    color: 'sky',
+    stats: { label: 'ROAS Promedio', value: '6.2x' },
+  },
+  {
+    titulo: 'Manufactura',
+    descripcion: 'Leads B2B para fábricas, distribuidores industriales y manufactureros.',
+    href: '/marketing-digital-manufactura-chile',
+    icon: Factory,
+    color: 'orange',
+    stats: { label: 'ROI Promedio', value: '12x' },
+  },
 ]
 
 const colorClasses: Record<string, { bg: string; icon: string; hover: string }> = {
@@ -95,6 +127,9 @@ const colorClasses: Record<string, { bg: string; icon: string; hover: string }> 
   cyan: { bg: 'bg-cyan-50', icon: 'text-cyan-600', hover: 'hover:border-cyan-300' },
   red: { bg: 'bg-red-50', icon: 'text-red-600', hover: 'hover:border-red-300' },
   indigo: { bg: 'bg-indigo-50', icon: 'text-indigo-600', hover: 'hover:border-indigo-300' },
+  amber: { bg: 'bg-amber-50', icon: 'text-amber-600', hover: 'hover:border-amber-300' },
+  sky: { bg: 'bg-sky-50', icon: 'text-sky-600', hover: 'hover:border-sky-300' },
+  orange: { bg: 'bg-orange-50', icon: 'text-orange-600', hover: 'hover:border-orange-300' },
 }
 
 export default function IndustriasPage() {

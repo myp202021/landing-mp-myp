@@ -606,6 +606,201 @@ export function createArticleSchema(article: {
   }
 }
 
+// LocalBusiness Schema por Ciudad - Para páginas específicas de ciudades
+export function createLocalBusinessSchema(city: {
+  name: string
+  region: string
+  postalCode?: string
+  latitude?: number
+  longitude?: number
+  pageUrl: string
+}) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': ['LocalBusiness', 'ProfessionalService'],
+    name: `Muller y Pérez - Agencia Marketing Digital ${city.name}`,
+    url: `${siteConfig.url}${city.pageUrl}`,
+    image: siteConfig.ogImage,
+    description: `Agencia de marketing digital y performance en ${city.name}. Google Ads, Meta Ads y estrategias de publicidad digital con resultados medibles.`,
+
+    // Dirección virtual en la ciudad
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: city.name,
+      addressRegion: city.region,
+      postalCode: city.postalCode || '',
+      addressCountry: 'CL'
+    },
+
+    // Ubicación geográfica
+    geo: city.latitude && city.longitude ? {
+      '@type': 'GeoCoordinates',
+      latitude: city.latitude,
+      longitude: city.longitude
+    } : undefined,
+
+    // Área de servicio
+    areaServed: {
+      '@type': 'City',
+      name: city.name
+    },
+
+    // Contacto
+    telephone: '+56992258137',
+    email: 'contacto@mulleryperez.cl',
+
+    // Rating
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: '4.9',
+      bestRating: '5',
+      ratingCount: '47'
+    },
+
+    // Horarios
+    openingHoursSpecification: [
+      {
+        '@type': 'OpeningHoursSpecification',
+        dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+        opens: '09:00',
+        closes: '18:00'
+      }
+    ],
+
+    priceRange: '$$',
+
+    // Link a la organización principal
+    parentOrganization: {
+      '@type': 'Organization',
+      name: 'Muller y Pérez',
+      url: siteConfig.url
+    }
+  }
+}
+
+// Datos de ciudades para LocalBusiness
+export const cityData: Record<string, {
+  name: string
+  region: string
+  postalCode: string
+  latitude: number
+  longitude: number
+  pageUrl: string
+}> = {
+  santiago: {
+    name: 'Santiago',
+    region: 'Región Metropolitana',
+    postalCode: '7500000',
+    latitude: -33.4489,
+    longitude: -70.6693,
+    pageUrl: '/agencia-marketing-digital-santiago'
+  },
+  'vina-del-mar': {
+    name: 'Viña del Mar',
+    region: 'Región de Valparaíso',
+    postalCode: '2520000',
+    latitude: -33.0245,
+    longitude: -71.5518,
+    pageUrl: '/agencia-marketing-digital-vina-del-mar'
+  },
+  valparaiso: {
+    name: 'Valparaíso',
+    region: 'Región de Valparaíso',
+    postalCode: '2340000',
+    latitude: -33.0472,
+    longitude: -71.6127,
+    pageUrl: '/agencia-marketing-digital-valparaiso'
+  },
+  concepcion: {
+    name: 'Concepción',
+    region: 'Región del Biobío',
+    postalCode: '4030000',
+    latitude: -36.8270,
+    longitude: -73.0503,
+    pageUrl: '/agencia-marketing-digital-concepcion'
+  },
+  temuco: {
+    name: 'Temuco',
+    region: 'Región de La Araucanía',
+    postalCode: '4780000',
+    latitude: -38.7359,
+    longitude: -72.5904,
+    pageUrl: '/agencia-marketing-digital-temuco'
+  },
+  antofagasta: {
+    name: 'Antofagasta',
+    region: 'Región de Antofagasta',
+    postalCode: '1240000',
+    latitude: -23.6509,
+    longitude: -70.3954,
+    pageUrl: '/agencia-marketing-digital-antofagasta'
+  },
+  'puerto-montt': {
+    name: 'Puerto Montt',
+    region: 'Región de Los Lagos',
+    postalCode: '5480000',
+    latitude: -41.4689,
+    longitude: -72.9411,
+    pageUrl: '/agencia-marketing-digital-puerto-montt'
+  },
+  'la-serena': {
+    name: 'La Serena',
+    region: 'Región de Coquimbo',
+    postalCode: '1700000',
+    latitude: -29.9027,
+    longitude: -71.2519,
+    pageUrl: '/agencia-marketing-digital-la-serena'
+  },
+  iquique: {
+    name: 'Iquique',
+    region: 'Región de Tarapacá',
+    postalCode: '1100000',
+    latitude: -20.2141,
+    longitude: -70.1524,
+    pageUrl: '/agencia-marketing-digital-iquique'
+  },
+  rancagua: {
+    name: 'Rancagua',
+    region: 'Región de O\'Higgins',
+    postalCode: '2820000',
+    latitude: -34.1708,
+    longitude: -70.7444,
+    pageUrl: '/agencia-marketing-digital-rancagua'
+  },
+  talca: {
+    name: 'Talca',
+    region: 'Región del Maule',
+    postalCode: '3460000',
+    latitude: -35.4264,
+    longitude: -71.6554,
+    pageUrl: '/agencia-marketing-digital-talca'
+  },
+  'las-condes': {
+    name: 'Las Condes',
+    region: 'Región Metropolitana',
+    postalCode: '7550000',
+    latitude: -33.4103,
+    longitude: -70.5672,
+    pageUrl: '/agencia-marketing-digital-las-condes'
+  },
+  vitacura: {
+    name: 'Vitacura',
+    region: 'Región Metropolitana',
+    postalCode: '7630000',
+    latitude: -33.3938,
+    longitude: -70.5772,
+    pageUrl: '/agencia-marketing-digital-vitacura'
+  },
+  'la-dehesa': {
+    name: 'La Dehesa',
+    region: 'Región Metropolitana',
+    postalCode: '7690000',
+    latitude: -33.3547,
+    longitude: -70.5167,
+    pageUrl: '/agencia-marketing-digital-la-dehesa'
+  }
+}
+
 // Helper para agregar canonical link en client components
 export function addCanonicalLink(path: string) {
   if (typeof window === 'undefined') return
