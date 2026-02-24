@@ -216,9 +216,19 @@ export default function ArticlePage() {
             description: 'Descubre cuánto cuesta Google Ads en Chile 2025: CPC promedio $250-$4.500, CPL $8.200-$67.900. Data real de +200 campañas por industria.',
             image: 'https://www.mulleryperez.cl/og-image.svg',
             author: {
-              '@type': 'Organization',
-              name: 'Muller y Pérez',
-              url: 'https://www.mulleryperez.cl'
+              '@type': 'Person',
+              name: 'Christopher Müller',
+              url: 'https://www.mulleryperez.cl/equipo/christopher-muller',
+              sameAs: [
+                'https://www.linkedin.com/in/christophermullerm/',
+                'https://www.mulleryperez.cl'
+              ],
+              jobTitle: 'CEO & Founder',
+              worksFor: {
+                '@type': 'Organization',
+                name: 'Muller y Pérez',
+                url: 'https://www.mulleryperez.cl'
+              }
             },
             publisher: {
               '@type': 'Organization',

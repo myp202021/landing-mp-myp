@@ -127,7 +127,7 @@ export const defaultMetadata: Metadata = {
     'agencia marketing digital con reportes',
     'agencia marketing digital acceso full'
   ],
-  authors: [{ name: 'Muller y Pérez' }],
+  authors: [{ name: 'Christopher Müller', url: 'https://www.mulleryperez.cl/equipo/christopher-muller' }],
   creator: 'Muller y Pérez',
   publisher: 'Muller y Pérez',
   formatDetection: {
@@ -563,6 +563,23 @@ export function createServiceSchema(service: {
   }
 }
 
+// Autor principal - Christopher Müller (CEO & Founder)
+export const CHRISTOPHER_MULLER_AUTHOR = {
+  '@type': 'Person',
+  name: 'Christopher Müller',
+  url: `${siteConfig.url}/equipo/christopher-muller`,
+  sameAs: [
+    'https://www.linkedin.com/in/christophermullerm/',
+    siteConfig.url
+  ],
+  jobTitle: 'CEO & Founder',
+  worksFor: {
+    '@type': 'Organization',
+    name: 'Muller y Pérez',
+    url: siteConfig.url
+  }
+}
+
 // Article Schema para blog posts - SEO Rich Snippets
 export function createArticleSchema(article: {
   title: string
@@ -570,9 +587,9 @@ export function createArticleSchema(article: {
   url: string
   publishedTime: string
   modifiedTime?: string
-  author?: string
   image?: string
   section?: string
+  keywords?: string[]
 }) {
   return {
     '@context': 'https://schema.org',
@@ -582,11 +599,7 @@ export function createArticleSchema(article: {
     url: article.url,
     datePublished: article.publishedTime,
     dateModified: article.modifiedTime || article.publishedTime,
-    author: {
-      '@type': 'Organization',
-      name: article.author || 'Muller y Pérez',
-      url: siteConfig.url
-    },
+    author: CHRISTOPHER_MULLER_AUTHOR,
     publisher: {
       '@type': 'Organization',
       name: 'Muller y Pérez',
@@ -597,6 +610,7 @@ export function createArticleSchema(article: {
       }
     },
     image: article.image || siteConfig.ogImage,
+    keywords: article.keywords?.join(', '),
     mainEntityOfPage: {
       '@type': 'WebPage',
       '@id': article.url

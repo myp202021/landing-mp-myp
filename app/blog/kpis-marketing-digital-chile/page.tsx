@@ -243,7 +243,21 @@ export default function ArticlePage() {
         '@type': 'Article',
         headline: 'KPIs de Marketing Digital que SÍ Importan en 2025 (No Vanity Metrics)',
         datePublished: '2025-01-05T10:00:00Z',
-        author: { '@type': 'Organization', name: 'Muller y Pérez' }
+        author: {
+          '@type': 'Person',
+          name: 'Christopher Müller',
+          url: 'https://www.mulleryperez.cl/equipo/christopher-muller',
+          sameAs: [
+            'https://www.linkedin.com/in/christophermullerm/',
+            'https://www.mulleryperez.cl'
+          ],
+          jobTitle: 'CEO & Founder',
+          worksFor: {
+            '@type': 'Organization',
+            name: 'Muller y Pérez',
+            url: 'https://www.mulleryperez.cl'
+          }
+        }
       })}} />
     </div>
   )

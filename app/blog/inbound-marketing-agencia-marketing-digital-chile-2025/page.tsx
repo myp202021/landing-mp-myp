@@ -29,9 +29,19 @@ export const metadata: Metadata = {
     datePublished: '2025-01-15T00:00:00.000Z',
     dateModified: '2025-01-15T00:00:00.000Z',
     author: {
-      '@type': 'Organization',
-      name: 'Muller y Pérez',
-      url: 'https://www.mulleryperez.cl'
+      '@type': 'Person',
+      name: 'Christopher Müller',
+      url: 'https://www.mulleryperez.cl/equipo/christopher-muller',
+      sameAs: [
+        'https://www.linkedin.com/in/christophermullerm/',
+        'https://www.mulleryperez.cl'
+      ],
+      jobTitle: 'CEO & Founder',
+      worksFor: {
+        '@type': 'Organization',
+        name: 'Muller y Pérez',
+        url: 'https://www.mulleryperez.cl'
+      }
     },
     publisher: {
       '@type': 'Organization',

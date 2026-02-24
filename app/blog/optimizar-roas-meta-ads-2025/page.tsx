@@ -229,7 +229,21 @@ export default function ArticlePage() {
         '@type': 'Article',
         headline: 'Cómo Optimizar ROAS en Meta Ads 2025: 7 Estrategias Probadas',
         datePublished: '2025-01-10T10:00:00Z',
-        author: { '@type': 'Organization', name: 'Muller y Pérez' },
+        author: {
+          '@type': 'Person',
+          name: 'Christopher Müller',
+          url: 'https://www.mulleryperez.cl/equipo/christopher-muller',
+          sameAs: [
+            'https://www.linkedin.com/in/christophermullerm/',
+            'https://www.mulleryperez.cl'
+          ],
+          jobTitle: 'CEO & Founder',
+          worksFor: {
+            '@type': 'Organization',
+            name: 'Muller y Pérez',
+            url: 'https://www.mulleryperez.cl'
+          }
+        },
         publisher: { '@type': 'Organization', name: 'Muller y Pérez', logo: { '@type': 'ImageObject', url: 'https://www.mulleryperez.cl/logo-color.png' }}
       })}} />
     </div>
