@@ -326,7 +326,7 @@ export default function CuantoCuestaAgenciaPage() {
             <div className="bg-blue-900 text-white rounded-xl p-8 text-center">
               <h3 className="text-2xl font-bold mb-4">¿Quieres una Cotización Personalizada?</h3>
               <p className="text-blue-100 mb-6">
-                En M&P ofrecemos planes transparentes desde $650.000/mes con equipo dedicado
+                En M&P ofrecemos planes transparentes desde $950.000/mes con equipo dedicado
                 y acceso completo a tus cuentas.
               </p>
               <Link

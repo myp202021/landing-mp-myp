@@ -27,7 +27,7 @@ const faqSchema = {
       "name": "¿Cuánto cuesta el marketing digital en Las Condes?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Nuestros planes comienzan desde $650.000 CLP mensuales. Trabajamos con empresas de todos los tamaños del sector oriente, desde startups hasta corporaciones establecidas."
+        "text": "Nuestros planes comienzan desde $950.000 CLP mensuales. Trabajamos con empresas de todos los tamaños del sector oriente, desde startups hasta corporaciones establecidas."
       }
     },
     {

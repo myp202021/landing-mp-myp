@@ -66,7 +66,7 @@ export default function AgenciaMarketingDigitalSantiagoPage() {
     },
     {
       question: '¿Cuánto cuesta una agencia de marketing digital en Santiago en 2025?',
-      answer: 'El costo de una agencia de marketing digital en Santiago varía entre $650.000 y $1.500.000+ mensuales. En M&P ofrecemos planes transparentes: Silver ($650k), Gold ($980k) y Platinum ($1.5M+), todos con equipo dedicado de 3 profesionales, acceso full a cuentas, reportería semanal y reuniones presenciales en nuestra oficina de Las Condes.'
+      answer: 'El costo de una agencia de marketing digital en Santiago varía entre $950.000 y $1.500.000+ mensuales. En M&P ofrecemos planes transparentes: Silver ($950k), Gold ($1.200.000) y Platinum ($1.5M+), todos con equipo dedicado de 3 profesionales, acceso full a cuentas, reportería semanal y reuniones presenciales en nuestra oficina de Las Condes.'
     },
     {
       question: '¿Qué sectores de Santiago atienden como agencia de marketing digital?',
@@ -401,7 +401,7 @@ export default function AgenciaMarketingDigitalSantiagoPage() {
                 <li className="flex items-start">
                   <span className="text-2xl mr-3">💎</span>
                   <div>
-                    <strong>Agencias premium con oficinas en Las Condes (M&P):</strong> $980k - $1.5M+/mes<br />
+                    <strong>Agencias premium con oficinas en Las Condes (M&P):</strong> $1.200k - $1.5M+/mes<br />
                     <span className="text-sm text-gray-600">Equipo dedicado, oficinas físicas, acceso full, reuniones presenciales, performance marketing real</span>
                   </div>
                 </li>
@@ -411,8 +411,8 @@ export default function AgenciaMarketingDigitalSantiagoPage() {
             <div className="bg-green-50 border-l-4 border-green-500 p-6 rounded-lg mb-6">
               <h4 className="font-semibold text-gray-900 mb-2">Nuestros Planes de Marketing Digital en Santiago:</h4>
               <ul className="space-y-2 text-gray-800">
-                <li><strong>Plan Silver:</strong> $650.000/mes - Ideal para PYMEs que empiezan en Santiago</li>
-                <li><strong>Plan Gold:</strong> $980.000/mes - Más popular, para empresas en crecimiento en la RM</li>
+                <li><strong>Plan Silver:</strong> $950.000/mes - Ideal para PYMEs que empiezan en Santiago</li>
+                <li><strong>Plan Gold:</strong> $1.200.000/mes - Más popular, para empresas en crecimiento en la RM</li>
                 <li><strong>Plan Platinum:</strong> $1.500.000+/mes - Para empresas que escalan agresivamente en Santiago</li>
               </ul>
               <p className="text-sm text-gray-600 mt-3">
@@ -531,7 +531,7 @@ export default function AgenciaMarketingDigitalSantiagoPage() {
                 },
                 {
                   q: '¿Cuánto cuesta una agencia de marketing digital en Santiago en 2025?',
-                  a: 'El costo de una agencia de marketing digital en Santiago varía entre $650.000 y $1.500.000+ mensuales. En M&P ofrecemos planes transparentes: Silver ($650k), Gold ($980k) y Platinum ($1.5M+), todos con equipo dedicado de 3 profesionales, acceso full a cuentas, reportería semanal y reuniones presenciales en nuestra oficina de Las Condes.'
+                  a: 'El costo de una agencia de marketing digital en Santiago varía entre $950.000 y $1.500.000+ mensuales. En M&P ofrecemos planes transparentes: Silver ($950k), Gold ($1.200.000) y Platinum ($1.5M+), todos con equipo dedicado de 3 profesionales, acceso full a cuentas, reportería semanal y reuniones presenciales en nuestra oficina de Las Condes.'
                 },
                 {
                   q: '¿Qué sectores de Santiago atienden como agencia de marketing digital?',

@@ -27,7 +27,7 @@ const faqSchema = {
       "name": "¿Cuánto cuesta el marketing digital para empresas en Vitacura?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Nuestros planes comienzan desde $650.000 CLP mensuales. Para marcas premium y campañas de posicionamiento de lujo, trabajamos con presupuestos personalizados según objetivos."
+        "text": "Nuestros planes comienzan desde $950.000 CLP mensuales. Para marcas premium y campañas de posicionamiento de lujo, trabajamos con presupuestos personalizados según objetivos."
       }
     },
     {

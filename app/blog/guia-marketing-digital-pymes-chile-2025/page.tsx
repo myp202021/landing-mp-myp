@@ -266,7 +266,7 @@ export default function MarketingDigitalPymesPage() {
             <div className="bg-purple-900 text-white rounded-xl p-8 text-center">
               <h3 className="text-2xl font-bold mb-4">¿Necesitas Ayuda con tu Pyme?</h3>
               <p className="text-purple-100 mb-6">
-                En M&P tenemos planes especiales para pymes desde $650.000/mes. Incluye
+                En M&P tenemos planes especiales para pymes desde $950.000/mes. Incluye
                 estrategia, ejecución y reportes.
               </p>
               <Link

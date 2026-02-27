@@ -19,7 +19,7 @@ export const SEO_CONFIG: Record<string, PageSEO> = {
   // HOMEPAGE
   home: {
     title: 'Muller y Pérez - Agencia Marketing Digital y Performance Chile 2025',
-    description: 'Agencia líder en Marketing de Datos Chile 2025 | ROI +380% real | Expertos Google Ads & Meta | 95% retención clientes | Desde $650k/mes → Solicita auditoría gratis',
+    description: 'Agencia líder en Marketing de Datos Chile 2025 | ROI +380% real | Expertos Google Ads & Meta | 95% retención clientes | Desde $950k/mes → Solicita auditoría gratis',
     keywords: [
       'agencia marketing digital chile',
       'agencia marketing datos chile',

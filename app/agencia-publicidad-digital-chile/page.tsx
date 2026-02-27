@@ -54,7 +54,7 @@ export default function AgenciaPublicidadDigitalChilePage() {
     },
     {
       question: '¿Cuánto cuesta contratar una agencia de publicidad digital en Chile?',
-      answer: 'El costo de una agencia de publicidad digital en Chile varía entre $650.000 y $1.500.000+ mensuales dependiendo del servicio. En M&P ofrecemos planes transparentes desde $650k/mes que incluyen gestión de Google Ads, Meta Ads, LinkedIn Ads, equipo dedicado de 3 profesionales, acceso full a cuentas y reportería semanal.'
+      answer: 'El costo de una agencia de publicidad digital en Chile varía entre $950.000 y $1.500.000+ mensuales dependiendo del servicio. En M&P ofrecemos planes transparentes desde $950k/mes que incluyen gestión de Google Ads, Meta Ads, LinkedIn Ads, equipo dedicado de 3 profesionales, acceso full a cuentas y reportería semanal.'
     },
     {
       question: '¿Qué plataformas de publicidad digital manejan en M&P?',
@@ -615,11 +615,11 @@ export default function AgenciaPublicidadDigitalChilePage() {
                 </p>
                 <ul className="space-y-3 text-gray-700">
                   <li>
-                    <strong>Plan Silver:</strong> $650.000/mes<br />
+                    <strong>Plan Silver:</strong> $950.000/mes<br />
                     <span className="text-sm text-gray-600">Ideal para presupuestos publicitarios de $500k-$2M/mes</span>
                   </li>
                   <li>
-                    <strong>Plan Gold:</strong> $980.000/mes<br />
+                    <strong>Plan Gold:</strong> $1.200.000/mes<br />
                     <span className="text-sm text-gray-600">Para presupuestos de $2M-$5M/mes (más popular)</span>
                   </li>
                   <li>
@@ -660,7 +660,7 @@ export default function AgenciaPublicidadDigitalChilePage() {
                   <strong>Empresa mediana con presupuesto de $3M/mes en publicidad digital:</strong>
                 </p>
                 <ul className="ml-6 space-y-1">
-                  <li>• Fee agencia (Plan Gold): <strong>$980.000/mes</strong></li>
+                  <li>• Fee agencia (Plan Gold): <strong>$1.200.000/mes</strong></li>
                   <li>• Inversión publicitaria: <strong>$3.000.000/mes</strong></li>
                   <li>• <strong>Total inversión mensual: $3.980.000</strong></li>
                 </ul>
@@ -785,7 +785,7 @@ export default function AgenciaPublicidadDigitalChilePage() {
                 },
                 {
                   q: '¿Cuánto cuesta contratar una agencia de publicidad digital en Chile?',
-                  a: 'El costo de una agencia de publicidad digital en Chile varía entre $650.000 y $1.500.000+ mensuales dependiendo del servicio. En M&P ofrecemos planes transparentes desde $650k/mes que incluyen gestión de Google Ads, Meta Ads, LinkedIn Ads, equipo dedicado de 3 profesionales, acceso full a cuentas y reportería semanal.'
+                  a: 'El costo de una agencia de publicidad digital en Chile varía entre $950.000 y $1.500.000+ mensuales dependiendo del servicio. En M&P ofrecemos planes transparentes desde $950k/mes que incluyen gestión de Google Ads, Meta Ads, LinkedIn Ads, equipo dedicado de 3 profesionales, acceso full a cuentas y reportería semanal.'
                 },
                 {
                   q: '¿Qué plataformas de publicidad digital manejan en M&P?',

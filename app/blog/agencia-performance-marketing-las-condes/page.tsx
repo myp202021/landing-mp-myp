@@ -78,7 +78,7 @@ const faqSchema = {
       "name": "¿Cuánto cuesta una agencia de performance marketing en Las Condes?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Rango de precios Las Condes 2025: Agencias boutique $650k-$1.2M/mes (servicio premium especializado), Mid-tier $400k-$800k/mes (servicio profesional estándar), Low-cost $200k-$400k/mes (servicio básico, menos especialización). El precio varía según: 1) Canales gestionados (Google Ads, Meta Ads, LinkedIn Ads), 2) Complejidad industria (B2B tech > retail), 3) Presupuesto publicitario administrado, 4) Nivel de personalización estratégica. Muller y Pérez: desde $650k/mes fee fijo (no porcentual)."
+        "text": "Rango de precios Las Condes 2025: Agencias boutique $950k-$1.2M/mes (servicio premium especializado), Mid-tier $400k-$800k/mes (servicio profesional estándar), Low-cost $200k-$400k/mes (servicio básico, menos especialización). El precio varía según: 1) Canales gestionados (Google Ads, Meta Ads, LinkedIn Ads), 2) Complejidad industria (B2B tech > retail), 3) Presupuesto publicitario administrado, 4) Nivel de personalización estratégica. Muller y Pérez: desde $950k/mes fee fijo (no porcentual)."
       }
     },
     {
@@ -413,7 +413,7 @@ export default function AgenciaPerformanceMarketingLasCondes() {
               <div className="text-gray-600">ROI Promedio</div>
             </div>
             <div className="bg-white p-6 rounded-lg text-center">
-              <div className="text-4xl font-bold text-blue-600 mb-2">$650k</div>
+              <div className="text-4xl font-bold text-blue-600 mb-2">$950k</div>
               <div className="text-gray-600">Desde / mes (fee fijo)</div>
             </div>
           </div>
@@ -554,7 +554,7 @@ export default function AgenciaPerformanceMarketingLasCondes() {
             <div className="bg-white border-2 border-gray-200 rounded-lg p-6">
               <h3 className="text-xl font-bold text-gray-900 mb-3">¿Cuánto cuesta una agencia de performance marketing en Las Condes?</h3>
               <p className="text-gray-700">
-                Rango de precios Las Condes 2025: <strong>Agencias boutique</strong> $650k-$1.2M/mes (servicio premium especializado), <strong>Mid-tier</strong> $400k-$800k/mes (servicio profesional estándar), <strong>Low-cost</strong> $200k-$400k/mes (servicio básico, menos especialización). El precio varía según: 1) Canales gestionados (Google Ads, Meta Ads, LinkedIn Ads), 2) Complejidad industria (B2B tech &gt; retail), 3) Presupuesto publicitario administrado, 4) Nivel de personalización estratégica. Muller y Pérez: desde $650k/mes fee fijo (no porcentual).
+                Rango de precios Las Condes 2025: <strong>Agencias boutique</strong> $950k-$1.2M/mes (servicio premium especializado), <strong>Mid-tier</strong> $400k-$800k/mes (servicio profesional estándar), <strong>Low-cost</strong> $200k-$400k/mes (servicio básico, menos especialización). El precio varía según: 1) Canales gestionados (Google Ads, Meta Ads, LinkedIn Ads), 2) Complejidad industria (B2B tech &gt; retail), 3) Presupuesto publicitario administrado, 4) Nivel de personalización estratégica. Muller y Pérez: desde $950k/mes fee fijo (no porcentual).
               </p>
             </div>
 

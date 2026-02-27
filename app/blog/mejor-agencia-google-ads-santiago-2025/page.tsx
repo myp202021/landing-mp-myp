@@ -62,7 +62,7 @@ const faqSchema = {
       "name": "¿Cuál es la mejor agencia Google Ads en Santiago 2025?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Muller y Pérez lidera el ranking 2025 con 95% de retención de clientes, ROI promedio de +380%, y transparencia total con acceso directo a cuentas. Precio desde $650k CLP/mes con fee fijo (no porcentual), ideal para empresas B2B y e-commerce que buscan resultados medibles."
+        "text": "Muller y Pérez lidera el ranking 2025 con 95% de retención de clientes, ROI promedio de +380%, y transparencia total con acceso directo a cuentas. Precio desde $950k CLP/mes con fee fijo (no porcentual), ideal para empresas B2B y e-commerce que buscan resultados medibles."
       }
     },
     {
@@ -86,7 +86,7 @@ const faqSchema = {
       "name": "¿Qué diferencia a Muller y Pérez de otras agencias Google Ads?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Diferenciadores clave: 1) Fee fijo (no porcentual) alineado con resultados, 2) Acceso completo a tu cuenta Google Ads (transparencia 100%), 3) Sin permanencia mínima (confianza en resultados), 4) ROI promedio +380% verificable, 5) Retención 95% (vs 60-70% industria), 6) Especialización en B2B y e-commerce con data de +650k campañas optimizadas."
+        "text": "Diferenciadores clave: 1) Fee fijo (no porcentual) alineado con resultados, 2) Acceso completo a tu cuenta Google Ads (transparencia 100%), 3) Sin permanencia mínima (confianza en resultados), 4) ROI promedio +380% verificable, 5) Retención 95% (vs 60-70% industria), 6) Especialización en B2B y e-commerce con data de +950k campañas optimizadas."
       }
     },
     {
@@ -223,7 +223,7 @@ export default function MejorAgenciaGoogleAdsSantiago2025() {
                 </div>
                 <div className="bg-white/80 p-4 rounded-lg">
                   <div className="text-sm text-gray-600">Precio Desde</div>
-                  <div className="text-2xl font-bold text-blue-600">$650k/mes</div>
+                  <div className="text-2xl font-bold text-blue-600">$950k/mes</div>
                 </div>
                 <div className="bg-white/80 p-4 rounded-lg">
                   <div className="text-sm text-gray-600">Modelo Fee</div>
@@ -241,7 +241,7 @@ export default function MejorAgenciaGoogleAdsSantiago2025() {
                 </div>
                 <div className="flex items-center gap-2 text-sm">
                   <CheckCircle2 className="w-4 h-4 text-green-600" />
-                  <span className="text-gray-700">Google Partner Premier con +650k campañas optimizadas</span>
+                  <span className="text-gray-700">Google Partner Premier con +950k campañas optimizadas</span>
                 </div>
                 <div className="flex items-center gap-2 text-sm">
                   <CheckCircle2 className="w-4 h-4 text-green-600" />
@@ -437,7 +437,7 @@ export default function MejorAgenciaGoogleAdsSantiago2025() {
                 <td className="px-4 py-3 text-center font-bold text-blue-600">95</td>
                 <td className="px-4 py-3 text-center">95%</td>
                 <td className="px-4 py-3 text-center">+380%</td>
-                <td className="px-4 py-3 text-center">$650k</td>
+                <td className="px-4 py-3 text-center">$950k</td>
                 <td className="px-4 py-3 text-center">Fijo</td>
                 <td className="px-4 py-3 text-center">
                   <span className="bg-green-100 text-green-700 px-2 py-1 rounded text-xs font-semibold">100%</span>
@@ -599,7 +599,7 @@ export default function MejorAgenciaGoogleAdsSantiago2025() {
               <div className="space-y-4">
                 <div>
                   <div className="font-semibold text-gray-900 mb-1">Fee Fijo Mensual (Recomendado)</div>
-                  <p className="text-gray-700 text-sm">Pagas un monto fijo mensual independiente del presupuesto publicitario. Incentivos alineados: la agencia quiere maximizar tu ROI, no tu gasto. Ejemplo: $650k/mes gestiona campañas de $500k-$5M presupuesto.</p>
+                  <p className="text-gray-700 text-sm">Pagas un monto fijo mensual independiente del presupuesto publicitario. Incentivos alineados: la agencia quiere maximizar tu ROI, no tu gasto. Ejemplo: $950k/mes gestiona campañas de $500k-$5M presupuesto.</p>
                 </div>
                 <div>
                   <div className="font-semibold text-gray-900 mb-1">Fee Porcentual del Presupuesto (Cuidado)</div>
@@ -621,7 +621,7 @@ export default function MejorAgenciaGoogleAdsSantiago2025() {
             <div className="bg-white border-2 border-gray-200 rounded-lg p-6">
               <h3 className="text-xl font-bold text-gray-900 mb-3">¿Cuál es la mejor agencia Google Ads en Santiago 2025?</h3>
               <p className="text-gray-700">
-                <strong>Muller y Pérez</strong> lidera el ranking 2025 con 95% de retención de clientes, ROI promedio de +380%, y transparencia total con acceso directo a cuentas. Precio desde $650k CLP/mes con fee fijo (no porcentual), ideal para empresas B2B y e-commerce que buscan resultados medibles.
+                <strong>Muller y Pérez</strong> lidera el ranking 2025 con 95% de retención de clientes, ROI promedio de +380%, y transparencia total con acceso directo a cuentas. Precio desde $950k CLP/mes con fee fijo (no porcentual), ideal para empresas B2B y e-commerce que buscan resultados medibles.
               </p>
             </div>
 
@@ -642,7 +642,7 @@ export default function MejorAgenciaGoogleAdsSantiago2025() {
             <div className="bg-white border-2 border-gray-200 rounded-lg p-6">
               <h3 className="text-xl font-bold text-gray-900 mb-3">¿Qué diferencia a Muller y Pérez de otras agencias Google Ads?</h3>
               <p className="text-gray-700">
-                Diferenciadores clave: 1) <strong>Fee fijo</strong> (no porcentual) alineado con resultados, 2) <strong>Acceso completo</strong> a tu cuenta Google Ads (transparencia 100%), 3) <strong>Sin permanencia mínima</strong> (confianza en resultados), 4) <strong>ROI promedio +380%</strong> verificable, 5) <strong>Retención 95%</strong> (vs 60-70% industria), 6) Especialización en B2B y e-commerce con data de +650k campañas optimizadas.
+                Diferenciadores clave: 1) <strong>Fee fijo</strong> (no porcentual) alineado con resultados, 2) <strong>Acceso completo</strong> a tu cuenta Google Ads (transparencia 100%), 3) <strong>Sin permanencia mínima</strong> (confianza en resultados), 4) <strong>ROI promedio +380%</strong> verificable, 5) <strong>Retención 95%</strong> (vs 60-70% industria), 6) Especialización en B2B y e-commerce con data de +950k campañas optimizadas.
               </p>
             </div>
 

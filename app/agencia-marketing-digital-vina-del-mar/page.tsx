@@ -56,7 +56,7 @@ export default function AgenciaMarketingDigitalVinaDelMarPage() {
     },
     {
       question: '¿Cuánto cuesta una agencia de marketing digital en Viña del Mar?',
-      answer: 'Los servicios de marketing digital para empresas de Viña del Mar y la V Región tienen un costo desde $650.000 CLP mensuales. Esto incluye gestión de Google Ads o Meta Ads, equipo dedicado de 3 profesionales, reportería semanal y optimización continua. Nuestros precios son competitivos y transparentes.'
+      answer: 'Los servicios de marketing digital para empresas de Viña del Mar y la V Región tienen un costo desde $950.000 CLP mensuales. Esto incluye gestión de Google Ads o Meta Ads, equipo dedicado de 3 profesionales, reportería semanal y optimización continua. Nuestros precios son competitivos y transparentes.'
     },
     {
       question: '¿Qué servicios de marketing digital ofrecen en Viña del Mar?',
@@ -342,7 +342,7 @@ export default function AgenciaMarketingDigitalVinaDelMarPage() {
                 </h3>
                 <p className="text-gray-700">
                   Los servicios de marketing digital para empresas de Viña del Mar tienen un costo
-                  desde <strong>$650.000 CLP mensuales</strong>. Incluye gestión de Google Ads o
+                  desde <strong>$950.000 CLP mensuales</strong>. Incluye gestión de Google Ads o
                   Meta Ads, equipo dedicado de 3 profesionales, reportería semanal y optimización continua.
                 </p>
               </div>

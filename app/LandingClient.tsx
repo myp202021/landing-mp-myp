@@ -421,7 +421,7 @@ export default function LandingClient() {
         name: '¿Cuál es el precio de los servicios de Muller y Pérez?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Los planes comienzan desde $650.000 + IVA mensuales. Contamos con tres planes: Silver, Gold y Platinum, cada uno con diferentes niveles de campañas y servicios incluidos. Actualmente tenemos precios especiales los primeros 6 meses de funcionamiento.'
+          text: 'Los planes comienzan desde $950.000 + IVA mensuales. Contamos con tres planes: Silver, Gold y Platinum, cada uno con diferentes niveles de campañas y servicios incluidos. Actualmente tenemos precios especiales los primeros 6 meses de funcionamiento.'
         }
       },
       {
@@ -461,7 +461,7 @@ export default function LandingClient() {
         name: '¿Cuánto cuesta una agencia de marketing digital en Chile en 2025?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Los costos de una agencia de marketing digital en Chile varían desde $650.000/mes hasta $1.5M+/mes dependiendo del alcance y nivel de servicio. En M&P ofrecemos planes Silver ($650k), Gold ($980k) y Platinum ($1.5M+), todos con equipo dedicado de 3 profesionales y reportería semanal incluida.'
+          text: 'Los costos de una agencia de marketing digital en Chile varían desde $950.000/mes hasta $1.5M+/mes dependiendo del alcance y nivel de servicio. En M&P ofrecemos planes Silver ($950k), Gold ($1.200.000) y Platinum ($1.5M+), todos con equipo dedicado de 3 profesionales y reportería semanal incluida.'
         }
       },
       {
@@ -888,7 +888,7 @@ export default function LandingClient() {
             {[
               { value: '6+', label: 'Años en el mercado' },
               { value: '100%', label: 'Transparencia de datos' },
-              { value: '650k', label: 'Desde $650.000/mes' },
+              { value: '950k', label: 'Desde $950.000/mes' },
               { value: '+200', label: 'Campañas activas' },
               { value: '95%', label: 'Retención de clientes' },
               { value: '4.9★', label: 'Valoración promedio' }
@@ -2034,7 +2034,7 @@ export default function LandingClient() {
 
           <div className="text-center mt-10">
             <p className="text-xl font-bold text-gray-900 mb-2">
-              Planes desde $650.000 + IVA mensuales
+              Planes desde $950.000 + IVA mensuales
             </p>
             <p className="text-base text-blue-600 font-semibold mb-4">
               Contamos con precios especiales los primeros 6 meses de funcionamiento

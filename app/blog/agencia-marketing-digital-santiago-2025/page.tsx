@@ -10,14 +10,14 @@ import { ArrowLeft, CheckCircle2, TrendingUp, Target, Users, BarChart3 } from 'l
 
 export const metadata: Metadata = {
   title: 'Agencia Marketing Digital Santiago 2025: Guía Completa | Muller y Pérez',
-  description: 'Guía completa para contratar agencia marketing digital en Santiago 2025. Comparativa de servicios, precios ($650k-$2M), métricas reales (ROI +380%) y checklist de selección. Data verificable.',
+  description: 'Guía completa para contratar agencia marketing digital en Santiago 2025. Comparativa de servicios, precios ($950k-$2M), métricas reales (ROI +380%) y checklist de selección. Data verificable.',
   keywords: 'agencia marketing digital santiago, agencia marketing santiago, marketing digital santiago 2025, agencia publicidad digital santiago, agencia google ads santiago, agencia meta ads santiago, performance marketing santiago',
   alternates: {
     canonical: 'https://www.mulleryperez.cl/blog/agencia-marketing-digital-santiago-2025'
   },
   openGraph: {
     title: 'Agencia Marketing Digital Santiago 2025: Guía Completa',
-    description: 'Guía completa para contratar agencia marketing digital en Santiago 2025. Comparativa de servicios, precios ($650k-$2M), métricas reales (ROI +380%) y checklist de selección.',
+    description: 'Guía completa para contratar agencia marketing digital en Santiago 2025. Comparativa de servicios, precios ($950k-$2M), métricas reales (ROI +380%) y checklist de selección.',
     type: 'article',
     url: 'https://www.mulleryperez.cl/blog/agencia-marketing-digital-santiago-2025',
     publishedTime: '2025-01-16T00:00:00Z',
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Agencia Marketing Digital Santiago 2025: Guía Completa',
-    description: 'Guía completa para contratar agencia marketing digital en Santiago 2025. Comparativa de servicios, precios ($650k-$2M), métricas reales.'
+    description: 'Guía completa para contratar agencia marketing digital en Santiago 2025. Comparativa de servicios, precios ($950k-$2M), métricas reales.'
   }
 }
 
@@ -78,7 +78,7 @@ export default function AgenciaMarketingDigitalSantiago2025() {
         name: '¿Cuánto cuesta una agencia de marketing digital en Santiago 2025?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'En Santiago 2025, una agencia de marketing digital profesional cobra entre $650.000 CLP y $2.000.000 CLP mensuales + IVA por el fee de gestión (sin incluir inversión publicitaria). Agencias low-cost cobran $200k-$400k pero con servicios limitados. Muller y Pérez ofrece 3 planes: Silver ($650k), Gold ($980k), Platinum ($1.5M-$2M), todos con equipo dedicado de 3 profesionales.'
+          text: 'En Santiago 2025, una agencia de marketing digital profesional cobra entre $950.000 CLP y $2.000.000 CLP mensuales + IVA por el fee de gestión (sin incluir inversión publicitaria). Agencias low-cost cobran $200k-$400k pero con servicios limitados. Muller y Pérez ofrece 3 planes: Silver ($950k), Gold ($1.200.000), Platinum ($1.5M-$2M), todos con equipo dedicado de 3 profesionales.'
         }
       },
       {
@@ -155,7 +155,7 @@ export default function AgenciaMarketingDigitalSantiago2025() {
             </h1>
 
             <p className="text-xl text-gray-600 leading-relaxed mb-6">
-              Guía definitiva para contratar una agencia de marketing digital en Santiago. Comparativa de servicios, precios reales ($650k-$2M CLP), métricas verificables (ROI +380%), y checklist completo de selección basado en data de +200 campañas.
+              Guía definitiva para contratar una agencia de marketing digital en Santiago. Comparativa de servicios, precios reales ($950k-$2M CLP), métricas verificables (ROI +380%), y checklist completo de selección basado en data de +200 campañas.
             </p>
 
             <div className="flex items-center gap-4 text-sm text-gray-500">
@@ -309,7 +309,7 @@ export default function AgenciaMarketingDigitalSantiago2025() {
                   </tr>
                   <tr className="border-b border-gray-200 bg-blue-50">
                     <td className="px-6 py-4 font-semibold text-blue-900">Agencia Profesional</td>
-                    <td className="px-6 py-4 text-blue-700 font-bold">$650k - $2M</td>
+                    <td className="px-6 py-4 text-blue-700 font-bold">$950k - $2M</td>
                     <td className="px-6 py-4 text-sm text-gray-700"><strong>Equipo dedicado 3+ personas, 2-6 campañas, reportería semanal/mensual, benchmark competencia, contenido orgánico, acceso 24/7</strong></td>
                   </tr>
                   <tr className="bg-gray-50">
@@ -324,8 +324,8 @@ export default function AgenciaMarketingDigitalSantiago2025() {
             <div className="bg-blue-50 border-2 border-blue-200 rounded-xl p-6 my-8">
               <p className="text-blue-900 font-bold text-lg mb-3">💰 Precios Muller y Pérez 2025:</p>
               <ul className="space-y-3 text-gray-700">
-                <li><strong>Plan Silver:</strong> $650.000 CLP + IVA/mes - 2 campañas, 16 contenidos orgánicos, equipo dedicado 3 profesionales</li>
-                <li><strong>Plan Gold:</strong> $980.000 CLP + IVA/mes - 4 campañas, 28 contenidos orgánicos, email marketing incluido</li>
+                <li><strong>Plan Silver:</strong> $950.000 CLP + IVA/mes - 2 campañas, 16 contenidos orgánicos, equipo dedicado 3 profesionales</li>
+                <li><strong>Plan Gold:</strong> $1.200.000 CLP + IVA/mes - 4 campañas, 28 contenidos orgánicos, email marketing incluido</li>
                 <li><strong>Plan Platinum:</strong> $1.500.000 - $2.000.000 CLP + IVA/mes - 6 campañas, 44 contenidos orgánicos, gestión de influencers</li>
               </ul>
               <p className="text-gray-600 text-sm mt-4 italic">

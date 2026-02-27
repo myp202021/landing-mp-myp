@@ -56,7 +56,7 @@ export default function AgenciaMarketingDigitalTemucoPage() {
     },
     {
       question: '¿Cuánto cuesta una agencia de marketing digital en Temuco?',
-      answer: 'Los servicios de marketing digital para empresas de Temuco tienen un costo desde $650.000 CLP mensuales. Esto incluye gestión de Google Ads o Meta Ads, equipo dedicado de 3 profesionales, reportería semanal y optimización continua.'
+      answer: 'Los servicios de marketing digital para empresas de Temuco tienen un costo desde $950.000 CLP mensuales. Esto incluye gestión de Google Ads o Meta Ads, equipo dedicado de 3 profesionales, reportería semanal y optimización continua.'
     },
     {
       question: '¿Qué servicios de marketing digital ofrecen en Temuco?',
@@ -341,7 +341,7 @@ export default function AgenciaMarketingDigitalTemucoPage() {
                 </h3>
                 <p className="text-gray-700">
                   Los servicios de marketing digital para empresas de Temuco tienen un costo
-                  desde <strong>$650.000 CLP mensuales</strong>. Incluye gestión de Google Ads o
+                  desde <strong>$950.000 CLP mensuales</strong>. Incluye gestión de Google Ads o
                   Meta Ads, equipo dedicado de 3 profesionales, reportería semanal y optimización continua.
                 </p>
               </div>
