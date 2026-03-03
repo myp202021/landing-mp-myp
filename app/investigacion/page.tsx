@@ -18,12 +18,20 @@ export const metadata: Metadata = {
 
 const estudios = [
   {
+    slug: 'google-meridian-marketing-mix-modeling-chile',
+    titulo: 'Google Meridian en Chile: el modelo de atribución que usa Google internamente',
+    descripcion: 'Qué es Google Meridian, cómo funciona el MMM bayesiano, por qué la atribución last-click ya no es suficiente y cómo aplica a la distribución de presupuesto en el mercado chileno.',
+    fecha: '3 de marzo, 2026',
+    tag: 'Análisis técnico',
+    destacado: true,
+  },
+  {
     slug: 'estudio-performance-marketing-chile-2026',
     titulo: 'Benchmarks de Performance Marketing en Chile 2026',
     descripcion: 'CPL, ROAS y CPC reales por industria. Datos de +200 campañas activas en Chile: e-commerce, fintech, inmobiliaria, SaaS y 18 industrias más.',
     fecha: '3 de marzo, 2026',
     tag: 'Estudio de datos',
-    destacado: true,
+    destacado: false,
   },
 ]
 
