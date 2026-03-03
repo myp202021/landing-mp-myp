@@ -9,19 +9,18 @@ const APIFY_TOKEN = process.env.APIFY_TOKEN
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY)
 
 const COMPETIDORES = [
-  { nombre: 'Viggo',                 instagram: 'viggo_chile',           web: 'viggo.cl' },
-  { nombre: 'Tándem Industrial',     instagram: 'tandem.industrial',     web: 'tandemindustrial.cl' },
-  { nombre: 'Yanguas',               instagram: 'yanguas.cl',            web: 'yanguas.cl' },
-  { nombre: 'Buses JM',              instagram: 'busesjm.cl',            web: 'busesjm.cl' },
-  { nombre: 'CVU',                   instagram: 'transportescvu_ssee',   web: 'transportescvu.cl' },
-  { nombre: 'Nortrans',              instagram: 'nortransspa',           web: 'nortrans.cl' },
-  { nombre: 'Géminis',               instagram: 'busesgeminis',          web: 'geminis.cl' },
-  { nombre: 'Verschae',              instagram: 'flota_verschae',        web: 'verschae.cl' },
-  { nombre: 'Transportes Calderón',  instagram: 'transportescalderon',   web: 'transportescalderon.cl' },
-  { nombre: 'Pullman Yuris',         instagram: 'busesyuris',            web: 'pullmanyuris.cl' },
-  // Sokol y Pullman San Luis sin Instagram confirmado — aparecen como sin actividad
-  { nombre: 'Sokol',                 instagram: null,                    web: 'gruposokol.com' },
-  { nombre: 'Pullman San Luis',      instagram: null,                    web: 'pullmansanluis.cl' },
+  { nombre: 'Viggo',                instagram: 'viggo_chile',          linkedin: 'https://www.linkedin.com/company/viggo-chile/',        web: 'viggo.cl' },
+  { nombre: 'Tándem Industrial',    instagram: 'tandem.industrial',    linkedin: 'https://www.linkedin.com/company/tandem-industrial/',  web: 'tandemindustrial.cl' },
+  { nombre: 'Yanguas',              instagram: 'yanguas.cl',           linkedin: 'https://www.linkedin.com/company/buses-yanguas/',      web: 'yanguas.cl' },
+  { nombre: 'Buses JM',             instagram: 'busesjm.cl',           linkedin: null,                                                   web: 'busesjm.cl' },
+  { nombre: 'CVU',                  instagram: 'transportescvu_ssee',  linkedin: 'https://www.linkedin.com/company/transportes-cvu/',    web: 'transportescvu.cl' },
+  { nombre: 'Nortrans',             instagram: 'nortransspa',          linkedin: 'https://www.linkedin.com/company/nortrans-ltda/',      web: 'nortrans.cl' },
+  { nombre: 'Géminis',              instagram: 'busesgeminis',         linkedin: 'https://www.linkedin.com/company/geminis/',            web: 'geminis.cl' },
+  { nombre: 'Verschae',             instagram: 'flota_verschae',       linkedin: null,                                                   web: 'verschae.cl' },
+  { nombre: 'Transportes Calderón', instagram: 'transportescalderon',  linkedin: null,                                                   web: 'transportescalderon.cl' },
+  { nombre: 'Pullman Yuris',        instagram: 'busesyuris',           linkedin: null,                                                   web: 'pullmanyuris.cl' },
+  { nombre: 'Sokol',                instagram: null,                   linkedin: 'https://www.linkedin.com/company/sokol-s-a/',          web: 'gruposokol.com' },
+  { nombre: 'Pullman San Luis',     instagram: null,                   linkedin: null,                                                   web: 'pullmansanluis.cl' },
 ]
 
 async function main() {
@@ -119,13 +118,51 @@ async function main() {
   }
 
   const sinActividad = COMPETIDORES.filter(c => !competidoresConPost.has(c.nombre))
-  console.log(`🏁 Reporte listo: ${competidoresConPost.size} con actividad, ${sinActividad.length} sin actividad.`)
+  console.log(`🏁 Instagram listo: ${competidoresConPost.size} con actividad, ${sinActividad.length} sin actividad.`)
+
+  // Scraping LinkedIn
+  const postsLinkedin = await scrapeLinkedin(hace24h)
 
   // Enviar email con el reporte
-  await enviarEmail({ hoy, postsGuardados: posts, competidoresConPost, sinActividad })
+  await enviarEmail({ hoy, postsGuardados: posts, competidoresConPost, sinActividad, postsLinkedin })
 }
 
-function generarHtmlEmail({ hoy, postsGuardados, competidoresConPost, sinActividad }) {
+async function scrapeLinkedin(hace24h) {
+  const conLI = COMPETIDORES.filter(c => c.linkedin)
+  if (conLI.length === 0) return []
+
+  console.log(`🔗 Scrapeando ${conLI.length} perfiles de LinkedIn...`)
+
+  try {
+    const res = await fetch(
+      `https://api.apify.com/v2/acts/bebity~linkedin-company-posts-scraper/run-sync-get-dataset-items?token=${APIFY_TOKEN}&timeout=180`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          companyUrls: conLI.map(c => c.linkedin),
+          maxPosts:    5,
+        }),
+      }
+    )
+
+    if (!res.ok) {
+      console.warn(`⚠️ LinkedIn scraper: ${res.status} — se omite LinkedIn`)
+      return []
+    }
+
+    const allPosts = await res.json()
+    const recientes = allPosts.filter(p => p.postedAt && new Date(p.postedAt) > hace24h)
+    console.log(`✅ LinkedIn: ${recientes.length} posts en últimas 24h`)
+    return recientes
+
+  } catch (err) {
+    console.warn('⚠️ Error scraping LinkedIn (se omite):', err.message)
+    return []
+  }
+}
+
+function generarHtmlEmail({ hoy, postsGuardados, competidoresConPost, sinActividad, postsLinkedin }) {
   const fecha = new Date(hoy + 'T12:00:00').toLocaleDateString('es-CL', {
     weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
   })
@@ -215,6 +252,42 @@ function generarHtmlEmail({ hoy, postsGuardados, competidoresConPost, sinActivid
       </div>
       ` : ''}
 
+      <!-- LinkedIn -->
+      ${postsLinkedin && postsLinkedin.length > 0 ? `
+      <div style="margin-top:24px;border-top:1px solid #E2E8F0;padding-top:20px;">
+        <div style="background:#EFF6FF;color:#1E40AF;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;padding:6px 12px;border-radius:6px;display:inline-block;margin-bottom:14px;">
+          💼 LinkedIn — ${postsLinkedin.length} posts hoy
+        </div>
+        ${postsLinkedin.map(p => {
+          const url = p.postUrl || p.url || ''
+          const nombre = p.companyName || 'Competidor'
+          const texto = (p.text || p.commentary || '').substring(0, 200)
+          return `
+          <div style="border:1px solid #E2E8F0;border-radius:10px;padding:14px;margin-bottom:10px;background:#fff;">
+            <div style="margin-bottom:6px;">
+              <strong style="color:#0F172A;font-size:14px;">${nombre}</strong>
+              <span style="background:#DBEAFE;color:#1E40AF;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;margin-left:6px;">💼 LinkedIn</span>
+            </div>
+            <p style="font-size:13px;color:#475569;line-height:1.5;margin:0 0 8px;">${texto}${texto.length >= 200 ? '...' : ''}</p>
+            ${p.likesCount ? '<span style="font-size:12px;color:#64748B;margin-right:12px;">👍 ' + p.likesCount + ' likes</span>' : ''}
+            ${p.commentsCount ? '<span style="font-size:12px;color:#64748B;margin-right:12px;">💬 ' + p.commentsCount + '</span>' : ''}
+            ${url ? '<a href="' + url + '" style="font-size:12px;color:#3B82F6;font-weight:600;text-decoration:none;">Ver post →</a>' : ''}
+          </div>`
+        }).join('')}
+      </div>
+      ` : `
+      <div style="margin-top:24px;border-top:1px solid #E2E8F0;padding-top:16px;">
+        <div style="background:#EFF6FF;color:#1E40AF;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;padding:6px 12px;border-radius:6px;display:inline-block;margin-bottom:10px;">
+          💼 LinkedIn — sin actividad hoy
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;">
+          ${COMPETIDORES.filter(c => c.linkedin).map(c =>
+            '<a href="' + c.linkedin + '" style="background:#fff;border:1px solid #DBEAFE;border-radius:20px;padding:5px 14px;font-size:12px;color:#1E40AF;text-decoration:none;display:inline-block;">' + c.nombre + ' →</a>'
+          ).join('')}
+        </div>
+      </div>
+      `}
+
     </div>
 
     <!-- Footer -->
@@ -227,14 +300,14 @@ function generarHtmlEmail({ hoy, postsGuardados, competidoresConPost, sinActivid
 </html>`
 }
 
-async function enviarEmail({ hoy, postsGuardados, competidoresConPost, sinActividad }) {
+async function enviarEmail({ hoy, postsGuardados, competidoresConPost, sinActividad, postsLinkedin }) {
   const RESEND_API_KEY = process.env.RESEND || process.env.RESEND_API_KEY
   if (!RESEND_API_KEY) {
     console.warn('⚠️  RESEND_API_KEY no definida — email no enviado.')
     return
   }
 
-  const html = generarHtmlEmail({ hoy, postsGuardados, competidoresConPost, sinActividad })
+  const html = generarHtmlEmail({ hoy, postsGuardados, competidoresConPost, sinActividad, postsLinkedin })
   const fecha = new Date(hoy + 'T12:00:00').toLocaleDateString('es-CL', {
     weekday: 'long', day: 'numeric', month: 'long'
   })
