@@ -1,12 +1,14 @@
 import { createClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server'
 
-const supabase = createClient(
-  process.env.SUPABASE_URL!,
-  process.env.SUPABASE_KEY!
-)
+export const dynamic = 'force-dynamic'
 
 export async function GET(request: Request) {
+  const supabase = createClient(
+    process.env.SUPABASE_URL!,
+    process.env.SUPABASE_KEY!
+  )
+
   const { searchParams } = new URL(request.url)
   const fecha = searchParams.get('fecha') || new Date().toISOString().split('T')[0]
 
