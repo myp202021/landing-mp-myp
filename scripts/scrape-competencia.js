@@ -228,7 +228,7 @@ function generarHtmlEmail({ hoy, postsGuardados, competidoresConPost, sinActivid
 }
 
 async function enviarEmail({ hoy, postsGuardados, competidoresConPost, sinActividad }) {
-  const RESEND_API_KEY = process.env.RESEND_API_KEY
+  const RESEND_API_KEY = process.env.RESEND || process.env.RESEND_API_KEY
   if (!RESEND_API_KEY) {
     console.warn('⚠️  RESEND_API_KEY no definida — email no enviado.')
     return
