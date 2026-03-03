@@ -1,0 +1,26 @@
+name: Reporte Diario — Competencia Hualpén
+
+on:
+  schedule:
+    - cron: '50 11 * * 1-5'  # 08:50 AM Chile (UTC-3, horario verano)
+  workflow_dispatch:           # permite correrlo manualmente desde GitHub
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Instalar dependencias
+        run: npm install node-fetch@2 @supabase/supabase-js
+
+      - name: Ejecutar scraper
+        run: node scripts/scrape-competencia.js
+        env:
+          APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}

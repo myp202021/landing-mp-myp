@@ -89,6 +89,12 @@ export default function CRMAdmin() {
     observaciones: ''
   })
 
+  // Competencia Hualpén
+  const [showCompetencia, setShowCompetencia] = useState(false)
+  const [reporteComp, setReporteComp] = useState<any[]>([])
+  const [fechaComp, setFechaComp] = useState(new Date().toISOString().split('T')[0])
+  const [loadingComp, setLoadingComp] = useState(false)
+
   // Función para calcular horas desde ingreso
   const getHorasSinContacto = (lead: Lead): number => {
     if (lead.contactado) return 0
@@ -320,6 +326,18 @@ export default function CRMAdmin() {
     setLoading(false)
   }
 
+  const loadCompetencia = async (fecha: string) => {
+    setLoadingComp(true)
+    try {
+      const res = await fetch(`/api/crm/competencia?fecha=${fecha}`)
+      const data = await res.json()
+      setReporteComp(data.reportes || [])
+    } catch (e) {
+      console.error('Error cargando competencia:', e)
+    }
+    setLoadingComp(false)
+  }
+
   const crearLeadManual = async () => {
     // Validar campos requeridos
     if (!nuevoLead.cliente_id) {
@@ -462,7 +480,17 @@ export default function CRMAdmin() {
               ))}
             </select>
           </div>
-          <div>
+          <div className="flex gap-2">
+            <Button
+              onClick={() => {
+                setShowCompetencia(!showCompetencia)
+                if (!showCompetencia && reporteComp.length === 0) loadCompetencia(fechaComp)
+              }}
+              variant="secondary"
+              className="whitespace-nowrap"
+            >
+              🚌 Competencia Hualpén
+            </Button>
             <Button
               onClick={() => setShowAgregarLeadModal(true)}
               variant="primary"
@@ -1074,6 +1102,109 @@ export default function CRMAdmin() {
           </div>
         </div>
       )}
+      {/* ===== SECCIÓN COMPETENCIA HUALPÉN ===== */}
+      {showCompetencia && (
+        <div className="mt-8 bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden">
+          <div className="bg-slate-800 text-white px-6 py-4 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+            <div>
+              <h2 className="text-lg font-bold">🚌 Competencia — Buses Hualpén</h2>
+              <p className="text-slate-400 text-sm">Actividad Instagram últimas 24 hrs</p>
+            </div>
+            <div className="flex items-center gap-3 flex-wrap">
+              <input
+                type="date"
+                value={fechaComp}
+                onChange={(e) => {
+                  setFechaComp(e.target.value)
+                  loadCompetencia(e.target.value)
+                }}
+                className="px-3 py-1.5 rounded-md text-sm text-slate-800 border border-slate-300"
+              />
+              <button
+                onClick={() => loadCompetencia(fechaComp)}
+                className="px-4 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-sm font-semibold"
+              >
+                {loadingComp ? '⏳ Cargando...' : '↻ Actualizar'}
+              </button>
+              <button
+                onClick={() => window.print()}
+                className="px-4 py-1.5 bg-slate-600 hover:bg-slate-500 text-white rounded-md text-sm font-semibold"
+              >
+                🖨️ Imprimir
+              </button>
+            </div>
+          </div>
+
+          <div className="p-6">
+            {loadingComp ? (
+              <p className="text-center text-slate-500 py-8">Cargando reporte...</p>
+            ) : reporteComp.length === 0 ? (
+              <p className="text-center text-slate-400 py-8">Sin datos para esta fecha. El scraper corre L-V a las 09:00 AM.</p>
+            ) : (
+              <>
+                {/* Con actividad */}
+                {reporteComp.filter(r => !r.sin_actividad).length > 0 && (
+                  <div className="mb-6">
+                    <span className="inline-block bg-green-100 text-green-800 text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full mb-4">
+                      ✅ Con actividad — {reporteComp.filter(r => !r.sin_actividad).length} posts
+                    </span>
+                    <div className="space-y-3">
+                      {reporteComp.filter(r => !r.sin_actividad).map(r => (
+                        <div key={r.id} className="flex gap-4 border border-slate-200 rounded-lg p-4">
+                          {r.post_imagen ? (
+                            <img src={r.post_imagen} alt="" className="w-20 h-20 rounded-lg object-cover flex-shrink-0" />
+                          ) : (
+                            <div className="w-20 h-20 rounded-lg bg-slate-100 flex items-center justify-center text-3xl flex-shrink-0">🚌</div>
+                          )}
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2 flex-wrap mb-1">
+                              <span className="font-bold text-slate-900">{r.competidor}</span>
+                              <span className="bg-pink-100 text-pink-800 text-xs font-semibold px-2 py-0.5 rounded-full">@{r.instagram_handle}</span>
+                              {r.fecha_post && (
+                                <span className="text-xs text-slate-400">
+                                  {new Date(r.fecha_post).toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' })}
+                                </span>
+                              )}
+                            </div>
+                            <p className="text-sm text-slate-600 line-clamp-2 mb-2">{r.post_texto}</p>
+                            <div className="flex items-center gap-4">
+                              <span className="text-xs text-slate-500">❤️ {r.likes ?? 0} likes</span>
+                              <span className="text-xs text-slate-500">💬 {r.comentarios ?? 0} comentarios</span>
+                              {r.post_url && (
+                                <a href={r.post_url} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 font-semibold hover:underline">
+                                  Ver post →
+                                </a>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Sin actividad */}
+                {reporteComp.filter(r => r.sin_actividad).length > 0 && (
+                  <div>
+                    <span className="inline-block bg-slate-100 text-slate-500 text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full mb-3">
+                      ⚪ Sin actividad — {reporteComp.filter(r => r.sin_actividad).length} competidores
+                    </span>
+                    <div className="flex flex-wrap gap-2">
+                      {reporteComp.filter(r => r.sin_actividad).map(r => (
+                        <span key={r.id} className="bg-white border border-slate-200 rounded-full px-3 py-1 text-xs text-slate-400">
+                          {r.competidor}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+        </div>
+      )}
+      {/* ===== FIN COMPETENCIA ===== */}
+
     </CRMLayout>
   )
 }
