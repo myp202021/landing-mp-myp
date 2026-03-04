@@ -1,11 +1,11 @@
-name: Reporte Diario — Competencia Hualpén                                    
-                                                                                
+name: Reporte Diario Competencia Hualpen                             
+                                                     
   on:                                                                           
-    schedule:                                                                
-      - cron: '50 11 * * 1-5'  # 08:50 AM Chile (UTC-3, horario verano)
-    workflow_dispatch:           # permite correrlo manualmente desde GitHub
-
-  jobs:
+    schedule:                                                                   
+      - cron: '50 11 * * 1-5'                                                   
+    workflow_dispatch:                                                          
+                                                                                
+  jobs:                                                                      
     scrape:
       runs-on: ubuntu-latest
       steps:
