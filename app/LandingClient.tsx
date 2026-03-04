@@ -730,11 +730,11 @@ export default function LandingClient() {
                     <div className="text-xs text-gray-500 mt-0.5">Datos de industria Chile</div>
                   </Link>
                   <Link
-                    href="/noticias/newsletter"
+                    href="/indicadores"
                     className="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
                   >
-                    <div className="font-semibold">Newsletter</div>
-                    <div className="text-xs text-gray-500 mt-0.5">Data semanal de marketing digital</div>
+                    <div className="font-semibold">Termómetro Marketing</div>
+                    <div className="text-xs text-gray-500 mt-0.5">CPC por industria · Empleos · USD</div>
                   </Link>
                 </div>
               )}
