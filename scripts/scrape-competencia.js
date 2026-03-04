@@ -5,6 +5,8 @@
 
 const fetch = require('node-fetch')
 const { createClient } = require('@supabase/supabase-js')
+const { execSync } = require('child_process')
+const fs = require('fs')
 
 const APIFY_TOKEN = process.env.APIFY_TOKEN
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY)
@@ -110,6 +112,22 @@ async function main() {
 
   // ── Email con PDF ──────────────────────────────────────────────────────────
   await enviarEmail({ hoy, postsIG, competidoresConPost, sinActividad, postsLinkedin, postsFacebook })
+}
+
+// ─── Generación de PDF con wkhtmltopdf ──────────────────────────────────────
+function generarPDF(html) {
+  try {
+    const tmpHtml = '/tmp/reporte-hualpen.html'
+    const tmpPdf  = '/tmp/reporte-hualpen.pdf'
+    fs.writeFileSync(tmpHtml, html, 'utf8')
+    execSync(`wkhtmltopdf --quiet --page-size A4 --margin-top 10 --margin-bottom 10 --margin-left 10 --margin-right 10 --enable-local-file-access "${tmpHtml}" "${tmpPdf}"`)
+    const buffer = fs.readFileSync(tmpPdf)
+    console.log(`✅ PDF generado (${Math.round(buffer.length / 1024)} KB)`)
+    return buffer
+  } catch (err) {
+    console.warn('⚠️ wkhtmltopdf falló:', err.message)
+    return null
+  }
 }
 
 // ─── Scraping LinkedIn ───────────────────────────────────────────────────────
@@ -364,15 +382,20 @@ async function enviarEmail({ hoy, postsIG, competidoresConPost, sinActividad, po
       <tr style="border-bottom:1px solid #E2E8F0;"><td style="padding:8px 0;color:#64748B;">Sin actividad</td><td style="padding:8px 0;font-weight:700;text-align:right;">${sinActividad.length}</td></tr>
       ${totalOfertas > 0 ? `<tr><td style="padding:8px 0;color:#92400E;font-weight:700;">⚠️ Ofertas laborales detectadas</td><td style="padding:8px 0;font-weight:700;color:#92400E;text-align:right;">${totalOfertas}</td></tr>` : ''}
     </table>
-    <p style="font-size:12px;color:#94A3B8;">El reporte completo se adjunta como archivo HTML — ábrelo en Chrome para verlo completo.<br>
-    <a href="https://www.mulleryperez.cl/crm" style="color:#3B82F6;">Ver en CRM →</a></p>
+    <p style="font-size:12px;color:#94A3B8;">El reporte completo se adjunta en PDF.</p>
   </div>`,
-    attachments: [{
-      filename: `Competencia-Hualpen-${hoy}.html`,
-      content: Buffer.from(reporteHtml).toString('base64'),
-    }],
   }
-  console.log(`📎 Email con HTML adjunto listo`)
+
+  // Generar PDF y adjuntar
+  const pdfBuffer = generarPDF(reporteHtml)
+  if (pdfBuffer) {
+    payload.attachments = [{ filename: `Competencia-Hualpen-${hoy}.pdf`, content: pdfBuffer.toString('base64') }]
+    console.log(`📎 Email con PDF adjunto`)
+  } else {
+    // Fallback: HTML adjunto si wkhtmltopdf no está disponible
+    payload.attachments = [{ filename: `Competencia-Hualpen-${hoy}.html`, content: Buffer.from(reporteHtml).toString('base64') }]
+    console.log(`📄 Email con HTML adjunto (fallback)`)
+  }
 
   const res = await fetch('https://api.resend.com/emails', {
     method: 'POST',
