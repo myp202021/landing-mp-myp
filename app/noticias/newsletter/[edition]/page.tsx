@@ -28,8 +28,8 @@ export async function generateMetadata({ params }: { params: { edition: string }
 
 export default async function NewsletterEdicionPage({ params }: { params: { edition: string } }) {
   const supabase = createClient(
-    process.env.SUPABASE_URL!,
-    process.env.SUPABASE_KEY!
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
   )
 
   const { data, error } = await supabase
