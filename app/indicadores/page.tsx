@@ -26,8 +26,19 @@ function VarBadge({ val }: { val: number | null }) {
   return <span className="flex items-center gap-0.5 text-white/40 text-xs"><Minus className="w-3 h-3" />0%</span>
 }
 
-function clp(n: number) {
-  return '$' + n?.toLocaleString('es-CL')
+function clp(n: number | undefined | null) {
+  if (n == null || isNaN(n)) return '—'
+  return '$' + Math.round(n).toLocaleString('es-CL')
+}
+
+// CVR por industria (fuente: predictor M&P) — se usa para calcular CPA en frontend
+const CVR_MAP: Record<string, number> = {
+  ecommerce: 2.1, moda_retail: 2.4, gastronomia: 2.8, educacion: 4.2,
+  tecnologia: 3.2, hogar: 2.1, belleza: 2.9, deportes: 2.8,
+  veterinaria: 4.8, automotriz: 1.6, inmobiliaria: 1.8, turismo: 2.1,
+  salud: 3.4, legal: 3.1, profesionales: 3.2, construccion: 2.1,
+  logistica: 2.4, seguros: 2.1, manufactura: 2.8, energia: 2.1,
+  fintech: 2.8, agro: 2.4,
 }
 
 export default async function IndicadoresPage() {
@@ -39,12 +50,20 @@ export default async function IndicadoresPage() {
   const { data } = await supabase
     .from('indicadores_semanales')
     .select('*')
-    .order('año', { ascending: false })
-    .order('semana', { ascending: false })
+    .order('id', { ascending: false })
     .limit(1)
     .single()
 
-  const cpcData: any[] = data?.cpc_data || []
+  // Enriquecer cpc_data con CPA calculado en frontend (tolerante a datos legacy)
+  const cpcData: any[] = (data?.cpc_data || []).map((ind: any) => {
+    const cvr = ind.cvr ?? CVR_MAP[ind.id] ?? 2.0
+    return {
+      ...ind,
+      cvr,
+      cpa_google_clp: ind.cpa_google_clp ?? Math.round(ind.google_clp / (cvr / 100)),
+      cpa_meta_clp:   ind.cpa_meta_clp   ?? Math.round(ind.meta_clp   / (cvr / 100)),
+    }
+  })
 
   const fechaActualizada = data?.fecha
     ? new Date(data.fecha + 'T12:00:00').toLocaleDateString('es-CL', { day: 'numeric', month: 'long', year: 'numeric' })
