@@ -25,7 +25,7 @@ const CPC_INDUSTRIAS = [
   { id: 'moda_retail',    label: 'Moda y Retail',           google: 128, metaRatio: 0.70, cvr: 2.4 },
   { id: 'gastronomia',    label: 'Gastronomía',             google: 162, metaRatio: 0.72, cvr: 2.8 },
   { id: 'educacion',      label: 'Educación',               google: 146, metaRatio: 0.58, cvr: 4.2 },
-  { id: 'tecnologia',     label: 'Software / Apps',          google: 39,  metaRatio: 0.52, cvr: 3.2 },
+  { id: 'tecnologia',     label: 'Tecnología / SaaS',        google: 390, metaRatio: 0.52, cvr: 3.2 },
   { id: 'hogar',          label: 'Hogar y Decoración',      google: 165, metaRatio: 0.62, cvr: 2.1 },
   { id: 'belleza',        label: 'Belleza y Cuidado',       google: 251, metaRatio: 0.68, cvr: 2.9 },
   { id: 'deportes',       label: 'Deportes y Fitness',      google: 195, metaRatio: 0.65, cvr: 2.8 },
