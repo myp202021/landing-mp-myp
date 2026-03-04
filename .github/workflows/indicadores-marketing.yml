@@ -1,0 +1,26 @@
+name: Termómetro Marketing — Indicadores Semanales
+
+on:
+  schedule:
+    - cron: '30 11 * * 1'   # Lunes 11:30 UTC = 08:30 AM Chile (después del radar)
+  workflow_dispatch:
+
+jobs:
+  indicadores:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Instalar dependencias
+        run: npm install node-fetch@2 apify-client
+
+      - name: Ejecutar Indicadores de Marketing
+        env:
+          APIFY_TOKEN:          ${{ secrets.APIFY_TOKEN }}
+          SUPABASE_URL:         ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: node scripts/indicadores-marketing.js
