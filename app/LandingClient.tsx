@@ -697,6 +697,13 @@ export default function LandingClient() {
               {noticiasDropdown && (
                 <div className="absolute top-full mt-1 left-0 bg-white rounded-xl shadow-2xl border border-gray-100 py-2 min-w-[220px] animate-in fade-in slide-in-from-top-2 duration-200">
                   <Link
+                    href="/noticias/newsletter"
+                    className="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
+                  >
+                    <div className="font-semibold">Newsletter</div>
+                    <div className="text-xs text-gray-500 mt-0.5">Data semanal de marketing digital</div>
+                  </Link>
+                  <Link
                     href="/investigacion"
                     className="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
                   >

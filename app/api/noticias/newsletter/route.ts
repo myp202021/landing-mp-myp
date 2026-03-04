@@ -1,0 +1,29 @@
+import { createClient } from '@supabase/supabase-js'
+import { NextResponse } from 'next/server'
+
+export const dynamic = 'force-dynamic'
+
+export async function GET(request: Request) {
+  const supabase = createClient(
+    process.env.SUPABASE_URL!,
+    process.env.SUPABASE_KEY!
+  )
+
+  const { searchParams } = new URL(request.url)
+  const slug = searchParams.get('slug')
+
+  if (!slug) {
+    return NextResponse.json({ error: 'slug requerido' }, { status: 400 })
+  }
+
+  const { data, error } = await supabase
+    .from('radar_marketing')
+    .select('*')
+    .eq('slug', slug)
+    .single()
+
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  if (!data) return NextResponse.json({ error: 'No encontrado' }, { status: 404 })
+
+  return NextResponse.json({ edicion: data })
+}
