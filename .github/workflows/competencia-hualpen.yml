@@ -1,11 +1,11 @@
 name: Reporte Diario Competencia Hualpen                             
                                                      
-  on:                                                                           
+on:                                                                   
     schedule:                                                                   
       - cron: '50 11 * * 1-5'                                                   
     workflow_dispatch:                                                          
                                                                                 
-  jobs:                                                                      
+jobs:                                                            
     scrape:
       runs-on: ubuntu-latest
       steps:
