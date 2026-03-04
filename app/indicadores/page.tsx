@@ -1,13 +1,13 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { createClient } from '@supabase/supabase-js'
-import { ArrowLeft, TrendingUp, TrendingDown, Minus, BarChart2, Briefcase, DollarSign } from 'lucide-react'
+import { ArrowLeft, TrendingUp, TrendingDown, Minus, BarChart2, DollarSign } from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
-  title: 'Termómetro de Marketing Digital Chile — Datos Semanales | Muller y Pérez',
-  description: 'Panel semanal con CPC promedio por industria en Chile, indicadores económicos y mercado laboral digital actualizado cada lunes.',
+  title: 'Termómetro de Marketing Digital Chile — CPC y CPA por Industria | Muller y Pérez',
+  description: 'CPC y CPA estimado por industria en Chile para Google Ads y Meta Ads, ajustados semanalmente al tipo de cambio USD. Datos reales actualizados cada lunes.',
   alternates: { canonical: 'https://www.mulleryperez.cl/indicadores' }
 }
 
@@ -26,19 +26,8 @@ function VarBadge({ val }: { val: number | null }) {
   return <span className="flex items-center gap-0.5 text-white/40 text-xs"><Minus className="w-3 h-3" />0%</span>
 }
 
-function VarBadgeJobs({ val }: { val: number | null }) {
-  if (val === null || val === undefined) return <span className="text-white/30 text-xs">—</span>
-  if (val > 0) return (
-    <span className="flex items-center gap-0.5 text-emerald-400 text-xs font-bold">
-      <TrendingUp className="w-3 h-3" />+{val}%
-    </span>
-  )
-  if (val < 0) return (
-    <span className="flex items-center gap-0.5 text-red-400 text-xs font-bold">
-      <TrendingDown className="w-3 h-3" />{val}%
-    </span>
-  )
-  return <span className="flex items-center gap-0.5 text-white/40 text-xs"><Minus className="w-3 h-3" />0%</span>
+function clp(n: number) {
+  return '$' + n?.toLocaleString('es-CL')
 }
 
 export default async function IndicadoresPage() {
@@ -55,11 +44,15 @@ export default async function IndicadoresPage() {
     .limit(1)
     .single()
 
-  const cpcData: any[]    = data?.cpc_data    || []
-  const ofertasData: any[]= data?.ofertas_data|| []
+  const cpcData: any[] = data?.cpc_data || []
 
   const fechaActualizada = data?.fecha
     ? new Date(data.fecha + 'T12:00:00').toLocaleDateString('es-CL', { day: 'numeric', month: 'long', year: 'numeric' })
+    : null
+
+  // CPA promedio Google entre todas las industrias
+  const avgCpaGoogle = cpcData.length
+    ? Math.round(cpcData.reduce((s: number, i: any) => s + (i.cpa_google_clp || 0), 0) / cpcData.length)
     : null
 
   return (
@@ -89,8 +82,8 @@ export default async function IndicadoresPage() {
             <span style={{ color: '#00d4ff' }}>Marketing Digital Chile</span>
           </h1>
           <p className="text-white/60 text-lg max-w-2xl">
-            CPC promedio por industria, indicadores económicos y mercado laboral digital.
-            Datos reales, actualizados cada semana.
+            CPC y CPA estimado para Google Ads y Meta Ads en 22 industrias, ajustados semanalmente
+            al tipo de cambio USD. Calculado con datos reales del mercado chileno.
           </p>
           {fechaActualizada && (
             <p className="text-white/30 text-sm mt-3">Última actualización: {fechaActualizada} · Semana {data.semana}/{data.año}</p>
@@ -107,10 +100,30 @@ export default async function IndicadoresPage() {
             {/* Métricas macro */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-12">
               {[
-                { label: 'USD · CLP', value: `$${data.usd_clp?.toLocaleString('es-CL')}`, sub: data.usd_var_pct != null ? `${data.usd_var_pct > 0 ? '+' : ''}${data.usd_var_pct}% vs sem. ant.` : 'Banco Central Chile', color: data.usd_var_pct > 0 ? '#f87171' : data.usd_var_pct < 0 ? '#34d399' : '#ffffff' },
-                { label: 'UF', value: `$${Math.round(data.uf_clp)?.toLocaleString('es-CL')}`, sub: 'Valor diario', color: '#ffffff' },
-                { label: 'Industrias monitoreadas', value: String(cpcData.length), sub: 'CPC Google + Meta', color: '#00d4ff' },
-                { label: 'Cargos digitales', value: `${data.total_ofertas?.toLocaleString('es-CL') || '—'}`, sub: data.var_total_ofertas_pct != null ? `${data.var_total_ofertas_pct > 0 ? '+' : ''}${data.var_total_ofertas_pct}% vs sem. ant.` : 'ofertas esta semana', color: data.var_total_ofertas_pct > 0 ? '#34d399' : '#ffffff' },
+                {
+                  label: 'USD · CLP',
+                  value: `$${data.usd_clp?.toLocaleString('es-CL')}`,
+                  sub: data.usd_var_pct != null ? `${data.usd_var_pct > 0 ? '+' : ''}${data.usd_var_pct}% vs sem. ant.` : 'Banco Central Chile',
+                  color: data.usd_var_pct > 0 ? '#f87171' : data.usd_var_pct < 0 ? '#34d399' : '#ffffff'
+                },
+                {
+                  label: 'UF',
+                  value: `$${Math.round(data.uf_clp)?.toLocaleString('es-CL')}`,
+                  sub: 'Valor diario',
+                  color: '#ffffff'
+                },
+                {
+                  label: 'Industrias analizadas',
+                  value: String(cpcData.length),
+                  sub: 'Google Ads + Meta Ads',
+                  color: '#00d4ff'
+                },
+                {
+                  label: 'CPA prom. Google',
+                  value: avgCpaGoogle ? clp(avgCpaGoogle) : '—',
+                  sub: 'Promedio entre industrias',
+                  color: '#a78bfa'
+                },
               ].map((m, i) => (
                 <div key={i} className="rounded-2xl p-5 border border-white/10" style={{ background: 'rgba(255,255,255,0.04)' }}>
                   <div className="text-2xl font-black mb-1" style={{ color: m.color }}>{m.value}</div>
@@ -120,72 +133,86 @@ export default async function IndicadoresPage() {
               ))}
             </div>
 
-            {/* Tabla CPC por industria */}
+            {/* Tabla principal: CPC + CPA por industria */}
             {cpcData.length > 0 && (
               <section className="mb-12">
                 <h2 className="text-sm font-bold uppercase tracking-wider mb-5 flex items-center gap-2" style={{ color: '#00d4ff' }}>
-                  <DollarSign className="w-4 h-4" /> CPC estimado por industria — Google Ads y Meta Ads
+                  <DollarSign className="w-4 h-4" /> CPC y CPA estimado por industria — Google Ads y Meta Ads
                 </h2>
                 <div className="rounded-2xl border border-white/10 overflow-hidden" style={{ background: 'rgba(255,255,255,0.03)' }}>
-                  {/* Header tabla */}
-                  <div className="grid grid-cols-5 px-5 py-3 border-b border-white/10 text-xs font-bold text-white/40 uppercase tracking-wider">
-                    <div className="col-span-2">Industria</div>
-                    <div className="text-right">Google CPC</div>
-                    <div className="text-right">Meta CPC</div>
-                    <div className="text-right">Var. semana</div>
-                  </div>
-                  {cpcData.map((ind: any, i: number) => (
-                    <div key={ind.id}
-                      className="grid grid-cols-5 px-5 py-3.5 border-b border-white/5 hover:bg-white/5 transition-colors items-center"
-                    >
-                      <div className="col-span-2 text-sm font-medium text-white">{ind.label}</div>
-                      <div className="text-right">
-                        <span className="text-sm font-bold text-white">${ind.google_clp?.toLocaleString('es-CL')}</span>
-                        <span className="text-white/40 text-xs ml-1">CLP</span>
-                      </div>
-                      <div className="text-right">
-                        <span className="text-sm font-bold" style={{ color: '#00d4ff' }}>${ind.meta_clp?.toLocaleString('es-CL')}</span>
-                        <span className="text-white/40 text-xs ml-1">CLP</span>
-                      </div>
-                      <div className="flex justify-end">
-                        <VarBadge val={ind.google_var_pct} />
-                      </div>
-                    </div>
-                  ))}
-                  <div className="px-5 py-3 text-xs text-white/25 border-t border-white/5">
-                    CPC base calibrado con Ubersuggest Chile. Ajustado semanalmente por tipo de cambio USD. Meta CPC calculado por ratio de industria (benchmarks WordStream/Databox).
-                  </div>
-                </div>
-              </section>
-            )}
 
-            {/* Tabla mercado laboral */}
-            {ofertasData.length > 0 && (
-              <section className="mb-12">
-                <h2 className="text-sm font-bold uppercase tracking-wider mb-5 flex items-center gap-2" style={{ color: '#00d4ff' }}>
-                  <Briefcase className="w-4 h-4" /> Mercado laboral digital Chile — Ofertas activas esta semana
-                </h2>
-                <div className="rounded-2xl border border-white/10 overflow-hidden" style={{ background: 'rgba(255,255,255,0.03)' }}>
-                  <div className="grid grid-cols-3 px-5 py-3 border-b border-white/10 text-xs font-bold text-white/40 uppercase tracking-wider">
-                    <div className="col-span-2">Cargo</div>
-                    <div className="text-right">Ofertas / variación</div>
+                  {/* Header desktop */}
+                  <div className="hidden md:grid px-5 py-3 border-b border-white/10 text-xs font-bold text-white/40 uppercase tracking-wider"
+                    style={{ gridTemplateColumns: '2fr 1fr 1fr 1fr 1fr 0.6fr 0.7fr' }}>
+                    <div>Industria</div>
+                    <div className="text-right">G. CPC</div>
+                    <div className="text-right text-emerald-400/60">G. CPA</div>
+                    <div className="text-right" style={{ color: 'rgba(0,212,255,0.6)' }}>M. CPC</div>
+                    <div className="text-right text-purple-400/60">M. CPA</div>
+                    <div className="text-right">CVR</div>
+                    <div className="text-right">Var.</div>
                   </div>
-                  {ofertasData
-                    .slice()
-                    .sort((a: any, b: any) => b.count - a.count)
-                    .map((o: any) => (
-                    <div key={o.id}
-                      className="grid grid-cols-3 px-5 py-3.5 border-b border-white/5 hover:bg-white/5 transition-colors items-center"
-                    >
-                      <div className="col-span-2 text-sm font-medium text-white">{o.label}</div>
-                      <div className="flex items-center justify-end gap-3">
-                        <span className="text-sm font-black text-white">{o.count?.toLocaleString('es-CL') || '—'}</span>
-                        <VarBadgeJobs val={o.var_pct} />
+
+                  {/* Header mobile */}
+                  <div className="grid md:hidden px-4 py-3 border-b border-white/10 text-xs font-bold text-white/40 uppercase tracking-wider"
+                    style={{ gridTemplateColumns: '2fr 1fr 1fr 0.7fr' }}>
+                    <div>Industria</div>
+                    <div className="text-right">G. CPC</div>
+                    <div className="text-right" style={{ color: 'rgba(0,212,255,0.6)' }}>M. CPC</div>
+                    <div className="text-right">Var.</div>
+                  </div>
+
+                  {cpcData.map((ind: any) => (
+                    <div key={ind.id} className="border-b border-white/5 hover:bg-white/5 transition-colors">
+
+                      {/* Row desktop */}
+                      <div className="hidden md:grid px-5 py-3.5 items-center"
+                        style={{ gridTemplateColumns: '2fr 1fr 1fr 1fr 1fr 0.6fr 0.7fr' }}>
+                        <div className="text-sm font-medium text-white">{ind.label}</div>
+                        <div className="text-right">
+                          <span className="text-sm font-bold text-white">{clp(ind.google_clp)}</span>
+                          <span className="text-white/30 text-xs ml-0.5">CLP</span>
+                        </div>
+                        <div className="text-right">
+                          <span className="text-sm font-bold text-emerald-400">{clp(ind.cpa_google_clp)}</span>
+                          <span className="text-white/30 text-xs ml-0.5">CLP</span>
+                        </div>
+                        <div className="text-right">
+                          <span className="text-sm font-bold" style={{ color: '#00d4ff' }}>{clp(ind.meta_clp)}</span>
+                          <span className="text-white/30 text-xs ml-0.5">CLP</span>
+                        </div>
+                        <div className="text-right">
+                          <span className="text-sm font-bold text-purple-400">{clp(ind.cpa_meta_clp)}</span>
+                          <span className="text-white/30 text-xs ml-0.5">CLP</span>
+                        </div>
+                        <div className="text-right text-white/50 text-sm">{ind.cvr}%</div>
+                        <div className="flex justify-end">
+                          <VarBadge val={ind.google_var_pct} />
+                        </div>
+                      </div>
+
+                      {/* Row mobile */}
+                      <div className="grid md:hidden px-4 py-3.5 items-center"
+                        style={{ gridTemplateColumns: '2fr 1fr 1fr 0.7fr' }}>
+                        <div className="text-sm font-medium text-white">{ind.label}</div>
+                        <div className="text-right">
+                          <span className="text-sm font-bold text-white">{clp(ind.google_clp)}</span>
+                        </div>
+                        <div className="text-right">
+                          <span className="text-sm font-bold" style={{ color: '#00d4ff' }}>{clp(ind.meta_clp)}</span>
+                        </div>
+                        <div className="flex justify-end">
+                          <VarBadge val={ind.google_var_pct} />
+                        </div>
                       </div>
                     </div>
                   ))}
-                  <div className="px-5 py-3 text-xs text-white/25 border-t border-white/5">
-                    Fuente: Computrabajo.cl. Búsqueda por cargo en Chile, actualizado cada lunes.
+
+                  <div className="px-5 py-3 text-xs text-white/25 border-t border-white/5 leading-relaxed">
+                    <span className="text-white/40 font-semibold">CPC:</span> benchmarks calibrados con Ubersuggest Chile, ajustados por USD semanal. &nbsp;
+                    <span className="text-emerald-400/50 font-semibold">CPA Google</span> y{' '}
+                    <span className="text-purple-400/50 font-semibold">CPA Meta:</span> CPC ÷ tasa de conversión de industria (fuente: predictor M&amp;P). &nbsp;
+                    <span className="text-white/40 font-semibold">CVR:</span> tasa de conversión promedio por industria.
                   </div>
                 </div>
               </section>
@@ -195,17 +222,19 @@ export default async function IndicadoresPage() {
             <div className="rounded-2xl p-6 border border-white/10 mb-10" style={{ background: 'rgba(0,212,255,0.05)', borderColor: 'rgba(0,212,255,0.15)' }}>
               <h3 className="text-sm font-bold mb-2" style={{ color: '#00d4ff' }}>¿Cómo se calculan estos datos?</h3>
               <p className="text-white/60 text-sm leading-relaxed">
-                Los CPC de Google son benchmarks calibrados con datos reales de Ubersuggest Chile (~1.200 keywords analizadas).
-                Se actualizan semanalmente multiplicando por la variación del USD (fuente: Banco Central de Chile vía mindicador.cl),
-                ya que las plataformas de pauta facturan en USD. Los CPC de Meta son estimados por ratio de industria
-                basados en benchmarks públicos de WordStream y Databox. Las ofertas laborales provienen de Computrabajo.cl.
+                Los <strong className="text-white/80">CPC de Google</strong> son benchmarks calibrados con datos reales de Ubersuggest Chile (~1.200 keywords analizadas, base Sep 2025).
+                Se ajustan semanalmente por el tipo de cambio USD (fuente: Banco Central vía mindicador.cl), ya que las plataformas facturan en dólares.
+                Los <strong className="text-white/80">CPC de Meta</strong> se estiman aplicando ratios de industria sobre el CPC Google (benchmarks WordStream/Databox).
+                El <strong className="text-white/80">CPA</strong> se calcula dividiendo el CPC por la tasa de conversión promedio de cada industria,
+                obtenida del motor del predictor M&P.
+                Un CPA más bajo indica mayor eficiencia publicitaria.
               </p>
             </div>
 
             {/* CTA */}
             <div className="rounded-2xl p-8 text-center border border-white/10" style={{ background: 'rgba(255,255,255,0.04)' }}>
               <p className="font-bold text-white text-lg mb-1">¿Cuánto debería invertir en pauta tu empresa?</p>
-              <p className="text-white/50 text-sm mb-5">Usa el Predictor M&P: proyección de ROAS, CAC y conversiones para tu industria.</p>
+              <p className="text-white/50 text-sm mb-5">Usa el Predictor M&P: proyección de ROAS, CAC y conversiones para tu industria específica.</p>
               <Link href="/labs/predictor"
                 className="inline-block px-7 py-3 rounded-xl font-bold text-sm transition-all text-white"
                 style={{ background: 'linear-gradient(90deg, #0050ff, #00d4ff)' }}>
