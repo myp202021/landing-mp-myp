@@ -384,30 +384,34 @@ async function enviarEmail({ hoy, postsIG, competidoresConPost, sinActividad, po
     subject: `🚌 Competencia Hualpén — ${fecha}${totalOfertas > 0 ? ` · ⚠️ ${totalOfertas} oferta${totalOfertas > 1 ? 's' : ''} laboral${totalOfertas > 1 ? 'es' : ''}` : ''} (${totalPosts} posts)`,
   }
 
+  // Cuerpo del email siempre limpio (resumen)
+  payload.html = `<div style="font-family:'Segoe UI',sans-serif;max-width:500px;margin:0 auto;padding:32px 16px;color:#1E293B;">
+    <h2 style="font-size:18px;font-weight:800;margin:0 0 8px;">🚌 Reporte Diario — Competencia Hualpén</h2>
+    <p style="color:#64748B;font-size:13px;margin:0 0 20px;">${fecha}</p>
+    <table style="width:100%;border-collapse:collapse;font-size:13px;margin-bottom:20px;">
+      <tr style="border-bottom:1px solid #E2E8F0;"><td style="padding:8px 0;color:#64748B;">Posts Instagram</td><td style="padding:8px 0;font-weight:700;text-align:right;">${postsIG.length}</td></tr>
+      <tr style="border-bottom:1px solid #E2E8F0;"><td style="padding:8px 0;color:#64748B;">Posts LinkedIn</td><td style="padding:8px 0;font-weight:700;text-align:right;">${postsLinkedin.length}</td></tr>
+      <tr style="border-bottom:1px solid #E2E8F0;"><td style="padding:8px 0;color:#64748B;">Posts Facebook</td><td style="padding:8px 0;font-weight:700;text-align:right;">${postsFacebook.length}</td></tr>
+      <tr style="border-bottom:1px solid #E2E8F0;"><td style="padding:8px 0;color:#64748B;">Sin actividad</td><td style="padding:8px 0;font-weight:700;text-align:right;">${sinActividad.length}</td></tr>
+      ${totalOfertas > 0 ? `<tr><td style="padding:8px 0;color:#92400E;font-weight:700;">⚠️ Ofertas laborales detectadas</td><td style="padding:8px 0;font-weight:700;color:#92400E;text-align:right;">${totalOfertas}</td></tr>` : ''}
+    </table>
+    <p style="font-size:12px;color:#94A3B8;">El reporte completo se adjunta como archivo ${pdfBuffer ? 'PDF' : 'HTML (abrir en browser)'}.<br>
+    <a href="https://www.mulleryperez.cl/crm" style="color:#3B82F6;">Ver en CRM →</a></p>
+  </div>`
+
   if (pdfBuffer) {
-    // Email limpio con PDF adjunto
-    payload.html = `<div style="font-family:'Segoe UI',sans-serif;max-width:500px;margin:0 auto;padding:32px 16px;color:#1E293B;">
-      <h2 style="font-size:18px;font-weight:800;margin:0 0 8px;">🚌 Reporte Diario — Competencia Hualpén</h2>
-      <p style="color:#64748B;font-size:13px;margin:0 0 20px;">${fecha}</p>
-      <table style="width:100%;border-collapse:collapse;font-size:13px;margin-bottom:20px;">
-        <tr style="border-bottom:1px solid #E2E8F0;"><td style="padding:8px 0;color:#64748B;">Posts Instagram</td><td style="padding:8px 0;font-weight:700;text-align:right;">${postsIG.length}</td></tr>
-        <tr style="border-bottom:1px solid #E2E8F0;"><td style="padding:8px 0;color:#64748B;">Posts LinkedIn</td><td style="padding:8px 0;font-weight:700;text-align:right;">${postsLinkedin.length}</td></tr>
-        <tr style="border-bottom:1px solid #E2E8F0;"><td style="padding:8px 0;color:#64748B;">Posts Facebook</td><td style="padding:8px 0;font-weight:700;text-align:right;">${postsFacebook.length}</td></tr>
-        <tr style="border-bottom:1px solid #E2E8F0;"><td style="padding:8px 0;color:#64748B;">Sin actividad</td><td style="padding:8px 0;font-weight:700;text-align:right;">${sinActividad.length}</td></tr>
-        ${totalOfertas > 0 ? `<tr><td style="padding:8px 0;color:#92400E;font-weight:700;">⚠️ Ofertas laborales detectadas</td><td style="padding:8px 0;font-weight:700;color:#92400E;text-align:right;">${totalOfertas}</td></tr>` : ''}
-      </table>
-      <p style="font-size:12px;color:#94A3B8;">El reporte completo se adjunta como archivo PDF.<br>
-      <a href="https://www.mulleryperez.cl/crm" style="color:#3B82F6;">Ver en CRM →</a></p>
-    </div>`
     payload.attachments = [{
       filename: `Competencia-Hualpen-${hoy}.pdf`,
       content: pdfBuffer.toString('base64'),
     }]
-    console.log(`📎 Email con PDF adjunto listo`)
+    console.log(`📎 Email con PDF adjunto`)
   } else {
-    // Fallback: HTML completo inline
-    payload.html = reporteHtml
-    console.log(`📄 Email con HTML inline (fallback — sin PDF)`)
+    // Fallback: adjuntar HTML como archivo (nunca inline)
+    payload.attachments = [{
+      filename: `Competencia-Hualpen-${hoy}.html`,
+      content: Buffer.from(reporteHtml).toString('base64'),
+    }]
+    console.log(`📄 Email con HTML adjunto (fallback — sin Chrome)`)
   }
 
   const res = await fetch('https://api.resend.com/emails', {
