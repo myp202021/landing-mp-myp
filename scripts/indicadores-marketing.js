@@ -49,20 +49,20 @@ const USD_BASE = 935 // tasa de referencia cuando se calibraron los CPCs
 
 // ─── Cargos digitales a monitorear ─────────────────────────────────────────
 const CARGOS = [
-  { id: 'community_manager',  label: 'Community Manager',          slug: 'community-manager' },
-  { id: 'paid_media',         label: 'Paid Media / SEM',           slug: 'paid-media' },
-  { id: 'disenador_digital',  label: 'Diseñador Digital',          slug: 'disenador-digital' },
-  { id: 'analista_marketing', label: 'Analista Marketing Digital', slug: 'analista-marketing-digital' },
-  { id: 'jefe_marketing',     label: 'Jefe Marketing Digital',     slug: 'jefe-marketing-digital' },
-  { id: 'gerente_marketing',  label: 'Gerente / Director Mkt',     slug: 'gerente-marketing' },
-  { id: 'social_media',       label: 'Social Media Manager',       slug: 'social-media' },
-  { id: 'publicista',         label: 'Publicista Digital',         slug: 'publicista' },
-  { id: 'seo_specialist',     label: 'SEO / SEM Specialist',       slug: 'seo' },
-  { id: 'data_analyst',       label: 'Data Analyst Marketing',     slug: 'data-analyst' },
-  { id: 'performance',        label: 'Performance Marketing',      slug: 'performance-marketing' },
-  { id: 'ux_ui',              label: 'UX/UI Designer',             slug: 'disenador-ux-ui' },
-  { id: 'subgerente',         label: 'Subgerente / Jefe Comercial',slug: 'subgerente-comercial' },
-  { id: 'content_manager',    label: 'Content Manager',            slug: 'content-manager' },
+  { id: 'community_manager',  label: 'Community Manager',          query: 'community manager' },
+  { id: 'paid_media',         label: 'Paid Media / SEM',           query: 'paid media sem google ads' },
+  { id: 'disenador_digital',  label: 'Diseñador Digital',          query: 'disenador digital web' },
+  { id: 'analista_marketing', label: 'Analista Marketing Digital', query: 'analista marketing digital' },
+  { id: 'jefe_marketing',     label: 'Jefe Marketing Digital',     query: 'jefe marketing digital' },
+  { id: 'gerente_marketing',  label: 'Gerente / Director Mkt',     query: 'gerente director marketing' },
+  { id: 'social_media',       label: 'Social Media Manager',       query: 'social media manager' },
+  { id: 'publicista',         label: 'Publicista Digital',         query: 'publicista digital' },
+  { id: 'seo_specialist',     label: 'SEO / SEM Specialist',       query: 'seo sem specialist' },
+  { id: 'data_analyst',       label: 'Data Analyst Marketing',     query: 'data analyst analytics' },
+  { id: 'performance',        label: 'Performance Marketing',      query: 'performance marketing' },
+  { id: 'ux_ui',              label: 'UX/UI Designer',             query: 'disenador ux ui' },
+  { id: 'subgerente',         label: 'Subgerente / Jefe Comercial',query: 'subgerente jefe comercial digital' },
+  { id: 'content_manager',    label: 'Content Manager',            query: 'content manager' },
 ]
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
@@ -90,48 +90,60 @@ async function fetchIndicadores() {
   }
 }
 
-// ─── Scraping ofertas de trabajo (Computrabajo.cl via Apify Cheerio) ────────
+// ─── Scraping ofertas de trabajo (Indeed Chile via Apify Web Scraper / Puppeteer) ─
 async function fetchOfertas() {
-  console.log('🔍 Scrapeando ofertas de trabajo...')
+  console.log('🔍 Scrapeando ofertas de trabajo en Indeed Chile...')
   const startUrls = CARGOS.map(c => ({
-    url: `https://cl.computrabajo.com/trabajos-de-${c.slug}`,
+    url: `https://cl.indeed.com/jobs?q=${encodeURIComponent(c.query || c.slug.replace(/-/g, ' '))}&l=Chile`,
     userData: { cargo_id: c.id }
   }))
 
-  const run = await apify.actor('apify~cheerio-scraper').call({
+  const run = await apify.actor('apify~web-scraper').call({
     startUrls,
     pageFunction: `async function pageFunction(context) {
-      const { $, request } = context
+      const { $, request, waitFor } = context
       const cargo_id = request.userData.cargo_id
 
-      // Computrabajo muestra "X ofertas de trabajo" en varios selectores
+      // Indeed usa JS — esperar a que cargue el contador
+      await waitFor(3000)
+
       let count = 0
-      const candidates = [
-        $('h1').first().text(),
-        $('p.title_wl').first().text(),
-        $('[class*="title"]').first().text(),
-        $('title').text(),
-      ]
-      for (const text of candidates) {
-        const match = text.match(/(\d[\d.,]*)/)
-        if (match) {
-          count = parseInt(match[1].replace(/[.,]/g, ''))
-          if (count > 0) break
+
+      // Método 1: título de página → "342 empleos de X en Chile"
+      const title = $('title').text().trim()
+      const titleMatch = title.match(/^([\d.,]+)/)
+      if (titleMatch) {
+        count = parseInt(titleMatch[1].replace(/[.,]/g, ''))
+      }
+
+      // Método 2: meta description → también suele tener el count
+      if (!count) {
+        const metaDesc = $('meta[name="description"]').attr('content') || ''
+        const metaMatch = metaDesc.match(/([\d.,]+)\s+empleo/)
+        if (metaMatch) count = parseInt(metaMatch[1].replace(/[.,]/g, ''))
+      }
+
+      // Método 3: elementos del DOM con el conteo
+      if (!count) {
+        const selectors = [
+          '[data-testid="searchCount"]',
+          '[class*="searchCount"]',
+          '[class*="jobCount"]',
+          'h1',
+        ]
+        for (const sel of selectors) {
+          const txt = $(sel).first().text()
+          const m = txt.match(/([\d.,]+)\s*(?:empleo|trabajo|resultado)/)
+          if (m) { count = parseInt(m[1].replace(/[.,]/g, '')); break }
         }
       }
 
-      // Intentar extraer salarios de las ofertas listadas
-      const salarios = []
-      $('[class*="salary"], [class*="salario"], [class*="sal_"]').each((i, el) => {
-        const txt = $(el).text().trim()
-        if (txt && txt.length < 50) salarios.push(txt)
-      })
-
-      return { cargo_id, count, salarios: salarios.slice(0, 3) }
+      return { cargo_id, count }
     }`,
-    maxRequestsPerCrawl: CARGOS.length + 2,
-    maxConcurrency: 5,
-  })
+    maxRequestsPerCrawl: CARGOS.length + 5,
+    maxConcurrency: 2,
+    navigationTimeoutSecs: 30,
+  }, { waitSecs: 180 })
 
   const { items } = await apify.dataset(run.defaultDatasetId).listItems()
   return items
