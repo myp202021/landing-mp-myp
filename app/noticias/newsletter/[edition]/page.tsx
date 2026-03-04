@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { createClient } from '@supabase/supabase-js'
 import { ArrowLeft, TrendingUp, BarChart2, ExternalLink } from 'lucide-react'
 import { notFound } from 'next/navigation'
+import SubscribeForm from '../SubscribeForm'
 
 export const dynamic = 'force-dynamic'
 
@@ -155,11 +156,9 @@ export default async function NewsletterEdicionPage({ params }: { params: { edit
               <TrendingUp className="w-4 h-4" /> Post más viral de la semana
             </h2>
             <div className="bg-gray-50 border border-gray-200 rounded-2xl p-6 flex gap-5">
-              {top.imagen && (
-                <a href={top.url} target="_blank" rel="noopener noreferrer" className="flex-shrink-0">
-                  <img src={top.imagen} alt="Top post" className="w-28 h-28 object-cover rounded-xl" />
-                </a>
-              )}
+              <a href={top.url} target="_blank" rel="noopener noreferrer" className="flex-shrink-0 w-16 h-16 bg-blue-100 rounded-xl flex items-center justify-center text-2xl">
+                🏆
+              </a>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-2">
                   <span className="text-sm font-bold text-blue-600">@{top.cuenta}</span>
@@ -188,9 +187,9 @@ export default async function NewsletterEdicionPage({ params }: { params: { edit
               {posts.map((p: any, i: number) => (
                 <a key={i} href={p.url} target="_blank" rel="noopener noreferrer"
                   className="bg-gray-50 border border-gray-200 rounded-xl p-4 flex gap-3 hover:border-gray-400 transition-colors">
-                  {p.displayUrl && (
-                    <img src={p.displayUrl} alt="" className="w-16 h-16 object-cover rounded-lg flex-shrink-0" />
-                  )}
+                  <div className="w-12 h-12 bg-gray-100 rounded-lg flex-shrink-0 flex items-center justify-center text-lg">
+                    📸
+                  </div>
                   <div className="flex-1 min-w-0">
                     <div className="text-blue-600 text-xs font-bold mb-1">@{p.ownerUsername}</div>
                     <p className="text-gray-500 text-xs leading-relaxed line-clamp-2">{p.caption}</p>
@@ -209,10 +208,7 @@ export default async function NewsletterEdicionPage({ params }: { params: { edit
         <div className="bg-blue-50 border border-blue-200 rounded-2xl p-8 text-center">
           <p className="text-blue-800 font-bold mb-1">¿Quieres recibir esto cada semana?</p>
           <p className="text-blue-600 text-sm mb-4">Datos reales de marketing digital, sin opiniones. Gratis.</p>
-          <a href="mailto:contacto@mulleryperez.cl?subject=Suscribirme al Newsletter M%26P"
-            className="inline-block px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold text-sm transition-colors">
-            Suscribirme al newsletter
-          </a>
+          <SubscribeForm />
         </div>
 
       </main>
