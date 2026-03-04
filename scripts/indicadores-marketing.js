@@ -9,11 +9,9 @@
  */
 
 const fetch = require('node-fetch')
-const { ApifyClient } = require('apify-client')
 const { createClient } = require('@supabase/supabase-js')
 
 // ─── Clientes ──────────────────────────────────────────────────────────────
-const apify = new ApifyClient({ token: process.env.APIFY_TOKEN })
 const supabase = createClient(
   process.env.SUPABASE_URL,
   process.env.SUPABASE_SERVICE_KEY
