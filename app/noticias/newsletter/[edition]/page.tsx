@@ -1,8 +1,9 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { createClient } from '@supabase/supabase-js'
-import { ArrowLeft, TrendingUp, BarChart2, Copy, ExternalLink } from 'lucide-react'
+import { ArrowLeft, TrendingUp, BarChart2, ExternalLink } from 'lucide-react'
 import { notFound } from 'next/navigation'
+import CopyButton from '../CopyButton'
 
 export const dynamic = 'force-dynamic'
 
@@ -218,12 +219,7 @@ export default async function NewsletterEdicionPage({ params }: { params: { edit
               <pre className="text-gray-200 text-sm whitespace-pre-wrap font-sans leading-relaxed mb-5 bg-gray-800 rounded-xl p-4">
                 {data.linkedin_texto}
               </pre>
-              <button
-                onClick={() => navigator.clipboard.writeText(data.linkedin_texto)}
-                className="flex items-center gap-2 px-5 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-bold text-sm transition-all cursor-pointer"
-              >
-                <Copy className="w-4 h-4" /> Copiar texto
-              </button>
+              <CopyButton text={data.linkedin_texto} />
             </div>
           </section>
         )}
