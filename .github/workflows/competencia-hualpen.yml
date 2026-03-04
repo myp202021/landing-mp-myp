@@ -1,30 +1,30 @@
-name: Reporte Diario Competencia Hualpen                             
-                                                     
-on:                                                                   
-    schedule:                                                                   
-      - cron: '50 11 * * 1-5'                                                   
-    workflow_dispatch:                                                          
-                                                                                
-jobs:                                                            
-    scrape:
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v4
+name: Reporte Diario Competencia Hualpen
 
-        - uses: actions/setup-node@v4
-          with:
-            node-version: '20'
+on:
+  schedule:
+    - cron: '50 11 * * 1-5'
+  workflow_dispatch:
 
-        - name: Instalar wkhtmltopdf
-          run: sudo apt-get install -y wkhtmltopdf
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
 
-        - name: Instalar dependencias
-          run: npm install node-fetch@2 @supabase/supabase-js
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
 
-        - name: Ejecutar scraper
-          run: node scripts/scrape-competencia.js
-          env:
-            APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
-            SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-            SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
-            RESEND: ${{ secrets.RESEND }}
+      - name: Instalar wkhtmltopdf
+        run: sudo apt-get install -y wkhtmltopdf
+
+      - name: Instalar dependencias
+        run: npm install node-fetch@2 @supabase/supabase-js
+
+      - name: Ejecutar scraper
+        run: node scripts/scrape-competencia.js
+        env:
+          APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          RESEND: ${{ secrets.RESEND }}
