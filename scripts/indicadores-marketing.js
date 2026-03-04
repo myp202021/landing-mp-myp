@@ -90,63 +90,77 @@ async function fetchIndicadores() {
   }
 }
 
-// ─── Scraping ofertas de trabajo (Indeed Chile via Apify Web Scraper / Puppeteer) ─
+// ─── Scraping ofertas de trabajo (fetch directo + cheerio, sin Apify) ───────
+const cheerio = require('cheerio')
+
+function slugify(q) {
+  return q.toLowerCase()
+    .replace(/\s+/g, '-')
+    .replace(/ñ/g, 'n')
+    .replace(/á/g, 'a').replace(/é/g, 'e').replace(/í/g, 'i').replace(/ó/g, 'o').replace(/ú/g, 'u')
+}
+
+async function fetchCount(url) {
+  try {
+    const res = await fetch(url, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
+        'Accept': 'text/html,application/xhtml+xml',
+        'Accept-Language': 'es-CL,es;q=0.9',
+        'Cache-Control': 'no-cache',
+      },
+      timeout: 15000,
+    })
+    if (!res.ok) return 0
+    const html = await res.text()
+    const $ = cheerio.load(html)
+
+    // Buscar en h1, h2, meta description, title — patrón numérico + "empleo/trabajo/oferta"
+    const targets = [
+      $('h1').first().text(),
+      $('h2').first().text(),
+      $('title').text(),
+      $('meta[name="description"]').attr('content') || '',
+      $('[class*="count"], [class*="result"], [class*="total"]').first().text(),
+    ]
+    for (const t of targets) {
+      const m = t.match(/([\d.,]+)\s*(?:empleo|trabajo|oferta|resultado)/i)
+      if (m) {
+        const n = parseInt(m[1].replace(/[.,]/g, ''))
+        if (n > 0) return n
+      }
+    }
+    return 0
+  } catch { return 0 }
+}
+
 async function fetchOfertas() {
-  console.log('🔍 Scrapeando ofertas de trabajo en Indeed Chile...')
-  const startUrls = CARGOS.map(c => ({
-    url: `https://cl.indeed.com/jobs?q=${encodeURIComponent(c.query || c.slug.replace(/-/g, ' '))}&l=Chile`,
-    userData: { cargo_id: c.id }
-  }))
+  console.log('🔍 Scrapeando ofertas de trabajo (Bumeran.cl + Laborum.cl)...')
+  const results = []
 
-  const run = await apify.actor('apify~web-scraper').call({
-    startUrls,
-    pageFunction: `async function pageFunction(context) {
-      const { $, request, waitFor } = context
-      const cargo_id = request.userData.cargo_id
+  for (const cargo of CARGOS) {
+    const slug = slugify(cargo.query)
+    let count = 0
 
-      // Indeed usa JS — esperar a que cargue el contador
-      await waitFor(3000)
+    // Intento 1: Bumeran Chile (SSR, red OCC)
+    count = await fetchCount(`https://www.bumeran.cl/empleos-busqueda-${slug}-en-chile.html`)
 
-      let count = 0
+    // Intento 2: Laborum Chile (SSR, red OCC)
+    if (!count) {
+      count = await fetchCount(`https://www.laborum.cl/empleos-en-chile/?q=${encodeURIComponent(cargo.query)}`)
+    }
 
-      // Método 1: título de página → "342 empleos de X en Chile"
-      const title = $('title').text().trim()
-      const titleMatch = title.match(/^([\d.,]+)/)
-      if (titleMatch) {
-        count = parseInt(titleMatch[1].replace(/[.,]/g, ''))
-      }
+    // Intento 3: Trabajando.com
+    if (!count) {
+      count = await fetchCount(`https://www.trabajando.cl/trabajo/index?buscar%5Btexto%5D=${encodeURIComponent(cargo.query)}`)
+    }
 
-      // Método 2: meta description → también suele tener el count
-      if (!count) {
-        const metaDesc = $('meta[name="description"]').attr('content') || ''
-        const metaMatch = metaDesc.match(/([\d.,]+)\s+empleo/)
-        if (metaMatch) count = parseInt(metaMatch[1].replace(/[.,]/g, ''))
-      }
+    console.log(`   ${cargo.label}: ${count}`)
+    results.push({ cargo_id: cargo.id, count })
+    await new Promise(r => setTimeout(r, 800))
+  }
 
-      // Método 3: elementos del DOM con el conteo
-      if (!count) {
-        const selectors = [
-          '[data-testid="searchCount"]',
-          '[class*="searchCount"]',
-          '[class*="jobCount"]',
-          'h1',
-        ]
-        for (const sel of selectors) {
-          const txt = $(sel).first().text()
-          const m = txt.match(/([\d.,]+)\s*(?:empleo|trabajo|resultado)/)
-          if (m) { count = parseInt(m[1].replace(/[.,]/g, '')); break }
-        }
-      }
-
-      return { cargo_id, count }
-    }`,
-    maxRequestsPerCrawl: CARGOS.length + 5,
-    maxConcurrency: 2,
-    navigationTimeoutSecs: 30,
-  }, { waitSecs: 180 })
-
-  const { items } = await apify.dataset(run.defaultDatasetId).listItems()
-  return items
+  return results
 }
 
 // ─── Main ───────────────────────────────────────────────────────────────────
