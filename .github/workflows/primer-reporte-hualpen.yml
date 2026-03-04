@@ -1,0 +1,30 @@
+name: Primer Reporte Competencia — Buses Hualpén
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirmar:
+        description: 'Escribir "enviar" para confirmar el envío del primer reporte'
+        required: true
+        default: 'enviar'
+
+jobs:
+  primer-reporte:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Instalar dependencias
+        run: npm install node-fetch@2
+
+      - name: Ejecutar primer reporte
+        env:
+          APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
+          RESEND: ${{ secrets.RESEND }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: node scripts/primer-reporte-hualpen.js
