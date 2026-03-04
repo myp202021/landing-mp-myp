@@ -25,8 +25,8 @@ export default async function NewsletterIndexPage() {
 
   const { data: ediciones } = await supabase
     .from('radar_marketing')
-    .select('slug, semana, año, fecha_inicio, fecha_fin, total_posts, cuentas_analizadas, formato_ganador, eng_ganador')
-    .order('año', { ascending: false })
+    .select('*')
+    .order('semana', { ascending: false })
     .order('semana', { ascending: false })
     .limit(20)
 
