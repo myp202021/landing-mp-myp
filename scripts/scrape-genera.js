@@ -112,24 +112,43 @@ function getTextoPost(p) {
 }
 
 function getLikes(p) {
+  // apimaestro usa p.stats.likes, otros usan campos directos
+  if (p.stats) {
+    return p.stats.likes || p.stats.reactions || p.stats.totalReactionCount || 0
+  }
   return p.likesCount || p.totalReactionCount || p.reactions || p.likes || 0
 }
 
 function getComentarios(p) {
+  if (p.stats) return p.stats.comments || 0
   return p.commentsCount || p.comments || p.commentCount || 0
 }
 
 function getCompartidos(p) {
+  if (p.stats) return p.stats.shares || p.stats.reposts || 0
   return p.sharesCount || p.shares || p.repostCount || p.reposts || 0
 }
 
 function getPostUrl(p) {
-  return p.url || p.postUrl || p.postLink || p.link || ''
+  return p.url || p.post_url || p.postUrl || p.postLink || p.link || ''
+}
+
+function getAuthorName(p) {
+  // apimaestro: author es un objeto con name, url, etc.
+  if (p.author && typeof p.author === 'object') return p.author.name || ''
+  if (p.source_company && typeof p.source_company === 'object') return p.source_company.name || ''
+  return p.author || p.companyName || p.authorName || ''
+}
+
+function getAuthorUrl(p) {
+  if (p.author && typeof p.author === 'object') return p.author.url || ''
+  if (p.source_company && typeof p.source_company === 'object') return p.source_company.url || ''
+  return p.companyUrl || p.authorUrl || ''
 }
 
 function getFechaPost(p) {
-  // Intentar múltiples campos de fecha conocidos de Apify LinkedIn actors
-  const raw = p.timestamp || p.postedAt || p.publishedAt || p.date || p.time
+  // apimaestro usa posted_at (snake_case)
+  const raw = p.timestamp || p.posted_at || p.postedAt || p.publishedAt || p.date || p.time
     || p.postedDate || p.publishedDate || p.createdAt || p.postedDateTimestamp || null
 
   // timeSincePosted: "3d", "1w", "2h", "5mo" — convertir a Date
@@ -148,7 +167,6 @@ function getFechaPost(p) {
   }
 
   if (!raw) return null
-  // Si es número (epoch ms o epoch s), convertir
   if (typeof raw === 'number') {
     return raw > 1e12 ? new Date(raw).toISOString() : new Date(raw * 1000).toISOString()
   }
@@ -302,14 +320,22 @@ async function tryLinkedinActor(actorId, input, hace72h, conLI) {
       return null
     }
 
-    // Debug: mostrar estructura del primer post para entender campos
+    // Debug: mostrar estructura de posts para entender campos
     if (all.length > 0) {
       const sample = all[0]
       console.log(`🔍 LinkedIn sample keys: ${Object.keys(sample).join(', ')}`)
-      const dateFields = ['timestamp', 'postedAt', 'publishedAt', 'date', 'time', 'postedDate', 'publishedDate', 'createdAt', 'postedDateTimestamp', 'timeSincePosted']
-      dateFields.forEach(f => { if (sample[f] !== undefined) console.log(`   📅 ${f} = ${sample[f]}`) })
-      const nameFields = ['companyName', 'authorName', 'author', 'companyUrl', 'authorUrl']
-      nameFields.forEach(f => { if (sample[f] !== undefined) console.log(`   🏢 ${f} = ${sample[f]}`) })
+      console.log(`   📅 posted_at = ${sample.posted_at}`)
+      console.log(`   📅 getFechaPost = ${getFechaPost(sample)}`)
+      console.log(`   🏢 getAuthorName = ${getAuthorName(sample)}`)
+      console.log(`   🏢 getAuthorUrl = ${getAuthorUrl(sample)}`)
+      if (sample.stats) console.log(`   📊 stats = ${JSON.stringify(sample.stats)}`)
+      if (sample.source_company) console.log(`   🏢 source_company = ${JSON.stringify(sample.source_company)}`)
+      // Mostrar fechas de los primeros 5 posts
+      all.slice(0, 5).forEach((p, i) => {
+        const f = getFechaPost(p)
+        const name = getAuthorName(p)
+        console.log(`   [${i}] fecha=${f} autor=${name} text=${(p.text||'').substring(0,60)}...`)
+      })
     }
 
     // Filtrar posts recientes y asignar competidor
@@ -321,11 +347,21 @@ async function tryLinkedinActor(actorId, input, hace72h, conLI) {
       return parsed > hace72h
     }).map(p => {
       // Intentar matchear con competidor por URL o nombre
-      const compName = p.companyName || p.authorName || p.author || ''
-      const matched = conLI.find(c =>
-        compName.toLowerCase().includes(c.nombre.toLowerCase()) ||
-        (p.companyUrl && c.linkedin && p.companyUrl.includes(c.linkedin.replace('https://www.linkedin.com', '')))
-      )
+      const compName = getAuthorName(p)
+      const compUrl = getAuthorUrl(p)
+      const matched = conLI.find(c => {
+        if (compName && compName.toLowerCase().includes(c.nombre.toLowerCase())) return true
+        if (compUrl && c.linkedin) {
+          const slug = c.linkedin.replace('https://www.linkedin.com', '').replace(/\/$/, '')
+          if (compUrl.includes(slug)) return true
+        }
+        // source_company URL match
+        if (p.source_company?.url && c.linkedin) {
+          const slug = c.linkedin.replace('https://www.linkedin.com', '').replace(/\/$/, '')
+          if (p.source_company.url.includes(slug)) return true
+        }
+        return false
+      })
       return { ...p, _competidor: matched ? matched.nombre : compName }
     })
 
