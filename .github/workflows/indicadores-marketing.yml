@@ -23,4 +23,5 @@ jobs:
           APIFY_TOKEN:          ${{ secrets.APIFY_TOKEN }}
           SUPABASE_URL:         ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          RESEND:               ${{ secrets.RESEND }}
         run: node scripts/indicadores-marketing.js

@@ -136,6 +136,119 @@ async function main() {
   console.log(`   USD: $${usd} CLP (${usdVarPct > 0 ? '+' : ''}${usdVarPct}% vs sem. ant.)`)
   console.log(`   UF: $${uf.toLocaleString('es-CL')} CLP`)
   console.log(`   CPC ajuste: ×${ajuste.toFixed(3)} vs base Sep 2025`)
+
+  // 5. Email recordatorio para publicar en LinkedIn
+  await enviarEmailLinkedin({ semana, año, fecha, usd, uf, usdVarPct, cpcData })
+}
+
+// ─── Email recordatorio LinkedIn ─────────────────────────────────────────────
+async function enviarEmailLinkedin({ semana, año, fecha, usd, uf, usdVarPct, cpcData }) {
+  const RESEND_API_KEY = process.env.RESEND || process.env.RESEND_API_KEY
+  if (!RESEND_API_KEY) {
+    console.warn('⚠️  RESEND_API_KEY no definida — email no enviado.')
+    return
+  }
+
+  const fechaHumana = new Date(fecha + 'T12:00:00').toLocaleDateString('es-CL', {
+    day: 'numeric', month: 'long', year: 'numeric'
+  })
+  const varIcon = usdVarPct > 0 ? '📈' : usdVarPct < 0 ? '📉' : '➡️'
+  const varSign = usdVarPct > 0 ? '+' : ''
+
+  // Top 5 industrias más caras en Google
+  const top5 = [...cpcData].sort((a, b) => b.google_clp - a.google_clp).slice(0, 5)
+  // Top 5 más baratas
+  const bottom5 = [...cpcData].sort((a, b) => a.google_clp - b.google_clp).slice(0, 5)
+
+  const top5Rows = top5.map(c =>
+    `<tr><td style="padding:6px 12px;border-bottom:1px solid #F1F5F9;font-size:13px;">${c.label}</td><td style="padding:6px 12px;border-bottom:1px solid #F1F5F9;font-size:13px;text-align:right;font-weight:700;">$${c.google_clp.toLocaleString('es-CL')}</td><td style="padding:6px 12px;border-bottom:1px solid #F1F5F9;font-size:13px;text-align:right;">$${c.meta_clp.toLocaleString('es-CL')}</td></tr>`
+  ).join('')
+
+  const bottom5Rows = bottom5.map(c =>
+    `<tr><td style="padding:6px 12px;border-bottom:1px solid #F1F5F9;font-size:13px;">${c.label}</td><td style="padding:6px 12px;border-bottom:1px solid #F1F5F9;font-size:13px;text-align:right;font-weight:700;">$${c.google_clp.toLocaleString('es-CL')}</td><td style="padding:6px 12px;border-bottom:1px solid #F1F5F9;font-size:13px;text-align:right;">$${c.meta_clp.toLocaleString('es-CL')}</td></tr>`
+  ).join('')
+
+  // Texto sugerido para LinkedIn (copy-paste ready)
+  const textoLinkedin = `📊 Termómetro de Marketing Digital Chile — Semana ${semana}
+
+${varIcon} Dólar hoy: $${usd} CLP (${varSign}${usdVarPct}% vs semana anterior)
+📌 UF: $${uf.toLocaleString('es-CL')} CLP
+
+🔥 Top CPC más caros (Google Ads):
+${top5.map(c => `• ${c.label}: $${c.google_clp.toLocaleString('es-CL')} CLP`).join('\n')}
+
+💡 CPC más accesibles:
+${bottom5.map(c => `• ${c.label}: $${c.google_clp.toLocaleString('es-CL')} CLP`).join('\n')}
+
+👉 Revisa todos los indicadores en: https://www.mulleryperez.cl/indicadores
+
+#MarketingDigital #GoogleAds #MetaAds #Chile #PerformanceMarketing`
+
+  const html = `<div style="font-family:'Segoe UI',sans-serif;max-width:600px;margin:0 auto;padding:32px 16px;color:#1E293B;">
+    <div style="background:linear-gradient(135deg,#6C31D9,#2878F0);border-radius:12px;padding:24px;margin-bottom:24px;">
+      <h1 style="color:#fff;font-size:18px;font-weight:800;margin:0 0 4px;">📊 Termómetro Marketing — Semana ${semana}</h1>
+      <p style="color:rgba(255,255,255,0.8);font-size:13px;margin:0;">${fechaHumana} · Recordatorio para publicar en LinkedIn</p>
+    </div>
+
+    <div style="background:#F8FAFC;border:1px solid #E2E8F0;border-radius:10px;padding:20px;margin-bottom:20px;">
+      <h2 style="font-size:14px;color:#64748B;margin:0 0 12px;text-transform:uppercase;letter-spacing:1px;">Indicadores de la semana</h2>
+      <div style="display:flex;gap:16px;margin-bottom:8px;">
+        <div style="flex:1;background:#fff;border-radius:8px;padding:14px;border:1px solid #E2E8F0;">
+          <div style="font-size:11px;color:#64748B;">USD/CLP</div>
+          <div style="font-size:24px;font-weight:800;color:#0F172A;">$${usd}</div>
+          <div style="font-size:11px;color:${usdVarPct > 0 ? '#DC2626' : usdVarPct < 0 ? '#16A34A' : '#64748B'};">${varSign}${usdVarPct}% vs sem. ant.</div>
+        </div>
+        <div style="flex:1;background:#fff;border-radius:8px;padding:14px;border:1px solid #E2E8F0;">
+          <div style="font-size:11px;color:#64748B;">UF/CLP</div>
+          <div style="font-size:24px;font-weight:800;color:#0F172A;">$${uf.toLocaleString('es-CL')}</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:#fff;border:1px solid #E2E8F0;border-radius:10px;padding:20px;margin-bottom:20px;">
+      <h2 style="font-size:14px;color:#DC2626;margin:0 0 10px;">🔥 Top 5 CPC más caros</h2>
+      <table style="width:100%;border-collapse:collapse;">
+        <tr><th style="text-align:left;padding:6px 12px;font-size:11px;color:#94A3B8;border-bottom:2px solid #E2E8F0;">Industria</th><th style="text-align:right;padding:6px 12px;font-size:11px;color:#94A3B8;border-bottom:2px solid #E2E8F0;">Google</th><th style="text-align:right;padding:6px 12px;font-size:11px;color:#94A3B8;border-bottom:2px solid #E2E8F0;">Meta</th></tr>
+        ${top5Rows}
+      </table>
+    </div>
+
+    <div style="background:#fff;border:1px solid #E2E8F0;border-radius:10px;padding:20px;margin-bottom:20px;">
+      <h2 style="font-size:14px;color:#16A34A;margin:0 0 10px;">💡 Top 5 CPC más accesibles</h2>
+      <table style="width:100%;border-collapse:collapse;">
+        <tr><th style="text-align:left;padding:6px 12px;font-size:11px;color:#94A3B8;border-bottom:2px solid #E2E8F0;">Industria</th><th style="text-align:right;padding:6px 12px;font-size:11px;color:#94A3B8;border-bottom:2px solid #E2E8F0;">Google</th><th style="text-align:right;padding:6px 12px;font-size:11px;color:#94A3B8;border-bottom:2px solid #E2E8F0;">Meta</th></tr>
+        ${bottom5Rows}
+      </table>
+    </div>
+
+    <div style="background:#0F172A;border-radius:10px;padding:20px;margin-bottom:20px;">
+      <h2 style="font-size:14px;color:#F59E0B;margin:0 0 10px;">📋 Texto sugerido para LinkedIn (copia y pega)</h2>
+      <pre style="background:#1E293B;border-radius:8px;padding:16px;color:#E2E8F0;font-size:12px;line-height:1.6;white-space:pre-wrap;word-wrap:break-word;margin:0;">${textoLinkedin}</pre>
+    </div>
+
+    <div style="text-align:center;padding:16px;">
+      <a href="https://www.mulleryperez.cl/indicadores" style="background:linear-gradient(135deg,#6C31D9,#2878F0);color:#fff;padding:12px 32px;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;display:inline-block;">Ver indicadores en la web →</a>
+    </div>
+
+    <p style="text-align:center;font-size:11px;color:#94A3B8;margin-top:20px;">Müller & Pérez — Marketing & Performance · Recordatorio automático semanal (lunes 08:30 AM)</p>
+  </div>`
+
+  const res = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: { 'Authorization': `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      from: 'Müller & Pérez <contacto@mulleryperez.cl>',
+      to: ['contacto@mulleryperez.cl'],
+      subject: `📊 Termómetro Semana ${semana} — USD $${usd} (${varSign}${usdVarPct}%) · Publicar en LinkedIn`,
+      html,
+    }),
+  })
+
+  if (res.ok) {
+    console.log('✉️  Email recordatorio enviado a contacto@mulleryperez.cl')
+  } else {
+    console.error('❌ Error enviando email:', await res.text())
+  }
 }
 
 main().catch(err => {
