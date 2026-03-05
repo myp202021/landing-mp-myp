@@ -1,0 +1,30 @@
+name: Radar Competencia — Genera Chile
+
+on:
+  schedule:
+    - cron: '30 11 * * 1-5'   # Lunes a Viernes 11:30 UTC = 08:30 AM Chile
+  workflow_dispatch:
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Instalar wkhtmltopdf
+        run: sudo apt-get update && sudo apt-get install -y wkhtmltopdf
+
+      - name: Instalar dependencias
+        run: npm install node-fetch@2 @supabase/supabase-js
+
+      - name: Ejecutar scraper Genera
+        run: node scripts/scrape-genera.js
+        env:
+          APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          RESEND: ${{ secrets.RESEND }}
