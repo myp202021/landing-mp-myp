@@ -27,28 +27,62 @@ const COMPETIDORES = [
 
 // ─── Detección de ofertas laborales ─────────────────────────────────────────
 const KEYWORDS_OFERTA = [
-  // Generales
+  // Generales — señales de publicación de empleo
   'se busca', 'buscamos', 'oferta laboral', 'postula', 'postúlate', 'vacante',
   'cargo disponible', 'remuneración', 'jornada', 'contrato', 'enviar cv', 'envía tu cv',
   'trabaja con nosotros', 'únete a', 'únete al equipo', 'incorporar', 'requisitos',
-  'experiencia comprobable', 'disponibilidad', 'join our team', 'we are hiring', 'hiring',
-  'open position', 'job opening', 'apply now', 'we\'re looking for',
+  'join our team', 'we are hiring', 'hiring', 'open position', 'job opening', 'apply now',
+
+  // Cargos operativos RRHH
+  'asistente de recursos humanos', 'administrativo de rr.hh', 'asistente de personal',
+  'asistente de talento humano', 'asistente de gestión de personas',
+  'asistente de reclutamiento', 'coordinador de reclutamiento', 'sourcer de talento',
+  'reclutador junior', 'analista de rr.hh', 'analista de nómina',
+  'analista de remuneraciones', 'analista de control de asistencia', 'analista de personal',
+  'people operations assistant', 'talent operations assistant', 'people coordinator',
+
+  // Cargos medios / especialistas RRHH
+  'analista de recursos humanos', 'generalista de rr.hh', 'hr generalist',
+  'business partner junior', 'hr business partner',
+  'especialista en atracción de talento', 'talent acquisition specialist',
+  'talent partner', 'talent manager',
+  'especialista en desarrollo organizacional', 'especialista en cultura organizacional',
+  'especialista en capacitación', 'learning & development',
+  'especialista en compensaciones', 'compensation & benefits',
+  'coordinador de rr.hh', 'coordinador de talento', 'coordinador de cultura',
+  'coordinador de desarrollo organizacional',
+  'people manager', 'people operations manager', 'talent development manager',
+
+  // Cargos altos / dirección RRHH
+  'jefe de recursos humanos', 'gerente de recursos humanos',
+  'gerente de gestión de personas', 'gerente de talento',
+  'gerente de cultura organizacional',
+  'director de recursos humanos', 'director de talento', 'director de personas',
+  'director de people', 'chief people officer', 'chief talent officer',
+  'chief human resources officer', 'chief culture officer', 'chro', 'cpo',
+
+  // Variantes modernas (startups / tech / SaaS)
+  'people experience manager', 'employee experience manager',
+  'head of people', 'head of talent', 'head of',
+  'workforce strategy', 'organizational effectiveness',
+  'human capital manager', 'talent acquisition',
+
   // Roles comerciales / ventas SaaS
   'ejecutivo comercial', 'account executive', 'account manager', 'key account',
   'sales representative', 'sales manager', 'sales executive',
   'closer', 'sdr', 'bdr', 'pre-venta', 'preventa', 'business development',
+
   // Roles Customer Success / Soporte
   'customer success', 'csm', 'onboarding', 'consultor de implementación',
-  'implementation consultant', 'soporte técnico', 'soporte al cliente',
+  'implementation consultant', 'soporte técnico',
+
   // Roles Tech / Producto
   'desarrollador', 'developer', 'full stack', 'fullstack', 'frontend', 'backend',
-  'ingeniero de software', 'software engineer', 'product manager', 'product owner',
-  'diseñador ux', 'ux designer', 'qa', 'devops', 'data engineer', 'data analyst',
-  // Roles de liderazgo
-  'head of', 'líder de', 'jefe de', 'gerente de', 'director de', 'vp of',
-  'country manager', 'cto', 'cpo', 'chief',
-  // Roles RRHH (competidores contratando en su propia área)
-  'people', 'talent acquisition', 'reclutador', 'recruiter', 'hr business partner',
+  'software engineer', 'product manager', 'product owner',
+  'ux designer', 'data engineer', 'data analyst',
+
+  // Liderazgo general
+  'líder de', 'jefe de', 'gerente de', 'director de', 'vp of', 'country manager',
 ]
 
 function esOfertaLaboral(texto) {
@@ -270,7 +304,7 @@ async function tryLinkedinActor(actorId, input, hace72h, conLI) {
 // (PDF removido — el reporte se envía como HTML en el cuerpo del email)
 
 
-// ─── HTML del reporte premium (diseño Radar Competencia) ─────────────────────
+// ─── HTML del reporte (100% tablas — compatible Gmail/Outlook) ───────────────
 function generarHtmlReporte({ hoy, postsIG, postsLinkedin, competidoresConPostIG, sinActividadIG, allPosts }) {
   const fechaObj = new Date(hoy + 'T12:00:00')
   const fecha = fechaObj.toLocaleDateString('es-CL', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' })
@@ -281,7 +315,6 @@ function generarHtmlReporte({ hoy, postsIG, postsLinkedin, competidoresConPostIG
   const totalComentarios = allPosts.reduce((s, p) => s + (getComentarios(p) || 0), 0)
   const totalCompartidos = allPosts.reduce((s, p) => s + (getCompartidos(p) || 0), 0)
 
-  // Ofertas y promos
   const ofertas = allPosts.filter(p => esOfertaLaboral(getTextoPost(p)))
   const promos = allPosts.filter(p => esPromocion(getTextoPost(p)))
   const totalOfertas = ofertas.length
@@ -306,275 +339,342 @@ function generarHtmlReporte({ hoy, postsIG, postsLinkedin, competidoresConPostIG
     total: engagementMap[c.nombre].likes + engagementMap[c.nombre].comentarios + engagementMap[c.nombre].compartidos,
   })).sort((a, b) => b.total - a.total)
 
-  const maxLikes = Math.max(...engSorted.map(e => e.likes), 1)
+  const maxEng = Math.max(...engSorted.map(e => e.total), 1)
 
-  // Estado por competidor
   function getEstado(comp) {
     const posts = allPosts.filter(p => (p._comp?.nombre || p._competidor) === comp.nombre)
-    if (posts.some(p => esOfertaLaboral(getTextoPost(p)))) return { tag: 'tag-red', label: '⚠ Oferta' }
-    if (posts.some(p => esPromocion(getTextoPost(p)))) return { tag: 'tag-purple', label: 'Promo' }
-    if (posts.length === 0) return { tag: 'tag-gray', label: 'Silencio' }
-    return { tag: 'tag-green', label: 'Normal' }
+    if (posts.some(p => esOfertaLaboral(getTextoPost(p)))) return { bg: '#FEE2E2', color: '#991B1B', label: '⚠ Oferta' }
+    if (posts.some(p => esPromocion(getTextoPost(p)))) return { bg: '#EDE9FE', color: '#5B21B6', label: 'Promo' }
+    if (posts.length === 0) return { bg: '#F3F4F6', color: '#6B7280', label: 'Silencio' }
+    return { bg: '#D1FAE5', color: '#065F46', label: 'Normal' }
   }
 
-  // Alertas automáticas
-  let alertasHtml = ''
+  // ── Alertas rows (table-based) ──
+  let alertRows = ''
   let alertCount = 0
 
   ofertas.forEach(p => {
     const comp = p._comp?.nombre || p._competidor || 'Competidor'
     const texto = getTextoPost(p).substring(0, 200)
-    alertasHtml += `<div style="display:flex;gap:14px;align-items:flex-start;">
-      <span style="padding:4px 10px;border-radius:6px;font-size:10px;font-weight:800;letter-spacing:0.5px;white-space:nowrap;flex-shrink:0;margin-top:1px;background:rgba(220,38,38,0.2);color:#FCA5A5;">🚨 URGENTE</span>
-      <p style="font-size:13px;color:rgba(255,255,255,0.65);line-height:1.55;margin:0;"><strong style="color:#fff;font-weight:700;">${comp}</strong> publicó oferta laboral: "${texto}..."</p>
-    </div>`
+    alertRows += `<tr><td style="padding:8px 0;vertical-align:top;width:90px;"><span style="display:inline-block;padding:4px 10px;background:#4A1515;color:#FCA5A5;font-size:10px;font-weight:800;letter-spacing:0.5px;border-radius:6px;">🚨 URGENTE</span></td><td style="padding:8px 0 8px 14px;font-size:13px;color:#A0A8C0;line-height:1.55;"><strong style="color:#fff;">${comp}</strong> publicó oferta laboral: "${texto}..."</td></tr>`
     alertCount++
   })
 
   promos.forEach(p => {
     const comp = p._comp?.nombre || p._competidor || 'Competidor'
     const texto = getTextoPost(p).substring(0, 200)
-    alertasHtml += `<div style="display:flex;gap:14px;align-items:flex-start;">
-      <span style="padding:4px 10px;border-radius:6px;font-size:10px;font-weight:800;letter-spacing:0.5px;white-space:nowrap;flex-shrink:0;margin-top:1px;background:rgba(217,119,6,0.2);color:#FCD34D;">⚠ ATENCIÓN</span>
-      <p style="font-size:13px;color:rgba(255,255,255,0.65);line-height:1.55;margin:0;"><strong style="color:#fff;font-weight:700;">${comp}</strong> lanzó promoción: "${texto}..."</p>
-    </div>`
+    alertRows += `<tr><td style="padding:8px 0;vertical-align:top;width:90px;"><span style="display:inline-block;padding:4px 10px;background:#3D2B08;color:#FCD34D;font-size:10px;font-weight:800;letter-spacing:0.5px;border-radius:6px;">⚠ ATENCIÓN</span></td><td style="padding:8px 0 8px 14px;font-size:13px;color:#A0A8C0;line-height:1.55;"><strong style="color:#fff;">${comp}</strong> lanzó promoción: "${texto}..."</td></tr>`
     alertCount++
   })
 
-  // Competidores sin actividad
   const sinActividad = COMPETIDORES.filter(c => engagementMap[c.nombre].posts === 0)
   if (sinActividad.length > 0) {
-    alertasHtml += `<div style="display:flex;gap:14px;align-items:flex-start;">
-      <span style="padding:4px 10px;border-radius:6px;font-size:10px;font-weight:800;letter-spacing:0.5px;white-space:nowrap;flex-shrink:0;margin-top:1px;background:rgba(5,150,105,0.2);color:#6EE7B7;">✓ OK</span>
-      <p style="font-size:13px;color:rgba(255,255,255,0.65);line-height:1.55;margin:0;"><strong style="color:#fff;font-weight:700;">${sinActividad.map(c => c.nombre).join(' y ')}</strong> sin actividad relevante (72h).</p>
-    </div>`
+    alertRows += `<tr><td style="padding:8px 0;vertical-align:top;width:90px;"><span style="display:inline-block;padding:4px 10px;background:#0A2E1F;color:#6EE7B7;font-size:10px;font-weight:800;letter-spacing:0.5px;border-radius:6px;">✓ OK</span></td><td style="padding:8px 0 8px 14px;font-size:13px;color:#A0A8C0;line-height:1.55;"><strong style="color:#fff;">${sinActividad.map(c => c.nombre).join(' y ')}</strong> sin actividad relevante (72h).</td></tr>`
   }
 
-  if (!alertasHtml) {
-    alertasHtml = `<div style="display:flex;gap:14px;align-items:flex-start;">
-      <span style="padding:4px 10px;border-radius:6px;font-size:10px;font-weight:800;letter-spacing:0.5px;white-space:nowrap;flex-shrink:0;margin-top:1px;background:rgba(5,150,105,0.2);color:#6EE7B7;">✓ OK</span>
-      <p style="font-size:13px;color:rgba(255,255,255,0.65);line-height:1.55;margin:0;">Sin alertas relevantes hoy. Todos los competidores con actividad normal.</p>
-    </div>`
+  if (!alertRows) {
+    alertRows = `<tr><td style="padding:8px 0;vertical-align:top;width:90px;"><span style="display:inline-block;padding:4px 10px;background:#0A2E1F;color:#6EE7B7;font-size:10px;font-weight:800;letter-spacing:0.5px;border-radius:6px;">✓ OK</span></td><td style="padding:8px 0 8px 14px;font-size:13px;color:#A0A8C0;line-height:1.55;">Sin alertas relevantes. Todos los competidores con actividad normal.</td></tr>`
   }
 
-  // Chips de competidores
-  const chipsHtml = COMPETIDORES.map(c => `<span style="padding:5px 14px;border-radius:6px;font-size:11px;font-weight:700;background:#F7F8FC;border:1px solid #E4E8F0;color:#485270;letter-spacing:0.2px;">${c.nombre}</span>`).join('')
-
-  // Engagement chart rows
-  const engChartHtml = engSorted.map(e => {
-    const pctLikes = Math.round((e.likes / maxLikes) * 100)
-    const pctComments = Math.round((e.comentarios / maxLikes) * 100)
-    const pctShares = Math.round((e.compartidos / maxLikes) * 100)
-    return `<div style="display:grid;grid-template-columns:110px 1fr 80px;gap:16px;align-items:center;padding:12px 0;border-bottom:1px solid #E4E8F0;">
-      <div style="font-size:13px;font-weight:700;color:#0D1226;display:flex;align-items:center;gap:8px;">
-        <div style="width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:#fff;flex-shrink:0;background:${e.color};">${e.initial}</div>
-        ${e.nombre}
-      </div>
-      <div style="display:flex;flex-direction:column;gap:4px;">
-        <div style="display:flex;align-items:center;gap:6px;"><div style="flex:1;height:7px;background:#F7F8FC;border-radius:4px;overflow:hidden;"><div style="height:100%;border-radius:4px;background:linear-gradient(90deg,#6C31D9,#2878F0);width:${pctLikes}%"></div></div><div style="font-size:11px;font-weight:600;color:#485270;width:36px;text-align:right;">${e.likes}</div></div>
-        <div style="display:flex;align-items:center;gap:6px;"><div style="flex:1;height:7px;background:#F7F8FC;border-radius:4px;overflow:hidden;"><div style="height:100%;border-radius:4px;background:#0EA5E9;width:${pctComments}%"></div></div><div style="font-size:11px;font-weight:600;color:#485270;width:36px;text-align:right;">${e.comentarios}</div></div>
-        <div style="display:flex;align-items:center;gap:6px;"><div style="flex:1;height:7px;background:#F7F8FC;border-radius:4px;overflow:hidden;"><div style="height:100%;border-radius:4px;background:#10B981;width:${pctShares}%"></div></div><div style="font-size:11px;font-weight:600;color:#485270;width:36px;text-align:right;">${e.compartidos}</div></div>
-      </div>
-      <div style="text-align:right;"><div style="font-size:20px;font-weight:800;color:#0D1226;letter-spacing:-0.5px;">${e.total.toLocaleString('es-CL')}</div><div style="font-size:10px;color:#8A93B0;font-weight:600;text-transform:uppercase;margin-top:2px;">Total</div></div>
-    </div>`
-  }).join('')
-
-  // Ranking table
-  const rankHtml = engSorted.map((e, i) => {
-    const estado = getEstado(e)
-    const rkClass = i === 0 ? 'background:linear-gradient(135deg,#6C31D9,#2878F0);color:#fff;' : i === 1 ? 'background:#EDE9FE;color:#6D28D9;' : i === 2 ? 'background:#DBEAFE;color:#1D4ED8;' : 'background:#F7F8FC;color:#8A93B0;'
+  // ── Engagement rows (table-based bars) ──
+  const engRows = engSorted.map(e => {
+    const pct = maxEng > 0 ? Math.max(Math.round((e.total / maxEng) * 100), 2) : 2
     return `<tr>
-      <td style="padding:13px 16px;font-size:13px;color:#485270;border-bottom:1px solid #E4E8F0;"><span style="width:22px;height:22px;border-radius:6px;font-size:10px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;${rkClass}">${i + 1}</span></td>
-      <td style="padding:13px 16px;font-size:13px;font-weight:700;color:#0D1226;border-bottom:1px solid #E4E8F0;">${e.nombre}</td>
-      <td style="padding:13px 16px;font-size:13px;color:#485270;text-align:center;border-bottom:1px solid #E4E8F0;">${e.posts}</td>
-      <td style="padding:13px 16px;font-size:13px;color:#485270;text-align:center;border-bottom:1px solid #E4E8F0;"><strong>${e.likes}</strong></td>
-      <td style="padding:13px 16px;font-size:13px;text-align:center;border-bottom:1px solid #E4E8F0;"><span style="display:inline-block;padding:3px 8px;border-radius:6px;font-size:10px;font-weight:700;${estado.tag === 'tag-red' ? 'background:#FEE2E2;color:#991B1B;' : estado.tag === 'tag-purple' ? 'background:#EDE9FE;color:#5B21B6;' : estado.tag === 'tag-green' ? 'background:#D1FAE5;color:#065F46;' : 'background:#F3F4F6;color:#6B7280;'}">${estado.label}</span></td>
+      <td style="padding:10px 12px;vertical-align:middle;width:120px;border-bottom:1px solid #E4E8F0;">
+        <table cellpadding="0" cellspacing="0" border="0"><tr>
+          <td style="width:28px;height:28px;background-color:${e.color};color:#fff;font-size:12px;font-weight:900;text-align:center;border-radius:7px;">${e.initial}</td>
+          <td style="padding-left:8px;font-size:13px;font-weight:700;color:#0D1226;">${e.nombre}</td>
+        </tr></table>
+      </td>
+      <td style="padding:10px 12px;vertical-align:middle;border-bottom:1px solid #E4E8F0;">
+        <table cellpadding="0" cellspacing="0" border="0" style="width:100%;"><tr>
+          <td style="width:${pct}%;height:8px;background-color:#6C31D9;border-radius:4px;font-size:1px;">&nbsp;</td>
+          <td style="font-size:1px;">&nbsp;</td>
+        </tr></table>
+      </td>
+      <td style="padding:10px 12px;vertical-align:middle;text-align:center;width:60px;border-bottom:1px solid #E4E8F0;">
+        <span style="font-size:11px;font-weight:600;color:#485270;">❤️ ${e.likes}</span>
+      </td>
+      <td style="padding:10px 12px;vertical-align:middle;text-align:center;width:60px;border-bottom:1px solid #E4E8F0;">
+        <span style="font-size:11px;font-weight:600;color:#485270;">💬 ${e.comentarios}</span>
+      </td>
+      <td style="padding:10px 12px;vertical-align:middle;text-align:right;width:70px;border-bottom:1px solid #E4E8F0;">
+        <span style="font-size:18px;font-weight:800;color:#0D1226;">${e.total.toLocaleString('es-CL')}</span>
+      </td>
     </tr>`
   }).join('')
 
-  // Posts destacados (top 4 por engagement)
+  // ── Ranking rows ──
+  const rankRows = engSorted.map((e, i) => {
+    const estado = getEstado(e)
+    const rkBg = i === 0 ? '#6C31D9' : i === 1 ? '#EDE9FE' : i === 2 ? '#DBEAFE' : '#F7F8FC'
+    const rkColor = i === 0 ? '#fff' : i === 1 ? '#6D28D9' : i === 2 ? '#1D4ED8' : '#8A93B0'
+    return `<tr>
+      <td style="padding:12px 16px;border-bottom:1px solid #E4E8F0;text-align:center;width:40px;"><span style="display:inline-block;width:22px;height:22px;line-height:22px;border-radius:6px;font-size:10px;font-weight:800;text-align:center;background-color:${rkBg};color:${rkColor};">${i + 1}</span></td>
+      <td style="padding:12px 16px;border-bottom:1px solid #E4E8F0;font-size:13px;font-weight:700;color:#0D1226;">${e.nombre}</td>
+      <td style="padding:12px 16px;border-bottom:1px solid #E4E8F0;font-size:13px;color:#485270;text-align:center;">${e.posts}</td>
+      <td style="padding:12px 16px;border-bottom:1px solid #E4E8F0;font-size:13px;color:#485270;text-align:center;font-weight:700;">${e.likes}</td>
+      <td style="padding:12px 16px;border-bottom:1px solid #E4E8F0;text-align:center;"><span style="display:inline-block;padding:3px 8px;border-radius:6px;font-size:10px;font-weight:700;background-color:${estado.bg};color:${estado.color};">${estado.label}</span></td>
+    </tr>`
+  }).join('')
+
+  // ── Posts destacados (top 4) ──
   const topPosts = allPosts
     .map(p => ({ ...p, _engagement: (getLikes(p) || 0) + (getComentarios(p) || 0) + (getCompartidos(p) || 0) }))
     .sort((a, b) => b._engagement - a._engagement)
     .slice(0, 4)
 
-  const postsHtml = topPosts.map(p => {
-    const comp = p._comp || COMPETIDORES.find(c => c.nombre === p._competidor) || { nombre: 'Competidor', color: '#64748B', initial: '?' }
+  const postCells = topPosts.map(p => {
+    const comp = p._comp || COMPETIDORES.find(c => c.nombre === p._competidor) || { nombre: '?', color: '#64748B', initial: '?' }
     const red = p._red || 'LinkedIn'
     const texto = getTextoPost(p).substring(0, 150)
     const likes = getLikes(p)
     const comentarios = getComentarios(p)
     const compartidos = getCompartidos(p)
     const isOferta = esOfertaLaboral(getTextoPost(p))
+    const isPromo = esPromocion(getTextoPost(p))
     const url = getPostUrl(p) || (p.shortCode ? `https://www.instagram.com/p/${p.shortCode}/` : '')
-    const netStyle = red === 'Instagram' ? 'background:#FCE7F3;color:#9D174D;' : 'background:#DBEAFE;color:#1E40AF;'
+    const netBg = red === 'Instagram' ? '#FCE7F3' : '#DBEAFE'
+    const netColor = red === 'Instagram' ? '#9D174D' : '#1E40AF'
+    const borderLeft = isOferta ? 'border-left:4px solid #DC2626;' : ''
 
-    return `<div style="background:#fff;border:1px solid #E4E8F0;border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:12px;${isOferta ? 'border-left:4px solid #DC2626;' : ''}">
-      <div style="display:flex;align-items:center;gap:10px;">
-        <div style="width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;color:#fff;flex-shrink:0;background:${comp.color};">${comp.initial}</div>
-        <div style="flex:1;">
-          <div style="font-size:14px;font-weight:800;color:#0D1226;">${comp.nombre}</div>
-          <div style="display:flex;gap:5px;margin-top:3px;">
-            <span style="padding:2px 7px;border-radius:4px;font-size:10px;font-weight:700;${netStyle}">${red}</span>
-            ${isOferta ? '<span style="padding:2px 7px;border-radius:4px;font-size:10px;font-weight:700;background:#FEE2E2;color:#991B1B;">⚠ Oferta laboral</span>' : ''}
-            ${esPromocion(getTextoPost(p)) ? '<span style="padding:2px 7px;border-radius:4px;font-size:10px;font-weight:700;background:#EDE9FE;color:#5B21B6;">Promoción</span>' : ''}
-          </div>
-        </div>
-      </div>
-      <div style="font-size:13px;color:#485270;line-height:1.6;">"${texto}${texto.length >= 150 ? '...' : ''}"</div>
-      <div style="display:flex;gap:14px;padding-top:12px;border-top:1px solid #E4E8F0;align-items:center;">
-        <div style="display:flex;align-items:center;gap:5px;font-size:12px;"><span>❤️</span><span style="font-weight:700;color:#0D1226;">${likes}</span></div>
-        <div style="display:flex;align-items:center;gap:5px;font-size:12px;"><span>💬</span><span style="font-weight:700;color:#0D1226;">${comentarios}</span></div>
-        <div style="display:flex;align-items:center;gap:5px;font-size:12px;"><span>🔁</span><span style="font-weight:700;color:#0D1226;">${compartidos}</span></div>
-        ${url ? `<a href="${url}" style="margin-left:auto;display:inline-block;font-size:11px;color:#fff;background:#3B82F6;padding:4px 12px;border-radius:6px;font-weight:600;text-decoration:none;">Ver post →</a>` : ''}
-      </div>
-    </div>`
-  }).join('')
+    return `<td style="width:50%;vertical-align:top;padding:6px;">
+      <table cellpadding="0" cellspacing="0" border="0" style="width:100%;background-color:#fff;border:1px solid #E4E8F0;border-radius:12px;${borderLeft}">
+        <tr><td style="padding:18px 18px 10px;">
+          <table cellpadding="0" cellspacing="0" border="0"><tr>
+            <td style="width:36px;height:36px;background-color:${comp.color};color:#fff;font-size:14px;font-weight:900;text-align:center;line-height:36px;border-radius:8px;">${comp.initial}</td>
+            <td style="padding-left:10px;vertical-align:middle;">
+              <span style="font-size:14px;font-weight:800;color:#0D1226;">${comp.nombre}</span><br>
+              <span style="display:inline-block;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:700;background-color:${netBg};color:${netColor};margin-top:3px;">${red}</span>
+              ${isOferta ? ' <span style="display:inline-block;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:700;background-color:#FEE2E2;color:#991B1B;">⚠ Oferta</span>' : ''}
+              ${isPromo ? ' <span style="display:inline-block;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:700;background-color:#EDE9FE;color:#5B21B6;">Promo</span>' : ''}
+            </td>
+          </tr></table>
+        </td></tr>
+        <tr><td style="padding:4px 18px 12px;font-size:13px;color:#485270;line-height:1.6;">"${texto}${texto.length >= 150 ? '...' : ''}"</td></tr>
+        <tr><td style="padding:0 18px 16px;">
+          <table cellpadding="0" cellspacing="0" border="0" style="width:100%;border-top:1px solid #E4E8F0;">
+            <tr><td style="padding-top:10px;font-size:12px;color:#0D1226;">❤️ <strong>${likes}</strong> &nbsp; 💬 <strong>${comentarios}</strong> &nbsp; 🔁 <strong>${compartidos}</strong></td>
+            ${url ? `<td style="padding-top:10px;text-align:right;"><a href="${url}" style="display:inline-block;font-size:11px;color:#fff;background-color:#3B82F6;padding:6px 14px;border-radius:6px;font-weight:600;text-decoration:none;">Ver →</a></td>` : ''}
+            </tr>
+          </table>
+        </td></tr>
+      </table>
+    </td>`
+  })
 
-  // ── HTML completo (diseño premium Radar Competencia) ─────────────────────
+  // Armar grilla 2×2 de posts
+  let postsGrid = ''
+  if (postCells.length > 0) {
+    postsGrid += '<tr>' + (postCells[0] || '<td></td>') + (postCells[1] || '<td></td>') + '</tr>'
+    if (postCells.length > 2) {
+      postsGrid += '<tr>' + (postCells[2] || '<td></td>') + (postCells[3] || '<td></td>') + '</tr>'
+    }
+  } else {
+    postsGrid = '<tr><td colspan="2" style="text-align:center;padding:40px;color:#8A93B0;font-size:13px;">Sin posts destacados</td></tr>'
+  }
+
+  // ── Chips competidores ──
+  const chipsHtml = COMPETIDORES.map(c =>
+    `<span style="display:inline-block;padding:5px 14px;border-radius:6px;font-size:11px;font-weight:700;background-color:#F7F8FC;border:1px solid #E4E8F0;color:#485270;margin:0 3px 3px 0;">${c.nombre}</span>`
+  ).join('')
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // HTML COMPLETO — 100% tablas, compatible Gmail / Outlook / Apple Mail
+  // ══════════════════════════════════════════════════════════════════════════
   return `<!DOCTYPE html>
-<html lang="es">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Inter', system-ui, sans-serif; color: #0D1226; background: #F7F8FC; min-height: 100vh; padding-bottom: 40px; }
-</style>
+<html lang="es" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>Radar Competencia · Genera Chile</title>
+<!--[if mso]><style>table,td{font-family:Arial,sans-serif !important;}</style><![endif]-->
 </head>
-<body>
+<body style="margin:0;padding:0;background-color:#F7F8FC;font-family:'Segoe UI',Roboto,Arial,sans-serif;color:#0D1226;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;">
 
 <!-- TOP STRIPE -->
-<div style="height:4px;background:linear-gradient(135deg,#6C31D9,#2878F0);"></div>
+<table cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color:#6C31D9;"><tr><td style="height:4px;font-size:1px;line-height:1px;">&nbsp;</td></tr></table>
 
 <!-- HEADER -->
-<div style="background:#fff;border-bottom:1px solid #E4E8F0;padding:0 56px;">
-  <div style="max-width:1040px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:72px;">
-    <div style="display:flex;align-items:center;gap:14px;">
-      ${LOGO_SRC ? `<img src="${LOGO_SRC}" alt="M&P" style="height:44px;width:auto;">` : '<div style="font-size:16px;font-weight:900;background:linear-gradient(135deg,#6C31D9,#2878F0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">M&P</div>'}
-      <div style="width:1px;height:28px;background:#E4E8F0;"></div>
-      <div style="font-size:12px;font-weight:600;color:#8A93B0;letter-spacing:0.5px;text-transform:uppercase;">Inteligencia Competitiva</div>
-    </div>
-    <div style="display:flex;align-items:center;gap:20px;">
-      <span style="font-size:12px;color:#8A93B0;">${fecha} · ${hora}</span>
-      <span style="background:#EEF2FF;border:1px solid #C7D2FE;padding:6px 16px;border-radius:20px;font-size:13px;font-weight:700;color:#3730A3;">Genera Chile</span>
-      <div style="display:flex;align-items:center;gap:6px;background:#ECFDF5;border:1px solid #A7F3D0;padding:5px 12px;border-radius:20px;">
-        <div style="width:6px;height:6px;background:#10B981;border-radius:50%;"></div>
-        <span style="font-size:11px;font-weight:700;color:#065F46;letter-spacing:0.5px;">LIVE</span>
-      </div>
-    </div>
-  </div>
-</div>
+<table cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color:#ffffff;border-bottom:1px solid #E4E8F0;">
+  <tr><td style="padding:0 20px;">
+    <table cellpadding="0" cellspacing="0" border="0" style="max-width:680px;width:100%;margin:0 auto;">
+      <tr>
+        <td style="padding:16px 0;vertical-align:middle;">
+          ${LOGO_SRC ? `<img src="${LOGO_SRC}" alt="M&P" width="110" style="display:inline-block;height:auto;max-height:40px;">` : '<span style="font-size:16px;font-weight:900;color:#6C31D9;">M&amp;P</span>'}
+          <span style="display:inline-block;width:1px;height:24px;background-color:#E4E8F0;vertical-align:middle;margin:0 12px;"></span>
+          <span style="font-size:11px;font-weight:600;color:#8A93B0;letter-spacing:0.5px;text-transform:uppercase;vertical-align:middle;">Inteligencia Competitiva</span>
+        </td>
+        <td style="padding:16px 0;text-align:right;vertical-align:middle;">
+          <span style="font-size:11px;color:#8A93B0;margin-right:12px;">${fecha} · ${hora}</span>
+          <span style="display:inline-block;padding:5px 14px;border-radius:20px;font-size:12px;font-weight:700;color:#3730A3;background-color:#EEF2FF;border:1px solid #C7D2FE;">Genera Chile</span>
+          <span style="display:inline-block;padding:4px 10px;border-radius:20px;font-size:10px;font-weight:700;color:#065F46;background-color:#ECFDF5;border:1px solid #A7F3D0;margin-left:8px;">● LIVE</span>
+        </td>
+      </tr>
+    </table>
+  </td></tr>
+</table>
 
 <!-- HERO -->
-<div style="background:#fff;border-bottom:1px solid #E4E8F0;padding:32px 56px 28px;">
-  <div style="max-width:1040px;margin:0 auto;display:flex;align-items:flex-end;justify-content:space-between;gap:32px;">
-    <div>
-      <h1 style="font-size:26px;font-weight:900;color:#0D1226;letter-spacing:-0.8px;line-height:1.15;">Radar de Competencia<br><span style="background:linear-gradient(135deg,#6C31D9,#2878F0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Software RRHH &amp; Nóminas</span></h1>
-      <p style="font-size:13px;color:#8A93B0;margin-top:6px;">Instagram · LinkedIn · Ofertas laborales · Actualización diaria</p>
-    </div>
-    <div style="display:flex;gap:6px;flex-wrap:wrap;">${chipsHtml}</div>
-  </div>
-</div>
+<table cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color:#ffffff;border-bottom:1px solid #E4E8F0;">
+  <tr><td style="padding:28px 20px 24px;">
+    <table cellpadding="0" cellspacing="0" border="0" style="max-width:680px;width:100%;margin:0 auto;">
+      <tr>
+        <td style="vertical-align:bottom;">
+          <h1 style="margin:0;font-size:24px;font-weight:900;color:#0D1226;letter-spacing:-0.5px;line-height:1.2;">Radar de Competencia</h1>
+          <h1 style="margin:0;font-size:24px;font-weight:900;color:#6C31D9;letter-spacing:-0.5px;line-height:1.2;">Software RRHH &amp; Nóminas</h1>
+          <p style="margin:6px 0 0;font-size:13px;color:#8A93B0;">Instagram · LinkedIn · Ofertas laborales · Actualización diaria</p>
+        </td>
+        <td style="vertical-align:bottom;text-align:right;">
+          ${chipsHtml}
+        </td>
+      </tr>
+    </table>
+  </td></tr>
+</table>
 
 <!-- BODY -->
-<div style="max-width:1040px;margin:0 auto;padding:36px 56px 0;">
+<table cellpadding="0" cellspacing="0" border="0" style="max-width:680px;width:100%;margin:0 auto;padding:0 20px;">
 
-  <!-- KPIs -->
-  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:32px;">
-    <div style="background:#fff;border:1px solid #E4E8F0;border-radius:12px;padding:22px 22px 18px;position:relative;overflow:hidden;">
-      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(135deg,#6C31D9,#2878F0);"></div>
-      <div style="font-size:36px;font-weight:900;letter-spacing:-2px;line-height:1;background:linear-gradient(135deg,#6C31D9,#2878F0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">${totalPosts}</div>
-      <div style="font-size:11px;font-weight:600;color:#8A93B0;text-transform:uppercase;letter-spacing:0.6px;margin-top:10px;">Posts (últimas 72h)</div>
-    </div>
-    <div style="background:#fff;border:1px solid #E4E8F0;border-radius:12px;padding:22px 22px 18px;position:relative;overflow:hidden;">
-      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(135deg,#6C31D9,#2878F0);"></div>
-      <div style="font-size:36px;font-weight:900;color:#0D1226;letter-spacing:-2px;line-height:1;">${(totalLikes + totalComentarios + totalCompartidos).toLocaleString('es-CL')}</div>
-      <div style="font-size:11px;font-weight:600;color:#8A93B0;text-transform:uppercase;letter-spacing:0.6px;margin-top:10px;">Interacciones (72h)</div>
-    </div>
-    <div style="background:#fff;border:1px solid #E4E8F0;border-radius:12px;padding:22px 22px 18px;position:relative;overflow:hidden;">
-      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:${totalOfertas > 0 ? 'linear-gradient(90deg,#DC2626,#F87171)' : 'linear-gradient(135deg,#6C31D9,#2878F0)'};"></div>
-      <div style="font-size:36px;font-weight:900;${totalOfertas > 0 ? 'color:#DC2626;' : 'color:#0D1226;'}letter-spacing:-2px;line-height:1;">${totalOfertas}</div>
-      <div style="font-size:11px;font-weight:600;color:#8A93B0;text-transform:uppercase;letter-spacing:0.6px;margin-top:10px;">Ofertas laborales</div>
-      ${totalOfertas > 0 ? `<div style="font-size:12px;font-weight:600;margin-top:5px;color:#DC2626;">⚠ ${ofertas.map(p => p._comp?.nombre || p._competidor).filter((v,i,a) => a.indexOf(v) === i).join(' + ')}</div>` : ''}
-    </div>
-    <div style="background:#fff;border:1px solid #E4E8F0;border-radius:12px;padding:22px 22px 18px;position:relative;overflow:hidden;">
-      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:${totalPromos > 0 ? 'linear-gradient(90deg,#D97706,#FCD34D)' : 'linear-gradient(135deg,#6C31D9,#2878F0)'};"></div>
-      <div style="font-size:36px;font-weight:900;color:#0D1226;letter-spacing:-2px;line-height:1;">${totalPromos}</div>
-      <div style="font-size:11px;font-weight:600;color:#8A93B0;text-transform:uppercase;letter-spacing:0.6px;margin-top:10px;">Promociones detectadas</div>
-    </div>
-  </div>
+  <!-- KPIs (4 columnas) -->
+  <tr><td style="padding:28px 0 0;">
+    <table cellpadding="0" cellspacing="0" border="0" width="100%">
+      <tr>
+        <td style="width:25%;padding:0 4px 0 0;vertical-align:top;">
+          <table cellpadding="0" cellspacing="0" border="0" style="width:100%;background-color:#fff;border:1px solid #E4E8F0;border-radius:10px;border-top:3px solid #6C31D9;">
+            <tr><td style="padding:18px 16px 14px;">
+              <span style="font-size:32px;font-weight:900;color:#6C31D9;letter-spacing:-2px;">${totalPosts}</span><br>
+              <span style="font-size:10px;font-weight:600;color:#8A93B0;text-transform:uppercase;letter-spacing:0.5px;">Posts (72h)</span>
+            </td></tr>
+          </table>
+        </td>
+        <td style="width:25%;padding:0 4px;vertical-align:top;">
+          <table cellpadding="0" cellspacing="0" border="0" style="width:100%;background-color:#fff;border:1px solid #E4E8F0;border-radius:10px;border-top:3px solid #6C31D9;">
+            <tr><td style="padding:18px 16px 14px;">
+              <span style="font-size:32px;font-weight:900;color:#0D1226;letter-spacing:-2px;">${(totalLikes + totalComentarios + totalCompartidos).toLocaleString('es-CL')}</span><br>
+              <span style="font-size:10px;font-weight:600;color:#8A93B0;text-transform:uppercase;letter-spacing:0.5px;">Interacciones</span>
+            </td></tr>
+          </table>
+        </td>
+        <td style="width:25%;padding:0 4px;vertical-align:top;">
+          <table cellpadding="0" cellspacing="0" border="0" style="width:100%;background-color:#fff;border:1px solid #E4E8F0;border-radius:10px;border-top:3px solid ${totalOfertas > 0 ? '#DC2626' : '#6C31D9'};">
+            <tr><td style="padding:18px 16px 14px;">
+              <span style="font-size:32px;font-weight:900;color:${totalOfertas > 0 ? '#DC2626' : '#0D1226'};letter-spacing:-2px;">${totalOfertas}</span><br>
+              <span style="font-size:10px;font-weight:600;color:#8A93B0;text-transform:uppercase;letter-spacing:0.5px;">Ofertas laborales</span>
+              ${totalOfertas > 0 ? `<br><span style="font-size:11px;font-weight:600;color:#DC2626;">⚠ ${ofertas.map(p => p._comp?.nombre || p._competidor).filter((v,i,a) => a.indexOf(v) === i).join(' + ')}</span>` : ''}
+            </td></tr>
+          </table>
+        </td>
+        <td style="width:25%;padding:0 0 0 4px;vertical-align:top;">
+          <table cellpadding="0" cellspacing="0" border="0" style="width:100%;background-color:#fff;border:1px solid #E4E8F0;border-radius:10px;border-top:3px solid ${totalPromos > 0 ? '#D97706' : '#6C31D9'};">
+            <tr><td style="padding:18px 16px 14px;">
+              <span style="font-size:32px;font-weight:900;color:#0D1226;letter-spacing:-2px;">${totalPromos}</span><br>
+              <span style="font-size:10px;font-weight:600;color:#8A93B0;text-transform:uppercase;letter-spacing:0.5px;">Promociones</span>
+            </td></tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </td></tr>
 
-  <!-- ALERTAS -->
-  <div style="margin-bottom:32px;">
-    <div style="font-size:11px;font-weight:800;color:#8A93B0;text-transform:uppercase;letter-spacing:1.2px;display:flex;align-items:center;gap:10px;margin-bottom:14px;">Alertas ejecutivas del día<div style="flex:1;height:1px;background:#E4E8F0;"></div></div>
-    <div style="background:#0D1226;border-radius:14px;padding:28px 32px;">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
-        <div style="font-size:11px;font-weight:800;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:1.2px;">Hallazgos · ${fecha}</div>
-        ${alertCount > 0 ? `<span style="background:rgba(220,38,38,0.2);border:1px solid rgba(220,38,38,0.35);color:#FCA5A5;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;">${alertCount} alerta${alertCount > 1 ? 's' : ''}</span>` : ''}
-      </div>
-      <div style="display:flex;flex-direction:column;gap:14px;">
-        ${alertasHtml}
-      </div>
-    </div>
-  </div>
-
-  <!-- ENGAGEMENT CHART -->
-  <div style="margin-bottom:32px;">
-    <div style="font-size:11px;font-weight:800;color:#8A93B0;text-transform:uppercase;letter-spacing:1.2px;display:flex;align-items:center;gap:10px;margin-bottom:14px;">Engagement por competidor<div style="flex:1;height:1px;background:#E4E8F0;"></div></div>
-    <div style="background:#fff;border:1px solid #E4E8F0;border-radius:14px;overflow:hidden;">
-      <div style="padding:16px 22px 12px;display:flex;gap:20px;border-bottom:1px solid #E4E8F0;background:#F7F8FC;">
-        <div style="display:flex;align-items:center;gap:6px;font-size:11px;font-weight:600;color:#8A93B0;"><div style="width:10px;height:10px;border-radius:3px;background:linear-gradient(135deg,#6C31D9,#2878F0);"></div>Likes</div>
-        <div style="display:flex;align-items:center;gap:6px;font-size:11px;font-weight:600;color:#8A93B0;"><div style="width:10px;height:10px;border-radius:3px;background:#0EA5E9;"></div>Comentarios</div>
-        <div style="display:flex;align-items:center;gap:6px;font-size:11px;font-weight:600;color:#8A93B0;"><div style="width:10px;height:10px;border-radius:3px;background:#10B981;"></div>Compartidos</div>
-      </div>
-      <div style="padding:8px 22px;">
-        ${engChartHtml}
-      </div>
-    </div>
-  </div>
-
-  <!-- RANKING -->
-  <div style="margin-bottom:32px;">
-    <div style="font-size:11px;font-weight:800;color:#8A93B0;text-transform:uppercase;letter-spacing:1.2px;display:flex;align-items:center;gap:10px;margin-bottom:14px;">Ranking de actividad<div style="flex:1;height:1px;background:#E4E8F0;"></div></div>
-    <div style="background:#fff;border:1px solid #E4E8F0;border-radius:14px;overflow:hidden;">
-      <table style="width:100%;border-collapse:collapse;">
-        <thead>
+  <!-- SECTION: ALERTAS -->
+  <tr><td style="padding:28px 0 0;">
+    <table cellpadding="0" cellspacing="0" border="0" width="100%">
+      <tr>
+        <td style="font-size:11px;font-weight:800;color:#8A93B0;text-transform:uppercase;letter-spacing:1.2px;padding-bottom:12px;">Alertas ejecutivas del día
+          <span style="display:inline-block;width:60%;border-bottom:1px solid #E4E8F0;vertical-align:middle;margin-left:10px;">&nbsp;</span>
+        </td>
+      </tr>
+    </table>
+    <table cellpadding="0" cellspacing="0" border="0" style="width:100%;background-color:#0D1226;border-radius:12px;">
+      <tr><td style="padding:24px 28px;">
+        <table cellpadding="0" cellspacing="0" border="0" width="100%">
           <tr>
-            <th style="padding:10px 16px;font-size:10px;font-weight:700;color:#8A93B0;text-transform:uppercase;letter-spacing:0.6px;background:#F7F8FC;text-align:left;border-bottom:1px solid #E4E8F0;width:40px;">#</th>
-            <th style="padding:10px 16px;font-size:10px;font-weight:700;color:#8A93B0;text-transform:uppercase;letter-spacing:0.6px;background:#F7F8FC;text-align:left;border-bottom:1px solid #E4E8F0;">Empresa</th>
-            <th style="padding:10px 16px;font-size:10px;font-weight:700;color:#8A93B0;text-transform:uppercase;letter-spacing:0.6px;background:#F7F8FC;text-align:center;border-bottom:1px solid #E4E8F0;">Posts</th>
-            <th style="padding:10px 16px;font-size:10px;font-weight:700;color:#8A93B0;text-transform:uppercase;letter-spacing:0.6px;background:#F7F8FC;text-align:center;border-bottom:1px solid #E4E8F0;">Likes</th>
-            <th style="padding:10px 16px;font-size:10px;font-weight:700;color:#8A93B0;text-transform:uppercase;letter-spacing:0.6px;background:#F7F8FC;text-align:center;border-bottom:1px solid #E4E8F0;">Estado</th>
+            <td style="font-size:11px;font-weight:800;color:#555E7A;text-transform:uppercase;letter-spacing:1.2px;padding-bottom:16px;">Hallazgos · ${fecha}</td>
+            ${alertCount > 0 ? `<td style="text-align:right;padding-bottom:16px;"><span style="display:inline-block;padding:3px 10px;border-radius:20px;background-color:#4A1515;color:#FCA5A5;font-size:11px;font-weight:700;">${alertCount} alerta${alertCount > 1 ? 's' : ''}</span></td>` : ''}
           </tr>
-        </thead>
-        <tbody>${rankHtml}</tbody>
-      </table>
-    </div>
-  </div>
+        </table>
+        <table cellpadding="0" cellspacing="0" border="0" width="100%">
+          ${alertRows}
+        </table>
+      </td></tr>
+    </table>
+  </td></tr>
 
-  <!-- POSTS DESTACADOS -->
-  <div style="margin-bottom:32px;">
-    <div style="font-size:11px;font-weight:800;color:#8A93B0;text-transform:uppercase;letter-spacing:1.2px;display:flex;align-items:center;gap:10px;margin-bottom:14px;">Posts destacados (72h)<div style="flex:1;height:1px;background:#E4E8F0;"></div></div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-      ${postsHtml || '<div style="grid-column:1/-1;text-align:center;padding:40px;color:#8A93B0;font-size:13px;">Sin posts destacados hoy</div>'}
-    </div>
-  </div>
+  <!-- SECTION: ENGAGEMENT -->
+  <tr><td style="padding:28px 0 0;">
+    <table cellpadding="0" cellspacing="0" border="0" width="100%">
+      <tr><td style="font-size:11px;font-weight:800;color:#8A93B0;text-transform:uppercase;letter-spacing:1.2px;padding-bottom:12px;">Engagement por competidor
+        <span style="display:inline-block;width:55%;border-bottom:1px solid #E4E8F0;vertical-align:middle;margin-left:10px;">&nbsp;</span>
+      </td></tr>
+    </table>
+    <table cellpadding="0" cellspacing="0" border="0" style="width:100%;background-color:#fff;border:1px solid #E4E8F0;border-radius:12px;">
+      <tr><td style="padding:12px 16px;background-color:#F7F8FC;border-bottom:1px solid #E4E8F0;font-size:11px;font-weight:600;color:#8A93B0;">
+        <span style="display:inline-block;width:10px;height:10px;background-color:#6C31D9;border-radius:3px;vertical-align:middle;margin-right:4px;"></span> Likes
+        &nbsp;&nbsp;
+        <span style="display:inline-block;width:10px;height:10px;background-color:#0EA5E9;border-radius:3px;vertical-align:middle;margin-right:4px;"></span> Comentarios
+        &nbsp;&nbsp;
+        <span style="display:inline-block;width:10px;height:10px;background-color:#10B981;border-radius:3px;vertical-align:middle;margin-right:4px;"></span> Compartidos
+      </td></tr>
+      <tr><td style="padding:4px 8px;">
+        <table cellpadding="0" cellspacing="0" border="0" width="100%">
+          ${engRows}
+        </table>
+      </td></tr>
+    </table>
+  </td></tr>
 
-</div>
+  <!-- SECTION: RANKING -->
+  <tr><td style="padding:28px 0 0;">
+    <table cellpadding="0" cellspacing="0" border="0" width="100%">
+      <tr><td style="font-size:11px;font-weight:800;color:#8A93B0;text-transform:uppercase;letter-spacing:1.2px;padding-bottom:12px;">Ranking de actividad
+        <span style="display:inline-block;width:60%;border-bottom:1px solid #E4E8F0;vertical-align:middle;margin-left:10px;">&nbsp;</span>
+      </td></tr>
+    </table>
+    <table cellpadding="0" cellspacing="0" border="0" style="width:100%;background-color:#fff;border:1px solid #E4E8F0;border-radius:12px;border-collapse:separate;">
+      <tr>
+        <th style="padding:10px 16px;font-size:10px;font-weight:700;color:#8A93B0;text-transform:uppercase;letter-spacing:0.6px;background-color:#F7F8FC;text-align:center;border-bottom:1px solid #E4E8F0;width:40px;">#</th>
+        <th style="padding:10px 16px;font-size:10px;font-weight:700;color:#8A93B0;text-transform:uppercase;letter-spacing:0.6px;background-color:#F7F8FC;text-align:left;border-bottom:1px solid #E4E8F0;">Empresa</th>
+        <th style="padding:10px 16px;font-size:10px;font-weight:700;color:#8A93B0;text-transform:uppercase;letter-spacing:0.6px;background-color:#F7F8FC;text-align:center;border-bottom:1px solid #E4E8F0;">Posts</th>
+        <th style="padding:10px 16px;font-size:10px;font-weight:700;color:#8A93B0;text-transform:uppercase;letter-spacing:0.6px;background-color:#F7F8FC;text-align:center;border-bottom:1px solid #E4E8F0;">Likes</th>
+        <th style="padding:10px 16px;font-size:10px;font-weight:700;color:#8A93B0;text-transform:uppercase;letter-spacing:0.6px;background-color:#F7F8FC;text-align:center;border-bottom:1px solid #E4E8F0;">Estado</th>
+      </tr>
+      ${rankRows}
+    </table>
+  </td></tr>
+
+  <!-- SECTION: POSTS DESTACADOS -->
+  <tr><td style="padding:28px 0 0;">
+    <table cellpadding="0" cellspacing="0" border="0" width="100%">
+      <tr><td style="font-size:11px;font-weight:800;color:#8A93B0;text-transform:uppercase;letter-spacing:1.2px;padding-bottom:12px;">Posts destacados (72h)
+        <span style="display:inline-block;width:60%;border-bottom:1px solid #E4E8F0;vertical-align:middle;margin-left:10px;">&nbsp;</span>
+      </td></tr>
+    </table>
+    <table cellpadding="0" cellspacing="0" border="0" width="100%">
+      ${postsGrid}
+    </table>
+  </td></tr>
+
+</table>
 
 <!-- FOOTER -->
-<div style="max-width:1040px;margin:40px auto 0;padding:0 56px;">
-  <div style="display:flex;align-items:center;justify-content:space-between;padding-top:24px;border-top:1px solid #E4E8F0;">
-    <div style="display:flex;align-items:center;gap:12px;">
-      ${LOGO_SRC ? `<img src="${LOGO_SRC}" alt="M&P" style="height:30px;">` : '<div style="font-size:12px;font-weight:900;background:linear-gradient(135deg,#6C31D9,#2878F0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">M&P</div>'}
-      <div style="font-size:12px;font-weight:600;color:#8A93B0;">Muller & Pérez · Inteligencia Competitiva</div>
-    </div>
-    <div style="font-size:11px;color:#8A93B0;text-align:right;line-height:1.7;">
-      Reporte confidencial para uso exclusivo de Genera Chile<br>
-      Generado automáticamente · ${fecha} · ${hora}
-    </div>
-  </div>
-</div>
+<table cellpadding="0" cellspacing="0" border="0" style="max-width:680px;width:100%;margin:36px auto 0;">
+  <tr><td style="border-top:1px solid #E4E8F0;padding:20px 20px 40px;">
+    <table cellpadding="0" cellspacing="0" border="0" width="100%">
+      <tr>
+        <td style="vertical-align:middle;">
+          ${LOGO_SRC ? `<img src="${LOGO_SRC}" alt="M&P" width="80" style="display:inline-block;height:auto;max-height:28px;vertical-align:middle;">` : '<span style="font-size:12px;font-weight:900;color:#6C31D9;">M&amp;P</span>'}
+          <span style="font-size:12px;font-weight:600;color:#8A93B0;vertical-align:middle;margin-left:10px;">Muller &amp; Pérez · Inteligencia Competitiva</span>
+        </td>
+        <td style="text-align:right;font-size:11px;color:#8A93B0;line-height:1.7;vertical-align:middle;">
+          Reporte confidencial · Genera Chile<br>
+          ${fecha} · ${hora}
+        </td>
+      </tr>
+    </table>
+  </td></tr>
+</table>
 
 </body>
 </html>`
