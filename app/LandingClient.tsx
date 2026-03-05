@@ -763,12 +763,17 @@ export default function LandingClient() {
                     <div>
                       <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Servicios</h3>
                       <div className="space-y-1">
-                        <Link href="/servicios/google-ads-chile" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">Google Ads Chile</Link>
-                        <Link href="/servicios/meta-ads-chile" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">Meta Ads Chile</Link>
-                        <Link href="/servicios/performance-marketing" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">Performance Marketing</Link>
-                        <Link href="/servicios/seo-chile" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">SEO Chile</Link>
+                        <Link href="/servicios#google-ads-chile" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">Google Ads Chile</Link>
+                        <Link href="/servicios#meta-ads-chile" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">Meta Ads Chile</Link>
+                        <Link href="/servicios#linkedin-ads-chile" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">LinkedIn Ads Chile</Link>
+                        <Link href="/servicios#tiktok-ads-chile" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">TikTok Ads Chile</Link>
+                        <Link href="/servicios#performance-marketing" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">Performance Marketing</Link>
+                        <Link href="/servicios#seo-chile" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">SEO Chile</Link>
+                        <Link href="/servicios#mp-radar-inteligencia-competitiva" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">M&P Radar — IA</Link>
+                        <Link href="/servicios#diseno-digital" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">Diseño Digital</Link>
+                        <Link href="/servicios#video-marketing-dron" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">Video con Dron</Link>
                         <div className="pt-2 border-t border-gray-100 mt-2">
-                          <Link href="/servicios" className="text-sm text-blue-600 hover:text-blue-700 font-semibold">Ver todos →</Link>
+                          <Link href="/servicios" className="text-sm text-blue-600 hover:text-blue-700 font-semibold">Ver los 13 servicios →</Link>
                         </div>
                       </div>
                     </div>
