@@ -137,16 +137,19 @@ async function scrapeLinkedin(hace24h) {
   console.log(`💼 Scrapeando ${conLI.length} perfiles de LinkedIn...`)
   try {
     const res = await fetch(
-      `https://api.apify.com/v2/acts/bebity~linkedin-company-posts-scraper/run-sync-get-dataset-items?token=${APIFY_TOKEN}&timeout=180`,
+      `https://api.apify.com/v2/acts/harvestapi~linkedin-company-posts/run-sync-get-dataset-items?token=${APIFY_TOKEN}&timeout=180`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ companyUrls: conLI.map(c => c.linkedin), maxPosts: 5 }),
+        body: JSON.stringify({ targetUrls: conLI.map(c => c.linkedin), maxPosts: 5 }),
       }
     )
     if (!res.ok) { console.warn(`⚠️ LinkedIn: ${res.status}`); return [] }
     const all = await res.json()
-    const recientes = all.filter(p => p.postedAt && new Date(p.postedAt) > hace24h)
+    const recientes = all.filter(p => {
+      const fecha = p.postedAt || p.publishedAt || p.date
+      return fecha && new Date(fecha) > hace24h
+    })
     console.log(`✅ LinkedIn: ${recientes.length} posts en últimas 24h`)
     return recientes
   } catch (err) {
@@ -222,18 +225,19 @@ function generarHtmlReporte({ hoy, postsIG, competidoresConPost, sinActividad, p
   }).join('')
 
   const postsLIHtml = postsLinkedin.map(p => {
-    const url = p.postUrl || p.url || ''
-    const nombre = p.companyName || 'Competidor'
-    const texto = (p.text || p.commentary || '').substring(0, 200)
+    const url = p.postUrl || p.url || p.postLink || ''
+    const nombre = p.companyName || p.authorName || p.author || 'Competidor'
+    const texto = (p.text || p.commentary || p.content || '').substring(0, 200)
+    const likes = p.likesCount || p.totalReactionCount || p.reactions || 0
     return `
       <div style="border:1px solid #E2E8F0;border-radius:10px;padding:12px;margin-bottom:10px;background:#fff;">
         <div style="margin-bottom:5px;">
           <strong style="color:#0F172A;font-size:13px;">${nombre}</strong>
           <span style="background:#DBEAFE;color:#1E40AF;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;margin-left:5px;">💼 LinkedIn</span>
-          ${ofertaBadge(p.text || p.commentary)}
+          ${ofertaBadge(p.text || p.commentary || p.content)}
         </div>
         <p style="font-size:12px;color:#475569;line-height:1.5;margin:0 0 6px;">${texto}${texto.length >= 200 ? '...' : ''}</p>
-        ${p.likesCount ? `<span style="font-size:11px;color:#64748B;margin-right:10px;">👍 ${p.likesCount}</span>` : ''}
+        ${likes ? `<span style="font-size:11px;color:#64748B;margin-right:10px;">👍 ${likes}</span>` : ''}
         ${url ? `<a href="${url}" style="font-size:11px;color:#3B82F6;font-weight:600;text-decoration:none;">Ver →</a>` : ''}
       </div>`
   }).join('')
@@ -263,7 +267,7 @@ function generarHtmlReporte({ hoy, postsIG, competidoresConPost, sinActividad, p
 
   const totalPosts = postsIG.length + postsLinkedin.length + postsFacebook.length
   const totalOfertas = [...postsIG, ...postsLinkedin, ...postsFacebook]
-    .filter(p => esOfertaLaboral(p.caption || p.text || p.commentary || p.message || '')).length
+    .filter(p => esOfertaLaboral(p.caption || p.text || p.commentary || p.content || p.message || '')).length
 
   return `<!DOCTYPE html>
 <html lang="es">
@@ -366,7 +370,7 @@ async function enviarEmail({ hoy, postsIG, competidoresConPost, sinActividad, po
 
   const totalPosts = postsIG.length + postsLinkedin.length + postsFacebook.length
   const totalOfertas = [...postsIG, ...postsLinkedin, ...postsFacebook]
-    .filter(p => esOfertaLaboral(p.caption || p.text || p.commentary || p.message || '')).length
+    .filter(p => esOfertaLaboral(p.caption || p.text || p.commentary || p.content || p.message || '')).length
 
   const payload = {
     from: 'Müller & Pérez <contacto@mulleryperez.cl>',
