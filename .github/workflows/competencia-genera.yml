@@ -1,8 +1,8 @@
 name: Radar Competencia — Genera Chile
 
 on:
-  schedule:
-    - cron: '30 11 * * 1-5'   # Lunes a Viernes 11:30 UTC = 08:30 AM Chile
+  # schedule:
+  #   - cron: '30 11 * * 1-5'   # PAUSADO — reactivar cuando se apruebe piloto
   workflow_dispatch:
 
 jobs:
