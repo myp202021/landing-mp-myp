@@ -3,11 +3,10 @@
 // Corre L-V 08:30 AM via GitHub Actions
 // Scrape Instagram + LinkedIn de competidores de software RRHH
 // Detecta ofertas laborales y promociones comerciales
-// Envía reporte premium como PDF adjunto
+// Envía reporte premium como HTML en el cuerpo del email
 
 const fetch = require('node-fetch')
 const { createClient } = require('@supabase/supabase-js')
-const { execSync } = require('child_process')
 const fs = require('fs')
 
 const APIFY_TOKEN = process.env.APIFY_TOKEN
@@ -28,13 +27,28 @@ const COMPETIDORES = [
 
 // ─── Detección de ofertas laborales ─────────────────────────────────────────
 const KEYWORDS_OFERTA = [
+  // Generales
   'se busca', 'buscamos', 'oferta laboral', 'postula', 'postúlate', 'vacante',
   'cargo disponible', 'remuneración', 'jornada', 'contrato', 'enviar cv', 'envía tu cv',
-  'trabaja con nosotros', 'únete a', 'incorporar', 'requisitos', 'experiencia comprobable',
-  'disponibilidad', 'join our team', 'we are hiring', 'hiring',
-  'ejecutivo comercial', 'account manager', 'customer success', 'sales representative',
-  'desarrollador', 'developer', 'ingeniero', 'product manager', 'diseñador ux',
-  'head of', 'líder de', 'jefe de', 'gerente de',
+  'trabaja con nosotros', 'únete a', 'únete al equipo', 'incorporar', 'requisitos',
+  'experiencia comprobable', 'disponibilidad', 'join our team', 'we are hiring', 'hiring',
+  'open position', 'job opening', 'apply now', 'we\'re looking for',
+  // Roles comerciales / ventas SaaS
+  'ejecutivo comercial', 'account executive', 'account manager', 'key account',
+  'sales representative', 'sales manager', 'sales executive',
+  'closer', 'sdr', 'bdr', 'pre-venta', 'preventa', 'business development',
+  // Roles Customer Success / Soporte
+  'customer success', 'csm', 'onboarding', 'consultor de implementación',
+  'implementation consultant', 'soporte técnico', 'soporte al cliente',
+  // Roles Tech / Producto
+  'desarrollador', 'developer', 'full stack', 'fullstack', 'frontend', 'backend',
+  'ingeniero de software', 'software engineer', 'product manager', 'product owner',
+  'diseñador ux', 'ux designer', 'qa', 'devops', 'data engineer', 'data analyst',
+  // Roles de liderazgo
+  'head of', 'líder de', 'jefe de', 'gerente de', 'director de', 'vp of',
+  'country manager', 'cto', 'cpo', 'chief',
+  // Roles RRHH (competidores contratando en su propia área)
+  'people', 'talent acquisition', 'reclutador', 'recruiter', 'hr business partner',
 ]
 
 function esOfertaLaboral(texto) {
@@ -87,7 +101,7 @@ function getFechaPost(p) {
 // ─── Main ────────────────────────────────────────────────────────────────────
 async function main() {
   const hoy = new Date().toISOString().split('T')[0]
-  const hace24h = new Date(Date.now() - 24 * 60 * 60 * 1000)
+  const hace72h = new Date(Date.now() - 72 * 60 * 60 * 1000)
 
   console.log(`📊 Radar Genera — Generando reporte para ${hoy}...`)
 
@@ -111,8 +125,8 @@ async function main() {
     )
     if (!res.ok) throw new Error(`Apify IG: ${res.status} ${await res.text()}`)
     const all = await res.json()
-    postsIG = all.filter(p => p.timestamp && new Date(p.timestamp) > hace24h)
-    console.log(`✅ Instagram: ${postsIG.length} posts en las últimas 24h`)
+    postsIG = all.filter(p => p.timestamp && new Date(p.timestamp) > hace72h)
+    console.log(`✅ Instagram: ${postsIG.length} posts en las últimas 72h`)
   } catch (err) {
     console.error('❌ Error Instagram:', err.message)
   }
@@ -153,7 +167,7 @@ async function main() {
   console.log(`🏁 Instagram: ${competidoresConPostIG.size} con actividad, ${sinActividadIG.length} sin actividad.`)
 
   // ── LinkedIn (doble actor con fallback) ────────────────────────────────────
-  const postsLinkedin = await scrapeLinkedin(hace24h)
+  const postsLinkedin = await scrapeLinkedin(hace72h)
 
   // Guardar posts LinkedIn en Supabase
   for (const post of postsLinkedin) {
@@ -180,7 +194,7 @@ async function main() {
 
 
 // ─── LinkedIn scraping con doble fallback ────────────────────────────────────
-async function scrapeLinkedin(hace24h) {
+async function scrapeLinkedin(hace72h) {
   const conLI = COMPETIDORES.filter(c => c.linkedin)
   if (conLI.length === 0) return []
 
@@ -189,7 +203,7 @@ async function scrapeLinkedin(hace24h) {
   let posts = await tryLinkedinActor(
     'apimaestro~linkedin-company-posts',
     { urls: conLI.map(c => c.linkedin) },
-    hace24h, conLI
+    hace72h, conLI
   )
 
   if (posts === null) {
@@ -198,7 +212,7 @@ async function scrapeLinkedin(hace24h) {
     posts = await tryLinkedinActor(
       'harvestapi~linkedin-company-posts',
       { targetUrls: conLI.map(c => c.linkedin), maxPosts: 5 },
-      hace24h, conLI
+      hace72h, conLI
     )
   }
 
@@ -210,7 +224,7 @@ async function scrapeLinkedin(hace24h) {
   return posts
 }
 
-async function tryLinkedinActor(actorId, input, hace24h, conLI) {
+async function tryLinkedinActor(actorId, input, hace72h, conLI) {
   try {
     const res = await fetch(
       `https://api.apify.com/v2/acts/${actorId}/run-sync-get-dataset-items?token=${APIFY_TOKEN}&timeout=180`,
@@ -233,7 +247,7 @@ async function tryLinkedinActor(actorId, input, hace24h, conLI) {
     // Filtrar posts recientes y asignar competidor
     const recientes = all.filter(p => {
       const fecha = getFechaPost(p)
-      return fecha && new Date(fecha) > hace24h
+      return fecha && new Date(fecha) > hace72h
     }).map(p => {
       // Intentar matchear con competidor por URL o nombre
       const compName = p.companyName || p.authorName || p.author || ''
@@ -244,7 +258,7 @@ async function tryLinkedinActor(actorId, input, hace24h, conLI) {
       return { ...p, _competidor: matched ? matched.nombre : compName }
     })
 
-    console.log(`✅ LinkedIn [${actorId}]: ${recientes.length} posts en últimas 24h (de ${all.length} total)`)
+    console.log(`✅ LinkedIn [${actorId}]: ${recientes.length} posts en últimas 72h (de ${all.length} total)`)
     return recientes
   } catch (err) {
     console.warn(`⚠️ ${actorId} error:`, err.message)
@@ -253,21 +267,7 @@ async function tryLinkedinActor(actorId, input, hace24h, conLI) {
 }
 
 
-// ─── Generación de PDF ──────────────────────────────────────────────────────
-function generarPDF(html) {
-  try {
-    const tmpHtml = '/tmp/reporte-genera.html'
-    const tmpPdf  = '/tmp/reporte-genera.pdf'
-    fs.writeFileSync(tmpHtml, html, 'utf8')
-    execSync(`wkhtmltopdf --quiet --page-size A4 --margin-top 10 --margin-bottom 10 --margin-left 10 --margin-right 10 --enable-local-file-access --enable-external-links "${tmpHtml}" "${tmpPdf}"`)
-    const buffer = fs.readFileSync(tmpPdf)
-    console.log(`✅ PDF generado (${Math.round(buffer.length / 1024)} KB)`)
-    return buffer
-  } catch (err) {
-    console.warn('⚠️ wkhtmltopdf falló:', err.message)
-    return null
-  }
-}
+// (PDF removido — el reporte se envía como HTML en el cuerpo del email)
 
 
 // ─── HTML del reporte premium (diseño Radar Competencia) ─────────────────────
@@ -346,7 +346,7 @@ function generarHtmlReporte({ hoy, postsIG, postsLinkedin, competidoresConPostIG
   if (sinActividad.length > 0) {
     alertasHtml += `<div style="display:flex;gap:14px;align-items:flex-start;">
       <span style="padding:4px 10px;border-radius:6px;font-size:10px;font-weight:800;letter-spacing:0.5px;white-space:nowrap;flex-shrink:0;margin-top:1px;background:rgba(5,150,105,0.2);color:#6EE7B7;">✓ OK</span>
-      <p style="font-size:13px;color:rgba(255,255,255,0.65);line-height:1.55;margin:0;"><strong style="color:#fff;font-weight:700;">${sinActividad.map(c => c.nombre).join(' y ')}</strong> sin actividad relevante hoy.</p>
+      <p style="font-size:13px;color:rgba(255,255,255,0.65);line-height:1.55;margin:0;"><strong style="color:#fff;font-weight:700;">${sinActividad.map(c => c.nombre).join(' y ')}</strong> sin actividad relevante (72h).</p>
     </div>`
   }
 
@@ -484,12 +484,12 @@ function generarHtmlReporte({ hoy, postsIG, postsLinkedin, competidoresConPostIG
     <div style="background:#fff;border:1px solid #E4E8F0;border-radius:12px;padding:22px 22px 18px;position:relative;overflow:hidden;">
       <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(135deg,#6C31D9,#2878F0);"></div>
       <div style="font-size:36px;font-weight:900;letter-spacing:-2px;line-height:1;background:linear-gradient(135deg,#6C31D9,#2878F0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">${totalPosts}</div>
-      <div style="font-size:11px;font-weight:600;color:#8A93B0;text-transform:uppercase;letter-spacing:0.6px;margin-top:10px;">Posts publicados hoy</div>
+      <div style="font-size:11px;font-weight:600;color:#8A93B0;text-transform:uppercase;letter-spacing:0.6px;margin-top:10px;">Posts (últimas 72h)</div>
     </div>
     <div style="background:#fff;border:1px solid #E4E8F0;border-radius:12px;padding:22px 22px 18px;position:relative;overflow:hidden;">
       <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(135deg,#6C31D9,#2878F0);"></div>
       <div style="font-size:36px;font-weight:900;color:#0D1226;letter-spacing:-2px;line-height:1;">${(totalLikes + totalComentarios + totalCompartidos).toLocaleString('es-CL')}</div>
-      <div style="font-size:11px;font-weight:600;color:#8A93B0;text-transform:uppercase;letter-spacing:0.6px;margin-top:10px;">Interacciones hoy</div>
+      <div style="font-size:11px;font-weight:600;color:#8A93B0;text-transform:uppercase;letter-spacing:0.6px;margin-top:10px;">Interacciones (72h)</div>
     </div>
     <div style="background:#fff;border:1px solid #E4E8F0;border-radius:12px;padding:22px 22px 18px;position:relative;overflow:hidden;">
       <div style="position:absolute;top:0;left:0;right:0;height:3px;background:${totalOfertas > 0 ? 'linear-gradient(90deg,#DC2626,#F87171)' : 'linear-gradient(135deg,#6C31D9,#2878F0)'};"></div>
@@ -554,7 +554,7 @@ function generarHtmlReporte({ hoy, postsIG, postsLinkedin, competidoresConPostIG
 
   <!-- POSTS DESTACADOS -->
   <div style="margin-bottom:32px;">
-    <div style="font-size:11px;font-weight:800;color:#8A93B0;text-transform:uppercase;letter-spacing:1.2px;display:flex;align-items:center;gap:10px;margin-bottom:14px;">Posts destacados del día<div style="flex:1;height:1px;background:#E4E8F0;"></div></div>
+    <div style="font-size:11px;font-weight:800;color:#8A93B0;text-transform:uppercase;letter-spacing:1.2px;display:flex;align-items:center;gap:10px;margin-bottom:14px;">Posts destacados (72h)<div style="flex:1;height:1px;background:#E4E8F0;"></div></div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
       ${postsHtml || '<div style="grid-column:1/-1;text-align:center;padding:40px;color:#8A93B0;font-size:13px;">Sin posts destacados hoy</div>'}
     </div>
@@ -581,7 +581,7 @@ function generarHtmlReporte({ hoy, postsIG, postsLinkedin, competidoresConPostIG
 }
 
 
-// ─── Envío de email con PDF adjunto ─────────────────────────────────────────
+// ─── Envío de email con HTML premium en el cuerpo ───────────────────────────
 async function enviarEmail({ hoy, postsIG, postsLinkedin, competidoresConPostIG, sinActividadIG, allPosts }) {
   const RESEND_API_KEY = process.env.RESEND || process.env.RESEND_API_KEY
   if (!RESEND_API_KEY) {
@@ -606,29 +606,10 @@ async function enviarEmail({ hoy, postsIG, postsLinkedin, competidoresConPostIG,
     from: 'Müller & Pérez <contacto@mulleryperez.cl>',
     to: ['contacto@mulleryperez.cl'],
     subject: `📊 Radar Genera — ${fecha} (${totalPosts} posts${subjectExtra})`,
-    html: `<div style="font-family:'Segoe UI',sans-serif;max-width:500px;margin:0 auto;padding:32px 16px;color:#1E293B;">
-    <h2 style="font-size:18px;font-weight:800;margin:0 0 8px;">📊 Radar de Competencia — Genera Chile</h2>
-    <p style="color:#64748B;font-size:13px;margin:0 0 20px;">${fecha}</p>
-    <table style="width:100%;border-collapse:collapse;font-size:13px;margin-bottom:20px;">
-      <tr style="border-bottom:1px solid #E2E8F0;"><td style="padding:8px 0;color:#64748B;">Posts Instagram</td><td style="padding:8px 0;font-weight:700;text-align:right;">${postsIG.length}</td></tr>
-      <tr style="border-bottom:1px solid #E2E8F0;"><td style="padding:8px 0;color:#64748B;">Posts LinkedIn</td><td style="padding:8px 0;font-weight:700;text-align:right;">${postsLinkedin.length}</td></tr>
-      <tr style="border-bottom:1px solid #E2E8F0;"><td style="padding:8px 0;color:#64748B;">Sin actividad IG</td><td style="padding:8px 0;font-weight:700;text-align:right;">${sinActividadIG.length}</td></tr>
-      ${totalOfertas > 0 ? `<tr><td style="padding:8px 0;color:#92400E;font-weight:700;">⚠️ Ofertas laborales</td><td style="padding:8px 0;font-weight:700;color:#92400E;text-align:right;">${totalOfertas}</td></tr>` : ''}
-      ${totalPromos > 0 ? `<tr><td style="padding:8px 0;color:#5B21B6;font-weight:700;">🏷️ Promociones</td><td style="padding:8px 0;font-weight:700;color:#5B21B6;text-align:right;">${totalPromos}</td></tr>` : ''}
-    </table>
-    <p style="font-size:12px;color:#94A3B8;">El reporte completo se adjunta en PDF.</p>
-  </div>`,
+    html: reporteHtml,
   }
 
-  // Generar PDF y adjuntar
-  const pdfBuffer = generarPDF(reporteHtml)
-  if (pdfBuffer) {
-    payload.attachments = [{ filename: `Radar-Genera-${hoy}.pdf`, content: pdfBuffer.toString('base64') }]
-    console.log(`📎 Email con PDF adjunto`)
-  } else {
-    payload.attachments = [{ filename: `Radar-Genera-${hoy}.html`, content: Buffer.from(reporteHtml).toString('base64') }]
-    console.log(`📄 Email con HTML adjunto (fallback)`)
-  }
+  console.log(`📧 Enviando reporte HTML premium en el cuerpo del email...`)
 
   const res = await fetch('https://api.resend.com/emails', {
     method: 'POST',
