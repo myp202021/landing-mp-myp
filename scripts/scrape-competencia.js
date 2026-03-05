@@ -120,7 +120,7 @@ function generarPDF(html) {
     const tmpHtml = '/tmp/reporte-hualpen.html'
     const tmpPdf  = '/tmp/reporte-hualpen.pdf'
     fs.writeFileSync(tmpHtml, html, 'utf8')
-    execSync(`wkhtmltopdf --quiet --page-size A4 --margin-top 10 --margin-bottom 10 --margin-left 10 --margin-right 10 --enable-local-file-access "${tmpHtml}" "${tmpPdf}"`)
+    execSync(`wkhtmltopdf --quiet --page-size A4 --margin-top 10 --margin-bottom 10 --margin-left 10 --margin-right 10 --enable-local-file-access --enable-external-links "${tmpHtml}" "${tmpPdf}"`)
     const buffer = fs.readFileSync(tmpPdf)
     console.log(`✅ PDF generado (${Math.round(buffer.length / 1024)} KB)`)
     return buffer
@@ -219,7 +219,7 @@ function generarHtmlReporte({ hoy, postsIG, competidoresConPost, sinActividad, p
           <p style="font-size:12px;color:#475569;line-height:1.5;margin:0 0 6px;">${texto}</p>
           <span style="font-size:11px;color:#64748B;margin-right:10px;">❤️ ${post.likesCount || 0}</span>
           <span style="font-size:11px;color:#64748B;margin-right:10px;">💬 ${post.commentsCount || 0}</span>
-          <a href="${postUrl}" style="font-size:11px;color:#3B82F6;font-weight:600;text-decoration:none;">Ver →</a>
+          <a href="${postUrl}" style="display:inline-block;font-size:11px;color:#fff;background:#3B82F6;padding:4px 12px;border-radius:6px;font-weight:600;text-decoration:none;">Ver post →</a>
         </div>
       </div>`
   }).join('')
@@ -238,7 +238,7 @@ function generarHtmlReporte({ hoy, postsIG, competidoresConPost, sinActividad, p
         </div>
         <p style="font-size:12px;color:#475569;line-height:1.5;margin:0 0 6px;">${texto}${texto.length >= 200 ? '...' : ''}</p>
         ${likes ? `<span style="font-size:11px;color:#64748B;margin-right:10px;">👍 ${likes}</span>` : ''}
-        ${url ? `<a href="${url}" style="font-size:11px;color:#3B82F6;font-weight:600;text-decoration:none;">Ver →</a>` : ''}
+        ${url ? `<a href="${url}" style="display:inline-block;font-size:11px;color:#fff;background:#3B82F6;padding:4px 12px;border-radius:6px;font-weight:600;text-decoration:none;">Ver post →</a>` : ''}
       </div>`
   }).join('')
 
@@ -257,7 +257,7 @@ function generarHtmlReporte({ hoy, postsIG, competidoresConPost, sinActividad, p
         </div>
         <p style="font-size:12px;color:#475569;line-height:1.5;margin:0 0 6px;">${texto}${texto.length >= 200 ? '...' : ''}</p>
         ${p.likes ? `<span style="font-size:11px;color:#64748B;margin-right:10px;">👍 ${p.likes}</span>` : ''}
-        ${url ? `<a href="${url}" style="font-size:11px;color:#3B82F6;font-weight:600;text-decoration:none;">Ver →</a>` : ''}
+        ${url ? `<a href="${url}" style="display:inline-block;font-size:11px;color:#fff;background:#3B82F6;padding:4px 12px;border-radius:6px;font-weight:600;text-decoration:none;">Ver post →</a>` : ''}
       </div>`
   }).join('')
 
