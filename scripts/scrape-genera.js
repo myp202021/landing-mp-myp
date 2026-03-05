@@ -128,7 +128,31 @@ function getPostUrl(p) {
 }
 
 function getFechaPost(p) {
-  return p.timestamp || p.postedAt || p.publishedAt || p.date || p.time || null
+  // Intentar múltiples campos de fecha conocidos de Apify LinkedIn actors
+  const raw = p.timestamp || p.postedAt || p.publishedAt || p.date || p.time
+    || p.postedDate || p.publishedDate || p.createdAt || p.postedDateTimestamp || null
+
+  // timeSincePosted: "3d", "1w", "2h", "5mo" — convertir a Date
+  if (!raw && p.timeSincePosted) {
+    const tsp = p.timeSincePosted.trim().toLowerCase()
+    const num = parseInt(tsp)
+    if (!isNaN(num)) {
+      const now = Date.now()
+      if (tsp.includes('h')) return new Date(now - num * 3600000).toISOString()
+      if (tsp.includes('d')) return new Date(now - num * 86400000).toISOString()
+      if (tsp.includes('w')) return new Date(now - num * 604800000).toISOString()
+      if (tsp.includes('mo')) return new Date(now - num * 2592000000).toISOString()
+      if (tsp.includes('y')) return new Date(now - num * 31536000000).toISOString()
+    }
+    return null
+  }
+
+  if (!raw) return null
+  // Si es número (epoch ms o epoch s), convertir
+  if (typeof raw === 'number') {
+    return raw > 1e12 ? new Date(raw).toISOString() : new Date(raw * 1000).toISOString()
+  }
+  return raw
 }
 
 
@@ -154,7 +178,7 @@ async function main() {
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ directUrls: profileUrls, resultsType: 'posts', resultsLimit: 6, addParentData: true }),
+        body: JSON.stringify({ directUrls: profileUrls, resultsType: 'posts', resultsLimit: 12, addParentData: true }),
       }
     )
     if (!res.ok) throw new Error(`Apify IG: ${res.status} ${await res.text()}`)
@@ -278,10 +302,23 @@ async function tryLinkedinActor(actorId, input, hace72h, conLI) {
       return null
     }
 
+    // Debug: mostrar estructura del primer post para entender campos
+    if (all.length > 0) {
+      const sample = all[0]
+      console.log(`🔍 LinkedIn sample keys: ${Object.keys(sample).join(', ')}`)
+      const dateFields = ['timestamp', 'postedAt', 'publishedAt', 'date', 'time', 'postedDate', 'publishedDate', 'createdAt', 'postedDateTimestamp', 'timeSincePosted']
+      dateFields.forEach(f => { if (sample[f] !== undefined) console.log(`   📅 ${f} = ${sample[f]}`) })
+      const nameFields = ['companyName', 'authorName', 'author', 'companyUrl', 'authorUrl']
+      nameFields.forEach(f => { if (sample[f] !== undefined) console.log(`   🏢 ${f} = ${sample[f]}`) })
+    }
+
     // Filtrar posts recientes y asignar competidor
     const recientes = all.filter(p => {
       const fecha = getFechaPost(p)
-      return fecha && new Date(fecha) > hace72h
+      if (!fecha) return false
+      const parsed = new Date(fecha)
+      if (isNaN(parsed.getTime())) return false
+      return parsed > hace72h
     }).map(p => {
       // Intentar matchear con competidor por URL o nombre
       const compName = p.companyName || p.authorName || p.author || ''
@@ -305,182 +342,174 @@ async function tryLinkedinActor(actorId, input, hace72h, conLI) {
 
 
 // ─── HTML del reporte (100% tablas — compatible Gmail/Outlook) ───────────────
+// Estructura: KPIs → Alertas → Instagram → LinkedIn → Ofertas Laborales
 function generarHtmlReporte({ hoy, postsIG, postsLinkedin, competidoresConPostIG, sinActividadIG, allPosts }) {
   const fechaObj = new Date(hoy + 'T12:00:00')
   const fecha = fechaObj.toLocaleDateString('es-CL', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' })
   const hora = '08:30 AM'
 
   const totalPosts = postsIG.length + postsLinkedin.length
-  const totalLikes = allPosts.reduce((s, p) => s + (getLikes(p) || 0), 0)
-  const totalComentarios = allPosts.reduce((s, p) => s + (getComentarios(p) || 0), 0)
-  const totalCompartidos = allPosts.reduce((s, p) => s + (getCompartidos(p) || 0), 0)
+  const totalLikesIG = postsIG.reduce((s, p) => s + (getLikes(p) || 0), 0)
+  const totalLikesLI = postsLinkedin.reduce((s, p) => s + (getLikes(p) || 0), 0)
+  const totalReactionsLI = postsLinkedin.reduce((s, p) => s + (getLikes(p) || 0) + (getComentarios(p) || 0) + (getCompartidos(p) || 0), 0)
 
   const ofertas = allPosts.filter(p => esOfertaLaboral(getTextoPost(p)))
   const promos = allPosts.filter(p => esPromocion(getTextoPost(p)))
   const totalOfertas = ofertas.length
   const totalPromos = promos.length
 
-  // Engagement por competidor
-  const engagementMap = {}
-  COMPETIDORES.forEach(c => { engagementMap[c.nombre] = { likes: 0, comentarios: 0, compartidos: 0, posts: 0 } })
-  allPosts.forEach(p => {
-    const compName = p._comp?.nombre || p._competidor || ''
-    if (engagementMap[compName]) {
-      engagementMap[compName].likes += getLikes(p) || 0
-      engagementMap[compName].comentarios += getComentarios(p) || 0
-      engagementMap[compName].compartidos += getCompartidos(p) || 0
-      engagementMap[compName].posts += 1
-    }
-  })
+  // ── Helpers para secciones ──
+  const TH = 'padding:10px 14px;font-size:10px;font-weight:700;color:#64748B;text-transform:uppercase;letter-spacing:0.5px;background-color:#F8FAFC;border-bottom:1px solid #E2E8F0;'
+  const TD = 'padding:11px 14px;font-size:13px;border-bottom:1px solid #F1F5F9;'
+  const W = 680 // max-width
 
-  const engSorted = COMPETIDORES.map(c => ({
-    ...c,
-    ...engagementMap[c.nombre],
-    total: engagementMap[c.nombre].likes + engagementMap[c.nombre].comentarios + engagementMap[c.nombre].compartidos,
-  })).sort((a, b) => b.total - a.total)
-
-  const maxEng = Math.max(...engSorted.map(e => e.total), 1)
-
-  function getEstado(comp) {
-    const posts = allPosts.filter(p => (p._comp?.nombre || p._competidor) === comp.nombre)
-    if (posts.some(p => esOfertaLaboral(getTextoPost(p)))) return { bg: '#FEE2E2', color: '#991B1B', label: '⚠ Oferta' }
-    if (posts.some(p => esPromocion(getTextoPost(p)))) return { bg: '#EDE9FE', color: '#5B21B6', label: 'Promo' }
-    if (posts.length === 0) return { bg: '#F3F4F6', color: '#6B7280', label: 'Silencio' }
-    return { bg: '#D1FAE5', color: '#065F46', label: 'Normal' }
+  function sectionTitle(icon, text, color) {
+    return `<tr><td style="padding:32px 0 14px;">
+      <table cellpadding="0" cellspacing="0" border="0" width="100%"><tr>
+        <td style="font-size:13px;font-weight:800;color:${color || '#1E293B'};letter-spacing:0.3px;">${icon} ${text}</td>
+        <td style="border-bottom:2px solid ${color || '#E2E8F0'};width:60%;">&nbsp;</td>
+      </tr></table>
+    </td></tr>`
   }
 
-  // ── Alertas rows (table-based) ──
-  let alertRows = ''
-  let alertCount = 0
-
-  ofertas.forEach(p => {
-    const comp = p._comp?.nombre || p._competidor || 'Competidor'
-    const texto = getTextoPost(p).substring(0, 200)
-    alertRows += `<tr><td style="padding:8px 0;vertical-align:top;width:90px;"><span style="display:inline-block;padding:4px 10px;background:#4A1515;color:#FCA5A5;font-size:10px;font-weight:800;letter-spacing:0.5px;border-radius:6px;">🚨 URGENTE</span></td><td style="padding:8px 0 8px 14px;font-size:13px;color:#A0A8C0;line-height:1.55;"><strong style="color:#fff;">${comp}</strong> publicó oferta laboral: "${texto}..."</td></tr>`
-    alertCount++
-  })
-
-  promos.forEach(p => {
-    const comp = p._comp?.nombre || p._competidor || 'Competidor'
-    const texto = getTextoPost(p).substring(0, 200)
-    alertRows += `<tr><td style="padding:8px 0;vertical-align:top;width:90px;"><span style="display:inline-block;padding:4px 10px;background:#3D2B08;color:#FCD34D;font-size:10px;font-weight:800;letter-spacing:0.5px;border-radius:6px;">⚠ ATENCIÓN</span></td><td style="padding:8px 0 8px 14px;font-size:13px;color:#A0A8C0;line-height:1.55;"><strong style="color:#fff;">${comp}</strong> lanzó promoción: "${texto}..."</td></tr>`
-    alertCount++
-  })
-
-  const sinActividad = COMPETIDORES.filter(c => engagementMap[c.nombre].posts === 0)
-  if (sinActividad.length > 0) {
-    alertRows += `<tr><td style="padding:8px 0;vertical-align:top;width:90px;"><span style="display:inline-block;padding:4px 10px;background:#0A2E1F;color:#6EE7B7;font-size:10px;font-weight:800;letter-spacing:0.5px;border-radius:6px;">✓ OK</span></td><td style="padding:8px 0 8px 14px;font-size:13px;color:#A0A8C0;line-height:1.55;"><strong style="color:#fff;">${sinActividad.map(c => c.nombre).join(' y ')}</strong> sin actividad relevante (72h).</td></tr>`
-  }
-
-  if (!alertRows) {
-    alertRows = `<tr><td style="padding:8px 0;vertical-align:top;width:90px;"><span style="display:inline-block;padding:4px 10px;background:#0A2E1F;color:#6EE7B7;font-size:10px;font-weight:800;letter-spacing:0.5px;border-radius:6px;">✓ OK</span></td><td style="padding:8px 0 8px 14px;font-size:13px;color:#A0A8C0;line-height:1.55;">Sin alertas relevantes. Todos los competidores con actividad normal.</td></tr>`
-  }
-
-  // ── Engagement rows (table-based bars) ──
-  const engRows = engSorted.map(e => {
-    const pct = maxEng > 0 ? Math.max(Math.round((e.total / maxEng) * 100), 2) : 2
-    return `<tr>
-      <td style="padding:10px 12px;vertical-align:middle;width:120px;border-bottom:1px solid #E4E8F0;">
-        <table cellpadding="0" cellspacing="0" border="0"><tr>
-          <td style="width:28px;height:28px;background-color:${e.color};color:#fff;font-size:12px;font-weight:900;text-align:center;border-radius:7px;">${e.initial}</td>
-          <td style="padding-left:8px;font-size:13px;font-weight:700;color:#0D1226;">${e.nombre}</td>
-        </tr></table>
-      </td>
-      <td style="padding:10px 12px;vertical-align:middle;border-bottom:1px solid #E4E8F0;">
-        <table cellpadding="0" cellspacing="0" border="0" style="width:100%;"><tr>
-          <td style="width:${pct}%;height:8px;background-color:#6C31D9;border-radius:4px;font-size:1px;">&nbsp;</td>
-          <td style="font-size:1px;">&nbsp;</td>
-        </tr></table>
-      </td>
-      <td style="padding:10px 12px;vertical-align:middle;text-align:center;width:60px;border-bottom:1px solid #E4E8F0;">
-        <span style="font-size:11px;font-weight:600;color:#485270;">❤️ ${e.likes}</span>
-      </td>
-      <td style="padding:10px 12px;vertical-align:middle;text-align:center;width:60px;border-bottom:1px solid #E4E8F0;">
-        <span style="font-size:11px;font-weight:600;color:#485270;">💬 ${e.comentarios}</span>
-      </td>
-      <td style="padding:10px 12px;vertical-align:middle;text-align:right;width:70px;border-bottom:1px solid #E4E8F0;">
-        <span style="font-size:18px;font-weight:800;color:#0D1226;">${e.total.toLocaleString('es-CL')}</span>
-      </td>
-    </tr>`
-  }).join('')
-
-  // ── Ranking rows ──
-  const rankRows = engSorted.map((e, i) => {
-    const estado = getEstado(e)
-    const rkBg = i === 0 ? '#6C31D9' : i === 1 ? '#EDE9FE' : i === 2 ? '#DBEAFE' : '#F7F8FC'
-    const rkColor = i === 0 ? '#fff' : i === 1 ? '#6D28D9' : i === 2 ? '#1D4ED8' : '#8A93B0'
-    return `<tr>
-      <td style="padding:12px 16px;border-bottom:1px solid #E4E8F0;text-align:center;width:40px;"><span style="display:inline-block;width:22px;height:22px;line-height:22px;border-radius:6px;font-size:10px;font-weight:800;text-align:center;background-color:${rkBg};color:${rkColor};">${i + 1}</span></td>
-      <td style="padding:12px 16px;border-bottom:1px solid #E4E8F0;font-size:13px;font-weight:700;color:#0D1226;">${e.nombre}</td>
-      <td style="padding:12px 16px;border-bottom:1px solid #E4E8F0;font-size:13px;color:#485270;text-align:center;">${e.posts}</td>
-      <td style="padding:12px 16px;border-bottom:1px solid #E4E8F0;font-size:13px;color:#485270;text-align:center;font-weight:700;">${e.likes}</td>
-      <td style="padding:12px 16px;border-bottom:1px solid #E4E8F0;text-align:center;"><span style="display:inline-block;padding:3px 8px;border-radius:6px;font-size:10px;font-weight:700;background-color:${estado.bg};color:${estado.color};">${estado.label}</span></td>
-    </tr>`
-  }).join('')
-
-  // ── Posts destacados (top 4) ──
-  const topPosts = allPosts
-    .map(p => ({ ...p, _engagement: (getLikes(p) || 0) + (getComentarios(p) || 0) + (getCompartidos(p) || 0) }))
-    .sort((a, b) => b._engagement - a._engagement)
-    .slice(0, 4)
-
-  const postCells = topPosts.map(p => {
+  function postCard(p, red) {
     const comp = p._comp || COMPETIDORES.find(c => c.nombre === p._competidor) || { nombre: '?', color: '#64748B', initial: '?' }
-    const red = p._red || 'LinkedIn'
-    const texto = getTextoPost(p).substring(0, 150)
+    const texto = getTextoPost(p).substring(0, 180)
     const likes = getLikes(p)
     const comentarios = getComentarios(p)
     const compartidos = getCompartidos(p)
     const isOferta = esOfertaLaboral(getTextoPost(p))
     const isPromo = esPromocion(getTextoPost(p))
     const url = getPostUrl(p) || (p.shortCode ? `https://www.instagram.com/p/${p.shortCode}/` : '')
-    const netBg = red === 'Instagram' ? '#FCE7F3' : '#DBEAFE'
-    const netColor = red === 'Instagram' ? '#9D174D' : '#1E40AF'
-    const borderLeft = isOferta ? 'border-left:4px solid #DC2626;' : ''
+    const borderLeft = isOferta ? 'border-left:4px solid #DC2626;' : isPromo ? 'border-left:4px solid #7C3AED;' : ''
 
-    return `<td style="width:50%;vertical-align:top;padding:6px;">
-      <table cellpadding="0" cellspacing="0" border="0" style="width:100%;background-color:#fff;border:1px solid #E4E8F0;border-radius:12px;${borderLeft}">
-        <tr><td style="padding:18px 18px 10px;">
-          <table cellpadding="0" cellspacing="0" border="0"><tr>
-            <td style="width:36px;height:36px;background-color:${comp.color};color:#fff;font-size:14px;font-weight:900;text-align:center;line-height:36px;border-radius:8px;">${comp.initial}</td>
-            <td style="padding-left:10px;vertical-align:middle;">
-              <span style="font-size:14px;font-weight:800;color:#0D1226;">${comp.nombre}</span><br>
-              <span style="display:inline-block;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:700;background-color:${netBg};color:${netColor};margin-top:3px;">${red}</span>
-              ${isOferta ? ' <span style="display:inline-block;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:700;background-color:#FEE2E2;color:#991B1B;">⚠ Oferta</span>' : ''}
-              ${isPromo ? ' <span style="display:inline-block;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:700;background-color:#EDE9FE;color:#5B21B6;">Promo</span>' : ''}
-            </td>
-          </tr></table>
-        </td></tr>
-        <tr><td style="padding:4px 18px 12px;font-size:13px;color:#485270;line-height:1.6;">"${texto}${texto.length >= 150 ? '...' : ''}"</td></tr>
-        <tr><td style="padding:0 18px 16px;">
-          <table cellpadding="0" cellspacing="0" border="0" style="width:100%;border-top:1px solid #E4E8F0;">
-            <tr><td style="padding-top:10px;font-size:12px;color:#0D1226;">❤️ <strong>${likes}</strong> &nbsp; 💬 <strong>${comentarios}</strong> &nbsp; 🔁 <strong>${compartidos}</strong></td>
-            ${url ? `<td style="padding-top:10px;text-align:right;"><a href="${url}" style="display:inline-block;font-size:11px;color:#fff;background-color:#3B82F6;padding:6px 14px;border-radius:6px;font-weight:600;text-decoration:none;">Ver →</a></td>` : ''}
-            </tr>
-          </table>
-        </td></tr>
-      </table>
-    </td>`
+    return `<table cellpadding="0" cellspacing="0" border="0" style="width:100%;background-color:#fff;border:1px solid #E2E8F0;border-radius:10px;margin-bottom:10px;${borderLeft}">
+      <tr><td style="padding:16px;">
+        <table cellpadding="0" cellspacing="0" border="0" width="100%"><tr>
+          <td style="width:32px;height:32px;background-color:${comp.color};color:#fff;font-size:13px;font-weight:900;text-align:center;line-height:32px;border-radius:8px;vertical-align:top;">${comp.initial}</td>
+          <td style="padding-left:10px;vertical-align:top;">
+            <span style="font-size:13px;font-weight:800;color:#1E293B;">${comp.nombre}</span>
+            ${isOferta ? ' &nbsp;<span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:9px;font-weight:700;background-color:#FEF2F2;color:#DC2626;">OFERTA LABORAL</span>' : ''}
+            ${isPromo ? ' &nbsp;<span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:9px;font-weight:700;background-color:#F5F3FF;color:#7C3AED;">PROMO</span>' : ''}
+            <p style="margin:6px 0 0;font-size:12px;color:#64748B;line-height:1.55;">${texto}${texto.length >= 180 ? '...' : ''}</p>
+            <p style="margin:8px 0 0;font-size:12px;color:#94A3B8;">
+              ${red === 'Instagram' ? `❤️ ${likes} &nbsp; 💬 ${comentarios}` : `👍 ${likes} &nbsp; 💬 ${comentarios} &nbsp; 🔁 ${compartidos}`}
+              ${url ? ` &nbsp; <a href="${url}" style="color:#6C31D9;font-weight:600;text-decoration:none;">Ver post →</a>` : ''}
+            </p>
+          </td>
+        </tr></table>
+      </td></tr>
+    </table>`
+  }
+
+  // ── Datos por competidor separados por red ──
+  const igByComp = {}
+  const liByComp = {}
+  COMPETIDORES.forEach(c => {
+    igByComp[c.nombre] = { posts: 0, likes: 0, comentarios: 0 }
+    liByComp[c.nombre] = { posts: 0, likes: 0, comentarios: 0, compartidos: 0 }
+  })
+  postsIG.forEach(p => {
+    const handle = p.ownerUsername?.toLowerCase()
+    const comp = COMPETIDORES.find(c => c.instagram?.toLowerCase() === handle)
+    if (comp && igByComp[comp.nombre]) {
+      igByComp[comp.nombre].posts++
+      igByComp[comp.nombre].likes += getLikes(p) || 0
+      igByComp[comp.nombre].comentarios += getComentarios(p) || 0
+    }
+  })
+  postsLinkedin.forEach(p => {
+    const comp = COMPETIDORES.find(c => c.nombre === p._competidor)
+    if (comp && liByComp[comp.nombre]) {
+      liByComp[comp.nombre].posts++
+      liByComp[comp.nombre].likes += getLikes(p) || 0
+      liByComp[comp.nombre].comentarios += getComentarios(p) || 0
+      liByComp[comp.nombre].compartidos += getCompartidos(p) || 0
+    }
   })
 
-  // Armar grilla 2×2 de posts
-  let postsGrid = ''
-  if (postCells.length > 0) {
-    postsGrid += '<tr>' + (postCells[0] || '<td></td>') + (postCells[1] || '<td></td>') + '</tr>'
-    if (postCells.length > 2) {
-      postsGrid += '<tr>' + (postCells[2] || '<td></td>') + (postCells[3] || '<td></td>') + '</tr>'
-    }
-  } else {
-    postsGrid = '<tr><td colspan="2" style="text-align:center;padding:40px;color:#8A93B0;font-size:13px;">Sin posts destacados</td></tr>'
+  // ── IG table rows ──
+  const igRows = COMPETIDORES.map(c => {
+    const d = igByComp[c.nombre]
+    return `<tr>
+      <td style="${TD}font-weight:700;color:#1E293B;">${c.nombre}</td>
+      <td style="${TD}text-align:center;">${d.posts}</td>
+      <td style="${TD}text-align:center;font-weight:600;">${d.likes}</td>
+      <td style="${TD}text-align:center;">${d.comentarios}</td>
+      <td style="${TD}text-align:center;"><span style="display:inline-block;padding:3px 8px;border-radius:6px;font-size:10px;font-weight:700;${d.posts > 0 ? 'background-color:#F0FDF4;color:#166534;' : 'background-color:#F8FAFC;color:#94A3B8;'}">${d.posts > 0 ? 'Activo' : 'Sin posts'}</span></td>
+    </tr>`
+  }).join('')
+
+  // ── LI table rows ──
+  const liRows = COMPETIDORES.map(c => {
+    const d = liByComp[c.nombre]
+    return `<tr>
+      <td style="${TD}font-weight:700;color:#1E293B;">${c.nombre}</td>
+      <td style="${TD}text-align:center;">${d.posts}</td>
+      <td style="${TD}text-align:center;font-weight:600;">${d.likes}</td>
+      <td style="${TD}text-align:center;">${d.comentarios}</td>
+      <td style="${TD}text-align:center;">${d.compartidos}</td>
+      <td style="${TD}text-align:center;"><span style="display:inline-block;padding:3px 8px;border-radius:6px;font-size:10px;font-weight:700;${d.posts > 0 ? 'background-color:#EFF6FF;color:#1D4ED8;' : 'background-color:#F8FAFC;color:#94A3B8;'}">${d.posts > 0 ? 'Activo' : 'Sin posts'}</span></td>
+    </tr>`
+  }).join('')
+
+  // ── Top posts IG (top 3 por likes) ──
+  const topIG = [...postsIG]
+    .map(p => ({ ...p, _comp: COMPETIDORES.find(c => c.instagram?.toLowerCase() === p.ownerUsername?.toLowerCase()) }))
+    .sort((a, b) => (getLikes(b) || 0) - (getLikes(a) || 0))
+    .slice(0, 3)
+
+  // ── Top posts LI (top 3 por engagement) ──
+  const topLI = [...postsLinkedin]
+    .map(p => ({ ...p, _comp: COMPETIDORES.find(c => c.nombre === p._competidor) }))
+    .sort((a, b) => ((getLikes(b)||0)+(getComentarios(b)||0)+(getCompartidos(b)||0)) - ((getLikes(a)||0)+(getComentarios(a)||0)+(getCompartidos(a)||0)))
+    .slice(0, 3)
+
+  // ── Alertas ──
+  let alertRows = ''
+  let alertCount = 0
+
+  ofertas.forEach(p => {
+    const comp = p._comp?.nombre || p._competidor || 'Competidor'
+    const texto = getTextoPost(p).substring(0, 200)
+    alertRows += `<tr><td style="padding:8px 0;vertical-align:top;width:100px;"><span style="display:inline-block;padding:4px 10px;background-color:#4A1515;color:#FCA5A5;font-size:10px;font-weight:800;letter-spacing:0.5px;border-radius:6px;">🚨 URGENTE</span></td><td style="padding:8px 0 8px 14px;font-size:13px;color:#CBD5E1;line-height:1.55;"><strong style="color:#F8FAFC;">${comp}</strong> publicó oferta laboral: "${texto}..."</td></tr>`
+    alertCount++
+  })
+
+  promos.forEach(p => {
+    const comp = p._comp?.nombre || p._competidor || 'Competidor'
+    const texto = getTextoPost(p).substring(0, 200)
+    alertRows += `<tr><td style="padding:8px 0;vertical-align:top;width:100px;"><span style="display:inline-block;padding:4px 10px;background-color:#3D2B08;color:#FCD34D;font-size:10px;font-weight:800;letter-spacing:0.5px;border-radius:6px;">⚠ ATENCIÓN</span></td><td style="padding:8px 0 8px 14px;font-size:13px;color:#CBD5E1;line-height:1.55;"><strong style="color:#F8FAFC;">${comp}</strong> lanzó promoción: "${texto}..."</td></tr>`
+    alertCount++
+  })
+
+  const sinActividad = COMPETIDORES.filter(c => igByComp[c.nombre].posts === 0 && liByComp[c.nombre].posts === 0)
+  if (sinActividad.length > 0) {
+    alertRows += `<tr><td style="padding:8px 0;vertical-align:top;width:100px;"><span style="display:inline-block;padding:4px 10px;background-color:#0A2E1F;color:#6EE7B7;font-size:10px;font-weight:800;letter-spacing:0.5px;border-radius:6px;">✓ OK</span></td><td style="padding:8px 0 8px 14px;font-size:13px;color:#CBD5E1;line-height:1.55;"><strong style="color:#F8FAFC;">${sinActividad.map(c => c.nombre).join(', ')}</strong> sin actividad en ninguna red (72h).</td></tr>`
   }
+
+  if (!alertRows) {
+    alertRows = `<tr><td style="padding:8px 0;vertical-align:top;width:100px;"><span style="display:inline-block;padding:4px 10px;background-color:#0A2E1F;color:#6EE7B7;font-size:10px;font-weight:800;letter-spacing:0.5px;border-radius:6px;">✓ OK</span></td><td style="padding:8px 0 8px 14px;font-size:13px;color:#CBD5E1;line-height:1.55;">Sin alertas relevantes. Todos los competidores con actividad normal.</td></tr>`
+  }
+
+  // ── Ofertas laborales detalladas (al final del reporte) ──
+  const ofertasRows = ofertas.map(p => {
+    const comp = p._comp?.nombre || p._competidor || 'Competidor'
+    const red = p._red || 'LinkedIn'
+    const texto = getTextoPost(p).substring(0, 300)
+    const url = getPostUrl(p) || (p.shortCode ? `https://www.instagram.com/p/${p.shortCode}/` : '')
+    return `<tr>
+      <td style="${TD}font-weight:700;color:#1E293B;">${comp}</td>
+      <td style="${TD}"><span style="display:inline-block;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:600;${red === 'Instagram' ? 'background-color:#FDF2F8;color:#BE185D;' : 'background-color:#EFF6FF;color:#1D4ED8;'}">${red}</span></td>
+      <td style="${TD}color:#475569;line-height:1.5;">${texto}${texto.length >= 300 ? '...' : ''} ${url ? `<a href="${url}" style="color:#6C31D9;font-weight:600;text-decoration:none;">Ver →</a>` : ''}</td>
+    </tr>`
+  }).join('')
 
   // ── Chips competidores ──
   const chipsHtml = COMPETIDORES.map(c =>
-    `<span style="display:inline-block;padding:5px 14px;border-radius:6px;font-size:11px;font-weight:700;background-color:#F7F8FC;border:1px solid #E4E8F0;color:#485270;margin:0 3px 3px 0;">${c.nombre}</span>`
+    `<span style="display:inline-block;padding:4px 12px;border-radius:6px;font-size:11px;font-weight:700;background-color:#F8FAFC;border:1px solid #E2E8F0;color:#475569;margin:0 3px 3px 0;">${c.nombre}</span>`
   ).join('')
 
-  // ══════════════════════════════════════════════════════════════════════════
-  // HTML COMPLETO — 100% tablas, compatible Gmail / Outlook / Apple Mail
   // ══════════════════════════════════════════════════════════════════════════
   return `<!DOCTYPE html>
 <html lang="es" xmlns="http://www.w3.org/1999/xhtml">
@@ -491,25 +520,25 @@ function generarHtmlReporte({ hoy, postsIG, postsLinkedin, competidoresConPostIG
 <title>Radar Competencia · Genera Chile</title>
 <!--[if mso]><style>table,td{font-family:Arial,sans-serif !important;}</style><![endif]-->
 </head>
-<body style="margin:0;padding:0;background-color:#F7F8FC;font-family:'Segoe UI',Roboto,Arial,sans-serif;color:#0D1226;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;">
+<body style="margin:0;padding:0;background-color:#F8FAFC;font-family:'Segoe UI',Roboto,Arial,sans-serif;color:#1E293B;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;">
 
 <!-- TOP STRIPE -->
 <table cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color:#6C31D9;"><tr><td style="height:4px;font-size:1px;line-height:1px;">&nbsp;</td></tr></table>
 
 <!-- HEADER -->
-<table cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color:#ffffff;border-bottom:1px solid #E4E8F0;">
+<table cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color:#ffffff;border-bottom:2px solid #E2E8F0;">
   <tr><td style="padding:0 20px;">
-    <table cellpadding="0" cellspacing="0" border="0" style="max-width:680px;width:100%;margin:0 auto;">
+    <table cellpadding="0" cellspacing="0" border="0" style="max-width:${W}px;width:100%;margin:0 auto;">
       <tr>
-        <td style="padding:16px 0;vertical-align:middle;">
-          ${LOGO_SRC ? `<img src="${LOGO_SRC}" alt="M&P" width="110" style="display:inline-block;height:auto;max-height:40px;">` : '<span style="font-size:16px;font-weight:900;color:#6C31D9;">M&amp;P</span>'}
-          <span style="display:inline-block;width:1px;height:24px;background-color:#E4E8F0;vertical-align:middle;margin:0 12px;"></span>
-          <span style="font-size:11px;font-weight:600;color:#8A93B0;letter-spacing:0.5px;text-transform:uppercase;vertical-align:middle;">Inteligencia Competitiva</span>
+        <td style="padding:14px 0;vertical-align:middle;">
+          ${LOGO_SRC ? `<img src="${LOGO_SRC}" alt="M&P" width="100" style="display:inline-block;height:auto;max-height:36px;vertical-align:middle;">` : '<span style="font-size:16px;font-weight:900;color:#6C31D9;">M&amp;P</span>'}
+          <span style="display:inline-block;width:1px;height:22px;background-color:#E2E8F0;vertical-align:middle;margin:0 12px;"></span>
+          <span style="font-size:10px;font-weight:600;color:#94A3B8;letter-spacing:0.5px;text-transform:uppercase;vertical-align:middle;">Inteligencia Competitiva</span>
         </td>
-        <td style="padding:16px 0;text-align:right;vertical-align:middle;">
-          <span style="font-size:11px;color:#8A93B0;margin-right:12px;">${fecha} · ${hora}</span>
-          <span style="display:inline-block;padding:5px 14px;border-radius:20px;font-size:12px;font-weight:700;color:#3730A3;background-color:#EEF2FF;border:1px solid #C7D2FE;">Genera Chile</span>
-          <span style="display:inline-block;padding:4px 10px;border-radius:20px;font-size:10px;font-weight:700;color:#065F46;background-color:#ECFDF5;border:1px solid #A7F3D0;margin-left:8px;">● LIVE</span>
+        <td style="padding:14px 0;text-align:right;vertical-align:middle;">
+          <span style="font-size:11px;color:#94A3B8;">${fecha} · ${hora}</span><br>
+          <span style="display:inline-block;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;color:#3730A3;background-color:#EEF2FF;border:1px solid #C7D2FE;margin-top:4px;">Genera Chile</span>
+          <span style="display:inline-block;padding:3px 8px;border-radius:20px;font-size:9px;font-weight:700;color:#065F46;background-color:#ECFDF5;border:1px solid #A7F3D0;margin-left:4px;">● LIVE</span>
         </td>
       </tr>
     </table>
@@ -517,60 +546,57 @@ function generarHtmlReporte({ hoy, postsIG, postsLinkedin, competidoresConPostIG
 </table>
 
 <!-- HERO -->
-<table cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color:#ffffff;border-bottom:1px solid #E4E8F0;">
-  <tr><td style="padding:28px 20px 24px;">
-    <table cellpadding="0" cellspacing="0" border="0" style="max-width:680px;width:100%;margin:0 auto;">
+<table cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color:#ffffff;border-bottom:1px solid #E2E8F0;">
+  <tr><td style="padding:24px 20px;">
+    <table cellpadding="0" cellspacing="0" border="0" style="max-width:${W}px;width:100%;margin:0 auto;">
       <tr>
         <td style="vertical-align:bottom;">
-          <h1 style="margin:0;font-size:24px;font-weight:900;color:#0D1226;letter-spacing:-0.5px;line-height:1.2;">Radar de Competencia</h1>
-          <h1 style="margin:0;font-size:24px;font-weight:900;color:#6C31D9;letter-spacing:-0.5px;line-height:1.2;">Software RRHH &amp; Nóminas</h1>
-          <p style="margin:6px 0 0;font-size:13px;color:#8A93B0;">Instagram · LinkedIn · Ofertas laborales · Actualización diaria</p>
+          <span style="font-size:22px;font-weight:900;color:#1E293B;">Radar de Competencia</span><br>
+          <span style="font-size:22px;font-weight:900;color:#6C31D9;">Software RRHH &amp; Nóminas</span><br>
+          <span style="font-size:12px;color:#94A3B8;margin-top:4px;">Instagram · LinkedIn · Ofertas laborales · Actualización diaria</span>
         </td>
-        <td style="vertical-align:bottom;text-align:right;">
-          ${chipsHtml}
-        </td>
+        <td style="vertical-align:bottom;text-align:right;">${chipsHtml}</td>
       </tr>
     </table>
   </td></tr>
 </table>
 
 <!-- BODY -->
-<table cellpadding="0" cellspacing="0" border="0" style="max-width:680px;width:100%;margin:0 auto;padding:0 20px;">
+<table cellpadding="0" cellspacing="0" border="0" style="max-width:${W}px;width:100%;margin:0 auto;">
 
-  <!-- KPIs (4 columnas) -->
-  <tr><td style="padding:28px 0 0;">
+  <!-- KPIs -->
+  <tr><td style="padding:24px 20px 0;">
     <table cellpadding="0" cellspacing="0" border="0" width="100%">
       <tr>
-        <td style="width:25%;padding:0 4px 0 0;vertical-align:top;">
-          <table cellpadding="0" cellspacing="0" border="0" style="width:100%;background-color:#fff;border:1px solid #E4E8F0;border-radius:10px;border-top:3px solid #6C31D9;">
-            <tr><td style="padding:18px 16px 14px;">
-              <span style="font-size:32px;font-weight:900;color:#6C31D9;letter-spacing:-2px;">${totalPosts}</span><br>
-              <span style="font-size:10px;font-weight:600;color:#8A93B0;text-transform:uppercase;letter-spacing:0.5px;">Posts (72h)</span>
+        <td style="width:25%;padding-right:6px;vertical-align:top;">
+          <table cellpadding="0" cellspacing="0" border="0" style="width:100%;background-color:#fff;border:1px solid #E2E8F0;border-radius:8px;border-top:3px solid #6C31D9;">
+            <tr><td style="padding:16px 14px;">
+              <span style="font-size:28px;font-weight:900;color:#6C31D9;">${postsIG.length}</span><br>
+              <span style="font-size:9px;font-weight:700;color:#94A3B8;text-transform:uppercase;">Posts IG</span>
             </td></tr>
           </table>
         </td>
-        <td style="width:25%;padding:0 4px;vertical-align:top;">
-          <table cellpadding="0" cellspacing="0" border="0" style="width:100%;background-color:#fff;border:1px solid #E4E8F0;border-radius:10px;border-top:3px solid #6C31D9;">
-            <tr><td style="padding:18px 16px 14px;">
-              <span style="font-size:32px;font-weight:900;color:#0D1226;letter-spacing:-2px;">${(totalLikes + totalComentarios + totalCompartidos).toLocaleString('es-CL')}</span><br>
-              <span style="font-size:10px;font-weight:600;color:#8A93B0;text-transform:uppercase;letter-spacing:0.5px;">Interacciones</span>
+        <td style="width:25%;padding:0 3px;vertical-align:top;">
+          <table cellpadding="0" cellspacing="0" border="0" style="width:100%;background-color:#fff;border:1px solid #E2E8F0;border-radius:8px;border-top:3px solid #2563EB;">
+            <tr><td style="padding:16px 14px;">
+              <span style="font-size:28px;font-weight:900;color:#2563EB;">${postsLinkedin.length}</span><br>
+              <span style="font-size:9px;font-weight:700;color:#94A3B8;text-transform:uppercase;">Posts LinkedIn</span>
             </td></tr>
           </table>
         </td>
-        <td style="width:25%;padding:0 4px;vertical-align:top;">
-          <table cellpadding="0" cellspacing="0" border="0" style="width:100%;background-color:#fff;border:1px solid #E4E8F0;border-radius:10px;border-top:3px solid ${totalOfertas > 0 ? '#DC2626' : '#6C31D9'};">
-            <tr><td style="padding:18px 16px 14px;">
-              <span style="font-size:32px;font-weight:900;color:${totalOfertas > 0 ? '#DC2626' : '#0D1226'};letter-spacing:-2px;">${totalOfertas}</span><br>
-              <span style="font-size:10px;font-weight:600;color:#8A93B0;text-transform:uppercase;letter-spacing:0.5px;">Ofertas laborales</span>
-              ${totalOfertas > 0 ? `<br><span style="font-size:11px;font-weight:600;color:#DC2626;">⚠ ${ofertas.map(p => p._comp?.nombre || p._competidor).filter((v,i,a) => a.indexOf(v) === i).join(' + ')}</span>` : ''}
+        <td style="width:25%;padding:0 3px;vertical-align:top;">
+          <table cellpadding="0" cellspacing="0" border="0" style="width:100%;background-color:#fff;border:1px solid #E2E8F0;border-radius:8px;border-top:3px solid ${totalOfertas > 0 ? '#DC2626' : '#10B981'};">
+            <tr><td style="padding:16px 14px;">
+              <span style="font-size:28px;font-weight:900;color:${totalOfertas > 0 ? '#DC2626' : '#1E293B'};">${totalOfertas}</span><br>
+              <span style="font-size:9px;font-weight:700;color:#94A3B8;text-transform:uppercase;">Ofertas lab.</span>
             </td></tr>
           </table>
         </td>
-        <td style="width:25%;padding:0 0 0 4px;vertical-align:top;">
-          <table cellpadding="0" cellspacing="0" border="0" style="width:100%;background-color:#fff;border:1px solid #E4E8F0;border-radius:10px;border-top:3px solid ${totalPromos > 0 ? '#D97706' : '#6C31D9'};">
-            <tr><td style="padding:18px 16px 14px;">
-              <span style="font-size:32px;font-weight:900;color:#0D1226;letter-spacing:-2px;">${totalPromos}</span><br>
-              <span style="font-size:10px;font-weight:600;color:#8A93B0;text-transform:uppercase;letter-spacing:0.5px;">Promociones</span>
+        <td style="width:25%;padding-left:6px;vertical-align:top;">
+          <table cellpadding="0" cellspacing="0" border="0" style="width:100%;background-color:#fff;border:1px solid #E2E8F0;border-radius:8px;border-top:3px solid ${totalPromos > 0 ? '#D97706' : '#10B981'};">
+            <tr><td style="padding:16px 14px;">
+              <span style="font-size:28px;font-weight:900;color:#1E293B;">${totalPromos}</span><br>
+              <span style="font-size:9px;font-weight:700;color:#94A3B8;text-transform:uppercase;">Promos</span>
             </td></tr>
           </table>
         </td>
@@ -578,98 +604,104 @@ function generarHtmlReporte({ hoy, postsIG, postsLinkedin, competidoresConPostIG
     </table>
   </td></tr>
 
-  <!-- SECTION: ALERTAS -->
-  <tr><td style="padding:28px 0 0;">
-    <table cellpadding="0" cellspacing="0" border="0" width="100%">
-      <tr>
-        <td style="font-size:11px;font-weight:800;color:#8A93B0;text-transform:uppercase;letter-spacing:1.2px;padding-bottom:12px;">Alertas ejecutivas del día
-          <span style="display:inline-block;width:60%;border-bottom:1px solid #E4E8F0;vertical-align:middle;margin-left:10px;">&nbsp;</span>
-        </td>
-      </tr>
-    </table>
-    <table cellpadding="0" cellspacing="0" border="0" style="width:100%;background-color:#0D1226;border-radius:12px;">
-      <tr><td style="padding:24px 28px;">
+  <!-- ALERTAS -->
+  <tr><td style="padding:24px 20px 0;">
+    <table cellpadding="0" cellspacing="0" border="0" style="width:100%;background-color:#0F172A;border-radius:10px;">
+      <tr><td style="padding:22px 24px;">
         <table cellpadding="0" cellspacing="0" border="0" width="100%">
           <tr>
-            <td style="font-size:11px;font-weight:800;color:#555E7A;text-transform:uppercase;letter-spacing:1.2px;padding-bottom:16px;">Hallazgos · ${fecha}</td>
-            ${alertCount > 0 ? `<td style="text-align:right;padding-bottom:16px;"><span style="display:inline-block;padding:3px 10px;border-radius:20px;background-color:#4A1515;color:#FCA5A5;font-size:11px;font-weight:700;">${alertCount} alerta${alertCount > 1 ? 's' : ''}</span></td>` : ''}
+            <td style="font-size:11px;font-weight:800;color:#64748B;text-transform:uppercase;letter-spacing:1px;padding-bottom:14px;">⚡ Alertas ejecutivas · ${fecha}</td>
+            ${alertCount > 0 ? `<td style="text-align:right;padding-bottom:14px;"><span style="display:inline-block;padding:3px 10px;border-radius:20px;background-color:#4A1515;color:#FCA5A5;font-size:10px;font-weight:700;">${alertCount} alerta${alertCount > 1 ? 's' : ''}</span></td>` : ''}
           </tr>
         </table>
-        <table cellpadding="0" cellspacing="0" border="0" width="100%">
-          ${alertRows}
-        </table>
+        <table cellpadding="0" cellspacing="0" border="0" width="100%">${alertRows}</table>
       </td></tr>
     </table>
   </td></tr>
 
-  <!-- SECTION: ENGAGEMENT -->
-  <tr><td style="padding:28px 0 0;">
-    <table cellpadding="0" cellspacing="0" border="0" width="100%">
-      <tr><td style="font-size:11px;font-weight:800;color:#8A93B0;text-transform:uppercase;letter-spacing:1.2px;padding-bottom:12px;">Engagement por competidor
-        <span style="display:inline-block;width:55%;border-bottom:1px solid #E4E8F0;vertical-align:middle;margin-left:10px;">&nbsp;</span>
-      </td></tr>
-    </table>
-    <table cellpadding="0" cellspacing="0" border="0" style="width:100%;background-color:#fff;border:1px solid #E4E8F0;border-radius:12px;">
-      <tr><td style="padding:12px 16px;background-color:#F7F8FC;border-bottom:1px solid #E4E8F0;font-size:11px;font-weight:600;color:#8A93B0;">
-        <span style="display:inline-block;width:10px;height:10px;background-color:#6C31D9;border-radius:3px;vertical-align:middle;margin-right:4px;"></span> Likes
-        &nbsp;&nbsp;
-        <span style="display:inline-block;width:10px;height:10px;background-color:#0EA5E9;border-radius:3px;vertical-align:middle;margin-right:4px;"></span> Comentarios
-        &nbsp;&nbsp;
-        <span style="display:inline-block;width:10px;height:10px;background-color:#10B981;border-radius:3px;vertical-align:middle;margin-right:4px;"></span> Compartidos
-      </td></tr>
-      <tr><td style="padding:4px 8px;">
-        <table cellpadding="0" cellspacing="0" border="0" width="100%">
-          ${engRows}
-        </table>
-      </td></tr>
-    </table>
+  <!-- ═══════ INSTAGRAM ═══════ -->
+  <tr><td style="padding:0 20px;">
+    ${sectionTitle('📸', 'Instagram — Resumen por competidor', '#E91E8C').replace('<tr><td', '<tr><td')}
   </td></tr>
-
-  <!-- SECTION: RANKING -->
-  <tr><td style="padding:28px 0 0;">
-    <table cellpadding="0" cellspacing="0" border="0" width="100%">
-      <tr><td style="font-size:11px;font-weight:800;color:#8A93B0;text-transform:uppercase;letter-spacing:1.2px;padding-bottom:12px;">Ranking de actividad
-        <span style="display:inline-block;width:60%;border-bottom:1px solid #E4E8F0;vertical-align:middle;margin-left:10px;">&nbsp;</span>
-      </td></tr>
-    </table>
-    <table cellpadding="0" cellspacing="0" border="0" style="width:100%;background-color:#fff;border:1px solid #E4E8F0;border-radius:12px;border-collapse:separate;">
+  <tr><td style="padding:0 20px;">
+    <table cellpadding="0" cellspacing="0" border="0" style="width:100%;background-color:#fff;border:1px solid #E2E8F0;border-radius:10px;">
       <tr>
-        <th style="padding:10px 16px;font-size:10px;font-weight:700;color:#8A93B0;text-transform:uppercase;letter-spacing:0.6px;background-color:#F7F8FC;text-align:center;border-bottom:1px solid #E4E8F0;width:40px;">#</th>
-        <th style="padding:10px 16px;font-size:10px;font-weight:700;color:#8A93B0;text-transform:uppercase;letter-spacing:0.6px;background-color:#F7F8FC;text-align:left;border-bottom:1px solid #E4E8F0;">Empresa</th>
-        <th style="padding:10px 16px;font-size:10px;font-weight:700;color:#8A93B0;text-transform:uppercase;letter-spacing:0.6px;background-color:#F7F8FC;text-align:center;border-bottom:1px solid #E4E8F0;">Posts</th>
-        <th style="padding:10px 16px;font-size:10px;font-weight:700;color:#8A93B0;text-transform:uppercase;letter-spacing:0.6px;background-color:#F7F8FC;text-align:center;border-bottom:1px solid #E4E8F0;">Likes</th>
-        <th style="padding:10px 16px;font-size:10px;font-weight:700;color:#8A93B0;text-transform:uppercase;letter-spacing:0.6px;background-color:#F7F8FC;text-align:center;border-bottom:1px solid #E4E8F0;">Estado</th>
+        <th style="${TH}text-align:left;">Empresa</th>
+        <th style="${TH}text-align:center;">Posts</th>
+        <th style="${TH}text-align:center;">❤️ Me gusta</th>
+        <th style="${TH}text-align:center;">💬 Comentarios</th>
+        <th style="${TH}text-align:center;">Estado</th>
       </tr>
-      ${rankRows}
+      ${igRows}
     </table>
   </td></tr>
 
-  <!-- SECTION: POSTS DESTACADOS -->
-  <tr><td style="padding:28px 0 0;">
-    <table cellpadding="0" cellspacing="0" border="0" width="100%">
-      <tr><td style="font-size:11px;font-weight:800;color:#8A93B0;text-transform:uppercase;letter-spacing:1.2px;padding-bottom:12px;">Posts destacados (72h)
-        <span style="display:inline-block;width:60%;border-bottom:1px solid #E4E8F0;vertical-align:middle;margin-left:10px;">&nbsp;</span>
-      </td></tr>
-    </table>
-    <table cellpadding="0" cellspacing="0" border="0" width="100%">
-      ${postsGrid}
+  ${topIG.length > 0 ? `
+  <tr><td style="padding:14px 20px 0;">
+    <span style="font-size:11px;font-weight:700;color:#E91E8C;text-transform:uppercase;letter-spacing:0.5px;">🔥 Posts calientes Instagram</span>
+  </td></tr>
+  <tr><td style="padding:8px 20px 0;">
+    ${topIG.map(p => postCard(p, 'Instagram')).join('')}
+  </td></tr>` : ''}
+
+  <!-- ═══════ LINKEDIN ═══════ -->
+  <tr><td style="padding:0 20px;">
+    ${sectionTitle('💼', 'LinkedIn — Resumen por competidor', '#2563EB').replace('<tr><td', '<tr><td')}
+  </td></tr>
+  <tr><td style="padding:0 20px;">
+    <table cellpadding="0" cellspacing="0" border="0" style="width:100%;background-color:#fff;border:1px solid #E2E8F0;border-radius:10px;">
+      <tr>
+        <th style="${TH}text-align:left;">Empresa</th>
+        <th style="${TH}text-align:center;">Posts</th>
+        <th style="${TH}text-align:center;">👍 Reacciones</th>
+        <th style="${TH}text-align:center;">💬 Comentarios</th>
+        <th style="${TH}text-align:center;">🔁 Compartidos</th>
+        <th style="${TH}text-align:center;">Estado</th>
+      </tr>
+      ${liRows}
     </table>
   </td></tr>
+
+  ${topLI.length > 0 ? `
+  <tr><td style="padding:14px 20px 0;">
+    <span style="font-size:11px;font-weight:700;color:#2563EB;text-transform:uppercase;letter-spacing:0.5px;">🔥 Posts calientes LinkedIn</span>
+  </td></tr>
+  <tr><td style="padding:8px 20px 0;">
+    ${topLI.map(p => postCard(p, 'LinkedIn')).join('')}
+  </td></tr>` : `
+  <tr><td style="padding:10px 20px 0;">
+    <span style="font-size:12px;color:#94A3B8;font-style:italic;">Sin posts de LinkedIn en las últimas 72h.</span>
+  </td></tr>`}
+
+  <!-- ═══════ OFERTAS LABORALES ═══════ -->
+  ${totalOfertas > 0 ? `
+  <tr><td style="padding:0 20px;">
+    ${sectionTitle('🚨', 'Ofertas laborales detectadas (' + totalOfertas + ')', '#DC2626').replace('<tr><td', '<tr><td')}
+  </td></tr>
+  <tr><td style="padding:0 20px;">
+    <table cellpadding="0" cellspacing="0" border="0" style="width:100%;background-color:#fff;border:1px solid #FEE2E2;border-radius:10px;border-top:3px solid #DC2626;">
+      <tr>
+        <th style="${TH}text-align:left;width:100px;">Empresa</th>
+        <th style="${TH}text-align:left;width:70px;">Red</th>
+        <th style="${TH}text-align:left;">Contenido</th>
+      </tr>
+      ${ofertasRows}
+    </table>
+  </td></tr>` : ''}
 
 </table>
 
 <!-- FOOTER -->
-<table cellpadding="0" cellspacing="0" border="0" style="max-width:680px;width:100%;margin:36px auto 0;">
-  <tr><td style="border-top:1px solid #E4E8F0;padding:20px 20px 40px;">
+<table cellpadding="0" cellspacing="0" border="0" style="max-width:${W}px;width:100%;margin:32px auto 0;">
+  <tr><td style="border-top:2px solid #E2E8F0;padding:18px 20px 40px;">
     <table cellpadding="0" cellspacing="0" border="0" width="100%">
       <tr>
         <td style="vertical-align:middle;">
-          ${LOGO_SRC ? `<img src="${LOGO_SRC}" alt="M&P" width="80" style="display:inline-block;height:auto;max-height:28px;vertical-align:middle;">` : '<span style="font-size:12px;font-weight:900;color:#6C31D9;">M&amp;P</span>'}
-          <span style="font-size:12px;font-weight:600;color:#8A93B0;vertical-align:middle;margin-left:10px;">Muller &amp; Pérez · Inteligencia Competitiva</span>
+          ${LOGO_SRC ? `<img src="${LOGO_SRC}" alt="M&P" width="80" style="display:inline-block;height:auto;max-height:26px;vertical-align:middle;">` : '<span style="font-weight:900;color:#6C31D9;">M&amp;P</span>'}
+          <span style="font-size:11px;font-weight:600;color:#94A3B8;vertical-align:middle;margin-left:8px;">Muller &amp; Pérez · Inteligencia Competitiva</span>
         </td>
-        <td style="text-align:right;font-size:11px;color:#8A93B0;line-height:1.7;vertical-align:middle;">
-          Reporte confidencial · Genera Chile<br>
-          ${fecha} · ${hora}
+        <td style="text-align:right;font-size:10px;color:#94A3B8;line-height:1.7;">
+          Confidencial · Genera Chile<br>${fecha} · ${hora}
         </td>
       </tr>
     </table>
