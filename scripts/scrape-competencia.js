@@ -15,23 +15,55 @@ const COMPETIDORES = [
   { nombre: 'Viggo',                instagram: 'viggo_chile',         linkedin: 'https://www.linkedin.com/company/viggo-chile/',       facebook: 'https://www.facebook.com/ViggoChile/',                                       web: 'viggo.cl' },
   { nombre: 'Tándem Industrial',    instagram: 'tandem.industrial',   linkedin: 'https://www.linkedin.com/company/tandem-industrial/', facebook: 'https://www.facebook.com/tandemindustrial.cl',                               web: 'tandemindustrial.cl' },
   { nombre: 'Yanguas',              instagram: 'yanguas.cl',          linkedin: 'https://www.linkedin.com/company/buses-yanguas/',     facebook: null,                                                                         web: 'yanguas.cl' },
-  { nombre: 'Buses JM',             instagram: 'busesjm.cl',          linkedin: null,                                                 facebook: 'https://www.facebook.com/BusesjmEmpresas/',                                  web: 'busesjm.cl' },
+  { nombre: 'Buses JM',             instagram: 'busesjm.cl',          linkedin: 'https://www.linkedin.com/company/buses-jm-empresas/', facebook: 'https://www.facebook.com/BusesjmEmpresas/',                                  web: 'busesjm.cl' },
   { nombre: 'CVU',                  instagram: 'transportescvu_ssee', linkedin: 'https://www.linkedin.com/company/transportes-cvu/',  facebook: null,                                                                         web: 'transportescvu.cl' },
-  { nombre: 'Nortrans',             instagram: 'nortransspa',         linkedin: 'https://www.linkedin.com/company/nortrans-ltda/',    facebook: 'https://www.facebook.com/sociedaddetransportesnortransLtda',                 web: 'nortrans.cl' },
+  { nombre: 'Nortrans',             instagram: 'nortransspa',         linkedin: 'https://www.linkedin.com/company/sociedad-de-transportes-nortrans-ltda/', facebook: 'https://www.facebook.com/sociedaddetransportesnortransLtda',                 web: 'nortrans.cl' },
   { nombre: 'Géminis',              instagram: 'busesgeminis',        linkedin: 'https://www.linkedin.com/company/geminis/',          facebook: 'https://www.facebook.com/Buses-G%C3%A9minis-210346879150954/',              web: 'geminis.cl' },
-  { nombre: 'Verschae',             instagram: 'flota_verschae',      linkedin: null,                                                 facebook: 'https://www.facebook.com/profile.php?id=100063564674214',                   web: 'verschae.cl' },
+  { nombre: 'Verschae',             instagram: 'flota_verschae',      linkedin: 'https://www.linkedin.com/company/flota-verschae/',   facebook: 'https://www.facebook.com/profile.php?id=100063564674214',                   web: 'verschae.cl' },
   { nombre: 'Transportes Calderón', instagram: 'transportescalderon', linkedin: null,                                                 facebook: null,                                                                         web: 'transportescalderon.cl' },
   { nombre: 'Pullman Yuris',        instagram: 'busesyuris',          linkedin: null,                                                 facebook: 'https://www.facebook.com/busesyuris',                                        web: 'pullmanyuris.cl' },
   { nombre: 'Sokol',                instagram: null,                  linkedin: 'https://www.linkedin.com/company/sokol-s-a/',        facebook: null,                                                                         web: 'gruposokol.com' },
-  { nombre: 'Pullman San Luis',     instagram: null,                  linkedin: null,                                                 facebook: null,                                                                         web: 'pullmansanluis.cl' },
+  { nombre: 'Pullman San Luis',     instagram: 'pullmansanluis',      linkedin: 'https://www.linkedin.com/company/pullman-san-luis-spa/', facebook: null,                                                                      web: 'pullmansanluis.cl' },
 ]
 
 // ─── Detección de ofertas laborales ─────────────────────────────────────────
 const KEYWORDS_OFERTA = [
+  // Señales genéricas de publicación de empleo
   'se busca', 'buscamos', 'oferta laboral', 'postula', 'postúlate', 'vacante',
-  'cargo disponible', 'remuneración', 'conductor', 'chofer', 'mecánico', 'técnico',
-  'operador', 'jornada', 'contrato', 'enviar cv', 'envía tu cv', 'trabaja con nosotros',
-  'únete a', 'incorporar', 'requisitos', 'experiencia comprobable', 'disponibilidad',
+  'cargo disponible', 'remuneración', 'jornada', 'contrato', 'enviar cv', 'envía tu cv',
+  'trabaja con nosotros', 'únete a', 'únete al equipo', 'incorporar', 'requisitos',
+  'experiencia comprobable', 'disponibilidad', 'join our team', 'we are hiring', 'hiring',
+  'open position', 'apply now',
+  // Cargos operativos — transporte y logística
+  'conductor', 'chofer', 'chofer profesional', 'conductor profesional',
+  'mecánico', 'mecánico diésel', 'mecánico automotriz', 'técnico mecánico',
+  'técnico', 'técnico de mantenimiento', 'técnico electromecánico',
+  'operador', 'operador de flota', 'operador de bus',
+  'electricista', 'soldador', 'vulcanizador', 'pintor automotriz',
+  'auxiliar de mantención', 'ayudante mecánico', 'lavador',
+  // Cargos administrativos
+  'administrativo', 'asistente administrativo', 'secretaria', 'recepcionista',
+  'asistente de rrhh', 'asistente recursos humanos', 'analista de personal',
+  'encargado de remuneraciones', 'analista de remuneraciones',
+  'asistente contable', 'contador', 'analista contable',
+  'ejecutivo de ventas', 'ejecutivo comercial', 'asesor comercial',
+  'analista de operaciones', 'coordinador de operaciones', 'planificador de rutas',
+  'despachador', 'inspector de flota', 'supervisor de tráfico',
+  // Cargos medios
+  'jefe de taller', 'jefe de mantenimiento', 'jefe de operaciones',
+  'jefe de flota', 'jefe de rrhh', 'jefe de recursos humanos',
+  'jefe de administración', 'jefe comercial', 'jefe de ventas',
+  'coordinador', 'supervisor', 'encargado',
+  'prevencionista de riesgos', 'encargado de seguridad', 'hseq',
+  // Cargos altos / gerencia
+  'gerente', 'gerente de operaciones', 'gerente general', 'gerente comercial',
+  'gerente de administración', 'gerente de finanzas',
+  'director', 'subgerente', 'jefe de área',
+  // Profesionales / soporte
+  'ingeniero', 'ingeniero de mantenimiento', 'ingeniero de transporte',
+  'analista de datos', 'encargado de tecnología', 'soporte ti',
+  'community manager', 'diseñador', 'marketing',
+  'abogado', 'asesor legal',
 ]
 
 function esOfertaLaboral(texto) {
@@ -146,11 +178,31 @@ async function scrapeLinkedin(hace24h) {
     )
     if (!res.ok) { console.warn(`⚠️ LinkedIn: ${res.status}`); return [] }
     const all = await res.json()
+    console.log(`   LinkedIn total posts recibidos: ${all.length}`)
+    if (all.length > 0) {
+      const sample = all[0]
+      console.log(`   LinkedIn sample fields: ${Object.keys(sample).join(', ')}`)
+    }
     const recientes = all.filter(p => {
-      const fecha = p.postedAt || p.publishedAt || p.date
-      return fecha && new Date(fecha) > hace24h
+      const fecha = p.postedAt || p.posted_at || p.publishedAt || p.date || p.timestamp
+      if (!fecha) {
+        // Intentar parsear timeSincePosted ("3d", "1w", etc.)
+        if (p.timeSincePosted) {
+          const tsp = p.timeSincePosted.trim().toLowerCase()
+          const num = parseInt(tsp)
+          if (!isNaN(num)) {
+            if (tsp.includes('h') && num <= 24) return true
+            if (tsp.includes('d') && num <= 1) return true
+          }
+        }
+        return false
+      }
+      const fechaDate = typeof fecha === 'number'
+        ? (fecha > 1e12 ? new Date(fecha) : new Date(fecha * 1000))
+        : new Date(fecha)
+      return fechaDate > hace24h
     })
-    console.log(`✅ LinkedIn: ${recientes.length} posts en últimas 24h`)
+    console.log(`✅ LinkedIn: ${recientes.length} posts en últimas 24h (de ${all.length} total)`)
     return recientes
   } catch (err) {
     console.warn('⚠️ Error LinkedIn (se omite):', err.message)
