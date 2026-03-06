@@ -2,7 +2,7 @@ name: Reporte Diario Competencia Hualpen
 
 on:
   schedule:
-    - cron: '50 11 * * 1-5'
+    - cron: '30 11 * * 1-5'  # 08:30 AM Chile (UTC-3)
   workflow_dispatch:
 
 jobs:
