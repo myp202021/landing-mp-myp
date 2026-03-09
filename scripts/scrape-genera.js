@@ -80,80 +80,70 @@ function esPromocion(texto) {
 }
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
+// Instagram: caption, likesCount, commentsCount, ownerUsername, timestamp, url, shortCode
+// harvestapi LinkedIn: content (string), engagement.likes/comments/shares, author.name,
+//   postedAt.date (ISO) / postedAt.timestamp (Unix ms), linkedinUrl, query (URL input)
+
 function getTextoPost(p) {
-  // caption (IG), text (LI), commentary (LI), content (puede ser string u objeto)
+  // IG
   if (p.caption) return p.caption
-  if (p.text) return p.text
-  if (p.commentary) return p.commentary
-  if (p.content) {
-    if (typeof p.content === 'string') return p.content
-    // harvestapi: content puede ser objeto con text, body, commentary, etc.
-    if (typeof p.content === 'object') {
-      return p.content.text || p.content.body || p.content.commentary
-        || p.content.originalContent || p.content.rawText || ''
-    }
-  }
-  if (p.message) return p.message
-  // socialContent puede tener el texto también
-  if (p.socialContent && typeof p.socialContent === 'object') {
-    return p.socialContent.text || p.socialContent.body || p.socialContent.commentary || ''
-  }
-  return ''
+  // harvestapi LI: content es string
+  if (typeof p.content === 'string') return p.content
+  // fallbacks genéricos
+  return p.text || p.commentary || p.message || ''
 }
 
 function getLikes(p) {
-  if (p.engagement) {
-    return p.engagement.likes || p.engagement.reactions || p.engagement.numLikes || p.engagement.totalReactionCount || 0
-  }
-  if (p.stats) {
-    return p.stats.likes || p.stats.reactions || p.stats.totalReactionCount || 0
-  }
-  if (p.reactions && typeof p.reactions === 'number') return p.reactions
-  return p.likesCount || p.totalReactionCount || p.likes || 0
+  // harvestapi LI
+  if (p.engagement) return p.engagement.likes || 0
+  // IG
+  return p.likesCount || 0
 }
 
 function getComentarios(p) {
-  if (p.engagement) return p.engagement.comments || p.engagement.numComments || 0
-  if (p.stats) return p.stats.comments || 0
-  if (typeof p.comments === 'number') return p.comments
-  if (Array.isArray(p.comments)) return p.comments.length
-  return p.commentsCount || p.commentCount || 0
+  // harvestapi LI
+  if (p.engagement) return p.engagement.comments || 0
+  // IG
+  return p.commentsCount || 0
 }
 
 function getCompartidos(p) {
-  if (p.engagement) return p.engagement.shares || p.engagement.reposts || p.engagement.numShares || 0
-  if (p.stats) return p.stats.shares || p.stats.reposts || 0
-  return p.sharesCount || p.shares || p.repostCount || p.reposts || 0
+  // harvestapi LI
+  if (p.engagement) return p.engagement.shares || 0
+  return 0
 }
 
 function getPostUrl(p) {
-  return p.url || p.post_url || p.postUrl || p.postLink || p.link || ''
+  // harvestapi LI
+  if (p.linkedinUrl) return p.linkedinUrl
+  // IG
+  if (p.url) return p.url
+  if (p.shortCode) return `https://www.instagram.com/p/${p.shortCode}/`
+  return ''
 }
 
 function getAuthorName(p) {
-  // apimaestro: author es un objeto con name, url, etc.
+  // harvestapi LI: author es objeto con name, type, linkedinUrl
   if (p.author && typeof p.author === 'object') return p.author.name || ''
-  if (p.source_company && typeof p.source_company === 'object') return p.source_company.name || ''
-  return p.author || p.companyName || p.authorName || ''
+  return p.companyName || p.authorName || ''
 }
 
 function getAuthorUrl(p) {
-  if (p.author && typeof p.author === 'object') return p.author.url || ''
-  if (p.source_company && typeof p.source_company === 'object') return p.source_company.url || ''
-  return p.companyUrl || p.authorUrl || ''
+  if (p.author && typeof p.author === 'object') return p.author.linkedinUrl || ''
+  return ''
 }
 
 function getFechaPost(p) {
-  let raw = p.timestamp || p.posted_at || p.postedAt || p.publishedAt || p.date || p.time
-    || p.postedDate || p.publishedDate || p.createdAt || p.postedDateTimestamp || null
+  // IG: p.timestamp es string ISO directa
+  if (p.timestamp && typeof p.timestamp === 'string') return p.timestamp
 
-  // harvestapi devuelve postedAt como objeto: { date: "2026-03-07T...", timestamp: 1747..., postedAgoShort: "3d" }
-  if (raw && typeof raw === 'object') {
-    if (raw.date) return typeof raw.date === 'string' ? raw.date : new Date(raw.date).toISOString()
-    if (raw.dateTime) return raw.dateTime
-    if (raw.timestamp) return new Date(raw.timestamp > 1e12 ? raw.timestamp : raw.timestamp * 1000).toISOString()
-    if (raw.postedAgoShort || raw.text) {
-      const tsp = (raw.postedAgoShort || raw.text).trim().toLowerCase()
+  // harvestapi LI: postedAt es objeto { date: "ISO", timestamp: Unix_ms, postedAgoShort: "6d" }
+  if (p.postedAt && typeof p.postedAt === 'object') {
+    if (p.postedAt.date) return p.postedAt.date
+    if (p.postedAt.timestamp) return new Date(p.postedAt.timestamp).toISOString()
+    // fallback: postedAgoShort "6d", "2h", etc.
+    if (p.postedAt.postedAgoShort) {
+      const tsp = p.postedAt.postedAgoShort.trim().toLowerCase()
       const num = parseInt(tsp)
       if (!isNaN(num)) {
         const now = Date.now()
@@ -161,32 +151,15 @@ function getFechaPost(p) {
         if (tsp.includes('d')) return new Date(now - num * 86400000).toISOString()
         if (tsp.includes('w')) return new Date(now - num * 604800000).toISOString()
         if (tsp.includes('mo')) return new Date(now - num * 2592000000).toISOString()
-        if (tsp.includes('y')) return new Date(now - num * 31536000000).toISOString()
       }
     }
-    return null
   }
 
-  // timeSincePosted: "3d", "1w", "2h", "5mo" — convertir a Date
-  if (!raw && p.timeSincePosted) {
-    const tsp = p.timeSincePosted.trim().toLowerCase()
-    const num = parseInt(tsp)
-    if (!isNaN(num)) {
-      const now = Date.now()
-      if (tsp.includes('h')) return new Date(now - num * 3600000).toISOString()
-      if (tsp.includes('d')) return new Date(now - num * 86400000).toISOString()
-      if (tsp.includes('w')) return new Date(now - num * 604800000).toISOString()
-      if (tsp.includes('mo')) return new Date(now - num * 2592000000).toISOString()
-      if (tsp.includes('y')) return new Date(now - num * 31536000000).toISOString()
-    }
-    return null
+  // fallback genérico
+  if (p.timestamp && typeof p.timestamp === 'number') {
+    return new Date(p.timestamp > 1e12 ? p.timestamp : p.timestamp * 1000).toISOString()
   }
-
-  if (!raw) return null
-  if (typeof raw === 'number') {
-    return raw > 1e12 ? new Date(raw).toISOString() : new Date(raw * 1000).toISOString()
-  }
-  return raw
+  return null
 }
 
 
