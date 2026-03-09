@@ -312,6 +312,7 @@ async function tryLinkedinActor(actorId, input, hace7d, conLI) {
       if (sample.engagement) console.log(`   📊 engagement = ${JSON.stringify(sample.engagement)}`)
       if (sample.reactions) console.log(`   📊 reactions = ${JSON.stringify(sample.reactions).substring(0, 200)}`)
       if (sample.stats) console.log(`   📊 stats = ${JSON.stringify(sample.stats)}`)
+      console.log(`   🔗 query RAW = ${JSON.stringify(sample.query)}`)
       // Mostrar fechas de los primeros 5 posts
       all.slice(0, 5).forEach((p, i) => {
         const f = getFechaPost(p)
@@ -343,8 +344,9 @@ async function tryLinkedinActor(actorId, input, hace7d, conLI) {
         if (compUrl && slug && compUrl.includes(slug)) return true
         // Match por source_company
         if (p.source_company?.url && slug && p.source_company.url.includes(slug)) return true
-        // Match por query (la URL que le pasamos a harvestapi)
-        if (p.query && slug && p.query.includes(slug)) return true
+        // Match por query (la URL que le pasamos a harvestapi — puede ser string u objeto)
+        const queryStr = typeof p.query === 'string' ? p.query : (p.query?.url || p.query?.value || '')
+        if (queryStr && slug && queryStr.includes(slug)) return true
         // Match por linkedinUrl del post
         if (p.linkedinUrl && slug && p.linkedinUrl.includes(slug)) return true
         return false
