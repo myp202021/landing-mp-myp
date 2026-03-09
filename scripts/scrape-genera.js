@@ -147,9 +147,26 @@ function getAuthorUrl(p) {
 }
 
 function getFechaPost(p) {
-  // apimaestro usa posted_at (snake_case)
-  const raw = p.timestamp || p.posted_at || p.postedAt || p.publishedAt || p.date || p.time
+  let raw = p.timestamp || p.posted_at || p.postedAt || p.publishedAt || p.date || p.time
     || p.postedDate || p.publishedDate || p.createdAt || p.postedDateTimestamp || null
+
+  // harvestapi devuelve postedAt como objeto: { text: "2d", dateTime: "2026-03-07T..." }
+  if (raw && typeof raw === 'object') {
+    if (raw.dateTime) return raw.dateTime
+    if (raw.text) {
+      const tsp = raw.text.trim().toLowerCase()
+      const num = parseInt(tsp)
+      if (!isNaN(num)) {
+        const now = Date.now()
+        if (tsp.includes('h')) return new Date(now - num * 3600000).toISOString()
+        if (tsp.includes('d')) return new Date(now - num * 86400000).toISOString()
+        if (tsp.includes('w')) return new Date(now - num * 604800000).toISOString()
+        if (tsp.includes('mo')) return new Date(now - num * 2592000000).toISOString()
+        if (tsp.includes('y')) return new Date(now - num * 31536000000).toISOString()
+      }
+    }
+    return null
+  }
 
   // timeSincePosted: "3d", "1w", "2h", "5mo" — convertir a Date
   if (!raw && p.timeSincePosted) {
