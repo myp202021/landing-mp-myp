@@ -333,22 +333,21 @@ async function tryLinkedinActor(actorId, input, hace7d, conLI) {
       fechaParseada = true
       return parsed > hace7d
     }).map(p => {
-      // Intentar matchear con competidor por múltiples señales
+      // Matchear con competidor — query.targetUrl es la fuente más confiable
       const compName = getAuthorName(p)
-      const compUrl = getAuthorUrl(p)
+      const queryUrl = typeof p.query === 'string' ? p.query : (p.query?.targetUrl || p.query?.url || '')
+      const authorUrl = p.author?.linkedinUrl || ''
       const matched = conLI.find(c => {
-        const slug = c.linkedin ? c.linkedin.replace('https://www.linkedin.com', '').replace(/\/$/, '') : ''
-        // Match por nombre del autor
-        if (compName && compName.toLowerCase().includes(c.nombre.toLowerCase())) return true
-        // Match por URL del autor
-        if (compUrl && slug && compUrl.includes(slug)) return true
-        // Match por source_company
-        if (p.source_company?.url && slug && p.source_company.url.includes(slug)) return true
-        // Match por query (la URL que le pasamos a harvestapi — puede ser string u objeto)
-        const queryStr = typeof p.query === 'string' ? p.query : (p.query?.url || p.query?.value || '')
-        if (queryStr && slug && queryStr.includes(slug)) return true
-        // Match por linkedinUrl del post
-        if (p.linkedinUrl && slug && p.linkedinUrl.includes(slug)) return true
+        const slug = c.linkedin ? c.linkedin.replace('https://www.linkedin.com/company/', '').replace(/\/$/, '') : ''
+        if (!slug) return false
+        // Match por query.targetUrl (la URL que le pasamos — más confiable)
+        if (queryUrl && queryUrl.includes(slug)) return true
+        // Match por author.linkedinUrl
+        if (authorUrl && authorUrl.includes(slug)) return true
+        // Match por author.universalName
+        if (p.author?.universalName === slug) return true
+        // Match por nombre (case-insensitive)
+        if (compName && compName.toLowerCase() === c.nombre.toLowerCase()) return true
         return false
       })
       return { ...p, _competidor: matched ? matched.nombre : compName }
@@ -374,7 +373,7 @@ async function tryLinkedinActor(actorId, input, hace7d, conLI) {
 function generarHtmlReporte({ hoy, postsIG, postsLinkedin, competidoresConPostIG, sinActividadIG, allPosts }) {
   const fechaObj = new Date(hoy + 'T12:00:00')
   const fecha = fechaObj.toLocaleDateString('es-CL', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' })
-  const hora = '08:30 AM'
+  const hora = new Date().toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit', hour12: true, timeZone: 'America/Santiago' })
 
   const totalPosts = postsIG.length + postsLinkedin.length
   const totalLikesIG = postsIG.reduce((s, p) => s + (getLikes(p) || 0), 0)
@@ -401,7 +400,7 @@ function generarHtmlReporte({ hoy, postsIG, postsLinkedin, competidoresConPostIG
   }
 
   function postCard(p, red) {
-    const comp = p._comp || COMPETIDORES.find(c => c.nombre === p._competidor) || { nombre: '?', color: '#64748B', initial: '?' }
+    const comp = p._comp || COMPETIDORES.find(c => c.nombre === p._competidor) || COMPETIDORES.find(c => c.nombre.toLowerCase() === (p._competidor || '').toLowerCase()) || { nombre: p._competidor || '?', color: '#64748B', initial: (p._competidor || '?')[0] }
     const texto = getTextoPost(p).substring(0, 180)
     const likes = getLikes(p)
     const comentarios = getComentarios(p)
@@ -447,7 +446,7 @@ function generarHtmlReporte({ hoy, postsIG, postsLinkedin, competidoresConPostIG
     }
   })
   postsLinkedin.forEach(p => {
-    const comp = COMPETIDORES.find(c => c.nombre === p._competidor)
+    const comp = COMPETIDORES.find(c => c.nombre === p._competidor) || COMPETIDORES.find(c => c.nombre.toLowerCase() === (p._competidor || '').toLowerCase())
     if (comp && liByComp[comp.nombre]) {
       liByComp[comp.nombre].posts++
       liByComp[comp.nombre].likes += getLikes(p) || 0
@@ -489,7 +488,7 @@ function generarHtmlReporte({ hoy, postsIG, postsLinkedin, competidoresConPostIG
 
   // ── Top posts LI (top 3 por engagement) ──
   const topLI = [...postsLinkedin]
-    .map(p => ({ ...p, _comp: COMPETIDORES.find(c => c.nombre === p._competidor) }))
+    .map(p => ({ ...p, _comp: COMPETIDORES.find(c => c.nombre === p._competidor) || COMPETIDORES.find(c => c.nombre.toLowerCase() === (p._competidor || '').toLowerCase()) }))
     .sort((a, b) => ((getLikes(b)||0)+(getComentarios(b)||0)+(getCompartidos(b)||0)) - ((getLikes(a)||0)+(getComentarios(a)||0)+(getCompartidos(a)||0)))
     .slice(0, 3)
 
@@ -716,6 +715,48 @@ function generarHtmlReporte({ hoy, postsIG, postsLinkedin, competidoresConPostIG
       ${ofertasRows}
     </table>
   </td></tr>` : ''}
+
+  <!-- ═══════ INSIGHTS ═══════ -->
+  <tr><td style="padding:0 20px;">
+    ${sectionTitle('💡', 'Lectura de la semana', '#6C31D9').replace('<tr><td', '<tr><td')}
+  </td></tr>
+  <tr><td style="padding:0 20px;">
+    <table cellpadding="0" cellspacing="0" border="0" style="width:100%;background-color:#FAFAFE;border:1px solid #E2E8F0;border-radius:10px;border-left:4px solid #6C31D9;">
+      <tr><td style="padding:20px 24px;">
+        <table cellpadding="0" cellspacing="0" border="0" width="100%">
+          ${(() => {
+            const insights = []
+            // Competidor más activo en IG
+            const masActivoIG = COMPETIDORES.reduce((max, c) => igByComp[c.nombre].posts > (igByComp[max.nombre]?.posts || 0) ? c : max, COMPETIDORES[0])
+            if (igByComp[masActivoIG.nombre].posts > 0) {
+              insights.push(`<strong>${masActivoIG.nombre}</strong> lidera Instagram con ${igByComp[masActivoIG.nombre].posts} posts y ${igByComp[masActivoIG.nombre].likes} reacciones.`)
+            }
+            // Competidor más activo en LI
+            const masActivoLI = COMPETIDORES.reduce((max, c) => liByComp[c.nombre].posts > (liByComp[max.nombre]?.posts || 0) ? c : max, COMPETIDORES[0])
+            if (liByComp[masActivoLI.nombre].posts > 0) {
+              insights.push(`<strong>${masActivoLI.nombre}</strong> domina LinkedIn con ${liByComp[masActivoLI.nombre].posts} publicaciones y ${liByComp[masActivoLI.nombre].likes} reacciones.`)
+            }
+            // Sin actividad
+            if (sinActividad.length > 0) {
+              insights.push(`<strong>${sinActividad.map(c => c.nombre).join(', ')}</strong> ${sinActividad.length === 1 ? 'no publicó' : 'no publicaron'} en ninguna red esta semana.`)
+            }
+            // Ofertas
+            if (totalOfertas > 0) {
+              insights.push(`Se detectaron <strong>${totalOfertas} oferta${totalOfertas > 1 ? 's' : ''} laboral${totalOfertas > 1 ? 'es' : ''}</strong> — señal de expansión de equipos en la competencia.`)
+            }
+            // Promos
+            if (totalPromos > 0) {
+              insights.push(`<strong>${totalPromos} promoción${totalPromos > 1 ? 'es' : ''}</strong> activa${totalPromos > 1 ? 's' : ''} detectada${totalPromos > 1 ? 's' : ''} — monitorear impacto en mercado.`)
+            }
+            if (insights.length === 0) {
+              insights.push('Semana sin movimientos relevantes. Todos los competidores con actividad estable.')
+            }
+            return insights.map(i => `<tr><td style="padding:5px 0;font-size:13px;color:#475569;line-height:1.6;">→ ${i}</td></tr>`).join('')
+          })()}
+        </table>
+      </td></tr>
+    </table>
+  </td></tr>
 
 </table>
 
