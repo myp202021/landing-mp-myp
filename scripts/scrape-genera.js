@@ -1,9 +1,9 @@
 // scrape-genera.js
 // Radar de Competencia — Genera Chile (Piloto)
-// Corre L-V 08:30 AM via GitHub Actions
+// Corre semanalmente (lunes) via GitHub Actions
 // Scrape Instagram + LinkedIn de competidores de software RRHH
 // Detecta ofertas laborales y promociones comerciales
-// Envía reporte premium como HTML en el cuerpo del email
+// Envía reporte semanal como HTML en el cuerpo del email
 
 const fetch = require('node-fetch')
 const { createClient } = require('@supabase/supabase-js')
@@ -177,9 +177,9 @@ function getFechaPost(p) {
 // ─── Main ────────────────────────────────────────────────────────────────────
 async function main() {
   const hoy = new Date().toISOString().split('T')[0]
-  const hace72h = new Date(Date.now() - 72 * 60 * 60 * 1000)
+  const hace7d = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
 
-  console.log(`📊 Radar Genera — Generando reporte para ${hoy}...`)
+  console.log(`📊 Radar Genera — Generando reporte semanal para ${hoy}...`)
 
   // Limpiar reportes del día (idempotente)
   await supabase.from('reportes_genera').delete().eq('fecha_reporte', hoy)
@@ -196,13 +196,13 @@ async function main() {
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ directUrls: profileUrls, resultsType: 'posts', resultsLimit: 12, addParentData: true }),
+        body: JSON.stringify({ directUrls: profileUrls, resultsType: 'posts', resultsLimit: 6, addParentData: true }),
       }
     )
     if (!res.ok) throw new Error(`Apify IG: ${res.status} ${await res.text()}`)
     const all = await res.json()
-    postsIG = all.filter(p => p.timestamp && new Date(p.timestamp) > hace72h)
-    console.log(`✅ Instagram: ${postsIG.length} posts en las últimas 72h`)
+    postsIG = all.filter(p => p.timestamp && new Date(p.timestamp) > hace7d)
+    console.log(`✅ Instagram: ${postsIG.length} posts en las última semana`)
   } catch (err) {
     console.error('❌ Error Instagram:', err.message)
   }
@@ -243,7 +243,7 @@ async function main() {
   console.log(`🏁 Instagram: ${competidoresConPostIG.size} con actividad, ${sinActividadIG.length} sin actividad.`)
 
   // ── LinkedIn (doble actor con fallback) ────────────────────────────────────
-  const postsLinkedin = await scrapeLinkedin(hace72h)
+  const postsLinkedin = await scrapeLinkedin(hace7d)
 
   // Guardar posts LinkedIn en Supabase
   for (const post of postsLinkedin) {
@@ -269,38 +269,27 @@ async function main() {
 }
 
 
-// ─── LinkedIn scraping con doble fallback ────────────────────────────────────
-async function scrapeLinkedin(hace72h) {
+// ─── LinkedIn scraping (harvestapi — más económico) ──────────────────────────
+async function scrapeLinkedin(hace7d) {
   const conLI = COMPETIDORES.filter(c => c.linkedin)
   if (conLI.length === 0) return []
 
-  // Actor primario: apimaestro (2.4M runs, 99.99% éxito)
-  console.log(`💼 LinkedIn [primario: apimaestro] — ${conLI.length} empresas...`)
-  let posts = await tryLinkedinActor(
-    'apimaestro~linkedin-company-posts',
-    { urls: conLI.map(c => c.linkedin) },
-    hace72h, conLI
+  console.log(`💼 LinkedIn [harvestapi] — ${conLI.length} empresas...`)
+  const posts = await tryLinkedinActor(
+    'harvestapi~linkedin-company-posts',
+    { targetUrls: conLI.map(c => c.linkedin), maxPosts: 5 },
+    hace7d, conLI
   )
 
   if (posts === null) {
-    // Fallback: harvestapi (547K runs, 100% éxito 30d)
-    console.log(`⚠️ Primario falló. LinkedIn [fallback: harvestapi]...`)
-    posts = await tryLinkedinActor(
-      'harvestapi~linkedin-company-posts',
-      { targetUrls: conLI.map(c => c.linkedin), maxPosts: 5 },
-      hace72h, conLI
-    )
-  }
-
-  if (posts === null) {
-    console.warn('❌ Ambos actores LinkedIn fallaron. Continuando sin LinkedIn.')
+    console.warn('❌ LinkedIn falló. Continuando sin LinkedIn.')
     return []
   }
 
   return posts
 }
 
-async function tryLinkedinActor(actorId, input, hace72h, conLI) {
+async function tryLinkedinActor(actorId, input, hace7d, conLI) {
   try {
     const res = await fetch(
       `https://api.apify.com/v2/acts/${actorId}/run-sync-get-dataset-items?token=${APIFY_TOKEN}&timeout=180`,
@@ -344,7 +333,7 @@ async function tryLinkedinActor(actorId, input, hace72h, conLI) {
       if (!fecha) return false
       const parsed = new Date(fecha)
       if (isNaN(parsed.getTime())) return false
-      return parsed > hace72h
+      return parsed > hace7d
     }).map(p => {
       // Intentar matchear con competidor por URL o nombre
       const compName = getAuthorName(p)
@@ -365,7 +354,7 @@ async function tryLinkedinActor(actorId, input, hace72h, conLI) {
       return { ...p, _competidor: matched ? matched.nombre : compName }
     })
 
-    console.log(`✅ LinkedIn [${actorId}]: ${recientes.length} posts en últimas 72h (de ${all.length} total)`)
+    console.log(`✅ LinkedIn [${actorId}]: ${recientes.length} posts en última semana (de ${all.length} total)`)
     return recientes
   } catch (err) {
     console.warn(`⚠️ ${actorId} error:`, err.message)
@@ -521,7 +510,7 @@ function generarHtmlReporte({ hoy, postsIG, postsLinkedin, competidoresConPostIG
 
   const sinActividad = COMPETIDORES.filter(c => igByComp[c.nombre].posts === 0 && liByComp[c.nombre].posts === 0)
   if (sinActividad.length > 0) {
-    alertRows += `<tr><td style="padding:8px 0;vertical-align:top;width:100px;"><span style="display:inline-block;padding:4px 10px;background-color:#0A2E1F;color:#6EE7B7;font-size:10px;font-weight:800;letter-spacing:0.5px;border-radius:6px;">✓ OK</span></td><td style="padding:8px 0 8px 14px;font-size:13px;color:#CBD5E1;line-height:1.55;"><strong style="color:#F8FAFC;">${sinActividad.map(c => c.nombre).join(', ')}</strong> sin actividad en ninguna red (72h).</td></tr>`
+    alertRows += `<tr><td style="padding:8px 0;vertical-align:top;width:100px;"><span style="display:inline-block;padding:4px 10px;background-color:#0A2E1F;color:#6EE7B7;font-size:10px;font-weight:800;letter-spacing:0.5px;border-radius:6px;">✓ OK</span></td><td style="padding:8px 0 8px 14px;font-size:13px;color:#CBD5E1;line-height:1.55;"><strong style="color:#F8FAFC;">${sinActividad.map(c => c.nombre).join(', ')}</strong> sin actividad en ninguna red (7 días).</td></tr>`
   }
 
   if (!alertRows) {
@@ -589,7 +578,7 @@ function generarHtmlReporte({ hoy, postsIG, postsLinkedin, competidoresConPostIG
         <td style="vertical-align:bottom;">
           <span style="font-size:22px;font-weight:900;color:#1E293B;">Radar de Competencia</span><br>
           <span style="font-size:22px;font-weight:900;color:#6C31D9;">Software RRHH &amp; Nóminas</span><br>
-          <span style="font-size:12px;color:#94A3B8;margin-top:4px;">Instagram · LinkedIn · Ofertas laborales · Actualización diaria</span>
+          <span style="font-size:12px;color:#94A3B8;margin-top:4px;">Instagram · LinkedIn · Ofertas laborales · Actualización semanal</span>
         </td>
         <td style="vertical-align:bottom;text-align:right;">${chipsHtml}</td>
       </tr>
@@ -706,7 +695,7 @@ function generarHtmlReporte({ hoy, postsIG, postsLinkedin, competidoresConPostIG
     ${topLI.map(p => postCard(p, 'LinkedIn')).join('')}
   </td></tr>` : `
   <tr><td style="padding:10px 20px 0;">
-    <span style="font-size:12px;color:#94A3B8;font-style:italic;">Sin posts de LinkedIn en las últimas 72h.</span>
+    <span style="font-size:12px;color:#94A3B8;font-style:italic;">Sin posts de LinkedIn en las última semana.</span>
   </td></tr>`}
 
   <!-- ═══════ OFERTAS LABORALES ═══════ -->
