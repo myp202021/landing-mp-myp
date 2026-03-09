@@ -26,69 +26,42 @@ const COMPETIDORES = [
 ]
 
 // ─── Detección de ofertas laborales ─────────────────────────────────────────
-const KEYWORDS_OFERTA = [
-  // Generales — señales de publicación de empleo
-  'se busca', 'buscamos', 'oferta laboral', 'postula', 'postúlate', 'vacante',
-  'cargo disponible', 'remuneración', 'jornada', 'contrato', 'enviar cv', 'envía tu cv',
-  'trabaja con nosotros', 'únete a', 'únete al equipo', 'incorporar', 'requisitos',
-  'join our team', 'we are hiring', 'hiring', 'open position', 'job opening', 'apply now',
+// Señales FUERTES = 1 sola basta para marcar como oferta
+const KEYWORDS_OFERTA_FUERTE = [
+  'oferta laboral', 'oferta de empleo', 'vacante', 'cargo disponible',
+  'enviar cv', 'envía tu cv', 'postula aquí', 'postúlate aquí',
+  'we are hiring', 'open position', 'job opening', 'apply now',
+  'enviar currículum', 'postulaciones abiertas',
+]
 
-  // Cargos operativos RRHH
-  'asistente de recursos humanos', 'administrativo de rr.hh', 'asistente de personal',
-  'asistente de talento humano', 'asistente de gestión de personas',
-  'asistente de reclutamiento', 'coordinador de reclutamiento', 'sourcer de talento',
-  'reclutador junior', 'analista de rr.hh', 'analista de nómina',
-  'analista de remuneraciones', 'analista de control de asistencia', 'analista de personal',
-  'people operations assistant', 'talent operations assistant', 'people coordinator',
+// Señales DÉBILES = necesitan 2+ para marcar como oferta
+const KEYWORDS_OFERTA_DEBIL = [
+  'se busca', 'buscamos', 'postula', 'postúlate', 'remuneración',
+  'jornada completa', 'jornada parcial', 'contrato indefinido', 'contrato plazo fijo',
+  'requisitos del cargo', 'requisitos excluyentes',
+  'trabaja con nosotros', 'únete al equipo', 'join our team', 'hiring',
 
-  // Cargos medios / especialistas RRHH
-  'analista de recursos humanos', 'generalista de rr.hh', 'hr generalist',
-  'business partner junior', 'hr business partner',
-  'especialista en atracción de talento', 'talent acquisition specialist',
-  'talent partner', 'talent manager',
-  'especialista en desarrollo organizacional', 'especialista en cultura organizacional',
-  'especialista en capacitación', 'learning & development',
-  'especialista en compensaciones', 'compensation & benefits',
-  'coordinador de rr.hh', 'coordinador de talento', 'coordinador de cultura',
-  'coordinador de desarrollo organizacional',
-  'people manager', 'people operations manager', 'talent development manager',
-
-  // Cargos altos / dirección RRHH
-  'jefe de recursos humanos', 'gerente de recursos humanos',
-  'gerente de gestión de personas', 'gerente de talento',
-  'gerente de cultura organizacional',
-  'director de recursos humanos', 'director de talento', 'director de personas',
-  'director de people', 'chief people officer', 'chief talent officer',
-  'chief human resources officer', 'chief culture officer', 'chro', 'cpo',
-
-  // Variantes modernas (startups / tech / SaaS)
-  'people experience manager', 'employee experience manager',
-  'head of people', 'head of talent', 'head of',
-  'workforce strategy', 'organizational effectiveness',
-  'human capital manager', 'talent acquisition',
-
-  // Roles comerciales / ventas SaaS
-  'ejecutivo comercial', 'account executive', 'account manager', 'key account',
-  'sales representative', 'sales manager', 'sales executive',
-  'closer', 'sdr', 'bdr', 'pre-venta', 'preventa', 'business development',
-
-  // Roles Customer Success / Soporte
-  'customer success', 'csm', 'onboarding', 'consultor de implementación',
-  'implementation consultant', 'soporte técnico',
-
-  // Roles Tech / Producto
-  'desarrollador', 'developer', 'full stack', 'fullstack', 'frontend', 'backend',
-  'software engineer', 'product manager', 'product owner',
-  'ux designer', 'data engineer', 'data analyst',
-
-  // Liderazgo general
-  'líder de', 'jefe de', 'gerente de', 'director de', 'vp of', 'country manager',
+  // Cargos específicos (solo matchean si hay otra señal)
+  'asistente de recursos humanos', 'analista de rr.hh', 'analista de nómina',
+  'analista de remuneraciones', 'hr business partner', 'hr generalist',
+  'talent acquisition specialist', 'people operations',
+  'ejecutivo comercial', 'account executive', 'sales representative',
+  'customer success manager', 'software engineer', 'product manager',
+  'desarrollador', 'full stack', 'frontend', 'backend',
+  'head of people', 'head of talent', 'chief people officer',
+  'gerente de recursos humanos', 'director de personas',
 ]
 
 function esOfertaLaboral(texto) {
   if (!texto) return false
   const lower = texto.toLowerCase()
-  return KEYWORDS_OFERTA.some(kw => lower.includes(kw))
+
+  // 1 señal fuerte = oferta confirmada
+  if (KEYWORDS_OFERTA_FUERTE.some(kw => lower.includes(kw))) return true
+
+  // 2+ señales débiles = probable oferta
+  const debilCount = KEYWORDS_OFERTA_DEBIL.filter(kw => lower.includes(kw)).length
+  return debilCount >= 2
 }
 
 // ─── Detección de promociones comerciales ───────────────────────────────────
@@ -150,11 +123,13 @@ function getFechaPost(p) {
   let raw = p.timestamp || p.posted_at || p.postedAt || p.publishedAt || p.date || p.time
     || p.postedDate || p.publishedDate || p.createdAt || p.postedDateTimestamp || null
 
-  // harvestapi devuelve postedAt como objeto: { text: "2d", dateTime: "2026-03-07T..." }
+  // harvestapi devuelve postedAt como objeto: { date: "2026-03-07T...", timestamp: 1747..., postedAgoShort: "3d" }
   if (raw && typeof raw === 'object') {
+    if (raw.date) return typeof raw.date === 'string' ? raw.date : new Date(raw.date).toISOString()
     if (raw.dateTime) return raw.dateTime
-    if (raw.text) {
-      const tsp = raw.text.trim().toLowerCase()
+    if (raw.timestamp) return new Date(raw.timestamp > 1e12 ? raw.timestamp : raw.timestamp * 1000).toISOString()
+    if (raw.postedAgoShort || raw.text) {
+      const tsp = (raw.postedAgoShort || raw.text).trim().toLowerCase()
       const num = parseInt(tsp)
       if (!isNaN(num)) {
         const now = Date.now()
@@ -330,7 +305,7 @@ async function tryLinkedinActor(actorId, input, hace7d, conLI) {
     if (all.length > 0) {
       const sample = all[0]
       console.log(`🔍 LinkedIn sample keys: ${Object.keys(sample).join(', ')}`)
-      console.log(`   📅 posted_at = ${sample.posted_at}`)
+      console.log(`   📅 postedAt RAW = ${JSON.stringify(sample.postedAt)}`)
       console.log(`   📅 getFechaPost = ${getFechaPost(sample)}`)
       console.log(`   🏢 getAuthorName = ${getAuthorName(sample)}`)
       console.log(`   🏢 getAuthorUrl = ${getAuthorUrl(sample)}`)
