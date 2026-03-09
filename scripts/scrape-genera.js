@@ -81,23 +81,47 @@ function esPromocion(texto) {
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 function getTextoPost(p) {
-  return p.caption || p.text || p.commentary || p.content || p.message || ''
+  // caption (IG), text (LI), commentary (LI), content (puede ser string u objeto)
+  if (p.caption) return p.caption
+  if (p.text) return p.text
+  if (p.commentary) return p.commentary
+  if (p.content) {
+    if (typeof p.content === 'string') return p.content
+    // harvestapi: content puede ser objeto con text, body, commentary, etc.
+    if (typeof p.content === 'object') {
+      return p.content.text || p.content.body || p.content.commentary
+        || p.content.originalContent || p.content.rawText || ''
+    }
+  }
+  if (p.message) return p.message
+  // socialContent puede tener el texto también
+  if (p.socialContent && typeof p.socialContent === 'object') {
+    return p.socialContent.text || p.socialContent.body || p.socialContent.commentary || ''
+  }
+  return ''
 }
 
 function getLikes(p) {
-  // apimaestro usa p.stats.likes, otros usan campos directos
+  if (p.engagement) {
+    return p.engagement.likes || p.engagement.reactions || p.engagement.numLikes || p.engagement.totalReactionCount || 0
+  }
   if (p.stats) {
     return p.stats.likes || p.stats.reactions || p.stats.totalReactionCount || 0
   }
-  return p.likesCount || p.totalReactionCount || p.reactions || p.likes || 0
+  if (p.reactions && typeof p.reactions === 'number') return p.reactions
+  return p.likesCount || p.totalReactionCount || p.likes || 0
 }
 
 function getComentarios(p) {
+  if (p.engagement) return p.engagement.comments || p.engagement.numComments || 0
   if (p.stats) return p.stats.comments || 0
-  return p.commentsCount || p.comments || p.commentCount || 0
+  if (typeof p.comments === 'number') return p.comments
+  if (Array.isArray(p.comments)) return p.comments.length
+  return p.commentsCount || p.commentCount || 0
 }
 
 function getCompartidos(p) {
+  if (p.engagement) return p.engagement.shares || p.engagement.reposts || p.engagement.numShares || 0
   if (p.stats) return p.stats.shares || p.stats.reposts || 0
   return p.sharesCount || p.shares || p.repostCount || p.reposts || 0
 }
@@ -301,52 +325,64 @@ async function tryLinkedinActor(actorId, input, hace7d, conLI) {
       return null
     }
 
-    // Debug: mostrar estructura de posts para entender campos
+    // Debug: mostrar estructura COMPLETA del primer post para diagnosticar
     if (all.length > 0) {
       const sample = all[0]
       console.log(`🔍 LinkedIn sample keys: ${Object.keys(sample).join(', ')}`)
       console.log(`   📅 postedAt RAW = ${JSON.stringify(sample.postedAt)}`)
       console.log(`   📅 getFechaPost = ${getFechaPost(sample)}`)
+      console.log(`   📝 content RAW type = ${typeof sample.content}`)
+      console.log(`   📝 content RAW = ${typeof sample.content === 'object' ? JSON.stringify(sample.content).substring(0, 300) : (sample.content || '').substring(0, 200)}`)
+      console.log(`   📝 getTextoPost = ${getTextoPost(sample).substring(0, 200)}`)
       console.log(`   🏢 getAuthorName = ${getAuthorName(sample)}`)
-      console.log(`   🏢 getAuthorUrl = ${getAuthorUrl(sample)}`)
+      console.log(`   🏢 author RAW = ${JSON.stringify(sample.author).substring(0, 200)}`)
+      if (sample.engagement) console.log(`   📊 engagement = ${JSON.stringify(sample.engagement)}`)
+      if (sample.reactions) console.log(`   📊 reactions = ${JSON.stringify(sample.reactions).substring(0, 200)}`)
       if (sample.stats) console.log(`   📊 stats = ${JSON.stringify(sample.stats)}`)
-      if (sample.source_company) console.log(`   🏢 source_company = ${JSON.stringify(sample.source_company)}`)
       // Mostrar fechas de los primeros 5 posts
       all.slice(0, 5).forEach((p, i) => {
         const f = getFechaPost(p)
         const name = getAuthorName(p)
-        console.log(`   [${i}] fecha=${f} autor=${name} text=${(p.text||'').substring(0,60)}...`)
+        const texto = getTextoPost(p).substring(0, 60)
+        console.log(`   [${i}] fecha=${f} autor=${name} texto=${texto}...`)
       })
     }
 
-    // Filtrar posts recientes y asignar competidor
+    // Filtrar posts recientes — si no podemos parsear fecha, INCLUIR el post
+    // (maxPosts: 5 ya limita, preferimos tener datos sin fecha que no tener nada)
+    let fechaParseada = false
     const recientes = all.filter(p => {
       const fecha = getFechaPost(p)
-      if (!fecha) return false
+      if (!fecha) return true  // sin fecha → incluir igual
       const parsed = new Date(fecha)
-      if (isNaN(parsed.getTime())) return false
+      if (isNaN(parsed.getTime())) return true  // fecha inválida → incluir igual
+      fechaParseada = true
       return parsed > hace7d
     }).map(p => {
-      // Intentar matchear con competidor por URL o nombre
+      // Intentar matchear con competidor por múltiples señales
       const compName = getAuthorName(p)
       const compUrl = getAuthorUrl(p)
       const matched = conLI.find(c => {
+        const slug = c.linkedin ? c.linkedin.replace('https://www.linkedin.com', '').replace(/\/$/, '') : ''
+        // Match por nombre del autor
         if (compName && compName.toLowerCase().includes(c.nombre.toLowerCase())) return true
-        if (compUrl && c.linkedin) {
-          const slug = c.linkedin.replace('https://www.linkedin.com', '').replace(/\/$/, '')
-          if (compUrl.includes(slug)) return true
-        }
-        // source_company URL match
-        if (p.source_company?.url && c.linkedin) {
-          const slug = c.linkedin.replace('https://www.linkedin.com', '').replace(/\/$/, '')
-          if (p.source_company.url.includes(slug)) return true
-        }
+        // Match por URL del autor
+        if (compUrl && slug && compUrl.includes(slug)) return true
+        // Match por source_company
+        if (p.source_company?.url && slug && p.source_company.url.includes(slug)) return true
+        // Match por query (la URL que le pasamos a harvestapi)
+        if (p.query && slug && p.query.includes(slug)) return true
+        // Match por linkedinUrl del post
+        if (p.linkedinUrl && slug && p.linkedinUrl.includes(slug)) return true
         return false
       })
       return { ...p, _competidor: matched ? matched.nombre : compName }
     })
 
-    console.log(`✅ LinkedIn [${actorId}]: ${recientes.length} posts en última semana (de ${all.length} total)`)
+    if (!fechaParseada) {
+      console.warn(`⚠️ LinkedIn: no se pudo parsear ninguna fecha. Incluyendo ${recientes.length} posts sin filtro de fecha.`)
+    }
+    console.log(`✅ LinkedIn [${actorId}]: ${recientes.length} posts incluidos (de ${all.length} total)`)
     return recientes
   } catch (err) {
     console.warn(`⚠️ ${actorId} error:`, err.message)
