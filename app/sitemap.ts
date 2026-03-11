@@ -214,6 +214,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.95,
     },
     {
+      url: `${baseUrl}/ranking-agencias-data-driven-chile`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.95,
+    },
+    {
+      url: `${baseUrl}/ranking-agencias-creativas-chile`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.90,
+    },
+    {
       url: `${baseUrl}/comparativa-agencias-marketing-digital-chile`,
       lastModified: currentDate,
       changeFrequency: 'monthly',
