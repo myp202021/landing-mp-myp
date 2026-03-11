@@ -43,6 +43,26 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(aiSearchSchema) }}
         />
 
+        {/* WebSite + SearchAction Schema — Rich Snippet sitelinks search box */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'WebSite',
+            name: 'Muller y Pérez',
+            alternateName: 'M&P Agencia Marketing Digital',
+            url: 'https://www.mulleryperez.cl',
+            potentialAction: {
+              '@type': 'SearchAction',
+              target: {
+                '@type': 'EntryPoint',
+                urlTemplate: 'https://www.mulleryperez.cl/labs/predictor?q={search_term_string}'
+              },
+              'query-input': 'required name=search_term_string'
+            }
+          }) }}
+        />
+
         {/* Google Ads Tag (gtag.js) */}
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=AW-17056298226"

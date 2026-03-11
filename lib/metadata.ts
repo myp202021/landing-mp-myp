@@ -272,7 +272,7 @@ export function createOrganizationSchema() {
         '@type': 'ContactPoint',
         telephone: '+56992258137',
         contactType: 'customer service',
-        email: 'contacto@mulleryperez.com',
+        email: 'contacto@mulleryperez.cl',
         areaServed: 'CL',
         availableLanguage: ['Spanish', 'English'],
         contactOption: 'TollFree'
@@ -383,7 +383,7 @@ export function createOrganizationSchema() {
     // Redes sociales y enlaces
     sameAs: [
       'https://www.instagram.com/mulleryp​erez',
-      'https://www.linkedin.com/company/muller-y-perez',
+      'https://www.linkedin.com/company/m%C3%BCller-y-p%C3%A9rez/',
       'https://www.youtube.com/@mulleryp​erez',
       'https://www.facebook.com/mulleryp​erez',
       siteConfig.links.whatsapp

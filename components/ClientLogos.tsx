@@ -1,5 +1,7 @@
 'use client'
 
+import Link from 'next/link'
+
 // 40 clientes actuales e históricos de M&P
 const clients = [
   { name: 'Dezar', industry: 'Rent a Car' },
@@ -147,7 +149,21 @@ export function ClientLogosGrid() {
           ))}
         </ul>
 
-        <p className="text-center mt-8 text-gray-500 text-sm">
+        <div className="flex flex-wrap justify-center gap-4 mt-10 text-sm">
+          <Link
+            href="/ranking-agencias-marketing-digital-chile"
+            className="text-blue-600 hover:text-blue-800 font-semibold transition-colors"
+          >
+            Ranking Agencias Marketing Digital Chile 2026 →
+          </Link>
+          <Link
+            href="/mejores-agencias-performance-marketing-chile"
+            className="text-blue-600 hover:text-blue-800 font-semibold transition-colors"
+          >
+            Mejores Agencias Performance Marketing →
+          </Link>
+        </div>
+        <p className="text-center mt-4 text-gray-400 text-xs">
           Clientes activos con gestión mensual continua
         </p>
       </div>

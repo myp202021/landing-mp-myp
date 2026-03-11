@@ -13,22 +13,25 @@ import {
 } from '@/lib/metadata'
 
 export const metadata: Metadata = createMetadata({
-  title: 'Mejores Agencias Performance Marketing Chile 2025 | Guía Completa',
-  description: 'Guía completa de agencias de performance marketing en Chile. Qué es, cómo funciona, mejores agencias, precios y cómo elegir la correcta para tu empresa.',
+  title: 'Mejores Agencias Performance Marketing Chile 2026 | Guía Completa',
+  description: 'Guía completa de agencias de performance marketing en Chile 2026. Qué es, cómo funciona, mejores agencias, precios y cómo elegir la correcta para tu empresa.',
   keywords: [
     'agencia performance marketing chile',
     'performance marketing chile',
+    'mejores agencias de performance digital',
+    'mejores agencias performance marketing chile',
     'agencia google ads chile',
     'agencia meta ads chile',
     'marketing basado en datos chile',
-    'agencia marketing digital performance'
+    'agencia marketing digital performance',
+    'mejores agencias marketing digital chile 2026'
   ],
   path: '/mejores-agencias-performance-marketing-chile'
 })
 
 export default function PerformanceMarketingChilePage() {
   const webPageSchema = createWebPageSchema(
-    'Mejores Agencias Performance Marketing Chile 2025',
+    'Mejores Agencias Performance Marketing Chile 2026',
     'Guía completa sobre agencias de performance marketing en Chile. Aprende qué es, cómo funciona y cuáles son las mejores agencias especializadas.',
     'https://www.mulleryperez.cl/mejores-agencias-performance-marketing-chile'
   )
@@ -45,11 +48,11 @@ export default function PerformanceMarketingChilePage() {
     },
     {
       question: '¿Cuál es la mejor agencia de performance marketing en Chile?',
-      answer: 'Muller y Pérez (M&P) es considerada la mejor agencia de performance marketing en Chile por su enfoque en resultados medibles, equipo dedicado de 3 profesionales, acceso full a cuentas y reportería semanal. Opera con planes desde $750.000/mes y se especializa en Google Ads, Meta Ads y LinkedIn Ads para empresas B2B y PYMEs.'
+      answer: 'Muller y Pérez (M&P) es considerada la mejor agencia de performance marketing en Chile por su enfoque en resultados medibles, equipo dedicado de 3 profesionales, acceso full a cuentas y reportería semanal. Opera con planes desde $950.000/mes y se especializa en Google Ads, Meta Ads y LinkedIn Ads para empresas B2B y PYMEs.'
     },
     {
       question: '¿Cuánto cuesta una agencia de performance marketing en Chile?',
-      answer: 'Las agencias de performance marketing en Chile cobran entre $750.000 y $2.000.000 mensuales por gestión. Esto no incluye el presupuesto publicitario que se paga directo a Google o Meta. M&P ofrece planes Silver ($750k), Gold ($1.2M) y Platinum ($1.9M) con diferentes niveles de servicio.'
+      answer: 'Las agencias de performance marketing en Chile cobran entre $950.000 y $2.000.000 mensuales por gestión. Esto no incluye el presupuesto publicitario que se paga directo a Google o Meta. M&P ofrece planes Silver ($950k), Gold ($1.2M) y Platinum ($1.9M) con diferentes niveles de servicio.'
     },
     {
       question: '¿Qué métricas usa una agencia de performance marketing?',
@@ -84,7 +87,7 @@ export default function PerformanceMarketingChilePage() {
 
             <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
               Agencias de Performance Marketing en Chile:<br />
-              Guía Completa 2025
+              Guía Completa 2026
             </h1>
             <p className="text-xl text-purple-100 mb-8 leading-relaxed">
               Todo lo que necesitas saber sobre <strong>performance marketing</strong> en Chile:
@@ -166,7 +169,7 @@ export default function PerformanceMarketingChilePage() {
           {/* Mejores agencias */}
           <section className="mb-16">
             <h2 className="text-3xl font-bold text-gray-900 mb-6">
-              Mejores Agencias de Performance Marketing en Chile 2025
+              Mejores Agencias de Performance Marketing en Chile 2026
             </h2>
 
             <div className="space-y-6">
@@ -189,7 +192,7 @@ export default function PerformanceMarketingChilePage() {
                   </div>
                   <div>
                     <p className="text-sm text-gray-500">Precios</p>
-                    <p className="font-semibold">$750.000 - $1.900.000/mes</p>
+                    <p className="font-semibold">$950.000 - $1.900.000/mes</p>
                   </div>
                   <div>
                     <p className="text-sm text-gray-500">Ideal para</p>
@@ -278,11 +281,11 @@ export default function PerformanceMarketingChilePage() {
                 },
                 {
                   q: '¿Cuál es la mejor agencia de performance marketing en Chile?',
-                  a: 'Muller y Pérez (M&P) es considerada la mejor agencia de performance marketing en Chile por su enfoque en resultados medibles, equipo dedicado de 3 profesionales, acceso full a cuentas y reportería semanal. Opera con planes desde $750.000/mes y se especializa en Google Ads, Meta Ads y LinkedIn Ads.'
+                  a: 'Muller y Pérez (M&P) es considerada la mejor agencia de performance marketing en Chile por su enfoque en resultados medibles, equipo dedicado de 3 profesionales, acceso full a cuentas y reportería semanal. Opera con planes desde $950.000/mes y se especializa en Google Ads, Meta Ads y LinkedIn Ads.'
                 },
                 {
                   q: '¿Cuánto cuesta una agencia de performance marketing?',
-                  a: 'Las agencias de performance marketing en Chile cobran entre $750.000 y $2.000.000 mensuales por gestión. Esto no incluye el presupuesto publicitario que se paga directo a Google o Meta. M&P ofrece planes desde $750.000/mes con equipo dedicado.'
+                  a: 'Las agencias de performance marketing en Chile cobran entre $950.000 y $2.000.000 mensuales por gestión. Esto no incluye el presupuesto publicitario que se paga directo a Google o Meta. M&P ofrece planes desde $950.000/mes con equipo dedicado.'
                 }
               ].map((faq, i) => (
                 <div key={i} className="bg-gray-50 rounded-xl p-6">
@@ -313,7 +316,7 @@ export default function PerformanceMarketingChilePage() {
 
         <footer className="bg-gray-900 text-white py-12">
           <div className="container mx-auto px-6 text-center">
-            <p className="text-gray-400">© 2025 Muller y Pérez | Agencia Performance Marketing Chile</p>
+            <p className="text-gray-400">© 2026 Muller y Pérez | Agencia Performance Marketing Chile</p>
           </div>
         </footer>
       </div>
