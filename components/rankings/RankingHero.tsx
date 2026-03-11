@@ -16,7 +16,20 @@ interface RankingHeroProps {
 
 export default function RankingHero({ title, subtitle, breadcrumbs, badge, fecha = 'Marzo 2026' }: RankingHeroProps) {
   return (
-    <header className="bg-gradient-to-br from-gray-900 via-blue-950 to-gray-900 text-white py-16 md:py-20 px-6">
+    <header className="bg-gradient-to-br from-gray-900 via-blue-950 to-gray-900 text-white">
+      {/* Mini nav */}
+      <div className="border-b border-white/10 px-6 py-3">
+        <div className="max-w-4xl mx-auto flex items-center justify-between">
+          <Link href="/" className="text-white font-bold text-lg hover:text-blue-300 transition-colors">
+            Muller y Pérez
+          </Link>
+          <Link href="/" className="text-sm text-gray-400 hover:text-white transition-colors">
+            ← Volver al inicio
+          </Link>
+        </div>
+      </div>
+
+      <div className="py-16 md:py-20 px-6">
       <div className="max-w-4xl mx-auto">
         {/* Breadcrumbs */}
         <nav aria-label="Breadcrumb" className="mb-6">
@@ -54,6 +67,7 @@ export default function RankingHero({ title, subtitle, breadcrumbs, badge, fecha
           <span className="w-1 h-1 bg-gray-600 rounded-full" />
           <span>Por Muller y Pérez</span>
         </div>
+      </div>
       </div>
     </header>
   )
