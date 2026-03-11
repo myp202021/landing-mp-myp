@@ -391,7 +391,7 @@ export default function LandingClient() {
       availableLanguage: 'Spanish'
     },
     sameAs: [
-      'https://www.linkedin.com/company/mulleryperez',
+      'https://www.linkedin.com/company/m%C3%BCller-y-p%C3%A9rez/?viewAsMember=true',
       'https://www.instagram.com/mulleryperez'
     ]
   }
@@ -2566,7 +2566,7 @@ export default function LandingClient() {
               {/* Redes Sociales */}
               <div className="flex gap-4">
                 <a
-                  href="https://www.linkedin.com/company/muller-y-perez"
+                  href="https://www.linkedin.com/company/m%C3%BCller-y-p%C3%A9rez/?viewAsMember=true"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-blue-200 hover:text-white transition-colors"

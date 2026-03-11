@@ -92,7 +92,7 @@ function buildSchemas(data: any, cpcData: any[], fecha: string | null) {
     name: 'Muller y Pérez',
     url: 'https://www.mulleryperez.cl',
     logo: 'https://www.mulleryperez.cl/logo-color.png',
-    sameAs: ['https://www.linkedin.com/company/mulleryperez'],
+    sameAs: ['https://www.linkedin.com/company/m%C3%BCller-y-p%C3%A9rez/?viewAsMember=true'],
     areaServed: { '@type': 'Country', name: 'Chile' },
   }
 

@@ -50,7 +50,7 @@ const aboutSchema = {
     },
     sameAs: [
       'https://www.instagram.com/mulleryp​erez',
-      'https://www.linkedin.com/company/muller-y-perez'
+      'https://www.linkedin.com/company/m%C3%BCller-y-p%C3%A9rez/?viewAsMember=true'
     ]
   }
 }
