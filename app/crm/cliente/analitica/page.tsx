@@ -234,6 +234,34 @@ export default function AnaliticaCliente() {
         </div>
       </div>
 
+      {/* Tasas */}
+      <div className="grid grid-cols-2 gap-4 mb-8">
+        <div className="bg-white rounded-xl shadow-md border border-gray-200 p-5 flex items-center justify-between">
+          <div>
+            <div className="text-sm text-gray-600">Tasa de Contacto</div>
+            <div className="text-3xl font-bold text-yellow-600">
+              {totals.total > 0 ? ((totals.contactados / totals.total) * 100).toFixed(1) : '0'}%
+            </div>
+            <div className="text-xs text-gray-500 mt-1">{totals.contactados} de {totals.total} leads contactados</div>
+          </div>
+          <div className="w-16 h-16 rounded-full border-4 border-yellow-200 flex items-center justify-center">
+            <span className="text-2xl">📞</span>
+          </div>
+        </div>
+        <div className="bg-white rounded-xl shadow-md border border-gray-200 p-5 flex items-center justify-between">
+          <div>
+            <div className="text-sm text-gray-600">Tasa de Venta</div>
+            <div className="text-3xl font-bold text-green-600">
+              {totals.total > 0 ? ((totals.vendidos / totals.total) * 100).toFixed(1) : '0'}%
+            </div>
+            <div className="text-xs text-gray-500 mt-1">{totals.vendidos} de {totals.total} leads vendidos</div>
+          </div>
+          <div className="w-16 h-16 rounded-full border-4 border-green-200 flex items-center justify-center">
+            <span className="text-2xl">✅</span>
+          </div>
+        </div>
+      </div>
+
       {loading ? (
         <div className="flex justify-center py-12">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
