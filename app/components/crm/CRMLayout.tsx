@@ -35,6 +35,7 @@ export default function CRMLayout({ children, title, authenticated = true, onRef
         { href: '/crm/admin', label: 'Cotizaciones M&P', icon: '📝', adminOnly: true },
     { href: '/crm/cliente/dashboard', label: 'Dashboard', icon: '🏠', adminOnly: false },
     { href: '/crm/cliente/cotizaciones', label: 'Cotizaciones', icon: '📄', adminOnly: false },
+    { href: '/crm/cliente/analitica', label: 'Analítica', icon: '📈', adminOnly: false },
     { href: '/crm/cliente/chatbot', label: 'ChatBot', icon: '🤖', adminOnly: false },
   ]
 

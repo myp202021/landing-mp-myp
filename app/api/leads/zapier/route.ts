@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
     // Verificar que el cliente existe
     const { data: clienteData, error: clienteError } = await supabase
       .from('clientes')
-      .select('id, nombre')
+      .select('id, nombre, contacto_email')
       .eq('id', body.client_id)
       .single()
 
@@ -152,6 +152,50 @@ export async function POST(req: NextRequest) {
     }
 
     console.log('✅ Lead creado exitosamente:', leadInserted.id)
+
+    // Enviar notificación email al cliente (no bloquea la respuesta)
+    const notifyEmail = clienteData.contacto_email
+    if (notifyEmail && process.env.RESEND_API_KEY) {
+      fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          from: 'contacto@mulleryperez.cl',
+          to: notifyEmail,
+          subject: `🔔 Nuevo lead: ${leadData.nombre} — ${clienteData.nombre}`,
+          html: `
+            <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;">
+              <div style="background:linear-gradient(135deg,#1e3a5f,#2563eb);padding:24px;border-radius:12px 12px 0 0;">
+                <h2 style="color:#fff;margin:0;">🔔 Nuevo Lead Recibido</h2>
+                <p style="color:#93c5fd;margin:8px 0 0;">Muller y Pérez — ${clienteData.nombre}</p>
+              </div>
+              <div style="background:#fff;padding:24px;border:1px solid #e5e7eb;border-top:none;border-radius:0 0 12px 12px;">
+                <table style="width:100%;border-collapse:collapse;">
+                  <tr><td style="padding:8px 0;color:#6b7280;width:120px;">Nombre</td><td style="padding:8px 0;font-weight:600;color:#111827;">${leadData.nombre}</td></tr>
+                  ${leadData.email ? `<tr><td style="padding:8px 0;color:#6b7280;">Email</td><td style="padding:8px 0;color:#111827;">${leadData.email}</td></tr>` : ''}
+                  ${leadData.telefono ? `<tr><td style="padding:8px 0;color:#6b7280;">Teléfono</td><td style="padding:8px 0;color:#111827;">${leadData.telefono}</td></tr>` : ''}
+                  ${leadData.empresa ? `<tr><td style="padding:8px 0;color:#6b7280;">Empresa</td><td style="padding:8px 0;color:#111827;">${leadData.empresa}</td></tr>` : ''}
+                  ${leadData.observaciones ? `<tr><td style="padding:8px 0;color:#6b7280;">Detalles</td><td style="padding:8px 0;color:#111827;font-size:13px;">${leadData.observaciones}</td></tr>` : ''}
+                </table>
+                <div style="margin-top:20px;padding:12px;background:#fef3c7;border-radius:8px;font-size:13px;color:#92400e;">
+                  ⏱️ Contacta este lead lo antes posible. Los leads contactados dentro de las primeras 24 horas tienen mayor probabilidad de conversión.
+                </div>
+                <div style="margin-top:16px;text-align:center;">
+                  <a href="https://www.mulleryperez.cl/crm/cliente/dashboard" style="display:inline-block;padding:12px 24px;background:#2563eb;color:#fff;text-decoration:none;border-radius:8px;font-weight:600;">Ver en Dashboard</a>
+                </div>
+              </div>
+              <p style="text-align:center;color:#9ca3af;font-size:12px;margin-top:16px;">Muller y Pérez — Performance Marketing</p>
+            </div>
+          `
+        })
+      })
+        .then(r => r.json())
+        .then(d => console.log('📧 Notificación enviada a', notifyEmail, d.id))
+        .catch(e => console.error('⚠️ Error enviando notificación (no crítico):', e))
+    }
 
     return NextResponse.json({
       success: true,
