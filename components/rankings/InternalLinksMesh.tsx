@@ -17,6 +17,12 @@ const rankingLinks: LinkItem[] = [
 const editorialLinks: LinkItem[] = [
   { href: '/blog/agencias-tradicionales-vs-digitales-chile', label: 'Agencias Tradicionales vs Digitales en Chile' },
   { href: '/blog/ejecucion-vs-estrategia-marketing-digital', label: 'Ejecución vs Estrategia: Qué Vale Más' },
+  { href: '/blog/como-aumentar-conversiones-google-ads', label: 'Cómo Aumentar Conversiones en Google Ads' },
+  { href: '/blog/roi-roas-agencia-marketing-digital-chile-2025', label: 'Guía ROI y ROAS en Marketing Digital' },
+  { href: '/blog/inbound-marketing-agencia-marketing-digital-chile-2025', label: 'Inbound Marketing en Chile' },
+  { href: '/blog/dashboards-agencia-marketing-digital-chile-2025', label: 'Dashboards de Marketing Digital' },
+  { href: '/blog/marketing-b2b-agencia-marketing-digital-chile-2025', label: 'Marketing B2B en Chile' },
+  { href: '/google-ads-vs-meta-ads-chile', label: 'Google Ads vs Meta Ads: Cuál Elegir' },
 ]
 
 const toolLinks: LinkItem[] = [

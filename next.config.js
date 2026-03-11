@@ -148,13 +148,34 @@ const nextConfig = {
         destination: '/predictor',
         permanent: true,
       },
-      // Fix 404s
       {
         source: '/login',
         destination: '/crm/login',
         permanent: true,
       },
-      // Redirect removido - ahora existe hub page /recursos
+      // ========================================
+      // 404 fixes — GSC report marzo 2026
+      // ========================================
+      {
+        source: '/labs/predictor-google-ads',
+        destination: '/predictor',
+        permanent: true,
+      },
+      {
+        source: '/portafolio',
+        destination: '/',
+        permanent: true,
+      },
+      {
+        source: '/comparativa',
+        destination: '/comparativa-agencias-marketing-digital-chile',
+        permanent: true,
+      },
+      {
+        source: '/blog/tiktok-ads-agencia-marketing-digital-chile-2025-2',
+        destination: '/blog/tiktok-ads-agencia-marketing-digital-chile-2025',
+        permanent: true,
+      },
       {
         source: '/contacto',
         destination: '/#contact',
@@ -166,21 +187,32 @@ const nextConfig = {
         permanent: true,
       },
       {
-        source: '/blog/cuanto-cuesta-agencia-marketing-digital-chile-2025',
-        destination: '/blog',
-        permanent: false, // temporary, could create this blog post later
-      },
-      {
         source: '/privacidad',
-        destination: '/#contact', // or create a privacy page
-        permanent: false,
+        destination: '/#contact',
+        permanent: true, // was 302, now 301 so Google stops recrawling
       },
       {
         source: '/terminos',
-        destination: '/#contact', // or create a terms page
-        permanent: false,
+        destination: '/#contact',
+        permanent: true, // was 302, now 301 so Google stops recrawling
       },
-      // Fix trailing slashes
+      {
+        source: '/blog/cuanto-cuesta-agencia-marketing-digital-chile-2025',
+        destination: '/blog',
+        permanent: true, // was 302, now 301
+      },
+      // ========================================
+      // Redirect error fixes — query params WordPress/LinkedIn
+      // ========================================
+      {
+        source: '/blog',
+        has: [{ type: 'query', key: 'layout_sidebar' }],
+        destination: '/blog',
+        permanent: true,
+      },
+      // ========================================
+      // Trailing slash fixes
+      // ========================================
       {
         source: '/labs/',
         destination: '/labs',
@@ -189,6 +221,11 @@ const nextConfig = {
       {
         source: '/predictor/',
         destination: '/predictor',
+        permanent: true,
+      },
+      {
+        source: '/blog/',
+        destination: '/blog',
         permanent: true,
       },
     ]
