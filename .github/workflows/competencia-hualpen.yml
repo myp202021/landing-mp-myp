@@ -16,15 +16,38 @@ jobs:
           node-version: '20'
 
       - name: Instalar wkhtmltopdf
-        run: sudo apt-get update && sudo apt-get install -y wkhtmltopdf
+        run: |
+          for i in 1 2 3; do
+            sudo apt-get update && sudo apt-get install -y wkhtmltopdf && break
+            echo "Intento $i falló, reintentando en 10s..."
+            sleep 10
+          done
 
       - name: Instalar dependencias
         run: npm install node-fetch@2 @supabase/supabase-js
 
       - name: Ejecutar scraper
+        id: scraper
         run: node scripts/scrape-competencia.js
         env:
           APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
           RESEND: ${{ secrets.RESEND }}
+
+      - name: Alerta si falla
+        if: failure()
+        run: |
+          node -e "
+          const fetch = require('node-fetch');
+          fetch('https://api.resend.com/emails', {
+            method: 'POST',
+            headers: { 'Authorization': 'Bearer ${{ secrets.RESEND }}', 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              from: 'contacto@mulleryperez.cl',
+              to: 'contacto@mulleryperez.cl',
+              subject: '⚠️ FALLO Reporte Hualpén — $(date -u +%Y-%m-%d)',
+              html: '<h2>El reporte diario de Competencia Hualpén falló</h2><p>Revisa el workflow en <a href=\"https://github.com/myp202021/landing-mp-myp/actions\">GitHub Actions</a></p>'
+            })
+          }).then(r => r.json()).then(d => console.log('Alerta enviada:', d.id)).catch(e => console.error('Error enviando alerta:', e));
+          "
