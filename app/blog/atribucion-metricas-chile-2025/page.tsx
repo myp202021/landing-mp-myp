@@ -3,14 +3,14 @@ import Link from 'next/link'
 import { ArrowLeft, Activity, DollarSign, TrendingUp, BarChart3, CheckCircle, Eye } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Atribución y Métricas en Chile 2025: del CAC y LTV al Payback con Dashboards en Tiempo Real',
+  title: 'Atribución y Métricas en Chile 2025-2026: del CAC y LTV al Payback con Dashboards en Tiempo Real',
   description: 'Aprende cómo medir CAC, LTV y Payback en Chile 2025 con dashboards en tiempo real y modelos de atribución data-driven. Casos reales y benchmarks locales.',
   keywords: 'atribución marketing digital Chile, CAC marketing digital, LTV clientes Chile, payback campañas digitales, dashboards marketing Chile',
   alternates: {
     canonical: 'https://www.mulleryperez.cl/blog/atribucion-metricas-chile-2025'
   },
   openGraph: {
-    title: 'Atribución y Métricas en Chile 2025: del CAC y LTV al Payback con Dashboards en Tiempo Real',
+    title: 'Atribución y Métricas en Chile 2025-2026: del CAC y LTV al Payback con Dashboards en Tiempo Real',
     description: 'Aprende cómo medir CAC, LTV y Payback en Chile 2025 con dashboards en tiempo real y modelos de atribución data-driven. Casos reales y benchmarks locales.',
     type: 'article',
     url: 'https://www.mulleryperez.cl/blog/atribucion-metricas-chile-2025',
@@ -23,11 +23,11 @@ export const metadata: Metadata = {
   const articleSchema = {
     '@context': 'https://schema.org',
     '@type': 'Article',
-    headline: 'Atribución y Métricas en Chile 2025: del CAC y LTV al Payback con Dashboards en Tiempo Real',
+    headline: 'Atribución y Métricas en Chile 2025-2026: del CAC y LTV al Payback con Dashboards en Tiempo Real',
     description: 'Aprende cómo medir CAC, LTV y Payback en Chile 2025 con dashboards en tiempo real y modelos de atribución data-driven. Casos reales y benchmarks locales.',
     url: 'https://www.mulleryperez.cl/blog/atribucion-metricas-chile-2025',
     datePublished: '2025-10-09T00:00:00.000Z',
-    dateModified: '2025-10-09T00:00:00.000Z',
+    dateModified: '2026-03-10T00:00:00.000Z',
     author: {
       '@type': 'Person',
       name: 'Christopher Müller',
@@ -87,7 +87,7 @@ export default function ArticlePage() {
           </div>
 
           <h1 className="text-4xl lg:text-5xl font-black text-gray-900 mb-6 leading-tight">
-            Atribución y Métricas en Chile 2025: del CAC y LTV al Payback con Dashboards en Tiempo Real
+            Atribución y Métricas en Chile 2025-2026: del CAC y LTV al Payback con Dashboards en Tiempo Real
           </h1>
 
           <p className="text-xl text-gray-600 mb-12 leading-relaxed">
@@ -419,6 +419,25 @@ export default function ArticlePage() {
         </div>
       </article>
 
+
+        {/* Related Posts */}
+        <nav className="mt-12 pt-8 border-t border-gray-200">
+          <h3 className="text-lg font-bold text-gray-900 mb-4">Artículos Relacionados</h3>
+          <div className="flex flex-wrap gap-2">
+            <Link href="/ranking-agencias-marketing-digital-chile" className="text-sm text-blue-600 hover:text-blue-800 bg-blue-50 px-3 py-1.5 rounded-lg">
+              Ranking Agencias Marketing Digital Chile 2026 →
+            </Link>
+            <Link href="/mejores-agencias-performance-marketing-chile" className="text-sm text-blue-600 hover:text-blue-800 bg-blue-50 px-3 py-1.5 rounded-lg">
+              Mejores Agencias Performance Marketing Chile →
+            </Link>
+            <Link href="/predictor" className="text-sm text-green-600 hover:text-green-800 bg-green-50 px-3 py-1.5 rounded-lg">
+              Predictor de Campañas →
+            </Link>
+            <Link href="/indicadores" className="text-sm text-green-600 hover:text-green-800 bg-green-50 px-3 py-1.5 rounded-lg">
+              Termómetro Marketing Digital Chile →
+            </Link>
+          </div>
+        </nav>
       <footer className="bg-gray-900 text-white py-12 px-6">
         <div className="max-w-7xl mx-auto text-center">
           <Link href="/"><img src="/logo-blanco.png" alt="Muller y Pérez" className="h-10 w-auto mx-auto mb-6" /></Link>

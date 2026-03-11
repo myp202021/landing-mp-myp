@@ -3,11 +3,11 @@ import Link from 'next/link'
 import { ArrowRight, Search, Users, CheckCircle, X, TrendingUp, Target, DollarSign, BarChart3 } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Google Ads vs Meta Ads en Chile 2025 | Comparativa Completa | M&P',
+  title: 'Google Ads vs Meta Ads en Chile 2025-2026 | Comparativa Completa | M&P',
   description: 'Comparativa detallada entre Google Ads y Meta Ads para empresas en Chile. Cuál elegir según tu industria, presupuesto y objetivos. CPL, ROAS y casos de uso reales.',
   keywords: 'google ads vs meta ads, google ads o facebook ads, cual es mejor google o facebook ads, comparacion google ads meta ads chile, publicidad google vs facebook',
   openGraph: {
-    title: 'Google Ads vs Meta Ads en Chile 2025 | Comparativa Completa',
+    title: 'Google Ads vs Meta Ads en Chile 2025-2026 | Comparativa Completa',
     description: 'Guía definitiva para elegir entre Google Ads y Meta Ads según tu negocio en Chile.',
     url: 'https://www.mulleryperez.cl/google-ads-vs-meta-ads-chile',
     siteName: 'Müller & Pérez',
@@ -25,12 +25,12 @@ const jsonLd = {
     {
       '@type': 'Article',
       '@id': 'https://www.mulleryperez.cl/google-ads-vs-meta-ads-chile',
-      headline: 'Google Ads vs Meta Ads en Chile 2025: Comparativa Completa',
+      headline: 'Google Ads vs Meta Ads en Chile 2025-2026: Comparativa Completa',
       description: 'Análisis detallado para elegir la mejor plataforma publicitaria según tu negocio.',
       author: { '@type': 'Organization', name: 'Müller & Pérez' },
       publisher: { '@type': 'Organization', name: 'Müller & Pérez' },
       datePublished: '2025-01-01',
-      dateModified: '2025-01-01',
+      dateModified: '2026-03-10',
     },
     {
       '@type': 'FAQPage',
@@ -470,6 +470,25 @@ export default function GoogleVsMetaPage() {
             </div>
           </div>
         </section>
+
+        {/* Related Posts */}
+        <nav className="mt-12 pt-8 border-t border-gray-200">
+          <h3 className="text-lg font-bold text-gray-900 mb-4">Artículos Relacionados</h3>
+          <div className="flex flex-wrap gap-2">
+            <Link href="/ranking-agencias-marketing-digital-chile" className="text-sm text-blue-600 hover:text-blue-800 bg-blue-50 px-3 py-1.5 rounded-lg">
+              Ranking Agencias Marketing Digital Chile 2026 →
+            </Link>
+            <Link href="/mejores-agencias-performance-marketing-chile" className="text-sm text-blue-600 hover:text-blue-800 bg-blue-50 px-3 py-1.5 rounded-lg">
+              Mejores Agencias Performance Marketing Chile →
+            </Link>
+            <Link href="/predictor" className="text-sm text-green-600 hover:text-green-800 bg-green-50 px-3 py-1.5 rounded-lg">
+              Predictor de Campañas →
+            </Link>
+            <Link href="/indicadores" className="text-sm text-green-600 hover:text-green-800 bg-green-50 px-3 py-1.5 rounded-lg">
+              Termómetro Marketing Digital Chile →
+            </Link>
+          </div>
+        </nav>
       </main>
     </>
   )

@@ -57,7 +57,7 @@ export default function ReporteCompetenciaPage() {
           <h1 className="text-4xl lg:text-6xl font-black text-gray-900 mb-6 leading-tight">
             Radar de Competencia
             <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
-              Publicitaria Chile 2025
+              Publicitaria Chile 2025-2026
             </span>
           </h1>
 
@@ -226,6 +226,25 @@ export default function ReporteCompetenciaPage() {
         </div>
       </section>
 
+
+        {/* Related Posts */}
+        <nav className="mt-12 pt-8 border-t border-gray-200">
+          <h3 className="text-lg font-bold text-gray-900 mb-4">Artículos Relacionados</h3>
+          <div className="flex flex-wrap gap-2">
+            <Link href="/ranking-agencias-marketing-digital-chile" className="text-sm text-blue-600 hover:text-blue-800 bg-blue-50 px-3 py-1.5 rounded-lg">
+              Ranking Agencias Marketing Digital Chile 2026 →
+            </Link>
+            <Link href="/mejores-agencias-performance-marketing-chile" className="text-sm text-blue-600 hover:text-blue-800 bg-blue-50 px-3 py-1.5 rounded-lg">
+              Mejores Agencias Performance Marketing Chile →
+            </Link>
+            <Link href="/predictor" className="text-sm text-green-600 hover:text-green-800 bg-green-50 px-3 py-1.5 rounded-lg">
+              Predictor de Campañas →
+            </Link>
+            <Link href="/indicadores" className="text-sm text-green-600 hover:text-green-800 bg-green-50 px-3 py-1.5 rounded-lg">
+              Termómetro Marketing Digital Chile →
+            </Link>
+          </div>
+        </nav>
       {/* Footer */}
       <footer className="bg-gray-900 text-white py-12 px-6">
         <div className="max-w-7xl mx-auto text-center">

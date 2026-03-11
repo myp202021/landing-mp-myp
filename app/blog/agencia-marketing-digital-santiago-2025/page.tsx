@@ -9,14 +9,14 @@ import Link from 'next/link'
 import { ArrowLeft, CheckCircle2, TrendingUp, Target, Users, BarChart3 } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Agencia Marketing Digital Santiago 2025: Guía Completa | Muller y Pérez',
+  title: 'Agencia Marketing Digital Santiago 2025-2026: Guía Completa | Muller y Pérez',
   description: 'Guía completa para contratar agencia marketing digital en Santiago 2025. Comparativa de servicios, precios ($950k-$2M), métricas reales (ROI +380%) y checklist de selección. Data verificable.',
   keywords: 'agencia marketing digital santiago, agencia marketing santiago, marketing digital santiago 2025, agencia publicidad digital santiago, agencia google ads santiago, agencia meta ads santiago, performance marketing santiago',
   alternates: {
     canonical: 'https://www.mulleryperez.cl/blog/agencia-marketing-digital-santiago-2025'
   },
   openGraph: {
-    title: 'Agencia Marketing Digital Santiago 2025: Guía Completa',
+    title: 'Agencia Marketing Digital Santiago 2025-2026: Guía Completa',
     description: 'Guía completa para contratar agencia marketing digital en Santiago 2025. Comparativa de servicios, precios ($950k-$2M), métricas reales (ROI +380%) y checklist de selección.',
     type: 'article',
     url: 'https://www.mulleryperez.cl/blog/agencia-marketing-digital-santiago-2025',
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Agencia Marketing Digital Santiago 2025: Guía Completa',
+    title: 'Agencia Marketing Digital Santiago 2025-2026: Guía Completa',
     description: 'Guía completa para contratar agencia marketing digital en Santiago 2025. Comparativa de servicios, precios ($950k-$2M), métricas reales.'
   }
 }
@@ -35,11 +35,11 @@ export default function AgenciaMarketingDigitalSantiago2025() {
   const articleSchema = {
     '@context': 'https://schema.org',
     '@type': 'Article',
-    headline: 'Agencia Marketing Digital Santiago 2025: Guía Completa',
+    headline: 'Agencia Marketing Digital Santiago 2025-2026: Guía Completa',
     description: 'Guía completa para contratar agencia marketing digital en Santiago 2025. Comparativa de servicios, precios, métricas reales y checklist de selección.',
     image: 'https://www.mulleryperez.cl/og-image.svg',
     datePublished: '2025-01-16T00:00:00Z',
-    dateModified: '2025-01-16T00:00:00Z',
+    dateModified: '2026-03-10T00:00:00.000Z',
     author: {
       '@type': 'Person',
       name: 'Christopher Müller',
@@ -151,7 +151,7 @@ export default function AgenciaMarketingDigitalSantiago2025() {
             </div>
 
             <h1 className="text-4xl md:text-5xl font-black text-gray-900 mb-6 leading-tight">
-              Agencia Marketing Digital Santiago 2025: Guía Completa
+              Agencia Marketing Digital Santiago 2025-2026: Guía Completa
             </h1>
 
             <p className="text-xl text-gray-600 leading-relaxed mb-6">
@@ -454,6 +454,20 @@ export default function AgenciaMarketingDigitalSantiago2025() {
                   </Link>
                 </li>
               </ul>
+              <div className="flex flex-wrap gap-2 mt-6">
+                <Link href="/ranking-agencias-marketing-digital-chile" className="text-sm text-blue-600 hover:text-blue-800 bg-blue-50 px-3 py-1.5 rounded-lg">
+                  Ranking Agencias Marketing Digital Chile 2026 →
+                </Link>
+                <Link href="/mejores-agencias-performance-marketing-chile" className="text-sm text-blue-600 hover:text-blue-800 bg-blue-50 px-3 py-1.5 rounded-lg">
+                  Mejores Agencias Performance Marketing Chile →
+                </Link>
+                <Link href="/predictor" className="text-sm text-green-600 hover:text-green-800 bg-green-50 px-3 py-1.5 rounded-lg">
+                  Predictor de Campañas →
+                </Link>
+                <Link href="/indicadores" className="text-sm text-green-600 hover:text-green-800 bg-green-50 px-3 py-1.5 rounded-lg">
+                  Termómetro Marketing Digital Chile →
+                </Link>
+              </div>
             </div>
           </div>
         </article>

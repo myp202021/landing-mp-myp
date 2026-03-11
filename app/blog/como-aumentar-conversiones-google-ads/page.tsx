@@ -3,14 +3,14 @@ import Link from 'next/link'
 import { ArrowLeft, TrendingUp, Target, CheckCircle, AlertTriangle, Zap, BarChart3 } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Cómo Aumentar Conversiones en Google Ads en 30 Días (Guía 2025)',
+  title: 'Cómo Aumentar Conversiones en Google Ads en 30 Días (Guía 2025-2026)',
   description: 'Estrategias probadas para aumentar conversiones en Google Ads: optimización de Quality Score, ajuste de pujas, extensiones y mejora de landing pages. Casos reales Chile.',
   keywords: 'aumentar conversiones google ads, mejorar conversiones sem, optimizar google ads, quality score, conversion rate optimization',
   alternates: {
     canonical: 'https://www.mulleryperez.cl/blog/como-aumentar-conversiones-google-ads'
   },
   openGraph: {
-    title: 'Cómo Aumentar Conversiones en Google Ads en 30 Días (Guía 2025)',
+    title: 'Cómo Aumentar Conversiones en Google Ads en 30 Días (Guía 2025-2026)',
     description: 'Estrategias probadas para aumentar conversiones: Quality Score, pujas, extensiones y landing pages.',
     type: 'article',
     url: 'https://www.mulleryperez.cl/blog/como-aumentar-conversiones-google-ads',
@@ -23,11 +23,11 @@ export const metadata: Metadata = {
   const articleSchema = {
     '@context': 'https://schema.org',
     '@type': 'Article',
-    headline: 'Cómo Aumentar Conversiones en Google Ads en 30 Días (Guía 2025)',
+    headline: 'Cómo Aumentar Conversiones en Google Ads en 30 Días (Guía 2025-2026)',
     description: 'Estrategias probadas para aumentar conversiones en Google Ads: optimización de Quality Score, ajuste de pujas, extensiones y mejora de landing pages. Casos reales Chile.',
     url: 'https://www.mulleryperez.cl/blog/como-aumentar-conversiones-google-ads',
     datePublished: '2025-10-08T18:00:00Z',
-    dateModified: '2025-10-08T18:00:00Z',
+    dateModified: '2026-03-10T00:00:00.000Z',
     author: {
       '@type': 'Person',
       name: 'Christopher Müller',
@@ -459,6 +459,25 @@ export default function ArticlePage() {
         </div>
       </article>
 
+
+        {/* Related Posts */}
+        <nav className="mt-12 pt-8 border-t border-gray-200">
+          <h3 className="text-lg font-bold text-gray-900 mb-4">Artículos Relacionados</h3>
+          <div className="flex flex-wrap gap-2">
+            <Link href="/ranking-agencias-marketing-digital-chile" className="text-sm text-blue-600 hover:text-blue-800 bg-blue-50 px-3 py-1.5 rounded-lg">
+              Ranking Agencias Marketing Digital Chile 2026 →
+            </Link>
+            <Link href="/mejores-agencias-performance-marketing-chile" className="text-sm text-blue-600 hover:text-blue-800 bg-blue-50 px-3 py-1.5 rounded-lg">
+              Mejores Agencias Performance Marketing Chile →
+            </Link>
+            <Link href="/predictor" className="text-sm text-green-600 hover:text-green-800 bg-green-50 px-3 py-1.5 rounded-lg">
+              Predictor de Campañas →
+            </Link>
+            <Link href="/indicadores" className="text-sm text-green-600 hover:text-green-800 bg-green-50 px-3 py-1.5 rounded-lg">
+              Termómetro Marketing Digital Chile →
+            </Link>
+          </div>
+        </nav>
       <footer className="bg-gray-900 text-white py-12 px-6">
         <div className="max-w-7xl mx-auto text-center">
           <Link href="/"><img src="/logo-white.png" alt="Muller y Pérez" className="h-10 w-auto mx-auto mb-6" /></Link>

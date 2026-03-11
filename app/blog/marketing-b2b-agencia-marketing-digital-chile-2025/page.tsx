@@ -3,14 +3,14 @@ import Link from 'next/link'
 import { ArrowLeft, TrendingUp, Target, DollarSign, CheckCircle, Zap, Users, BarChart3, PlayCircle } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Marketing B2B en Chile 2025: Cómo una Agencia de Marketing Digital Genera Leads de Alto Valor',
+  title: 'Marketing B2B en Chile 2025-2026: Cómo una Agencia de Marketing Digital Genera Leads de Alto Valor',
   description: 'Descubre cómo una agencia de marketing digital en Chile 2025 genera leads B2B de alto valor con estrategias multicanal, nurturing y reportería financiera.',
   keywords: 'agencia de marketing digital, marketing B2B Chile, leads B2B 2025, agencia marketing digital B2B, performance B2B Chile',
   alternates: {
     canonical: 'https://www.mulleryperez.cl/blog/marketing-b2b-agencia-marketing-digital-chile-2025'
   },
   openGraph: {
-    title: 'Marketing B2B en Chile 2025: Cómo una Agencia de Marketing Digital Genera Leads de Alto Valor',
+    title: 'Marketing B2B en Chile 2025-2026: Cómo una Agencia de Marketing Digital Genera Leads de Alto Valor',
     description: 'Descubre cómo una agencia de marketing digital en Chile 2025 genera leads B2B de alto valor con estrategias multicanal, nurturing y reportería financiera.',
     type: 'article',
     url: 'https://www.mulleryperez.cl/blog/marketing-b2b-agencia-marketing-digital-chile-2025',
@@ -23,11 +23,11 @@ export const metadata: Metadata = {
   const articleSchema = {
     '@context': 'https://schema.org',
     '@type': 'Article',
-    headline: 'Marketing B2B en Chile 2025: Cómo una Agencia de Marketing Digital Genera Leads de Alto Valor',
+    headline: 'Marketing B2B en Chile 2025-2026: Cómo una Agencia de Marketing Digital Genera Leads de Alto Valor',
     description: 'Descubre cómo una agencia de marketing digital en Chile 2025 genera leads B2B de alto valor con estrategias multicanal, nurturing y reportería financiera.',
     url: 'https://www.mulleryperez.cl/blog/marketing-b2b-agencia-marketing-digital-chile-2025',
     datePublished: '2025-01-21T00:00:00.000Z',
-    dateModified: '2025-01-21T00:00:00.000Z',
+    dateModified: '2026-03-10T00:00:00.000Z',
     author: {
       '@type': 'Person',
       name: 'Christopher Müller',
@@ -87,7 +87,7 @@ export default function ArticlePage() {
           </div>
 
           <h1 className="text-4xl lg:text-5xl font-black text-gray-900 mb-6 leading-tight">
-            Marketing B2B en Chile 2025: Cómo una Agencia de Marketing Digital Genera Leads de Alto Valor
+            Marketing B2B en Chile 2025-2026: Cómo una Agencia de Marketing Digital Genera Leads de Alto Valor
           </h1>
 
           <div className="prose prose-lg max-w-none">
@@ -369,6 +369,25 @@ export default function ArticlePage() {
         </div>
       </article>
 
+
+        {/* Related Posts */}
+        <nav className="mt-12 pt-8 border-t border-gray-200">
+          <h3 className="text-lg font-bold text-gray-900 mb-4">Artículos Relacionados</h3>
+          <div className="flex flex-wrap gap-2">
+            <Link href="/ranking-agencias-marketing-digital-chile" className="text-sm text-blue-600 hover:text-blue-800 bg-blue-50 px-3 py-1.5 rounded-lg">
+              Ranking Agencias Marketing Digital Chile 2026 →
+            </Link>
+            <Link href="/mejores-agencias-performance-marketing-chile" className="text-sm text-blue-600 hover:text-blue-800 bg-blue-50 px-3 py-1.5 rounded-lg">
+              Mejores Agencias Performance Marketing Chile →
+            </Link>
+            <Link href="/predictor" className="text-sm text-green-600 hover:text-green-800 bg-green-50 px-3 py-1.5 rounded-lg">
+              Predictor de Campañas →
+            </Link>
+            <Link href="/indicadores" className="text-sm text-green-600 hover:text-green-800 bg-green-50 px-3 py-1.5 rounded-lg">
+              Termómetro Marketing Digital Chile →
+            </Link>
+          </div>
+        </nav>
       {/* Footer */}
       <footer className="border-t border-gray-200 py-12 px-6">
         <div className="max-w-7xl mx-auto text-center text-gray-600 text-sm">

@@ -3,14 +3,14 @@ import Link from 'next/link'
 import { CheckCircle2, TrendingUp, MapPin, Building2, Target, BarChart3, DollarSign, Users } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Agencia Performance Marketing Las Condes 2025: ROI Real y Data Verificable | Muller y Pérez',
+  title: 'Agencia Performance Marketing Las Condes 2025-2026: ROI Real y Data Verificable | Muller y Pérez',
   description: 'Agencia performance marketing especializada en Las Condes. ROI +380%, transparencia total y casos de éxito verificables en empresas B2B, tech y servicios premium.',
   keywords: 'agencia performance marketing las condes, agencia marketing las condes, performance marketing chile, agencia digital las condes, marketing b2b las condes',
   alternates: {
     canonical: 'https://www.mulleryperez.cl/blog/agencia-performance-marketing-las-condes'
   },
   openGraph: {
-    title: 'Agencia Performance Marketing Las Condes 2025: ROI Real y Data Verificable',
+    title: 'Agencia Performance Marketing Las Condes 2025-2026: ROI Real y Data Verificable',
     description: 'Agencia performance marketing especializada en Las Condes. ROI +380%, transparencia total y casos de éxito verificables en empresas B2B, tech y servicios premium.',
     url: 'https://www.mulleryperez.cl/blog/agencia-performance-marketing-las-condes',
     type: 'article',
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Agencia Performance Marketing Las Condes 2025: ROI Real',
+    title: 'Agencia Performance Marketing Las Condes 2025-2026: ROI Real',
     description: 'Agencia performance marketing especializada en Las Condes. ROI +380%, transparencia total y casos de éxito verificables.',
   }
 }
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
 const articleSchema = {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "Agencia Performance Marketing Las Condes 2025: ROI Real y Data Verificable",
+  "headline": "Agencia Performance Marketing Las Condes 2025-2026: ROI Real y Data Verificable",
   "description": "Guía completa sobre agencias de performance marketing en Las Condes, benchmarks por industria y casos de éxito reales.",
   "image": "https://www.mulleryperez.cl/og-blog-performance-las-condes.jpg",
   "author": {
@@ -50,7 +50,7 @@ const articleSchema = {
     }
   },
   "datePublished": "2025-01-16",
-  "dateModified": "2025-01-16"
+  "dateModified": "2026-03-10"
 }
 
 const faqSchema = {
@@ -609,6 +609,20 @@ export default function AgenciaPerformanceMarketingLasCondes() {
             <Link href="/blog/agencia-marketing-digital-santiago-2025" className="bg-white border-2 border-gray-200 rounded-lg p-6 hover:border-blue-400 transition-colors">
               <h3 className="text-lg font-bold text-gray-900 mb-2">Agencia Marketing Digital Santiago 2025</h3>
               <p className="text-gray-600 text-sm">Guía completa sobre agencias de marketing digital en Santiago.</p>
+            </Link>
+          </div>
+          <div className="flex flex-wrap gap-2 mt-6">
+            <Link href="/ranking-agencias-marketing-digital-chile" className="text-sm text-blue-600 hover:text-blue-800 bg-blue-50 px-3 py-1.5 rounded-lg">
+              Ranking Agencias Marketing Digital Chile 2026 →
+            </Link>
+            <Link href="/mejores-agencias-performance-marketing-chile" className="text-sm text-blue-600 hover:text-blue-800 bg-blue-50 px-3 py-1.5 rounded-lg">
+              Mejores Agencias Performance Marketing Chile →
+            </Link>
+            <Link href="/predictor" className="text-sm text-green-600 hover:text-green-800 bg-green-50 px-3 py-1.5 rounded-lg">
+              Predictor de Campañas →
+            </Link>
+            <Link href="/indicadores" className="text-sm text-green-600 hover:text-green-800 bg-green-50 px-3 py-1.5 rounded-lg">
+              Termómetro Marketing Digital Chile →
             </Link>
           </div>
         </div>
