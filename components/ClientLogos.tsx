@@ -4,9 +4,9 @@
 const clients = [
   { name: 'Dezar', industry: 'Rent a Car' },
   { name: 'Antartic', industry: 'Refrigeración Industrial' },
-  { name: 'Charriot', industry: 'Leasing Operativo' },
+  { name: 'Charriot', industry: 'Automotriz' },
   { name: 'Adimac', industry: 'Maquinaria Industrial' },
-  { name: 'Sistemáticos', industry: 'Tecnología' },
+  { name: 'Sistemáticos', industry: 'Protección contra Incendios' },
   { name: 'Zero Water', industry: 'Purificación de Agua' },
   { name: 'Granarolo', industry: 'Alimentos' },
   { name: 'Fundación Pro Acogida', industry: 'ONG' },
