@@ -1,77 +1,70 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 
-// 40 clientes actuales e históricos de M&P
 const clients = [
-  { name: 'Dezar', industry: 'Rent a Car' },
-  { name: 'Antartic', industry: 'Refrigeración Industrial' },
-  { name: 'Charriot', industry: 'Automotriz' },
-  { name: 'Adimac', industry: 'Maquinaria Industrial' },
-  { name: 'Sistemáticos', industry: 'Protección contra Incendios' },
-  { name: 'Zero Water', industry: 'Purificación de Agua' },
-  { name: 'Granarolo', industry: 'Alimentos' },
-  { name: 'Fundación Pro Acogida', industry: 'ONG' },
-  { name: 'Elitsoft', industry: 'Software' },
-  { name: 'Invas', industry: 'Logística' },
-  { name: 'First Pack', industry: 'Packaging' },
-  { name: 'Power Energy', industry: 'Iluminación LED' },
-  { name: 'Buses Hualpén', industry: 'Transporte' },
-  { name: 'Stocks', industry: 'Propiedades' },
-  { name: 'Vemos tu Auto', industry: 'Automotriz', url: 'https://vemostuauto.cl/' },
-  { name: 'Clínica Mateos López', industry: 'Salud' },
-  { name: 'Pregiata', industry: 'Retail' },
-  { name: 'Genera HR', industry: 'SaaS' },
-  { name: 'JP Procesos Agroindustriales', industry: 'Agroindustria' },
-  { name: 'Empresas Tecnomat', industry: 'Construcción' },
-  { name: 'Forcmin', industry: 'Minería' },
-  { name: 'Distec', industry: 'Distribución Tecnológica' },
-  { name: 'Pineapple Store', industry: 'Accesorios Apple' },
-  { name: 'Byte Store', industry: 'Tecnología Refurbished' },
-  { name: 'Rilay', industry: 'Inmobiliaria' },
-  { name: 'Onewaite', industry: 'Inmobiliaria' },
-  { name: 'Fuxion Logistics', industry: 'Logística' },
-  { name: 'HL Soluciones', industry: 'SaaS' },
-  { name: 'ALD Automotora', industry: 'Automotriz' },
-  { name: 'Swing Management', industry: 'Producción de Eventos' },
-  { name: 'Atacama Experience', industry: 'Turismo' },
-  { name: 'Budnik', industry: 'Propiedades' },
-  { name: 'Homar', industry: 'Importadora' },
-  { name: 'Cobreloa', industry: 'Deportes' },
-  { name: 'Imestre', industry: 'Construcción' },
-  { name: 'Pacific Mining Parts', industry: 'Minería' },
-  { name: 'Klapp', industry: 'Educación' },
-  { name: '4life Hipotecaria', industry: 'Finanzas' },
-  { name: 'Security Hipotecaria', industry: 'Finanzas' },
-  { name: 'Forestal Río Claro', industry: 'Forestal' },
+  { name: 'Dezar', industry: 'Rent a Car', logo: '/clientes/dezar.png' },
+  { name: 'Antartic', industry: 'Refrigeración Industrial', logo: '/clientes/antartic.png' },
+  { name: 'Charriot', industry: 'Automotriz', logo: '/clientes/charriot.png' },
+  { name: 'Adimac', industry: 'Maquinaria Industrial', logo: '/clientes/adimac.png' },
+  { name: 'Sistemáticos', industry: 'Protección contra Incendios', logo: '/clientes/sistematios.png' },
+  { name: 'Zero Water', industry: 'Purificación de Agua', logo: '/clientes/zero-water.png' },
+  { name: 'Granarolo', industry: 'Alimentos', logo: '/clientes/granarolo.png' },
+  { name: 'Fundación Pro Acogida', industry: 'ONG', logo: '/clientes/pro-acogida.png' },
+  { name: 'Elitsoft', industry: 'Software', logo: '/clientes/elitsoft.png' },
+  { name: 'invasWMS', industry: 'Logística', logo: '/clientes/invaswms.png' },
+  { name: 'First Pack', industry: 'Packaging', logo: '/clientes/first-pack.png' },
+  { name: 'Power Energy', industry: 'Iluminación LED', logo: '/clientes/power-energy.png' },
+  { name: 'Buses Hualpén', industry: 'Transporte', logo: '/clientes/hualpen.png' },
+  { name: 'Stocks', industry: 'Propiedades', logo: '/clientes/stocks.png' },
+  { name: 'Vemos tu Auto', industry: 'Automotriz', logo: '/clientes/vemos-tu-auto.png', url: 'https://vemostuauto.cl/' },
+  { name: 'Clínica Mateos López', industry: 'Salud', logo: '/clientes/lopez-mateo.png' },
+  { name: 'Pregiata', industry: 'Retail', logo: '/clientes/pregiata.png' },
+  { name: 'Genera', industry: 'Recursos Humanos', logo: '/clientes/genera.png' },
+  { name: 'JP Procesos', industry: 'Agroindustria', logo: '/clientes/jp-procesos.png' },
+  { name: 'Tecnomat', industry: 'Construcción', logo: '/clientes/tecnomat.png' },
+  { name: 'Forcmin', industry: 'Minería', logo: '/clientes/logo-forcmin-c.png' },
+  { name: 'Distec', industry: 'Distribución Tecnológica', logo: '/clientes/distec.png' },
+  { name: 'Pineapple Store', industry: 'Accesorios Apple', logo: '/clientes/pineapple-store.png' },
+  { name: 'Byte Store', industry: 'Tecnología Refurbished', logo: '/clientes/byte-store.png' },
+  { name: 'Rilay', industry: 'Inmobiliaria', logo: '/clientes/rilay.png' },
+  { name: 'Fuxion Logistics', industry: 'Logística', logo: '/clientes/fuxion-logistics.png' },
+  { name: 'HL Soluciones', industry: 'SaaS', logo: '/clientes/hl-soluciones.png' },
+  { name: 'ALD Automotora', industry: 'Automotriz', logo: '/clientes/ald.png' },
+  { name: 'Swing', industry: 'Producción de Eventos', logo: '/clientes/swing.png' },
+  { name: 'Atacama Experience', industry: 'Turismo', logo: '/clientes/atacama-experience.png' },
+  { name: 'Budnik', industry: 'Propiedades', logo: '/clientes/budnik.png' },
+  { name: 'Homar', industry: 'Importadora', logo: '/clientes/homar.png' },
+  { name: 'Faretto', industry: 'Iluminación', logo: '/clientes/faretto.png' },
 ]
 
-const row1 = clients.slice(0, 20)
-const row2 = clients.slice(20, 40)
+const row1 = clients.slice(0, 17)
+const row2 = clients.slice(17)
 
 function ClientCard({ client }: { client: typeof clients[0] }) {
   return (
     <div
-      className="flex-shrink-0 w-44 h-20 bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md hover:border-blue-200 transition-all duration-300 flex flex-col items-center justify-center px-4 mx-2 group"
+      className="flex-shrink-0 w-48 h-24 bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md hover:border-blue-200 transition-all duration-300 flex items-center justify-center px-5 mx-2 group"
       title={`${client.name} — ${client.industry}`}
     >
-      <span className="text-[13px] font-extrabold text-gray-800 group-hover:text-blue-900 text-center leading-tight whitespace-normal tracking-tight transition-colors duration-300">
-        {client.name}
-      </span>
-      <span className="text-[9px] font-medium text-gray-400 group-hover:text-blue-500 uppercase tracking-widest mt-1 transition-colors duration-300">
-        {client.industry}
-      </span>
+      <Image
+        src={client.logo}
+        alt={`Logo ${client.name} — cliente de Muller y Pérez`}
+        width={160}
+        height={64}
+        className="object-contain max-h-14 w-auto grayscale group-hover:grayscale-0 opacity-70 group-hover:opacity-100 transition-all duration-300"
+      />
     </div>
   )
 }
 
-// Carrusel infinito CSS — dos filas, direcciones opuestas
 export default function ClientLogos() {
   return (
     <div className="w-full overflow-hidden py-6 relative">
       <div className="text-center mb-6">
         <p className="text-sm font-bold text-gray-500 uppercase tracking-wider">
-          +40 empresas confían en nosotros
+          +50 empresas confían en nosotros
         </p>
       </div>
 
@@ -99,14 +92,13 @@ export default function ClientLogos() {
   )
 }
 
-// Versión grid estática — SEO + JSON-LD
 export function ClientLogosGrid() {
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Organization',
     name: 'Muller y Pérez',
     url: 'https://www.mulleryperez.cl',
-    description: 'Agencia de Performance Marketing en Chile con más de 40 clientes activos en diversas industrias',
+    description: 'Agencia de Performance Marketing en Chile con más de 50 clientes activos en diversas industrias',
     knowsAbout: ['Performance Marketing', 'Google Ads', 'Meta Ads', 'Marketing Digital Chile'],
     member: clients.map(c => ({
       '@type': 'Organization',
@@ -132,14 +124,12 @@ export function ClientLogosGrid() {
             Confían en Nosotros
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            +40 empresas gestionan su performance marketing con el modelo M&P: estrategia, datos y resultados medibles cada mes
+            +50 empresas gestionan su performance marketing con el modelo M&P: estrategia, datos y resultados medibles cada mes
           </p>
         </header>
 
-        {/* Carrusel visual */}
         <ClientLogos />
 
-        {/* Grid oculto para SEO — crawlable por bots */}
         <ul className="sr-only" role="list" aria-label="Lista completa de clientes de Muller y Pérez">
           {clients.map((client) => (
             <li key={client.name}>
