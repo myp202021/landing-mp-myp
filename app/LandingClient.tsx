@@ -2068,6 +2068,9 @@ export default function LandingClient() {
         </div>
       </section>
 
+      {/* Clientes — debajo de planes */}
+      <ClientLogosGrid />
+
       {/* Contacto */}
       <section id="contacto" className="py-20 px-6 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-white" aria-labelledby="formulario-contacto">
         <div className="max-w-4xl mx-auto">
@@ -2402,10 +2405,7 @@ export default function LandingClient() {
             </div>
           </div>
 
-          {/* Clientes */}
-          <div className="mb-20">
-            <ClientLogosGrid />
-          </div>
+          {/* Clientes — movido arriba, debajo de planes */}
 
           {/* Industrias - 10 con colores vivos */}
           <div className="text-center">

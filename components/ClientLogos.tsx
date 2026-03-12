@@ -45,7 +45,7 @@ const row2 = clients.slice(17)
 function ClientCard({ client }: { client: typeof clients[0] }) {
   return (
     <div
-      className="flex-shrink-0 w-48 h-24 bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md hover:border-blue-200 transition-all duration-300 flex items-center justify-center px-5 mx-2 group"
+      className="flex-shrink-0 w-48 h-24 bg-white rounded-xl shadow-md hover:shadow-lg hover:scale-105 transition-all duration-300 flex items-center justify-center px-5 mx-2"
       title={`${client.name} — ${client.industry}`}
     >
       <Image
@@ -53,7 +53,7 @@ function ClientCard({ client }: { client: typeof clients[0] }) {
         alt={`Logo ${client.name} — cliente de Muller y Pérez`}
         width={160}
         height={64}
-        className="object-contain max-h-14 w-auto grayscale group-hover:grayscale-0 opacity-70 group-hover:opacity-100 transition-all duration-300"
+        className="object-contain max-h-14 w-auto"
       />
     </div>
   )
@@ -61,13 +61,7 @@ function ClientCard({ client }: { client: typeof clients[0] }) {
 
 export default function ClientLogos() {
   return (
-    <div className="w-full overflow-hidden py-6 relative">
-      <div className="text-center mb-6">
-        <p className="text-sm font-bold text-gray-500 uppercase tracking-wider">
-          +50 empresas confían en nosotros
-        </p>
-      </div>
-
+    <div className="w-full overflow-hidden py-4 relative">
       {/* Fila 1 — izquierda */}
       <div className="relative overflow-hidden mb-3">
         <div className="flex animate-scroll-left">
@@ -86,8 +80,8 @@ export default function ClientLogos() {
         </div>
       </div>
 
-      <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-gray-50 to-transparent z-10" />
-      <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-gray-50 to-transparent z-10" />
+      <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-slate-900 to-transparent z-10" />
+      <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-slate-900 to-transparent z-10" />
     </div>
   )
 }
@@ -110,7 +104,8 @@ export function ClientLogosGrid() {
 
   return (
     <section
-      className="py-16 px-6 bg-gray-50 border-t border-gray-100"
+      id="clientes"
+      className="py-20 px-6 bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900"
       aria-label="Clientes de Muller y Pérez"
     >
       <script
@@ -119,12 +114,15 @@ export function ClientLogosGrid() {
       />
 
       <div className="max-w-7xl mx-auto">
-        <header className="text-center mb-10">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Confían en Nosotros
+        <header className="text-center mb-12">
+          <p className="text-sm font-bold text-blue-400 uppercase tracking-widest mb-3">
+            +50 empresas confían en nosotros
+          </p>
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+            Resultados reales para empresas reales
           </h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            +50 empresas gestionan su performance marketing con el modelo M&P: estrategia, datos y resultados medibles cada mes
+          <p className="text-lg text-blue-200/80 max-w-2xl mx-auto">
+            Desde startups hasta empresas con operaciones internacionales, gestionamos performance marketing con datos y transparencia total
           </p>
         </header>
 
@@ -142,18 +140,18 @@ export function ClientLogosGrid() {
         <div className="flex flex-wrap justify-center gap-4 mt-10 text-sm">
           <Link
             href="/ranking-agencias-marketing-digital-chile"
-            className="text-blue-600 hover:text-blue-800 font-semibold transition-colors"
+            className="text-blue-400 hover:text-blue-300 font-semibold transition-colors"
           >
             Ranking Agencias Marketing Digital Chile 2026 →
           </Link>
           <Link
             href="/mejores-agencias-performance-marketing-chile"
-            className="text-blue-600 hover:text-blue-800 font-semibold transition-colors"
+            className="text-blue-400 hover:text-blue-300 font-semibold transition-colors"
           >
             Mejores Agencias Performance Marketing →
           </Link>
         </div>
-        <p className="text-center mt-4 text-gray-400 text-xs">
+        <p className="text-center mt-4 text-blue-300/50 text-xs">
           Clientes activos con gestión mensual continua
         </p>
       </div>
