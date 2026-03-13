@@ -500,11 +500,13 @@ export const createDefinitiveAnswerSchema = (qa: {
       dateCreated: dateCreated,
       author: {
         '@type': 'Organization',
-        name: qa.author || 'Muller y Pérez'
+        name: qa.author || 'Muller y Pérez',
+        url: 'https://www.mulleryperez.cl'
       },
       acceptedAnswer: {
         '@type': 'Answer',
         text: qa.answer,
+        url: 'https://www.mulleryperez.cl',
         dateCreated: dateCreated,
         dateModified: dateModified,
         author: {
