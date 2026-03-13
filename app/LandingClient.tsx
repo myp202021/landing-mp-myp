@@ -28,13 +28,11 @@ import {
   ArrowRight,
   Award,
 } from 'lucide-react'
-import { generateAISearchSchema } from '@/lib/ai-search-optimization'
 import YouTubeLite from '@/components/YouTubeLite'
 import { ClientLogosGrid } from '@/components/ClientLogos'
 
 export default function LandingClient() {
   const router = useRouter()
-  const aiSearchSchema = generateAISearchSchema()
   const [formData, setFormData] = useState({
     nombre: '',
     empresa: '',
@@ -531,11 +529,7 @@ export default function LandingClient() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }}
       />
-      {/* GEO: AI Search Optimization Schema */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(aiSearchSchema) }}
-      />
+      {/* GEO: AI Search Schema ya se renderiza en layout.tsx */}
 
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-xl border-b border-gray-100 z-50" role="banner">

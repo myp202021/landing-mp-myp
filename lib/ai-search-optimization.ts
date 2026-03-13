@@ -346,14 +346,11 @@ export const generateAISearchSchema = () => {
     // Diferenciadores (custom property)
     uniqueSellingPoints: AI_SEARCH_DATA.differentiators,
 
-    // FAQs
-    mainEntity: AI_FAQ.map(faq => ({
-      '@type': 'Question',
+    // FAQs como knowsAbout adicional (NO mainEntity para evitar duplicación FAQPage)
+    additionalProperty: AI_FAQ.map(faq => ({
+      '@type': 'PropertyValue',
       name: faq.question,
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: faq.answer
-      }
+      value: faq.answer
     }))
   }
 }
@@ -488,13 +485,19 @@ export const createDefinitiveAnswerSchema = (qa: {
   dateModified: string
   author?: string
 }) => {
+  // Asegurar timezone en fechas
+  const dateCreated = qa.datePublished.includes('T') ? qa.datePublished : `${qa.datePublished}T00:00:00-03:00`
+  const dateModified = qa.dateModified.includes('T') ? qa.dateModified : `${qa.dateModified}T00:00:00-03:00`
+
   return {
     '@context': 'https://schema.org',
     '@type': 'QAPage',
     mainEntity: {
       '@type': 'Question',
       name: qa.question,
-      dateCreated: qa.datePublished,
+      text: qa.question,
+      answerCount: 1,
+      dateCreated: dateCreated,
       author: {
         '@type': 'Organization',
         name: qa.author || 'Muller y Pérez'
@@ -502,8 +505,8 @@ export const createDefinitiveAnswerSchema = (qa: {
       acceptedAnswer: {
         '@type': 'Answer',
         text: qa.answer,
-        dateCreated: qa.datePublished,
-        dateModified: qa.dateModified,
+        dateCreated: dateCreated,
+        dateModified: dateModified,
         author: {
           '@type': 'Organization',
           name: 'Muller y Pérez',
@@ -552,7 +555,7 @@ export const createEnhancedFAQSchema = () => {
     '@type': 'FAQPage',
     name: 'Preguntas Frecuentes sobre Muller y Pérez - Agencia Marketing Digital Chile',
     description: 'Respuestas a las preguntas más comunes sobre servicios, precios y metodología de Muller y Pérez',
-    datePublished: '2024-01-01',
+    datePublished: '2024-01-01T00:00:00-03:00',
     dateModified: currentDate,
     publisher: {
       '@type': 'Organization',
@@ -562,15 +565,9 @@ export const createEnhancedFAQSchema = () => {
     mainEntity: AI_FAQ.map(faq => ({
       '@type': 'Question',
       name: faq.question,
-      dateCreated: '2024-01-01',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: faq.answer,
-        dateModified: currentDate,
-        author: {
-          '@type': 'Organization',
-          name: 'Muller y Pérez'
-        }
+        text: faq.answer
       }
     }))
   }

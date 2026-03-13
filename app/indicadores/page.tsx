@@ -68,7 +68,8 @@ const CVR_MAP: Record<string, number> = {
 // ─── JSON-LD Schemas ─────────────────────────────────────────────────────────
 
 function buildSchemas(data: any, cpcData: any[], fecha: string | null) {
-  const datePublished = data?.fecha ?? new Date().toISOString().split('T')[0]
+  const rawDate = data?.fecha ?? new Date().toISOString().split('T')[0]
+  const datePublished = rawDate.includes('T') ? rawDate : `${rawDate}T00:00:00-03:00`
   const semanaLabel = data ? `Semana ${data.semana}/${data.año}` : ''
 
   const maxCpc = cpcData.length ? cpcData.reduce((a: any, b: any) => a.google_clp > b.google_clp ? a : b) : null
