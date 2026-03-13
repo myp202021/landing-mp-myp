@@ -154,17 +154,27 @@ export async function POST(req: NextRequest) {
     console.log('✅ Lead creado exitosamente:', leadInserted.id)
 
     // Enviar notificación email al cliente (no bloquea la respuesta)
+    const RESEND_KEY = process.env.RESEND_API_KEY || process.env.RESEND
     const notifyEmail = clienteData.contacto_email
-    if (notifyEmail && process.env.RESEND_API_KEY) {
+    const ALWAYS_CC = 'arturo@mulleryperez.cl'
+
+    if (RESEND_KEY) {
+      const toList = notifyEmail ? [notifyEmail] : [ALWAYS_CC]
+      // Agregar CC si notifyEmail no es ya arturo
+      const ccList = (notifyEmail && notifyEmail !== ALWAYS_CC) ? [ALWAYS_CC] : []
+
+      console.log('📧 Enviando notificación a:', toList, 'CC:', ccList)
+
       fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
+          'Authorization': `Bearer ${RESEND_KEY}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
           from: 'contacto@mulleryperez.cl',
-          to: notifyEmail,
+          to: toList,
+          ...(ccList.length > 0 ? { cc: ccList } : {}),
           subject: `🔔 Nuevo lead: ${leadData.nombre} — ${clienteData.nombre}`,
           html: `
             <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;">
@@ -193,8 +203,16 @@ export async function POST(req: NextRequest) {
         })
       })
         .then(r => r.json())
-        .then(d => console.log('📧 Notificación enviada a', notifyEmail, d.id))
-        .catch(e => console.error('⚠️ Error enviando notificación (no crítico):', e))
+        .then(d => {
+          if (d.id) {
+            console.log('📧 Notificación enviada OK:', d.id, '→', toList)
+          } else {
+            console.error('⚠️ Resend respondió sin ID:', JSON.stringify(d))
+          }
+        })
+        .catch(e => console.error('⚠️ Error enviando notificación:', e.message))
+    } else {
+      console.warn('⚠️ RESEND_API_KEY / RESEND no configurada — notificación NO enviada')
     }
 
     return NextResponse.json({
