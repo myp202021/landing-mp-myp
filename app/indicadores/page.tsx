@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
   title: 'CPC y CPA por Industria en Chile 2026 — Google Ads y Meta Ads | Muller y Pérez',
-  description: 'Benchmarks semanales de CPC y CPA para Google Ads y Meta Ads en 22 industrias en Chile. E-commerce, salud, inmobiliaria, fintech y más. Actualizado cada lunes con tipo de cambio USD real.',
+  description: 'Benchmarks semanales de CPC y CPA para Google Ads y Meta Ads en 22 industrias en Chile. E-commerce, salud, inmobiliaria, fintech y más. Actualizado cada sábado con tipo de cambio USD real.',
   keywords: [
     'CPC Chile 2026', 'CPA Chile publicidad digital', 'Google Ads Chile costo por click',
     'Meta Ads Chile benchmark', 'costo pauta digital Chile', 'benchmark marketing digital Chile',
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   alternates: { canonical: 'https://www.mulleryperez.cl/indicadores' },
   openGraph: {
     title: 'CPC y CPA por Industria en Chile 2026 — Google Ads y Meta Ads',
-    description: 'Benchmarks semanales de CPC y CPA para Google Ads y Meta Ads en 22 industrias en Chile. Actualizado cada lunes.',
+    description: 'Benchmarks semanales de CPC y CPA para Google Ads y Meta Ads en 22 industrias en Chile. Actualizado cada sábado.',
     url: 'https://www.mulleryperez.cl/indicadores',
     siteName: 'Muller y Pérez',
     locale: 'es_CL',
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'CPC y CPA por Industria en Chile 2026',
-    description: 'Benchmarks semanales de Google Ads y Meta Ads para 22 industrias en Chile. Actualizado cada lunes.',
+    description: 'Benchmarks semanales de Google Ads y Meta Ads para 22 industrias en Chile. Actualizado cada sábado.',
     images: ['https://www.mulleryperez.cl/og-indicadores.png'],
   },
   robots: { index: true, follow: true, googleBot: { index: true, follow: true } },
@@ -165,7 +165,7 @@ function buildSchemas(data: any, cpcData: any[], fecha: string | null) {
     },
     {
       q: '¿Por qué cambia el CPC de Google Ads y Meta Ads cada semana en Chile?',
-      a: 'Las plataformas de publicidad digital (Google y Meta) cobran en dólares americanos (USD). Cuando el tipo de cambio USD/CLP sube, el costo en pesos de cada click también sube proporcionalmente. Por eso el Termómetro M&P actualiza los CPCs cada lunes usando el valor del dólar publicado por el Banco Central de Chile.',
+      a: 'Las plataformas de publicidad digital (Google y Meta) cobran en dólares americanos (USD). Cuando el tipo de cambio USD/CLP sube, el costo en pesos de cada click también sube proporcionalmente. Por eso el Termómetro M&P actualiza los CPCs cada sábado usando el valor del dólar publicado por el Banco Central de Chile.',
     },
     {
       q: '¿Qué industria tiene el CPC más alto en Chile?',
@@ -251,7 +251,7 @@ export default async function IndicadoresPage() {
             <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold border mb-5"
               style={{ background: 'rgba(0,212,255,0.1)', borderColor: 'rgba(0,212,255,0.3)', color: '#00d4ff' }}>
               <span className="w-2 h-2 rounded-full bg-[#00d4ff] animate-pulse" />
-              Actualizado cada lunes · Automatizado
+              Actualizado cada sábado · Ajuste estacional
             </span>
             <h1 className="text-4xl lg:text-5xl font-black mb-4 leading-tight">
               Termómetro de<br />
@@ -260,7 +260,7 @@ export default async function IndicadoresPage() {
             <p className="speakable-intro text-white/60 text-lg max-w-2xl">
               CPC y CPA estimado para Google Ads y Meta Ads en 22 industrias en Chile,
               ajustados semanalmente al tipo de cambio USD.
-              Benchmarks reales del mercado chileno, actualizados cada lunes.
+              Benchmarks reales del mercado chileno, actualizados cada sábado con ajuste estacional por industria.
             </p>
             {fechaActualizada && (
               <p className="text-white/30 text-sm mt-3">
@@ -272,7 +272,7 @@ export default async function IndicadoresPage() {
           {!data ? (
             <div className="rounded-2xl p-16 text-center border border-white/10" style={{ background: 'rgba(255,255,255,0.03)' }}>
               <BarChart2 className="w-12 h-12 text-white/20 mx-auto mb-4" />
-              <p className="text-white/40">Los indicadores se publican cada lunes.</p>
+              <p className="text-white/40">Los indicadores se publican cada sábado.</p>
             </div>
           ) : (
             <>
@@ -322,7 +322,7 @@ export default async function IndicadoresPage() {
 
                     {/* Header desktop */}
                     <div className="hidden md:grid px-5 py-3 border-b border-white/10 text-xs font-bold text-white/40 uppercase tracking-wider"
-                      style={{ gridTemplateColumns: '2fr 1fr 1fr 1fr 1fr 0.6fr 0.7fr' }}>
+                      style={{ gridTemplateColumns: '2fr 1fr 1fr 1fr 1fr 0.6fr 0.7fr 0.7fr' }}>
                       <div>Industria</div>
                       <div className="text-right">G. CPC</div>
                       <div className="text-right text-emerald-400/60">G. CPA</div>
@@ -330,6 +330,7 @@ export default async function IndicadoresPage() {
                       <div className="text-right text-purple-400/60">M. CPA</div>
                       <div className="text-right">CVR</div>
                       <div className="text-right">Var.</div>
+                      <div className="text-right text-amber-400/60">Est.</div>
                     </div>
 
                     {/* Header mobile */}
@@ -349,7 +350,7 @@ export default async function IndicadoresPage() {
 
                         {/* Row desktop */}
                         <div className="hidden md:grid px-5 py-3.5 items-center"
-                          style={{ gridTemplateColumns: '2fr 1fr 1fr 1fr 1fr 0.6fr 0.7fr' }}>
+                          style={{ gridTemplateColumns: '2fr 1fr 1fr 1fr 1fr 0.6fr 0.7fr 0.7fr' }}>
                           <div className="text-sm font-medium text-white">{ind.label}</div>
                           <div className="text-right">
                             <span className="text-sm font-bold text-white">{clp(ind.google_clp)}</span>
@@ -371,6 +372,20 @@ export default async function IndicadoresPage() {
                           <div className="flex justify-end">
                             <VarBadge val={ind.google_var_pct} />
                           </div>
+                          <div className="text-right">
+                            {ind.factor_estacional ? (
+                              <span className={`text-xs font-bold ${
+                                ind.factor_estacional > 1.05 ? 'text-amber-400' :
+                                ind.factor_estacional < 0.95 ? 'text-sky-400' :
+                                'text-white/40'
+                              }`}>
+                                {ind.factor_estacional > 1.05 ? '↑' : ind.factor_estacional < 0.95 ? '↓' : '·'}{' '}
+                                {ind.factor_estacional.toFixed(2)}
+                              </span>
+                            ) : (
+                              <span className="text-white/30 text-xs">—</span>
+                            )}
+                          </div>
                         </div>
 
                         {/* Row mobile */}
@@ -391,11 +406,12 @@ export default async function IndicadoresPage() {
                     ))}
 
                     <div className="px-5 py-3 text-xs text-white/25 border-t border-white/5 leading-relaxed">
-                      <span className="text-white/40 font-semibold">CPC:</span> benchmarks Ubersuggest Chile, ajustados por USD semanal (Banco Central). &nbsp;
+                      <span className="text-white/40 font-semibold">CPC:</span> benchmarks Ubersuggest Chile, ajustados por USD semanal + estacionalidad. &nbsp;
                       <span className="text-emerald-400/50 font-semibold">CPA Google</span> y{' '}
                       <span className="text-purple-400/50 font-semibold">CPA Meta:</span> CPC ÷ CVR de industria (predictor M&amp;P). &nbsp;
                       <span className="text-white/40 font-semibold">CVR:</span> tasa de conversión promedio por industria. &nbsp;
-                      <span className="text-white/40 font-semibold">Var.:</span> variación vs semana anterior (sube USD → sube CPC).
+                      <span className="text-white/40 font-semibold">Var.:</span> variación vs semana anterior. &nbsp;
+                      <span className="text-amber-400/50 font-semibold">Est.:</span> factor estacional del mes (<span className="text-amber-400/70">↑</span> temporada alta, <span className="text-sky-400/70">↓</span> baja).
                     </div>
                   </div>
                 </section>
@@ -407,8 +423,10 @@ export default async function IndicadoresPage() {
                 <p className="text-white/60 text-sm leading-relaxed">
                   Los <strong className="text-white/80">CPC de Google</strong> son benchmarks calibrados con datos reales de Ubersuggest Chile
                   (~1.200 keywords analizadas por volumen ponderado, base Sep 2025 a USD $935 CLP).
-                  Se ajustan semanalmente por el tipo de cambio del Banco Central de Chile (vía mindicador.cl),
-                  ya que Google y Meta facturan en dólares.
+                  Se ajustan semanalmente por dos factores: (1) el <strong className="text-white/80">tipo de cambio USD</strong> del Banco Central
+                  de Chile (vía mindicador.cl), ya que Google y Meta facturan en dólares, y (2) un <strong className="text-amber-400/80">factor
+                  estacional</strong> por industria y mes, que refleja la variación de demanda publicitaria a lo largo del año
+                  en Chile (ej: turismo sube en verano, educación en marzo, retail en noviembre).
                   Los <strong className="text-white/80">CPC de Meta</strong> se estiman aplicando ratios de industria sobre Google
                   (benchmarks WordStream y Databox 2024–2025).
                   El <strong className="text-white/80">CPA</strong> = CPC ÷ CVR, donde el CVR proviene del motor del predictor M&P

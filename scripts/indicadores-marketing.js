@@ -46,6 +46,42 @@ const CPC_INDUSTRIAS = [
 ]
 const USD_BASE = 935 // tasa de referencia cuando se calibraron los CPCs
 
+// ─── Factores estacionales por industria (Chile, hemisferio sur) ─────────
+// Multiplicador mensual: 1.0 = demanda base. >1 = temporada alta (más competencia, CPC sube)
+// Fuentes: benchmarks WordStream/Databox + experiencia M&P mercado chileno
+// Índices: 0=Ene, 1=Feb, ... 11=Dic
+const ESTACIONALIDAD = {
+  //                        Ene   Feb   Mar   Abr   May   Jun   Jul   Ago   Sep   Oct   Nov   Dic
+  ecommerce:              [0.85, 0.88, 0.95, 0.92, 1.00, 1.05, 1.02, 0.98, 1.00, 1.08, 1.25, 1.35],
+  moda_retail:            [0.82, 0.85, 0.95, 0.92, 0.98, 1.08, 1.05, 0.95, 1.00, 1.05, 1.22, 1.30],
+  gastronomia:            [0.95, 0.92, 1.00, 0.98, 1.00, 1.05, 1.02, 1.00, 1.02, 1.05, 1.08, 1.15],
+  educacion:              [0.78, 1.15, 1.30, 1.10, 1.00, 0.92, 0.88, 0.95, 1.00, 1.02, 0.90, 0.75],
+  tecnologia:             [0.92, 0.95, 1.00, 1.00, 1.02, 1.05, 1.00, 0.98, 1.00, 1.08, 1.20, 1.10],
+  hogar:                  [0.90, 0.88, 1.00, 1.05, 1.08, 0.95, 0.92, 0.95, 1.05, 1.10, 1.12, 1.08],
+  belleza:                [0.95, 0.92, 1.00, 1.02, 1.05, 0.98, 0.95, 1.00, 1.05, 1.08, 1.10, 1.15],
+  deportes:               [1.15, 1.10, 1.08, 1.00, 0.92, 0.85, 0.88, 0.95, 1.05, 1.08, 1.10, 1.12],
+  veterinaria:            [0.95, 0.98, 1.00, 1.02, 1.00, 1.05, 1.02, 1.00, 1.00, 1.02, 1.00, 0.98],
+  automotriz:             [0.88, 0.90, 1.10, 1.12, 1.05, 0.95, 0.90, 0.92, 1.00, 1.10, 1.15, 1.08],
+  inmobiliaria:           [0.85, 0.88, 1.08, 1.12, 1.10, 0.95, 0.90, 0.92, 1.05, 1.12, 1.10, 0.90],
+  turismo:                [1.30, 1.25, 1.10, 0.88, 0.80, 0.82, 0.90, 0.85, 0.95, 1.05, 1.10, 1.35],
+  salud:                  [0.95, 0.98, 1.02, 1.05, 1.08, 1.12, 1.10, 1.05, 1.00, 1.00, 0.98, 0.92],
+  legal:                  [0.90, 0.95, 1.08, 1.10, 1.05, 1.00, 0.98, 1.00, 1.02, 1.05, 1.02, 0.88],
+  profesionales:          [0.88, 0.92, 1.10, 1.08, 1.05, 1.00, 0.95, 0.98, 1.02, 1.05, 1.05, 0.85],
+  construccion:           [0.85, 0.88, 1.05, 1.10, 1.08, 0.92, 0.88, 0.90, 1.05, 1.12, 1.10, 0.90],
+  logistica:              [0.90, 0.92, 1.00, 1.02, 1.05, 1.00, 0.98, 1.00, 1.02, 1.05, 1.12, 1.18],
+  seguros:                [0.92, 0.95, 1.08, 1.05, 1.02, 1.00, 0.98, 1.00, 1.02, 1.05, 1.05, 0.95],
+  manufactura:            [0.85, 0.90, 1.05, 1.08, 1.10, 1.05, 0.98, 1.00, 1.05, 1.08, 1.05, 0.82],
+  energia:                [0.90, 0.92, 1.00, 1.05, 1.08, 1.12, 1.10, 1.05, 1.00, 1.02, 1.00, 0.88],
+  fintech:                [0.88, 0.92, 1.05, 1.08, 1.05, 1.02, 1.00, 1.00, 1.02, 1.05, 1.08, 1.02],
+  agro:                   [0.82, 0.85, 0.95, 1.05, 1.10, 1.00, 0.95, 1.05, 1.15, 1.12, 1.05, 0.85],
+}
+
+function getFactorEstacional(industriaId, mes) {
+  const factores = ESTACIONALIDAD[industriaId]
+  if (!factores) return 1.0
+  return factores[mes] || 1.0
+}
+
 // ─── Helpers ────────────────────────────────────────────────────────────────
 function getSemanaISO(date = new Date()) {
   const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()))
@@ -97,11 +133,16 @@ async function main() {
   const usdVarPct = pct(usd, usdPrev)
   const cpcVarPct = usdVarPct // variación CPC = variación USD
 
-  // 3. Calcular CPCs y CPAs ajustados al USD actual
-  const ajuste = usd / USD_BASE
+  // 3. Calcular CPCs y CPAs ajustados al USD actual + estacionalidad
+  const ajusteUsd = usd / USD_BASE
+  const mesActual = new Date().getMonth() // 0=Ene ... 11=Dic
+  const MESES_ES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre']
+
   const cpcData = CPC_INDUSTRIAS.map(ind => {
-    const googleClp = round(ind.google * ajuste)
-    const metaClp   = round(ind.google * ind.metaRatio * ajuste)
+    const factorEst = getFactorEstacional(ind.id, mesActual)
+    const ajusteTotal = ajusteUsd * factorEst
+    const googleClp = round(ind.google * ajusteTotal)
+    const metaClp   = round(ind.google * ind.metaRatio * ajusteTotal)
     // CPA = CPC / CVR   (CVR en decimal: 2.1% → 0.021)
     const cpaGoogle = round(googleClp / (ind.cvr / 100))
     const cpaMeta   = round(metaClp   / (ind.cvr / 100))
@@ -115,11 +156,13 @@ async function main() {
       cvr:            ind.cvr,
       google_var_pct: cpcVarPct,
       meta_var_pct:   cpcVarPct,
+      factor_estacional: factorEst,
+      mes:            MESES_ES[mesActual],
     }
   })
 
-  console.log('✅ CPCs y CPAs calculados')
-  cpcData.forEach(c => console.log(`   ${c.label}: G $${c.google_clp} / M $${c.meta_clp} | CPA G $${c.cpa_google_clp} / M $${c.cpa_meta_clp}`))
+  console.log(`✅ CPCs y CPAs calculados (ajuste USD ×${ajusteUsd.toFixed(3)} + estacionalidad ${MESES_ES[mesActual]})`)
+  cpcData.forEach(c => console.log(`   ${c.label}: G $${c.google_clp} / M $${c.meta_clp} | CPA G $${c.cpa_google_clp} / M $${c.cpa_meta_clp} | Est: ×${c.factor_estacional}`))
 
   // 4. Guardar en Supabase
   const { error } = await supabase.from('indicadores_semanales').upsert({
@@ -135,7 +178,8 @@ async function main() {
   console.log(`\n✅ Indicadores guardados — ${slug}`)
   console.log(`   USD: $${usd} CLP (${usdVarPct > 0 ? '+' : ''}${usdVarPct}% vs sem. ant.)`)
   console.log(`   UF: $${uf.toLocaleString('es-CL')} CLP`)
-  console.log(`   CPC ajuste: ×${ajuste.toFixed(3)} vs base Sep 2025`)
+  console.log(`   CPC ajuste USD: ×${ajusteUsd.toFixed(3)} vs base Sep 2025`)
+  console.log(`   Estacionalidad: ${MESES_ES[mesActual]} — factores aplicados por industria`)
 
   // 5. Email recordatorio para publicar en LinkedIn
   await enviarEmailLinkedin({ semana, año, fecha, usd, uf, usdVarPct, cpcData })
@@ -230,7 +274,7 @@ ${bottom5.map(c => `• ${c.label}: $${c.google_clp.toLocaleString('es-CL')} CLP
       <a href="https://www.mulleryperez.cl/indicadores" style="background:linear-gradient(135deg,#6C31D9,#2878F0);color:#fff;padding:12px 32px;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;display:inline-block;">Ver indicadores en la web →</a>
     </div>
 
-    <p style="text-align:center;font-size:11px;color:#94A3B8;margin-top:20px;">Müller & Pérez — Marketing & Performance · Recordatorio automático semanal (lunes 08:30 AM)</p>
+    <p style="text-align:center;font-size:11px;color:#94A3B8;margin-top:20px;">Müller & Pérez — Marketing & Performance · Recordatorio automático semanal (sábado 08:30 AM) · Ajuste estacional aplicado</p>
   </div>`
 
   const res = await fetch('https://api.resend.com/emails', {
