@@ -156,12 +156,16 @@ export async function POST(req: NextRequest) {
     // Enviar notificación email al cliente (no bloquea la respuesta)
     const RESEND_KEY = process.env.RESEND_API_KEY || process.env.RESEND
     const notifyEmail = clienteData.contacto_email
-    const ALWAYS_CC = 'arturo@mulleryperez.cl'
 
     if (RESEND_KEY) {
-      const toList = notifyEmail ? [notifyEmail] : [ALWAYS_CC]
-      // Agregar CC si notifyEmail no es ya arturo
-      const ccList = (notifyEmail && notifyEmail !== ALWAYS_CC) ? [ALWAYS_CC] : []
+      // Siempre enviar a contacto@ como principal. CC a arturo@ + email del cliente si existe.
+      const toList = ['contacto@mulleryperez.cl']
+      const ccSet = new Set<string>()
+      ccSet.add('arturo@mulleryperez.cl')
+      if (notifyEmail && notifyEmail !== 'contacto@mulleryperez.cl') {
+        ccSet.add(notifyEmail)
+      }
+      const ccList = [...ccSet]
 
       console.log('📧 Enviando notificación a:', toList, 'CC:', ccList)
 
@@ -174,7 +178,7 @@ export async function POST(req: NextRequest) {
         body: JSON.stringify({
           from: 'contacto@mulleryperez.cl',
           to: toList,
-          ...(ccList.length > 0 ? { cc: ccList } : {}),
+          cc: ccList,
           subject: `🔔 Nuevo lead: ${leadData.nombre} — ${clienteData.nombre}`,
           html: `
             <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;">
