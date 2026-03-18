@@ -8,7 +8,7 @@ const planes = [
   {
     id: 'silver',
     nombre: 'Plan Silver',
-    precio: 'Desde $750.000',
+    precio: 'Desde $950.000',
     descripcion: 'Combina Paid Media + Contenidos orgánicos',
     icon: Zap,
     color: 'cyan',
@@ -35,7 +35,7 @@ const planes = [
   {
     id: 'gold',
     nombre: 'Plan Gold',
-    precio: 'Desde $1.200.000',
+    precio: 'Desde $1.350.000',
     descripcion: 'Estrategia completa con email marketing y gestión web',
     icon: Star,
     color: 'yellow',
@@ -325,8 +325,8 @@ export default function PlanesClient() {
                 </tr>
                 <tr className="bg-gray-100">
                   <td className="px-6 py-4 font-bold">Precio Mensual</td>
-                  <td className="px-6 py-4 text-center font-bold text-cyan-600">Desde $750K</td>
-                  <td className="px-6 py-4 text-center font-bold text-yellow-600 bg-yellow-100">Desde $1.2M</td>
+                  <td className="px-6 py-4 text-center font-bold text-cyan-600">Desde $950K</td>
+                  <td className="px-6 py-4 text-center font-bold text-yellow-600 bg-yellow-100">Desde $1.35M</td>
                   <td className="px-6 py-4 text-center font-bold text-purple-600">Contactar</td>
                 </tr>
               </tbody>

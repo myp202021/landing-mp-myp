@@ -619,11 +619,11 @@ export default function AgenciaPublicidadDigitalChilePage() {
                     <span className="text-sm text-gray-600">Ideal para presupuestos publicitarios de $500k-$2M/mes</span>
                   </li>
                   <li>
-                    <strong>Plan Gold:</strong> $1.200.000/mes<br />
+                    <strong>Plan Gold:</strong> $1.350.000/mes<br />
                     <span className="text-sm text-gray-600">Para presupuestos de $2M-$5M/mes (más popular)</span>
                   </li>
                   <li>
-                    <strong>Plan Platinum:</strong> $1.500.000+/mes<br />
+                    <strong>Plan Platinum:</strong> $2.200.000/mes<br />
                     <span className="text-sm text-gray-600">Para presupuestos de $5M+/mes (escala agresiva)</span>
                   </li>
                 </ul>
@@ -660,9 +660,9 @@ export default function AgenciaPublicidadDigitalChilePage() {
                   <strong>Empresa mediana con presupuesto de $3M/mes en publicidad digital:</strong>
                 </p>
                 <ul className="ml-6 space-y-1">
-                  <li>• Fee agencia (Plan Gold): <strong>$1.200.000/mes</strong></li>
+                  <li>• Fee agencia (Plan Gold): <strong>$1.350.000/mes</strong></li>
                   <li>• Inversión publicitaria: <strong>$3.000.000/mes</strong></li>
-                  <li>• <strong>Total inversión mensual: $3.980.000</strong></li>
+                  <li>• <strong>Total inversión mensual: $4.130.000</strong></li>
                 </ul>
                 <p className="text-sm text-gray-600 mt-3 italic">
                   De esos $3M, distribuimos estratégicamente entre Google Ads, Meta Ads, LinkedIn Ads según rendimiento.

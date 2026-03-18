@@ -2601,9 +2601,9 @@ Agencia de marketing digital enfocada en performance.
 |------|------------|----------|------------|
 | Campanas | $490.000 | 2 | - |
 | Contenidos | $650.000 | - | 20 |
-| **Silver** | **$750.000** | **2** | **20** |
-| Gold | $1.200.000 | 4 | 28 |
-| Platinum | $1.900.000 | 6 | 44 |
+| **Silver** | **$950.000** | **2** | **20** |
+| Gold | $1.350.000 | 4 | 28 |
+| Platinum | $2.200.000 | 6 | 44 |
 
 *Precios + IVA | Sin contratos | Inversion en ads adicional*`,
     options: [
@@ -2619,7 +2619,7 @@ Agencia de marketing digital enfocada en performance.
   'plan_silver': {
     id: 'plan_silver',
     type: 'menu',
-    text: `**Plan Silver - $750.000 + IVA/mes** ⭐
+    text: `**Plan Silver - $950.000 + IVA/mes** ⭐
 
 El mas popular. Campanas + contenido organico.
 
@@ -2664,7 +2664,7 @@ El mas popular. Campanas + contenido organico.
   'plan_gold': {
     id: 'plan_gold',
     type: 'menu',
-    text: `**Plan Gold - $1.200.000 + IVA/mes** 🥇
+    text: `**Plan Gold - $1.350.000 + IVA/mes** 🥇
 
 Mas volumen + email marketing.
 
@@ -2709,7 +2709,7 @@ Mas volumen + email marketing.
   'plan_platinum': {
     id: 'plan_platinum',
     type: 'menu',
-    text: `**Plan Platinum - $1.900.000 + IVA/mes** 💎
+    text: `**Plan Platinum - $2.200.000 + IVA/mes** 💎
 
 Todo incluido. Presencia digital intensiva.
 
@@ -2753,7 +2753,7 @@ Todo incluido. Presencia digital intensiva.
 
 | | Campanas | Silver | Gold | Platinum |
 |---|:---:|:---:|:---:|:---:|
-| **Precio** | $490K | $750K | $1.2M | $1.9M |
+| **Precio** | $490K | $950K | $1.35M | $2.2M |
 | **Campanas ads** | 2 | 2 | 4 | 6 |
 | **Piezas graficas** | 6 | 6 | 6 | 10 |
 | **Contenidos** | - | 20 | 28 | 44 |

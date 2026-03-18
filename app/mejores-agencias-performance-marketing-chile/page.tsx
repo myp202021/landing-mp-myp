@@ -57,7 +57,7 @@ const faqs = [
   },
   {
     question: '¿Cuánto cuesta una agencia de performance marketing en Chile?',
-    answer: 'Las agencias de performance marketing en Chile cobran entre $950.000 y $2.000.000 mensuales + IVA por gestión profesional. Esto no incluye el presupuesto publicitario que se paga directo a Google o Meta. Muller y Pérez ofrece planes Silver ($950.000), Gold ($1.200.000) y Platinum ($1.900.000). El presupuesto mínimo de inversión recomendado es $500.000/mes en Google Ads o $400.000/mes en Meta Ads, adicional al fee de la agencia.'
+    answer: 'Las agencias de performance marketing en Chile cobran entre $950.000 y $2.000.000 mensuales + IVA por gestión profesional. Esto no incluye el presupuesto publicitario que se paga directo a Google o Meta. Muller y Pérez ofrece planes Silver ($950.000), Gold ($1.350.000) y Platinum ($2.200.000). El presupuesto mínimo de inversión recomendado es $500.000/mes en Google Ads o $400.000/mes en Meta Ads, adicional al fee de la agencia.'
   },
   {
     question: '¿Qué métricas usa una agencia de performance marketing?',
@@ -235,7 +235,7 @@ export default function PerformanceMarketingChilePage() {
                 'ROAS promedio 4.2x (vs 2.8x promedio industria)',
                 '+40 clientes activos en +20 industrias distintas',
                 'Dashboards ejecutivos en tiempo real para cada cliente',
-                'Fee fijo $950.000-$1.900.000/mes + IVA, sin comisión sobre pauta',
+                'Fee fijo $950.000-$2.200.000/mes + IVA, sin comisión sobre pauta',
                 'Reducción de CAC del 38% promedio en clientes B2B',
                 'Retención de clientes del 95% sin contratos de permanencia'
               ]}
@@ -332,7 +332,7 @@ export default function PerformanceMarketingChilePage() {
                   M&P opera aquí
                 </span>
                 <h3 className="text-xl font-bold text-blue-600 mb-2">Profesional</h3>
-                <p className="text-3xl font-bold text-blue-600 mb-3">$950k - $1.9M<span className="text-sm font-normal">/mes</span></p>
+                <p className="text-3xl font-bold text-blue-600 mb-3">$950k - $2.2M<span className="text-sm font-normal">/mes</span></p>
                 <ul className="text-sm text-gray-600 space-y-1">
                   <li>Equipo dedicado (3 profesionales)</li>
                   <li>Google Ads + Meta Ads + Analytics</li>

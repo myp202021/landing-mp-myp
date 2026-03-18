@@ -79,7 +79,7 @@ const faqs = [
   },
   {
     question: '¿Cuánto cobra una agencia de marketing digital en Chile en 2026?',
-    answer: 'Los precios de agencias de marketing digital en Chile 2026 varían según el nivel: Nivel básico ($300.000-$600.000/mes) incluye gestión limitada sin equipo dedicado. Nivel profesional ($950.000-$1.900.000/mes) como Muller y Pérez ofrece equipo dedicado de 3 profesionales, acceso a cuentas y reporting semanal. Nivel premium ($2.000.000-$5.000.000+/mes) para corporaciones con necesidades enterprise. Las multinacionales como Havas o VML pueden superar los $10.000.000/mes. El rango más común para PYMEs es $800.000-$1.500.000 mensuales + IVA, con el cliente pagando la pauta directamente a Google/Meta.'
+    answer: 'Los precios de agencias de marketing digital en Chile 2026 varían según el nivel: Nivel básico ($300.000-$600.000/mes) incluye gestión limitada sin equipo dedicado. Nivel profesional ($950.000-$2.200.000/mes) como Muller y Pérez ofrece equipo dedicado de 3 profesionales, acceso a cuentas y reporting semanal. Nivel premium ($2.000.000-$5.000.000+/mes) para corporaciones con necesidades enterprise. Las multinacionales como Havas o VML pueden superar los $10.000.000/mes. El rango más común para PYMEs es $800.000-$1.500.000 mensuales + IVA, con el cliente pagando la pauta directamente a Google/Meta.'
   },
   {
     question: '¿Qué agencia de marketing digital es mejor para PYMEs en Chile?',
@@ -324,7 +324,7 @@ export default function RankingAgenciasPage() {
                   M&P opera aquí
                 </span>
                 <h3 className="text-xl font-bold text-blue-600 mb-2">Nivel Profesional</h3>
-                <p className="text-3xl font-bold text-blue-600 mb-3">$950k - $1.9M<span className="text-sm font-normal">/mes</span></p>
+                <p className="text-3xl font-bold text-blue-600 mb-3">$950k - $2.2M<span className="text-sm font-normal">/mes</span></p>
                 <ul className="text-sm text-gray-600 space-y-1">
                   <li>• Equipo dedicado (3 profesionales)</li>
                   <li>• Google Ads + Meta Ads + Analytics</li>

@@ -41,7 +41,7 @@ export default function PreciosAgenciaPage() {
   const faqSchema = createFAQPageSchema([
     {
       question: '¿Cuánto cobra una agencia de marketing digital en Chile?',
-      answer: 'Las agencias de marketing digital en Chile cobran entre $300.000 y $5.000.000 mensuales dependiendo del nivel de servicio. Agencias básicas: $300k-$500k, agencias profesionales como M&P: $750k-$1.9M, agencias premium: $2M-$5M+. El precio no incluye el presupuesto publicitario que se paga directo a Google/Meta.'
+      answer: 'Las agencias de marketing digital en Chile cobran entre $300.000 y $5.000.000 mensuales dependiendo del nivel de servicio. Agencias básicas: $300k-$500k, agencias profesionales como M&P: $950k-$2.2M, agencias premium: $2.5M-$5M+. El precio no incluye el presupuesto publicitario que se paga directo a Google/Meta.'
     },
     {
       question: '¿Qué incluye el precio de una agencia de marketing digital?',
@@ -49,11 +49,11 @@ export default function PreciosAgenciaPage() {
     },
     {
       question: '¿Vale la pena pagar más por una agencia de marketing digital?',
-      answer: 'Sí, si la agencia optimiza correctamente. Una agencia barata que desperdicia 50% de tu presupuesto publicitario te cuesta más a largo plazo. M&P ofrece el mejor balance precio-valor con equipo dedicado desde $750.000/mes, optimizando para resultados reales (CAC, ROAS) en lugar de métricas de vanidad.'
+      answer: 'Sí, si la agencia optimiza correctamente. Una agencia barata que desperdicia 50% de tu presupuesto publicitario te cuesta más a largo plazo. M&P ofrece el mejor balance precio-valor con equipo dedicado desde $950.000/mes, optimizando para resultados reales (CAC, ROAS) en lugar de métricas de vanidad.'
     },
     {
       question: '¿Cuál es el precio de M&P para marketing digital?',
-      answer: 'Muller y Pérez ofrece 3 planes: Silver ($750.000/mes) ideal para PYMEs, Gold ($1.200.000/mes) para empresas en crecimiento, y Platinum ($1.900.000/mes) para empresas que escalan agresivamente. Todos incluyen equipo dedicado de 3 profesionales, acceso full a cuentas y reportería frecuente.'
+      answer: 'Muller y Pérez ofrece 3 planes: Silver ($950.000/mes) ideal para PYMEs, Gold ($1.350.000/mes) para empresas en crecimiento, y Platinum ($2.200.000/mes) para empresas que escalan agresivamente. Todos incluyen equipo dedicado de 3 profesionales, acceso full a cuentas y reportería frecuente.'
     }
   ])
 
@@ -122,7 +122,7 @@ export default function PreciosAgenciaPage() {
                 <div className="text-center mb-4 mt-2">
                   <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-medium">Nivel Profesional</span>
                 </div>
-                <p className="text-4xl font-bold text-center text-blue-700 mb-2">$750k - $1.9M</p>
+                <p className="text-4xl font-bold text-center text-blue-700 mb-2">$950k - $2.2M</p>
                 <p className="text-center text-blue-600 mb-6">mensual + IVA</p>
                 <ul className="space-y-2 text-gray-700 text-sm">
                   <li className="flex items-center gap-2"><span className="text-green-500">✓</span> Equipo dedicado (3 personas)</li>
@@ -171,7 +171,7 @@ export default function PreciosAgenciaPage() {
                     <p className="text-gray-600">Ideal para PYMEs que empiezan en digital</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-3xl font-bold text-blue-600">$750.000</p>
+                    <p className="text-3xl font-bold text-blue-600">$950.000</p>
                     <p className="text-gray-500">mensual + IVA</p>
                   </div>
                 </div>
@@ -202,7 +202,7 @@ export default function PreciosAgenciaPage() {
                     <p className="text-gray-600">Para empresas en crecimiento</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-3xl font-bold text-blue-600">$1.200.000</p>
+                    <p className="text-3xl font-bold text-blue-600">$1.350.000</p>
                     <p className="text-gray-500">mensual + IVA</p>
                   </div>
                 </div>
@@ -230,7 +230,7 @@ export default function PreciosAgenciaPage() {
                     <p className="text-gray-600">Para empresas que escalan agresivamente</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-3xl font-bold text-blue-600">$1.900.000</p>
+                    <p className="text-3xl font-bold text-blue-600">$2.200.000</p>
                     <p className="text-gray-500">mensual + IVA</p>
                   </div>
                 </div>
@@ -367,7 +367,7 @@ export default function PreciosAgenciaPage() {
               {[
                 {
                   q: '¿Cuánto cobra una agencia de marketing digital en Chile?',
-                  a: 'Las agencias cobran entre $300.000 y $5.000.000 mensuales. Agencias básicas: $300k-$500k, profesionales como M&P: $750k-$1.9M, premium: $2M-$5M+. Esto NO incluye el presupuesto publicitario.'
+                  a: 'Las agencias cobran entre $300.000 y $5.000.000 mensuales. Agencias básicas: $300k-$500k, profesionales como M&P: $950k-$2.2M, premium: $2.5M-$5M+. Esto NO incluye el presupuesto publicitario.'
                 },
                 {
                   q: '¿Qué incluye el precio de una agencia de marketing digital?',

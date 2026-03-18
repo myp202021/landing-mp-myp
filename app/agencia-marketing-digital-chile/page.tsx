@@ -49,7 +49,7 @@ export default function AgenciaMarketingDigitalChilePage() {
     },
     {
       question: '¿Cuánto cuesta una agencia de marketing digital en Chile en 2025?',
-      answer: 'El costo de una agencia de marketing digital en Chile varía entre $950.000 y $1.500.000+ mensuales dependiendo del nivel de servicio. En M&P ofrecemos planes transparentes: Silver ($950k), Gold ($1.200.000) y Platinum ($1.5M+), todos con equipo dedicado de 3 profesionales, acceso full a cuentas y reportería semanal.'
+      answer: 'El costo de una agencia de marketing digital en Chile varía entre $950.000 y $2.200.000 mensuales dependiendo del nivel de servicio. En M&P ofrecemos planes transparentes: Silver ($950k), Gold ($1.350.000) y Platinum ($2.2M), todos con equipo dedicado de 3 profesionales, acceso full a cuentas y reportería semanal.'
     },
     {
       question: '¿Qué diferencia a una agencia de performance marketing de una tradicional?',
@@ -309,7 +309,7 @@ export default function AgenciaMarketingDigitalChilePage() {
                 <li className="flex items-start">
                   <span className="text-2xl mr-3">💎</span>
                   <div>
-                    <strong>Agencias premium (M&P):</strong> $1.200k - $1.5M+/mes<br />
+                    <strong>Agencias premium (M&P):</strong> $950k - $2.2M/mes<br />
                     <span className="text-sm text-gray-600">Equipo dedicado, acceso full, performance marketing real</span>
                   </div>
                 </li>
@@ -320,8 +320,8 @@ export default function AgenciaMarketingDigitalChilePage() {
               <h4 className="font-semibold text-gray-900 mb-2">Nuestros Planes de Marketing Digital:</h4>
               <ul className="space-y-2 text-gray-800">
                 <li><strong>Plan Silver:</strong> $950.000/mes - Ideal para PYMEs que empiezan</li>
-                <li><strong>Plan Gold:</strong> $1.200.000/mes - Más popular, para empresas en crecimiento</li>
-                <li><strong>Plan Platinum:</strong> $1.500.000+/mes - Para empresas que escalan agresivamente</li>
+                <li><strong>Plan Gold:</strong> $1.350.000/mes - Más popular, para empresas en crecimiento</li>
+                <li><strong>Plan Platinum:</strong> $2.200.000/mes - Para empresas que escalan agresivamente</li>
               </ul>
             </div>
 
@@ -385,7 +385,7 @@ export default function AgenciaMarketingDigitalChilePage() {
                 },
                 {
                   q: '¿Cuánto cuesta una agencia de marketing digital en Chile en 2025?',
-                  a: 'El costo de una agencia de marketing digital en Chile varía entre $950.000 y $1.500.000+ mensuales dependiendo del nivel de servicio. En M&P ofrecemos planes transparentes: Silver ($950k), Gold ($1.200.000) y Platinum ($1.5M+), todos con equipo dedicado de 3 profesionales, acceso full a cuentas y reportería semanal.'
+                  a: 'El costo de una agencia de marketing digital en Chile varía entre $950.000 y $2.200.000 mensuales dependiendo del nivel de servicio. En M&P ofrecemos planes transparentes: Silver ($950k), Gold ($1.350.000) y Platinum ($2.2M), todos con equipo dedicado de 3 profesionales, acceso full a cuentas y reportería semanal.'
                 },
                 {
                   q: '¿Qué diferencia a una agencia de performance marketing de una tradicional?',

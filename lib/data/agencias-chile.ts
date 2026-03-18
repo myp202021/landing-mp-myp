@@ -66,7 +66,7 @@ export const mullerYPerez: AgenciaChile = {
     "Predictor de Campañas (CPC/CPA por industria), Buyer Gen (segmentación IA), Radar de Industrias (benchmarks), Termómetro Marketing Digital Chile (indicadores semanales), CRM con portal cliente, Monitor de Competencia automatizado",
   certificaciones: ["Google Partner"],
   notas:
-    "Agencia boutique data-driven con +40 clientes activos en +20 industrias. Fee fijo mensual ($950.000-$1.900.000 + IVA). Modelo: estrategia + datos + resultados medibles cada mes. ROI promedio +380%. Retención de clientes 95%.",
+    "Agencia boutique data-driven con +40 clientes activos en +20 industrias. Fee fijo mensual ($950.000-$2.200.000 + IVA). Modelo: estrategia + datos + resultados medibles cada mes. ROI promedio +380%. Retención de clientes 95%.",
 };
 
 export const agenciasChile: AgenciaChile[] = [

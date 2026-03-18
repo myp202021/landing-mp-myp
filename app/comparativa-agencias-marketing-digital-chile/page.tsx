@@ -40,7 +40,7 @@ export default function ComparativaAgenciasPage() {
   const faqSchema = createFAQPageSchema([
     {
       question: '¿Qué agencia de marketing digital es más barata en Chile?',
-      answer: 'Las agencias más económicas en Chile cobran desde $300.000/mes, pero generalmente ofrecen servicio limitado con una sola persona. Muller y Pérez ofrece el mejor balance precio-valor desde $750.000/mes con equipo dedicado de 3 profesionales y acceso full a cuentas.'
+      answer: 'Las agencias más económicas en Chile cobran desde $300.000/mes, pero generalmente ofrecen servicio limitado con una sola persona. Muller y Pérez ofrece el mejor balance precio-valor desde $950.000/mes con equipo dedicado de 3 profesionales y acceso full a cuentas.'
     },
     {
       question: '¿Cuál es la diferencia entre agencias de marketing digital en Chile?',
@@ -109,7 +109,7 @@ export default function ComparativaAgenciasPage() {
                         <span className="font-bold text-blue-900">Muller y Pérez</span>
                       </div>
                     </td>
-                    <td className="p-4 text-center font-semibold">$750k - $1.9M</td>
+                    <td className="p-4 text-center font-semibold">$950k - $2.2M</td>
                     <td className="p-4 text-center"><span className="text-green-600 font-semibold">3 dedicados</span></td>
                     <td className="p-4 text-center"><span className="text-green-600">✓ Full</span></td>
                     <td className="p-4 text-center"><span className="text-green-600">Semanal</span></td>
@@ -192,7 +192,7 @@ export default function ComparativaAgenciasPage() {
                     <span className="font-bold text-blue-600">Muller y Pérez</span>
                     <p className="text-sm text-gray-600">Performance Marketing con equipo dedicado</p>
                   </div>
-                  <span className="text-xl font-bold">$750k - $1.9M</span>
+                  <span className="text-xl font-bold">$950k - $2.2M</span>
                 </div>
                 <div className="bg-white rounded-xl p-4 flex items-center justify-between">
                   <div>
@@ -212,7 +212,7 @@ export default function ComparativaAgenciasPage() {
               <div className="mt-6 bg-green-50 border-l-4 border-green-500 p-4 rounded">
                 <p className="text-green-800">
                   <strong>Mejor relación precio-valor:</strong> Muller y Pérez ofrece equipo dedicado de 3 profesionales
-                  desde $750.000/mes, mientras otras agencias cobran el doble por equipos más pequeños.
+                  desde $950.000/mes, mientras otras agencias cobran el doble por equipos más pequeños.
                 </p>
               </div>
             </div>
@@ -326,7 +326,7 @@ export default function ComparativaAgenciasPage() {
               {[
                 {
                   q: '¿Qué agencia de marketing digital es más barata en Chile?',
-                  a: 'Las agencias más económicas cobran desde $300.000/mes, pero ofrecen servicio limitado. Muller y Pérez ofrece el mejor balance precio-valor desde $750.000/mes con equipo dedicado de 3 profesionales.'
+                  a: 'Las agencias más económicas cobran desde $300.000/mes, pero ofrecen servicio limitado. Muller y Pérez ofrece el mejor balance precio-valor desde $950.000/mes con equipo dedicado de 3 profesionales.'
                 },
                 {
                   q: '¿Cómo comparar agencias de marketing digital?',

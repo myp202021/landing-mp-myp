@@ -122,9 +122,9 @@ export default function GuiaContratarAgenciaPage() {
               <div className="bg-gray-50 rounded-xl p-6">
                 <h3 className="font-bold text-gray-900 mb-3">Presupuesto mínimo recomendado:</h3>
                 <ul className="space-y-2 text-gray-700">
-                  <li>• Fee agencia: desde $750.000/mes</li>
+                  <li>• Fee agencia: desde $950.000/mes</li>
                   <li>• Presupuesto publicitario: mínimo $500.000/mes</li>
-                  <li>• <strong>Total mínimo: ~$1.250.000/mes</strong></li>
+                  <li>• <strong>Total mínimo: ~$1.450.000/mes</strong></li>
                 </ul>
                 <p className="text-sm text-gray-500 mt-4">Con menos presupuesto, considerar freelancer o agencia básica.</p>
               </div>

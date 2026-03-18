@@ -189,7 +189,7 @@ export default function ComparativaPage() {
                   </tr>
                   <tr className="bg-gray-50">
                     <td className="px-6 py-4 font-medium text-gray-900">Precio mensual desde</td>
-                    <td className="px-6 py-4 text-center font-semibold text-blue-600">$750.000</td>
+                    <td className="px-6 py-4 text-center font-semibold text-blue-600">$950.000</td>
                     <td className="px-6 py-4 text-center text-gray-700">$1.500.000+</td>
                     <td className="px-6 py-4 text-center text-gray-700">$300.000</td>
                   </tr>

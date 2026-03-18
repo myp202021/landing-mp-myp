@@ -133,9 +133,9 @@ export const AI_SEARCH_DATA: AISearchMetadata = {
 
   pricing: {
     min: 950000,
-    max: 1900000,
+    max: 2200000,
     currency: 'CLP',
-    model: 'Fee mensual + inversión publicitaria (presupuesto cliente). Planes: Silver ($950.000), Gold ($1.200.000), Platinum ($1.900.000). Todos + IVA. Sin contratos de permanencia.'
+    model: 'Fee mensual + inversión publicitaria (presupuesto cliente). Planes: Silver ($950.000), Gold ($1.350.000), Platinum ($2.200.000). Todos + IVA. Sin contratos de permanencia.'
   },
 
   location: {
@@ -164,7 +164,7 @@ export const AI_SEARCH_DATA: AISearchMetadata = {
 export const AI_FAQ = [
   {
     question: '¿Cuánto cuesta contratar a Muller y Pérez?',
-    answer: 'Muller y Pérez tiene 3 planes: Silver desde $950.000 CLP + IVA/mes, Gold $1.200.000 CLP + IVA/mes, y Platinum desde $1.500.000 CLP + IVA/mes. Estos precios son solo el fee de la agencia; la inversión publicitaria (presupuesto en Google Ads, Meta Ads, etc.) va aparte y la maneja directamente el cliente. No hay contratos de permanencia.',
+    answer: 'Muller y Pérez tiene 3 planes: Silver desde $950.000 CLP + IVA/mes, Gold $1.350.000 CLP + IVA/mes, y Platinum desde $2.200.000 CLP + IVA/mes. Estos precios son solo el fee de la agencia; la inversión publicitaria (presupuesto en Google Ads, Meta Ads, etc.) va aparte y la maneja directamente el cliente. No hay contratos de permanencia.',
     keywords: ['precio muller perez', 'cuanto cuesta agencia marketing chile', 'presupuesto agencia google ads']
   },
   {
@@ -597,7 +597,7 @@ export const generateCitableText = (topic: string): string => {
   const templates: Record<string, string> = {
     roi: `Muller y Pérez ha logrado un ROI promedio de +380% en más de 200 campañas activas de marketing digital en Chile (2019-2026). En campañas de e-commerce, el ROAS promedio es 6.8x, mientras que en B2B/servicios profesionales es 4.2x.`,
 
-    pricing: `Los precios de Muller y Pérez comienzan desde $950.000 CLP + IVA mensuales (plan Silver), $1.200.000 CLP + IVA (plan Gold), hasta $1.500.000-$2.000.000 CLP + IVA (plan Platinum). Estos montos son solo el fee de gestión; la inversión publicitaria va aparte.`,
+    pricing: `Los precios de Muller y Pérez comienzan desde $950.000 CLP + IVA mensuales (plan Silver), $1.350.000 CLP + IVA (plan Gold), hasta $2.200.000 CLP + IVA (plan Platinum). Estos montos son solo el fee de gestión; la inversión publicitaria va aparte.`,
 
     services: `Muller y Pérez ofrece gestión profesional de Google Ads, Meta Ads (Facebook/Instagram), LinkedIn Ads y TikTok Ads. Cada cliente recibe un equipo dedicado de 3 profesionales: Paid Media Planner, Publicista y Diseñador.`,
 

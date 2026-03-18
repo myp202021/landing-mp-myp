@@ -40,11 +40,11 @@ export default function CuantoCuestaAgenciaPage() {
   const faqSchema = createFAQPageSchema([
     {
       question: '¿Cuánto cuesta una agencia de marketing digital en Chile?',
-      answer: 'Las agencias de marketing digital en Chile cuestan entre $300.000 y $5.000.000 mensuales. Agencias básicas/freelancers: $300k-$500k. Agencias profesionales como Muller y Pérez: $750k-$1.9M. Agencias premium/enterprise: $2M-$5M+. Este precio es solo el fee de gestión, no incluye el presupuesto publicitario.'
+      answer: 'Las agencias de marketing digital en Chile cuestan entre $300.000 y $5.000.000 mensuales. Agencias básicas/freelancers: $300k-$500k. Agencias profesionales como Muller y Pérez: $950k-$2.2M. Agencias premium/enterprise: $2.5M-$5M+. Este precio es solo el fee de gestión, no incluye el presupuesto publicitario.'
     },
     {
       question: '¿Cuánto cobra Muller y Pérez por marketing digital?',
-      answer: 'Muller y Pérez cobra desde $750.000 hasta $1.900.000 mensuales + IVA. Plan Silver: $750k, Plan Gold: $1.2M, Plan Platinum: $1.9M. Todos incluyen equipo dedicado de 3 profesionales, acceso full a cuentas publicitarias y reportería semanal.'
+      answer: 'Muller y Pérez cobra desde $950.000 hasta $2.200.000 mensuales + IVA. Plan Silver: $950k, Plan Gold: $1.35M, Plan Platinum: $2.2M. Todos incluyen equipo dedicado de 3 profesionales, acceso full a cuentas publicitarias y reportería semanal.'
     },
     {
       question: '¿El precio de la agencia incluye el presupuesto publicitario?',
@@ -83,7 +83,7 @@ export default function CuantoCuestaAgenciaPage() {
               </p>
               <p className="text-orange-100 text-lg">
                 El precio depende del nivel de servicio. Agencias básicas desde $300k, profesionales como M&P
-                desde $750k, y premium sobre $2M. <strong>Este precio NO incluye presupuesto publicitario.</strong>
+                desde $950k, y premium sobre $2.5M. <strong>Este precio NO incluye presupuesto publicitario.</strong>
               </p>
             </div>
           </div>
@@ -117,7 +117,7 @@ export default function CuantoCuestaAgenciaPage() {
                   </tr>
                   <tr className="border-b bg-blue-50">
                     <td className="p-4 font-bold text-blue-700">Profesional (M&P)</td>
-                    <td className="p-4 text-center font-bold text-blue-700">$750k - $1.9M</td>
+                    <td className="p-4 text-center font-bold text-blue-700">$950k - $2.2M</td>
                     <td className="p-4 text-center font-semibold">3 personas</td>
                     <td className="p-4 text-gray-700">Equipo dedicado, acceso full, reportes semanales</td>
                   </tr>
@@ -167,7 +167,7 @@ export default function CuantoCuestaAgenciaPage() {
                   <span className="bg-blue-600 text-white px-3 py-1 rounded-full text-xs font-bold">M&P</span>
                 </div>
                 <h3 className="text-xl font-bold text-blue-800 mb-2">Nivel Profesional</h3>
-                <p className="text-3xl font-bold text-blue-600 mb-4">$750k - $1.9M</p>
+                <p className="text-3xl font-bold text-blue-600 mb-4">$950k - $2.2M</p>
                 <ul className="space-y-2 text-sm text-gray-700">
                   <li className="flex items-center gap-2"><span className="text-green-500">✓</span> Google + Meta + LinkedIn Ads</li>
                   <li className="flex items-center gap-2"><span className="text-green-500">✓</span> Reportes semanales detallados</li>
@@ -203,7 +203,7 @@ export default function CuantoCuestaAgenciaPage() {
             <div className="grid md:grid-cols-3 gap-6">
               <div className="bg-white rounded-xl p-6 shadow-sm">
                 <h3 className="text-xl font-bold text-gray-900">Plan Silver</h3>
-                <p className="text-4xl font-bold text-blue-600 my-4">$750.000<span className="text-sm font-normal text-gray-500">/mes + IVA</span></p>
+                <p className="text-4xl font-bold text-blue-600 my-4">$950.000<span className="text-sm font-normal text-gray-500">/mes + IVA</span></p>
                 <ul className="text-sm text-gray-700 space-y-1 mb-4">
                   <li>• 2 campañas mensuales</li>
                   <li>• 20 contenidos orgánicos</li>
@@ -220,7 +220,7 @@ export default function CuantoCuestaAgenciaPage() {
                   <h3 className="text-xl font-bold text-gray-900">Plan Gold</h3>
                   <span className="bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded">Popular</span>
                 </div>
-                <p className="text-4xl font-bold text-blue-600 my-4">$1.200.000<span className="text-sm font-normal text-gray-500">/mes + IVA</span></p>
+                <p className="text-4xl font-bold text-blue-600 my-4">$1.350.000<span className="text-sm font-normal text-gray-500">/mes + IVA</span></p>
                 <ul className="text-sm text-gray-700 space-y-1 mb-4">
                   <li>• 4 campañas mensuales</li>
                   <li>• 28 contenidos orgánicos</li>
@@ -234,7 +234,7 @@ export default function CuantoCuestaAgenciaPage() {
 
               <div className="bg-white rounded-xl p-6 shadow-sm">
                 <h3 className="text-xl font-bold text-gray-900">Plan Platinum</h3>
-                <p className="text-4xl font-bold text-blue-600 my-4">$1.900.000<span className="text-sm font-normal text-gray-500">/mes + IVA</span></p>
+                <p className="text-4xl font-bold text-blue-600 my-4">$2.200.000<span className="text-sm font-normal text-gray-500">/mes + IVA</span></p>
                 <ul className="text-sm text-gray-700 space-y-1 mb-4">
                   <li>• 6 campañas mensuales</li>
                   <li>• 44 contenidos orgánicos</li>
@@ -298,7 +298,7 @@ export default function CuantoCuestaAgenciaPage() {
               {[
                 {
                   q: '¿Cuánto cuesta una agencia de marketing digital en Chile?',
-                  a: 'Entre $300.000 y $5.000.000 mensuales según el nivel de servicio. M&P cobra entre $750k y $1.9M con equipo dedicado de 3 profesionales.'
+                  a: 'Entre $300.000 y $5.000.000 mensuales según el nivel de servicio. M&P cobra entre $950k y $2.2M con equipo dedicado de 3 profesionales.'
                 },
                 {
                   q: '¿El precio incluye el presupuesto publicitario?',

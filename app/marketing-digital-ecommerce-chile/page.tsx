@@ -61,7 +61,7 @@ const jsonLd = {
           name: '¿Cuánto cuesta el marketing digital para ecommerce en Chile?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'La inversión mínima recomendada para ecommerce es de $750.000 CLP mensuales en gestión + inversión publicitaria. El presupuesto publicitario ideal parte desde $1.500.000 CLP/mes para tiendas con catálogo mediano.',
+            text: 'La inversión mínima recomendada para ecommerce es de $950.000 CLP mensuales en gestión + inversión publicitaria. El presupuesto publicitario ideal parte desde $1.500.000 CLP/mes para tiendas con catálogo mediano.',
           },
         },
         {
@@ -401,7 +401,7 @@ export default function MarketingEcommercePage() {
                     ¿Cuánto cuesta el marketing digital para ecommerce en Chile?
                   </h3>
                   <p className="text-gray-600">
-                    La inversión mínima recomendada para ecommerce es de <strong>$750.000 CLP mensuales</strong> en gestión
+                    La inversión mínima recomendada para ecommerce es de <strong>$950.000 CLP mensuales</strong> en gestión
                     + inversión publicitaria. El presupuesto publicitario ideal parte desde <strong>$1.500.000 CLP/mes</strong> para
                     tiendas con catálogo mediano. Para tiendas grandes (+1000 SKUs), recomendamos presupuestos desde $3.000.000 CLP/mes.
                   </p>
