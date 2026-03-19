@@ -160,12 +160,10 @@ export async function POST(req: NextRequest) {
     if (RESEND_KEY) {
       // Siempre enviar a contacto@ como principal. CC a arturo@ + email del cliente si existe.
       const toList = ['contacto@mulleryperez.cl']
-      const ccSet = new Set<string>()
-      ccSet.add('arturo@mulleryperez.cl')
-      if (notifyEmail && notifyEmail !== 'contacto@mulleryperez.cl') {
-        ccSet.add(notifyEmail)
+      const ccList: string[] = ['arturo@mulleryperez.cl']
+      if (notifyEmail && notifyEmail !== 'contacto@mulleryperez.cl' && notifyEmail !== 'arturo@mulleryperez.cl') {
+        ccList.push(notifyEmail)
       }
-      const ccList = [...ccSet]
 
       console.log('📧 Enviando notificación a:', toList, 'CC:', ccList)
 
