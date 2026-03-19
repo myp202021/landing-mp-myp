@@ -361,6 +361,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'monthly',
       priority: 0.95,
     },
+    // Casos de Éxito
+    {
+      url: `${baseUrl}/casos-de-exito`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.9,
+    },
     // Portfolio
     {
       url: `${baseUrl}/portfolio`,

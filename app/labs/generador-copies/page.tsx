@@ -121,7 +121,7 @@ const generarCopies = (data: any) => {
     LINKEDIN: {
       posts: [
         `🎯 ${beneficio}\n\nComo profesionales de ${industria}, sabemos que ${audiencia} enfrenta desafíos únicos.\n\nPor eso desarrollamos ${producto}: una solución diseñada específicamente para sus necesidades.\n\n✅ Resultados medibles\n✅ ROI comprobado\n✅ Implementación ágil\n\n¿Te gustaría saber cómo podemos ayudarte?\n\nComenta "INFO" o agenda una llamada (link en comentarios)`,
-        `Después de trabajar con +50 empresas de ${industria}, identificamos el patrón #1 que separa a los que crecen de los que se estancan:\n\n${beneficio}\n\nNuestro ${producto} está diseñado para resolver exactamente esto.\n\n📊 Caso de éxito: Cliente aumentó resultados 40% en 60 días.\n\n¿Quieres los detalles? DM abiertos.`,
+        `Después de trabajar con +40 empresas de ${industria}, identificamos el patrón #1 que separa a los que crecen de los que se estancan:\n\n${beneficio}\n\nNuestro ${producto} está diseñado para resolver exactamente esto.\n\n📊 Caso de éxito: Cliente aumentó resultados 40% en 60 días.\n\n¿Quieres los detalles? DM abiertos.`,
       ],
       headlines: [
         `${producto} para ${industria}`,

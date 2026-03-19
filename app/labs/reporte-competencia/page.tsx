@@ -82,9 +82,12 @@ export default function ReporteCompetenciaPage() {
       {/* Bolsa de Tendencias */}
       <section className="pb-16 px-6">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl font-black text-gray-900 mb-8 text-center">
+          <h2 className="text-3xl font-black text-gray-900 mb-4 text-center">
             🔥 Bolsa de Tendencias - Esta Semana
           </h2>
+          <p className="text-center text-sm text-gray-500 mb-8 bg-gray-100 rounded-lg py-2 px-4 inline-block mx-auto w-full">
+            Datos de ejemplo — conecta tu cuenta para datos reales de tu industria
+          </p>
 
           <div className="grid md:grid-cols-2 gap-8 mb-12">
             {/* Top Alzas */}

@@ -743,6 +743,14 @@ export default function LandingClient() {
               Portfolio
             </Link>
 
+            {/* Casos de Éxito */}
+            <Link
+              href="/casos-de-exito"
+              className="hidden md:block text-sm font-semibold text-gray-700 hover:text-blue-600 transition-all duration-200"
+            >
+              Casos de Éxito
+            </Link>
+
             {/* Servicios Mega Dropdown */}
             <div
               className="relative hidden md:block"

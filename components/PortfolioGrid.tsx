@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 
 const portfolioItems = [
   {
@@ -254,6 +255,15 @@ export default function PortfolioGrid() {
                 </div>
               </div>
             ))}
+          </div>
+
+          <div className="text-center mt-10">
+            <Link
+              href="/casos-de-exito"
+              className="text-blue-400 hover:text-blue-300 font-semibold transition-colors text-sm"
+            >
+              Ver nuestros casos de éxito con datos reales →
+            </Link>
           </div>
         </div>
       </section>
