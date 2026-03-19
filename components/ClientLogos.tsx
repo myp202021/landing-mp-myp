@@ -138,6 +138,12 @@ export function ClientLogosGrid() {
         </ul>
 
         <div className="flex flex-wrap justify-center gap-4 mt-10 text-sm">
+          <a
+            href="#portfolio"
+            className="text-blue-400 hover:text-blue-300 font-semibold transition-colors"
+          >
+            Ver nuestro portfolio de trabajos ↓
+          </a>
           <Link
             href="/ranking-agencias-marketing-digital-chile"
             className="text-blue-400 hover:text-blue-300 font-semibold transition-colors"

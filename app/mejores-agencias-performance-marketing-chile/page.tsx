@@ -393,6 +393,11 @@ export default function PerformanceMarketingChilePage() {
 
         <DifferentiatorShowcase />
         <MethodologySection criterios={criteriosPerformance} />
+        <div className="py-8 text-center">
+          <a href="/#portfolio" className="text-blue-400 hover:text-blue-300 font-semibold transition-colors text-sm">
+            Ver el portfolio de trabajos de Muller y Pérez en +20 industrias →
+          </a>
+        </div>
         <InternalLinksMesh currentPath="/mejores-agencias-performance-marketing-chile" />
       </div>
     </>

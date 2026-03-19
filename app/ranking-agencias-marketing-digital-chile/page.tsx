@@ -421,6 +421,13 @@ export default function RankingAgenciasPage() {
         {/* Metodología */}
         <MethodologySection criterios={criteriosPerformance} />
 
+        {/* Link Portfolio */}
+        <div className="py-8 text-center">
+          <a href="/#portfolio" className="text-blue-400 hover:text-blue-300 font-semibold transition-colors text-sm">
+            Ver el portfolio de trabajos de Muller y Pérez en +20 industrias →
+          </a>
+        </div>
+
         {/* Links internos */}
         <InternalLinksMesh currentPath="/ranking-agencias-marketing-digital-chile" />
       </div>

@@ -680,6 +680,13 @@ export default function ServiciosPage() {
         </div>
       </section>
 
+      {/* Link Portfolio */}
+      <div className="py-8 bg-slate-900 text-center">
+        <a href="/#portfolio" className="text-blue-400 hover:text-blue-300 font-semibold transition-colors text-sm">
+          Ver nuestro portfolio de trabajos en +20 industrias →
+        </a>
+      </div>
+
       {/* CTA Final */}
       <section className="py-16 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 relative overflow-hidden">
         <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-5"></div>

@@ -201,10 +201,13 @@ export default function PortfolioGrid() {
               Portfolio
             </p>
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              Nuestro trabajo
+              Portfolio de marketing digital y diseño en Chile
             </h2>
-            <p className="text-lg text-blue-200/70 max-w-2xl mx-auto">
-              Diseño, campañas y performance para más de 20 industrias. Cada pieza está pensada para convertir.
+            <p className="text-lg text-blue-200/70 max-w-2xl mx-auto mb-4">
+              Diseño de campañas, anuncios y contenido para más de 20 industrias. Cada pieza está pensada para convertir, no solo para verse bien.
+            </p>
+            <p className="text-sm text-blue-200/40 max-w-3xl mx-auto leading-relaxed">
+              Campañas para eventos masivos como Marco Antonio Solís e Il Volo, plataformas SaaS como Genera, productos premium como Zero Water y PineApple Store, inmobiliarias como Rilay, soluciones industriales para Forcmin Mining y Tecnomat, y agroindustria con JP Procesos. Diseño y performance marketing medible para empresas en Chile y Latinoamérica.
             </p>
           </header>
 
@@ -237,6 +240,7 @@ export default function PortfolioGrid() {
                 <Image
                   src={item.src}
                   alt={item.alt}
+                  title={`${item.client} — ${item.description} | Muller y Pérez`}
                   width={item.width}
                   height={item.height}
                   className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-[1.03]"
