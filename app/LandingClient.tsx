@@ -30,6 +30,7 @@ import {
 } from 'lucide-react'
 import YouTubeLite from '@/components/YouTubeLite'
 import { ClientLogosGrid } from '@/components/ClientLogos'
+import PortfolioGrid from '@/components/PortfolioGrid'
 
 export default function LandingClient() {
   const router = useRouter()
@@ -2064,6 +2065,9 @@ export default function LandingClient() {
 
       {/* Clientes — debajo de planes */}
       <ClientLogosGrid />
+
+      {/* Portfolio — debajo de clientes */}
+      <PortfolioGrid />
 
       {/* Contacto */}
       <section id="contacto" className="py-20 px-6 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-white" aria-labelledby="formulario-contacto">
