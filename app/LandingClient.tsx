@@ -735,6 +735,14 @@ export default function LandingClient() {
               )}
             </div>
 
+            {/* Portfolio */}
+            <Link
+              href="/portfolio"
+              className="hidden md:block text-sm font-semibold text-gray-700 hover:text-blue-600 transition-all duration-200"
+            >
+              Portfolio
+            </Link>
+
             {/* Servicios Mega Dropdown */}
             <div
               className="relative hidden md:block"

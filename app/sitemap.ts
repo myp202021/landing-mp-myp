@@ -361,6 +361,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'monthly',
       priority: 0.95,
     },
+    // Portfolio
+    {
+      url: `${baseUrl}/portfolio`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.9,
+    },
     // Servicios Hub
     {
       url: `${baseUrl}/servicios`,
