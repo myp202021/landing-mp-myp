@@ -34,7 +34,6 @@ const clients = [
   { name: 'ALD Automotora', industry: 'Automotriz', logo: '/clientes/ald.png' },
   { name: 'Swing', industry: 'Producción de Eventos', logo: '/clientes/swing.png' },
   { name: 'Atacama Experience', industry: 'Turismo', logo: '/clientes/atacama-experience.png' },
-  { name: 'Budnik', industry: 'Propiedades', logo: '/clientes/budnik.png' },
   { name: 'Homar', industry: 'Importadora', logo: '/clientes/homar.png' },
   { name: 'Faretto', industry: 'Iluminación', logo: '/clientes/faretto.png' },
 ]
