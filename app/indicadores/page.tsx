@@ -322,24 +322,21 @@ export default async function IndicadoresPage() {
 
                     {/* Header desktop */}
                     <div className="hidden md:grid px-5 py-3 border-b border-white/10 text-xs font-bold text-white/40 uppercase tracking-wider"
-                      style={{ gridTemplateColumns: '2fr 1fr 1fr 1fr 1fr 0.6fr 0.7fr 0.7fr' }}>
+                      style={{ gridTemplateColumns: '2fr 1fr 1fr 1fr 1fr 0.6fr' }}>
                       <div>Industria</div>
                       <div className="text-right">G. CPC</div>
                       <div className="text-right text-emerald-400/60">G. CPA</div>
                       <div className="text-right" style={{ color: 'rgba(0,212,255,0.6)' }}>M. CPC</div>
                       <div className="text-right text-purple-400/60">M. CPA</div>
                       <div className="text-right">CVR</div>
-                      <div className="text-right">Var.</div>
-                      <div className="text-right text-amber-400/60">Est.</div>
                     </div>
 
                     {/* Header mobile */}
                     <div className="grid md:hidden px-4 py-3 border-b border-white/10 text-xs font-bold text-white/40 uppercase tracking-wider"
-                      style={{ gridTemplateColumns: '2fr 1fr 1fr 0.7fr' }}>
+                      style={{ gridTemplateColumns: '2fr 1fr 1fr' }}>
                       <div>Industria</div>
                       <div className="text-right">G. CPC</div>
                       <div className="text-right" style={{ color: 'rgba(0,212,255,0.6)' }}>M. CPC</div>
-                      <div className="text-right">Var.</div>
                     </div>
 
                     {cpcData.map((ind: any) => (
@@ -350,7 +347,7 @@ export default async function IndicadoresPage() {
 
                         {/* Row desktop */}
                         <div className="hidden md:grid px-5 py-3.5 items-center"
-                          style={{ gridTemplateColumns: '2fr 1fr 1fr 1fr 1fr 0.6fr 0.7fr 0.7fr' }}>
+                          style={{ gridTemplateColumns: '2fr 1fr 1fr 1fr 1fr 0.6fr' }}>
                           <div className="text-sm font-medium text-white">{ind.label}</div>
                           <div className="text-right">
                             <span className="text-sm font-bold text-white">{clp(ind.google_clp)}</span>
@@ -369,37 +366,17 @@ export default async function IndicadoresPage() {
                             <span className="text-white/30 text-xs ml-0.5">CLP</span>
                           </div>
                           <div className="text-right text-white/50 text-sm">{ind.cvr}%</div>
-                          <div className="flex justify-end">
-                            <VarBadge val={ind.google_var_pct} />
-                          </div>
-                          <div className="text-right">
-                            {ind.factor_estacional ? (
-                              <span className={`text-xs font-bold ${
-                                ind.factor_estacional > 1.05 ? 'text-amber-400' :
-                                ind.factor_estacional < 0.95 ? 'text-sky-400' :
-                                'text-white/40'
-                              }`}>
-                                {ind.factor_estacional > 1.05 ? '↑' : ind.factor_estacional < 0.95 ? '↓' : '·'}{' '}
-                                {ind.factor_estacional.toFixed(2)}
-                              </span>
-                            ) : (
-                              <span className="text-white/30 text-xs">—</span>
-                            )}
-                          </div>
                         </div>
 
                         {/* Row mobile */}
                         <div className="grid md:hidden px-4 py-3.5 items-center"
-                          style={{ gridTemplateColumns: '2fr 1fr 1fr 0.7fr' }}>
+                          style={{ gridTemplateColumns: '2fr 1fr 1fr' }}>
                           <div className="text-sm font-medium text-white">{ind.label}</div>
                           <div className="text-right">
                             <span className="text-sm font-bold text-white">{clp(ind.google_clp)}</span>
                           </div>
                           <div className="text-right">
                             <span className="text-sm font-bold" style={{ color: '#00d4ff' }}>{clp(ind.meta_clp)}</span>
-                          </div>
-                          <div className="flex justify-end">
-                            <VarBadge val={ind.google_var_pct} />
                           </div>
                         </div>
                       </div>
@@ -409,9 +386,7 @@ export default async function IndicadoresPage() {
                       <span className="text-white/40 font-semibold">CPC:</span> benchmarks Ubersuggest Chile, ajustados por USD semanal + estacionalidad. &nbsp;
                       <span className="text-emerald-400/50 font-semibold">CPA Google</span> y{' '}
                       <span className="text-purple-400/50 font-semibold">CPA Meta:</span> CPC ÷ CVR de industria (predictor M&amp;P). &nbsp;
-                      <span className="text-white/40 font-semibold">CVR:</span> tasa de conversión promedio por industria. &nbsp;
-                      <span className="text-white/40 font-semibold">Var.:</span> variación vs semana anterior. &nbsp;
-                      <span className="text-amber-400/50 font-semibold">Est.:</span> factor estacional del mes (<span className="text-amber-400/70">↑</span> temporada alta, <span className="text-sky-400/70">↓</span> baja).
+                      <span className="text-white/40 font-semibold">CVR:</span> tasa de conversión promedio por industria.
                     </div>
                   </div>
                 </section>
