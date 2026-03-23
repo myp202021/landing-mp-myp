@@ -2,20 +2,39 @@ name: Reporte Diario Competencia Hualpen
 
 on:
   schedule:
-    - cron: '30 11 * * 1-5'  # 08:30 AM Chile (UTC-3)
+    - cron: '0 10 * * 1-5'   # 07:00 AM Chile (UTC-3) — intento principal
+    - cron: '30 10 * * 1-5'  # 07:30 AM Chile (UTC-3) — respaldo si el primero no corrió
   workflow_dispatch:
 
 jobs:
   scrape:
     runs-on: ubuntu-latest
     steps:
+      - name: Verificar si ya corrió hoy
+        id: check
+        run: |
+          TODAY=$(date -u +%Y-%m-%d)
+          RESULT=$(curl -s -H "Authorization: Bearer ${{ secrets.SUPABASE_SERVICE_KEY }}" \
+            "${{ secrets.SUPABASE_URL }}/rest/v1/reportes_competencia?fecha_reporte=eq.${TODAY}&select=id&limit=1" \
+            -H "apikey: ${{ secrets.SUPABASE_SERVICE_KEY }}")
+          if echo "$RESULT" | grep -q '"id"'; then
+            echo "already_ran=true" >> $GITHUB_OUTPUT
+            echo "✅ Ya existe reporte para $TODAY — saltando ejecución"
+          else
+            echo "already_ran=false" >> $GITHUB_OUTPUT
+            echo "🔄 No hay reporte para $TODAY — ejecutando"
+          fi
+
       - uses: actions/checkout@v4
+        if: steps.check.outputs.already_ran == 'false'
 
       - uses: actions/setup-node@v4
+        if: steps.check.outputs.already_ran == 'false'
         with:
           node-version: '20'
 
       - name: Instalar wkhtmltopdf
+        if: steps.check.outputs.already_ran == 'false'
         run: |
           for i in 1 2 3; do
             sudo apt-get update && sudo apt-get install -y wkhtmltopdf && break
@@ -24,9 +43,11 @@ jobs:
           done
 
       - name: Instalar dependencias
+        if: steps.check.outputs.already_ran == 'false'
         run: npm install node-fetch@2 @supabase/supabase-js
 
       - name: Ejecutar scraper
+        if: steps.check.outputs.already_ran == 'false'
         id: scraper
         run: node scripts/scrape-competencia.js
         env:
@@ -36,7 +57,7 @@ jobs:
           RESEND: ${{ secrets.RESEND }}
 
       - name: Alerta si falla
-        if: failure()
+        if: failure() && steps.check.outputs.already_ran == 'false'
         run: |
           node -e "
           const fetch = require('node-fetch');
