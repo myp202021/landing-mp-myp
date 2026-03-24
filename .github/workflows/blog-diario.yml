@@ -1,0 +1,54 @@
+name: Blog Diario M&P
+
+on:
+  schedule:
+    - cron: '0 12 * * *'    # 09:00 AM Chile (UTC-3) — todos los días
+    - cron: '30 12 * * *'   # 09:30 AM Chile — respaldo
+  workflow_dispatch:
+
+jobs:
+  generar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verificar si ya se publicó hoy
+        id: check
+        run: |
+          TODAY=$(date -u +%Y-%m-%d)
+          RESULT=$(curl -s -H "Authorization: Bearer ${{ secrets.SUPABASE_SERVICE_KEY }}" \
+            "${{ secrets.SUPABASE_URL }}/rest/v1/blog_posts?date_published=eq.${TODAY}&select=id&limit=1" \
+            -H "apikey: ${{ secrets.SUPABASE_SERVICE_KEY }}")
+          if echo "$RESULT" | grep -q '"id"'; then
+            echo "already_ran=true" >> $GITHUB_OUTPUT
+            echo "✅ Ya hay post para $TODAY — saltando"
+          else
+            echo "already_ran=false" >> $GITHUB_OUTPUT
+            echo "🔄 No hay post para $TODAY — generando"
+          fi
+
+      - uses: actions/checkout@v4
+        if: steps.check.outputs.already_ran == 'false'
+
+      - uses: actions/setup-node@v4
+        if: steps.check.outputs.already_ran == 'false'
+        with:
+          node-version: '20'
+
+      - name: Instalar dependencias
+        if: steps.check.outputs.already_ran == 'false'
+        run: npm install node-fetch@2 @supabase/supabase-js
+
+      - name: Generar y publicar artículo
+        if: steps.check.outputs.already_ran == 'false'
+        run: node scripts/generar-blog.js
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+
+      - name: Alerta si falla
+        if: failure() && steps.check.outputs.already_ran == 'false'
+        run: |
+          curl -s -X POST "https://api.resend.com/emails" \
+            -H "Authorization: Bearer ${{ secrets.RESEND }}" \
+            -H "Content-Type: application/json" \
+            -d "{\"from\":\"contacto@mulleryperez.cl\",\"to\":\"contacto@mulleryperez.cl\",\"subject\":\"⚠️ FALLO Blog Diario — $(date -u +%Y-%m-%d)\",\"html\":\"<p>El generador de blog falló. <a href='https://github.com/myp202021/landing-mp-myp/actions'>Ver logs</a></p>\"}"

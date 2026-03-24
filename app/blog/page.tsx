@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { Calendar, ArrowRight, Tag } from 'lucide-react'
+import { createClient } from '@supabase/supabase-js'
 
 export const metadata: Metadata = {
   title: 'Blog Marketing Digital 2025 - Guías Google Ads y Performance | M&P',
@@ -460,7 +461,39 @@ const articles = [
   }
 ]
 
-export default function BlogPage() {
+export const revalidate = 3600
+
+async function getSupabasePosts() {
+  try {
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    )
+    const { data } = await supabase
+      .from('blog_posts')
+      .select('slug, title, excerpt, date_published, category, read_time, tag')
+      .order('date_published', { ascending: false })
+
+    return (data || []).map((p: any) => ({
+      slug: p.slug,
+      title: p.title,
+      excerpt: p.excerpt || '',
+      date: p.date_published,
+      category: p.category || 'Marketing Digital',
+      readTime: p.read_time || '10 min',
+      tag: p.tag || p.category || 'Performance'
+    }))
+  } catch {
+    return []
+  }
+}
+
+export default async function BlogPage() {
+  const supabasePosts = await getSupabasePosts()
+  const staticSlugs = new Set(articles.map(a => a.slug))
+  const newPosts = supabasePosts.filter((p: any) => !staticSlugs.has(p.slug))
+  const allArticles = [...newPosts, ...articles]
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-white">
       {/* Header */}
@@ -504,7 +537,7 @@ export default function BlogPage() {
       <section className="pb-24 px-6">
         <div className="max-w-6xl mx-auto">
           <div className="grid md:grid-cols-1 gap-8">
-            {articles.map((article) => (
+            {allArticles.map((article) => (
               <Link
                 key={article.slug}
                 href={`/blog/${article.slug}`}
