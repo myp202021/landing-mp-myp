@@ -44,12 +44,10 @@ export default function LandingClient() {
     enviado: false
   })
 
-  const [serviciosDropdown, setServiciosDropdown] = useState(false)
-  const [industriasDropdown, setIndustriasDropdown] = useState(false)
-  const [recursosDropdown, setRecursosDropdown] = useState(false)
   const [labsDropdown, setLabsDropdown] = useState(false)
   const [utilidadesDropdown, setUtilidadesDropdown] = useState(false)
   const [noticiasDropdown, setNoticiasDropdown] = useState(false)
+  const [nosotrosDropdown, setNosotrosDropdown] = useState(false)
 
   // SEO: Metadata dinámica optimizada
 
@@ -554,14 +552,6 @@ export default function LandingClient() {
               Planes
             </button>
 
-            {/* Casos de Éxito */}
-            <button
-              onClick={() => document.getElementById('casos-exito')?.scrollIntoView({ behavior: 'smooth' })}
-              className="hidden md:block text-sm font-semibold text-gray-700 hover:text-blue-600 transition-all duration-200"
-            >
-              Casos de Éxito
-            </button>
-
             {/* M&P Labs Dropdown */}
             <div
               className="relative hidden md:block"
@@ -573,44 +563,26 @@ export default function LandingClient() {
                 className="flex items-center gap-1 text-sm font-semibold text-gray-700 hover:text-blue-600 transition-all duration-200"
                 aria-expanded={labsDropdown}
                 aria-haspopup="true"
-                aria-label="Ir a M&P Labs"
               >
                 M&P Labs
                 <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${labsDropdown ? 'rotate-180' : ''}`} aria-hidden="true" />
               </Link>
               {labsDropdown && (
-                <div className="absolute top-full mt-1 left-0 bg-white rounded-xl shadow-2xl border border-gray-100 py-2 min-w-[240px] animate-in fade-in slide-in-from-top-2 duration-200">
-                  <Link
-                    href="/labs/predictor"
-                    className="block px-4 py-3 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors bg-gradient-to-r from-indigo-50/30 to-transparent"
-                  >
-                    <div className="font-semibold flex items-center gap-2">
-                      Predictor + Diagnóstico
-                      <span className="px-1.5 py-0.5 bg-emerald-500 text-white text-[10px] font-bold rounded">NUEVO</span>
-                    </div>
+                <div className="absolute top-full mt-1 left-0 bg-white rounded-xl shadow-2xl border border-gray-100 py-2 min-w-[260px] animate-in fade-in slide-in-from-top-2 duration-200">
+                  <Link href="/labs/predictor" className="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+                    <div className="font-semibold flex items-center gap-2">Predictor + Diagnóstico <span className="px-1.5 py-0.5 bg-emerald-500 text-white text-[10px] font-bold rounded">NUEVO</span></div>
                     <div className="text-xs text-gray-500 mt-0.5">Google vs Meta vs LinkedIn</div>
                   </Link>
-                  <Link
-                    href="/labs/buyer-gen"
-                    className="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
-                  >
+                  <Link href="/labs/buyer-gen" className="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
                     <div className="font-semibold">Buyer Gen</div>
                     <div className="text-xs text-gray-500 mt-0.5">Genera buyer personas</div>
                   </Link>
-                  <Link
-                    href="/labs/radar-industrias"
-                    className="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
-                  >
+                  <Link href="/labs/radar-industrias" className="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
                     <div className="font-semibold">Radar Industrias</div>
                     <div className="text-xs text-gray-500 mt-0.5">Madurez digital por sector</div>
                   </Link>
                   <div className="border-t border-gray-100 mt-2 pt-2">
-                    <Link
-                      href="/labs"
-                      className="block px-4 py-2 text-sm text-blue-600 hover:text-blue-700 font-semibold transition-colors"
-                    >
-                      Ver todas las herramientas →
-                    </Link>
+                    <Link href="/labs" className="block px-4 py-2 text-sm text-blue-600 hover:text-blue-700 font-semibold transition-colors">Ver todas las herramientas →</Link>
                   </div>
                 </div>
               )}
@@ -627,54 +599,36 @@ export default function LandingClient() {
                 className="flex items-center gap-1 text-sm font-semibold text-gray-700 hover:text-blue-600 transition-all duration-200"
                 aria-expanded={utilidadesDropdown}
                 aria-haspopup="true"
-                aria-label="Ir a Utilidades"
               >
                 Utilidades
                 <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${utilidadesDropdown ? 'rotate-180' : ''}`} aria-hidden="true" />
               </Link>
               {utilidadesDropdown && (
                 <div className="absolute top-full mt-1 left-0 bg-white rounded-xl shadow-2xl border border-gray-100 py-2 min-w-[260px] animate-in fade-in slide-in-from-top-2 duration-200">
-                  <Link
-                    href="/utilidades/calculadora-cac"
-                    className="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
-                  >
+                  <Link href="/utilidades/calculadora-cac" className="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
                     <div className="font-semibold">Calculadora CAC</div>
                     <div className="text-xs text-gray-500 mt-0.5">Costo de adquisición por canal</div>
                   </Link>
-                  <Link
-                    href="/utilidades/comparador-web"
-                    className="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
-                  >
+                  <Link href="/utilidades/comparador-web" className="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
                     <div className="font-semibold">Comparador Web</div>
                     <div className="text-xs text-gray-500 mt-0.5">Velocidad y Core Web Vitals</div>
                   </Link>
-                  <Link
-                    href="/utilidades/generador-funnels"
-                    className="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
-                  >
+                  <Link href="/utilidades/generador-funnels" className="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
                     <div className="font-semibold">Generador Funnels</div>
                     <div className="text-xs text-gray-500 mt-0.5">Embudos de venta CRM</div>
                   </Link>
-                  <Link
-                    href="/utilidades/juega-aprende"
-                    className="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
-                  >
+                  <Link href="/utilidades/juega-aprende" className="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
                     <div className="font-semibold">Juega y Aprende</div>
                     <div className="text-xs text-gray-500 mt-0.5">Simulador estrategias marketing</div>
                   </Link>
                   <div className="border-t border-gray-100 mt-2 pt-2">
-                    <Link
-                      href="/utilidades"
-                      className="block px-4 py-2 text-sm text-blue-600 hover:text-blue-700 font-semibold transition-colors"
-                    >
-                      Ver todas las utilidades →
-                    </Link>
+                    <Link href="/utilidades" className="block px-4 py-2 text-sm text-blue-600 hover:text-blue-700 font-semibold transition-colors">Ver todas las utilidades →</Link>
                   </div>
                 </div>
               )}
             </div>
 
-            {/* Noticias Dropdown (Blog + Cápsulas) */}
+            {/* Noticias Dropdown */}
             <div
               className="relative hidden md:block"
               onMouseEnter={() => setNoticiasDropdown(true)}
@@ -684,156 +638,61 @@ export default function LandingClient() {
                 className="flex items-center gap-1 text-sm font-semibold text-gray-700 hover:text-blue-600 transition-all duration-200"
                 aria-expanded={noticiasDropdown}
                 aria-haspopup="true"
-                aria-label="Noticias"
               >
                 Noticias
                 <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${noticiasDropdown ? 'rotate-180' : ''}`} aria-hidden="true" />
               </button>
               {noticiasDropdown && (
-                <div className="absolute top-full mt-1 left-0 bg-white rounded-xl shadow-2xl border border-gray-100 py-2 min-w-[220px] animate-in fade-in slide-in-from-top-2 duration-200">
-                  <Link
-                    href="/investigacion"
-                    className="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
-                  >
-                    <div className="font-semibold">Investigación</div>
-                    <div className="text-xs text-gray-500 mt-0.5">Estudios y datos originales</div>
-                  </Link>
-                  <Link
-                    href="/blog"
-                    className="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
-                  >
+                <div className="absolute top-full mt-1 left-0 bg-white rounded-xl shadow-2xl border border-gray-100 py-2 min-w-[260px] animate-in fade-in slide-in-from-top-2 duration-200">
+                  <Link href="/blog" className="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
                     <div className="font-semibold">Blog</div>
                     <div className="text-xs text-gray-500 mt-0.5">Artículos y guías completas</div>
                   </Link>
-                  <a
-                    href="#capsulas-youtube"
-                    onClick={(e) => {
-                      e.preventDefault()
-                      document.getElementById('capsulas-youtube')?.scrollIntoView({ behavior: 'smooth' })
-                      setNoticiasDropdown(false)
-                    }}
-                    className="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors cursor-pointer"
-                  >
-                    <div className="font-semibold">Cápsulas YouTube</div>
-                    <div className="text-xs text-gray-500 mt-0.5">Videos cortos y prácticos</div>
-                  </a>
-                  <Link
-                    href="/benchmarks"
-                    className="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
-                  >
+                  <Link href="/indicadores" className="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+                    <div className="font-semibold">Termómetro Marketing</div>
+                    <div className="text-xs text-gray-500 mt-0.5">CPC por industria · USD · UF</div>
+                  </Link>
+                  <Link href="/investigacion" className="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+                    <div className="font-semibold">Investigación</div>
+                    <div className="text-xs text-gray-500 mt-0.5">Estudios y datos originales</div>
+                  </Link>
+                  <Link href="/benchmarks" className="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
                     <div className="font-semibold">Benchmarks 2025</div>
                     <div className="text-xs text-gray-500 mt-0.5">Datos de industria Chile</div>
-                  </Link>
-                  <Link
-                    href="/indicadores"
-                    className="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
-                  >
-                    <div className="font-semibold">Termómetro Marketing</div>
-                    <div className="text-xs text-gray-500 mt-0.5">CPC por industria · Empleos · USD</div>
                   </Link>
                 </div>
               )}
             </div>
 
-            {/* Portfolio */}
-            <Link
-              href="/portfolio"
-              className="hidden md:block text-sm font-semibold text-gray-700 hover:text-blue-600 transition-all duration-200"
-            >
-              Portfolio
-            </Link>
-
-            {/* Casos de Éxito */}
-            <Link
-              href="/casos-de-exito"
-              className="hidden md:block text-sm font-semibold text-gray-700 hover:text-blue-600 transition-all duration-200"
-            >
-              Casos de Éxito
-            </Link>
-
-            {/* Servicios Mega Dropdown */}
+            {/* Nosotros Dropdown */}
             <div
               className="relative hidden md:block"
-              onMouseEnter={() => setServiciosDropdown(true)}
-              onMouseLeave={() => setServiciosDropdown(false)}
+              onMouseEnter={() => setNosotrosDropdown(true)}
+              onMouseLeave={() => setNosotrosDropdown(false)}
             >
               <Link
-                href="/servicios"
+                href="/nosotros"
                 className="flex items-center gap-1 text-sm font-semibold text-gray-700 hover:text-blue-600 transition-all duration-200"
-                aria-expanded={serviciosDropdown}
+                aria-expanded={nosotrosDropdown}
                 aria-haspopup="true"
-                aria-label="Ver servicios"
               >
-                Servicios
-                <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${serviciosDropdown ? 'rotate-180' : ''}`} aria-hidden="true" />
+                Nosotros
+                <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${nosotrosDropdown ? 'rotate-180' : ''}`} aria-hidden="true" />
               </Link>
-              {serviciosDropdown && (
-                <div className="absolute top-full mt-1 right-0 bg-white rounded-xl shadow-2xl border border-gray-100 p-6 min-w-[720px] animate-in fade-in slide-in-from-top-2 duration-200">
-                  <div className="grid grid-cols-3 gap-6">
-                    {/* Columna Servicios */}
-                    <div>
-                      <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Servicios</h3>
-                      <div className="space-y-1">
-                        <Link href="/servicios#google-ads-chile" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">Google Ads Chile</Link>
-                        <Link href="/servicios#meta-ads-chile" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">Meta Ads Chile</Link>
-                        <Link href="/servicios#linkedin-ads-chile" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">LinkedIn Ads Chile</Link>
-                        <Link href="/servicios#tiktok-ads-chile" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">TikTok Ads Chile</Link>
-                        <Link href="/servicios#performance-marketing" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">Performance Marketing</Link>
-                        <Link href="/servicios#seo-chile" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">SEO Chile</Link>
-                        <Link href="/servicios#mp-radar-inteligencia-competitiva" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">M&P Radar — IA</Link>
-                        <Link href="/servicios#diseno-digital" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">Diseño Digital</Link>
-                        <Link href="/servicios#video-marketing-dron" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">Video con Dron</Link>
-                        <div className="pt-2 border-t border-gray-100 mt-2">
-                          <Link href="/servicios" className="text-sm text-blue-600 hover:text-blue-700 font-semibold">Ver los 13 servicios →</Link>
-                        </div>
-                      </div>
-                    </div>
-                    {/* Columna Industrias */}
-                    <div>
-                      <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Por Industria</h3>
-                      <div className="space-y-1">
-                        <Link href="/marketing-digital-ecommerce-chile" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">Ecommerce</Link>
-                        <Link href="/marketing-digital-b2b-chile" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">B2B / Empresas</Link>
-                        <Link href="/marketing-digital-saas-chile" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">SaaS / Software</Link>
-                        <Link href="/marketing-digital-fintech-chile" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">Fintech</Link>
-                        <Link href="/marketing-digital-legal-chile" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">Legal / Abogados</Link>
-                        <Link href="/marketing-digital-seguros-chile" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">Seguros</Link>
-                        <Link href="/marketing-digital-turismo-chile" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">Turismo</Link>
-                        <Link href="/marketing-digital-manufactura-chile" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">Manufactura</Link>
-                        <div className="pt-2 border-t border-gray-100 mt-2">
-                          <Link href="/industrias" className="text-sm text-blue-600 hover:text-blue-700 font-semibold">Ver todas →</Link>
-                        </div>
-                      </div>
-                    </div>
-                    {/* Columna Ciudades */}
-                    <div>
-                      <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Por Ciudad</h3>
-                      <div className="space-y-1">
-                        <Link href="/agencia-marketing-digital-santiago" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">Santiago</Link>
-                        <Link href="/agencia-marketing-digital-vina-del-mar" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">Viña del Mar</Link>
-                        <Link href="/agencia-marketing-digital-concepcion" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">Concepción</Link>
-                        <Link href="/agencia-marketing-digital-valparaiso" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">Valparaíso</Link>
-                        <Link href="/agencia-marketing-digital-antofagasta" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">Antofagasta</Link>
-                        <Link href="/agencia-marketing-digital-temuco" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">Temuco</Link>
-                        <Link href="/agencia-marketing-digital-puerto-montt" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">Puerto Montt</Link>
-                        <Link href="/agencia-marketing-digital-las-condes" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">Las Condes</Link>
-                        <Link href="/agencia-marketing-digital-vitacura" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">Vitacura</Link>
-                      </div>
-                    </div>
-                    {/* Columna Recursos */}
-                    <div>
-                      <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Recursos</h3>
-                      <div className="space-y-1">
-                        <Link href="/ranking-agencias-marketing-digital-chile" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">Ranking Agencias</Link>
-                        <Link href="/precios-agencia-marketing-digital-chile" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">Precios Agencias</Link>
-                        <Link href="/google-ads-vs-meta-ads-chile" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">Google vs Meta Ads</Link>
-                        <Link href="/agencia-marketing-digital-vs-inhouse" className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium">Agencia vs In-House</Link>
-                        <div className="pt-2 border-t border-gray-100 mt-2">
-                          <Link href="/recursos" className="text-sm text-blue-600 hover:text-blue-700 font-semibold">Ver todos →</Link>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+              {nosotrosDropdown && (
+                <div className="absolute top-full mt-1 right-0 bg-white rounded-xl shadow-2xl border border-gray-100 py-2 min-w-[260px] animate-in fade-in slide-in-from-top-2 duration-200">
+                  <Link href="/casos-de-exito" className="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+                    <div className="font-semibold">Casos de Éxito</div>
+                    <div className="text-xs text-gray-500 mt-0.5">Resultados reales con datos</div>
+                  </Link>
+                  <Link href="/portfolio" className="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+                    <div className="font-semibold">Portfolio</div>
+                    <div className="text-xs text-gray-500 mt-0.5">Trabajos y piezas gráficas</div>
+                  </Link>
+                  <Link href="/servicios" className="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+                    <div className="font-semibold">Servicios</div>
+                    <div className="text-xs text-gray-500 mt-0.5">Google Ads, Meta, LinkedIn y más</div>
+                  </Link>
                 </div>
               )}
             </div>
