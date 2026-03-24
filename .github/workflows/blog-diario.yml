@@ -2,8 +2,8 @@ name: Blog Diario M&P
 
 on:
   schedule:
-    - cron: '0 12 * * *'    # 09:00 AM Chile (UTC-3) — todos los días
-    - cron: '30 12 * * *'   # 09:30 AM Chile — respaldo
+    - cron: '0 9 * * *'     # 06:00 AM Chile (UTC-3) — todos los días L-D
+    - cron: '30 9 * * *'    # 06:30 AM Chile — respaldo
   workflow_dispatch:
 
 jobs:
@@ -39,11 +39,36 @@ jobs:
 
       - name: Generar y publicar artículo
         if: steps.check.outputs.already_ran == 'false'
-        run: node scripts/generar-blog.js
+        id: blog
+        run: |
+          OUTPUT=$(node scripts/generar-blog.js 2>&1)
+          echo "$OUTPUT"
+          TITLE=$(echo "$OUTPUT" | grep "📰 Artículo publicado:" | sed 's/📰 Artículo publicado: //')
+          URL=$(echo "$OUTPUT" | grep "🔗 URL:" | sed 's/🔗 URL: //')
+          CATEGORY=$(echo "$OUTPUT" | grep "📂 Categoría:" | sed 's/📂 Categoría: //')
+          echo "title=$TITLE" >> $GITHUB_OUTPUT
+          echo "url=$URL" >> $GITHUB_OUTPUT
+          echo "category=$CATEGORY" >> $GITHUB_OUTPUT
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+
+      - name: Notificar por email
+        if: success() && steps.check.outputs.already_ran == 'false' && steps.blog.outputs.url != ''
+        run: |
+          curl -s -X POST "https://api.resend.com/emails" \
+            -H "Authorization: Bearer ${{ secrets.RESEND }}" \
+            -H "Content-Type: application/json" \
+            -d "$(cat <<EMAILEOF
+          {
+            "from": "contacto@mulleryperez.cl",
+            "to": "contacto@mulleryperez.cl",
+            "subject": "📝 Blog publicado: ${{ steps.blog.outputs.title }}",
+            "html": "<div style='font-family:Arial,sans-serif;max-width:600px;margin:0 auto;'><div style='background:#0A1628;color:white;padding:20px;border-radius:10px 10px 0 0;'><h2 style='margin:0;font-size:18px;'>Nuevo artículo publicado en el blog</h2></div><div style='padding:20px;border:1px solid #E5E7EB;border-top:none;border-radius:0 0 10px 10px;'><h3 style='color:#1E3A5F;margin:0 0 8px;'>${{ steps.blog.outputs.title }}</h3><p style='color:#6B7280;font-size:14px;margin:0 0 4px;'>Categoría: ${{ steps.blog.outputs.category }}</p><p style='color:#6B7280;font-size:14px;margin:0 0 16px;'>Fecha: $(date -u +%Y-%m-%d)</p><a href='${{ steps.blog.outputs.url }}' style='display:inline-block;background:#0055A4;color:white;padding:10px 24px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:14px;'>Ver artículo →</a></div><p style='color:#9CA3AF;font-size:12px;margin-top:12px;text-align:center;'>Blog automático M&P — www.mulleryperez.cl/blog</p></div>"
+          }
+          EMAILEOF
+          )"
 
       - name: Alerta si falla
         if: failure() && steps.check.outputs.already_ran == 'false'
