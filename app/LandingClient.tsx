@@ -552,6 +552,14 @@ export default function LandingClient() {
               Planes
             </button>
 
+            {/* Clientes */}
+            <button
+              onClick={() => document.getElementById('clientes')?.scrollIntoView({ behavior: 'smooth' })}
+              className="hidden md:block text-sm font-semibold text-gray-700 hover:text-blue-600 transition-all duration-200"
+            >
+              Clientes
+            </button>
+
             {/* M&P Labs Dropdown */}
             <div
               className="relative hidden md:block"
