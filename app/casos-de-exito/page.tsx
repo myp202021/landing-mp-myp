@@ -1,5 +1,6 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
+import SiteHeader from '@/components/SiteHeader'
 
 export const metadata: Metadata = {
   title: 'Casos de Éxito Marketing Digital Chile 2026 | Muller y Pérez',
@@ -77,8 +78,10 @@ export default function CasosDeExitoPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
 
+      <SiteHeader />
+
       {/* Hero */}
-      <section className="relative bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 py-24 px-6 overflow-hidden">
+      <section className="relative bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 pt-32 pb-24 px-6 overflow-hidden">
         <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-5" />
         <div className="max-w-5xl mx-auto relative z-10 text-center">
           <p className="text-sm font-bold text-blue-400 uppercase tracking-widest mb-4">

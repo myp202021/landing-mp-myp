@@ -12,7 +12,7 @@
     "@portabletext/react": "^4.0.3",
     "@sanity/client": "^6.24.1",
     "@supabase/ssr": "0.8.0",
-    "@supabase/supabase-js": "2.76.1",
+    "@supabase/supabase-js": "^2.76.1",
     "@vercel/speed-insights": "^1.2.0",
     "bcryptjs": "^3.0.3",
     "destack": "^3.0.8",
@@ -24,12 +24,14 @@
     "lucide-react": "^0.263.1",
     "next": "^14.2.0",
     "next-sanity": "^9.8.14",
+    "node-fetch": "^2.7.0",
     "papaparse": "^5.5.3",
     "react": "^18.3.0",
     "react-dom": "^18.3.0",
     "react-hot-toast": "^2.6.0",
     "recharts": "^3.4.1",
     "resend": "^3.2.0",
+    "tweetsodium": "^0.0.4",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {

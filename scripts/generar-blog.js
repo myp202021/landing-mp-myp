@@ -82,13 +82,56 @@ async function elegirTema() {
   // Filtrar temas no usados
   const disponibles = TEMAS.filter(t => !slugsExistentes.has(slugify(t.tema)))
 
-  if (disponibles.length === 0) {
-    console.log('⚠️ Todos los temas ya fueron publicados. Saliendo.')
-    process.exit(0)
+  if (disponibles.length > 0) {
+    // Hay temas predefinidos disponibles
+    return disponibles[Math.floor(Math.random() * disponibles.length)]
   }
 
-  // Elegir uno aleatorio
-  return disponibles[Math.floor(Math.random() * disponibles.length)]
+  // Todos los temas predefinidos ya se usaron — generar uno nuevo con IA
+  console.log('🤖 Temas predefinidos agotados. Generando tema nuevo con IA...')
+
+  const slugsList = [...slugsExistentes].join(', ')
+  const categorias = ['Google Ads', 'Meta Ads', 'Performance', 'LinkedIn Ads', 'SEO', 'Automatización', 'Estrategia', 'Industrias', 'Analytics', 'CRO']
+
+  const res = await fetch('https://api.openai.com/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${OPENAI_API_KEY}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      model: 'gpt-4o-mini',
+      messages: [{
+        role: 'user',
+        content: `Eres un estratega de contenido para una agencia de performance marketing en Chile (Muller y Pérez). Genera UN tema nuevo para un artículo de blog que sea:
+
+1. Relevante para marketing digital, performance, campañas pagadas o estrategia digital en Chile
+2. Específico y accionable (no genérico)
+3. Que NO sea igual ni similar a estos temas ya publicados: ${slugsList}
+4. Orientado a empresarios y gerentes de marketing chilenos
+
+Responde SOLO con un JSON (nada más):
+{"categoria": "una de: ${categorias.join(', ')}", "tag": "etiqueta corta", "tema": "título completo del artículo en español"}`
+      }],
+      max_tokens: 200,
+      temperature: 0.9
+    })
+  })
+
+  const data = await res.json()
+  try {
+    const raw = data.choices[0].message.content.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim()
+    const nuevoTema = JSON.parse(raw)
+    console.log(`💡 Tema generado: ${nuevoTema.tema}`)
+    return nuevoTema
+  } catch (e) {
+    // Fallback si falla el parsing
+    return {
+      categoria: categorias[Math.floor(Math.random() * categorias.length)],
+      tag: 'Performance',
+      tema: `Tendencias de marketing digital en Chile ${new Date().getFullYear()}: lo que funciona y lo que no`
+    }
+  }
 }
 
 async function generarArticulo(tema) {

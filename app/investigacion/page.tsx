@@ -1,5 +1,6 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
+import SiteHeader from '@/components/SiteHeader'
 
 export const metadata: Metadata = {
   title: 'Investigación y Estudios — Muller y Pérez',
@@ -38,16 +39,7 @@ const estudios = [
 export default function InvestigacionPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-white">
-      <header className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-xl border-b border-gray-100 z-50">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 py-5 flex items-center justify-between">
-          <Link href="/">
-            <img src="/logo-color.png" alt="Muller y Pérez" className="h-11 w-auto" />
-          </Link>
-          <Link href="/" className="text-sm font-semibold text-gray-700 hover:text-blue-600 transition-all">
-            ← Inicio
-          </Link>
-        </div>
-      </header>
+      <SiteHeader />
 
       <main className="pt-32 pb-24 px-6">
         <div className="max-w-4xl mx-auto">

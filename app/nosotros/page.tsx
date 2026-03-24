@@ -1,7 +1,7 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
-import Image from 'next/image'
 import { Target, Users, BarChart3, Award, CheckCircle2, ArrowRight, HelpCircle } from 'lucide-react'
+import SiteHeader from '@/components/SiteHeader'
 
 export const metadata: Metadata = {
   title: 'Quiénes Somos | Muller y Pérez - Agencia de Marketing Digital Chile',
@@ -110,22 +110,7 @@ export default function NosotrosPage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
 
       <div className="min-h-screen bg-white">
-        {/* Header */}
-        <header className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-xl border-b border-gray-100 z-50">
-          <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-            <Link href="/">
-              <img src="/logo-color.png" alt="Muller y Pérez" className="h-10 w-auto" />
-            </Link>
-            <nav className="hidden md:flex items-center gap-6">
-              <Link href="/servicios" className="text-gray-600 hover:text-blue-600 font-medium">Servicios</Link>
-              <Link href="/blog" className="text-gray-600 hover:text-blue-600 font-medium">Blog</Link>
-              <Link href="/labs" className="text-gray-600 hover:text-blue-600 font-medium">Labs</Link>
-              <Link href="/cotizador" className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg font-semibold transition-all">
-                Cotizar
-              </Link>
-            </nav>
-          </div>
-        </header>
+        <SiteHeader />
 
         {/* Hero */}
         <section className="pt-28 pb-20 px-6 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-white">

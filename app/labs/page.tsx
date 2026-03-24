@@ -7,7 +7,6 @@
 
 import React from 'react'
 import Link from 'next/link'
-import Image from 'next/image'
 import {
   Sparkles,
   TrendingUp,
@@ -22,6 +21,7 @@ import {
   PenTool,
   Search
 } from 'lucide-react'
+import SiteHeader from '@/components/SiteHeader'
 
 export default function MPLabs() {
   const herramientas = [
@@ -101,35 +101,7 @@ export default function MPLabs() {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Header - Consistente con home */}
-      <header className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-xl border-b border-gray-100 z-50">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 py-5 flex items-center justify-between">
-          <Link href="/" className="hover:opacity-80 transition-opacity">
-            <Image
-              src="/logo-color.png"
-              alt="Muller y Pérez"
-              width={140}
-              height={45}
-              className="h-11 w-auto"
-              priority
-            />
-          </Link>
-          <div className="flex items-center gap-4">
-            <Link
-              href="/utilidades"
-              className="hidden md:block text-sm font-semibold text-gray-600 hover:text-blue-600 transition-colors"
-            >
-              Utilidades
-            </Link>
-            <Link
-              href="/"
-              className="text-sm font-semibold text-gray-600 hover:text-blue-600 transition-colors"
-            >
-              ← Volver al inicio
-            </Link>
-          </div>
-        </div>
-      </header>
+      <SiteHeader />
 
       {/* Hero - Estilo consistente con home */}
       <section className="pt-36 pb-20 px-6 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-white relative overflow-hidden">
