@@ -286,6 +286,36 @@ async function enviarEmail(contenido, pngBuffer) {
 // ============================================================
 // PUBLICAR EN LINKEDIN VIA AYRSHARE
 // ============================================================
+async function subirImagenSupabase(pngBuffer) {
+  const hoy = new Date().toISOString().split('T')[0]
+  const filename = `social/myp-social-${hoy}.png`
+
+  const { data, error } = await supabase.storage
+    .from('public-assets')
+    .upload(filename, pngBuffer, {
+      contentType: 'image/png',
+      upsert: true
+    })
+
+  if (error) {
+    // Si el bucket no existe, intentar crearlo
+    if (error.message && error.message.includes('not found')) {
+      console.log('📦 Creando bucket public-assets...')
+      await supabase.storage.createBucket('public-assets', { public: true })
+      const { data: d2, error: e2 } = await supabase.storage
+        .from('public-assets')
+        .upload(filename, pngBuffer, { contentType: 'image/png', upsert: true })
+      if (e2) throw new Error(`Supabase Storage error: ${e2.message}`)
+    } else {
+      throw new Error(`Supabase Storage error: ${error.message}`)
+    }
+  }
+
+  const { data: urlData } = supabase.storage.from('public-assets').getPublicUrl(filename)
+  console.log(`🖼️ Imagen subida: ${urlData.publicUrl}`)
+  return urlData.publicUrl
+}
+
 async function publicarEnLinkedIn(contenido, pngBuffer) {
   if (!AYRSHARE_API_KEY) {
     console.log('⚠️ AYRSHARE_API_KEY no configurada — saltando publicación')
@@ -293,8 +323,8 @@ async function publicarEnLinkedIn(contenido, pngBuffer) {
   }
 
   try {
-    // Subir imagen como base64 data URL
-    const imageBase64 = `data:image/png;base64,${pngBuffer.toString('base64')}`
+    // Subir imagen a Supabase Storage para obtener URL pública
+    const imageUrl = await subirImagenSupabase(pngBuffer)
 
     const res = await fetch('https://app.ayrshare.com/api/post', {
       method: 'POST',
@@ -305,7 +335,7 @@ async function publicarEnLinkedIn(contenido, pngBuffer) {
       body: JSON.stringify({
         post: contenido.copy_linkedin,
         platforms: ['linkedin'],
-        mediaUrls: [imageBase64]
+        mediaUrls: [imageUrl]
       })
     })
 
@@ -314,7 +344,7 @@ async function publicarEnLinkedIn(contenido, pngBuffer) {
     if (data.status === 'success' || data.id) {
       console.log('✅ Publicado en LinkedIn via Ayrshare')
     } else {
-      console.log('⚠️ Ayrshare respuesta:', JSON.stringify(data).substring(0, 200))
+      console.log('⚠️ Ayrshare respuesta:', JSON.stringify(data).substring(0, 300))
     }
   } catch (err) {
     console.log('⚠️ Error publicando en LinkedIn:', err.message)
