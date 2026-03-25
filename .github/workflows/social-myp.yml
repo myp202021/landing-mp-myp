@@ -2,8 +2,8 @@ name: Contenido Social M&P
 
 on:
   schedule:
-    - cron: '0 8 * * 1,3,5'    # 05:00 AM Chile (UTC-3) — lunes, miércoles, viernes
-    - cron: '30 8 * * 1,3,5'   # 05:30 AM Chile — respaldo
+    - cron: '0 11 * * 1,3,5'   # 08:00 AM Chile (UTC-3) — lunes, miércoles, viernes
+    - cron: '30 11 * * 1,3,5'  # 08:30 AM Chile — respaldo
   workflow_dispatch:
 
 jobs:
