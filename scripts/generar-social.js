@@ -410,10 +410,7 @@ async function main() {
   const pngBuffer = await renderizarPNG(html)
   console.log(`✅ PNG generado: ${(pngBuffer.length / 1024).toFixed(0)} KB`)
 
-  // 6. Publicar en LinkedIn via Ayrshare
-  await publicarEnLinkedIn(contenido, pngBuffer)
-
-  // 7. Enviar email (con copy de IG para publicar manual)
+  // 6. Enviar email (con copy LinkedIn + IG para publicar manual)
   await enviarEmail(contenido, pngBuffer)
 
   // 8. Guardar en Supabase
@@ -422,7 +419,7 @@ async function main() {
 
   console.log('')
   console.log(`📰 Contenido listo: ${contenido.headline_grafica}`)
-  console.log(`📋 LinkedIn: PUBLICADO automático`)
+  console.log(`📋 LinkedIn: en el email para publicar manual`)
   console.log(`📋 Instagram: en el email para publicar manual`)
 }
 
