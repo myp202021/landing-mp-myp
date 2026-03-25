@@ -154,94 +154,71 @@ function generarHtmlGrafica(contenido) {
   const headline = contenido.headline_grafica || ''
   const sub = contenido.subtitulo_grafica || ''
 
+  const STYLE = `<style>@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&display=swap');*{margin:0;padding:0;box-sizing:border-box;}</style>`
+  const footerDark = `<div style="position:absolute;bottom:38px;left:80px;right:80px;display:flex;justify-content:space-between;align-items:center;z-index:10;"><div style="display:flex;align-items:center;gap:10px;"><div style="width:8px;height:8px;border-radius:50%;background:linear-gradient(135deg,#2DD4BF,#8B5CF6);"></div><div style="font-size:20px;font-weight:800;color:rgba(255,255,255,0.5);letter-spacing:0.5px;">mulleryperez.cl</div></div><div style="font-size:13px;color:rgba(168,85,247,0.4);font-weight:600;">Performance Marketing · Chile</div></div>`
+  const footerLight = `<div style="position:absolute;bottom:38px;left:80px;right:80px;display:flex;justify-content:space-between;align-items:center;z-index:10;"><div style="display:flex;align-items:center;gap:10px;"><div style="width:8px;height:8px;border-radius:50%;background:linear-gradient(135deg,#8B5CF6,#2DD4BF);"></div><div style="font-size:20px;font-weight:800;letter-spacing:0.5px;background:linear-gradient(135deg,#4C1D95,#7C3AED,#0D9488);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">mulleryperez.cl</div></div><div style="font-size:13px;color:#A78BFA;font-weight:600;">Performance Marketing · Chile</div></div>`
+  // Burbujas sólidas (sin filter:blur que Puppeteer no renderiza bien)
+  const bubblesDark = `<div style="position:absolute;top:-60px;right:-30px;width:280px;height:280px;border-radius:50%;background:rgba(168,85,247,0.3);"></div><div style="position:absolute;top:30px;right:50px;width:170px;height:170px;border-radius:50%;background:rgba(192,132,252,0.2);"></div><div style="position:absolute;bottom:-40px;left:-30px;width:250px;height:250px;border-radius:50%;background:rgba(59,130,246,0.25);"></div><div style="position:absolute;bottom:40px;left:50px;width:150px;height:150px;border-radius:50%;background:rgba(96,165,250,0.15);"></div><div style="position:absolute;top:200px;right:200px;width:180px;height:180px;border-radius:50%;background:rgba(236,72,153,0.2);"></div><div style="position:absolute;bottom:250px;left:350px;width:140px;height:140px;border-radius:50%;background:rgba(45,212,191,0.18);"></div><div style="position:absolute;top:450px;right:400px;width:100px;height:100px;border-radius:50%;background:rgba(251,146,60,0.15);"></div>`
+  const bubblesLight = `<div style="position:absolute;top:-60px;right:-30px;width:280px;height:280px;border-radius:50%;background:rgba(139,92,246,0.25);"></div><div style="position:absolute;top:20px;right:40px;width:180px;height:180px;border-radius:50%;background:rgba(192,132,252,0.2);"></div><div style="position:absolute;bottom:-40px;left:-30px;width:250px;height:250px;border-radius:50%;background:rgba(45,212,191,0.25);"></div><div style="position:absolute;bottom:30px;left:40px;width:150px;height:150px;border-radius:50%;background:rgba(94,234,212,0.2);"></div><div style="position:absolute;top:180px;right:250px;width:200px;height:200px;border-radius:50%;background:rgba(236,72,153,0.18);"></div><div style="position:absolute;top:50px;left:200px;width:160px;height:160px;border-radius:50%;background:rgba(251,146,60,0.18);"></div><div style="position:absolute;bottom:220px;right:60px;width:130px;height:130px;border-radius:50%;background:rgba(59,130,246,0.15);"></div><div style="position:absolute;top:600px;left:400px;width:100px;height:100px;border-radius:50%;background:rgba(168,85,247,0.12);"></div>`
+  const dots = `<div style="position:absolute;top:160px;right:180px;width:14px;height:14px;border-radius:50%;background:#8B5CF6;opacity:0.4;"></div><div style="position:absolute;bottom:300px;left:110px;width:12px;height:12px;border-radius:50%;background:#EC4899;opacity:0.35;"></div><div style="position:absolute;top:400px;right:50px;width:10px;height:10px;border-radius:50%;background:#2DD4BF;opacity:0.5;"></div><div style="position:absolute;top:70px;left:380px;width:8px;height:8px;border-radius:50%;background:#F97316;opacity:0.4;"></div><div style="position:absolute;bottom:120px;right:350px;width:9px;height:9px;border-radius:50%;background:#3B82F6;opacity:0.35;"></div><div style="position:absolute;top:320px;left:80px;width:7px;height:7px;border-radius:50%;background:#A78BFA;opacity:0.45;"></div>`
+
   // ============================================================
-  // TEMPLATE 1 — Fondo oscuro púrpura + burbujas multicolor
+  // TEMPLATE 1 — Fondo oscuro púrpura + burbujas sólidas multicolor
   // ============================================================
   if (templateNum === 1) {
-    return `<!DOCTYPE html><html><head><meta charset="UTF-8">
-<style>@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&display=swap');*{margin:0;padding:0;box-sizing:border-box;}</style></head><body>
+    return `<!DOCTYPE html><html><head><meta charset="UTF-8">${STYLE}</head><body>
 <div style="width:1080px;height:1080px;background:linear-gradient(160deg,#0B0B1A 0%,#1a1145 30%,#2d1b69 55%,#1a0b3e 100%);position:relative;overflow:hidden;font-family:'Plus Jakarta Sans',sans-serif;">
-  <div style="position:absolute;top:-80px;right:-40px;width:380px;height:380px;border-radius:50%;background:radial-gradient(circle,rgba(168,85,247,0.4) 0%,rgba(168,85,247,0.1) 40%,transparent 70%);filter:blur(20px);"></div>
-  <div style="position:absolute;top:200px;right:100px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(236,72,153,0.35) 0%,transparent 65%);filter:blur(15px);"></div>
-  <div style="position:absolute;bottom:-60px;left:-40px;width:350px;height:350px;border-radius:50%;background:radial-gradient(circle,rgba(59,130,246,0.35) 0%,rgba(59,130,246,0.1) 40%,transparent 70%);filter:blur(20px);"></div>
-  <div style="position:absolute;bottom:200px;left:300px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(45,212,191,0.25) 0%,transparent 65%);filter:blur(15px);"></div>
-  <div style="position:absolute;top:400px;right:350px;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,rgba(251,146,60,0.2) 0%,transparent 65%);filter:blur(10px);"></div>
-  <div style="position:absolute;top:60px;left:60px;width:140px;height:140px;border-radius:50%;border:1.5px solid rgba(168,85,247,0.15);"></div>
-  <div style="position:absolute;bottom:120px;right:120px;width:200px;height:200px;border-radius:50%;border:1.5px solid rgba(59,130,246,0.12);"></div>
-  <div style="position:absolute;top:350px;right:60px;width:80px;height:80px;border-radius:50%;border:1.5px solid rgba(236,72,153,0.15);"></div>
-  <div style="position:absolute;top:180px;left:120px;width:8px;height:8px;border-radius:50%;background:rgba(45,212,191,0.5);"></div>
-  <div style="position:absolute;top:500px;right:200px;width:6px;height:6px;border-radius:50%;background:rgba(168,85,247,0.5);"></div>
-  <div style="position:absolute;bottom:300px;left:250px;width:10px;height:10px;border-radius:50%;background:rgba(236,72,153,0.4);"></div>
-  <div style="position:absolute;top:150px;right:300px;width:5px;height:5px;border-radius:50%;background:rgba(251,146,60,0.5);"></div>
-  <div style="position:absolute;top:0;left:65px;width:1px;height:100%;background:linear-gradient(to bottom,transparent 0%,rgba(168,85,247,0.15) 20%,rgba(45,212,191,0.1) 80%,transparent 100%);"></div>
+  ${bubblesDark}
+  ${dots}
   <div style="position:absolute;top:48px;right:55px;z-index:10;"><img src="${logoUrl}" style="height:52px;width:auto;"></div>
   <div style="position:relative;z-index:5;display:flex;flex-direction:column;justify-content:center;height:100%;padding:90px 80px;">
     ${dato ? `<div style="font-size:130px;font-weight:900;line-height:0.9;letter-spacing:-6px;margin-bottom:24px;"><span style="background:linear-gradient(135deg,#2DD4BF,#34D399,#5EEAD4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">${dato}</span></div>` : ''}
     <div style="font-size:${dato ? '44' : '52'}px;font-weight:900;color:#FFFFFF;line-height:1.08;max-width:85%;letter-spacing:-1.5px;">${headline}</div>
     <div style="margin-top:24px;padding-left:2px;">
-      <div style="display:flex;gap:6px;margin-bottom:16px;"><div style="width:45px;height:4px;background:linear-gradient(90deg,#2DD4BF,#8B5CF6);border-radius:2px;"></div><div style="width:20px;height:4px;background:rgba(236,72,153,0.6);border-radius:2px;"></div><div style="width:10px;height:4px;background:rgba(251,146,60,0.5);border-radius:2px;"></div></div>
+      <div style="display:flex;gap:6px;margin-bottom:16px;"><div style="width:45px;height:4px;background:linear-gradient(90deg,#2DD4BF,#8B5CF6);border-radius:2px;"></div><div style="width:20px;height:4px;background:#EC4899;border-radius:2px;opacity:0.6;"></div><div style="width:10px;height:4px;background:#F97316;border-radius:2px;opacity:0.5;"></div></div>
       <div style="font-size:20px;color:rgba(255,255,255,0.5);line-height:1.5;max-width:75%;font-weight:500;">${sub}</div>
     </div>
   </div>
-  <div style="position:absolute;bottom:42px;left:80px;right:80px;display:flex;justify-content:space-between;align-items:center;z-index:10;">
-    <div style="font-size:15px;color:rgba(255,255,255,0.3);font-weight:600;letter-spacing:0.5px;">mulleryperez.cl</div>
-    <div style="display:flex;align-items:center;gap:8px;"><div style="width:6px;height:6px;border-radius:50%;background:#2DD4BF;"></div><div style="font-size:12px;color:rgba(168,85,247,0.5);font-weight:600;">Performance Marketing · Chile</div></div>
-  </div>
+  ${footerDark}
 </div></body></html>`
   }
 
   // ============================================================
-  // TEMPLATE 2 — Fondo claro lavanda + burbujas suaves + caja info
+  // TEMPLATE 2 — Fondo claro lavanda + burbujas sólidas + caja info
   // ============================================================
   if (templateNum === 2) {
-    return `<!DOCTYPE html><html><head><meta charset="UTF-8">
-<style>@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&display=swap');*{margin:0;padding:0;box-sizing:border-box;}</style></head><body>
-<div style="width:1080px;height:1080px;background:#F1F0FB;position:relative;overflow:hidden;font-family:'Plus Jakarta Sans',sans-serif;">
+    return `<!DOCTYPE html><html><head><meta charset="UTF-8">${STYLE}</head><body>
+<div style="width:1080px;height:1080px;background:linear-gradient(150deg,#F5F3FF 0%,#EDE9FE 30%,#F1F0FB 60%,#FDF2F8 100%);position:relative;overflow:hidden;font-family:'Plus Jakarta Sans',sans-serif;">
   <div style="position:absolute;top:0;left:0;right:0;height:6px;background:linear-gradient(90deg,#2DD4BF,#8B5CF6,#EC4899,#F97316);"></div>
-  <div style="position:absolute;top:-100px;right:-80px;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,rgba(139,92,246,0.12) 0%,transparent 65%);filter:blur(30px);"></div>
-  <div style="position:absolute;bottom:-80px;left:-60px;width:380px;height:380px;border-radius:50%;background:radial-gradient(circle,rgba(45,212,191,0.12) 0%,transparent 65%);filter:blur(30px);"></div>
-  <div style="position:absolute;top:300px;left:500px;width:250px;height:250px;border-radius:50%;background:radial-gradient(circle,rgba(236,72,153,0.08) 0%,transparent 65%);filter:blur(20px);"></div>
-  <div style="position:absolute;top:100px;left:200px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(251,146,60,0.08) 0%,transparent 65%);filter:blur(15px);"></div>
-  <div style="position:absolute;top:120px;right:100px;width:160px;height:160px;border-radius:50%;border:2px solid rgba(139,92,246,0.08);"></div>
-  <div style="position:absolute;bottom:180px;left:80px;width:120px;height:120px;border-radius:50%;border:2px solid rgba(45,212,191,0.08);"></div>
-  <div style="position:absolute;top:200px;right:250px;width:10px;height:10px;border-radius:50%;background:rgba(139,92,246,0.2);"></div>
-  <div style="position:absolute;bottom:350px;left:150px;width:8px;height:8px;border-radius:50%;background:rgba(236,72,153,0.2);"></div>
-  <div style="position:absolute;top:450px;right:80px;width:6px;height:6px;border-radius:50%;background:rgba(45,212,191,0.25);"></div>
+  ${bubblesLight}
+  ${dots}
   <div style="position:absolute;top:48px;right:55px;z-index:10;"><img src="${logoUrl}" style="height:52px;width:auto;"></div>
   <div style="position:relative;z-index:5;display:flex;flex-direction:column;justify-content:center;height:100%;padding:90px 80px;">
     <div style="display:inline-flex;align-items:center;gap:8px;margin-bottom:28px;width:fit-content;"><div style="width:10px;height:10px;border-radius:50%;background:linear-gradient(135deg,#2DD4BF,#8B5CF6);"></div><div style="font-size:13px;font-weight:800;color:#7C3AED;letter-spacing:2px;text-transform:uppercase;">Datos M&P</div></div>
     ${dato ? `<div style="font-size:110px;font-weight:900;line-height:0.9;letter-spacing:-5px;margin-bottom:16px;"><span style="background:linear-gradient(135deg,#1E1B4B,#4C1D95,#7C3AED);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">${dato}</span></div>` : ''}
     <div style="font-size:${dato ? '40' : '48'}px;font-weight:900;color:#0F172A;line-height:1.1;max-width:85%;letter-spacing:-1px;">${headline}</div>
-    <div style="margin-top:28px;background:white;border:2px solid rgba(139,92,246,0.12);border-radius:16px;padding:22px 26px;max-width:80%;box-shadow:0 4px 24px rgba(139,92,246,0.06);"><div style="font-size:18px;color:#475569;line-height:1.5;font-weight:500;">${sub}</div></div>
-    <div style="margin-top:24px;display:flex;align-items:center;gap:8px;"><div style="width:40px;height:4px;background:linear-gradient(90deg,#2DD4BF,#8B5CF6);border-radius:2px;"></div><div style="width:16px;height:4px;background:#EC4899;border-radius:2px;opacity:0.5;"></div><div style="width:8px;height:4px;background:#F97316;border-radius:2px;opacity:0.4;"></div></div>
+    <div style="margin-top:28px;background:rgba(255,255,255,0.85);border:2px solid rgba(139,92,246,0.15);border-radius:16px;padding:22px 26px;max-width:80%;box-shadow:0 4px 24px rgba(139,92,246,0.08);"><div style="font-size:18px;color:#475569;line-height:1.5;font-weight:500;">${sub}</div></div>
+    <div style="margin-top:24px;display:flex;align-items:center;gap:8px;"><div style="width:40px;height:4px;background:linear-gradient(90deg,#2DD4BF,#8B5CF6);border-radius:2px;"></div><div style="width:16px;height:4px;background:#EC4899;border-radius:2px;"></div><div style="width:8px;height:4px;background:#F97316;border-radius:2px;"></div></div>
   </div>
-  <div style="position:absolute;bottom:42px;left:80px;right:80px;display:flex;justify-content:space-between;align-items:center;z-index:10;">
-    <div style="font-size:15px;color:#94A3B8;font-weight:600;">mulleryperez.cl</div>
-    <div style="display:flex;align-items:center;gap:8px;"><div style="width:6px;height:6px;border-radius:50%;background:#8B5CF6;"></div><div style="font-size:12px;color:#C4B5FD;font-weight:600;">Datos Chile · 2026</div></div>
-  </div>
+  ${footerLight}
 </div></body></html>`
   }
 
   // ============================================================
-  // TEMPLATE 3 — Split diagonal oscuro/púrpura + burbujas
+  // TEMPLATE 3 — Split diagonal oscuro/púrpura + burbujas sólidas
   // ============================================================
-  return `<!DOCTYPE html><html><head><meta charset="UTF-8">
-<style>@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&display=swap');*{margin:0;padding:0;box-sizing:border-box;}</style></head><body>
+  return `<!DOCTYPE html><html><head><meta charset="UTF-8">${STYLE}</head><body>
 <div style="width:1080px;height:1080px;position:relative;overflow:hidden;font-family:'Plus Jakarta Sans',sans-serif;">
   <div style="position:absolute;inset:0;background:linear-gradient(170deg,#0A0A14 0%,#0F0D24 100%);"></div>
   <div style="position:absolute;top:0;right:0;width:50%;height:100%;background:linear-gradient(160deg,#7C3AED 0%,#8B5CF6 30%,#A78BFA 60%,#C4B5FD 100%);clip-path:polygon(30% 0,100% 0,100% 100%,0% 100%);"></div>
-  <div style="position:absolute;top:100px;right:60px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(236,72,153,0.3) 0%,transparent 65%);filter:blur(25px);"></div>
-  <div style="position:absolute;bottom:150px;right:200px;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,rgba(251,146,60,0.25) 0%,transparent 65%);filter:blur(20px);"></div>
-  <div style="position:absolute;top:400px;right:350px;width:140px;height:140px;border-radius:50%;background:radial-gradient(circle,rgba(45,212,191,0.2) 0%,transparent 65%);filter:blur(15px);"></div>
-  <div style="position:absolute;top:-50px;left:-30px;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(59,130,246,0.2) 0%,transparent 65%);filter:blur(25px);"></div>
-  <div style="position:absolute;bottom:100px;left:100px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(168,85,247,0.15) 0%,transparent 65%);filter:blur(15px);"></div>
-  <div style="position:absolute;top:80px;right:80px;width:180px;height:180px;border-radius:50%;border:2px solid rgba(255,255,255,0.15);"></div>
-  <div style="position:absolute;bottom:100px;right:150px;width:100px;height:100px;border-radius:50%;border:2px solid rgba(255,255,255,0.1);"></div>
-  <div style="position:absolute;top:500px;right:50px;width:60px;height:60px;border-radius:50%;border:1.5px solid rgba(255,255,255,0.12);"></div>
-  <div style="position:absolute;top:300px;right:120px;width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.3);"></div>
-  <div style="position:absolute;top:180px;right:320px;width:6px;height:6px;border-radius:50%;background:rgba(45,212,191,0.5);"></div>
-  <div style="position:absolute;bottom:250px;left:200px;width:8px;height:8px;border-radius:50%;background:rgba(139,92,246,0.4);"></div>
-  <div style="position:absolute;top:120px;left:150px;width:5px;height:5px;border-radius:50%;background:rgba(236,72,153,0.4);"></div>
+  <!-- Burbujas sobre el split -->
+  <div style="position:absolute;top:80px;right:40px;width:200px;height:200px;border-radius:50%;background:rgba(236,72,153,0.25);"></div>
+  <div style="position:absolute;bottom:120px;right:180px;width:150px;height:150px;border-radius:50%;background:rgba(251,146,60,0.2);"></div>
+  <div style="position:absolute;top:400px;right:320px;width:120px;height:120px;border-radius:50%;background:rgba(45,212,191,0.18);"></div>
+  <div style="position:absolute;top:-40px;left:-20px;width:260px;height:260px;border-radius:50%;background:rgba(59,130,246,0.2);"></div>
+  <div style="position:absolute;bottom:80px;left:80px;width:170px;height:170px;border-radius:50%;background:rgba(168,85,247,0.15);"></div>
+  <div style="position:absolute;top:250px;left:200px;width:100px;height:100px;border-radius:50%;background:rgba(236,72,153,0.12);"></div>
+  ${dots}
   <div style="position:absolute;top:48px;left:60px;z-index:10;"><img src="${logoUrl}" style="height:52px;width:auto;"></div>
   <div style="position:relative;z-index:5;display:flex;flex-direction:column;justify-content:center;height:100%;padding:90px 70px;max-width:58%;">
     <div style="display:inline-flex;align-items:center;gap:8px;margin-bottom:24px;width:fit-content;"><div style="width:8px;height:8px;border-radius:50%;background:#2DD4BF;"></div><div style="font-size:12px;font-weight:800;color:#2DD4BF;letter-spacing:2px;text-transform:uppercase;">M&P Data</div></div>
@@ -249,9 +226,8 @@ function generarHtmlGrafica(contenido) {
     <div style="font-size:${dato ? '36' : '46'}px;font-weight:900;color:#FFFFFF;line-height:1.08;letter-spacing:-1px;">${headline}</div>
     <div style="margin-top:22px;"><div style="display:flex;gap:6px;margin-bottom:14px;"><div style="width:40px;height:4px;background:#2DD4BF;border-radius:2px;"></div><div style="width:15px;height:4px;background:#8B5CF6;border-radius:2px;"></div><div style="width:8px;height:4px;background:#EC4899;border-radius:2px;"></div></div><div style="font-size:18px;color:rgba(255,255,255,0.45);line-height:1.5;font-weight:500;">${sub}</div></div>
   </div>
-  <div style="position:absolute;right:55px;top:50%;transform:translateY(-50%);z-index:6;writing-mode:vertical-rl;"><div style="font-size:13px;font-weight:800;color:rgba(255,255,255,0.2);letter-spacing:5px;text-transform:uppercase;">Performance</div></div>
-  <div style="position:absolute;bottom:42px;left:70px;z-index:10;"><div style="font-size:15px;color:rgba(255,255,255,0.25);font-weight:600;">mulleryperez.cl</div></div>
-  <div style="position:absolute;bottom:42px;right:70px;z-index:10;"><div style="display:flex;align-items:center;gap:6px;"><div style="width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,0.3);"></div><div style="font-size:12px;color:rgba(255,255,255,0.2);font-weight:600;">M&P · Chile 2026</div></div></div>
+  <div style="position:absolute;right:55px;top:50%;transform:translateY(-50%);z-index:6;writing-mode:vertical-rl;"><div style="font-size:13px;font-weight:800;color:rgba(255,255,255,0.15);letter-spacing:5px;text-transform:uppercase;">Performance</div></div>
+  ${footerDark}
 </div></body></html>`
 }
 
