@@ -71,70 +71,62 @@ ${datosReales.industrias.map(i => `${i.nombre}: CPC Google $${i.cpc_google} CLP,
 `
     : ''
 
-  const prompt = `Eres Christopher Müller, CEO de Muller y Pérez (www.mulleryperez.cl), una agencia de performance marketing en Chile con +40 clientes y 6 años de experiencia. Generas contenido para LinkedIn e Instagram.
+  const prompt = `Eres un director de performance marketing que lleva 6 años gestionando campañas para +40 empresas en Chile. Publicas en LinkedIn e Instagram contenido que lo lee un gerente general, un gerente de marketing o un CFO. No eres community manager. Eres el tipo que ve los dashboards todos los días y sabe exactamente cuánto cuesta un cliente en cada industria.
 
 FECHA: ${hoy}
 TIPO DE CONTENIDO: ${tipo}
 
 ${datosContext}
 
-HERRAMIENTAS PROPIAS M&P (menciona naturalmente cuando calce):
-- Predictor M&P: analiza 22 industrias en Chile, predice CPC y CPA por canal
-- Termómetro Marketing: actualiza CPC/CPA semanal por industria con USD y UF
-- Radar Industrias: madurez digital por sector
-- Calculadora CAC: costo de adquisición por canal
-- Comparador Web: velocidad y Core Web Vitals
-- CRM propio M&P: leads con origen trackeado, panel comercial, semáforo de estado
-- Blog automático con IA: 1 post diario generado y publicado
+CONTEXTO M&P — USA CUANDO CALCE (no fuerces):
+- Predictor M&P analiza 22 industrias en Chile con CPC y CPA real por canal
+- Termómetro Marketing se actualiza semanalmente con datos de CPC, CPA, USD y UF
+- CRM propio donde cada lead llega con origen trackeado (Google, Meta, LinkedIn, orgánico)
+- Blog automático: 1 artículo diario con IA, posicionando en Google
+- Clientes reales (sin nombrar): SaaS que bajó CPL 65% en 15 meses, iluminación que bajó CPA 95%, constructora entrando a minería, HR Tech con LinkedIn Thought Leader Ads
 
-CLIENTES (sin nombrar, referir por industria):
-- SaaS B2B: CPL bajó de $21.048 a $7.337 (65% menos) en 15 meses
-- Iluminación: CPA bajó de $17.100 a $826 (95% menos) en 15 meses
-- Transporte de pasajeros: monitor de competencia diario con IA
-- HR Tech: campañas LinkedIn + branding "Hablemos de Productividad"
-- Educación continua: funnel de 3 meses con remarketing ex alumnos
-- Constructora: 4 objetivos (ventas, visibilidad, captación, fidelización)
+TIPOS:
+- dato_duro: número del mercado + qué significa para el negocio del que lee
+- behind_the_scenes: mostrar cómo se ve por dentro una operación real de performance
+- proceso_real: un flujo concreto que implementamos (lead → CRM → WhatsApp automático → cierre)
+- herramienta_en_accion: qué sale cuando metes una industria al Predictor o al Termómetro
+- hot_take: opinión que la mayoría no dice pero es verdad, con datos
+- encuesta: pregunta que el gerente quiere responder porque le toca directamente
+- comportamiento_compra: cómo se toman las decisiones de contratar servicios digitales en Chile
+- caso_industria: resultado real sin nombre, con antes/después y contexto
+- resultado_cliente: el dato de impacto puro, directo, sin adornos
+- quote: una frase que un gerente copiaría y pegaría en su grupo de WhatsApp
 
-TIPOS DE CONTENIDO:
-- dato_duro: número impactante del Termómetro o del mercado chileno + implicancia para el negocio
-- behind_the_scenes: cómo se ve nuestro CRM, un dashboard, la config de una campaña
-- proceso_real: flujo paso a paso de algo que hacemos (lead → CRM → WhatsApp → cierre)
-- herramienta_en_accion: mostrar qué sale del Predictor, Termómetro, Calculadora CAC
-- hot_take: opinión fundamentada que genera debate (sin atacar a nadie)
-- encuesta: pregunta con 2-3 opciones que genera participación
-- comportamiento_compra: cómo las empresas buscan y contratan servicios digitales en Chile
-- caso_industria: resultado real anonimizado con contexto de industria
-- resultado_cliente: dato de impacto (antes/después) sin nombre
-- quote: frase directa, compartible, tipo tweet provocador
+TONO — EL CONTENIDO TIENE QUE SER VIRAL Y C-LEVEL:
+- El headline de la gráfica tiene que ser tan impactante que alguien deje de scrollear. Corto, directo, que genere curiosidad o reacción inmediata.
+- El subtítulo complementa con el dato concreto o la implicancia de negocio.
+- El dato grande tiene que ser un número que duela o sorprenda.
+- El copy de LinkedIn tiene que sonar como alguien que escribe desde la trinchera, no desde un escritorio. Que el gerente que lo lea diga "este tipo sabe de lo que habla".
+- El copy de Instagram es más corto, más punchy, va al grano.
 
-REGLAS DE TONO — PROHIBIDO:
-- Emojis (cero, ninguno, jamás)
-- "En el mundo actual", "es importante destacar", "sin lugar a dudas", "en conclusión"
-- "Sabías que...?", "Te contamos", "Hoy queremos compartir"
-- "En M&P creemos que..."
-- Listas con "1️⃣ 2️⃣ 3️⃣"
-- Cualquier cosa que suene a manual corporativo o a ChatGPT
-- Frases motivacionales vacías
+PROHIBIDO (en serio, si incluyes algo de esto regenero):
+- Emojis
+- "En el mundo actual", "es importante", "sin lugar a dudas", "en conclusión", "cabe destacar"
+- "Sabías que...?", "Te contamos", "Hoy queremos compartir", "En M&P creemos"
+- Frases motivacionales genéricas
+- Anything that sounds like ChatGPT wrote it
+- Explicar cosas obvias. El lector es inteligente.
 
-REGLAS DE TONO — OBLIGATORIO:
-- Empezar con el dato, la pregunta o la provocación. Nunca con contexto.
-- Párrafos de 1-2 líneas máximo
-- Si hay dato, poner fuente (Termómetro M&P, benchmark propio)
-- Hablar como alguien que trabaja en esto todos los días
-- Ser técnico pero entendible para un gerente de marketing o gerente general
-- CTA natural si aplica, nunca "contáctanos para saber más"
-- Positivo y constructivo: no "las agencias hacen esto mal" sino "así lo resolvemos nosotros"
-- Aterrizado: no la solución de oro, sino el paso concreto
+OBLIGATORIO:
+- Primera línea: dato, pregunta o provocación. Cero preámbulo.
+- Párrafos de 1-2 líneas. Ritmo de lectura rápido.
+- Si mencionas un dato, di de dónde sale.
+- Habla como peer, no como vendedor. No estás vendiendo — estás mostrando cómo trabajas.
+- Positivo: no "las agencias hacen mal esto" sino "nosotros lo hacemos así y funciona"
+- Aterrizado: nada de "la IA va a cambiar el mundo". Sí "conectamos el CRM con Google Ads y ahora sabemos qué keyword genera clientes reales, no solo clics"
 
-RESPONDE CON UN JSON (solo el JSON, nada más):
+RESPONDE SOLO CON ESTE JSON (nada más):
 {
-  "headline_grafica": "texto principal para la gráfica (max 12 palabras, impactante)",
-  "subtitulo_grafica": "texto secundario para la gráfica (max 20 palabras)",
-  "dato_grande": "el número o dato destacado si aplica (ej: '65%', '$7.337', '22 industrias') o null",
-  "copy_linkedin": "el post completo para LinkedIn (4-8 párrafos cortos, max 300 palabras)",
-  "copy_instagram": "el caption para Instagram (más corto, 2-4 párrafos, max 150 palabras, con 5-8 hashtags al final)",
-  "tipo_layout": "uno de: dato_grande | mockup | lista | antes_despues | quote | paso_a_paso",
-  "color_acento": "uno de: blue | green | purple | orange | teal"
+  "headline_grafica": "max 10 palabras, impactante, que frene el scroll",
+  "subtitulo_grafica": "max 18 palabras, complementa con dato o implicancia",
+  "dato_grande": "el número que duele o sorprende (ej: '65%', '$826', '22') o null si no aplica",
+  "copy_linkedin": "post completo LinkedIn, 4-8 párrafos cortos, max 280 palabras, sin emojis",
+  "copy_instagram": "caption IG, 2-4 párrafos, max 140 palabras, 5-7 hashtags al final, sin emojis"
 }`
 
   const res = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -153,191 +145,114 @@ RESPONDE CON UN JSON (solo el JSON, nada más):
 // GENERAR HTML DE LA GRÁFICA
 // ============================================================
 function generarHtmlGrafica(contenido) {
-  const layout = contenido.tipo_layout || 'dato_grande'
   const dia = new Date().getDay()
-  // Rotar 3 templates: lunes=1, miércoles=2, viernes=3
-  const templateNum = dia === 1 ? 1 : dia === 3 ? 2 : 3
+  // Rotar 3 templates: lunes=1, miércoles=2, viernes=3, manual dispatch=random
+  const templateNum = dia === 1 ? 1 : dia === 3 ? 2 : dia === 5 ? 3 : (Math.floor(Math.random() * 3) + 1)
 
   const logoUrl = 'https://www.mulleryperez.cl/logo-color.png'
+  const dato = contenido.dato_grande || ''
+  const headline = contenido.headline_grafica || ''
+  const sub = contenido.subtitulo_grafica || ''
 
   // ============================================================
-  // TEMPLATE 1 — Fondo oscuro con gradiente púrpura/azul + dato grande
-  // Estilo: "¿SEO o SEM?" — dramático, headline teal, fondo profundo
+  // TEMPLATE 1 — Fondo oscuro púrpura + burbujas multicolor
   // ============================================================
   if (templateNum === 1) {
     return `<!DOCTYPE html><html><head><meta charset="UTF-8">
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&display=swap');
-  * { margin:0; padding:0; box-sizing:border-box; }
-</style></head><body>
-<div style="width:1080px; height:1080px; background:linear-gradient(160deg, #0B0B1A 0%, #1a1145 35%, #2d1b69 60%, #1a0b3e 100%); position:relative; overflow:hidden; font-family:'Plus Jakarta Sans',sans-serif;">
-
-  <!-- Orbes decorativos -->
-  <div style="position:absolute; top:-120px; right:-80px; width:450px; height:450px; border-radius:50%; background:radial-gradient(circle, rgba(139,92,246,0.3) 0%, transparent 70%);"></div>
-  <div style="position:absolute; bottom:-100px; left:-60px; width:380px; height:380px; border-radius:50%; background:radial-gradient(circle, rgba(59,130,246,0.2) 0%, transparent 70%);"></div>
-  <div style="position:absolute; top:40%; right:10%; width:200px; height:200px; border-radius:50%; background:radial-gradient(circle, rgba(236,72,153,0.15) 0%, transparent 70%);"></div>
-
-  <!-- Líneas decorativas -->
-  <div style="position:absolute; top:0; left:50px; width:1px; height:100%; background:linear-gradient(to bottom, transparent 0%, rgba(139,92,246,0.2) 30%, rgba(139,92,246,0.2) 70%, transparent 100%);"></div>
-  <div style="position:absolute; top:0; right:80px; width:1px; height:100%; background:linear-gradient(to bottom, transparent 0%, rgba(59,130,246,0.15) 40%, rgba(59,130,246,0.15) 60%, transparent 100%);"></div>
-
-  <!-- Logo -->
-  <div style="position:absolute; top:50px; right:60px; z-index:10;">
-    <img src="${logoUrl}" style="height:55px; width:auto;">
-  </div>
-
-  <!-- Contenido principal -->
-  <div style="position:relative; z-index:5; display:flex; flex-direction:column; justify-content:center; height:100%; padding:80px 70px;">
-
-    ${contenido.dato_grande ? `
-    <div style="font-size:120px; font-weight:900; color:#2DD4BF; line-height:0.95; letter-spacing:-5px; margin-bottom:24px; text-shadow: 0 0 80px rgba(45,212,191,0.3);">${contenido.dato_grande}</div>
-    ` : ''}
-
-    <div style="font-size:${contenido.dato_grande ? '42' : '52'}px; font-weight:900; color:#FFFFFF; line-height:1.1; max-width:90%; letter-spacing:-1.5px;">
-      ${contenido.headline_grafica}
-    </div>
-
-    <div style="margin-top:20px; padding-left:4px;">
-      <div style="width:60px; height:4px; background:linear-gradient(90deg, #2DD4BF, #8B5CF6); border-radius:2px; margin-bottom:16px;"></div>
-      <div style="font-size:20px; color:rgba(255,255,255,0.55); line-height:1.5; max-width:80%; font-weight:500;">
-        ${contenido.subtitulo_grafica}
-      </div>
+<style>@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&display=swap');*{margin:0;padding:0;box-sizing:border-box;}</style></head><body>
+<div style="width:1080px;height:1080px;background:linear-gradient(160deg,#0B0B1A 0%,#1a1145 30%,#2d1b69 55%,#1a0b3e 100%);position:relative;overflow:hidden;font-family:'Plus Jakarta Sans',sans-serif;">
+  <div style="position:absolute;top:-80px;right:-40px;width:380px;height:380px;border-radius:50%;background:radial-gradient(circle,rgba(168,85,247,0.4) 0%,rgba(168,85,247,0.1) 40%,transparent 70%);filter:blur(20px);"></div>
+  <div style="position:absolute;top:200px;right:100px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(236,72,153,0.35) 0%,transparent 65%);filter:blur(15px);"></div>
+  <div style="position:absolute;bottom:-60px;left:-40px;width:350px;height:350px;border-radius:50%;background:radial-gradient(circle,rgba(59,130,246,0.35) 0%,rgba(59,130,246,0.1) 40%,transparent 70%);filter:blur(20px);"></div>
+  <div style="position:absolute;bottom:200px;left:300px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(45,212,191,0.25) 0%,transparent 65%);filter:blur(15px);"></div>
+  <div style="position:absolute;top:400px;right:350px;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,rgba(251,146,60,0.2) 0%,transparent 65%);filter:blur(10px);"></div>
+  <div style="position:absolute;top:60px;left:60px;width:140px;height:140px;border-radius:50%;border:1.5px solid rgba(168,85,247,0.15);"></div>
+  <div style="position:absolute;bottom:120px;right:120px;width:200px;height:200px;border-radius:50%;border:1.5px solid rgba(59,130,246,0.12);"></div>
+  <div style="position:absolute;top:350px;right:60px;width:80px;height:80px;border-radius:50%;border:1.5px solid rgba(236,72,153,0.15);"></div>
+  <div style="position:absolute;top:180px;left:120px;width:8px;height:8px;border-radius:50%;background:rgba(45,212,191,0.5);"></div>
+  <div style="position:absolute;top:500px;right:200px;width:6px;height:6px;border-radius:50%;background:rgba(168,85,247,0.5);"></div>
+  <div style="position:absolute;bottom:300px;left:250px;width:10px;height:10px;border-radius:50%;background:rgba(236,72,153,0.4);"></div>
+  <div style="position:absolute;top:150px;right:300px;width:5px;height:5px;border-radius:50%;background:rgba(251,146,60,0.5);"></div>
+  <div style="position:absolute;top:0;left:65px;width:1px;height:100%;background:linear-gradient(to bottom,transparent 0%,rgba(168,85,247,0.15) 20%,rgba(45,212,191,0.1) 80%,transparent 100%);"></div>
+  <div style="position:absolute;top:48px;right:55px;z-index:10;"><img src="${logoUrl}" style="height:52px;width:auto;"></div>
+  <div style="position:relative;z-index:5;display:flex;flex-direction:column;justify-content:center;height:100%;padding:90px 80px;">
+    ${dato ? `<div style="font-size:130px;font-weight:900;line-height:0.9;letter-spacing:-6px;margin-bottom:24px;"><span style="background:linear-gradient(135deg,#2DD4BF,#34D399,#5EEAD4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">${dato}</span></div>` : ''}
+    <div style="font-size:${dato ? '44' : '52'}px;font-weight:900;color:#FFFFFF;line-height:1.08;max-width:85%;letter-spacing:-1.5px;">${headline}</div>
+    <div style="margin-top:24px;padding-left:2px;">
+      <div style="display:flex;gap:6px;margin-bottom:16px;"><div style="width:45px;height:4px;background:linear-gradient(90deg,#2DD4BF,#8B5CF6);border-radius:2px;"></div><div style="width:20px;height:4px;background:rgba(236,72,153,0.6);border-radius:2px;"></div><div style="width:10px;height:4px;background:rgba(251,146,60,0.5);border-radius:2px;"></div></div>
+      <div style="font-size:20px;color:rgba(255,255,255,0.5);line-height:1.5;max-width:75%;font-weight:500;">${sub}</div>
     </div>
   </div>
-
-  <!-- Footer -->
-  <div style="position:absolute; bottom:45px; left:70px; right:70px; display:flex; justify-content:space-between; align-items:center; z-index:10;">
-    <div style="display:flex; align-items:center; gap:12px;">
-      <div style="font-size:15px; color:rgba(255,255,255,0.4); font-weight:600; letter-spacing:1px;">mulleryperez.cl</div>
-    </div>
-    <div style="font-size:13px; color:rgba(139,92,246,0.5); font-weight:600;">Performance Marketing · Chile</div>
+  <div style="position:absolute;bottom:42px;left:80px;right:80px;display:flex;justify-content:space-between;align-items:center;z-index:10;">
+    <div style="font-size:15px;color:rgba(255,255,255,0.3);font-weight:600;letter-spacing:0.5px;">mulleryperez.cl</div>
+    <div style="display:flex;align-items:center;gap:8px;"><div style="width:6px;height:6px;border-radius:50%;background:#2DD4BF;"></div><div style="font-size:12px;color:rgba(168,85,247,0.5);font-weight:600;">Performance Marketing · Chile</div></div>
   </div>
-
-</div>
-</body></html>`
+</div></body></html>`
   }
 
   // ============================================================
-  // TEMPLATE 2 — Fondo claro con acento de color + cajas
-  // Estilo: limpio, corporativo, info estructurada
+  // TEMPLATE 2 — Fondo claro lavanda + burbujas suaves + caja info
   // ============================================================
   if (templateNum === 2) {
     return `<!DOCTYPE html><html><head><meta charset="UTF-8">
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&display=swap');
-  * { margin:0; padding:0; box-sizing:border-box; }
-</style></head><body>
-<div style="width:1080px; height:1080px; background:#F8FAFC; position:relative; overflow:hidden; font-family:'Plus Jakarta Sans',sans-serif;">
-
-  <!-- Barra superior de color -->
-  <div style="position:absolute; top:0; left:0; right:0; height:8px; background:linear-gradient(90deg, #2DD4BF, #8B5CF6, #3B82F6);"></div>
-
-  <!-- Forma decorativa esquina -->
-  <div style="position:absolute; top:-200px; right:-200px; width:500px; height:500px; border-radius:50%; background:linear-gradient(135deg, rgba(139,92,246,0.06), rgba(45,212,191,0.04));"></div>
-  <div style="position:absolute; bottom:-150px; left:-150px; width:400px; height:400px; border-radius:50%; background:rgba(59,130,246,0.04);"></div>
-
-  <!-- Logo -->
-  <div style="position:absolute; top:50px; right:60px; z-index:10;">
-    <img src="${logoUrl}" style="height:50px; width:auto;">
+<style>@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&display=swap');*{margin:0;padding:0;box-sizing:border-box;}</style></head><body>
+<div style="width:1080px;height:1080px;background:#F1F0FB;position:relative;overflow:hidden;font-family:'Plus Jakarta Sans',sans-serif;">
+  <div style="position:absolute;top:0;left:0;right:0;height:6px;background:linear-gradient(90deg,#2DD4BF,#8B5CF6,#EC4899,#F97316);"></div>
+  <div style="position:absolute;top:-100px;right:-80px;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,rgba(139,92,246,0.12) 0%,transparent 65%);filter:blur(30px);"></div>
+  <div style="position:absolute;bottom:-80px;left:-60px;width:380px;height:380px;border-radius:50%;background:radial-gradient(circle,rgba(45,212,191,0.12) 0%,transparent 65%);filter:blur(30px);"></div>
+  <div style="position:absolute;top:300px;left:500px;width:250px;height:250px;border-radius:50%;background:radial-gradient(circle,rgba(236,72,153,0.08) 0%,transparent 65%);filter:blur(20px);"></div>
+  <div style="position:absolute;top:100px;left:200px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(251,146,60,0.08) 0%,transparent 65%);filter:blur(15px);"></div>
+  <div style="position:absolute;top:120px;right:100px;width:160px;height:160px;border-radius:50%;border:2px solid rgba(139,92,246,0.08);"></div>
+  <div style="position:absolute;bottom:180px;left:80px;width:120px;height:120px;border-radius:50%;border:2px solid rgba(45,212,191,0.08);"></div>
+  <div style="position:absolute;top:200px;right:250px;width:10px;height:10px;border-radius:50%;background:rgba(139,92,246,0.2);"></div>
+  <div style="position:absolute;bottom:350px;left:150px;width:8px;height:8px;border-radius:50%;background:rgba(236,72,153,0.2);"></div>
+  <div style="position:absolute;top:450px;right:80px;width:6px;height:6px;border-radius:50%;background:rgba(45,212,191,0.25);"></div>
+  <div style="position:absolute;top:48px;right:55px;z-index:10;"><img src="${logoUrl}" style="height:52px;width:auto;"></div>
+  <div style="position:relative;z-index:5;display:flex;flex-direction:column;justify-content:center;height:100%;padding:90px 80px;">
+    <div style="display:inline-flex;align-items:center;gap:8px;margin-bottom:28px;width:fit-content;"><div style="width:10px;height:10px;border-radius:50%;background:linear-gradient(135deg,#2DD4BF,#8B5CF6);"></div><div style="font-size:13px;font-weight:800;color:#7C3AED;letter-spacing:2px;text-transform:uppercase;">Datos M&P</div></div>
+    ${dato ? `<div style="font-size:110px;font-weight:900;line-height:0.9;letter-spacing:-5px;margin-bottom:16px;"><span style="background:linear-gradient(135deg,#1E1B4B,#4C1D95,#7C3AED);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">${dato}</span></div>` : ''}
+    <div style="font-size:${dato ? '40' : '48'}px;font-weight:900;color:#0F172A;line-height:1.1;max-width:85%;letter-spacing:-1px;">${headline}</div>
+    <div style="margin-top:28px;background:white;border:2px solid rgba(139,92,246,0.12);border-radius:16px;padding:22px 26px;max-width:80%;box-shadow:0 4px 24px rgba(139,92,246,0.06);"><div style="font-size:18px;color:#475569;line-height:1.5;font-weight:500;">${sub}</div></div>
+    <div style="margin-top:24px;display:flex;align-items:center;gap:8px;"><div style="width:40px;height:4px;background:linear-gradient(90deg,#2DD4BF,#8B5CF6);border-radius:2px;"></div><div style="width:16px;height:4px;background:#EC4899;border-radius:2px;opacity:0.5;"></div><div style="width:8px;height:4px;background:#F97316;border-radius:2px;opacity:0.4;"></div></div>
   </div>
-
-  <!-- Contenido -->
-  <div style="position:relative; z-index:5; display:flex; flex-direction:column; justify-content:center; height:100%; padding:80px 70px;">
-
-    <!-- Tag -->
-    <div style="display:inline-block; background:linear-gradient(135deg, #2DD4BF, #0D9488); color:white; font-size:13px; font-weight:800; padding:6px 18px; border-radius:20px; letter-spacing:1.5px; text-transform:uppercase; margin-bottom:28px; width:fit-content;">DATOS M&P</div>
-
-    ${contenido.dato_grande ? `
-    <div style="font-size:100px; font-weight:900; color:#0F172A; line-height:0.95; letter-spacing:-4px; margin-bottom:16px;">${contenido.dato_grande}</div>
-    ` : ''}
-
-    <div style="font-size:${contenido.dato_grande ? '38' : '48'}px; font-weight:900; color:#0F172A; line-height:1.1; max-width:90%; letter-spacing:-1px;">
-      ${contenido.headline_grafica}
-    </div>
-
-    <!-- Caja de subtítulo -->
-    <div style="margin-top:28px; background:white; border:2px solid #E2E8F0; border-radius:16px; padding:24px 28px; max-width:85%; box-shadow:0 4px 20px rgba(0,0,0,0.04);">
-      <div style="font-size:19px; color:#475569; line-height:1.55; font-weight:500;">${contenido.subtitulo_grafica}</div>
-    </div>
-
-    <!-- Línea decorativa -->
-    <div style="margin-top:28px; display:flex; align-items:center; gap:12px;">
-      <div style="width:40px; height:3px; background:#2DD4BF; border-radius:2px;"></div>
-      <div style="width:20px; height:3px; background:#8B5CF6; border-radius:2px;"></div>
-      <div style="width:10px; height:3px; background:#3B82F6; border-radius:2px;"></div>
-    </div>
+  <div style="position:absolute;bottom:42px;left:80px;right:80px;display:flex;justify-content:space-between;align-items:center;z-index:10;">
+    <div style="font-size:15px;color:#94A3B8;font-weight:600;">mulleryperez.cl</div>
+    <div style="display:flex;align-items:center;gap:8px;"><div style="width:6px;height:6px;border-radius:50%;background:#8B5CF6;"></div><div style="font-size:12px;color:#C4B5FD;font-weight:600;">Datos Chile · 2026</div></div>
   </div>
-
-  <!-- Footer -->
-  <div style="position:absolute; bottom:45px; left:70px; right:70px; display:flex; justify-content:space-between; align-items:center; z-index:10;">
-    <div style="font-size:15px; color:#94A3B8; font-weight:600;">mulleryperez.cl</div>
-    <div style="font-size:13px; color:#CBD5E1; font-weight:600;">Termómetro M&P · Chile 2026</div>
-  </div>
-
-</div>
-</body></html>`
+</div></body></html>`
   }
 
   // ============================================================
-  // TEMPLATE 3 — Split: mitad oscura + mitad gradiente teal
-  // Estilo: bold, moderno, impactante
+  // TEMPLATE 3 — Split diagonal oscuro/púrpura + burbujas
   // ============================================================
   return `<!DOCTYPE html><html><head><meta charset="UTF-8">
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&display=swap');
-  * { margin:0; padding:0; box-sizing:border-box; }
-</style></head><body>
-<div style="width:1080px; height:1080px; position:relative; overflow:hidden; font-family:'Plus Jakarta Sans',sans-serif;">
-
-  <!-- Fondo split diagonal -->
-  <div style="position:absolute; inset:0; background:#0A0A14;"></div>
-  <div style="position:absolute; top:0; right:0; width:55%; height:100%; background:linear-gradient(160deg, #0D9488 0%, #2DD4BF 40%, #14B8A6 100%); clip-path:polygon(25% 0, 100% 0, 100% 100%, 0% 100%);"></div>
-
-  <!-- Textura sobre el gradiente -->
-  <div style="position:absolute; top:0; right:0; width:55%; height:100%; clip-path:polygon(25% 0, 100% 0, 100% 100%, 0% 100%); opacity:0.1;">
-    <div style="position:absolute; top:20%; right:10%; width:300px; height:300px; border:2px solid white; border-radius:50%;"></div>
-    <div style="position:absolute; bottom:15%; right:25%; width:180px; height:180px; border:2px solid white; border-radius:50%;"></div>
+<style>@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&display=swap');*{margin:0;padding:0;box-sizing:border-box;}</style></head><body>
+<div style="width:1080px;height:1080px;position:relative;overflow:hidden;font-family:'Plus Jakarta Sans',sans-serif;">
+  <div style="position:absolute;inset:0;background:linear-gradient(170deg,#0A0A14 0%,#0F0D24 100%);"></div>
+  <div style="position:absolute;top:0;right:0;width:50%;height:100%;background:linear-gradient(160deg,#7C3AED 0%,#8B5CF6 30%,#A78BFA 60%,#C4B5FD 100%);clip-path:polygon(30% 0,100% 0,100% 100%,0% 100%);"></div>
+  <div style="position:absolute;top:100px;right:60px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(236,72,153,0.3) 0%,transparent 65%);filter:blur(25px);"></div>
+  <div style="position:absolute;bottom:150px;right:200px;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,rgba(251,146,60,0.25) 0%,transparent 65%);filter:blur(20px);"></div>
+  <div style="position:absolute;top:400px;right:350px;width:140px;height:140px;border-radius:50%;background:radial-gradient(circle,rgba(45,212,191,0.2) 0%,transparent 65%);filter:blur(15px);"></div>
+  <div style="position:absolute;top:-50px;left:-30px;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(59,130,246,0.2) 0%,transparent 65%);filter:blur(25px);"></div>
+  <div style="position:absolute;bottom:100px;left:100px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(168,85,247,0.15) 0%,transparent 65%);filter:blur(15px);"></div>
+  <div style="position:absolute;top:80px;right:80px;width:180px;height:180px;border-radius:50%;border:2px solid rgba(255,255,255,0.15);"></div>
+  <div style="position:absolute;bottom:100px;right:150px;width:100px;height:100px;border-radius:50%;border:2px solid rgba(255,255,255,0.1);"></div>
+  <div style="position:absolute;top:500px;right:50px;width:60px;height:60px;border-radius:50%;border:1.5px solid rgba(255,255,255,0.12);"></div>
+  <div style="position:absolute;top:300px;right:120px;width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.3);"></div>
+  <div style="position:absolute;top:180px;right:320px;width:6px;height:6px;border-radius:50%;background:rgba(45,212,191,0.5);"></div>
+  <div style="position:absolute;bottom:250px;left:200px;width:8px;height:8px;border-radius:50%;background:rgba(139,92,246,0.4);"></div>
+  <div style="position:absolute;top:120px;left:150px;width:5px;height:5px;border-radius:50%;background:rgba(236,72,153,0.4);"></div>
+  <div style="position:absolute;top:48px;left:60px;z-index:10;"><img src="${logoUrl}" style="height:52px;width:auto;"></div>
+  <div style="position:relative;z-index:5;display:flex;flex-direction:column;justify-content:center;height:100%;padding:90px 70px;max-width:58%;">
+    <div style="display:inline-flex;align-items:center;gap:8px;margin-bottom:24px;width:fit-content;"><div style="width:8px;height:8px;border-radius:50%;background:#2DD4BF;"></div><div style="font-size:12px;font-weight:800;color:#2DD4BF;letter-spacing:2px;text-transform:uppercase;">M&P Data</div></div>
+    ${dato ? `<div style="font-size:100px;font-weight:900;color:#2DD4BF;line-height:0.9;letter-spacing:-4px;margin-bottom:20px;">${dato}</div>` : ''}
+    <div style="font-size:${dato ? '36' : '46'}px;font-weight:900;color:#FFFFFF;line-height:1.08;letter-spacing:-1px;">${headline}</div>
+    <div style="margin-top:22px;"><div style="display:flex;gap:6px;margin-bottom:14px;"><div style="width:40px;height:4px;background:#2DD4BF;border-radius:2px;"></div><div style="width:15px;height:4px;background:#8B5CF6;border-radius:2px;"></div><div style="width:8px;height:4px;background:#EC4899;border-radius:2px;"></div></div><div style="font-size:18px;color:rgba(255,255,255,0.45);line-height:1.5;font-weight:500;">${sub}</div></div>
   </div>
-
-  <!-- Logo -->
-  <div style="position:absolute; top:50px; left:60px; z-index:10;">
-    <img src="${logoUrl}" style="height:50px; width:auto;">
-  </div>
-
-  <!-- Contenido principal — lado izquierdo oscuro -->
-  <div style="position:relative; z-index:5; display:flex; flex-direction:column; justify-content:center; height:100%; padding:80px 70px; max-width:60%;">
-
-    ${contenido.dato_grande ? `
-    <div style="font-size:90px; font-weight:900; color:#2DD4BF; line-height:0.95; letter-spacing:-4px; margin-bottom:20px;">${contenido.dato_grande}</div>
-    ` : ''}
-
-    <div style="font-size:${contenido.dato_grande ? '36' : '46'}px; font-weight:900; color:#FFFFFF; line-height:1.1; letter-spacing:-1px;">
-      ${contenido.headline_grafica}
-    </div>
-
-    <div style="margin-top:20px;">
-      <div style="width:50px; height:4px; background:#2DD4BF; border-radius:2px; margin-bottom:14px;"></div>
-      <div style="font-size:18px; color:rgba(255,255,255,0.5); line-height:1.5; font-weight:500; max-width:95%;">
-        ${contenido.subtitulo_grafica}
-      </div>
-    </div>
-  </div>
-
-  <!-- Lado derecho — texto vertical o acento -->
-  <div style="position:absolute; right:60px; top:50%; transform:translateY(-50%); z-index:6; writing-mode:vertical-rl; text-orientation:mixed;">
-    <div style="font-size:14px; font-weight:800; color:rgba(10,10,20,0.3); letter-spacing:4px; text-transform:uppercase;">PERFORMANCE</div>
-  </div>
-
-  <!-- Footer -->
-  <div style="position:absolute; bottom:45px; left:70px; z-index:10;">
-    <div style="font-size:15px; color:rgba(255,255,255,0.35); font-weight:600;">mulleryperez.cl</div>
-  </div>
-  <div style="position:absolute; bottom:45px; right:70px; z-index:10;">
-    <div style="font-size:13px; color:rgba(10,10,20,0.4); font-weight:700;">M&P · Chile</div>
-  </div>
-
-</div>
-</body></html>`
+  <div style="position:absolute;right:55px;top:50%;transform:translateY(-50%);z-index:6;writing-mode:vertical-rl;"><div style="font-size:13px;font-weight:800;color:rgba(255,255,255,0.2);letter-spacing:5px;text-transform:uppercase;">Performance</div></div>
+  <div style="position:absolute;bottom:42px;left:70px;z-index:10;"><div style="font-size:15px;color:rgba(255,255,255,0.25);font-weight:600;">mulleryperez.cl</div></div>
+  <div style="position:absolute;bottom:42px;right:70px;z-index:10;"><div style="display:flex;align-items:center;gap:6px;"><div style="width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,0.3);"></div><div style="font-size:12px;color:rgba(255,255,255,0.2);font-weight:600;">M&P · Chile 2026</div></div></div>
+</div></body></html>`
 }
 
 // ============================================================
