@@ -45,6 +45,7 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
           RESEND: ${{ secrets.RESEND }}
+          AYRSHARE_API_KEY: ${{ secrets.AYRSHARE_API_KEY }}
 
       - name: Alerta si falla
         if: failure() && steps.check.outputs.already_ran == 'false'

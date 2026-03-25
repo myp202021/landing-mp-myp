@@ -11,6 +11,7 @@ const fs = require('fs')
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY
 const RESEND_API_KEY = process.env.RESEND
+const AYRSHARE_API_KEY = process.env.AYRSHARE_API_KEY
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY)
 
 // ============================================================
@@ -283,6 +284,44 @@ async function enviarEmail(contenido, pngBuffer) {
 }
 
 // ============================================================
+// PUBLICAR EN LINKEDIN VIA AYRSHARE
+// ============================================================
+async function publicarEnLinkedIn(contenido, pngBuffer) {
+  if (!AYRSHARE_API_KEY) {
+    console.log('⚠️ AYRSHARE_API_KEY no configurada — saltando publicación')
+    return
+  }
+
+  try {
+    // Subir imagen como base64 data URL
+    const imageBase64 = `data:image/png;base64,${pngBuffer.toString('base64')}`
+
+    const res = await fetch('https://app.ayrshare.com/api/post', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${AYRSHARE_API_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        post: contenido.copy_linkedin,
+        platforms: ['linkedin'],
+        mediaUrls: [imageBase64]
+      })
+    })
+
+    const data = await res.json()
+
+    if (data.status === 'success' || data.id) {
+      console.log('✅ Publicado en LinkedIn via Ayrshare')
+    } else {
+      console.log('⚠️ Ayrshare respuesta:', JSON.stringify(data).substring(0, 200))
+    }
+  } catch (err) {
+    console.log('⚠️ Error publicando en LinkedIn:', err.message)
+  }
+}
+
+// ============================================================
 // GUARDAR EN SUPABASE
 // ============================================================
 async function guardarEnSupabase(contenido, pngBase64) {
@@ -341,17 +380,20 @@ async function main() {
   const pngBuffer = await renderizarPNG(html)
   console.log(`✅ PNG generado: ${(pngBuffer.length / 1024).toFixed(0)} KB`)
 
-  // 6. Enviar email
+  // 6. Publicar en LinkedIn via Ayrshare
+  await publicarEnLinkedIn(contenido, pngBuffer)
+
+  // 7. Enviar email (con copy de IG para publicar manual)
   await enviarEmail(contenido, pngBuffer)
 
-  // 7. Guardar en Supabase
+  // 8. Guardar en Supabase
   const pngBase64 = pngBuffer.toString('base64')
   await guardarEnSupabase(contenido, pngBase64)
 
   console.log('')
   console.log(`📰 Contenido listo: ${contenido.headline_grafica}`)
-  console.log(`📋 LinkedIn: ${contenido.copy_linkedin.substring(0, 80)}...`)
-  console.log(`📋 Instagram: ${contenido.copy_instagram.substring(0, 80)}...`)
+  console.log(`📋 LinkedIn: PUBLICADO automático`)
+  console.log(`📋 Instagram: en el email para publicar manual`)
 }
 
 main().catch(err => {
