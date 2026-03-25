@@ -153,76 +153,189 @@ RESPONDE CON UN JSON (solo el JSON, nada más):
 // GENERAR HTML DE LA GRÁFICA
 // ============================================================
 function generarHtmlGrafica(contenido) {
-  const colores = {
-    blue: { bg: '#0055A4', light: '#DBEAFE', gradient: 'from-blue-600 to-blue-900' },
-    green: { bg: '#059669', light: '#D1FAE5', gradient: 'from-emerald-600 to-emerald-900' },
-    purple: { bg: '#7C3AED', light: '#EDE9FE', gradient: 'from-purple-600 to-purple-900' },
-    orange: { bg: '#EA580C', light: '#FFF7ED', gradient: 'from-orange-600 to-orange-900' },
-    teal: { bg: '#0D9488', light: '#CCFBF1', gradient: 'from-teal-600 to-teal-900' }
-  }
-  const c = colores[contenido.color_acento] || colores.blue
   const layout = contenido.tipo_layout || 'dato_grande'
+  const dia = new Date().getDay()
+  // Rotar 3 templates: lunes=1, miércoles=2, viernes=3
+  const templateNum = dia === 1 ? 1 : dia === 3 ? 2 : 3
 
-  let cuerpo = ''
+  const logoUrl = 'https://www.mulleryperez.cl/logo-color.png'
 
-  if (layout === 'dato_grande' && contenido.dato_grande) {
-    cuerpo = `
-      <div style="font-size:96px; font-weight:900; color:white; line-height:1; margin-bottom:20px; letter-spacing:-3px;">${contenido.dato_grande}</div>
-      <div style="font-size:28px; font-weight:700; color:white; line-height:1.3; max-width:85%;">${contenido.headline_grafica}</div>
-      <div style="font-size:18px; color:rgba(255,255,255,0.7); margin-top:12px; max-width:80%; line-height:1.4;">${contenido.subtitulo_grafica}</div>`
-  } else if (layout === 'quote') {
-    cuerpo = `
-      <div style="font-size:22px; color:rgba(255,255,255,0.4); font-weight:900; margin-bottom:10px;">"</div>
-      <div style="font-size:32px; font-weight:800; color:white; line-height:1.35; max-width:85%; font-style:italic;">${contenido.headline_grafica}</div>
-      <div style="font-size:16px; color:rgba(255,255,255,0.6); margin-top:20px;">${contenido.subtitulo_grafica}</div>`
-  } else if (layout === 'antes_despues') {
-    cuerpo = `
-      <div style="font-size:24px; font-weight:800; color:white; margin-bottom:24px; line-height:1.3;">${contenido.headline_grafica}</div>
-      <div style="display:flex; gap:16px; width:85%;">
-        <div style="flex:1; background:rgba(239,68,68,0.2); border:2px solid rgba(239,68,68,0.5); border-radius:12px; padding:20px; text-align:center;">
-          <div style="font-size:14px; color:#fca5a5; font-weight:700; margin-bottom:8px;">ANTES</div>
-          <div style="font-size:36px; font-weight:900; color:#fca5a5;">${contenido.dato_grande ? contenido.dato_grande.split('→')[0] || contenido.dato_grande : '?'}</div>
-        </div>
-        <div style="flex:1; background:rgba(52,211,153,0.2); border:2px solid rgba(52,211,153,0.5); border-radius:12px; padding:20px; text-align:center;">
-          <div style="font-size:14px; color:#6ee7b7; font-weight:700; margin-bottom:8px;">DESPUÉS</div>
-          <div style="font-size:36px; font-weight:900; color:#6ee7b7;">${contenido.dato_grande ? contenido.dato_grande.split('→')[1] || contenido.dato_grande : '?'}</div>
-        </div>
+  // ============================================================
+  // TEMPLATE 1 — Fondo oscuro con gradiente púrpura/azul + dato grande
+  // Estilo: "¿SEO o SEM?" — dramático, headline teal, fondo profundo
+  // ============================================================
+  if (templateNum === 1) {
+    return `<!DOCTYPE html><html><head><meta charset="UTF-8">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&display=swap');
+  * { margin:0; padding:0; box-sizing:border-box; }
+</style></head><body>
+<div style="width:1080px; height:1080px; background:linear-gradient(160deg, #0B0B1A 0%, #1a1145 35%, #2d1b69 60%, #1a0b3e 100%); position:relative; overflow:hidden; font-family:'Plus Jakarta Sans',sans-serif;">
+
+  <!-- Orbes decorativos -->
+  <div style="position:absolute; top:-120px; right:-80px; width:450px; height:450px; border-radius:50%; background:radial-gradient(circle, rgba(139,92,246,0.3) 0%, transparent 70%);"></div>
+  <div style="position:absolute; bottom:-100px; left:-60px; width:380px; height:380px; border-radius:50%; background:radial-gradient(circle, rgba(59,130,246,0.2) 0%, transparent 70%);"></div>
+  <div style="position:absolute; top:40%; right:10%; width:200px; height:200px; border-radius:50%; background:radial-gradient(circle, rgba(236,72,153,0.15) 0%, transparent 70%);"></div>
+
+  <!-- Líneas decorativas -->
+  <div style="position:absolute; top:0; left:50px; width:1px; height:100%; background:linear-gradient(to bottom, transparent 0%, rgba(139,92,246,0.2) 30%, rgba(139,92,246,0.2) 70%, transparent 100%);"></div>
+  <div style="position:absolute; top:0; right:80px; width:1px; height:100%; background:linear-gradient(to bottom, transparent 0%, rgba(59,130,246,0.15) 40%, rgba(59,130,246,0.15) 60%, transparent 100%);"></div>
+
+  <!-- Logo -->
+  <div style="position:absolute; top:50px; right:60px; z-index:10;">
+    <img src="${logoUrl}" style="height:55px; width:auto;">
+  </div>
+
+  <!-- Contenido principal -->
+  <div style="position:relative; z-index:5; display:flex; flex-direction:column; justify-content:center; height:100%; padding:80px 70px;">
+
+    ${contenido.dato_grande ? `
+    <div style="font-size:120px; font-weight:900; color:#2DD4BF; line-height:0.95; letter-spacing:-5px; margin-bottom:24px; text-shadow: 0 0 80px rgba(45,212,191,0.3);">${contenido.dato_grande}</div>
+    ` : ''}
+
+    <div style="font-size:${contenido.dato_grande ? '42' : '52'}px; font-weight:900; color:#FFFFFF; line-height:1.1; max-width:90%; letter-spacing:-1.5px;">
+      ${contenido.headline_grafica}
+    </div>
+
+    <div style="margin-top:20px; padding-left:4px;">
+      <div style="width:60px; height:4px; background:linear-gradient(90deg, #2DD4BF, #8B5CF6); border-radius:2px; margin-bottom:16px;"></div>
+      <div style="font-size:20px; color:rgba(255,255,255,0.55); line-height:1.5; max-width:80%; font-weight:500;">
+        ${contenido.subtitulo_grafica}
       </div>
-      <div style="font-size:16px; color:rgba(255,255,255,0.6); margin-top:16px;">${contenido.subtitulo_grafica}</div>`
-  } else {
-    // Default: mockup, lista, paso_a_paso → formato limpio
-    cuerpo = `
-      <div style="font-size:36px; font-weight:900; color:white; line-height:1.2; max-width:85%; margin-bottom:16px;">${contenido.headline_grafica}</div>
-      <div style="font-size:18px; color:rgba(255,255,255,0.7); max-width:80%; line-height:1.5;">${contenido.subtitulo_grafica}</div>
-      ${contenido.dato_grande ? `<div style="font-size:64px; font-weight:900; color:${c.bg}; margin-top:20px; background:white; display:inline-block; padding:8px 24px; border-radius:12px;">${contenido.dato_grande}</div>` : ''}`
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div style="position:absolute; bottom:45px; left:70px; right:70px; display:flex; justify-content:space-between; align-items:center; z-index:10;">
+    <div style="display:flex; align-items:center; gap:12px;">
+      <div style="font-size:15px; color:rgba(255,255,255,0.4); font-weight:600; letter-spacing:1px;">mulleryperez.cl</div>
+    </div>
+    <div style="font-size:13px; color:rgba(139,92,246,0.5); font-weight:600;">Performance Marketing · Chile</div>
+  </div>
+
+</div>
+</body></html>`
   }
 
-  return `<!DOCTYPE html>
-<html><head><meta charset="UTF-8">
+  // ============================================================
+  // TEMPLATE 2 — Fondo claro con acento de color + cajas
+  // Estilo: limpio, corporativo, info estructurada
+  // ============================================================
+  if (templateNum === 2) {
+    return `<!DOCTYPE html><html><head><meta charset="UTF-8">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&display=swap');
   * { margin:0; padding:0; box-sizing:border-box; }
-  body { width:1080px; height:1080px; font-family:'Inter',sans-serif; }
-</style></head>
-<body>
-<div style="width:1080px; height:1080px; background:linear-gradient(135deg, #0A0A0F 0%, ${c.bg} 100%); display:flex; flex-direction:column; justify-content:center; align-items:center; padding:80px; position:relative; overflow:hidden;">
-  <!-- Decoración sutil -->
-  <div style="position:absolute; top:-100px; right:-100px; width:400px; height:400px; border-radius:50%; background:rgba(255,255,255,0.03);"></div>
-  <div style="position:absolute; bottom:-150px; left:-150px; width:500px; height:500px; border-radius:50%; background:rgba(255,255,255,0.02);"></div>
+</style></head><body>
+<div style="width:1080px; height:1080px; background:#F8FAFC; position:relative; overflow:hidden; font-family:'Plus Jakarta Sans',sans-serif;">
+
+  <!-- Barra superior de color -->
+  <div style="position:absolute; top:0; left:0; right:0; height:8px; background:linear-gradient(90deg, #2DD4BF, #8B5CF6, #3B82F6);"></div>
+
+  <!-- Forma decorativa esquina -->
+  <div style="position:absolute; top:-200px; right:-200px; width:500px; height:500px; border-radius:50%; background:linear-gradient(135deg, rgba(139,92,246,0.06), rgba(45,212,191,0.04));"></div>
+  <div style="position:absolute; bottom:-150px; left:-150px; width:400px; height:400px; border-radius:50%; background:rgba(59,130,246,0.04);"></div>
+
+  <!-- Logo -->
+  <div style="position:absolute; top:50px; right:60px; z-index:10;">
+    <img src="${logoUrl}" style="height:50px; width:auto;">
+  </div>
 
   <!-- Contenido -->
-  <div style="position:relative; z-index:1; text-align:center; display:flex; flex-direction:column; align-items:center; justify-content:center; flex:1;">
-    ${cuerpo}
+  <div style="position:relative; z-index:5; display:flex; flex-direction:column; justify-content:center; height:100%; padding:80px 70px;">
+
+    <!-- Tag -->
+    <div style="display:inline-block; background:linear-gradient(135deg, #2DD4BF, #0D9488); color:white; font-size:13px; font-weight:800; padding:6px 18px; border-radius:20px; letter-spacing:1.5px; text-transform:uppercase; margin-bottom:28px; width:fit-content;">DATOS M&P</div>
+
+    ${contenido.dato_grande ? `
+    <div style="font-size:100px; font-weight:900; color:#0F172A; line-height:0.95; letter-spacing:-4px; margin-bottom:16px;">${contenido.dato_grande}</div>
+    ` : ''}
+
+    <div style="font-size:${contenido.dato_grande ? '38' : '48'}px; font-weight:900; color:#0F172A; line-height:1.1; max-width:90%; letter-spacing:-1px;">
+      ${contenido.headline_grafica}
+    </div>
+
+    <!-- Caja de subtítulo -->
+    <div style="margin-top:28px; background:white; border:2px solid #E2E8F0; border-radius:16px; padding:24px 28px; max-width:85%; box-shadow:0 4px 20px rgba(0,0,0,0.04);">
+      <div style="font-size:19px; color:#475569; line-height:1.55; font-weight:500;">${contenido.subtitulo_grafica}</div>
+    </div>
+
+    <!-- Línea decorativa -->
+    <div style="margin-top:28px; display:flex; align-items:center; gap:12px;">
+      <div style="width:40px; height:3px; background:#2DD4BF; border-radius:2px;"></div>
+      <div style="width:20px; height:3px; background:#8B5CF6; border-radius:2px;"></div>
+      <div style="width:10px; height:3px; background:#3B82F6; border-radius:2px;"></div>
+    </div>
   </div>
 
-  <!-- Footer con logo -->
-  <div style="position:absolute; bottom:40px; left:80px; right:80px; display:flex; justify-content:space-between; align-items:center; z-index:1;">
-    <div style="display:flex; align-items:center; gap:10px;">
-      <div style="width:36px; height:36px; background:white; border-radius:8px; display:flex; align-items:center; justify-content:center; font-weight:900; color:${c.bg}; font-size:14px;">M&P</div>
-      <div style="color:rgba(255,255,255,0.5); font-size:13px; font-weight:600;">mulleryperez.cl</div>
-    </div>
-    <div style="color:rgba(255,255,255,0.3); font-size:12px;">Termómetro M&P · Datos Chile</div>
+  <!-- Footer -->
+  <div style="position:absolute; bottom:45px; left:70px; right:70px; display:flex; justify-content:space-between; align-items:center; z-index:10;">
+    <div style="font-size:15px; color:#94A3B8; font-weight:600;">mulleryperez.cl</div>
+    <div style="font-size:13px; color:#CBD5E1; font-weight:600;">Termómetro M&P · Chile 2026</div>
   </div>
+
+</div>
+</body></html>`
+  }
+
+  // ============================================================
+  // TEMPLATE 3 — Split: mitad oscura + mitad gradiente teal
+  // Estilo: bold, moderno, impactante
+  // ============================================================
+  return `<!DOCTYPE html><html><head><meta charset="UTF-8">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&display=swap');
+  * { margin:0; padding:0; box-sizing:border-box; }
+</style></head><body>
+<div style="width:1080px; height:1080px; position:relative; overflow:hidden; font-family:'Plus Jakarta Sans',sans-serif;">
+
+  <!-- Fondo split diagonal -->
+  <div style="position:absolute; inset:0; background:#0A0A14;"></div>
+  <div style="position:absolute; top:0; right:0; width:55%; height:100%; background:linear-gradient(160deg, #0D9488 0%, #2DD4BF 40%, #14B8A6 100%); clip-path:polygon(25% 0, 100% 0, 100% 100%, 0% 100%);"></div>
+
+  <!-- Textura sobre el gradiente -->
+  <div style="position:absolute; top:0; right:0; width:55%; height:100%; clip-path:polygon(25% 0, 100% 0, 100% 100%, 0% 100%); opacity:0.1;">
+    <div style="position:absolute; top:20%; right:10%; width:300px; height:300px; border:2px solid white; border-radius:50%;"></div>
+    <div style="position:absolute; bottom:15%; right:25%; width:180px; height:180px; border:2px solid white; border-radius:50%;"></div>
+  </div>
+
+  <!-- Logo -->
+  <div style="position:absolute; top:50px; left:60px; z-index:10;">
+    <img src="${logoUrl}" style="height:50px; width:auto;">
+  </div>
+
+  <!-- Contenido principal — lado izquierdo oscuro -->
+  <div style="position:relative; z-index:5; display:flex; flex-direction:column; justify-content:center; height:100%; padding:80px 70px; max-width:60%;">
+
+    ${contenido.dato_grande ? `
+    <div style="font-size:90px; font-weight:900; color:#2DD4BF; line-height:0.95; letter-spacing:-4px; margin-bottom:20px;">${contenido.dato_grande}</div>
+    ` : ''}
+
+    <div style="font-size:${contenido.dato_grande ? '36' : '46'}px; font-weight:900; color:#FFFFFF; line-height:1.1; letter-spacing:-1px;">
+      ${contenido.headline_grafica}
+    </div>
+
+    <div style="margin-top:20px;">
+      <div style="width:50px; height:4px; background:#2DD4BF; border-radius:2px; margin-bottom:14px;"></div>
+      <div style="font-size:18px; color:rgba(255,255,255,0.5); line-height:1.5; font-weight:500; max-width:95%;">
+        ${contenido.subtitulo_grafica}
+      </div>
+    </div>
+  </div>
+
+  <!-- Lado derecho — texto vertical o acento -->
+  <div style="position:absolute; right:60px; top:50%; transform:translateY(-50%); z-index:6; writing-mode:vertical-rl; text-orientation:mixed;">
+    <div style="font-size:14px; font-weight:800; color:rgba(10,10,20,0.3); letter-spacing:4px; text-transform:uppercase;">PERFORMANCE</div>
+  </div>
+
+  <!-- Footer -->
+  <div style="position:absolute; bottom:45px; left:70px; z-index:10;">
+    <div style="font-size:15px; color:rgba(255,255,255,0.35); font-weight:600;">mulleryperez.cl</div>
+  </div>
+  <div style="position:absolute; bottom:45px; right:70px; z-index:10;">
+    <div style="font-size:13px; color:rgba(10,10,20,0.4); font-weight:700;">M&P · Chile</div>
+  </div>
+
 </div>
 </body></html>`
 }
