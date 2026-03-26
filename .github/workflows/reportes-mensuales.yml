@@ -1,0 +1,34 @@
+name: Reportes Mensuales Clientes
+
+on:
+  schedule:
+    - cron: '0 12 1 * *'    # 09:00 AM Chile (UTC-3) — día 1 de cada mes
+  workflow_dispatch:
+
+jobs:
+  generar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Instalar dependencias
+        run: npm install node-fetch@2
+
+      - name: Generar reportes
+        run: node scripts/generar-reportes.js
+        env:
+          REPORTEI_TOKEN: ${{ secrets.REPORTEI_TOKEN }}
+          RESEND: ${{ secrets.RESEND }}
+
+      - name: Alerta si falla
+        if: failure()
+        run: |
+          curl -s -X POST "https://api.resend.com/emails" \
+            -H "Authorization: Bearer ${{ secrets.RESEND }}" \
+            -H "Content-Type: application/json" \
+            -d "{\"from\":\"contacto@mulleryperez.cl\",\"to\":\"contacto@mulleryperez.cl\",\"subject\":\"⚠️ FALLO Reportes Mensuales — $(date -u +%Y-%m-%d)\",\"html\":\"<p>El generador de reportes mensuales falló. <a href='https://github.com/myp202021/landing-mp-myp/actions'>Ver logs</a></p>\"}"
