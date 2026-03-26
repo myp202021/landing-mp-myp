@@ -605,11 +605,9 @@ async function processClient(cliente, periodo) {
       project_id: cliente.id,
       template_id: config.template_id,
       title: `Reporte ${cliente.nombre} — ${periodo.mesNombre} ${periodo.mesYear}`,
-      subtitle: `vs ${periodo.compNombre} ${periodo.mesYear}`,
+      subtitle: `Datos del mes`,
       start: periodo.start,
       end: periodo.end,
-      comparison_start: periodo.compStart,
-      comparison_end: periodo.compEnd,
       integration_ids: activeIntegrationIds
     })
     if (report.report && report.report.external_url) {
