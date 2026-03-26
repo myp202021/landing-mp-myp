@@ -23,6 +23,7 @@ const BASE = 'https://app.reportei.com/api/v2'
 // UTILS
 // ============================================================
 const sleep = (ms) => new Promise(r => setTimeout(r, ms))
+let requestCount = 0
 const fmt = (n) => Math.round(n).toLocaleString('es-CL')
 const fmtPct = (n) => (n * 100).toFixed(1) + '%'
 const fmtMoney = (n) => '$' + fmt(n)
@@ -75,20 +76,51 @@ function getMesesAño(mesYear, mesMonth) {
 // API CALLS
 // ============================================================
 async function apiGet(endpoint) {
-  await sleep(2100) // Rate limit: 30 req/min = 2s between
+  requestCount++
+  // Every 25 requests, pause longer to avoid rate limit
+  if (requestCount % 25 === 0) {
+    console.log(`  ⏳ Pausa anti rate-limit (request #${requestCount})...`)
+    await sleep(10000)
+  } else {
+    await sleep(2500)
+  }
   const res = await fetch(`${BASE}${endpoint}`, {
     headers: { 'Authorization': `Bearer ${REPORTEI_TOKEN}` }
   })
+  if (res.status === 429) {
+    console.log(`  ⚠️ Rate limit hit — esperando 30s...`)
+    await sleep(30000)
+    const retry = await fetch(`${BASE}${endpoint}`, {
+      headers: { 'Authorization': `Bearer ${REPORTEI_TOKEN}` }
+    })
+    return retry.json()
+  }
   return res.json()
 }
 
 async function apiPost(endpoint, body) {
-  await sleep(2100)
+  requestCount++
+  if (requestCount % 25 === 0) {
+    console.log(`  ⏳ Pausa anti rate-limit (request #${requestCount})...`)
+    await sleep(10000)
+  } else {
+    await sleep(2500)
+  }
   const res = await fetch(`${BASE}${endpoint}`, {
     method: 'POST',
     headers: { 'Authorization': `Bearer ${REPORTEI_TOKEN}`, 'Content-Type': 'application/json' },
     body: JSON.stringify(body)
   })
+  if (res.status === 429) {
+    console.log(`  ⚠️ Rate limit hit — esperando 30s...`)
+    await sleep(30000)
+    const retry = await fetch(`${BASE}${endpoint}`, {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${REPORTEI_TOKEN}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    })
+    return retry.json()
+  }
   return res.json()
 }
 
@@ -444,7 +476,12 @@ async function processClient(cliente, periodo) {
 
   // 1. Get integrations
   const intResult = await apiGet(`/integrations?project_id=${cliente.id}`)
-  const integrations = (intResult.data || intResult).filter(i => i.status === 'active')
+  const intArray = intResult.data || intResult
+  if (!Array.isArray(intArray)) {
+    console.log(`  ⚠️ Error obteniendo integraciones:`, JSON.stringify(intResult).substring(0, 200))
+    return { nombre: cliente.nombre, status: 'error', error: 'API error integraciones' }
+  }
+  const integrations = intArray.filter(i => i.status === 'active')
 
   if (integrations.length === 0) {
     console.log(`  ⚠️ Sin integraciones activas — saltando`)
