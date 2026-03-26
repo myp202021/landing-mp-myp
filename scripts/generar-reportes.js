@@ -292,7 +292,9 @@ function formatValue(val, format) {
 
 function changeBadge(change) {
   if (change === null || change === undefined) return '<span style="font-size:8px;font-weight:bold;background:#F3F4F6;color:#6B7280;padding:1px 4px;border-radius:3px;">—</span>'
-  // Nunca rojo — solo verde (positivo) o gris neutro (negativo)
+  // Regla: si baja más de 10%, no mostrar variación (solo guión)
+  if (change < -10) return '<span style="font-size:8px;font-weight:bold;background:#F3F4F6;color:#6B7280;padding:1px 4px;border-radius:3px;">—</span>'
+  // Nunca rojo — solo verde (positivo) o gris neutro (negativo leve)
   const isPositive = change >= 0
   const bg = isPositive ? '#D1FAE5' : '#F3F4F6'
   const color = isPositive ? '#065F46' : '#6B7280'
@@ -391,6 +393,36 @@ function renderChannels(channels) {
     <tr style="background:#0A1628;"><td style="padding:5px 8px;color:white;font-size:8px;font-weight:bold;">Canal</td><td align="right" style="padding:5px 8px;color:white;font-size:8px;font-weight:bold;">Sesiones</td><td align="right" style="padding:5px 8px;color:white;font-size:8px;font-weight:bold;">Usuarios</td><td align="right" style="padding:5px 8px;color:white;font-size:8px;font-weight:bold;">Pág. Vistas</td><td align="right" style="padding:5px 8px;color:white;font-size:8px;font-weight:bold;">% Total</td></tr>
     ${rows}
   </table>`
+}
+
+function renderHighlight(label, value, sublabel, color) {
+  return `<table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:8px;"><tr>
+    <td style="background:${color || '#F0FDF4'};border-radius:6px;padding:10px 14px;">
+      <span style="font-size:8px;color:#6B7280;font-weight:bold;text-transform:uppercase;">⭐ ${label}</span><br>
+      <span style="font-size:15px;font-weight:bold;color:#0A1628;">${value}</span>
+      ${sublabel ? `<br><span style="font-size:9px;color:#6B7280;">${sublabel}</span>` : ''}
+    </td>
+  </tr></table>`
+}
+
+function getBestCampaign(campaigns) {
+  if (!campaigns || campaigns.length < 2) return null
+  // Filtrar campañas con al menos 5 conversiones
+  const valid = campaigns.filter(c => c[5] >= 5)
+  if (valid.length === 0) return null
+  // Ordenar por menor CPA (index 8)
+  valid.sort((a, b) => (a[8] || 999999) - (b[8] || 999999))
+  const best = valid[0]
+  return { name: best[0], cpa: best[8], conv: Math.round(best[5]), type: best[1] }
+}
+
+function getBestPost(posts) {
+  if (!posts || posts.length === 0) return null
+  // El primero ya viene ordenado por alcance (sort -reach)
+  const best = posts[0]
+  const type = (best[1] === 'Reels' || best[1] === 'Reel') ? 'Reel' : 'Imagen'
+  const date = best[12] ? new Date(best[12]).toLocaleDateString('es-CL', { day: 'numeric', month: 'short' }) : ''
+  return { type, reach: best[2], interactions: best[4], likes: best[6], date }
 }
 
 function renderSection(title, icon, iconBg, tag, kpis, extra) {
@@ -523,6 +555,11 @@ async function processClient(cliente, periodo) {
     if (slug === 'google_adwords') {
       hasGadsIntegration = integration.id
       let extra = renderGadsCampaigns(data.campaigns)
+      // Mejor campaña del mes
+      const bestCamp = getBestCampaign(data.campaigns)
+      if (bestCamp) {
+        extra = renderHighlight('Mejor campaña del mes', bestCamp.name, `CPA ${fmtMoney(bestCamp.cpa)} · ${bestCamp.conv} conversiones · ${bestCamp.type}`, '#F0FDF4') + extra
+      }
       sections[slug] = renderSection('Google Ads', 'G', 'linear-gradient(135deg,#4285f4,#34A853)', `${data.campaigns ? data.campaigns.length : 0} campañas`, data.kpis, extra)
     } else if (slug === 'facebook_ads') {
       sections[slug] = renderSection('Meta Ads', 'M', '#8B5CF6', 'Facebook Ads', data.kpis, '')
@@ -530,7 +567,13 @@ async function processClient(cliente, periodo) {
       let extra = renderChannels(data.channels)
       sections[slug] = renderSection('Google Analytics 4', 'GA', '#F97316', integration.name || '', data.kpis, extra)
     } else if (slug === 'instagram_business') {
-      let extra = renderIgPosts(data.posts)
+      let extra = ''
+      // Mejor post del mes
+      const bestPost = getBestPost(data.posts)
+      if (bestPost) {
+        extra += renderHighlight('Mejor publicación del mes', `${bestPost.type} del ${bestPost.date}`, `Alcance ${fmt(bestPost.reach)} · ${bestPost.interactions} interacciones · ${bestPost.likes} likes`, '#FDF4FF')
+      }
+      extra += renderIgPosts(data.posts)
       const postsCount = data.posts ? data.posts.length : 0
       sections[slug] = renderSection('Instagram', 'IG', 'linear-gradient(135deg,#EC4899,#F97316)', `@${integration.name || ''}`, [...data.kpis, ...(postsCount > 0 ? [{ label: 'Publicaciones', value: postsCount, prev: null, change: null, format: 'num' }] : [])], extra)
     }
