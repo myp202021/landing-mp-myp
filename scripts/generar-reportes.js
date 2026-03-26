@@ -191,7 +191,7 @@ async function fetchMetrics(integrationId, start, end, compStart, compEnd, slug)
   }
 
   const result = await apiPost('/metrics/get-data', body)
-  if (result.errors) return null
+  if (result.errors || !result.data) return null
 
   // Parse results
   const parsed = { kpis: [], campaigns: null, posts: null, channels: null }
@@ -199,7 +199,7 @@ async function fetchMetrics(integrationId, start, end, compStart, compEnd, slug)
   if (defs.kpis) {
     defs.kpis.forEach(k => {
       const d = result.data[k.id]
-      if (!d) return
+      if (!d || d.warning || d.message) return
       let val = d.values
       if (val === undefined || val === null || val === 0 || val === '0') return
       val = parseFloat(val)
@@ -263,13 +263,18 @@ async function fetchEvolution(integrationId, meses) {
       end: mes.end,
       metrics: evoMetrics.map(m => ({ id: m.id, reference_key: m.ref, component: m.comp, metrics: m.metrics, dimensions: [], sort: [], custom: [], type: m.type }))
     }
-    const result = await apiPost('/metrics/get-data', body)
-    if (result.data) {
-      evoMetrics.forEach(m => {
-        if (result.data[m.id] && result.data[m.id].values) {
-          evolution[m.label][mes.nombre] = parseFloat(result.data[m.id].values)
-        }
-      })
+    try {
+      const result = await apiPost('/metrics/get-data', body)
+      if (result && result.data) {
+        evoMetrics.forEach(m => {
+          if (result.data[m.id] && result.data[m.id].values !== undefined && result.data[m.id].values !== null) {
+            const val = parseFloat(result.data[m.id].values)
+            if (!isNaN(val) && val > 0) evolution[m.label][mes.nombre] = val
+          }
+        })
+      }
+    } catch (e) {
+      console.log(`    → Error evolución ${mes.nombre}: ${e.message}`)
     }
   }
 
@@ -491,7 +496,13 @@ async function processClient(cliente, periodo) {
     if (!integration) continue
 
     console.log(`  📈 Fetching ${slug}...`)
-    const data = await fetchMetrics(integration.id, periodo.start, periodo.end, periodo.compStart, periodo.compEnd, slug)
+    let data
+    try {
+      data = await fetchMetrics(integration.id, periodo.start, periodo.end, periodo.compStart, periodo.compEnd, slug)
+    } catch (e) {
+      console.log(`    → Error fetch: ${e.message}`)
+      continue
+    }
 
     if (!data) {
       console.log(`    → Sin datos`)
