@@ -448,7 +448,7 @@ async function processClient(cliente, periodo) {
 
   if (integrations.length === 0) {
     console.log(`  ⚠️ Sin integraciones activas — saltando`)
-    return
+    return { nombre: cliente.nombre, status: 'sin_integraciones' }
   }
 
   console.log(`  📡 ${integrations.length} integraciones: ${integrations.map(i => i.slug).join(', ')}`)
@@ -494,7 +494,7 @@ async function processClient(cliente, periodo) {
 
   if (Object.keys(sections).length === 0) {
     console.log(`  ⚠️ Ninguna integración con datos — saltando`)
-    return
+    return { nombre: cliente.nombre, status: 'sin_datos' }
   }
 
   // 3. Fetch evolution (Google Ads only)
@@ -551,14 +551,59 @@ async function processClient(cliente, periodo) {
     })
     const emailData = await emailRes.json()
     console.log(`  ✅ Email enviado: ${emailData.id || 'ok'}`)
+    return { nombre: cliente.nombre, status: 'enviado', integraciones: Object.keys(sections).length }
   } catch (e) {
     console.log(`  ❌ Error email: ${e.message}`)
+    return { nombre: cliente.nombre, status: 'error_email', error: e.message }
   }
 }
 
 // ============================================================
 // MAIN
 // ============================================================
+async function enviarResumen(resultados, periodo) {
+  const enviados = resultados.filter(r => r && r.status === 'enviado')
+  const sinDatos = resultados.filter(r => r && (r.status === 'sin_datos' || r.status === 'sin_integraciones'))
+  const errores = resultados.filter(r => r && r.status === 'error_email')
+  const fallidos = resultados.filter(r => r && r.status === 'error')
+
+  const listaEnviados = enviados.map(r => `  - ${r.nombre} (${r.integraciones} integraciones)`).join('\n')
+  const listaSinDatos = sinDatos.map(r => `  - ${r.nombre} (${r.status})`).join('\n')
+  const listaErrores = [...errores, ...fallidos].map(r => `  - ${r.nombre}: ${r.error || r.status}`).join('\n')
+
+  const texto = `Reportes Mensuales M&P — ${periodo.mesNombre} ${periodo.mesYear}
+${'='.repeat(50)}
+
+Enviados: ${enviados.length}
+${listaEnviados || '  (ninguno)'}
+
+Sin datos: ${sinDatos.length}
+${listaSinDatos || '  (ninguno)'}
+
+${errores.length + fallidos.length > 0 ? `Errores: ${errores.length + fallidos.length}\n${listaErrores}` : 'Errores: 0'}
+
+Total procesados: ${resultados.length}
+Destinatarios: ${Array.isArray(config.email_destino) ? config.email_destino.join(', ') : config.email_destino}`
+
+  const htmlResumen = `<div style="font-family:monospace;font-size:13px;white-space:pre-wrap;background:#F8FAFC;padding:20px;border-radius:8px;border:1px solid #E5E7EB;">${texto}</div>`
+
+  try {
+    await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${RESEND_KEY}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        from: 'contacto@mulleryperez.cl',
+        to: 'contacto@mulleryperez.cl',
+        subject: `Resumen Reportes — ${enviados.length}/${resultados.length} enviados — ${periodo.mesNombre} ${periodo.mesYear}`,
+        html: htmlResumen
+      })
+    })
+    console.log('📧 Resumen enviado a contacto@mulleryperez.cl')
+  } catch (e) {
+    console.log('❌ Error enviando resumen:', e.message)
+  }
+}
+
 async function main() {
   console.log('📊 Generador de Reportes Mensuales M&P')
   console.log('=======================================')
@@ -570,13 +615,20 @@ async function main() {
   const clientesActivos = config.clientes.filter(c => c.activo)
   console.log(`👥 Clientes activos: ${clientesActivos.length}`)
 
+  const resultados = []
+
   for (const cliente of clientesActivos) {
     try {
-      await processClient(cliente, periodo)
+      const resultado = await processClient(cliente, periodo)
+      resultados.push(resultado || { nombre: cliente.nombre, status: 'sin_datos' })
     } catch (err) {
       console.log(`❌ Error en ${cliente.nombre}: ${err.message}`)
+      resultados.push({ nombre: cliente.nombre, status: 'error', error: err.message })
     }
   }
+
+  // Enviar resumen
+  await enviarResumen(resultados, periodo)
 
   console.log('\n✅ Proceso completado')
 }

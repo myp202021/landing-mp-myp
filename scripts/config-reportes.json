@@ -35,5 +35,10 @@
     { "id": 1189453, "nombre": "HL Soluciones", "activo": true }
   ],
   "template_id": 10367,
-  "email_destino": "contacto@mulleryperez.cl"
+  "email_destino": [
+    "contacto@mulleryperez.cl",
+    "mariaines@mulleryperez.cl",
+    "araceli@mulleryperez.cl",
+    "francisco@mulleryperez.cl"
+  ]
 }
