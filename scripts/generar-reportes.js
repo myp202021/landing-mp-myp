@@ -369,7 +369,11 @@ function renderIgPosts(posts) {
     const typeColor = type === 'Reels' || type === 'Reel' ? '#EC4899' : '#8B5CF6'
     const typeLabel = type === 'Reels' || type === 'Reel' ? 'REEL' : 'IMG'
     const date = p[12] ? new Date(p[12]).toLocaleDateString('es-CL', { day: 'numeric', month: 'short' }) : '—'
-    rows += `<tr style="background:${bg};"><td style="padding:5px 8px;font-size:10px;border-bottom:1px solid #F3F4F6;">${date}</td><td style="padding:5px 8px;font-size:10px;border-bottom:1px solid #F3F4F6;"><span style="font-size:7px;color:white;background:${typeColor};padding:1px 4px;border-radius:3px;font-weight:bold;">${typeLabel}</span></td><td align="right" style="padding:5px 8px;font-size:10px;border-bottom:1px solid #F3F4F6;">${p[2] || 0}</td><td align="right" style="padding:5px 8px;font-size:10px;border-bottom:1px solid #F3F4F6;">${p[3] || 0}</td><td align="right" style="padding:5px 8px;font-size:10px;border-bottom:1px solid #F3F4F6;">${p[4] || 0}</td><td align="right" style="padding:5px 8px;font-size:10px;border-bottom:1px solid #F3F4F6;">${p[6] || 0}</td><td align="right" style="padding:5px 8px;font-size:10px;border-bottom:1px solid #F3F4F6;">${p[8] || 0}</td><td align="right" style="padding:5px 8px;font-size:10px;border-bottom:1px solid #F3F4F6;">${p[11] || 0}</td></tr>`
+    const postUrl = (p[0] && typeof p[0] === 'object' && p[0].url) ? p[0].url : null
+    const dateCell = postUrl
+      ? `<a href="${postUrl}" style="color:#0055A4;text-decoration:none;font-weight:bold;" target="_blank">${date} ↗</a>`
+      : date
+    rows += `<tr style="background:${bg};"><td style="padding:5px 8px;font-size:10px;border-bottom:1px solid #F3F4F6;">${dateCell}</td><td style="padding:5px 8px;font-size:10px;border-bottom:1px solid #F3F4F6;"><span style="font-size:7px;color:white;background:${typeColor};padding:1px 4px;border-radius:3px;font-weight:bold;">${typeLabel}</span></td><td align="right" style="padding:5px 8px;font-size:10px;border-bottom:1px solid #F3F4F6;">${p[2] || 0}</td><td align="right" style="padding:5px 8px;font-size:10px;border-bottom:1px solid #F3F4F6;">${p[3] || 0}</td><td align="right" style="padding:5px 8px;font-size:10px;border-bottom:1px solid #F3F4F6;">${p[4] || 0}</td><td align="right" style="padding:5px 8px;font-size:10px;border-bottom:1px solid #F3F4F6;">${p[6] || 0}</td><td align="right" style="padding:5px 8px;font-size:10px;border-bottom:1px solid #F3F4F6;">${p[8] || 0}</td><td align="right" style="padding:5px 8px;font-size:10px;border-bottom:1px solid #F3F4F6;">${p[11] || 0}</td></tr>`
   })
 
   return `<table width="100%" cellpadding="0" cellspacing="0" style="margin-top:8px;border-collapse:collapse;">
@@ -418,11 +422,11 @@ function getBestCampaign(campaigns) {
 
 function getBestPost(posts) {
   if (!posts || posts.length === 0) return null
-  // El primero ya viene ordenado por alcance (sort -reach)
   const best = posts[0]
   const type = (best[1] === 'Reels' || best[1] === 'Reel') ? 'Reel' : 'Imagen'
   const date = best[12] ? new Date(best[12]).toLocaleDateString('es-CL', { day: 'numeric', month: 'short' }) : ''
-  return { type, reach: best[2], interactions: best[4], likes: best[6], date }
+  const url = (best[0] && typeof best[0] === 'object' && best[0].url) ? best[0].url : null
+  return { type, reach: best[2], interactions: best[4], likes: best[6], date, url }
 }
 
 function renderSection(title, icon, iconBg, tag, kpis, extra) {
@@ -571,7 +575,8 @@ async function processClient(cliente, periodo) {
       // Mejor post del mes
       const bestPost = getBestPost(data.posts)
       if (bestPost) {
-        extra += renderHighlight('Mejor publicación del mes', `${bestPost.type} del ${bestPost.date}`, `Alcance ${fmt(bestPost.reach)} · ${bestPost.interactions} interacciones · ${bestPost.likes} likes`, '#FDF4FF')
+        const postLink = bestPost.url ? ` <a href="${bestPost.url}" style="color:#0055A4;text-decoration:none;font-size:9px;" target="_blank">Ver post ↗</a>` : ''
+        extra += renderHighlight('Mejor publicación del mes', `${bestPost.type} del ${bestPost.date}${postLink}`, `Alcance ${fmt(bestPost.reach)} · ${bestPost.interactions} interacciones · ${bestPost.likes} likes`, '#FDF4FF')
       }
       extra += renderIgPosts(data.posts)
       const postsCount = data.posts ? data.posts.length : 0
