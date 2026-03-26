@@ -2,8 +2,8 @@
   "clientes": [
     { "id": 303030, "nombre": "Dezar", "activo": true },
     { "id": 303130, "nombre": "Adimac", "activo": true },
-    { "id": 303132, "nombre": "Sistematicos.cl", "activo": true },
-    { "id": 318699, "nombre": "CHARRIOT", "activo": true },
+    { "id": 303132, "nombre": "Sistematicos.cl", "activo": true, "ocultar": ["inversion"] },
+    { "id": 318699, "nombre": "CHARRIOT", "activo": true, "ocultar": ["inversion"] },
     { "id": 326374, "nombre": "Zero Water", "activo": true },
     { "id": 334791, "nombre": "ANTARTIC", "activo": true },
     { "id": 338663, "nombre": "M&P", "activo": true },

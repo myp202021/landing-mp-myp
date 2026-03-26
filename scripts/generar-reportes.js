@@ -287,10 +287,10 @@ function formatValue(val, format) {
 
 function changeBadge(change) {
   if (change === null || change === undefined) return '<span style="font-size:8px;font-weight:bold;background:#F3F4F6;color:#6B7280;padding:1px 4px;border-radius:3px;">—</span>'
-  const isGood = change >= 0
-  // For costs (CPC, CPA, spend increase), positive is bad. But we'll keep it simple: green=positive, red=negative for most
-  const bg = isGood ? '#D1FAE5' : '#FEE2E2'
-  const color = isGood ? '#065F46' : '#991B1B'
+  // Nunca rojo — solo verde (positivo) o gris neutro (negativo)
+  const isPositive = change >= 0
+  const bg = isPositive ? '#D1FAE5' : '#F3F4F6'
+  const color = isPositive ? '#065F46' : '#6B7280'
   const sign = change > 0 ? '+' : ''
   return `<span style="font-size:8px;font-weight:bold;background:${bg};color:${color};padding:1px 4px;border-radius:3px;">${sign}${change.toFixed(1)}%</span>`
 }
@@ -496,6 +496,13 @@ async function processClient(cliente, periodo) {
     if (!data) {
       console.log(`    → Sin datos`)
       continue
+    }
+
+    // Filtrar KPIs ocultos según config del cliente
+    const ocultar = cliente.ocultar || []
+    if (ocultar.includes('inversion')) {
+      data.kpis = data.kpis.filter(k => k.label !== 'Inversión')
+      // También quitar inversión de campañas (columna cost_micros / spend)
     }
 
     activeIntegrationIds.push(integration.id)
