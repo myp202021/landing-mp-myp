@@ -77,13 +77,7 @@ function getMesesAño(mesYear, mesMonth) {
 // ============================================================
 async function apiGet(endpoint) {
   requestCount++
-  // Every 25 requests, pause longer to avoid rate limit
-  if (requestCount % 25 === 0) {
-    console.log(`  ⏳ Pausa anti rate-limit (request #${requestCount})...`)
-    await sleep(10000)
-  } else {
-    await sleep(2500)
-  }
+  await sleep(3000) // 3s entre cada llamada
   const res = await fetch(`${BASE}${endpoint}`, {
     headers: { 'Authorization': `Bearer ${REPORTEI_TOKEN}` }
   })
@@ -100,12 +94,7 @@ async function apiGet(endpoint) {
 
 async function apiPost(endpoint, body) {
   requestCount++
-  if (requestCount % 25 === 0) {
-    console.log(`  ⏳ Pausa anti rate-limit (request #${requestCount})...`)
-    await sleep(10000)
-  } else {
-    await sleep(2500)
-  }
+  await sleep(3000) // 3s entre cada llamada
   const res = await fetch(`${BASE}${endpoint}`, {
     method: 'POST',
     headers: { 'Authorization': `Bearer ${REPORTEI_TOKEN}`, 'Content-Type': 'application/json' },
@@ -654,7 +643,18 @@ async function main() {
 
   const resultados = []
 
-  for (const cliente of clientesActivos) {
+  for (let i = 0; i < clientesActivos.length; i++) {
+    const cliente = clientesActivos[i]
+
+    // Pausa de 60s cada 10 clientes para no topar rate limit
+    if (i > 0 && i % 10 === 0) {
+      console.log(`\n⏳ Pausa de 60s después de ${i} clientes (rate limit)...\n`)
+      await sleep(60000)
+    } else if (i > 0) {
+      // 30s entre cliente y cliente
+      await sleep(30000)
+    }
+
     try {
       const resultado = await processClient(cliente, periodo)
       resultados.push(resultado || { nombre: cliente.nombre, status: 'sin_datos' })
