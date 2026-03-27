@@ -98,6 +98,9 @@ function extraerCopiesRecientes(csvTexts) {
 // GOOGLE SHEETS — Crear sheet editable
 // ═══════════════════════════════════════════════════════════════
 
+// Sheet existente del cliente — se agrega una hoja nueva por mes
+const GENERA_SHEET_ID = '1iFPnPEyBlc4GpKjvBe3_o1X52PGKRzG0kbyrt8BR_HY'
+
 async function crearGoogleSheet(grilla, mesNombre, año) {
   if (!GOOGLE_CREDENTIALS) {
     console.log('⚠️ GOOGLE_CREDENTIALS no configuradas — saltando creación de Sheet')
@@ -106,26 +109,31 @@ async function crearGoogleSheet(grilla, mesNombre, año) {
 
   const auth = new google.auth.GoogleAuth({
     credentials: GOOGLE_CREDENTIALS,
-    scopes: ['https://www.googleapis.com/auth/spreadsheets', 'https://www.googleapis.com/auth/drive']
+    scopes: ['https://www.googleapis.com/auth/spreadsheets']
   })
   const sheets = google.sheets({ version: 'v4', auth })
-  const drive = google.drive({ version: 'v3', auth })
+  const spreadsheetId = GENERA_SHEET_ID
+  const hojaTitle = `${mesNombre} ${año} (BORRADOR)`
 
-  // Crear spreadsheet nuevo
-  const spreadsheet = await sheets.spreadsheets.create({
-    resource: {
-      properties: { title: `Grilla Genera — ${mesNombre} ${año} (BORRADOR)` },
-      sheets: [{ properties: { title: mesNombre, gridProperties: { frozenRowCount: 1 } } }]
-    }
-  })
-  const spreadsheetId = spreadsheet.data.spreadsheetId
-  const sheetUrl = `https://docs.google.com/spreadsheets/d/${spreadsheetId}`
+  // Verificar si ya existe una hoja con ese nombre
+  const info = await sheets.spreadsheets.get({ spreadsheetId })
+  const existente = info.data.sheets.find(s => s.properties.title === hojaTitle)
+  if (existente) {
+    // Borrar la existente para recrearla limpia
+    await sheets.spreadsheets.batchUpdate({
+      spreadsheetId,
+      resource: { requests: [{ deleteSheet: { sheetId: existente.properties.sheetId } }] }
+    })
+  }
 
-  // Compartir con M&P (cualquiera con el link puede editar)
-  await drive.permissions.create({
-    fileId: spreadsheetId,
-    resource: { role: 'writer', type: 'anyone' }
+  // Crear hoja nueva
+  await sheets.spreadsheets.batchUpdate({
+    spreadsheetId,
+    resource: { requests: [{ addSheet: { properties: { title: hojaTitle } } }] }
   })
+
+  const sheetUrl = `https://docs.google.com/spreadsheets/d/${spreadsheetId}/edit#gid=` +
+    (await sheets.spreadsheets.get({ spreadsheetId })).data.sheets.find(s => s.properties.title === hojaTitle).properties.sheetId
 
   // Armar filas
   const rows = []
@@ -188,23 +196,7 @@ async function crearGoogleSheet(grilla, mesNombre, año) {
     resource: { values: rows }
   })
 
-  // Formato: header oscuro, celdas de copy anchas
-  const sheetId = spreadsheet.data.sheets[0].properties.sheetId
-  await sheets.spreadsheets.batchUpdate({
-    spreadsheetId,
-    resource: {
-      requests: [
-        // Columna A (labels) ancha
-        { updateDimensionProperties: { range: { sheetId, dimension: 'COLUMNS', startIndex: 0, endIndex: 1 }, properties: { pixelSize: 120 }, fields: 'pixelSize' } },
-        // Columnas B-H (días) anchas para copies
-        { updateDimensionProperties: { range: { sheetId, dimension: 'COLUMNS', startIndex: 1, endIndex: 8 }, properties: { pixelSize: 280 }, fields: 'pixelSize' } },
-        // Filas de copy más altas
-        { updateDimensionProperties: { range: { sheetId, dimension: 'ROWS' }, properties: { pixelSize: 25 }, fields: 'pixelSize' } },
-      ]
-    }
-  })
-
-  console.log(`✅ Google Sheet creado: ${sheetUrl}`)
+  console.log(`✅ Hoja "${hojaTitle}" creada en Sheet de Genera: ${sheetUrl}`)
   return sheetUrl
 }
 
