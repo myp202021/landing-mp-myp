@@ -552,6 +552,14 @@ export default function LandingClient() {
               Planes
             </button>
 
+            {/* Tecnología */}
+            <Link
+              href="/tecnologia"
+              className="hidden md:block text-sm font-semibold text-gray-700 hover:text-blue-600 transition-all duration-200"
+            >
+              Tecnología
+            </Link>
+
             {/* Clientes */}
             <button
               onClick={() => document.getElementById('clientes')?.scrollIntoView({ behavior: 'smooth' })}
