@@ -1,0 +1,33 @@
+name: Grilla Contenido — Genera
+
+on:
+  schedule:
+    - cron: '0 15 15 * *'   # 15 de cada mes a las 12:00 PM Chile (UTC-3)
+  workflow_dispatch:          # Ejecutar manualmente
+
+jobs:
+  generar-grilla:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Instalar dependencias
+        run: npm install node-fetch@2
+
+      - name: Generar grilla mensual
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          RESEND: ${{ secrets.RESEND }}
+        run: node scripts/grilla-genera.js
+
+      - name: Guardar CSV como artefacto
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: grilla-genera
+          path: /tmp/grilla-genera-*.csv
+          retention-days: 30
