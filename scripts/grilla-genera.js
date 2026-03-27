@@ -446,10 +446,16 @@ async function main() {
   const contingencia = await obtenerContingencia(meses[mesTarget], añoTarget)
   contingencia.forEach((c, i) => console.log(`  ${i + 1}. ${c}`))
 
-  // Generar grilla
-  const grilla = await generarGrilla(mesTarget, añoTarget, contingencia, briefing, copiesRecientes)
+  // Generar grilla (con retry si sale incompleta)
+  let grilla = null
+  for (let intento = 1; intento <= 2; intento++) {
+    grilla = await generarGrilla(mesTarget, añoTarget, contingencia, briefing, copiesRecientes)
+    const totalPosts = grilla.semanas.reduce((a, s) => a + (s.dias?.length || 0), 0)
+    console.log(`✅ Intento ${intento}: ${grilla.semanas.length} semanas, ${totalPosts} posts`)
+    if (totalPosts >= 12) break
+    console.warn(`⚠️ Grilla incompleta (${totalPosts} posts, mínimo 12). Reintentando...`)
+  }
   const totalPosts = grilla.semanas.reduce((a, s) => a + (s.dias?.length || 0), 0)
-  console.log(`✅ Grilla generada: ${grilla.semanas.length} semanas, ${totalPosts} posts`)
 
   // Validar mínimos
   for (const sem of grilla.semanas) {
@@ -462,8 +468,14 @@ async function main() {
     }
   }
 
-  // Crear Google Sheet
-  const sheetUrl = await crearGoogleSheet(grilla, meses[mesTarget], añoTarget)
+  // Crear Google Sheet (si falla, continúa sin link)
+  let sheetUrl = null
+  try {
+    sheetUrl = await crearGoogleSheet(grilla, meses[mesTarget], añoTarget)
+  } catch (e) {
+    console.warn(`⚠️ No se pudo crear Google Sheet: ${e.message}`)
+    console.warn('  Continuando sin link — revisa permisos de la Service Account')
+  }
 
   // Guardar CSV local como respaldo
   const csvPath = `/tmp/grilla-genera-${meses[mesTarget].toLowerCase()}-${añoTarget}.csv`
