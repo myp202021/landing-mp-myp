@@ -16,13 +16,36 @@ jobs:
           node-version: '20'
 
       - name: Instalar dependencias
-        run: npm install node-fetch@2
+        run: npm install node-fetch@2 googleapis
+
+      - name: Ejecutar setup si no existe briefing
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          if [ ! -f data/agentes/genera.json ]; then
+            echo "📋 Briefing no existe — ejecutando setup inicial..."
+            node scripts/setup-agente-genera.js
+          else
+            echo "✅ Briefing existe — saltando setup"
+          fi
 
       - name: Generar grilla mensual
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           RESEND: ${{ secrets.RESEND }}
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
         run: node scripts/grilla-genera.js
+
+      - name: Guardar briefing si se generó
+        if: always()
+        run: |
+          if [ -f data/agentes/genera.json ]; then
+            git config user.name "GitHub Actions"
+            git config user.email "actions@github.com"
+            git add data/agentes/genera.json
+            git diff --cached --quiet || git commit -m "chore: update Genera agent briefing [skip ci]"
+            git push || echo "Push failed — briefing not saved to repo"
+          fi
 
       - name: Guardar CSV como artefacto
         if: always()

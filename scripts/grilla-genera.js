@@ -1,492 +1,505 @@
 /**
- * AGENTE DE CONTENIDO — GENERA (HR Tech Chile)
- * Genera la grilla mensual de copies para LinkedIn + Facebook/Instagram
+ * AGENTE MENSUAL — Genera (HR Tech Chile)
+ * Genera la grilla de contenido del mes siguiente.
  *
- * Corre el 15 de cada mes via GitHub Actions
- * Lee grillas históricas del Google Sheet de Genera
- * Consulta contingencia Chile + calendario estacional
- * Genera copies con OpenAI (gpt-4o)
- * Envía email con la grilla al equipo
+ * Lee el briefing generado por setup-agente-genera.js
+ * Consulta contingencia Chile actual
+ * Genera copies de EXCELENCIA con GPT-4o
+ * Crea un Google Sheet editable con la grilla
+ * Envía email con link al Sheet
  *
- * Cliente: Genera — genera.cl
- * Producto: Software de RRHH (asistencia, remuneraciones, firma digital, turnos)
- * Concepto de marca: "Hablemos de Productividad"
- * Redes: LinkedIn + Facebook/Instagram
- * Frecuencia: 3-5 posts/semana
+ * Cron: 15 de cada mes via GitHub Actions
  */
 
 const fetch = require('node-fetch')
+const fs = require('fs')
+const { google } = require('googleapis')
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY
 const RESEND_API_KEY = process.env.RESEND
+const GOOGLE_CREDENTIALS = process.env.GOOGLE_CREDENTIALS ? JSON.parse(process.env.GOOGLE_CREDENTIALS) : null
 
 // ═══════════════════════════════════════════════════════════════
-// BRIEFING DEL AGENTE — Todo lo que necesita saber sobre Genera
+// CALENDARIO CHILE 2026
 // ═══════════════════════════════════════════════════════════════
 
-const BRIEFING_GENERA = `
-## CLIENTE: Genera — genera.cl
-Software de Recursos Humanos para empresas medianas y grandes en Chile.
-
-## PRODUCTO Y MÓDULOS
-1. **Control de Asistencia** — Relojes biométricos, app móvil, marcación facial. Acreditado por la Dirección del Trabajo. Gestiona +380.000 personas.
-2. **Remuneraciones** — Cálculo automático integrado con asistencia. Sin reprocesos manuales.
-3. **Firma Digital** — Contratos, finiquitos, anexos firmados digitalmente con validez legal.
-4. **Turnos Inteligentes con IA** — Funcionalidad nueva (lanzada abril 2026). Optimiza asignación de turnos considerando variables operativas y normativas.
-5. **GENHORAS** — Producto estrella de control de asistencia, acreditado por la DT.
-
-## CONCEPTO DE MARCA
-"Hablemos de Productividad" — SIEMPRE cerrar los copies con esta frase o una variación.
-La productividad se entiende como: eliminar fricción operativa en RRHH para que las personas y la empresa se enfoquen en lo que importa.
-
-## TONO Y VOZ
-- Corporativo pero no frío. Cercano pero no informal.
-- Habla desde la autoridad (380.000 personas gestionadas) sin ser arrogante.
-- Usa datos concretos, no adjetivos vacíos.
-- NO usa "solución", "revolucionario", "líderes del mercado" ni buzzwords genéricos.
-- SÍ usa: "procesos", "operación", "continuidad", "normativa", "productividad", "fricción operativa".
-- Cierra siempre con "📊 genera.cl" o "👉 genera.cl" + "Hablemos de Productividad" o variación.
-- LinkedIn: más largo (150-250 palabras), estratégico, pensado para gerentes de RRHH.
-- Facebook/Instagram: más directo (80-150 palabras), emocional-racional, visual.
-
-## REGLAS DEL EQUIPO DE CONTENIDOS (feedback recurrente)
-- Finalizar siempre con la frase invitación "Hablemos de Productividad".
-- Poner punto después de "hrs." (42 hrs.)
-- La "G" de "genera" en mayúscula cuando se refiere a la marca.
-- Destacar la palabra "productividad" cuando aparezca en titulares.
-- Titulares deben ser preguntas o frases de impacto, no descripciones.
-- No empezar dos posts seguidos con el mismo formato.
-
-## QUÉ NO REPETIR (temas ya cubiertos extensamente)
-- Ley 42 horas: se cubrió intensamente en marzo-abril 2026 (todos los ángulos: asistencia, remuneraciones, firma digital, turnos). Puede mencionarse como contexto pero NO como tema principal de más de 1-2 posts al mes.
-- "Errores manuales en asistencia generan cadena de problemas" — ángulo ya usado 4+ veces.
-- "Conectar asistencia con remuneraciones" — ángulo ya usado 5+ veces.
-`
-
-// ═══════════════════════════════════════════════════════════════
-// CALENDARIO ESTACIONAL CHILE 2026
-// ═══════════════════════════════════════════════════════════════
-
-const CALENDARIO_CHILE = {
-  1: { fechas: ['1 Año Nuevo'], temas: ['Vuelta al trabajo', 'Planificación anual RRHH', 'Objetivos del año'] },
-  2: { fechas: ['14 San Valentín'], temas: ['Clima laboral', 'Bienestar', 'Cultura organizacional'] },
-  3: { fechas: ['8 Día Internacional de la Mujer'], temas: ['Equidad', 'Liderazgo femenino', 'Políticas de género en empresas'] },
-  4: { fechas: ['18-19 Semana Santa', '26 Entrada en vigencia 42 hrs.'], temas: ['Ley 42 horas implementación', 'Turnos nuevos', 'Adaptación normativa'] },
-  5: { fechas: ['1 Día del Trabajador', '10 Día de la Madre (Chile)', '21 Día de las Glorias Navales'], temas: ['Reconocimiento laboral', 'Bienestar empleados', 'Productividad post-feriados', 'Gestión de ausentismo mayo', 'Temporada alta de licencias médicas'] },
-  6: { fechas: ['20 Día del Padre'], temas: ['Corresponsabilidad', 'Beneficios laborales', 'Mid-year review RRHH'] },
-  7: { fechas: ['16 Día de la Virgen del Carmen'], temas: ['Segundo semestre', 'Ajuste presupuestario', 'Evaluación de desempeño'] },
-  8: { fechas: ['15 Asunción'], temas: ['Preparación Fiestas Patrias', 'Gestión de vacaciones', 'Turnos temporada alta'] },
-  9: { fechas: ['18-19 Fiestas Patrias'], temas: ['Feriados largos', 'Gestión de permisos', 'Asistencia post-feriado'] },
-  10: { fechas: ['12 Encuentro de Dos Mundos', '31 Día de la Reforma'], temas: ['Q4 planning', 'Cierre de año', 'Bonos y gratificaciones'] },
-  11: { fechas: ['1 Día de Todos los Santos'], temas: ['Cierre fiscal', 'Finiquitos', 'Renovaciones contrato'] },
-  12: { fechas: ['8 Inmaculada Concepción', '25 Navidad'], temas: ['Cierre de año RRHH', 'Aguinaldos', 'Planificación dotación', 'Vacaciones colectivas'] },
+const CALENDARIO = {
+  1: { fechas: ['1 Año Nuevo'], contexto: 'Vuelta al trabajo, planificación anual, objetivos RRHH' },
+  2: { fechas: ['14 San Valentín'], contexto: 'Clima laboral, bienestar, cultura organizacional' },
+  3: { fechas: ['8 Día de la Mujer'], contexto: 'Equidad de género, liderazgo femenino en empresas' },
+  4: { fechas: ['Semana Santa', '26 Entrada en vigencia 42 hrs'], contexto: 'Implementación ley 42 horas, adaptación normativa' },
+  5: { fechas: ['1 Día del Trabajador', '10 Día de la Madre'], contexto: 'Reconocimiento laboral, bienestar, ausentismo mayo, temporada licencias médicas, post-implementación 42 hrs' },
+  6: { fechas: ['20 Día del Padre'], contexto: 'Corresponsabilidad, mid-year review, evaluación primer semestre' },
+  7: { fechas: ['16 Virgen del Carmen'], contexto: 'Mitad de año, ajustes presupuestarios, evaluación desempeño' },
+  8: { fechas: ['15 Asunción'], contexto: 'Preparación Fiestas Patrias, gestión vacaciones, turnos alta demanda' },
+  9: { fechas: ['18-19 Fiestas Patrias'], contexto: 'Feriados largos, permisos, asistencia post-feriado, ausentismo' },
+  10: { fechas: ['12 Encuentro de Dos Mundos', '31 Halloween'], contexto: 'Q4, cierre de año, bonos, gratificaciones' },
+  11: { fechas: ['1 Todos los Santos'], contexto: 'Cierre fiscal, finiquitos, renovaciones contrato' },
+  12: { fechas: ['8 Inmaculada', '25 Navidad'], contexto: 'Cierre anual RRHH, aguinaldos, vacaciones colectivas, dotación año siguiente' },
 }
 
 // ═══════════════════════════════════════════════════════════════
 // FUNCIONES
 // ═══════════════════════════════════════════════════════════════
 
-/**
- * Descarga una hoja del Google Sheet como CSV
- */
-async function descargarHoja(sheetId, gid) {
-  const url = `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv&gid=${gid}`
-  const res = await fetch(url, { redirect: 'follow' })
-  if (!res.ok) throw new Error(`Error descargando hoja gid=${gid}: ${res.status}`)
-  return await res.text()
-}
-
-/**
- * Busca noticias/contingencia de Chile relevante para RRHH y productividad
- */
-async function obtenerContingencia(mes, año) {
-  const prompt = `Es ${mes} ${año} en Chile. Lista las 5-7 noticias o tendencias económicas/laborales más relevantes de las últimas 4 semanas que afecten a empresas medianas y grandes en Chile, especialmente en gestión de personas y RRHH.
-
-Ejemplos del tipo de contingencia que busco:
-- Cambios en leyes laborales o normativas
-- Variaciones económicas (dólar, inflación, bencina, costos operativos)
-- Tendencias del mercado laboral (escasez de talento, rotación, teletrabajo)
-- Eventos sectoriales o fechas importantes
-- Tecnología/IA aplicada a RRHH
-
-Responde SOLO con un JSON array de strings. Ejemplo:
-["El dólar subió a $950 aumentando costos operativos", "Nueva normativa de teletrabajo en discusión"]`
-
+async function callOpenAI(system, user, maxTokens = 8000, temp = 0.6) {
   const res = await fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
     headers: { 'Authorization': `Bearer ${OPENAI_API_KEY}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({
       model: 'gpt-4o',
-      messages: [{ role: 'user', content: prompt }],
-      max_tokens: 500,
-      temperature: 0.3
+      messages: [{ role: 'system', content: system }, { role: 'user', content: user }],
+      max_tokens: maxTokens,
+      temperature: temp
     })
   })
   const data = await res.json()
+  if (!data.choices?.[0]) throw new Error(`OpenAI error: ${JSON.stringify(data).substring(0, 500)}`)
+  return data.choices[0].message.content
+}
+
+async function obtenerContingencia(mes, año) {
+  const raw = await callOpenAI(
+    'Eres un analista económico y laboral chileno. Solo entregas datos verificables.',
+    `Estamos en ${mes} ${año} en Chile. Lista 6-8 hechos económicos, laborales o regulatorios relevantes de las últimas semanas que afecten a empresas medianas/grandes en gestión de personas. Solo hechos concretos, no opiniones. Formato JSON array de strings.`,
+    600, 0.3
+  )
   try {
-    const raw = data.choices[0].message.content.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim()
-    return JSON.parse(raw)
+    return JSON.parse(raw.replace(/```json\n?/g, '').replace(/```/g, '').trim())
   } catch (e) {
-    console.warn('⚠️ No se pudo parsear contingencia, usando fallback')
-    return ['Costos operativos en alza presionan la eficiencia empresarial', 'Adopción de IA en procesos de RRHH sigue creciendo en Chile']
+    return ['Costos operativos en alza', 'Mercado laboral competitivo en Chile']
   }
 }
 
-/**
- * Extrae un resumen de los copies históricos para no repetir
- */
-function extraerHistorico(csvTexts) {
-  const temas = []
+async function descargarHoja(sheetId, gid) {
+  const url = `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv&gid=${gid}`
+  const res = await fetch(url, { redirect: 'follow' })
+  if (!res.ok) return ''
+  return await res.text()
+}
+
+function extraerCopiesRecientes(csvTexts) {
+  const copies = []
   for (const csv of csvTexts) {
-    const lines = csv.split('\n')
-    for (const line of lines) {
-      // Buscar líneas que parecen copies (largas, con contenido)
-      if (line.length > 200 && !line.startsWith('Hashtags') && !line.startsWith('Comentarios') && !line.startsWith('Cometarios')) {
-        // Extraer el primer párrafo/oración como tema
-        const match = line.match(/"([^"]{50,200})/)
-        if (match) temas.push(match[1].substring(0, 150))
+    const matches = csv.match(/"([^"]{100,600})"/g)
+    if (matches) {
+      for (const m of matches) {
+        const clean = m.replace(/^"|"$/g, '').replace(/""/g, '"')
+        if (!clean.startsWith('#') && !clean.includes('Ajustar') && !clean.includes('Finalizar')) {
+          copies.push(clean.substring(0, 400))
+        }
       }
     }
   }
-  return temas.slice(0, 40) // Máximo 40 temas para no sobrecargar el prompt
+  return copies
 }
 
-/**
- * Genera la grilla completa del mes con OpenAI
- */
-async function generarGrilla(mesNum, año, contingencia, temasHistoricos) {
-  const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
-  const mesNombre = meses[mesNum - 1]
-  const cal = CALENDARIO_CHILE[mesNum] || { fechas: [], temas: [] }
+// ═══════════════════════════════════════════════════════════════
+// GOOGLE SHEETS — Crear sheet editable
+// ═══════════════════════════════════════════════════════════════
 
-  // Calcular semanas del mes
-  const primerDia = new Date(año, mesNum - 1, 1)
-  const ultimoDia = new Date(año, mesNum, 0)
-  const totalDias = ultimoDia.getDate()
+async function crearGoogleSheet(grilla, mesNombre, año) {
+  if (!GOOGLE_CREDENTIALS) {
+    console.log('⚠️ GOOGLE_CREDENTIALS no configuradas — saltando creación de Sheet')
+    return null
+  }
 
-  const prompt = `${BRIEFING_GENERA}
+  const auth = new google.auth.GoogleAuth({
+    credentials: GOOGLE_CREDENTIALS,
+    scopes: ['https://www.googleapis.com/auth/spreadsheets', 'https://www.googleapis.com/auth/drive']
+  })
+  const sheets = google.sheets({ version: 'v4', auth })
+  const drive = google.drive({ version: 'v3', auth })
 
-## TU TAREA
-Genera la grilla de contenido de ${mesNombre} ${año} para Genera.
-La grilla debe cubrir TODO el mes: del 1 al ${totalDias} de ${mesNombre}.
+  // Crear spreadsheet nuevo
+  const spreadsheet = await sheets.spreadsheets.create({
+    resource: {
+      properties: { title: `Grilla Genera — ${mesNombre} ${año} (BORRADOR)` },
+      sheets: [{ properties: { title: mesNombre, gridProperties: { frozenRowCount: 1 } } }]
+    }
+  })
+  const spreadsheetId = spreadsheet.data.spreadsheetId
+  const sheetUrl = `https://docs.google.com/spreadsheets/d/${spreadsheetId}`
 
-## CALENDARIO DEL MES
-Fechas importantes: ${cal.fechas.join(', ') || 'Ninguna especial'}
-Temas estacionales sugeridos: ${cal.temas.join(', ')}
+  // Compartir con M&P (cualquiera con el link puede editar)
+  await drive.permissions.create({
+    fileId: spreadsheetId,
+    resource: { role: 'writer', type: 'anyone' }
+  })
 
-## CONTINGENCIA CHILE (${mesNombre} ${año})
+  // Armar filas
+  const rows = []
+
+  // Header
+  rows.push([mesNombre + ' ' + año, '', '', '', '', '', '', ''])
+  rows.push(['', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', '', ''])
+  rows.push([])
+
+  for (const semana of grilla.semanas) {
+    const diasSemana = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo']
+    const mapa = {}
+    for (const d of (semana.dias || [])) { mapa[d.dia_semana] = d }
+
+    // Rango
+    rows.push([semana.rango])
+    rows.push([])
+
+    // Dia
+    const filaDia = ['Dia']
+    for (const ds of diasSemana) { filaDia.push(mapa[ds]?.dia || '') }
+    rows.push(filaDia)
+
+    // Plataforma
+    const filaPlatf = ['Plataforma']
+    for (const ds of diasSemana) { filaPlatf.push(mapa[ds]?.plataforma || '') }
+    rows.push(filaPlatf)
+
+    // IMAGEN/VIDEO
+    rows.push(['IMAGEN /VIDEO', '', '', '', '', '', '', ''])
+
+    // Tipo Post
+    const filaTipo = ['Tipo Post']
+    for (const ds of diasSemana) { filaTipo.push(mapa[ds]?.tipo_post || '') }
+    rows.push(filaTipo)
+
+    // Copy
+    const filaCopy = ['Copy']
+    for (const ds of diasSemana) { filaCopy.push(mapa[ds]?.copy || '') }
+    rows.push(filaCopy)
+
+    // Hashtags
+    const filaHash = ['Hashtags']
+    for (const ds of diasSemana) { filaHash.push(mapa[ds]?.hashtags || '') }
+    rows.push(filaHash)
+
+    // Comentarios
+    const filaComent = ['Comentarios']
+    for (const ds of diasSemana) { filaComent.push(mapa[ds]?.nota_interna || '') }
+    rows.push(filaComent)
+
+    rows.push([]) // Separador
+  }
+
+  // Escribir datos
+  await sheets.spreadsheets.values.update({
+    spreadsheetId,
+    range: `${mesNombre}!A1`,
+    valueInputOption: 'RAW',
+    resource: { values: rows }
+  })
+
+  // Formato: header oscuro, celdas de copy anchas
+  const sheetId = spreadsheet.data.sheets[0].properties.sheetId
+  await sheets.spreadsheets.batchUpdate({
+    spreadsheetId,
+    resource: {
+      requests: [
+        // Columna A (labels) ancha
+        { updateDimensionProperties: { range: { sheetId, dimension: 'COLUMNS', startIndex: 0, endIndex: 1 }, properties: { pixelSize: 120 }, fields: 'pixelSize' } },
+        // Columnas B-H (días) anchas para copies
+        { updateDimensionProperties: { range: { sheetId, dimension: 'COLUMNS', startIndex: 1, endIndex: 8 }, properties: { pixelSize: 280 }, fields: 'pixelSize' } },
+        // Filas de copy más altas
+        { updateDimensionProperties: { range: { sheetId, dimension: 'ROWS' }, properties: { pixelSize: 25 }, fields: 'pixelSize' } },
+      ]
+    }
+  })
+
+  console.log(`✅ Google Sheet creado: ${sheetUrl}`)
+  return sheetUrl
+}
+
+// ═══════════════════════════════════════════════════════════════
+// EMAIL
+// ═══════════════════════════════════════════════════════════════
+
+async function enviarEmail(grilla, mesNombre, año, sheetUrl) {
+  let totalPosts = grilla.semanas.reduce((a, s) => a + (s.dias?.length || 0), 0)
+
+  let postsPreview = ''
+  for (const sem of grilla.semanas) {
+    postsPreview += `<tr><td colspan="4" style="background:#0A1628;color:#60A5FA;padding:8px 12px;font-weight:700;font-size:12px;">${sem.rango}</td></tr>`
+    for (const d of (sem.dias || [])) {
+      const plColor = d.plataforma === 'LinkedIn' ? '#0077B5' : '#E1306C'
+      postsPreview += `<tr style="border-bottom:1px solid #eee;">
+        <td style="padding:10px;font-size:12px;font-weight:700;white-space:nowrap;">${d.dia_semana} ${d.dia}</td>
+        <td style="padding:10px;"><span style="background:${plColor};color:#fff;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;">${d.plataforma}</span></td>
+        <td style="padding:10px;font-size:11px;color:#666;">${d.tipo_post}</td>
+        <td style="padding:10px;font-size:11px;color:#333;line-height:1.5;">${d.copy}</td>
+      </tr>`
+    }
+  }
+
+  const sheetButton = sheetUrl
+    ? `<a href="${sheetUrl}" style="display:inline-block;background:#0055A4;color:#fff;padding:12px 28px;border-radius:8px;font-weight:700;font-size:14px;text-decoration:none;margin:16px 0;">Abrir Grilla en Google Sheets →</a>
+       <p style="font-size:11px;color:#888;margin-top:4px;">Link editable — el equipo puede modificar directamente</p>`
+    : '<p style="color:#EA580C;font-size:11px;">⚠️ Google Sheets no configurado. Ver CSV adjunto.</p>'
+
+  const html = `
+    <div style="font-family:'Segoe UI',sans-serif;max-width:800px;margin:0 auto;">
+      <div style="background:linear-gradient(135deg,#0A1628,#0055A4);color:#fff;padding:24px 28px;border-radius:12px 12px 0 0;">
+        <h2 style="margin:0;font-size:20px;">Grilla de Contenido — Genera</h2>
+        <p style="margin:6px 0 0;opacity:0.8;font-size:14px;">${mesNombre} ${año} · ${totalPosts} publicaciones · Borrador para revisión</p>
+      </div>
+      <div style="background:#fff;padding:20px 28px;border:1px solid #e0e0e0;text-align:center;">
+        ${sheetButton}
+      </div>
+      <div style="background:#fff;padding:0 28px 20px;border:1px solid #e0e0e0;border-top:none;">
+        <h3 style="font-size:13px;color:#0055A4;margin:16px 0 8px;">PREVIEW COMPLETO</h3>
+        <table style="width:100%;border-collapse:collapse;">
+          <tr style="background:#f8f9fa;"><th style="padding:6px 10px;text-align:left;font-size:10px;">Día</th><th style="padding:6px 10px;text-align:left;font-size:10px;">Red</th><th style="padding:6px 10px;text-align:left;font-size:10px;">Tipo</th><th style="padding:6px 10px;text-align:left;font-size:10px;">Copy</th></tr>
+          ${postsPreview}
+        </table>
+      </div>
+      <div style="background:#f8f9fa;padding:16px 28px;border:1px solid #e0e0e0;border-top:none;border-radius:0 0 12px 12px;font-size:11px;color:#666;">
+        <strong>Borrador generado automáticamente.</strong> El equipo de contenidos revisa, edita y aprueba antes de enviar al cliente.
+        <br>Muller y Pérez — Performance Marketing
+      </div>
+    </div>`
+
+  await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: { 'Authorization': `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      from: 'M&P Contenidos <contacto@mulleryperez.cl>',
+      to: ['contacto@mulleryperez.cl'],
+      subject: `📋 Grilla Genera — ${mesNombre} ${año} (borrador para revisión)`,
+      html
+    })
+  })
+  console.log('✅ Email enviado con preview + link a Sheet')
+}
+
+// ═══════════════════════════════════════════════════════════════
+// GENERACIÓN DE GRILLA — EL PROMPT DURO
+// ═══════════════════════════════════════════════════════════════
+
+async function generarGrilla(mesNum, año, contingencia, briefing, copiesRecientes) {
+  const meses = ['', 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
+  const mesNombre = meses[mesNum]
+  const cal = CALENDARIO[mesNum] || { fechas: [], contexto: '' }
+  const ultimoDia = new Date(año, mesNum, 0).getDate()
+
+  // Copies de referencia (los mejores del cliente)
+  const refCopies = (briefing.copies_referencia || []).slice(0, 6).map((c, i) => `EJEMPLO ${i + 1}:\n${c}`).join('\n\n')
+
+  // Extraer datos del briefing
+  const tono = briefing.analisis_tono || {}
+  const reglas = briefing.reglas_feedback || {}
+  const competitivo = briefing.analisis_competitivo || {}
+  const web = briefing.analisis_web || {}
+
+  const SYSTEM = `Eres el copywriter senior de Genera, empresa de software de RRHH en Chile. Llevas años escribiendo para esta marca. Conoces su tono, sus productos, su público y su competencia. NO eres una IA generando contenido — eres un profesional que escribe como si cada post fuera a ser leído por el gerente de RRHH de Copefrut o Agrosuper y tiene que sentirse identificado.
+
+Tu trabajo NO es "crear contenido de redes sociales". Tu trabajo es posicionar a Genera como el aliado estratégico que entiende la operación de RRHH mejor que nadie en Chile.`
+
+  const PROMPT = `## BRIEFING GENERA
+
+### Propuesta de valor
+${web.propuesta_valor || 'Software integral de RRHH: asistencia, remuneraciones, firma digital, turnos con IA.'}
+
+### Módulos del producto
+${(web.modulos_producto || ['Control de Asistencia', 'Remuneraciones', 'Firma Digital', 'Turnos Inteligentes con IA', 'GENHORAS']).join(', ')}
+
+### Números clave
+${(web.numeros_clave || ['+380.000 personas gestionadas', '+40 años de experiencia']).join(' · ')}
+
+### Tono de la marca
+${tono.tono_general || 'Corporativo sin ser frío. Habla desde la autoridad de gestionar +380.000 personas. Usa datos concretos, no adjetivos vacíos.'}
+Nivel de formalidad: ${tono.nivel_formalidad || '7'}/10
+Palabras frecuentes: ${(tono.palabras_frecuentes || ['productividad', 'procesos', 'operación', 'fricción operativa', 'normativa']).join(', ')}
+Cierre: ${tono.patron_cierre || 'genera.cl + variación de "Hablemos de Productividad"'}
+
+### Reglas del equipo de contenidos
+${(reglas.reglas_obligatorias || ['Cerrar siempre con "Hablemos de Productividad"', 'Punto después de hrs.', 'G mayúscula en Genera', 'Titulares como pregunta o frase de impacto']).map(r => `- ${r}`).join('\n')}
+
+### Errores a evitar
+${(reglas.errores_recurrentes || ['No empezar con pregunta retórica vacía', 'No usar datos inventados']).map(r => `- ${r}`).join('\n')}
+
+### Diferenciación vs competencia (Buk, GeoVictoria, Talana, Rex+)
+Lo que Genera puede decir que otros no: ${competitivo.que_dice_solo_genera || 'Gestiona +380.000 personas, acreditación DT, concepto de productividad (no solo software de RRHH)'}
+Ángulos diferenciadores: ${(competitivo.angulos_diferenciadores || ['Productividad como eje central', 'Experiencia con empresas grandes', 'IA aplicada a turnos']).join(' · ')}
+Temas saturados por competencia: ${(competitivo.temas_a_evitar || ['Digitalización genérica', 'Nube vs on-premise']).join(', ')}
+
+---
+
+## COPIES DE REFERENCIA — ASÍ ESCRIBE GENERA (copiar este nivel)
+${refCopies}
+
+---
+
+## COPIES RECIENTES (NO repetir estos ángulos)
+${copiesRecientes.slice(0, 15).map((c, i) => `${i + 1}. ${c.substring(0, 150)}...`).join('\n')}
+
+---
+
+## CONTINGENCIA CHILE — ${mesNombre} ${año}
 ${contingencia.map((c, i) => `${i + 1}. ${c}`).join('\n')}
-IMPORTANTE: Usa la contingencia como CONTEXTO para hacer los copies más relevantes. Si los costos suben → la productividad importa más. Si hay cambios normativos → Genera resuelve eso. NO hagas posts sobre la noticia en sí, sino sobre cómo la productividad en RRHH ayuda en ese contexto.
 
-## TEMAS YA CUBIERTOS EN MESES ANTERIORES (NO REPETIR estos ángulos)
-${temasHistoricos.map((t, i) => `- ${t}`).join('\n')}
+## CALENDARIO
+Fechas: ${cal.fechas.join(', ')}
+Contexto estacional: ${cal.contexto}
 
-## FORMATO DE SALIDA
-Genera un JSON con esta estructura exacta:
+---
+
+## TAREA
+Genera la grilla completa de ${mesNombre} ${año} para Genera. Del 1 al ${ultimoDia}.
+
+## PROHIBICIONES ABSOLUTAS — Si violas alguna, el copy se descarta
+1. PROHIBIDO empezar con "¿Sabías que...?", "En un mundo donde...", "Hoy más que nunca...", "En la era de..."
+2. PROHIBIDO usar emojis al inicio del copy. Si usas emoji, máximo 1 por copy y solo como marcador visual (📊, 👉, 📌) al final, antes del CTA.
+3. PROHIBIDO inventar estadísticas o porcentajes. Solo usar datos que Genera publica: +380.000 personas, +40 años, acreditación DT.
+4. PROHIBIDO copies de menos de 120 palabras en LinkedIn o menos de 70 palabras en Instagram. TODO copy debe ser robusto, sustantivo, con desarrollo argumental.
+5. PROHIBIDO dos copies seguidos con la misma estructura (ej: dos que empiecen con pregunta, o dos que empiecen con afirmación).
+6. PROHIBIDO usar "solución", "revolucionario", "líder del mercado", "innovador", "cutting-edge", "game-changer" o cualquier buzzword vacío.
+7. PROHIBIDO posts genéricos tipo "Feliz Día del Trabajador". Si hay fecha especial, conectar CON SUSTANCIA al producto o al dolor del gerente de RRHH.
+8. PROHIBIDO repetir temas de los copies recientes listados arriba.
+9. PROHIBIDO copies que suenen a "IA generó esto". Cada copy debe tener un punto de vista, una postura, una tensión. Como si lo escribiera alguien que lleva 10 años en la industria de RRHH.
+10. PROHIBIDO cerrar sin "genera.cl" y sin alguna variación de "Hablemos de Productividad".
+
+## OBLIGACIONES
+- LinkedIn: 150-250 palabras mínimo. Desarrollo argumental. Premisa → tensión → resolución → CTA.
+- Facebook/Instagram: 70-150 palabras mínimo. Más directo pero igualmente sustantivo.
+- 15-18 posts en total para el mes.
+- 3-4 posts por semana (L-V). Alternar LinkedIn (2/semana) y FB/IG (2/semana).
+- Al menos 2 carruseles en el mes (con nota interna de qué slides).
+- Al menos 3 posts que conecten con la contingencia de Chile.
+- Rotar módulos: Asistencia, Remuneraciones, Firma Digital, Turnos IA. No más de 3 posts del mismo módulo.
+- Variar aperturas: dato concreto, escenario real, afirmación provocadora, pregunta genuina (no retórica).
+- Los hashtags siempre incluyen #Genera #Productividad + 3-4 del tema.
+
+## FORMATO JSON
 {
   "mes": "${mesNombre} ${año}",
   "semanas": [
     {
-      "rango": "1-5 mayo" (ejemplo),
+      "rango": "1-5 ${mesNombre.toLowerCase()}",
       "dias": [
         {
           "dia": 1,
           "dia_semana": "Jueves",
-          "plataforma": "LinkedIn" o "Facebook / Instagram",
-          "tipo_post": "Post" o "Carrusel",
-          "copy": "El copy completo aquí...",
-          "hashtags": "#Tag1 #Tag2 #Tag3",
-          "nota_interna": "Breve nota para el equipo sobre el enfoque"
+          "plataforma": "LinkedIn",
+          "tipo_post": "Post",
+          "copy": "Copy completo aquí. Mínimo 150 palabras para LinkedIn, 70 para Instagram. Robusto, con argumento, sin relleno.",
+          "hashtags": "#Genera #Productividad #RRHH #Tag4 #Tag5",
+          "nota_interna": "Nota para el equipo de diseño/contenidos"
         }
       ]
     }
   ]
 }
 
-## REGLAS OBLIGATORIAS
-1. Genera entre 3 y 5 posts por semana (L-V). NO todos los días tienen post.
-2. Alterna LinkedIn (2 por semana) y Facebook/Instagram (2-3 por semana).
-3. LinkedIn: copies de 150-250 palabras. Tono estratégico, para gerentes RRHH.
-4. Facebook/Instagram: copies de 80-150 palabras. Más directo, con emoji al inicio.
-5. SIEMPRE termina con "genera.cl" + variación de "Hablemos de Productividad".
-6. Cada post debe tener un ÁNGULO ÚNICO. No repetir la misma idea con distintas palabras.
-7. Al menos 1 post semanal sobre un módulo específico (Asistencia, Remuneraciones, Firma Digital, Turnos IA). Rotar módulos.
-8. Al menos 1 post semanal que conecte con la contingencia actual de Chile.
-9. Si hay fecha importante en la semana, 1 post debe aprovecharla (sin ser genérico tipo "feliz día de..."). Conectar con productividad.
-10. Los hashtags deben incluir siempre #Genera y #Productividad + 3-4 relevantes al tema.
-11. Incluye 1-2 carruseles por mes (tipo_post: "Carrusel") con nota interna sobre qué slides hacer.
-12. Los copies deben ser de EXCELENCIA. Nada genérico. Cada frase debe aportar valor o provocar reflexión. Un gerente de RRHH tiene que sentir que lo escribió alguien que entiende su mundo.
-13. Varía las estructuras: pregunta inicial, dato impactante, afirmación directa, escenario hipotético. NUNCA dos posts seguidos con la misma estructura.
+Genera SOLO el JSON. Nada más.`
 
-Genera el JSON completo. Nada más.`
-
-  console.log(`🧠 Generando grilla de ${mesNombre} ${año} con GPT-4o...`)
-
-  const res = await fetch('https://api.openai.com/v1/chat/completions', {
-    method: 'POST',
-    headers: { 'Authorization': `Bearer ${OPENAI_API_KEY}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      model: 'gpt-4o',
-      messages: [
-        { role: 'system', content: 'Eres el director de contenido de Genera, una empresa de software de RRHH en Chile. Generas copies de nivel profesional para LinkedIn y redes sociales. Tu trabajo es impecable: cada palabra está pensada, cada post tiene un propósito, y todo respira el concepto "Hablemos de Productividad".' },
-        { role: 'user', content: prompt }
-      ],
-      max_tokens: 8000,
-      temperature: 0.7
-    })
-  })
-
-  const data = await res.json()
-
-  if (!data.choices || !data.choices[0]) {
-    console.error('❌ Error OpenAI:', JSON.stringify(data))
-    throw new Error('OpenAI no devolvió resultado')
-  }
-
-  const raw = data.choices[0].message.content.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim()
+  console.log('🧠 Generando grilla con GPT-4o (prompt duro)...')
+  const raw = await callOpenAI(SYSTEM, PROMPT, 12000, 0.6)
+  const json = raw.replace(/```json\n?/g, '').replace(/```/g, '').trim()
 
   try {
-    return JSON.parse(raw)
+    return JSON.parse(json)
   } catch (e) {
-    console.error('❌ Error parseando JSON de OpenAI')
-    console.log('Raw:', raw.substring(0, 500))
+    console.error('❌ Error parseando JSON. Primeros 500 chars:', json.substring(0, 500))
     throw e
   }
 }
 
-/**
- * Convierte la grilla JSON a formato CSV (mismo formato que usan)
- */
-function grillaACSV(grilla) {
-  let csv = `${grilla.mes}\n\n`
-
-  for (const semana of grilla.semanas) {
-    // Header de semana
-    const dias = semana.dias
-    if (!dias || dias.length === 0) continue
-
-    // Determinar el rango de la semana (lunes a domingo)
-    csv += `,Lunes,Martes,Miércoles,Jueves,Viernes,,\n`
-    csv += `,,,,,,,\n`
-
-    // Crear mapa dia_semana → contenido
-    const diasSemana = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo']
-    const mapa = {}
-    for (const d of dias) {
-      mapa[d.dia_semana] = d
-    }
-
-    // Fila Dia
-    csv += `Dia`
-    for (const ds of diasSemana) {
-      const d = mapa[ds]
-      csv += `,${d ? d.dia : ''}`
-    }
-    csv += `\n`
-
-    // Fila Plataforma
-    csv += `Plataforma`
-    for (const ds of diasSemana) {
-      const d = mapa[ds]
-      csv += `,${d ? d.plataforma : ''}`
-    }
-    csv += `\n`
-
-    // Fila IMAGEN/VIDEO
-    csv += `IMAGEN /VIDEO,,,,,,,\n`
-
-    // Fila Tipo Post
-    csv += `Tipo Post`
-    for (const ds of diasSemana) {
-      const d = mapa[ds]
-      csv += `,${d ? d.tipo_post : ''}`
-    }
-    csv += `\n`
-
-    // Fila Copy
-    csv += `Copy`
-    for (const ds of diasSemana) {
-      const d = mapa[ds]
-      const copy = d ? `"${d.copy.replace(/"/g, '""')}"` : ''
-      csv += `,${copy}`
-    }
-    csv += `\n`
-
-    // Fila Hashtags
-    csv += `Hashtags`
-    for (const ds of diasSemana) {
-      const d = mapa[ds]
-      csv += `,${d ? d.hashtags : ''}`
-    }
-    csv += `\n`
-
-    // Fila Comentarios (notas internas)
-    csv += `Comentarios`
-    for (const ds of diasSemana) {
-      const d = mapa[ds]
-      csv += `,${d ? (d.nota_interna || '') : ''}`
-    }
-    csv += `\n\n`
-  }
-
-  return csv
-}
-
-/**
- * Genera HTML del email con preview de la grilla
- */
-function generarEmailHTML(grilla, csvContent) {
-  let postsHTML = ''
-  let totalPosts = 0
-
-  for (const semana of grilla.semanas) {
-    postsHTML += `<tr><td colspan="4" style="background:#0A1628;color:#60A5FA;padding:8px 12px;font-weight:700;font-size:12px;">${semana.rango}</td></tr>`
-    for (const d of (semana.dias || [])) {
-      totalPosts++
-      const platformColor = d.plataforma === 'LinkedIn' ? '#0077B5' : '#E1306C'
-      postsHTML += `
-        <tr style="border-bottom:1px solid #eee;">
-          <td style="padding:8px;font-size:11px;font-weight:700;">${d.dia_semana} ${d.dia}</td>
-          <td style="padding:8px;"><span style="background:${platformColor};color:#fff;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;">${d.plataforma}</span></td>
-          <td style="padding:8px;font-size:10px;color:#666;">${d.tipo_post}</td>
-          <td style="padding:8px;font-size:10px;color:#333;max-width:400px;">${d.copy.substring(0, 120)}...</td>
-        </tr>`
-    }
-  }
-
-  return `
-    <div style="font-family:'Segoe UI',sans-serif;max-width:700px;margin:0 auto;">
-      <div style="background:linear-gradient(135deg,#0A1628,#0055A4);color:#fff;padding:20px 24px;border-radius:10px 10px 0 0;">
-        <h2 style="margin:0;font-size:18px;">Grilla de Contenido — Genera</h2>
-        <p style="margin:4px 0 0;opacity:0.8;font-size:13px;">${grilla.mes} · ${totalPosts} publicaciones · Borrador para revisión</p>
-      </div>
-      <div style="background:#fff;padding:16px;border:1px solid #e0e0e0;">
-        <table style="width:100%;border-collapse:collapse;font-size:11px;">
-          <tr style="background:#f8f9fa;">
-            <th style="padding:6px 8px;text-align:left;font-size:10px;">Día</th>
-            <th style="padding:6px 8px;text-align:left;font-size:10px;">Red</th>
-            <th style="padding:6px 8px;text-align:left;font-size:10px;">Tipo</th>
-            <th style="padding:6px 8px;text-align:left;font-size:10px;">Copy (preview)</th>
-          </tr>
-          ${postsHTML}
-        </table>
-      </div>
-      <div style="background:#f8f9fa;padding:16px;border:1px solid #e0e0e0;border-top:none;border-radius:0 0 10px 10px;font-size:11px;color:#666;">
-        <p><strong>Este es un borrador generado automáticamente.</strong> El equipo de contenidos debe revisar, editar los copies y aprobar antes de enviar al cliente.</p>
-        <p style="margin-top:8px;">Muller y Pérez — Performance Marketing</p>
-      </div>
-    </div>`
-}
-
-/**
- * Envía email con la grilla
- */
-async function enviarEmail(html, mes) {
-  // Por ahora enviar solo a M&P — después se agrega contacto del cliente
-  const destinatarios = ['contacto@mulleryperez.cl']
-
-  const res = await fetch('https://api.resend.com/emails', {
-    method: 'POST',
-    headers: { 'Authorization': `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      from: 'M&P Contenidos <contacto@mulleryperez.cl>',
-      to: destinatarios,
-      subject: `📋 Grilla Genera — ${mes} (borrador)`,
-      html: html
-    })
-  })
-
-  if (!res.ok) {
-    const err = await res.text()
-    console.error('❌ Error enviando email:', err)
-  } else {
-    console.log(`✅ Email enviado a: ${destinatarios.join(', ')}`)
-  }
-}
-
 // ═══════════════════════════════════════════════════════════════
-// EJECUCIÓN PRINCIPAL
+// MAIN
 // ═══════════════════════════════════════════════════════════════
 
 async function main() {
-  console.log('═══════════════════════════════════════')
-  console.log('  AGENTE GENERA — Grilla de Contenido')
-  console.log('═══════════════════════════════════════')
+  console.log('═══════════════════════════════════════════════')
+  console.log('  AGENTE GENERA — Grilla Mensual (v2)')
+  console.log('═══════════════════════════════════════════════')
 
-  // Determinar mes target (el mes SIGUIENTE al actual)
+  // Mes target: el siguiente al actual
   const hoy = new Date()
-  let mesTarget = hoy.getMonth() + 2 // +1 porque getMonth es 0-based, +1 más para mes siguiente
+  let mesTarget = hoy.getMonth() + 2
   let añoTarget = hoy.getFullYear()
   if (mesTarget > 12) { mesTarget = 1; añoTarget++ }
-
   const meses = ['', 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
-  console.log(`📅 Generando grilla para: ${meses[mesTarget]} ${añoTarget}`)
+  console.log(`📅 Generando grilla: ${meses[mesTarget]} ${añoTarget}`)
 
-  // Paso 1: Descargar grillas históricas
-  console.log('📥 Descargando grillas históricas...')
-  const SHEET_ID = '1iFPnPEyBlc4GpKjvBe3_o1X52PGKRzG0kbyrt8BR_HY'
-  const GIDS = [0, 819456550, 1250083556, 963825208, 1948170592] // Concepto, Ene, Feb, Mar, Mar-Abr
-
-  const csvHistoricos = []
-  for (const gid of GIDS) {
-    try {
-      const csv = await descargarHoja(SHEET_ID, gid)
-      csvHistoricos.push(csv)
-      console.log(`  ✓ Hoja gid=${gid} descargada (${csv.length} chars)`)
-    } catch (e) {
-      console.warn(`  ⚠ Error descargando gid=${gid}: ${e.message}`)
-    }
+  // Cargar briefing
+  const briefingPath = `${__dirname}/../data/agentes/genera.json`
+  let briefing = {}
+  if (fs.existsSync(briefingPath)) {
+    briefing = JSON.parse(fs.readFileSync(briefingPath, 'utf8'))
+    console.log('📋 Briefing cargado desde:', briefingPath)
+  } else {
+    console.warn('⚠️ Sin briefing — ejecutar setup-agente-genera.js primero')
+    console.log('  Continuando con briefing mínimo...')
   }
 
-  // Paso 2: Extraer temas históricos
-  console.log('🔍 Analizando temas ya cubiertos...')
-  const temasHistoricos = extraerHistorico(csvHistoricos)
-  console.log(`  → ${temasHistoricos.length} temas/ángulos identificados`)
+  // Descargar grillas recientes para no repetir
+  console.log('📥 Descargando grillas históricas...')
+  const sheetConfig = briefing.sheet_config || { sheetId: '1iFPnPEyBlc4GpKjvBe3_o1X52PGKRzG0kbyrt8BR_HY', hojas: [{ gid: 1948170592 }, { gid: 963825208 }] }
+  const csvTexts = []
+  for (const h of (sheetConfig.hojas || [])) {
+    const csv = await descargarHoja(sheetConfig.sheetId, h.gid)
+    if (csv) csvTexts.push(csv)
+  }
+  const copiesRecientes = extraerCopiesRecientes(csvTexts)
+  console.log(`  → ${copiesRecientes.length} copies recientes extraídos`)
 
-  // Paso 3: Obtener contingencia Chile
-  console.log('🇨🇱 Consultando contingencia Chile...')
+  // Contingencia Chile
+  console.log('🇨🇱 Consultando contingencia...')
   const contingencia = await obtenerContingencia(meses[mesTarget], añoTarget)
-  console.log(`  → ${contingencia.length} noticias/tendencias obtenidas`)
-  contingencia.forEach((c, i) => console.log(`    ${i + 1}. ${c}`))
+  contingencia.forEach((c, i) => console.log(`  ${i + 1}. ${c}`))
 
-  // Paso 4: Generar grilla con OpenAI
-  const grilla = await generarGrilla(mesTarget, añoTarget, contingencia, temasHistoricos)
-  const totalPosts = grilla.semanas.reduce((acc, s) => acc + (s.dias?.length || 0), 0)
+  // Generar grilla
+  const grilla = await generarGrilla(mesTarget, añoTarget, contingencia, briefing, copiesRecientes)
+  const totalPosts = grilla.semanas.reduce((a, s) => a + (s.dias?.length || 0), 0)
   console.log(`✅ Grilla generada: ${grilla.semanas.length} semanas, ${totalPosts} posts`)
 
-  // Paso 5: Convertir a CSV
-  const csvOutput = grillaACSV(grilla)
-  const fs = require('fs')
-  const outputPath = `/tmp/grilla-genera-${meses[mesTarget].toLowerCase()}-${añoTarget}.csv`
-  fs.writeFileSync(outputPath, csvOutput, 'utf8')
-  console.log(`💾 CSV guardado en: ${outputPath}`)
-
-  // Paso 6: Mostrar preview
-  console.log('\n📋 PREVIEW DE LA GRILLA:')
-  console.log('─'.repeat(60))
-  for (const semana of grilla.semanas) {
-    console.log(`\n📅 ${semana.rango}`)
-    for (const d of (semana.dias || [])) {
-      const platform = d.plataforma === 'LinkedIn' ? '🔵 LI' : '🟣 IG'
-      console.log(`  ${d.dia_semana} ${d.dia} | ${platform} | ${d.tipo_post} | ${d.copy.substring(0, 80)}...`)
+  // Validar mínimos
+  for (const sem of grilla.semanas) {
+    for (const d of (sem.dias || [])) {
+      const words = d.copy.split(/\s+/).length
+      const min = d.plataforma === 'LinkedIn' ? 150 : 70
+      if (words < min * 0.7) {
+        console.warn(`  ⚠ ${d.dia_semana} ${d.dia}: ${words} palabras (mínimo ${min}) — copy corto`)
+      }
     }
   }
 
-  // Paso 7: Enviar email
-  if (RESEND_API_KEY) {
-    console.log('\n📧 Enviando email...')
-    const html = generarEmailHTML(grilla, csvOutput)
-    await enviarEmail(html, `${meses[mesTarget]} ${añoTarget}`)
-  } else {
-    console.log('\n⚠️ RESEND_API_KEY no configurada — email no enviado')
+  // Crear Google Sheet
+  const sheetUrl = await crearGoogleSheet(grilla, meses[mesTarget], añoTarget)
+
+  // Guardar CSV local como respaldo
+  const csvPath = `/tmp/grilla-genera-${meses[mesTarget].toLowerCase()}-${añoTarget}.csv`
+  let csvContent = `${grilla.mes}\n\n`
+  for (const sem of grilla.semanas) {
+    csvContent += `${sem.rango}\n`
+    for (const d of (sem.dias || [])) {
+      csvContent += `${d.dia_semana} ${d.dia},${d.plataforma},${d.tipo_post},"${d.copy.replace(/"/g, '""')}",${d.hashtags}\n`
+    }
+    csvContent += '\n'
+  }
+  fs.writeFileSync(csvPath, csvContent, 'utf8')
+  console.log(`💾 CSV respaldo: ${csvPath}`)
+
+  // Preview en consola
+  console.log('\n📋 PREVIEW:')
+  console.log('─'.repeat(70))
+  for (const sem of grilla.semanas) {
+    console.log(`\n📅 ${sem.rango}`)
+    for (const d of (sem.dias || [])) {
+      const pl = d.plataforma === 'LinkedIn' ? 'LI' : 'IG'
+      const words = d.copy.split(/\s+/).length
+      console.log(`  ${d.dia_semana} ${d.dia} | ${pl} | ${d.tipo_post} | ${words}w | ${d.copy.substring(0, 90)}...`)
+    }
   }
 
-  console.log('\n═══════════════════════════════════════')
-  console.log('  ✅ AGENTE GENERA COMPLETADO')
-  console.log('═══════════════════════════════════════')
+  // Enviar email
+  if (RESEND_API_KEY) {
+    console.log('\n📧 Enviando email...')
+    await enviarEmail(grilla, meses[mesTarget], añoTarget, sheetUrl)
+  }
+
+  console.log('\n═══════════════════════════════════════════════')
+  console.log('  ✅ AGENTE GENERA COMPLETADO (v2)')
+  if (sheetUrl) console.log(`  📊 Sheet: ${sheetUrl}`)
+  console.log('═══════════════════════════════════════════════')
 }
 
-main().catch(e => {
-  console.error('❌ Error fatal:', e)
-  process.exit(1)
-})
+main().catch(e => { console.error('❌ Error fatal:', e); process.exit(1) })
