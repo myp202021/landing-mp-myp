@@ -26,6 +26,14 @@ export default function SiteHeader() {
             Planes
           </Link>
 
+          {/* Tecnología */}
+          <Link
+            href="/tecnologia"
+            className="hidden md:block text-sm font-semibold text-gray-700 hover:text-blue-600 transition-all duration-200"
+          >
+            Tecnología
+          </Link>
+
           {/* Clientes */}
           <Link
             href="/#clientes"
