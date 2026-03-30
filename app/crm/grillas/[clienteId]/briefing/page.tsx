@@ -35,6 +35,8 @@ export default function BriefingPage() {
   const [cierre, setCierre] = useState('')
   const [modelo, setModelo] = useState('gpt-4o')
 
+  const [sheetsLinks, setSheetsLinks] = useState('')
+
   // Analysis results
   const [analisisWeb, setAnalisisWeb] = useState<Record<string, unknown> | null>(null)
   const [analisisTono, setAnalisisTono] = useState<Record<string, unknown> | null>(null)
@@ -66,6 +68,7 @@ export default function BriefingPage() {
         setReglas(b.reglas_adicionales || '')
         setCierre(b.cierre_obligatorio || '')
         setModelo(b.modelo || 'gpt-4o')
+        setSheetsLinks((b.sheets_links || []).join('\n'))
         if (b.analisis_web) { setAnalisisWeb(b.analisis_web); setHasAnalysis(true) }
         if (b.analisis_tono) setAnalisisTono(b.analisis_tono)
         if (b.analisis_competitivo) setAnalisisComp(b.analisis_competitivo)
@@ -90,6 +93,7 @@ export default function BriefingPage() {
           reglas_adicionales: reglas,
           cierre_obligatorio: cierre,
           modelo,
+          sheets_links: sheetsLinks.split('\n').map(l => l.trim()).filter(Boolean),
         }),
       })
       alert('Briefing guardado')
@@ -219,6 +223,21 @@ export default function BriefingPage() {
         </Section>
 
         {/* Rules */}
+        {/* Historical grillas */}
+        <Section title="GRILLAS ANTERIORES (Google Sheets)">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Links a Google Sheets con grillas anteriores (uno por línea)</label>
+            <p className="text-xs text-gray-500 mb-2">La IA descarga los copies, analiza el tono y estilo, y los usa como referencia para generar contenido calibrado. Los links deben ser públicos ("cualquier persona con el enlace").</p>
+            <textarea
+              value={sheetsLinks}
+              onChange={e => setSheetsLinks(e.target.value)}
+              rows={4}
+              placeholder={"https://docs.google.com/spreadsheets/d/xxxx/edit?gid=123\nhttps://docs.google.com/spreadsheets/d/xxxx/edit?gid=456"}
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono"
+            />
+          </div>
+        </Section>
+
         <Section title="REGLAS Y RESTRICCIONES">
           <Field label="Palabras prohibidas (separadas por coma)" value={prohibidas} onChange={setProhibidas} placeholder="Ej: solución, innovador, líder" />
           <Field label="Reglas adicionales" value={reglas} onChange={setReglas} placeholder="Ej: siempre mencionar acreditación DT, no usar datos de 2024..." multiline />

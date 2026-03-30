@@ -88,7 +88,36 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // 3. Get existing copies from previous grillas
+    // 2b. Download historical grillas from Google Sheets links
+    const sheetsLinks = (briefing.sheets_links || []) as string[]
+    const sheetsCopies: string[] = []
+    for (const link of sheetsLinks.slice(0, 5)) {
+      try {
+        // Extract spreadsheet ID and gid from URL
+        const idMatch = link.match(/\/d\/([a-zA-Z0-9_-]+)/)
+        const gidMatch = link.match(/gid=(\d+)/)
+        if (idMatch) {
+          const sheetId = idMatch[1]
+          const gid = gidMatch ? gidMatch[1] : '0'
+          const csvUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv&gid=${gid}`
+          const csvRes = await fetch(csvUrl, { redirect: 'follow', signal: AbortSignal.timeout(15000) })
+          if (csvRes.ok) {
+            const csvText = await csvRes.text()
+            // Extract text content from CSV (copies are usually the longest fields)
+            const lines = csvText.split('\n').slice(1) // skip header
+            for (const line of lines) {
+              const fields = line.split(',')
+              for (const field of fields) {
+                const clean = field.replace(/^"|"$/g, '').replace(/""/g, '"').trim()
+                if (clean.length > 60) sheetsCopies.push(clean)
+              }
+            }
+          }
+        }
+      } catch { /* skip failed sheet */ }
+    }
+
+    // 3. Get existing copies from previous grillas (Supabase + Sheets)
     const { data: grillasAnteriores } = await supabase
       .from('grillas_contenido')
       .select('posts')
@@ -97,10 +126,19 @@ export async function POST(req: NextRequest) {
       .order('mes', { ascending: false })
       .limit(3)
 
-    const copiesAnteriores = (grillasAnteriores || [])
+    const copiesSupabase = (grillasAnteriores || [])
       .flatMap(g => (g.posts as Array<{ copy: string }>).map(p => p.copy))
       .filter(c => c && c.length > 50)
-      .slice(0, 15)
+
+    // Combine: Supabase copies + Sheets copies (dedup by first 80 chars)
+    const allCopies = [...copiesSupabase, ...sheetsCopies]
+    const seen = new Set<string>()
+    const copiesAnteriores = allCopies.filter(c => {
+      const key = c.substring(0, 80).toLowerCase()
+      if (seen.has(key)) return false
+      seen.add(key)
+      return true
+    }).slice(0, 20)
 
     // 4. Analysis: Web + Products
     let analisisWeb = null
