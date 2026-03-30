@@ -270,15 +270,36 @@ Responde ÚNICAMENTE con un JSON array. Sin texto antes ni después. Sin markdow
       copy: string; hashtags: string; nota_interna: string
     }>
 
-    if (!Array.isArray(posts) || posts.length < 8) {
+    if (!Array.isArray(posts) || posts.length === 0) {
       return NextResponse.json({
-        error: 'La IA generó menos de 8 posts. Intenta de nuevo.',
-        posts_generados: Array.isArray(posts) ? posts.length : 0,
+        error: 'La IA no generó posts. Verifica el briefing e intenta de nuevo.',
+        posts_generados: 0,
       }, { status: 422 })
     }
 
+    // If less than 16, try to generate additional posts to complete
+    let allPosts = [...posts]
+    if (allPosts.length < 12) {
+      try {
+        const usedDays = new Set(allPosts.map(p => p.dia))
+        const completarPrompt = `Genera ${16 - allPosts.length} posts ADICIONALES para completar la grilla de ${MESES[mes]} ${anio} para ${nombreCliente} (${rubroCliente}).
+
+Los días YA usados son: ${Array.from(usedDays).join(', ')}. Usa días DIFERENTES.
+Mantén el mismo tono y estilo. Plataformas: ${plataformas}.
+${contexto_mes ? `Contexto del mes: ${contexto_mes}` : ''}
+
+MÍNIMO 100 palabras por post. Responde SOLO JSON array.`
+
+        const extraResponse = await callModel(modelo, systemPrompt, completarPrompt)
+        const extraPosts = extractJSON(extraResponse) as typeof posts
+        if (Array.isArray(extraPosts) && extraPosts.length > 0) {
+          allPosts = [...allPosts, ...extraPosts]
+        }
+      } catch { /* keep what we have */ }
+    }
+
     // Validate word counts and quality
-    const validated = posts.map(p => {
+    const validated = allPosts.map(p => {
       const wordCount = p.copy?.split(/\s+/).filter(Boolean).length || 0
       const isLinkedIn = p.plataforma === 'LinkedIn'
       const minWords = isLinkedIn ? 150 : (p.tipo_post === 'Reel' ? 50 : 80)
