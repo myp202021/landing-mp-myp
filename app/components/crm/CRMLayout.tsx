@@ -27,16 +27,13 @@ export default function CRMLayout({ children, title, authenticated = true, onRef
   const allNavItems = [
     { href: '/crm', label: 'CRM Admin', icon: '🏠', adminOnly: true },
     { href: '/crm/clientes', label: 'Clientes', icon: '👥', adminOnly: true },
-    { href: '/crm/cotizaciones', label: 'Cotizaciones', icon: '📄', adminOnly: true },
-    { href: '/crm/usuarios', label: 'Usuarios', icon: '🔐', adminOnly: true },
-    { href: '/crm/plantillas', label: 'Plantillas', icon: '📋', adminOnly: true },
-    { href: '/crm/metricas', label: 'Metricas', icon: '📊', adminOnly: true },
     { href: '/crm/integraciones', label: 'Integraciones', icon: '🔌', adminOnly: true },
-        { href: '/crm/admin', label: 'Cotizaciones M&P', icon: '📝', adminOnly: true },
+    { href: '/crm/grillas', label: 'Grillas', icon: '📅', adminOnly: true },
     { href: '/crm/cliente/dashboard', label: 'Dashboard', icon: '🏠', adminOnly: false },
     { href: '/crm/cliente/cotizaciones', label: 'Cotizaciones', icon: '📄', adminOnly: false },
     { href: '/crm/cliente/analitica', label: 'Analítica', icon: '📈', adminOnly: false },
     { href: '/crm/cliente/chatbot', label: 'ChatBot', icon: '🤖', adminOnly: false },
+    { href: '/crm/cliente/grillas', label: 'Grillas', icon: '📅', adminOnly: false },
   ]
 
   const navItems = allNavItems.filter(item => isAdmin ? item.adminOnly : !item.adminOnly)
@@ -87,7 +84,7 @@ export default function CRMLayout({ children, title, authenticated = true, onRef
         <div className="max-w-7xl mx-auto px-0 sm:px-6">
           <nav className="flex overflow-x-auto scrollbar-hide -mb-px">
             {navItems.map((item) => {
-              const isActive = pathname === item.href
+              const isActive = pathname === item.href || (pathname?.startsWith(item.href + '/') ?? false)
               return (
                 <Link
                   key={item.href}
