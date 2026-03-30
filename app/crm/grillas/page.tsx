@@ -67,6 +67,42 @@ export default function GrillasAdminPage() {
     setAnio(a)
   }
 
+  // New client modal
+  const [showNewClient, setShowNewClient] = useState(false)
+  const [newNombre, setNewNombre] = useState('')
+  const [newRubro, setNewRubro] = useState('')
+  const [newEmail, setNewEmail] = useState('')
+  const [creatingClient, setCreatingClient] = useState(false)
+
+  const handleCreateClient = async () => {
+    if (!newNombre.trim()) return
+    setCreatingClient(true)
+    try {
+      const res = await fetch('/api/crm/clientes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nombre: newNombre.trim(), rubro: newRubro.trim(), contacto_email: newEmail.trim(), activo: true }),
+      })
+      const data = await res.json()
+      if (data.success || data.cliente) {
+        setShowNewClient(false)
+        setNewNombre(''); setNewRubro(''); setNewEmail('')
+        loadData()
+      } else {
+        alert(data.error || 'Error al crear cliente')
+      }
+    } catch (e) { console.error(e) }
+    setCreatingClient(false)
+  }
+
+  const handleDeleteClient = async (id: string, nombre: string) => {
+    if (!confirm(`¿Eliminar a ${nombre}? Se borrarán sus grillas y briefing.`)) return
+    try {
+      await fetch(`/api/crm/clientes?id=${id}`, { method: 'DELETE' })
+      loadData()
+    } catch (e) { console.error(e) }
+  }
+
   const filtered = clientes.filter(c => {
     const matchSearch = c.nombre.toLowerCase().includes(search.toLowerCase()) || c.rubro.toLowerCase().includes(search.toLowerCase())
     const matchEstado = filtroEstado === 'todos' || c.grilla_estado === filtroEstado
@@ -99,7 +135,7 @@ export default function GrillasAdminPage() {
           <MetricBox label="Sin Grilla" value={stats.sin_grilla} icon="⚠️" color="red" />
         </div>
 
-        {/* Filters */}
+        {/* Filters + New Client */}
         <div className="flex flex-col sm:flex-row gap-3">
           <input
             type="text"
@@ -120,6 +156,9 @@ export default function GrillasAdminPage() {
             <option value="aprobado">Aprobado</option>
             <option value="enviado">Enviado</option>
           </select>
+          <button onClick={() => setShowNewClient(true)} className="px-4 py-2.5 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 transition whitespace-nowrap">
+            + Nuevo Cliente
+          </button>
         </div>
 
         {/* Table */}
@@ -146,7 +185,10 @@ export default function GrillasAdminPage() {
                       <td className="px-6 py-4"><GrillaStatusBadge estado={c.grilla_estado === 'sin_grilla' ? 'sin_grilla' : c.grilla_estado} /></td>
                       <td className="px-6 py-4 text-gray-500 text-sm">{c.actualizado_en || '—'}</td>
                       <td className="px-6 py-4 text-right">
-                        <button className="px-4 py-2 bg-blue-600 text-white rounded-lg text-xs font-semibold hover:bg-blue-700 transition">Ver Grilla →</button>
+                        <div className="flex items-center justify-end gap-2">
+                          <button className="px-4 py-2 bg-blue-600 text-white rounded-lg text-xs font-semibold hover:bg-blue-700 transition">Ver Grilla →</button>
+                          <button onClick={(e) => { e.stopPropagation(); handleDeleteClient(c.id, c.nombre) }} className="px-2 py-2 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition text-xs" title="Eliminar cliente">✕</button>
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -170,6 +212,41 @@ export default function GrillasAdminPage() {
           </div>
         )}
       </div>
+
+      {/* New client modal */}
+      {showNewClient && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50" onClick={() => setShowNewClient(false)}>
+          <div className="bg-white rounded-xl shadow-2xl max-w-md w-full" onClick={e => e.stopPropagation()}>
+            <div className="bg-gradient-to-r from-blue-900 to-blue-800 text-white p-5 rounded-t-xl flex items-center justify-between">
+              <h2 className="text-lg font-bold">Nuevo Cliente</h2>
+              <button onClick={() => setShowNewClient(false)} className="text-white/70 hover:text-white text-xl">✕</button>
+            </div>
+            <div className="p-6 space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Nombre *</label>
+                <input type="text" value={newNombre} onChange={e => setNewNombre(e.target.value)} placeholder="Nombre del cliente"
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Rubro</label>
+                <input type="text" value={newRubro} onChange={e => setNewRubro(e.target.value)} placeholder="Ej: E-commerce, HR Tech"
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Email de contacto</label>
+                <input type="email" value={newEmail} onChange={e => setNewEmail(e.target.value)} placeholder="contacto@cliente.cl"
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+              </div>
+            </div>
+            <div className="flex justify-end gap-3 px-6 pb-6">
+              <button onClick={() => setShowNewClient(false)} className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-semibold hover:bg-gray-200 transition border border-gray-300">Cancelar</button>
+              <button onClick={handleCreateClient} disabled={creatingClient || !newNombre.trim()} className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 transition disabled:opacity-50">
+                {creatingClient ? 'Creando...' : 'Crear Cliente'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </CRMLayout>
   )
 }

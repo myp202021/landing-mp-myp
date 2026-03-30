@@ -57,6 +57,8 @@ export default function GrillaEditorPage() {
 
   const [saving, setSaving] = useState(false)
   const [sending, setSending] = useState(false)
+  const [generating, setGenerating] = useState(false)
+  const [hasBriefing, setHasBriefing] = useState(false)
   // History: which months have grillas
   const [historial, setHistorial] = useState<{ mes: number; anio: number; estado: string }[]>([])
 
@@ -69,6 +71,10 @@ export default function GrillaEditorPage() {
       const hRes = await fetch(`/api/crm/grillas?cliente_id=${clienteId}`)
       const hData = await hRes.json()
       setHistorial((hData.grillas || []).map((g: { mes: number; anio: number; estado: string }) => ({ mes: g.mes, anio: g.anio, estado: g.estado })))
+      // Check briefing
+      const bRes = await fetch(`/api/crm/briefings?cliente_id=${clienteId}`)
+      const bData = await bRes.json()
+      setHasBriefing(!!bData.briefing)
     } catch (e) { console.error(e) }
   }, [clienteId])
 
@@ -209,6 +215,35 @@ export default function GrillaEditorPage() {
     setSending(false)
   }
 
+  // Generate with AI
+  const handleGenerar = async () => {
+    if (!hasBriefing) {
+      router.push(`/crm/grillas/${clienteId}/briefing`)
+      return
+    }
+    const msg = grilla && posts.length > 0
+      ? '¿Regenerar la grilla? Los posts actuales se reemplazarán.'
+      : `¿Generar grilla para ${MESES[mesNum]} ${anio} con IA?`
+    if (!confirm(msg)) return
+    setGenerating(true)
+    try {
+      const res = await fetch('/api/crm/grillas/generar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ cliente_id: clienteId, mes: mesNum, anio }),
+      })
+      const data = await res.json()
+      if (data.success) {
+        setGrilla(data.grilla)
+        alert(`✅ ${data.stats.total_posts} posts generados (${data.stats.modelo_usado})`)
+        loadGrilla()
+      } else {
+        alert(data.error || 'Error al generar')
+      }
+    } catch (e) { console.error(e) }
+    setGenerating(false)
+  }
+
   // Export to formatted Excel
   const handleExport = () => {
     if (!grilla) return
@@ -265,6 +300,14 @@ export default function GrillaEditorPage() {
           </div>
           <div className="flex items-center gap-2 flex-wrap">
             {grilla && <GrillaStatusBadge estado={grilla.estado} />}
+            <button onClick={handleGenerar} disabled={generating}
+              className="px-3 py-2 bg-purple-600 text-white rounded-lg text-xs font-semibold hover:bg-purple-700 transition disabled:opacity-50">
+              {generating ? '🔄 Generando (~30s)...' : '🤖 Generar con IA'}
+            </button>
+            <button onClick={() => router.push(`/crm/grillas/${clienteId}/briefing`)}
+              className={`px-3 py-2 rounded-lg text-xs font-semibold transition border ${hasBriefing ? 'bg-white text-gray-600 border-gray-300 hover:bg-gray-50' : 'bg-amber-100 text-amber-700 border-amber-300 hover:bg-amber-200'}`}>
+              {hasBriefing ? '📋 Briefing' : '⚠️ Crear Briefing'}
+            </button>
             {grilla && grilla.estado === 'borrador' && (
               <button onClick={() => handleChangeEstado('en_revision')} className="px-3 py-2 bg-yellow-500 text-white rounded-lg text-xs font-semibold hover:bg-yellow-600 transition">
                 📋 En Revisión
@@ -419,8 +462,8 @@ export default function GrillaEditorPage() {
           <div className="bg-white rounded-xl shadow-md border border-gray-200 py-20 text-center">
             <p className="text-4xl mb-4">📅</p>
             <p className="text-gray-500 text-lg font-medium">No hay grilla para {MESES[mesNum]} {anio}</p>
-            <button onClick={handleCreateGrilla} className="mt-6 px-6 py-3 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 transition">
-              + Crear Grilla {MESES[mesNum]}
+            <button onClick={handleGenerar} disabled={generating} className="mt-6 px-6 py-3 bg-purple-600 text-white rounded-lg text-sm font-semibold hover:bg-purple-700 transition disabled:opacity-50">
+              {generating ? '🔄 Generando...' : `🤖 Generar Grilla ${MESES[mesNum]} con IA`}
             </button>
           </div>
         )}
