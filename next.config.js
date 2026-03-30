@@ -108,38 +108,11 @@ const nextConfig = {
   async redirects() {
     return [
       // ========================================
-      // WordPress legacy URLs (cleanup for SEO)
+      // Query param redirects moved to middleware.ts
+      // (page_id, trk, p, m, cat, s, layout_sidebar)
+      // middleware strips params and does 301
       // ========================================
-      {
-        source: '/',
-        has: [{ type: 'query', key: 'page_id' }],
-        destination: '/',
-        permanent: true,
-      },
-      {
-        source: '/',
-        has: [{ type: 'query', key: 'm' }],
-        destination: '/blog',
-        permanent: true,
-      },
-      {
-        source: '/',
-        has: [{ type: 'query', key: 'trk' }],
-        destination: '/',
-        permanent: true,
-      },
-      {
-        source: '/',
-        has: [{ type: 'query', key: 'p' }],
-        destination: '/',
-        permanent: true,
-      },
-      {
-        source: '/',
-        has: [{ type: 'query', key: 'cat' }],
-        destination: '/blog',
-        permanent: true,
-      },
+
       // ========================================
       // Old URLs
       // ========================================
@@ -154,7 +127,7 @@ const nextConfig = {
         permanent: true,
       },
       // ========================================
-      // 404 fixes — GSC report marzo 2026
+      // 404 & redirect error fixes — GSC marzo 2026
       // ========================================
       {
         source: '/labs/predictor-google-ads',
@@ -163,7 +136,7 @@ const nextConfig = {
       },
       {
         source: '/portafolio',
-        destination: '/',
+        destination: '/portfolio',
         permanent: true,
       },
       {
@@ -178,36 +151,45 @@ const nextConfig = {
       },
       {
         source: '/contacto',
-        destination: '/#contact',
+        destination: '/#contacto',
         permanent: true,
       },
       {
         source: '/contacto/',
-        destination: '/#contact',
+        destination: '/#contacto',
         permanent: true,
       },
       {
         source: '/privacidad',
-        destination: '/#contact',
-        permanent: true, // was 302, now 301 so Google stops recrawling
+        destination: '/privacy',
+        permanent: true,
       },
       {
         source: '/terminos',
-        destination: '/#contact',
-        permanent: true, // was 302, now 301 so Google stops recrawling
+        destination: '/conditions',
+        permanent: true,
       },
       {
         source: '/blog/cuanto-cuesta-agencia-marketing-digital-chile-2025',
-        destination: '/blog',
-        permanent: true, // was 302, now 301
+        destination: '/cuanto-cuesta-agencia-marketing-digital-chile',
+        permanent: true,
+      },
+      {
+        source: '/blog/estudio-performance-marketing-chile-2026',
+        destination: '/investigacion/estudio-performance-marketing-chile-2026',
+        permanent: true,
       },
       // ========================================
-      // Redirect error fixes — query params WordPress/LinkedIn
+      // Industry page redirects (old /industrias/ URLs)
       // ========================================
       {
-        source: '/blog',
-        has: [{ type: 'query', key: 'layout_sidebar' }],
-        destination: '/blog',
+        source: '/industrias/ecommerce',
+        destination: '/marketing-digital-ecommerce-chile',
+        permanent: true,
+      },
+      {
+        source: '/industrias/tecnologia-saas',
+        destination: '/marketing-digital-saas-chile',
         permanent: true,
       },
       // ========================================
