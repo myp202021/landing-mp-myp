@@ -115,8 +115,13 @@ export default function GrillasAdminPage() {
   const handleDeleteClient = async (id: string, nombre: string) => {
     if (!confirm(`¿Eliminar a ${nombre}? Se borrarán sus grillas y briefing.`)) return
     try {
-      await fetch(`/api/crm/clientes?id=${id}`, { method: 'DELETE' })
-      loadData()
+      const res = await fetch(`/api/crm/clientes?id=${id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': 'Bearer admin' },
+      })
+      const data = await res.json()
+      if (data.error) alert(data.error)
+      else loadData()
     } catch (e) { console.error(e) }
   }
 
