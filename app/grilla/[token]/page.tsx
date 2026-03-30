@@ -114,11 +114,48 @@ export default function GrillaPublicaPage() {
 
       {/* Content */}
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 space-y-6">
-        {/* Info banner */}
-        <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
-          <p className="text-sm text-blue-700">
-            Revisa cada publicación y deja tus comentarios. Tu feedback nos ayuda a crear contenido que represente tu marca.
-          </p>
+        {/* How it works */}
+        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+          <h3 className="font-bold text-gray-900 mb-3">¿Cómo revisar tu grilla?</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="flex gap-3">
+              <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-700 font-bold text-sm flex-shrink-0">1</div>
+              <div>
+                <p className="text-sm font-semibold text-gray-800">Revisa cada post</p>
+                <p className="text-xs text-gray-500">Haz click en "Ver más" para leer el copy completo</p>
+              </div>
+            </div>
+            <div className="flex gap-3">
+              <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-700 font-bold text-sm flex-shrink-0">2</div>
+              <div>
+                <p className="text-sm font-semibold text-gray-800">Deja comentarios</p>
+                <p className="text-xs text-gray-500">Usa el botón "Comentar" en cada publicación</p>
+              </div>
+            </div>
+            <div className="flex gap-3">
+              <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-700 font-bold text-sm flex-shrink-0">3</div>
+              <div>
+                <p className="text-sm font-semibold text-gray-800">Nosotros ajustamos</p>
+                <p className="text-xs text-gray-500">Tu ejecutivo incorporará tus cambios</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Summary cards */}
+        <div className="grid grid-cols-3 gap-4">
+          <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-4 text-center">
+            <p className="text-2xl font-bold text-gray-900">{stats.total}</p>
+            <p className="text-xs text-gray-500">Publicaciones</p>
+          </div>
+          <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-4 text-center">
+            <p className="text-2xl font-bold text-blue-700">{stats.linkedin}</p>
+            <p className="text-xs text-gray-500">LinkedIn</p>
+          </div>
+          <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-4 text-center">
+            <p className="text-2xl font-bold text-purple-700">{stats.igfb}</p>
+            <p className="text-xs text-gray-500">Instagram / Facebook</p>
+          </div>
         </div>
 
         {/* Weeks */}

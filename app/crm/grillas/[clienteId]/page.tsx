@@ -57,12 +57,18 @@ export default function GrillaEditorPage() {
 
   const [saving, setSaving] = useState(false)
   const [sending, setSending] = useState(false)
+  // History: which months have grillas
+  const [historial, setHistorial] = useState<{ mes: number; anio: number; estado: string }[]>([])
 
   const loadCliente = useCallback(async () => {
     try {
       const res = await fetch(`/api/crm/clientes?id=${clienteId}`)
       const data = await res.json()
       if (data.cliente) setCliente({ nombre: data.cliente.nombre, rubro: data.cliente.rubro })
+      // Load all grillas for this client (history)
+      const hRes = await fetch(`/api/crm/grillas?cliente_id=${clienteId}`)
+      const hData = await hRes.json()
+      setHistorial((hData.grillas || []).map((g: { mes: number; anio: number; estado: string }) => ({ mes: g.mes, anio: g.anio, estado: g.estado })))
     } catch (e) { console.error(e) }
   }, [clienteId])
 
@@ -203,6 +209,36 @@ export default function GrillaEditorPage() {
     setSending(false)
   }
 
+  // Export to CSV (open in Google Sheets)
+  const handleExportCSV = () => {
+    if (!grilla || !posts.length) return
+    const sorted = [...posts].sort((a, b) => a.dia - b.dia)
+    const header = ['Semana', 'Día', 'Día Semana', 'Plataforma', 'Tipo Post', 'Copy', 'Hashtags', 'Imagen/Video (agregar aquí)', 'Nota Interna', 'Comentarios']
+    const rows = sorted.map(p => {
+      const weekIdx = weeks.findIndex(w => w.dias.some(d => d.id === p.id))
+      return [
+        `Semana ${weekIdx + 1}`,
+        p.dia,
+        p.dia_semana,
+        p.plataforma,
+        p.tipo_post,
+        `"${p.copy.replace(/"/g, '""')}"`,
+        p.hashtags,
+        '', // columna vacía para imágenes
+        `"${p.nota_interna.replace(/"/g, '""')}"`,
+        '' // columna para comentarios
+      ].join(',')
+    })
+    const csv = '\uFEFF' + [header.join(','), ...rows].join('\n') // BOM for Excel/Sheets UTF-8
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `Grilla_${cliente?.nombre || 'cliente'}_${MESES[mesNum]}_${anio}.csv`
+    a.click()
+    URL.revokeObjectURL(url)
+  }
+
   // Delete post
   const handleDeletePost = async (postId: string) => {
     if (!grilla || !confirm('¿Eliminar este post?')) return
@@ -268,6 +304,11 @@ export default function GrillaEditorPage() {
                 {sending ? 'Enviando...' : '📩 Enviar al Cliente'}
               </button>
             )}
+            {grilla && posts.length > 0 && (
+              <button onClick={handleExportCSV} className="px-3 py-2 bg-green-600 text-white rounded-lg text-xs font-semibold hover:bg-green-700 transition">
+                📊 Exportar CSV
+              </button>
+            )}
           </div>
         </div>
 
@@ -277,6 +318,31 @@ export default function GrillaEditorPage() {
           <h3 className="text-lg font-bold text-gray-900 min-w-[180px] text-center">{MESES[mesNum]} {anio}</h3>
           <button onClick={() => navMes(1)} className="w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 font-bold transition">›</button>
         </div>
+
+        {/* Month chips — history */}
+        {historial.length > 0 && (
+          <div className="flex items-center justify-center gap-2 flex-wrap">
+            <span className="text-xs text-gray-400 mr-1">Meses con grilla:</span>
+            {historial.map(h => {
+              const isActive = h.mes === mesNum && h.anio === anio
+              const colors: Record<string, string> = {
+                borrador: 'bg-gray-100 text-gray-600 border-gray-300',
+                en_revision: 'bg-yellow-100 text-yellow-700 border-yellow-300',
+                aprobado: 'bg-green-100 text-green-700 border-green-300',
+                enviado: 'bg-blue-100 text-blue-700 border-blue-300',
+              }
+              return (
+                <button
+                  key={`${h.mes}-${h.anio}`}
+                  onClick={() => { setMesNum(h.mes); setAnio(h.anio) }}
+                  className={`px-3 py-1 rounded-full text-xs font-semibold border transition ${colors[h.estado] || colors.borrador} ${isActive ? 'ring-2 ring-blue-500 ring-offset-1' : 'hover:opacity-80'}`}
+                >
+                  {MESES[h.mes].substring(0, 3)} {h.anio}
+                </button>
+              )
+            })}
+          </div>
+        )}
 
         {loading ? (
           <div className="py-20 text-center text-gray-400">Cargando...</div>
