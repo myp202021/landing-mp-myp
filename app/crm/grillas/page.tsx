@@ -71,6 +71,8 @@ export default function GrillasAdminPage() {
   const [showNewClient, setShowNewClient] = useState(false)
   const [newNombre, setNewNombre] = useState('')
   const [newRubro, setNewRubro] = useState('')
+  const [newWeb, setNewWeb] = useState('')
+  const [newInstagram, setNewInstagram] = useState('')
   const [newEmail, setNewEmail] = useState('')
   const [creatingClient, setCreatingClient] = useState(false)
 
@@ -78,6 +80,7 @@ export default function GrillasAdminPage() {
     if (!newNombre.trim()) return
     setCreatingClient(true)
     try {
+      // 1. Create client
       const res = await fetch('/api/crm/clientes', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -85,8 +88,22 @@ export default function GrillasAdminPage() {
       })
       const data = await res.json()
       if (data.success || data.cliente) {
+        // 2. Auto-create briefing with web + instagram
+        const clienteId = data.cliente?.id
+        if (clienteId && (newWeb.trim() || newInstagram.trim())) {
+          await fetch('/api/crm/briefings', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              cliente_id: clienteId,
+              web: newWeb.trim(),
+              instagram: newInstagram.trim(),
+              rubro: newRubro.trim(),
+            }),
+          })
+        }
         setShowNewClient(false)
-        setNewNombre(''); setNewRubro(''); setNewEmail('')
+        setNewNombre(''); setNewRubro(''); setNewWeb(''); setNewInstagram(''); setNewEmail('')
         loadData()
       } else {
         alert(data.error || 'Error al crear cliente')
@@ -229,7 +246,17 @@ export default function GrillasAdminPage() {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Rubro</label>
-                <input type="text" value={newRubro} onChange={e => setNewRubro(e.target.value)} placeholder="Ej: E-commerce, HR Tech"
+                <input type="text" value={newRubro} onChange={e => setNewRubro(e.target.value)} placeholder="Ej: E-commerce, HR Tech, Agua y Purificación"
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Sitio web</label>
+                <input type="text" value={newWeb} onChange={e => setNewWeb(e.target.value)} placeholder="https://ejemplo.cl"
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Instagram</label>
+                <input type="text" value={newInstagram} onChange={e => setNewInstagram(e.target.value)} placeholder="@cuenta"
                   className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
               </div>
               <div>
