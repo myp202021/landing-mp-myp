@@ -209,34 +209,10 @@ export default function GrillaEditorPage() {
     setSending(false)
   }
 
-  // Export to CSV (open in Google Sheets)
-  const handleExportCSV = () => {
-    if (!grilla || !posts.length) return
-    const sorted = [...posts].sort((a, b) => a.dia - b.dia)
-    const header = ['Semana', 'Día', 'Día Semana', 'Plataforma', 'Tipo Post', 'Copy', 'Hashtags', 'Imagen/Video (agregar aquí)', 'Nota Interna', 'Comentarios']
-    const rows = sorted.map(p => {
-      const weekIdx = weeks.findIndex(w => w.dias.some(d => d.id === p.id))
-      return [
-        `Semana ${weekIdx + 1}`,
-        p.dia,
-        p.dia_semana,
-        p.plataforma,
-        p.tipo_post,
-        `"${p.copy.replace(/"/g, '""')}"`,
-        p.hashtags,
-        '', // columna vacía para imágenes
-        `"${p.nota_interna.replace(/"/g, '""')}"`,
-        '' // columna para comentarios
-      ].join(',')
-    })
-    const csv = '\uFEFF' + [header.join(','), ...rows].join('\n') // BOM for Excel/Sheets UTF-8
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = `Grilla_${cliente?.nombre || 'cliente'}_${MESES[mesNum]}_${anio}.csv`
-    a.click()
-    URL.revokeObjectURL(url)
+  // Export to formatted Excel
+  const handleExport = () => {
+    if (!grilla) return
+    window.open(`/api/crm/grillas/exportar?grilla_id=${grilla.id}`, '_blank')
   }
 
   // Delete post
@@ -305,8 +281,8 @@ export default function GrillaEditorPage() {
               </button>
             )}
             {grilla && posts.length > 0 && (
-              <button onClick={handleExportCSV} className="px-3 py-2 bg-green-600 text-white rounded-lg text-xs font-semibold hover:bg-green-700 transition">
-                📊 Exportar CSV
+              <button onClick={handleExport} className="px-3 py-2 bg-green-600 text-white rounded-lg text-xs font-semibold hover:bg-green-700 transition">
+                📊 Exportar Excel
               </button>
             )}
           </div>
