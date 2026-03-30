@@ -61,6 +61,9 @@ export default function GrillaEditorPage() {
   const [hasBriefing, setHasBriefing] = useState(false)
   const [showGenerarModal, setShowGenerarModal] = useState(false)
   const [contextoMes, setContextoMes] = useState('')
+  const [showMejorarModal, setShowMejorarModal] = useState(false)
+  const [instruccionesMejora, setInstruccionesMejora] = useState('')
+  const [improving, setImproving] = useState(false)
   // History: which months have grillas
   const [historial, setHistorial] = useState<{ mes: number; anio: number; estado: string }[]>([])
 
@@ -250,6 +253,30 @@ export default function GrillaEditorPage() {
     setContextoMes('')
   }
 
+  // Improve existing grilla with AI
+  const handleMejorar = async () => {
+    if (!grilla) return
+    setShowMejorarModal(false)
+    setImproving(true)
+    try {
+      const res = await fetch('/api/crm/grillas/mejorar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ grilla_id: grilla.id, instrucciones: instruccionesMejora.trim() || undefined }),
+      })
+      const data = await res.json()
+      if (data.success) {
+        setGrilla(data.grilla)
+        alert(`✨ Posts mejorados · Promedio: ${data.stats.promedio_palabras_antes} → ${data.stats.promedio_palabras_despues} palabras (+${data.stats.mejora_pct}%)`)
+        loadGrilla()
+      } else {
+        alert(data.error || 'Error al mejorar')
+      }
+    } catch (e) { console.error(e) }
+    setImproving(false)
+    setInstruccionesMejora('')
+  }
+
   // Delete entire grilla
   const handleDeleteGrilla = async () => {
     if (!grilla || !confirm('¿Eliminar esta grilla completa? Se perderán todos los posts y comentarios.')) return
@@ -320,6 +347,12 @@ export default function GrillaEditorPage() {
               className="px-3 py-2 bg-purple-600 text-white rounded-lg text-xs font-semibold hover:bg-purple-700 transition disabled:opacity-50">
               {generating ? '🔄 Generando (~30s)...' : '🤖 Generar con IA'}
             </button>
+            {grilla && posts.length > 0 && (
+              <button onClick={() => setShowMejorarModal(true)} disabled={improving}
+                className="px-3 py-2 bg-amber-500 text-white rounded-lg text-xs font-semibold hover:bg-amber-600 transition disabled:opacity-50">
+                {improving ? '🔄 Mejorando...' : '✨ Mejorar con IA'}
+              </button>
+            )}
             <button onClick={() => router.push(`/crm/grillas/${clienteId}/briefing`)}
               className={`px-3 py-2 rounded-lg text-xs font-semibold transition border ${hasBriefing ? 'bg-white text-gray-600 border-gray-300 hover:bg-gray-50' : 'bg-amber-100 text-amber-700 border-amber-300 hover:bg-amber-200'}`}>
               {hasBriefing ? '📋 Briefing' : '⚠️ Crear Briefing'}
@@ -519,6 +552,39 @@ export default function GrillaEditorPage() {
               <button onClick={() => setShowGenerarModal(false)} className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-semibold hover:bg-gray-200 transition border border-gray-300">Cancelar</button>
               <button onClick={handleGenerar} className="px-5 py-2.5 bg-purple-600 text-white rounded-lg text-sm font-semibold hover:bg-purple-700 transition">
                 🤖 Generar {posts.length > 0 ? '(reemplazar)' : ''}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Improve modal */}
+      {showMejorarModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50" onClick={() => setShowMejorarModal(false)}>
+          <div className="bg-white rounded-xl shadow-2xl max-w-lg w-full" onClick={e => e.stopPropagation()}>
+            <div className="bg-gradient-to-r from-amber-500 to-amber-700 text-white p-5 rounded-t-xl">
+              <h2 className="text-lg font-bold">✨ Mejorar Grilla con IA</h2>
+              <p className="text-amber-100 text-sm mt-1">Toma los {posts.length} posts actuales y los mejora sin cambiar la estructura</p>
+            </div>
+            <div className="p-6 space-y-4">
+              <div>
+                <label className="block text-sm font-bold text-gray-800 mb-2">¿Qué quieres mejorar? (opcional)</label>
+                <textarea
+                  value={instruccionesMejora}
+                  onChange={e => setInstruccionesMejora(e.target.value)}
+                  rows={4}
+                  placeholder={"Ej:\n• Hacer los copies más largos y con más datos\n• Mejorar las aperturas, son muy genéricas\n• Agregar más CTA concretos\n• El tono está muy formal, hacerlo más cercano\n• Los carruseles necesitan más detalle en cada slide"}
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-amber-500 focus:border-transparent leading-relaxed"
+                />
+              </div>
+              <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
+                <p className="text-xs text-amber-700">La IA mantiene la misma estructura (días, plataformas, tipo de post) pero mejora: copies más largos, aperturas más fuertes, notas internas más detalladas, hashtags más específicos.</p>
+              </div>
+            </div>
+            <div className="flex justify-end gap-3 px-6 pb-6">
+              <button onClick={() => setShowMejorarModal(false)} className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-semibold hover:bg-gray-200 transition border border-gray-300">Cancelar</button>
+              <button onClick={handleMejorar} className="px-5 py-2.5 bg-amber-500 text-white rounded-lg text-sm font-semibold hover:bg-amber-600 transition">
+                ✨ Mejorar Posts
               </button>
             </div>
           </div>
