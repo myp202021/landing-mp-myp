@@ -11,27 +11,29 @@ import { useSimpleAuth } from '@/lib/auth/simple-auth'
 import type { GrillaContenido, GrillaPost, GrillaComentario } from '@/app/components/crm/grillas-types'
 import { MESES } from '@/app/components/crm/grillas-types'
 
-// Group posts into weeks
-function groupIntoWeeks(posts: GrillaPost[], mes: number, anio: number) {
+// Group posts into weeks by calendar weeks (1-7, 8-14, 15-21, 22-28, 29-31)
+function groupIntoWeeks(posts: GrillaPost[], mes: number) {
   if (!posts.length) return []
-  const sorted = [...posts].sort((a, b) => a.dia - b.dia)
-  const weeks: { rango: string; dias: GrillaPost[] }[] = []
-  let currentWeek: GrillaPost[] = []
-  let weekStart = sorted[0].dia
+  const mesName = (MESES[mes] || 'mes').toLowerCase()
+  const sorted = [...posts].filter(p => p.dia > 0).sort((a, b) => a.dia - b.dia)
 
-  for (const post of sorted) {
-    if (post.dia - weekStart >= 7 && currentWeek.length > 0) {
-      const last = currentWeek[currentWeek.length - 1]
-      weeks.push({ rango: `${currentWeek[0].dia} – ${last.dia} ${MESES[mes].toLowerCase()}`, dias: currentWeek })
-      currentWeek = [post]
-      weekStart = post.dia
-    } else {
-      currentWeek.push(post)
+  const weekRanges = [
+    { start: 1, end: 7 },
+    { start: 8, end: 14 },
+    { start: 15, end: 21 },
+    { start: 22, end: 28 },
+    { start: 29, end: 31 },
+  ]
+
+  const weeks: { rango: string; dias: GrillaPost[] }[] = []
+  for (const range of weekRanges) {
+    const postsInWeek = sorted.filter(p => p.dia >= range.start && p.dia <= range.end)
+    if (postsInWeek.length > 0) {
+      weeks.push({
+        rango: `${range.start} – ${Math.min(range.end, postsInWeek[postsInWeek.length - 1].dia)} ${mesName}`,
+        dias: postsInWeek,
+      })
     }
-  }
-  if (currentWeek.length > 0) {
-    const last = currentWeek[currentWeek.length - 1]
-    weeks.push({ rango: `${currentWeek[0].dia} – ${last.dia} ${MESES[mes].toLowerCase()}`, dias: currentWeek })
   }
   return weeks
 }
@@ -309,7 +311,7 @@ export default function GrillaEditorPage() {
   }
 
   const posts = grilla?.posts || []
-  const weeks = groupIntoWeeks(posts, mesNum, anio)
+  const weeks = groupIntoWeeks(posts, mesNum)
   const stats = {
     total: posts.length,
     linkedin: posts.filter(p => p.plataforma === 'LinkedIn').length,

@@ -209,10 +209,10 @@ El equipo editó copies anteriores. Aprende de estas correcciones:
 ${feedback.slice(0, 5).map(f => `ANTES: "${f.original?.substring(0, 150)}..." → DESPUÉS: "${f.editado?.substring(0, 150)}..."`).join('\n')}` : ''}
 
 === ESPECIFICACIONES TÉCNICAS ===
-- Genera exactamente 16 posts para ${MESES[mes]} ${anio}
-- Distribúyelos de lunes a viernes, 3-4 por semana (algunos sábados si hay contenido estacional)
+- Genera exactamente 4 posts para la SEMANA_PLACEHOLDER de ${MESES[mes]} ${anio}
+- Usa los días DIAS_PLACEHOLDER (lunes a viernes de esa semana)
 - Alterna plataformas: ${plataformas}
-- Tipos: Post (10-12), Carrusel (2-3), Reel (1-2)
+- Tipos: Post (2-3), Carrusel (0-1), Reel (0-1)
 - NO generes Stories (esas las hace el equipo de diseño)
 
 === LARGO MÍNIMO OBLIGATORIO ===
@@ -266,46 +266,57 @@ Responde ÚNICAMENTE con un JSON array. Sin texto antes ni después. Sin markdow
   }
 ]`
 
-    // 6. Call AI (mix models)
+    // 6. Generate week by week (4 calls of 4 posts = 16 total, no truncation)
     const modelo = briefing.modelo || 'gpt-4o'
-    const rawResponse = await callModel(modelo, systemPrompt, userPrompt)
+    const DIAS_SEMANA = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes']
 
-    // 7. Parse response
-    const posts = extractJSON(rawResponse) as Array<{
-      dia: number; dia_semana: string; plataforma: string; tipo_post: string;
-      copy: string; hashtags: string; nota_interna: string
-    }>
+    // Calculate weeks of the month
+    const daysInMonth = new Date(anio, mes, 0).getDate()
+    const weekRanges = [
+      { start: 1, end: 7, label: 'Semana 1' },
+      { start: 8, end: 14, label: 'Semana 2' },
+      { start: 15, end: 21, label: 'Semana 3' },
+      { start: 22, end: Math.min(28, daysInMonth), label: 'Semana 4' },
+    ]
 
-    if (!Array.isArray(posts) || posts.length === 0) {
-      return NextResponse.json({
-        error: 'La IA no generó posts. Verifica el briefing e intenta de nuevo.',
-        posts_generados: 0,
-      }, { status: 422 })
-    }
+    type PostType = { dia: number; dia_semana: string; plataforma: string; tipo_post: string; copy: string; hashtags: string; nota_interna: string }
+    let allPosts: PostType[] = []
 
-    // If less than 16, try to generate additional posts to complete
-    let allPosts = [...posts]
-    if (allPosts.length < 12) {
+    for (const week of weekRanges) {
       try {
-        const usedDays = new Set(allPosts.map(p => p.dia))
-        const completarPrompt = `Genera ${16 - allPosts.length} posts ADICIONALES para completar la grilla de ${MESES[mes]} ${anio} para ${nombreCliente} (${rubroCliente}).
-
-Los días YA usados son: ${Array.from(usedDays).join(', ')}. Usa días DIFERENTES.
-Mantén el mismo tono y estilo. Plataformas: ${plataformas}.
-${contexto_mes ? `Contexto del mes: ${contexto_mes}` : ''}
-
-MÍNIMO 100 palabras por post. Responde SOLO JSON array.`
-
-        const extraResponse = await callModel(modelo, systemPrompt, completarPrompt)
-        const extraPosts = extractJSON(extraResponse) as typeof posts
-        if (Array.isArray(extraPosts) && extraPosts.length > 0) {
-          allPosts = [...allPosts, ...extraPosts]
+        // Calculate which weekdays fall in this range
+        const weekDays: { dia: number; nombre: string }[] = []
+        for (let d = week.start; d <= week.end && d <= daysInMonth; d++) {
+          const date = new Date(anio, mes - 1, d)
+          const dow = date.getDay() // 0=Sun, 1=Mon...
+          if (dow >= 1 && dow <= 5) {
+            weekDays.push({ dia: d, nombre: DIAS_SEMANA[dow - 1] })
+          }
         }
-      } catch { /* keep what we have */ }
-    }
 
-    // Filter out empty/broken posts before validation
-    allPosts = allPosts.filter(p => p.copy && p.copy.trim().length > 20)
+        if (weekDays.length === 0) continue
+
+        // Pick 3-4 days for posts
+        const postDays = weekDays.slice(0, 4)
+        const diasStr = postDays.map(d => `${d.nombre} ${d.dia}`).join(', ')
+
+        const weekPrompt = userPrompt
+          .replace('SEMANA_PLACEHOLDER', `${week.label} (días ${week.start}-${week.end})`)
+          .replace('DIAS_PLACEHOLDER', diasStr)
+
+        const rawResponse = await callModel(modelo, systemPrompt, weekPrompt)
+        const weekPosts = extractJSON(rawResponse) as PostType[]
+
+        if (Array.isArray(weekPosts)) {
+          // Filter valid posts only
+          const valid = weekPosts.filter(p => p.copy && p.copy.trim().length > 20)
+          allPosts = [...allPosts, ...valid]
+        }
+      } catch (e) {
+        console.error(`Error generating ${week.label}:`, e)
+        // Continue with next week
+      }
+    }
 
     // Validate word counts and quality
     const validated = allPosts.map(p => {
