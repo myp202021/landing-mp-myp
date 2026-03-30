@@ -59,6 +59,8 @@ export default function GrillaEditorPage() {
   const [sending, setSending] = useState(false)
   const [generating, setGenerating] = useState(false)
   const [hasBriefing, setHasBriefing] = useState(false)
+  const [showGenerarModal, setShowGenerarModal] = useState(false)
+  const [contextoMes, setContextoMes] = useState('')
   // History: which months have grillas
   const [historial, setHistorial] = useState<{ mes: number; anio: number; estado: string }[]>([])
 
@@ -216,32 +218,36 @@ export default function GrillaEditorPage() {
   }
 
   // Generate with AI
-  const handleGenerar = async () => {
+  // Open generation modal (or redirect to briefing)
+  const handleGenerarClick = () => {
     if (!hasBriefing) {
       router.push(`/crm/grillas/${clienteId}/briefing`)
       return
     }
-    const msg = grilla && posts.length > 0
-      ? '¿Regenerar la grilla? Los posts actuales se reemplazarán.'
-      : `¿Generar grilla para ${MESES[mesNum]} ${anio} con IA?`
-    if (!confirm(msg)) return
+    setShowGenerarModal(true)
+  }
+
+  // Actually generate
+  const handleGenerar = async () => {
+    setShowGenerarModal(false)
     setGenerating(true)
     try {
       const res = await fetch('/api/crm/grillas/generar', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ cliente_id: clienteId, mes: mesNum, anio }),
+        body: JSON.stringify({ cliente_id: clienteId, mes: mesNum, anio, contexto_mes: contextoMes.trim() || undefined }),
       })
       const data = await res.json()
       if (data.success) {
         setGrilla(data.grilla)
-        alert(`✅ ${data.stats.total_posts} posts generados (${data.stats.modelo_usado})`)
+        alert(`✅ ${data.stats.total_posts} posts generados (${data.stats.modelo_usado}) · Promedio: ${data.stats.promedio_palabras} palabras`)
         loadGrilla()
       } else {
         alert(data.error || 'Error al generar')
       }
     } catch (e) { console.error(e) }
     setGenerating(false)
+    setContextoMes('')
   }
 
   // Delete entire grilla
@@ -310,7 +316,7 @@ export default function GrillaEditorPage() {
           </div>
           <div className="flex items-center gap-2 flex-wrap">
             {grilla && <GrillaStatusBadge estado={grilla.estado} />}
-            <button onClick={handleGenerar} disabled={generating}
+            <button onClick={handleGenerarClick} disabled={generating}
               className="px-3 py-2 bg-purple-600 text-white rounded-lg text-xs font-semibold hover:bg-purple-700 transition disabled:opacity-50">
               {generating ? '🔄 Generando (~30s)...' : '🤖 Generar con IA'}
             </button>
@@ -478,12 +484,46 @@ export default function GrillaEditorPage() {
           <div className="bg-white rounded-xl shadow-md border border-gray-200 py-20 text-center">
             <p className="text-4xl mb-4">📅</p>
             <p className="text-gray-500 text-lg font-medium">No hay grilla para {MESES[mesNum]} {anio}</p>
-            <button onClick={handleGenerar} disabled={generating} className="mt-6 px-6 py-3 bg-purple-600 text-white rounded-lg text-sm font-semibold hover:bg-purple-700 transition disabled:opacity-50">
+            <button onClick={handleGenerarClick} disabled={generating} className="mt-6 px-6 py-3 bg-purple-600 text-white rounded-lg text-sm font-semibold hover:bg-purple-700 transition disabled:opacity-50">
               {generating ? '🔄 Generando...' : `🤖 Generar Grilla ${MESES[mesNum]} con IA`}
             </button>
           </div>
         )}
       </div>
+
+      {/* Generate modal with month context */}
+      {showGenerarModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50" onClick={() => setShowGenerarModal(false)}>
+          <div className="bg-white rounded-xl shadow-2xl max-w-lg w-full" onClick={e => e.stopPropagation()}>
+            <div className="bg-gradient-to-r from-purple-700 to-purple-900 text-white p-5 rounded-t-xl">
+              <h2 className="text-lg font-bold">🤖 Generar Grilla — {MESES[mesNum]} {anio}</h2>
+              <p className="text-purple-200 text-sm mt-1">{cliente?.nombre} · {grilla && posts.length > 0 ? '⚠️ Se reemplazarán los posts actuales' : 'Se creará una nueva grilla'}</p>
+            </div>
+            <div className="p-6 space-y-4">
+              <div>
+                <label className="block text-sm font-bold text-gray-800 mb-2">Contexto especial para este mes</label>
+                <p className="text-xs text-gray-500 mb-2">Promociones, lanzamientos, eventos, ofertas, productos destacados, noticias del cliente... todo lo que la IA debe considerar además del briefing base.</p>
+                <textarea
+                  value={contextoMes}
+                  onChange={e => setContextoMes(e.target.value)}
+                  rows={5}
+                  placeholder={"Ej:\n• Lanzamiento nuevo modelo Zero 20 RO en abril\n• Promo 20% dcto primer mes para empresas\n• Participamos en feria ExpoAgua Santiago 15-17 abril\n• Destacar servicio HORECA para restaurantes"}
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-purple-500 focus:border-transparent leading-relaxed"
+                />
+              </div>
+              <div className="bg-purple-50 border border-purple-200 rounded-lg p-3">
+                <p className="text-xs text-purple-700">La IA usará: briefing del cliente + estacionalidad {MESES[mesNum]} + contingencia Chile + competidores + este contexto. Toma ~30-60 segundos.</p>
+              </div>
+            </div>
+            <div className="flex justify-end gap-3 px-6 pb-6">
+              <button onClick={() => setShowGenerarModal(false)} className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-semibold hover:bg-gray-200 transition border border-gray-300">Cancelar</button>
+              <button onClick={handleGenerar} className="px-5 py-2.5 bg-purple-600 text-white rounded-lg text-sm font-semibold hover:bg-purple-700 transition">
+                🤖 Generar {posts.length > 0 ? '(reemplazar)' : ''}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Edit modal */}
       {editingPost && (

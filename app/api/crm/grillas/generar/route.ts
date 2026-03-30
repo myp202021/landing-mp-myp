@@ -83,7 +83,7 @@ function extractJSON(text: string): unknown {
 
 export async function POST(req: NextRequest) {
   try {
-    const { cliente_id, mes, anio } = await req.json()
+    const { cliente_id, mes, anio, contexto_mes } = await req.json()
     if (!cliente_id || !mes || !anio) {
       return NextResponse.json({ error: 'cliente_id, mes y anio requeridos' }, { status: 400 })
     }
@@ -191,6 +191,7 @@ Temas a evitar (la competencia ya los gastó): ${JSON.stringify(analisisComp.tem
 === ESTACIONALIDAD ${MESES[mes].toUpperCase()} ${anio} ===
 ${estacionalidad}
 ${contingencia ? `\n=== CONTINGENCIA ACTUAL EN CHILE (usar como contexto) ===\n${contingencia}` : ''}
+${contexto_mes ? `\n=== INSTRUCCIONES ESPECIALES ESTE MES (PRIORIDAD ALTA) ===\nEl equipo indicó lo siguiente para este mes — DEBE reflejarse en al menos 3-4 posts:\n${contexto_mes}` : ''}
 IMPORTANTE: Al menos 4 posts DEBEN conectar con fechas, contingencia o contexto del mes. No de forma forzada — la conexión debe ser natural y relevante para el rubro.
 
 ${copiesRef && copiesRef.length > 0 ? `=== COPIES DE REFERENCIA (este es el nivel de calidad esperado) ===
