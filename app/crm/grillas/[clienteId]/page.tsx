@@ -244,6 +244,16 @@ export default function GrillaEditorPage() {
     setGenerating(false)
   }
 
+  // Delete entire grilla
+  const handleDeleteGrilla = async () => {
+    if (!grilla || !confirm('¿Eliminar esta grilla completa? Se perderán todos los posts y comentarios.')) return
+    try {
+      await fetch(`/api/crm/grillas?id=${grilla.id}`, { method: 'DELETE' })
+      setGrilla(null)
+      loadCliente() // refresh historial
+    } catch (e) { console.error(e) }
+  }
+
   // Export to formatted Excel
   const handleExport = () => {
     if (!grilla) return
@@ -328,6 +338,11 @@ export default function GrillaEditorPage() {
                 📊 Exportar Excel
               </button>
             )}
+            {grilla && (
+              <button onClick={handleDeleteGrilla} className="px-3 py-2 bg-red-50 text-red-500 rounded-lg text-xs font-semibold hover:bg-red-100 transition border border-red-200" title="Eliminar grilla">
+                🗑 Eliminar
+              </button>
+            )}
           </div>
         </div>
 
@@ -409,6 +424,7 @@ export default function GrillaEditorPage() {
                           post={post}
                           showNotas={true}
                           onEdit={setEditingPost}
+                          onDelete={handleDeletePost}
                           commentCount={commentCounts[post.id] || 0}
                           onCommentClick={setCommentsPostId}
                         />

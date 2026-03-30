@@ -7,11 +7,12 @@ interface GrillaPostCardProps {
   post: GrillaPost
   showNotas?: boolean
   onEdit?: (post: GrillaPost) => void
+  onDelete?: (postId: string) => void
   commentCount?: number
   onCommentClick?: (postId: string) => void
 }
 
-export default function GrillaPostCard({ post, showNotas = true, onEdit, commentCount, onCommentClick }: GrillaPostCardProps) {
+export default function GrillaPostCard({ post, showNotas = true, onEdit, onDelete, commentCount, onCommentClick }: GrillaPostCardProps) {
   const [expanded, setExpanded] = useState(false)
   const platform = getPlatformStyle(post.plataforma)
 
@@ -80,6 +81,15 @@ export default function GrillaPostCard({ post, showNotas = true, onEdit, comment
                   {commentCount}
                 </span>
               )}
+            </button>
+          )}
+          {onDelete && (
+            <button
+              onClick={() => onDelete(post.id)}
+              className="w-9 flex items-center justify-center py-2 bg-red-50 hover:bg-red-100 text-red-500 rounded-lg text-xs font-semibold transition border border-red-200"
+              title="Eliminar post"
+            >
+              🗑
             </button>
           )}
         </div>
