@@ -27,34 +27,9 @@ export default function GrillaPostCard({ post, showNotas = true, onEdit, comment
             {post.tipo_post}
           </span>
         </div>
-        <div className="flex items-center gap-2">
-          {onEdit && (
-            <button
-              onClick={() => onEdit(post)}
-              className="w-7 h-7 flex items-center justify-center rounded-full bg-gray-100 hover:bg-blue-100 text-gray-500 hover:text-blue-600 transition text-xs"
-              title="Editar post"
-            >
-              ✏️
-            </button>
-          )}
-          {onCommentClick && (
-            <button
-              onClick={() => onCommentClick(post.id)}
-              className="relative w-7 h-7 flex items-center justify-center rounded-full bg-gray-100 hover:bg-blue-100 text-gray-500 hover:text-blue-600 transition text-xs"
-              title="Comentarios"
-            >
-              💬
-              {(commentCount ?? 0) > 0 && (
-                <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
-                  {commentCount}
-                </span>
-              )}
-            </button>
-          )}
-          <span className="text-sm font-semibold text-gray-500">
-            {post.dia_semana} {post.dia}
-          </span>
-        </div>
+        <span className="text-sm font-semibold text-gray-500">
+          {post.dia_semana} {post.dia}
+        </span>
       </div>
 
       {/* Copy */}
@@ -80,6 +55,33 @@ export default function GrillaPostCard({ post, showNotas = true, onEdit, comment
         <div className="bg-amber-50 border border-amber-200 rounded-lg p-2.5">
           <p className="text-xs font-semibold text-amber-700 mb-0.5">Nota interna</p>
           <p className="text-xs text-amber-800 leading-relaxed">{post.nota_interna}</p>
+        </div>
+      )}
+
+      {/* Action buttons bar */}
+      {(onEdit || onCommentClick) && (
+        <div className="flex items-center gap-2 pt-2 border-t border-gray-100">
+          {onEdit && (
+            <button
+              onClick={() => onEdit(post)}
+              className="flex-1 flex items-center justify-center gap-1.5 py-2 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg text-xs font-semibold transition border border-blue-200"
+            >
+              ✏️ Editar
+            </button>
+          )}
+          {onCommentClick && (
+            <button
+              onClick={() => onCommentClick(post.id)}
+              className="flex-1 flex items-center justify-center gap-1.5 py-2 bg-gray-50 hover:bg-gray-100 text-gray-700 rounded-lg text-xs font-semibold transition border border-gray-200 relative"
+            >
+              💬 Comentar
+              {(commentCount ?? 0) > 0 && (
+                <span className="ml-1 px-1.5 py-0.5 bg-red-500 text-white text-[10px] font-bold rounded-full">
+                  {commentCount}
+                </span>
+              )}
+            </button>
+          )}
         </div>
       )}
     </div>
