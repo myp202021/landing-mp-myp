@@ -207,10 +207,11 @@ export async function DELETE(req: NextRequest) {
       )
     }
 
-    // Usar la función SQL que creamos
-    const { error } = await supabase.rpc('eliminar_cliente_con_cascade', {
-      p_cliente_id: id
-    })
+    // Delete con CASCADE (grillas, briefings, comentarios se borran automáticamente)
+    const { error } = await supabase
+      .from('clientes')
+      .delete()
+      .eq('id', id)
 
     if (error) {
       return NextResponse.json(

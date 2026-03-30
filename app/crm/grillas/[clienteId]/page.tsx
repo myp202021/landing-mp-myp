@@ -597,6 +597,7 @@ export default function GrillaEditorPage() {
           post={editingPost}
           onSave={handleSaveNewPost}
           onClose={() => setEditingPost(null)}
+          grillaId={grilla?.id}
         />
       )}
 

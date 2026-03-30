@@ -7,12 +7,46 @@ interface Props {
   post: GrillaPost
   onSave: (updated: GrillaPost) => void
   onClose: () => void
+  grillaId?: string // needed for AI generation
 }
 
 const DIAS_SEMANA = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo']
 
-export default function GrillaPostEditModal({ post, onSave, onClose }: Props) {
+export default function GrillaPostEditModal({ post, onSave, onClose, grillaId }: Props) {
   const [form, setForm] = useState<GrillaPost>({ ...post })
+  const [generatingAI, setGeneratingAI] = useState(false)
+  const [aiInstrucciones, setAiInstrucciones] = useState('')
+
+  const handleGenerateAI = async () => {
+    if (!grillaId) return
+    setGeneratingAI(true)
+    try {
+      const res = await fetch('/api/crm/grillas/generar-post', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          grilla_id: grillaId,
+          plataforma: form.plataforma,
+          tipo_post: form.tipo_post,
+          dia: form.dia,
+          dia_semana: form.dia_semana,
+          instrucciones: aiInstrucciones.trim() || undefined,
+        }),
+      })
+      const data = await res.json()
+      if (data.success && data.post) {
+        setForm(prev => ({
+          ...prev,
+          copy: data.post.copy,
+          hashtags: data.post.hashtags,
+          nota_interna: data.post.nota_interna,
+        }))
+      } else {
+        alert(data.error || 'Error al generar')
+      }
+    } catch (e) { console.error(e) }
+    setGeneratingAI(false)
+  }
 
   const update = (field: keyof GrillaPost, value: string | number) => {
     setForm(prev => ({ ...prev, [field]: value }))
@@ -85,6 +119,31 @@ export default function GrillaPostEditModal({ post, onSave, onClose }: Props) {
               </select>
             </div>
           </div>
+
+          {/* AI Generation for this post */}
+          {grillaId && (
+            <div className="bg-purple-50 border border-purple-200 rounded-lg p-3">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-sm font-bold text-purple-700">🤖 Generar copy con IA</span>
+              </div>
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={aiInstrucciones}
+                  onChange={e => setAiInstrucciones(e.target.value)}
+                  placeholder="Instrucciones opcionales (ej: enfocarse en precio, hablar de garantía...)"
+                  className="flex-1 border border-purple-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                />
+                <button
+                  onClick={handleGenerateAI}
+                  disabled={generatingAI}
+                  className="px-4 py-2 bg-purple-600 text-white rounded-lg text-sm font-semibold hover:bg-purple-700 transition disabled:opacity-50 whitespace-nowrap"
+                >
+                  {generatingAI ? '🔄 ...' : '🤖 Generar'}
+                </button>
+              </div>
+            </div>
+          )}
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Copy</label>
