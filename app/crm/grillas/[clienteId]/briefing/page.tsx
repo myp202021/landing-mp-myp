@@ -36,6 +36,7 @@ export default function BriefingPage() {
   const [modelo, setModelo] = useState('gpt-4o')
 
   const [sheetsLinks, setSheetsLinks] = useState('')
+  const [briefEstrategico, setBriefEstrategico] = useState('')
 
   // Analysis results
   const [analisisWeb, setAnalisisWeb] = useState<Record<string, unknown> | null>(null)
@@ -69,6 +70,7 @@ export default function BriefingPage() {
         setCierre(b.cierre_obligatorio || '')
         setModelo(b.modelo || 'gpt-4o')
         setSheetsLinks((b.sheets_links || []).join('\n'))
+        setBriefEstrategico(b.brief_estrategico || '')
         if (b.analisis_web) { setAnalisisWeb(b.analisis_web); setHasAnalysis(true) }
         if (b.analisis_tono) setAnalisisTono(b.analisis_tono)
         if (b.analisis_competitivo) setAnalisisComp(b.analisis_competitivo)
@@ -94,6 +96,7 @@ export default function BriefingPage() {
           cierre_obligatorio: cierre,
           modelo,
           sheets_links: sheetsLinks.split('\n').map(l => l.trim()).filter(Boolean),
+          brief_estrategico: briefEstrategico.trim(),
         }),
       })
       alert('Briefing guardado')
@@ -235,6 +238,22 @@ export default function BriefingPage() {
               placeholder={"https://docs.google.com/spreadsheets/d/xxxx/edit?gid=123\nhttps://docs.google.com/spreadsheets/d/xxxx/edit?gid=456"}
               className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono"
             />
+          </div>
+        </Section>
+
+        {/* Strategic brief */}
+        <Section title="BRIEF ESTRATÉGICO (opcional)">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Brief del cliente</label>
+            <p className="text-xs text-gray-500 mb-2">Pega aquí el brief estratégico completo: contexto del negocio, diferenciadores, pilares de comunicación, tono, territorios creativos, líneas de contenido, qué NO hacer. La IA lo usa como guía maestra para generar contenido calibrado.</p>
+            <textarea
+              value={briefEstrategico}
+              onChange={e => setBriefEstrategico(e.target.value)}
+              rows={10}
+              placeholder={"BRIEFING ESTRATÉGICO — [CLIENTE]\n\n1. CONTEXTO DEL NEGOCIO\n...\n\n2. DIFERENCIAL REAL\n...\n\n3. PROPUESTA DE VALOR\n...\n\n4. PILARES DE COMUNICACIÓN\n...\n\n5. QUÉ NO HACER\n...\n\n6. TONO DE MARCA\n...\n\n7. FRASES CLAVE\n..."}
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent leading-relaxed font-mono"
+            />
+            <p className="text-xs text-gray-400 mt-1">{briefEstrategico.length > 0 ? `${briefEstrategico.split(/\s+/).filter(Boolean).length} palabras` : 'Sin brief'}</p>
           </div>
         </Section>
 

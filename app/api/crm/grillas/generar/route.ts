@@ -147,6 +147,7 @@ export async function POST(req: NextRequest) {
     const analisisComp = briefing.analisis_competitivo as Record<string, unknown> | null
     const feedback = briefing.feedback_equipo as Array<{ original: string; editado: string }> | null
     const copiesRef = briefing.copies_referencia as string[] | null
+    const briefEstrategico = (briefing.brief_estrategico as string) || ''
 
     const systemPrompt = `Eres un director de contenidos con 10 años de experiencia en performance marketing en Chile. Escribes copies para redes sociales que generan engagement real — no relleno genérico. Cada post que escribes tiene una TESIS clara, desarrollo con datos o escenarios concretos, y un cierre que mueve a la acción.
 
@@ -158,7 +159,12 @@ REGLAS INQUEBRANTABLES DE CALIDAD:
 5. Cada post debe poder funcionar SOLO — sin necesitar contexto de otros posts.
 6. Escribe en español de Chile con acentos correctos (á, é, í, ó, ú, ñ).`
 
-    const userPrompt = `
+    const userPrompt = `${briefEstrategico ? `
+=== BRIEF ESTRATÉGICO DEL CLIENTE (GUÍA MAESTRA — PRIORIDAD MÁXIMA) ===
+Este brief define el posicionamiento, tono, diferenciadores y territorios creativos. TODO el contenido debe alinearse con esto:
+
+${briefEstrategico.substring(0, 6000)}
+` : ''}
 === CLIENTE ===
 ${nombreCliente} — ${rubroCliente}
 ${briefing.web ? `Web: ${briefing.web}` : ''}
