@@ -304,6 +304,9 @@ MÍNIMO 100 palabras por post. Responde SOLO JSON array.`
       } catch { /* keep what we have */ }
     }
 
+    // Filter out empty/broken posts before validation
+    allPosts = allPosts.filter(p => p.copy && p.copy.trim().length > 20)
+
     // Validate word counts and quality
     const validated = allPosts.map(p => {
       const wordCount = p.copy?.split(/\s+/).filter(Boolean).length || 0

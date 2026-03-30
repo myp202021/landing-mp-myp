@@ -34,25 +34,39 @@ export default function GrillaPostCard({ post, showNotas = true, onEdit, onDelet
       </div>
 
       {/* Copy */}
-      <div className="relative">
-        <p className={`text-sm text-gray-700 leading-relaxed whitespace-pre-line ${!expanded ? 'line-clamp-3' : ''}`}>
-          {post.copy}
-        </p>
-        <button
-          onClick={() => setExpanded(!expanded)}
-          className="text-xs text-blue-600 hover:text-blue-800 font-medium mt-1"
-        >
-          {expanded ? '← Ver menos' : 'Ver más →'}
-        </button>
+      {!post.copy || post.copy.trim().length < 10 ? (
+        <div className="bg-gray-50 border border-dashed border-gray-300 rounded-lg p-4 text-center">
+          <p className="text-xs text-gray-400 mb-2">Sin copy — genera con IA o escribe manualmente</p>
+          {onEdit && (
+            <button onClick={() => onEdit(post)} className="px-3 py-1.5 bg-purple-600 text-white rounded-lg text-xs font-semibold hover:bg-purple-700 transition">
+              🤖 Generar con IA
+            </button>
+          )}
+        </div>
+      ) : (
+        <div className="relative">
+          <p className={`text-sm text-gray-700 leading-relaxed whitespace-pre-line ${!expanded ? 'line-clamp-3' : ''}`}>
+            {post.copy}
+          </p>
+          <button
+            onClick={() => setExpanded(!expanded)}
+            className="text-xs text-blue-600 hover:text-blue-800 font-medium mt-1"
+          >
+            {expanded ? '← Ver menos' : 'Ver más →'}
+          </button>
       </div>
 
+      )}
+
       {/* Hashtags */}
-      <p className="text-xs text-blue-500 leading-relaxed">
-        {post.hashtags}
-      </p>
+      {post.hashtags && (
+        <p className="text-xs text-blue-500 leading-relaxed">
+          {post.hashtags}
+        </p>
+      )}
 
       {/* Nota interna (solo admin) */}
-      {showNotas && post.nota_interna && (
+      {showNotas && post.nota_interna && !post.nota_interna.startsWith('undefined') && (
         <div className="bg-amber-50 border border-amber-200 rounded-lg p-2.5">
           <p className="text-xs font-semibold text-amber-700 mb-0.5">Nota interna</p>
           <p className="text-xs text-amber-800 leading-relaxed">{post.nota_interna}</p>
