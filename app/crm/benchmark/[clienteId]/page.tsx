@@ -31,6 +31,7 @@ export default function BenchmarkClientePage() {
       const cData = await cRes.json()
       if (cData.cliente) setCliente({ nombre: cData.cliente.nombre, rubro: cData.cliente.rubro })
 
+      // Load benchmark data
       const bRes = await fetch(`/api/crm/benchmark?cliente_id=${clienteId}`)
       const bData = await bRes.json()
       if (bData.benchmark) {
@@ -38,6 +39,19 @@ export default function BenchmarkClientePage() {
         setClienteIg(bData.benchmark.cliente_ig || '')
         if (bData.benchmark.competidores?.length) setCompetidores(bData.benchmark.competidores)
         if (bData.benchmark.resultado) setResultado(bData.benchmark.resultado)
+      }
+
+      // If no benchmark data, try to prefill from briefing
+      if (!bData.benchmark?.cliente_web) {
+        const brRes = await fetch(`/api/crm/briefings?cliente_id=${clienteId}`)
+        const brData = await brRes.json()
+        if (brData.briefing) {
+          if (brData.briefing.web && !bData.benchmark?.cliente_web) setClienteWeb(brData.briefing.web)
+          if (brData.briefing.instagram && !bData.benchmark?.cliente_ig) setClienteIg(brData.briefing.instagram)
+          if (brData.briefing.competidores?.length && (!bData.benchmark?.competidores?.length)) {
+            setCompetidores((brData.briefing.competidores as Array<{nombre: string; web: string}>).map(c => ({ nombre: c.nombre || '', web: c.web || '', ig: '' })))
+          }
+        }
       }
     } catch (e) { console.error(e) }
     setLoading(false)

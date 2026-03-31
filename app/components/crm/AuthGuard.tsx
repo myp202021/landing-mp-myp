@@ -33,6 +33,15 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
         router.push('/crm')
       }
     }
+
+    // Equipo solo puede ver /crm/grillas y /crm/benchmark — redirigir si intenta otra cosa
+    if (isAuthenticated && user?.role === 'equipo' && pathname) {
+      const allowed = ['/crm/grillas', '/crm/benchmark', '/crm/login']
+      const isAllowed = allowed.some(p => pathname.startsWith(p))
+      if (!isAllowed) {
+        router.push('/crm/grillas')
+      }
+    }
   }, [user, isAuthenticated, loading, router, pathname])
 
   // Mostrar loading mientras se verifica la autenticación
