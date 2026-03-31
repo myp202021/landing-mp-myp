@@ -23,9 +23,15 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
       router.push('/crm/login')
     }
 
-    // Si estamos en /crm/login y ya hay usuario, redirigir al dashboard
+    // Si estamos en /crm/login y ya hay usuario, redirigir según rol
     if (isAuthenticated && pathname === '/crm/login') {
-      router.push('/crm')
+      if (user?.role === 'equipo') {
+        router.push('/crm/grillas')
+      } else if (user?.role === 'cliente') {
+        router.push('/crm/cliente/dashboard')
+      } else {
+        router.push('/crm')
+      }
     }
   }, [user, isAuthenticated, loading, router, pathname])
 

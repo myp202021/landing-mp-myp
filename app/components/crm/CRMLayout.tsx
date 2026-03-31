@@ -22,21 +22,28 @@ export default function CRMLayout({ children, title, authenticated = true, onRef
   }
 
   // Filtrar navegación según rol
-  const isAdmin = user?.role === 'admin'
+  const role = user?.role
 
-  const allNavItems = [
-    { href: '/crm', label: 'CRM Admin', icon: '🏠', adminOnly: true },
-    { href: '/crm/clientes', label: 'Clientes', icon: '👥', adminOnly: true },
-    { href: '/crm/integraciones', label: 'Integraciones', icon: '🔌', adminOnly: true },
-    { href: '/crm/grillas', label: 'Grillas', icon: '📅', adminOnly: true },
-    { href: '/crm/cliente/dashboard', label: 'Dashboard', icon: '🏠', adminOnly: false },
-    { href: '/crm/cliente/cotizaciones', label: 'Cotizaciones', icon: '📄', adminOnly: false },
-    { href: '/crm/cliente/analitica', label: 'Analítica', icon: '📈', adminOnly: false },
-    { href: '/crm/cliente/chatbot', label: 'ChatBot', icon: '🤖', adminOnly: false },
-    { href: '/crm/cliente/grillas', label: 'Grillas', icon: '📅', adminOnly: false },
-  ]
+  const navItemsByRole: Record<string, Array<{ href: string; label: string; icon: string }>> = {
+    admin: [
+      { href: '/crm', label: 'CRM Admin', icon: '🏠' },
+      { href: '/crm/clientes', label: 'Clientes', icon: '👥' },
+      { href: '/crm/integraciones', label: 'Integraciones', icon: '🔌' },
+      { href: '/crm/grillas', label: 'Grillas', icon: '📅' },
+    ],
+    equipo: [
+      { href: '/crm/grillas', label: 'Grillas', icon: '📅' },
+    ],
+    cliente: [
+      { href: '/crm/cliente/dashboard', label: 'Dashboard', icon: '🏠' },
+      { href: '/crm/cliente/cotizaciones', label: 'Cotizaciones', icon: '📄' },
+      { href: '/crm/cliente/analitica', label: 'Analítica', icon: '📈' },
+      { href: '/crm/cliente/chatbot', label: 'ChatBot', icon: '🤖' },
+      { href: '/crm/cliente/grillas', label: 'Grillas', icon: '📅' },
+    ],
+  }
 
-  const navItems = allNavItems.filter(item => isAdmin ? item.adminOnly : !item.adminOnly)
+  const navItems = navItemsByRole[role || 'cliente'] || navItemsByRole.cliente
 
   const handleLogout = () => {
     if (confirm('¿Estás seguro de que deseas cerrar sesión?')) {

@@ -4,7 +4,7 @@ import { createContext, useContext, useState, useEffect, ReactNode } from 'react
 import { useRouter } from 'next/navigation'
 
 // Tipos
-export type UserRole = 'admin' | 'cliente'
+export type UserRole = 'admin' | 'cliente' | 'equipo'
 
 export interface User {
   username: string
