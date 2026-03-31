@@ -10,7 +10,7 @@ const supabase = createClient(
 )
 
 // Cliente ID para leads internos de M&P (predictor, landing, etc.)
-const MYP_INTERNAL_CLIENT_ID = 1 // Ajustar según tu configuración
+const MYP_INTERNAL_CLIENT_ID = '1ecabf3e-27a1-4715-bfa7-eb54b078d7d3'
 
 /**
  * API para captura de leads del Predictor y otras herramientas M&P
