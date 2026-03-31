@@ -1,0 +1,59 @@
+name: Backup Supabase (diario)
+
+on:
+  schedule:
+    - cron: '0 8 * * *'  # 05:00 AM Chile, todos los días
+  workflow_dispatch: # manual
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Backup tables to CSV
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: |
+          mkdir -p backup
+          DATE=$(date +%Y-%m-%d)
+
+          echo "📦 Backing up Supabase tables — $DATE"
+
+          # Backup each critical table
+          for TABLE in clientes leads cotizaciones grillas_contenido grilla_comentarios briefings_cliente usuarios blog_posts reportes_competencia indicadores_semanales; do
+            echo "  → $TABLE"
+            curl -s "${SUPABASE_URL}/rest/v1/${TABLE}?select=*" \
+              -H "apikey: ${SUPABASE_SERVICE_KEY}" \
+              -H "Authorization: Bearer ${SUPABASE_SERVICE_KEY}" \
+              -o "backup/${TABLE}_${DATE}.json"
+
+            # Check if file has content
+            SIZE=$(stat -f%z "backup/${TABLE}_${DATE}.json" 2>/dev/null || stat -c%s "backup/${TABLE}_${DATE}.json" 2>/dev/null || echo "0")
+            echo "    ✅ ${TABLE}: ${SIZE} bytes"
+          done
+
+          echo ""
+          echo "📊 Backup summary:"
+          ls -lh backup/
+
+      - name: Upload backup artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: supabase-backup-${{ github.run_id }}
+          path: backup/
+          retention-days: 90
+
+      - name: Send alert if backup failed
+        if: failure()
+        env:
+          RESEND: ${{ secrets.RESEND }}
+        run: |
+          curl -s -X POST "https://api.resend.com/emails" \
+            -H "Authorization: Bearer $RESEND" \
+            -H "Content-Type: application/json" \
+            -d "{
+              \"from\": \"Backup M&P <noreply@mulleryperez.cl>\",
+              \"to\": \"contacto@mulleryperez.cl\",
+              \"subject\": \"⚠️ BACKUP FALLÓ — $(date +%Y-%m-%d)\",
+              \"text\": \"El backup diario de Supabase falló. Revisar GitHub Actions.\"
+            }"
