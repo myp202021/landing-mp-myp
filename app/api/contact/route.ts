@@ -209,6 +209,7 @@ Fecha: ${new Date().toLocaleString('es-CL')}
     const { data, error } = await resend.emails.send({
       from: 'Formulario M&P <noreply@mulleryperez.cl>',
       to: destinatario || 'contacto@mulleryperez.cl',
+      cc: ['arturo@mulleryperez.cl'],
       subject: `🎯 Nueva solicitud: ${empresa} - ${nombre}`,
       text: emailText,
       html: emailHtml,

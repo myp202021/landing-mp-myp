@@ -141,6 +141,7 @@ export async function POST(req: NextRequest) {
       await resend.emails.send({
         from: 'Lead Magnets <noreply@mulleryperez.cl>',
         to: ['contacto@mulleryperez.cl'],
+        cc: ['arturo@mulleryperez.cl'],
         subject: `📥 Nuevo lead magnet: ${magnetInfo.title}`,
         html: `
           <h2>Nuevo Lead desde Lead Magnet</h2>
