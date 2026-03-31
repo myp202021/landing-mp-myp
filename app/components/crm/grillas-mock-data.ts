@@ -10,6 +10,7 @@ export interface GrillaPost {
   plataforma: 'LinkedIn' | 'Facebook/Instagram'
   tipo_post: 'Post' | 'Carrusel' | 'Video' | 'Reel'
   copy: string
+  copy_grafica?: string // Texto visual: headline para imagen, slides para carrusel, guión para reel
   hashtags: string
   nota_interna: string
 }

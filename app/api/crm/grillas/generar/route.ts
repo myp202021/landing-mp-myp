@@ -233,7 +233,8 @@ ${feedback.slice(0, 5).map(f => `ANTES: "${f.original?.substring(0, 150)}..." �
 === PROHIBICIONES ABSOLUTAS ===
 - JAMÁS empezar con: "¿Sabías que...?", "En un mundo donde...", "Hoy más que nunca...", "En la era digital..."
 - JAMÁS usar emojis al inicio del copy
-- JAMÁS inventar estadísticas — usa solo datos del briefing o datos públicos verificables
+- JAMÁS inventar estadísticas — usa SOLO datos del briefing o datos públicos con fuente verificable
+- Si citas un estudio o dato, DEBES poder indicar la fuente (ej: "según INE", "estudio Deloitte 2025", "datos SERNAC"). Si no tienes fuente real, NO lo cites — usa un escenario o ejemplo en vez de un dato inventado
 - JAMÁS usar: "solución integral", "revolucionario", "líder del mercado", "innovador", "de vanguardia", "a tu alcance"
 - JAMÁS hacer posts genéricos tipo "Feliz Día de..." sin conexión real con el producto/servicio
 - JAMÁS escribir copies de menos de 3 párrafos para Posts de LinkedIn
@@ -252,6 +253,16 @@ Cada post DEBE incluir nota_interna detallada para el equipo de diseño:
 - Para Carruseles: descripción de cada slide (mínimo 4 slides)
 - Para Reels: descripción de escenas, duración sugerida, si necesita subtítulos
 
+=== COPY DE GRÁFICA (OBLIGATORIO) ===
+Cada post DEBE incluir "copy_grafica" — es el TEXTO QUE VA EN LA IMAGEN, no el caption.
+- Post: 1 headline visual potente (máx 8-10 palabras) + 1 subtítulo corto
+- Carrusel: texto de CADA slide separado por "---". Mínimo 4 slides. Slide 1=gancho, últimos=CTA
+- Reel: guión de subtítulos en pantalla, escena por escena, con tiempos
+
+Ejemplo Post: "La tasa no es lo que pagas.\nLa cuota sí."
+Ejemplo Carrusel: "5 errores que suben tu CPA---Error 1: No hacer remarketing---Error 2: Audiencia demasiado amplia---Error 3: Sin A/B testing---Error 4: Creatividades repetidas---Error 5: Sin funnel---¿Quieres bajar tu CPA? Hablemos."
+Ejemplo Reel: "0-3s: Pregunta en pantalla '¿Cuánto pagas de verdad?'---3-8s: Comparativo visual tasa vs cuota---8-12s: Logo + CTA 'Cotiza en 2 minutos'"
+
 === FORMATO JSON ===
 Responde ÚNICAMENTE con un JSON array. Sin texto antes ni después. Sin markdown.
 [
@@ -260,9 +271,10 @@ Responde ÚNICAMENTE con un JSON array. Sin texto antes ni después. Sin markdow
     "dia_semana": "Lunes",
     "plataforma": "LinkedIn" o "Facebook/Instagram",
     "tipo_post": "Post" o "Carrusel" o "Reel",
-    "copy": "EL COPY COMPLETO — largo, desarrollado, con sustancia",
+    "copy": "EL COPY COMPLETO del post (caption, lo que va debajo de la imagen)",
+    "copy_grafica": "TEXTO QUE VA EN LA IMAGEN/GRÁFICA (headline, slides, guión)",
     "hashtags": "#Tag1 #Tag2 #Tag3 #Tag4 #Tag5",
-    "nota_interna": "Instrucciones detalladas para diseño"
+    "nota_interna": "Instrucciones de diseño: tipo visual, paleta, formato"
   }
 ]`
 

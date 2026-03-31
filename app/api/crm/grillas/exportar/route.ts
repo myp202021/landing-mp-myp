@@ -28,6 +28,7 @@ interface Post {
   plataforma: string
   tipo_post: string
   copy: string
+  copy_grafica: string
   hashtags: string
   nota_interna: string
 }
@@ -72,15 +73,16 @@ export async function GET(req: NextRequest) {
       { key: 'dia_semana', width: 12 },
       { key: 'plataforma', width: 18 },
       { key: 'tipo', width: 12 },
-      { key: 'copy', width: 60 },
-      { key: 'hashtags', width: 35 },
+      { key: 'copy', width: 55 },
+      { key: 'copy_grafica', width: 40 },
+      { key: 'hashtags', width: 30 },
       { key: 'imagen', width: 25 },
-      { key: 'nota_interna', width: 35 },
-      { key: 'comentarios', width: 30 },
+      { key: 'nota_interna', width: 30 },
+      { key: 'comentarios', width: 25 },
     ]
 
     // ========== HEADER: M&P Branding ==========
-    ws.mergeCells('A1:J1')
+    ws.mergeCells('A1:K1')
     const titleRow = ws.getRow(1)
     titleRow.height = 40
     const titleCell = ws.getCell('A1')
@@ -89,7 +91,7 @@ export async function GET(req: NextRequest) {
     titleCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: BLUE_DARK } }
     titleCell.alignment = { vertical: 'middle', horizontal: 'left', indent: 1 }
 
-    ws.mergeCells('A2:J2')
+    ws.mergeCells('A2:K2')
     const subtitleRow = ws.getRow(2)
     subtitleRow.height = 28
     const subtitleCell = ws.getCell('A2')
@@ -104,7 +106,7 @@ export async function GET(req: NextRequest) {
     // ========== COLUMN HEADERS ==========
     const headerRow = ws.getRow(4)
     headerRow.height = 30
-    const headers = ['Semana', 'Día', 'Día', 'Plataforma', 'Tipo', 'Copy', 'Hashtags', 'Imagen / Video', 'Nota Interna', 'Comentarios']
+    const headers = ['Semana', 'Día', 'Día', 'Plataforma', 'Tipo', 'Copy (caption)', 'Copy Gráfica', 'Hashtags', 'Imagen / Video', 'Nota Interna', 'Comentarios']
     headers.forEach((h, i) => {
       const cell = headerRow.getCell(i + 1)
       cell.value = h
@@ -179,33 +181,40 @@ export async function GET(req: NextRequest) {
       copyCell.alignment = { vertical: 'top', horizontal: 'left', wrapText: true }
 
       // Hashtags
-      const hashCell = row.getCell(7)
+      // Copy gráfica (texto en la imagen)
+      const grafCell = row.getCell(7)
+      grafCell.value = (post.copy_grafica || '').replace(/---/g, '\n')
+      grafCell.font = { name: 'Arial', size: 9, bold: true, color: { argb: '6D28D9' } }
+      grafCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'F5F3FF' } }
+      grafCell.alignment = { vertical: 'top', horizontal: 'left', wrapText: true }
+
+      const hashCell = row.getCell(8)
       hashCell.value = post.hashtags
       hashCell.font = { name: 'Arial', size: 9, color: { argb: '2563EB' } }
       hashCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: bgColor } }
       hashCell.alignment = { vertical: 'top', horizontal: 'left', wrapText: true }
 
       // Imagen (empty, green background to highlight)
-      const imgCell = row.getCell(8)
+      const imgCell = row.getCell(9)
       imgCell.value = ''
       imgCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: GREEN_LIGHT } }
       imgCell.alignment = { vertical: 'top', horizontal: 'center' }
 
       // Nota interna
-      const notaCell = row.getCell(9)
+      const notaCell = row.getCell(10)
       notaCell.value = post.nota_interna
       notaCell.font = { name: 'Arial', size: 9, italic: true, color: { argb: '92400E' } }
       notaCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FEF3C7' } }
       notaCell.alignment = { vertical: 'top', horizontal: 'left', wrapText: true }
 
       // Comentarios (empty)
-      const comCell = row.getCell(10)
+      const comCell = row.getCell(11)
       comCell.value = ''
       comCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: bgColor } }
       comCell.alignment = { vertical: 'top', horizontal: 'left', wrapText: true }
 
       // Borders for all cells
-      for (let c = 1; c <= 10; c++) {
+      for (let c = 1; c <= 11; c++) {
         row.getCell(c).border = {
           top: { style: 'thin', color: { argb: GRAY_BORDER } },
           bottom: { style: 'thin', color: { argb: GRAY_BORDER } },
@@ -217,7 +226,7 @@ export async function GET(req: NextRequest) {
 
     // ========== FOOTER ==========
     const footerRowNum = 5 + posts.length + 1
-    ws.mergeCells(`A${footerRowNum}:J${footerRowNum}`)
+    ws.mergeCells(`A${footerRowNum}:K${footerRowNum}`)
     const footerCell = ws.getCell(`A${footerRowNum}`)
     footerCell.value = `Generado por Muller y Pérez · mulleryperez.cl · ${new Date().toLocaleDateString('es-CL')}`
     footerCell.font = { name: 'Arial', size: 9, italic: true, color: { argb: '94A3B8' } }
@@ -227,7 +236,7 @@ export async function GET(req: NextRequest) {
     ws.views = [{ state: 'frozen', ySplit: 4 }]
 
     // Auto filter
-    ws.autoFilter = { from: 'A4', to: 'J4' }
+    ws.autoFilter = { from: 'A4', to: 'K4' }
 
     // Generate buffer
     const buffer = await wb.xlsx.writeBuffer()

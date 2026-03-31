@@ -58,6 +58,16 @@ export default function GrillaPostCard({ post, showNotas = true, onEdit, onDelet
 
       )}
 
+      {/* Copy gráfica */}
+      {post.copy_grafica && (
+        <div className="bg-purple-50 border border-purple-200 rounded-lg p-2.5">
+          <p className="text-xs font-semibold text-purple-700 mb-0.5">
+            {post.tipo_post === 'Carrusel' ? 'Slides' : post.tipo_post === 'Reel' ? 'Guión visual' : 'Texto gráfica'}
+          </p>
+          <p className="text-xs text-purple-800 leading-relaxed whitespace-pre-line">{post.copy_grafica.replace(/---/g, '\n')}</p>
+        </div>
+      )}
+
       {/* Hashtags */}
       {post.hashtags && (
         <p className="text-xs text-blue-500 leading-relaxed">

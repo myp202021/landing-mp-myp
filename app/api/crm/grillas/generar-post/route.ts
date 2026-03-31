@@ -80,9 +80,10 @@ REGLAS:
 
 Responde SOLO JSON (un objeto, no array):
 {
-  "copy": "el copy completo desarrollado",
+  "copy": "el copy completo desarrollado (caption del post)",
+  "copy_grafica": "texto que va EN la imagen: headline para post, slides separados por --- para carrusel, guión por escena para reel",
   "hashtags": "#Tag1 #Tag2 #Tag3 #Tag4 #Tag5",
-  "nota_interna": "instrucciones de diseño detalladas"
+  "nota_interna": "instrucciones de diseño: tipo visual, paleta, formato"
 }`
           }
         ],
@@ -110,6 +111,7 @@ Responde SOLO JSON (un objeto, no array):
         plataforma: plataforma || 'Facebook/Instagram',
         tipo_post: tipo_post || 'Post',
         copy: post.copy || '',
+        copy_grafica: post.copy_grafica || '',
         hashtags: post.hashtags || '',
         nota_interna: post.nota_interna || '',
       },
