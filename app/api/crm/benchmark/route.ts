@@ -33,16 +33,32 @@ export async function POST(req: NextRequest) {
     const { cliente_id, cliente_web, cliente_ig, competidores } = body
     if (!cliente_id) return NextResponse.json({ error: 'cliente_id requerido' }, { status: 400 })
 
-    const { data, error } = await supabase
+    // Check if exists
+    const { data: existing } = await supabase
       .from('benchmarks_cliente')
-      .upsert({
-        cliente_id,
-        cliente_web: cliente_web || '',
-        cliente_ig: cliente_ig || '',
-        competidores: competidores || [],
-      }, { onConflict: 'cliente_id' })
-      .select()
+      .select('id')
+      .eq('cliente_id', cliente_id)
       .single()
+
+    let data, error
+    if (existing) {
+      const result = await supabase
+        .from('benchmarks_cliente')
+        .update({ cliente_web: cliente_web || '', cliente_ig: cliente_ig || '', competidores: competidores || [] })
+        .eq('cliente_id', cliente_id)
+        .select()
+        .single()
+      data = result.data
+      error = result.error
+    } else {
+      const result = await supabase
+        .from('benchmarks_cliente')
+        .insert({ cliente_id, cliente_web: cliente_web || '', cliente_ig: cliente_ig || '', competidores: competidores || [] })
+        .select()
+        .single()
+      data = result.data
+      error = result.error
+    }
 
     if (error) throw error
     return NextResponse.json({ success: true, benchmark: data })
