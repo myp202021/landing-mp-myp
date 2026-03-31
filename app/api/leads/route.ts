@@ -80,6 +80,29 @@ export async function POST(request: NextRequest) {
 
     console.log(`✅ Lead del Predictor guardado en CRM: ${lead.id} - ${email || name}`)
 
+    // Notificar por email
+    const RESEND_KEY = process.env.RESEND_API_KEY
+    if (RESEND_KEY) {
+      try {
+        const { Resend } = await import('resend')
+        const resend = new Resend(RESEND_KEY)
+        await resend.emails.send({
+          from: 'M&P Predictor <noreply@mulleryperez.cl>',
+          to: ['contacto@mulleryperez.cl'],
+          cc: ['arturo@mulleryperez.cl'],
+          subject: `🎯 Nuevo lead Predictor: ${name || email}${data?.empresa ? ` - ${data.empresa}` : ''}`,
+          html: `<h2>Nuevo Lead desde Predictor</h2>
+            <p><strong>Nombre:</strong> ${name || '—'}</p>
+            <p><strong>Email:</strong> ${email || '—'}</p>
+            <p><strong>Teléfono:</strong> ${phone || '—'}</p>
+            <p><strong>Empresa:</strong> ${data?.empresa || '—'}</p>
+            <p><strong>Fuente:</strong> ${source || 'predictor_v2'}</p>
+            <p><strong>Cargo:</strong> ${data?.cargo || '—'}</p>
+            <p><strong>Fecha:</strong> ${new Date().toLocaleString('es-CL', { timeZone: 'America/Santiago' })}</p>`
+        })
+      } catch (e) { console.error('Error enviando email predictor:', e) }
+    }
+
     return NextResponse.json({
       success: true,
       message: 'Lead registrado en CRM',
