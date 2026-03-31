@@ -112,16 +112,17 @@ export default function GrillasAdminPage() {
     setCreatingClient(false)
   }
 
-  const handleDeleteClient = async (id: string, nombre: string) => {
-    if (!confirm(`¿Eliminar a ${nombre}? Se borrarán sus grillas y briefing.`)) return
+  // Only removes grillas for this client/month — does NOT delete the client from CRM
+  const handleRemoveGrilla = async (clienteId: string, nombre: string) => {
+    if (!confirm(`¿Quitar la grilla de ${nombre} para este mes? (El cliente NO se elimina del CRM)`)) return
     try {
-      const res = await fetch(`/api/crm/clientes?id=${id}`, {
-        method: 'DELETE',
-        headers: { 'Authorization': 'Bearer admin' },
-      })
+      // Find and delete only the grilla for current month
+      const res = await fetch(`/api/crm/grillas?cliente_id=${clienteId}&mes=${mesNum}&anio=${anio}`)
       const data = await res.json()
-      if (data.error) alert(data.error)
-      else loadData()
+      if (data.grilla?.id) {
+        await fetch(`/api/crm/grillas?id=${data.grilla.id}`, { method: 'DELETE' })
+      }
+      loadData()
     } catch (e) { console.error(e) }
   }
 
@@ -209,7 +210,7 @@ export default function GrillasAdminPage() {
                       <td className="px-6 py-4 text-right">
                         <div className="flex items-center justify-end gap-2">
                           <button className="px-4 py-2 bg-blue-600 text-white rounded-lg text-xs font-semibold hover:bg-blue-700 transition">Ver Grilla →</button>
-                          <button onClick={(e) => { e.stopPropagation(); handleDeleteClient(c.id, c.nombre) }} className="px-2 py-2 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition text-xs" title="Eliminar cliente">✕</button>
+                          <button onClick={(e) => { e.stopPropagation(); handleRemoveGrilla(c.id, c.nombre) }} className="px-2 py-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition text-xs" title="Quitar grilla del mes">✕</button>
                         </div>
                       </td>
                     </tr>
