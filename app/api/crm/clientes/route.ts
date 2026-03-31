@@ -207,7 +207,20 @@ export async function DELETE(req: NextRequest) {
       )
     }
 
-    // Delete con CASCADE (grillas, briefings, comentarios se borran automáticamente)
+    // Check if client has leads before deleting
+    const { count } = await supabase
+      .from('leads')
+      .select('id', { count: 'exact', head: true })
+      .eq('cliente_id', id)
+
+    if (count && count > 0) {
+      return NextResponse.json(
+        { error: `No se puede eliminar: este cliente tiene ${count} leads. Elimina los leads primero o desactiva el cliente.` },
+        { status: 400 }
+      )
+    }
+
+    // Delete (grillas, briefings se borran en CASCADE)
     const { error } = await supabase
       .from('clientes')
       .delete()
