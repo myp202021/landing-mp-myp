@@ -67,6 +67,21 @@ export async function GET(req: NextRequest) {
   }
 }
 
+// PATCH: insertar registros de historial en batch
+export async function PATCH(req: NextRequest) {
+  try {
+    const { registros } = await req.json()
+    if (!registros?.length) return NextResponse.json({ error: 'registros requeridos' }, { status: 400 })
+
+    const { error } = await supabase.from('reportes_historial').insert(registros)
+    if (error) throw error
+    return NextResponse.json({ success: true, insertados: registros.length })
+  } catch (error: unknown) {
+    const msg = error instanceof Error ? error.message : 'Error'
+    return NextResponse.json({ error: msg }, { status: 500 })
+  }
+}
+
 // POST: agregar cliente a reportes
 export async function POST(req: NextRequest) {
   try {
