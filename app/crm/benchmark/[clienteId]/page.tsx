@@ -113,11 +113,13 @@ export default function BenchmarkClientePage() {
   }
   const removeComp = (i: number) => setCompetidores(prev => prev.filter((_, j) => j !== i))
 
-  const comp = resultado?.comparativo as Record<string, unknown> | undefined
+  const est = resultado?.estrategia as Record<string, unknown> | undefined
   const ca = resultado?.cliente as Record<string, unknown> | undefined
-  // Safe getter for client analysis fields
   const cg = (key: string): string => ca?.[key] ? String(ca[key]) : ''
+  const clienteScores = ((ca?.scores || []) as Array<{dimension: string; nota: number; justificacion: string}>)
   const compResults = (resultado?.competidores || []) as CompAnalysis[]
+  const compScoresMap = new Map<string, Array<{dimension: string; nota: number; justificacion: string}>>()
+  compResults.forEach(c => { if (c.scores) compScoresMap.set(c.nombre, c.scores as Array<{dimension: string; nota: number; justificacion: string}>) })
 
   if (loading) return <CRMLayout title="Benchmark"><div className="py-20 text-center text-gray-400">Cargando...</div></CRMLayout>
 
@@ -196,40 +198,90 @@ export default function BenchmarkClientePage() {
             {/* Resumen ejecutivo */}
             <div className="bg-gradient-to-r from-blue-900 to-blue-800 rounded-xl p-6 text-white">
               <h3 className="font-bold text-lg mb-2">Resumen Ejecutivo</h3>
-              <p className="text-blue-100 text-sm leading-relaxed">{(comp?.resumen_ejecutivo as string) || ''}</p>
+              <p className="text-blue-100 text-sm leading-relaxed">{(est?.resumen_ejecutivo as string) || ''}</p>
             </div>
 
-            {/* Score digital por dimensión */}
-            {comp?.score_digital && (() => {
-              const sd = comp.score_digital as Record<string, unknown>
-              const dims = (sd.dimensiones as string[]) || []
-              const scores = (sd.scores as Record<string, number[]>) || {}
-              return dims.length > 0 ? (
-                <div className="bg-white rounded-xl shadow-md border border-gray-200 p-5 overflow-x-auto">
-                  <h3 className="text-xs font-bold text-blue-600 uppercase tracking-wider mb-4 pb-2 border-b border-gray-200">SCORE DIGITAL POR DIMENSIÓN</h3>
-                  <table className="w-full text-sm">
-                    <thead>
-                      <tr className="bg-gray-900 text-white">
-                        <th className="px-3 py-2 text-left text-xs font-bold">Empresa</th>
-                        {dims.map(d => <th key={d} className="px-3 py-2 text-center text-xs font-bold">{d}</th>)}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {Object.entries(scores).map(([name, vals]) => (
-                        <tr key={name} className={name === cliente?.nombre ? 'bg-blue-50' : 'bg-gray-50'}>
-                          <td className={`px-3 py-2 font-bold text-xs ${name === cliente?.nombre ? 'text-blue-700' : 'text-gray-700'}`}>{name}</td>
-                          {(vals || []).map((v, i) => (
-                            <td key={i} className={`px-3 py-2 text-center font-bold text-xs ${v >= 7 ? 'text-green-700 bg-green-50' : v >= 5 ? 'text-amber-700 bg-amber-50' : 'text-red-700 bg-red-50'}`}>
-                              {v}/10
-                            </td>
-                          ))}
-                        </tr>
+            {/* TABLA MAESTRA — 15 dimensiones, cliente vs competidores */}
+            {clienteScores.length > 0 && (
+              <div className="bg-white rounded-xl shadow-md border border-gray-200 p-5 overflow-x-auto">
+                <h3 className="text-xs font-bold text-blue-600 uppercase tracking-wider mb-4 pb-2 border-b border-gray-200">EVALUACIÓN — 15 DIMENSIONES</h3>
+                <table className="w-full text-xs">
+                  <thead>
+                    <tr className="bg-gray-900 text-white">
+                      <th className="px-2 py-2 text-left font-bold">Dimensión</th>
+                      <th className="px-2 py-2 text-center font-bold text-blue-300">{cliente?.nombre}</th>
+                      {compResults.filter(c => !c.error && c.scores).map(c => (
+                        <th key={c.nombre} className="px-2 py-2 text-center font-bold">{c.nombre}</th>
                       ))}
-                    </tbody>
-                  </table>
-                </div>
-              ) : null
-            })()}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {['Propuesta de valor','Tono comunicacional','Claridad de oferta','Copywriting','Storytelling / Casos','Social proof'].length > 0 && (
+                      <tr><td colSpan={2 + compResults.filter(c => !c.error && c.scores).length} className="bg-blue-900 text-blue-200 px-2 py-1 font-bold text-center">COMUNICACIÓN</td></tr>
+                    )}
+                    {clienteScores.slice(0, 6).map((s, i) => {
+                      const nc = (n: number) => n === 0 ? 'text-gray-400 bg-gray-50' : n >= 7 ? 'text-green-700 bg-green-50 font-bold' : n >= 5 ? 'text-amber-700 bg-amber-50' : 'text-red-700 bg-red-50 font-bold'
+                      return (
+                        <tr key={i} className={i % 2 === 0 ? '' : 'bg-gray-50/50'}>
+                          <td className="px-2 py-1.5 font-semibold text-gray-800" title={s.justificacion}>{s.dimension}</td>
+                          <td className={`px-2 py-1.5 text-center ${nc(s.nota)}`} title={s.justificacion}>{s.nota === 0 ? '—' : s.nota}</td>
+                          {compResults.filter(c => !c.error && c.scores).map(c => {
+                            const cs = (c.scores as Array<{nota: number; justificacion: string}>)?.[i]
+                            return <td key={c.nombre} className={`px-2 py-1.5 text-center ${nc(cs?.nota || 0)}`} title={cs?.justificacion || ''}>{cs?.nota === 0 ? '—' : cs?.nota || '—'}</td>
+                          })}
+                        </tr>
+                      )
+                    })}
+                    <tr><td colSpan={2 + compResults.filter(c => !c.error && c.scores).length} className="bg-purple-900 text-purple-200 px-2 py-1 font-bold text-center">DIGITAL</td></tr>
+                    {clienteScores.slice(6, 11).map((s, i) => {
+                      const idx = i + 6
+                      const nc = (n: number) => n === 0 ? 'text-gray-400 bg-gray-50' : n >= 7 ? 'text-green-700 bg-green-50 font-bold' : n >= 5 ? 'text-amber-700 bg-amber-50' : 'text-red-700 bg-red-50 font-bold'
+                      return (
+                        <tr key={idx} className={i % 2 === 0 ? '' : 'bg-gray-50/50'}>
+                          <td className="px-2 py-1.5 font-semibold text-gray-800" title={s.justificacion}>{s.dimension}</td>
+                          <td className={`px-2 py-1.5 text-center ${nc(s.nota)}`} title={s.justificacion}>{s.nota === 0 ? '—' : s.nota}</td>
+                          {compResults.filter(c => !c.error && c.scores).map(c => {
+                            const cs = (c.scores as Array<{nota: number; justificacion: string}>)?.[idx]
+                            return <td key={c.nombre} className={`px-2 py-1.5 text-center ${nc(cs?.nota || 0)}`} title={cs?.justificacion || ''}>{cs?.nota === 0 ? '—' : cs?.nota || '—'}</td>
+                          })}
+                        </tr>
+                      )
+                    })}
+                    <tr><td colSpan={2 + compResults.filter(c => !c.error && c.scores).length} className="bg-green-900 text-green-200 px-2 py-1 font-bold text-center">ESTRATÉGICO</td></tr>
+                    {clienteScores.slice(11, 15).map((s, i) => {
+                      const idx = i + 11
+                      const nc = (n: number) => n === 0 ? 'text-gray-400 bg-gray-50' : n >= 7 ? 'text-green-700 bg-green-50 font-bold' : n >= 5 ? 'text-amber-700 bg-amber-50' : 'text-red-700 bg-red-50 font-bold'
+                      return (
+                        <tr key={idx} className={i % 2 === 0 ? '' : 'bg-gray-50/50'}>
+                          <td className="px-2 py-1.5 font-semibold text-gray-800" title={s.justificacion}>{s.dimension}</td>
+                          <td className={`px-2 py-1.5 text-center ${nc(s.nota)}`} title={s.justificacion}>{s.nota === 0 ? '—' : s.nota}</td>
+                          {compResults.filter(c => !c.error && c.scores).map(c => {
+                            const cs = (c.scores as Array<{nota: number; justificacion: string}>)?.[idx]
+                            return <td key={c.nombre} className={`px-2 py-1.5 text-center ${nc(cs?.nota || 0)}`} title={cs?.justificacion || ''}>{cs?.nota === 0 ? '—' : cs?.nota || '—'}</td>
+                          })}
+                        </tr>
+                      )
+                    })}
+                  </tbody>
+                </table>
+                <p className="text-xs text-gray-400 mt-3">Pasa el mouse sobre cada nota para ver la justificación. — = sin datos detectables.</p>
+              </div>
+            )}
+
+            {/* Ranking */}
+            {est?.ranking && (
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {((est.ranking as Array<Record<string, unknown>>) || []).map((r, i) => (
+                  <div key={i} className={`rounded-xl p-4 text-center border ${i === 0 ? 'bg-blue-50 border-blue-300' : 'bg-gray-50 border-gray-200'}`}>
+                    <p className="text-xs text-gray-400 font-bold">#{i + 1}</p>
+                    <p className={`text-2xl font-bold ${i === 0 ? 'text-blue-700' : 'text-gray-700'}`}>{String(r.promedio)}</p>
+                    <p className="text-sm font-semibold text-gray-800">{String(r.nombre)}</p>
+                    <p className="text-xs text-green-600 mt-1">Mejor: {String(r.mejor_dimension)}</p>
+                    <p className="text-xs text-red-500">Peor: {String(r.peor_dimension)}</p>
+                  </div>
+                ))}
+              </div>
+            )}
 
             {/* Análisis cliente */}
             {ca && (
@@ -263,7 +315,7 @@ export default function BenchmarkClientePage() {
             )}
 
             {/* Tabla comparativa */}
-            {comp?.tabla_comparativa && (
+            {est?.tabla_comparativa && (
               <div className="bg-white rounded-xl shadow-md border border-gray-200 p-5 overflow-x-auto">
                 <h3 className="text-xs font-bold text-blue-600 uppercase tracking-wider mb-4 pb-2 border-b border-gray-200">TABLA COMPARATIVA</h3>
                 <table className="w-full text-sm">
@@ -274,7 +326,7 @@ export default function BenchmarkClientePage() {
                     <th className="px-3 py-2 text-center text-xs">Evaluación</th>
                   </tr></thead>
                   <tbody>
-                    {((comp.tabla_comparativa as Array<Record<string, string>>) || []).map((row, i) => (
+                    {((est?.tabla_comparativa as Array<Record<string, string>>) || []).map((row, i) => (
                       <tr key={i} className={i % 2 === 0 ? 'bg-gray-50' : ''}>
                         <td className="px-3 py-2 font-semibold text-xs text-gray-800">{row.dimension}</td>
                         <td className="px-3 py-2 text-xs text-center text-gray-600">{row.cliente}</td>
@@ -318,29 +370,29 @@ export default function BenchmarkClientePage() {
             </div>
 
             {/* Fortalezas + Brechas + Oportunidades */}
-            {comp && (
+            {est && (
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="bg-green-50 border border-green-200 rounded-xl p-4">
                   <h4 className="text-sm font-bold text-green-700 mb-3">Fortalezas</h4>
-                  {((comp.fortalezas_cliente as string[]) || []).map((f, i) => <p key={i} className="text-xs text-green-800 mb-2">✅ {f}</p>)}
+                  {((est.fortalezas_cliente as string[]) || []).map((f, i) => <p key={i} className="text-xs text-green-800 mb-2">✅ {f}</p>)}
                 </div>
                 <div className="bg-red-50 border border-red-200 rounded-xl p-4">
                   <h4 className="text-sm font-bold text-red-700 mb-3">Brechas Críticas</h4>
-                  {((comp.brechas_criticas as string[]) || (comp.brechas_cliente as string[]) || []).map((b, i) => <p key={i} className="text-xs text-red-800 mb-2">⚠️ {b}</p>)}
+                  {((est.brechas_criticas as string[]) || (est.brechas_cliente as string[]) || []).map((b, i) => <p key={i} className="text-xs text-red-800 mb-2">⚠️ {b}</p>)}
                 </div>
                 <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
                   <h4 className="text-sm font-bold text-blue-700 mb-3">Oportunidades</h4>
-                  {((comp.oportunidades_accionables as string[]) || (comp.oportunidades as string[]) || []).map((o, i) => <p key={i} className="text-xs text-blue-800 mb-2">💡 {o}</p>)}
+                  {((est.oportunidades_accionables as string[]) || (est.oportunidades as string[]) || []).map((o, i) => <p key={i} className="text-xs text-blue-800 mb-2">💡 {o}</p>)}
                 </div>
               </div>
             )}
 
             {/* Pilares de contenido */}
-            {comp?.pilares_contenido && (
+            {est?.pilares_contenido && (
               <div className="bg-white rounded-xl shadow-md border border-gray-200 p-5">
                 <h3 className="text-xs font-bold text-blue-600 uppercase tracking-wider mb-4 pb-2 border-b border-gray-200">PILARES DE CONTENIDO RECOMENDADOS</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {((comp.pilares_contenido as Array<Record<string, string>>) || []).map((pilar, i) => (
+                  {((est?.pilares_contenido as Array<Record<string, string>>) || []).map((pilar, i) => (
                     <div key={i} className="bg-gray-50 border border-gray-200 rounded-lg p-4">
                       <h4 className="font-bold text-gray-900 text-sm">{pilar.pilar}</h4>
                       <p className="text-xs text-gray-600 mt-1">{pilar.descripcion}</p>
@@ -353,8 +405,8 @@ export default function BenchmarkClientePage() {
             )}
 
             {/* Tono recomendado */}
-            {comp?.tono_recomendado && (() => {
-              const tr = comp.tono_recomendado as Record<string, unknown>
+            {est?.tono_recomendado && (() => {
+              const tr = est?.tono_recomendado as Record<string, unknown>
               return (
                 <div className="bg-purple-50 border border-purple-200 rounded-xl p-5">
                   <h3 className="text-sm font-bold text-purple-700 mb-3">Tono Recomendado para {cliente?.nombre}</h3>
@@ -379,10 +431,10 @@ export default function BenchmarkClientePage() {
             })()}
 
             {/* Quick wins */}
-            {comp?.quick_wins && (
+            {est?.quick_wins && (
               <div className="bg-gradient-to-r from-blue-900 to-blue-800 rounded-xl p-5 text-white">
                 <h3 className="font-bold text-sm mb-3">QUICK WINS — Acciones para esta semana</h3>
-                {((comp.quick_wins as string[]) || []).map((qw, i) => (
+                {((est?.quick_wins as string[]) || []).map((qw, i) => (
                   <p key={i} className="text-sm text-blue-100 mb-2">→ {qw}</p>
                 ))}
               </div>
