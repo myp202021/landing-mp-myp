@@ -36,7 +36,7 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
 
     // Equipo solo puede ver /crm/grillas y /crm/benchmark — redirigir si intenta otra cosa
     if (isAuthenticated && user?.role === 'equipo' && pathname) {
-      const allowed = ['/crm/grillas', '/crm/benchmark', '/crm/login']
+      const allowed = ['/crm/grillas', '/crm/benchmark', '/crm/reportes', '/crm/login']
       const isAllowed = allowed.some(p => pathname.startsWith(p))
       if (!isAllowed) {
         router.push('/crm/grillas')

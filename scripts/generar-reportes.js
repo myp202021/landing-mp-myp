@@ -641,6 +641,29 @@ async function processClient(cliente, periodo) {
     })
     const emailData = await emailRes.json()
     console.log(`  ✅ Email enviado: ${emailData.id || 'ok'}`)
+
+    // Save to historial in Supabase
+    try {
+      const SUPABASE_URL = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL
+      const SUPABASE_KEY = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY
+      if (SUPABASE_URL && SUPABASE_KEY) {
+        await fetch(`${SUPABASE_URL}/rest/v1/reportes_historial`, {
+          method: 'POST',
+          headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            cliente_reportei_id: cliente.id,
+            cliente_nombre: cliente.nombre,
+            mes: periodo.mesMonth,
+            anio: periodo.mesYear,
+            estado: 'enviado',
+            reportei_url: reporteiUrl || null,
+            integraciones: Object.keys(sections).length,
+            enviado_en: new Date().toISOString(),
+          })
+        })
+      }
+    } catch (histErr) { console.log(`  ⚠️ Error guardando historial: ${histErr.message}`) }
+
     return { nombre: cliente.nombre, status: 'enviado', integraciones: Object.keys(sections).length }
   } catch (e) {
     console.log(`  ❌ Error email: ${e.message}`)

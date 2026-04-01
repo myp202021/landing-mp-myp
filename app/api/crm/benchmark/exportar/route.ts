@@ -108,7 +108,7 @@ export async function GET(req: NextRequest) {
       ]
 
       bloques.forEach(b => {
-        rows.push([{ text: b.label, options: { fill: { color: b.color }, color: WHITE, fontSize: 7, bold: true, align: 'center' as const, colSpan: 2 + comps.length + 1 } }])
+        rows.push([{ text: b.label, options: { fill: { color: b.color }, color: WHITE, fontSize: 7, bold: true, align: 'center' as const, colspan: 2 + comps.length + 1 } }])
         clScores.slice(b.start, b.end).forEach((s, i) => {
           const idx = b.start + i
           rows.push([
