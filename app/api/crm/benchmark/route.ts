@@ -67,3 +67,21 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: msg }, { status: 500 })
   }
 }
+
+export async function DELETE(req: NextRequest) {
+  try {
+    const clienteId = new URL(req.url).searchParams.get('cliente_id')
+    if (!clienteId) return NextResponse.json({ error: 'cliente_id requerido' }, { status: 400 })
+
+    const { error } = await supabase
+      .from('benchmarks_cliente')
+      .delete()
+      .eq('cliente_id', clienteId)
+
+    if (error) throw error
+    return NextResponse.json({ success: true })
+  } catch (error: unknown) {
+    const msg = error instanceof Error ? error.message : 'Error'
+    return NextResponse.json({ error: msg }, { status: 500 })
+  }
+}

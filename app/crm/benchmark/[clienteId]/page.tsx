@@ -72,6 +72,18 @@ export default function BenchmarkClientePage() {
     })
   }
 
+  const handleDelete = async () => {
+    if (!confirm('¿Eliminar este benchmark? Se borrarán los datos y resultados.')) return
+    try {
+      await fetch(`/api/crm/benchmark?cliente_id=${clienteId}`, { method: 'DELETE' })
+      setResultado(null)
+      setClienteWeb('')
+      setClienteIg('')
+      setCompetidores([{ nombre: '', web: '', ig: '' }])
+      loadData()
+    } catch (e) { console.error(e) }
+  }
+
   const handleGenerate = async () => {
     await handleSave()
     setGenerating(true)
@@ -119,6 +131,9 @@ export default function BenchmarkClientePage() {
             <p className="text-sm text-gray-500">{cliente?.rubro}</p>
           </div>
           <div className="flex gap-2">
+            <button onClick={() => handleSave()} className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 transition">
+              💾 Guardar
+            </button>
             <button onClick={handleGenerate} disabled={generating}
               className="px-4 py-2 bg-purple-600 text-white rounded-lg text-sm font-semibold hover:bg-purple-700 transition disabled:opacity-50">
               {generating ? '🔄 Analizando (~60s)...' : '🤖 Generar Benchmark'}
@@ -126,6 +141,11 @@ export default function BenchmarkClientePage() {
             {resultado && (
               <button onClick={handleExportPPT} className="px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-semibold hover:bg-green-700 transition">
                 📊 Exportar PowerPoint
+              </button>
+            )}
+            {resultado && (
+              <button onClick={handleDelete} className="px-4 py-2 bg-red-50 text-red-500 rounded-lg text-sm font-semibold hover:bg-red-100 transition border border-red-200">
+                🗑 Eliminar
               </button>
             )}
           </div>
