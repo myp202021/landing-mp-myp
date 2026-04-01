@@ -49,11 +49,16 @@ export async function GET(req: NextRequest) {
     const r = benchmark.resultado as Record<string, unknown>
     const clienteData = r.cliente as Record<string, unknown>
     const competidores = r.competidores as Array<Record<string, unknown>>
-    const comp = r.comparativo as Record<string, unknown>
+    const est = r.estrategia as Record<string, unknown> || r.comparativo as Record<string, unknown> || {}
     const nombre = (benchmark.clientes as Record<string, string>)?.nombre || 'Cliente'
     const rubro = (benchmark.clientes as Record<string, string>)?.rubro || ''
     const compCount = competidores.filter(c => !c.error).length
     const totalSlides = 7 + compCount
+
+    // Extract scores
+    type ScoreItem = { dimension: string; nota: number; justificacion: string }
+    const clienteScores = ((clienteData?.scores || []) as ScoreItem[])
+    const DIMS = clienteScores.map(s => s.dimension)
 
     const pptx = new PptxGenJS()
     pptx.layout = 'LAYOUT_WIDE'
@@ -73,30 +78,52 @@ export async function GET(req: NextRequest) {
     // ===== SLIDE 2: RESUMEN EJECUTIVO =====
     const s2 = pptx.addSlide()
     addHeader(s2, pptx, 'RESUMEN EJECUTIVO', `${nombre} vs ${compCount} competidores`)
-    s2.addText((comp?.resumen_ejecutivo as string) || '', { x: 0.6, y: 1.5, w: 12, h: 1.8, fontSize: 13, color: '334155', fontFace: 'Arial', lineSpacingMultiple: 1.3 })
+    s2.addText((est?.resumen_ejecutivo as string) || '', { x: 0.6, y: 1.5, w: 12, h: 2, fontSize: 12, color: '334155', fontFace: 'Arial', lineSpacingMultiple: 1.3 })
 
-    // Score cards
-    const scores = comp?.score_digital as Record<string, unknown> | undefined
-    if (scores) {
-      const dims = (scores.dimensiones as string[]) || []
-      const scoresData = scores.scores as Record<string, number[]>
-      const entries = Object.entries(scoresData)
-      if (entries.length > 0 && dims.length > 0) {
-        const tableRows: PptxGenJS.TableRow[] = [
-          [{ text: '', options: { fill: { color: DARK }, color: WHITE, fontSize: 9, bold: true } },
-           ...dims.map(d => ({ text: d, options: { fill: { color: DARK }, color: WHITE, fontSize: 8, bold: true, align: 'center' as const } }))]
-        ]
-        entries.forEach(([name, vals]) => {
-          const isClient = name === nombre
-          tableRows.push([
-            { text: name, options: { bold: true, fontSize: 9, fill: { color: isClient ? 'DBEAFE' : GRAY_LIGHT }, color: isClient ? BLUE : '334155' } },
-            ...vals.map(v => ({ text: `${v}/10`, options: { fontSize: 9, align: 'center' as const, fill: { color: v >= 7 ? 'D1FAE5' : v >= 5 ? 'FEF3C7' : 'FEE2E2' }, color: v >= 7 ? GREEN : v >= 5 ? AMBER : RED, bold: true } }))
-          ])
-        })
-        s2.addTable(tableRows, { x: 0.6, y: 3.8, w: 12, colW: [2, ...dims.map(() => (12 - 2) / dims.length)], border: { pt: 0.5, color: 'E5E7EB' } })
-      }
-    }
+    // Ranking cards
+    const ranking = (est?.ranking as Array<Record<string, unknown>>) || []
+    ranking.slice(0, 4).forEach((rk, i) => {
+      const x = 0.6 + i * 3.1
+      const isClient = String(rk.nombre) === nombre
+      pptx.addSlide // just reference to keep slide
+      s2.addShape(pptx.ShapeType.rect, { x, y: 3.8, w: 2.8, h: 1.5, fill: { color: isClient ? 'DBEAFE' : GRAY_LIGHT }, rectRadius: 0.1 })
+      s2.addText(`#${i + 1}`, { x, y: 3.85, w: 2.8, h: 0.3, fontSize: 9, color: GRAY, align: 'center', fontFace: 'Arial' })
+      s2.addText(String(rk.promedio || '?'), { x, y: 4.1, w: 2.8, h: 0.5, fontSize: 24, bold: true, color: isClient ? BLUE : '334155', align: 'center', fontFace: 'Arial' })
+      s2.addText(String(rk.nombre), { x, y: 4.6, w: 2.8, h: 0.3, fontSize: 10, bold: true, color: '334155', align: 'center', fontFace: 'Arial' })
+      s2.addText(`Mejor: ${String(rk.mejor_dimension || '')}`, { x, y: 4.9, w: 2.8, h: 0.2, fontSize: 8, color: GREEN, align: 'center', fontFace: 'Arial' })
+      s2.addText(`Peor: ${String(rk.peor_dimension || '')}`, { x, y: 5.1, w: 2.8, h: 0.2, fontSize: 8, color: RED, align: 'center', fontFace: 'Arial' })
+    })
     addFooter(s2, 2, totalSlides)
+
+    // ===== SLIDE 2B: TABLA 15 DIMENSIONES =====
+    if (DIMS.length > 0) {
+      const s2b = pptx.addSlide()
+      addHeader(s2b, pptx, 'EVALUACIÓN — 15 DIMENSIONES', 'Rúbrica objetiva con justificación')
+      const activeComps = competidores.filter(c => !c.error && c.scores)
+      const colW = [3, 1.2, ...activeComps.map(() => 1.2), 4.5]
+      const headerRow: PptxGenJS.TableRow = [
+        { text: 'Dimensión', options: { fill: { color: DARK }, color: WHITE, fontSize: 8, bold: true } },
+        { text: nombre, options: { fill: { color: DARK }, color: '93C5FD', fontSize: 8, bold: true, align: 'center' as const } },
+        ...activeComps.map(c => ({ text: String(c.nombre), options: { fill: { color: DARK }, color: WHITE, fontSize: 8, bold: true, align: 'center' as const } })),
+        { text: 'Justificación cliente', options: { fill: { color: DARK }, color: WHITE, fontSize: 8, bold: true } },
+      ]
+      const dataRows: PptxGenJS.TableRow[] = clienteScores.map((s, i) => {
+        const nc = (n: number) => n === 0 ? GRAY : n >= 7 ? GREEN : n >= 5 ? AMBER : RED
+        const bg = (n: number) => n === 0 ? GRAY_LIGHT : n >= 7 ? 'D1FAE5' : n >= 5 ? 'FEF3C7' : 'FEE2E2'
+        return [
+          { text: s.dimension, options: { fontSize: 8, bold: true, color: '334155' } },
+          { text: s.nota === 0 ? '—' : String(s.nota), options: { fontSize: 9, bold: true, color: nc(s.nota), fill: { color: bg(s.nota) }, align: 'center' as const } },
+          ...activeComps.map(c => {
+            const cs = (c.scores as ScoreItem[])?.[i]
+            const n = cs?.nota || 0
+            return { text: n === 0 ? '—' : String(n), options: { fontSize: 9, bold: true, color: nc(n), fill: { color: bg(n) }, align: 'center' as const } }
+          }),
+          { text: s.justificacion || '', options: { fontSize: 7, color: '475569', italic: true } },
+        ]
+      })
+      s2b.addTable([headerRow, ...dataRows], { x: 0.3, y: 1.4, w: 12.7, colW, border: { pt: 0.5, color: 'E5E7EB' }, rowH: 0.35 })
+      addFooter(s2b, 3, totalSlides)
+    }
 
     // ===== SLIDE 3: ANÁLISIS CLIENTE =====
     const s3 = pptx.addSlide()
@@ -181,7 +208,7 @@ export async function GET(req: NextRequest) {
     // ===== SLIDE: TABLA COMPARATIVA =====
     const st = pptx.addSlide()
     addHeader(st, pptx, 'TABLA COMPARATIVA', 'Evaluación por dimensión')
-    const tabla = (comp?.tabla_comparativa as Array<Record<string, string>>) || []
+    const tabla = (est?.tabla_comparativa as Array<Record<string, string>>) || []
     if (tabla.length > 0) {
       const tableRows: PptxGenJS.TableRow[] = [
         [
@@ -211,9 +238,9 @@ export async function GET(req: NextRequest) {
     addHeader(sf, pptx, 'DIAGNÓSTICO ESTRATÉGICO', 'Fortalezas · Brechas · Oportunidades')
 
     const sections = [
-      { title: 'FORTALEZAS', items: (comp?.fortalezas_cliente as string[]) || [], color: GREEN, bg: 'D1FAE5', icon: '✓' },
-      { title: 'BRECHAS CRÍTICAS', items: (comp?.brechas_criticas as string[]) || [], color: RED, bg: 'FEE2E2', icon: '⚠' },
-      { title: 'OPORTUNIDADES', items: (comp?.oportunidades_accionables as string[]) || [], color: BLUE_LIGHT, bg: 'DBEAFE', icon: '→' },
+      { title: 'FORTALEZAS', items: (est?.fortalezas_cliente as string[]) || [], color: GREEN, bg: 'D1FAE5', icon: '✓' },
+      { title: 'BRECHAS CRÍTICAS', items: (est?.brechas_criticas as string[]) || [], color: RED, bg: 'FEE2E2', icon: '⚠' },
+      { title: 'OPORTUNIDADES', items: (est?.oportunidades_accionables as string[]) || [], color: BLUE_LIGHT, bg: 'DBEAFE', icon: '→' },
     ]
     sections.forEach((sec, si) => {
       const x = 0.4 + si * 4.2
@@ -229,7 +256,7 @@ export async function GET(req: NextRequest) {
     // ===== SLIDE: TONO RECOMENDADO + PILARES =====
     const sr = pptx.addSlide()
     addHeader(sr, pptx, 'TONO RECOMENDADO', `Estrategia de comunicación para ${nombre}`)
-    const tonoRec = comp?.tono_recomendado as Record<string, unknown> | undefined
+    const tonoRec = est?.tono_recomendado as Record<string, unknown> | undefined
     if (tonoRec) {
       sr.addShape(pptx.ShapeType.rect, { x: 0.6, y: 1.5, w: 12, h: 1.2, fill: { color: 'F5F3FF' }, rectRadius: 0.1 })
       sr.addText((tonoRec.descripcion as string) || '', { x: 0.8, y: 1.6, w: 11.5, h: 1, fontSize: 12, color: PURPLE, fontFace: 'Arial', lineSpacingMultiple: 1.3 })
@@ -264,7 +291,7 @@ export async function GET(req: NextRequest) {
     sc2.addShape(pptx.ShapeType.rect, { x: 0, y: 5, w: 13.33, h: 2.5, fill: { color: BLUE } })
     sc2.addText('¿Siguiente paso?', { x: 0.8, y: 1.5, w: 11, h: 0.8, fontSize: 36, bold: true, color: WHITE, fontFace: 'Arial' })
 
-    const qwins = (comp?.quick_wins as string[]) || []
+    const qwins = (est?.quick_wins as string[]) || []
     qwins.slice(0, 4).forEach((qw, i) => {
       sc2.addText(`${i + 1}. ${qw}`, { x: 1, y: 2.5 + i * 0.5, w: 11, h: 0.45, fontSize: 13, color: '93C5FD', fontFace: 'Arial' })
     })
