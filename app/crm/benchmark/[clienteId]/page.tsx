@@ -197,116 +197,192 @@ export default function BenchmarkClientePage() {
               <p className="text-blue-100 text-sm leading-relaxed">{(comp?.resumen_ejecutivo as string) || ''}</p>
             </div>
 
-            {/* Score digital */}
-            {comp?.score_digital && (
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 text-center">
-                  <p className="text-3xl font-bold text-blue-700">{(comp.score_digital as Record<string, string>).cliente || '?'}</p>
-                  <p className="text-xs text-blue-600 font-medium">{cliente?.nombre}</p>
+            {/* Score digital por dimensión */}
+            {comp?.score_digital && (() => {
+              const sd = comp.score_digital as Record<string, unknown>
+              const dims = (sd.dimensiones as string[]) || []
+              const scores = (sd.scores as Record<string, number[]>) || {}
+              return dims.length > 0 ? (
+                <div className="bg-white rounded-xl shadow-md border border-gray-200 p-5 overflow-x-auto">
+                  <h3 className="text-xs font-bold text-blue-600 uppercase tracking-wider mb-4 pb-2 border-b border-gray-200">SCORE DIGITAL POR DIMENSIÓN</h3>
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="bg-gray-900 text-white">
+                        <th className="px-3 py-2 text-left text-xs font-bold">Empresa</th>
+                        {dims.map(d => <th key={d} className="px-3 py-2 text-center text-xs font-bold">{d}</th>)}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {Object.entries(scores).map(([name, vals]) => (
+                        <tr key={name} className={name === cliente?.nombre ? 'bg-blue-50' : 'bg-gray-50'}>
+                          <td className={`px-3 py-2 font-bold text-xs ${name === cliente?.nombre ? 'text-blue-700' : 'text-gray-700'}`}>{name}</td>
+                          {(vals || []).map((v, i) => (
+                            <td key={i} className={`px-3 py-2 text-center font-bold text-xs ${v >= 7 ? 'text-green-700 bg-green-50' : v >= 5 ? 'text-amber-700 bg-amber-50' : 'text-red-700 bg-red-50'}`}>
+                              {v}/10
+                            </td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
-                {Object.entries((comp.score_digital as Record<string, unknown>).competidores as Record<string, string> || {}).map(([nombre, score]) => (
-                  <div key={nombre} className="bg-gray-50 border border-gray-200 rounded-xl p-4 text-center">
-                    <p className="text-3xl font-bold text-gray-700">{score}</p>
-                    <p className="text-xs text-gray-500 font-medium">{nombre}</p>
-                  </div>
-                ))}
-              </div>
-            )}
+              ) : null
+            })()}
 
-            {/* Cliente analysis */}
+            {/* Análisis cliente */}
             {clienteAnalisis && (
               <div className="bg-white rounded-xl shadow-md border border-gray-200 p-5">
                 <h3 className="text-xs font-bold text-blue-600 uppercase tracking-wider mb-4 pb-2 border-b border-gray-200">ANÁLISIS {cliente?.nombre?.toUpperCase()}</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <p className="text-sm"><span className="font-semibold text-gray-700">Propuesta de valor:</span> {clienteAnalisis.propuesta_valor as string}</p>
-                    <p className="text-sm mt-2"><span className="font-semibold text-gray-700">Tono:</span> {clienteAnalisis.tono as string} (formalidad: {clienteAnalisis.nivel_formalidad as string}/10)</p>
-                    <p className="text-sm mt-2"><span className="font-semibold text-gray-700">CTA principal:</span> {clienteAnalisis.cta_principal as string}</p>
+                  <div className="space-y-3">
+                    {clienteAnalisis.propuesta_valor && <div><p className="text-xs font-bold text-gray-500">Propuesta de valor</p><p className="text-sm text-gray-800">{clienteAnalisis.propuesta_valor as string}</p></div>}
+                    {(() => { const t = clienteAnalisis.tono_comunicacional as Record<string, string> | undefined; return t ? (
+                      <div><p className="text-xs font-bold text-gray-500">Tono comunicacional</p><p className="text-sm text-gray-800">{t.descripcion}</p>
+                      <p className="text-xs text-gray-500 mt-1">Formalidad: {t.formalidad}/10 · Calidez: {t.calidez}/10 · Tecnicismo: {t.tecnicismo}/10</p>
+                      {t.personalidad && <p className="text-xs text-purple-600 italic mt-1">Personalidad: {t.personalidad}</p>}</div>
+                    ) : null })()}
+                    {clienteAnalisis.publico_objetivo && <div><p className="text-xs font-bold text-gray-500">Público objetivo</p><p className="text-sm text-gray-800">{clienteAnalisis.publico_objetivo as string}</p></div>}
+                    {clienteAnalisis.cta_principal && <div><p className="text-xs font-bold text-gray-500">CTA principal</p><p className="text-sm text-gray-800">{clienteAnalisis.cta_principal as string}</p></div>}
+                    {clienteAnalisis.nivel_profesionalismo && <div><p className="text-xs font-bold text-gray-500">Profesionalismo web: {clienteAnalisis.nivel_profesionalismo as string}/10</p></div>}
                   </div>
-                  <div>
-                    <p className="text-xs font-semibold text-gray-500 mb-1">Ideas fuerza:</p>
-                    <ul className="space-y-1">
-                      {((clienteAnalisis.ideas_fuerza as string[]) || []).map((idea, i) => (
-                        <li key={i} className="text-sm text-gray-700 flex gap-2"><span className="text-blue-500">→</span>{idea}</li>
-                      ))}
-                    </ul>
+                  <div className="space-y-3">
+                    <div><p className="text-xs font-bold text-gray-500 mb-1">Ideas fuerza</p>
+                      {((clienteAnalisis.ideas_fuerza as string[]) || []).map((idea, i) => <p key={i} className="text-xs text-gray-700 mb-1">→ {idea}</p>)}
+                    </div>
+                    <div><p className="text-xs font-bold text-gray-500 mb-1">Diferenciadores reales</p>
+                      {((clienteAnalisis.diferenciadores_reales as string[]) || []).map((d, i) => <p key={i} className="text-xs text-green-700 mb-1">✓ {d}</p>)}
+                    </div>
+                    <div><p className="text-xs font-bold text-red-500 mb-1">Debilidades</p>
+                      {((clienteAnalisis.debilidades_comunicacion as string[]) || []).map((d, i) => <p key={i} className="text-xs text-red-700 mb-1">⚠ {d}</p>)}
+                    </div>
                   </div>
                 </div>
               </div>
             )}
 
-            {/* Competitors */}
+            {/* Tabla comparativa */}
+            {comp?.tabla_comparativa && (
+              <div className="bg-white rounded-xl shadow-md border border-gray-200 p-5 overflow-x-auto">
+                <h3 className="text-xs font-bold text-blue-600 uppercase tracking-wider mb-4 pb-2 border-b border-gray-200">TABLA COMPARATIVA</h3>
+                <table className="w-full text-sm">
+                  <thead><tr className="bg-gray-900 text-white">
+                    <th className="px-3 py-2 text-left text-xs">Dimensión</th>
+                    <th className="px-3 py-2 text-center text-xs">{cliente?.nombre}</th>
+                    <th className="px-3 py-2 text-center text-xs">Mejor competidor</th>
+                    <th className="px-3 py-2 text-center text-xs">Evaluación</th>
+                  </tr></thead>
+                  <tbody>
+                    {((comp.tabla_comparativa as Array<Record<string, string>>) || []).map((row, i) => (
+                      <tr key={i} className={i % 2 === 0 ? 'bg-gray-50' : ''}>
+                        <td className="px-3 py-2 font-semibold text-xs text-gray-800">{row.dimension}</td>
+                        <td className="px-3 py-2 text-xs text-center text-gray-600">{row.cliente}</td>
+                        <td className="px-3 py-2 text-xs text-center text-gray-600">{row.mejor_competidor}</td>
+                        <td className={`px-3 py-2 text-xs text-center font-bold ${row.evaluacion === 'ventaja' ? 'text-green-700 bg-green-50' : row.evaluacion === 'desventaja' ? 'text-red-700 bg-red-50' : 'text-amber-700 bg-amber-50'}`}>
+                          {row.evaluacion?.toUpperCase()}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+
+            {/* Competidores */}
             <div className="bg-white rounded-xl shadow-md border border-gray-200 p-5">
               <h3 className="text-xs font-bold text-blue-600 uppercase tracking-wider mb-4 pb-2 border-b border-gray-200">COMPETIDORES</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {compResults.map((c, i) => (
-                  <div key={i} className="bg-gray-50 rounded-lg border border-gray-200 p-4">
-                    <h4 className="font-bold text-gray-900">{c.nombre}</h4>
-                    <p className="text-xs text-gray-400">{c.web}</p>
-                    {c.error ? (
-                      <p className="text-xs text-red-500 mt-2">{c.error}</p>
-                    ) : (
-                      <>
-                        <p className="text-sm mt-2"><span className="font-semibold">Tono:</span> {c.tono}</p>
-                        <p className="text-sm"><span className="font-semibold">Propuesta:</span> {c.propuesta_valor}</p>
-                        <div className="mt-2">
-                          <p className="text-xs font-semibold text-gray-500">Ideas fuerza:</p>
-                          {(c.ideas_fuerza || []).map((idea, j) => (
-                            <p key={j} className="text-xs text-gray-600">→ {idea}</p>
-                          ))}
+                {compResults.map((c, i) => {
+                  const tono = c.tono_comunicacional as Record<string, string> | undefined
+                  return (
+                    <div key={i} className="bg-gray-50 rounded-lg border border-gray-200 p-4">
+                      <h4 className="font-bold text-gray-900">{c.nombre}</h4>
+                      <p className="text-xs text-gray-400 mb-2">{c.web}</p>
+                      {c.error ? <p className="text-xs text-red-500">{c.error}</p> : (<>
+                        <p className="text-sm text-gray-700 mb-2">{c.propuesta_valor as string}</p>
+                        {tono && <p className="text-xs text-gray-500 mb-2">Tono: {tono.descripcion} · Formalidad {tono.formalidad}/10 · Calidez {tono.calidez}/10</p>}
+                        <div className="grid grid-cols-2 gap-2 mt-2">
+                          <div className="bg-red-50 rounded p-2"><p className="text-xs font-bold text-red-600 mb-1">Nos gana en:</p>
+                            {((c[`que_hace_mejor_que_${(cliente?.nombre || '').toLowerCase().replace(/\s/g, '_')}`] as string[]) || (c.diferenciadores as string[]) || []).slice(0, 3).map((m, j) => <p key={j} className="text-xs text-red-700">• {m}</p>)}
+                          </div>
+                          <div className="bg-green-50 rounded p-2"><p className="text-xs font-bold text-green-600 mb-1">Le ganamos en:</p>
+                            {((c.que_hace_peor as string[]) || (c.debilidades as string[]) || []).slice(0, 3).map((p, j) => <p key={j} className="text-xs text-green-700">• {p}</p>)}
+                          </div>
                         </div>
-                      </>
-                    )}
-                  </div>
-                ))}
+                      </>)}
+                    </div>
+                  )
+                })}
               </div>
             </div>
 
-            {/* Fortalezas, brechas, oportunidades */}
+            {/* Fortalezas + Brechas + Oportunidades */}
             {comp && (
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="bg-green-50 border border-green-200 rounded-xl p-4">
-                  <h4 className="text-sm font-bold text-green-700 mb-2">Fortalezas</h4>
-                  {((comp.fortalezas_cliente as string[]) || []).map((f, i) => (
-                    <p key={i} className="text-xs text-green-800 mb-1">✅ {f}</p>
-                  ))}
+                  <h4 className="text-sm font-bold text-green-700 mb-3">Fortalezas</h4>
+                  {((comp.fortalezas_cliente as string[]) || []).map((f, i) => <p key={i} className="text-xs text-green-800 mb-2">✅ {f}</p>)}
                 </div>
                 <div className="bg-red-50 border border-red-200 rounded-xl p-4">
-                  <h4 className="text-sm font-bold text-red-700 mb-2">Brechas</h4>
-                  {((comp.brechas_cliente as string[]) || []).map((b, i) => (
-                    <p key={i} className="text-xs text-red-800 mb-1">⚠️ {b}</p>
-                  ))}
+                  <h4 className="text-sm font-bold text-red-700 mb-3">Brechas Críticas</h4>
+                  {((comp.brechas_criticas as string[]) || (comp.brechas_cliente as string[]) || []).map((b, i) => <p key={i} className="text-xs text-red-800 mb-2">⚠️ {b}</p>)}
                 </div>
                 <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
-                  <h4 className="text-sm font-bold text-blue-700 mb-2">Oportunidades</h4>
-                  {((comp.oportunidades as string[]) || []).map((o, i) => (
-                    <p key={i} className="text-xs text-blue-800 mb-1">💡 {o}</p>
+                  <h4 className="text-sm font-bold text-blue-700 mb-3">Oportunidades</h4>
+                  {((comp.oportunidades_accionables as string[]) || (comp.oportunidades as string[]) || []).map((o, i) => <p key={i} className="text-xs text-blue-800 mb-2">💡 {o}</p>)}
+                </div>
+              </div>
+            )}
+
+            {/* Pilares de contenido */}
+            {comp?.pilares_contenido && (
+              <div className="bg-white rounded-xl shadow-md border border-gray-200 p-5">
+                <h3 className="text-xs font-bold text-blue-600 uppercase tracking-wider mb-4 pb-2 border-b border-gray-200">PILARES DE CONTENIDO RECOMENDADOS</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {((comp.pilares_contenido as Array<Record<string, string>>) || []).map((pilar, i) => (
+                    <div key={i} className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                      <h4 className="font-bold text-gray-900 text-sm">{pilar.pilar}</h4>
+                      <p className="text-xs text-gray-600 mt-1">{pilar.descripcion}</p>
+                      <p className="text-xs text-blue-600 italic mt-2">Ejemplo: "{pilar.ejemplo_post}"</p>
+                      <p className="text-xs text-gray-400 mt-1">{pilar.frecuencia}</p>
+                    </div>
                   ))}
                 </div>
               </div>
             )}
 
             {/* Tono recomendado */}
-            {comp?.tono_recomendado && (
-              <div className="bg-purple-50 border border-purple-200 rounded-xl p-5">
-                <h3 className="text-sm font-bold text-purple-700 mb-3">Tono Recomendado para {cliente?.nombre}</h3>
-                <p className="text-sm text-purple-800 mb-3">{(comp.tono_recomendado as Record<string, unknown>).descripcion as string}</p>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <p className="text-xs font-semibold text-purple-600 mb-1">Palabras clave:</p>
-                    <div className="flex flex-wrap gap-1">
-                      {((comp.tono_recomendado as Record<string, unknown>).palabras_clave as string[] || []).map((p, i) => (
-                        <span key={i} className="px-2 py-1 bg-purple-200 text-purple-800 rounded-full text-xs font-medium">{p}</span>
-                      ))}
-                    </div>
-                  </div>
-                  <div>
-                    <p className="text-xs font-semibold text-purple-600 mb-1">Frases ejemplo:</p>
-                    {((comp.tono_recomendado as Record<string, unknown>).frases_ejemplo as string[] || []).map((f, i) => (
-                      <p key={i} className="text-xs text-purple-800 italic mb-1">"{f}"</p>
+            {comp?.tono_recomendado && (() => {
+              const tr = comp.tono_recomendado as Record<string, unknown>
+              return (
+                <div className="bg-purple-50 border border-purple-200 rounded-xl p-5">
+                  <h3 className="text-sm font-bold text-purple-700 mb-3">Tono Recomendado para {cliente?.nombre}</h3>
+                  <p className="text-sm text-purple-800 mb-4 leading-relaxed">{tr.descripcion as string}</p>
+                  <div className="flex flex-wrap gap-1 mb-4">
+                    {((tr.palabras_clave as string[]) || []).map((p, i) => (
+                      <span key={i} className="px-2.5 py-1 bg-purple-200 text-purple-800 rounded-full text-xs font-medium">{p}</span>
                     ))}
                   </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="bg-green-50 border border-green-200 rounded-lg p-3">
+                      <p className="text-xs font-bold text-green-700 mb-2">SÍ DECIR</p>
+                      {((tr.frases_ejemplo as string[]) || []).map((f, i) => <p key={i} className="text-xs text-green-800 italic mb-1">"{f}"</p>)}
+                    </div>
+                    <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+                      <p className="text-xs font-bold text-red-700 mb-2">NUNCA DECIR</p>
+                      {((tr.que_nunca_decir as string[]) || []).map((n, i) => <p key={i} className="text-xs text-red-800 mb-1">✕ {n}</p>)}
+                    </div>
+                  </div>
                 </div>
+              )
+            })()}
+
+            {/* Quick wins */}
+            {comp?.quick_wins && (
+              <div className="bg-gradient-to-r from-blue-900 to-blue-800 rounded-xl p-5 text-white">
+                <h3 className="font-bold text-sm mb-3">QUICK WINS — Acciones para esta semana</h3>
+                {((comp.quick_wins as string[]) || []).map((qw, i) => (
+                  <p key={i} className="text-sm text-blue-100 mb-2">→ {qw}</p>
+                ))}
               </div>
             )}
           </>
