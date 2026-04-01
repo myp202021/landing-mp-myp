@@ -5,7 +5,7 @@ import { useParams, useRouter } from 'next/navigation'
 import CRMLayout from '@/app/components/crm/CRMLayout'
 
 interface Competidor { nombre: string; web: string; ig: string }
-interface CompAnalysis { nombre: string; web: string; ig: string; propuesta_valor?: string; ideas_fuerza?: string[]; tono?: string; nivel_formalidad?: string; diferenciadores?: string[]; debilidades_comunicacion?: string[]; error?: string }
+interface CompAnalysis { nombre: string; web: string; ig: string; propuesta_valor?: string; ideas_fuerza?: string[]; tono?: string; tono_comunicacional?: Record<string, string>; nivel_formalidad?: string; diferenciadores?: string[]; debilidades?: string[]; debilidades_comunicacion?: string[]; que_hace_peor?: string[]; error?: string; [key: string]: unknown }
 
 export default function BenchmarkClientePage() {
   const params = useParams()
@@ -114,7 +114,9 @@ export default function BenchmarkClientePage() {
   const removeComp = (i: number) => setCompetidores(prev => prev.filter((_, j) => j !== i))
 
   const comp = resultado?.comparativo as Record<string, unknown> | undefined
-  const clienteAnalisis = resultado?.cliente as Record<string, unknown> | undefined
+  const ca = resultado?.cliente as Record<string, unknown> | undefined
+  // Safe getter for client analysis fields
+  const cg = (key: string): string => ca?.[key] ? String(ca[key]) : ''
   const compResults = (resultado?.competidores || []) as CompAnalysis[]
 
   if (loading) return <CRMLayout title="Benchmark"><div className="py-20 text-center text-gray-400">Cargando...</div></CRMLayout>
@@ -230,30 +232,30 @@ export default function BenchmarkClientePage() {
             })()}
 
             {/* Análisis cliente */}
-            {clienteAnalisis && (
+            {ca && (
               <div className="bg-white rounded-xl shadow-md border border-gray-200 p-5">
                 <h3 className="text-xs font-bold text-blue-600 uppercase tracking-wider mb-4 pb-2 border-b border-gray-200">ANÁLISIS {cliente?.nombre?.toUpperCase()}</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-3">
-                    {clienteAnalisis.propuesta_valor && <div><p className="text-xs font-bold text-gray-500">Propuesta de valor</p><p className="text-sm text-gray-800">{clienteAnalisis.propuesta_valor as string}</p></div>}
-                    {(() => { const t = clienteAnalisis.tono_comunicacional as Record<string, string> | undefined; return t ? (
-                      <div><p className="text-xs font-bold text-gray-500">Tono comunicacional</p><p className="text-sm text-gray-800">{t.descripcion}</p>
-                      <p className="text-xs text-gray-500 mt-1">Formalidad: {t.formalidad}/10 · Calidez: {t.calidez}/10 · Tecnicismo: {t.tecnicismo}/10</p>
-                      {t.personalidad && <p className="text-xs text-purple-600 italic mt-1">Personalidad: {t.personalidad}</p>}</div>
+                    {cg('propuesta_valor') && <div><p className="text-xs font-bold text-gray-500">Propuesta de valor</p><p className="text-sm text-gray-800">{cg('propuesta_valor')}</p></div>}
+                    {(() => { const t = ca?.tono_comunicacional as Record<string, string> | undefined; return t ? (
+                      <div><p className="text-xs font-bold text-gray-500">Tono comunicacional</p><p className="text-sm text-gray-800">{String(t.descripcion || '')}</p>
+                      <p className="text-xs text-gray-500 mt-1">Formalidad: {String(t.formalidad || '?')}/10 · Calidez: {String(t.calidez || '?')}/10 · Tecnicismo: {String(t.tecnicismo || '?')}/10</p>
+                      {t.personalidad && <p className="text-xs text-purple-600 italic mt-1">Personalidad: {String(t.personalidad)}</p>}</div>
                     ) : null })()}
-                    {clienteAnalisis.publico_objetivo && <div><p className="text-xs font-bold text-gray-500">Público objetivo</p><p className="text-sm text-gray-800">{clienteAnalisis.publico_objetivo as string}</p></div>}
-                    {clienteAnalisis.cta_principal && <div><p className="text-xs font-bold text-gray-500">CTA principal</p><p className="text-sm text-gray-800">{clienteAnalisis.cta_principal as string}</p></div>}
-                    {clienteAnalisis.nivel_profesionalismo && <div><p className="text-xs font-bold text-gray-500">Profesionalismo web: {clienteAnalisis.nivel_profesionalismo as string}/10</p></div>}
+                    {cg('publico_objetivo') && <div><p className="text-xs font-bold text-gray-500">Público objetivo</p><p className="text-sm text-gray-800">{cg('publico_objetivo')}</p></div>}
+                    {cg('cta_principal') && <div><p className="text-xs font-bold text-gray-500">CTA principal</p><p className="text-sm text-gray-800">{cg('cta_principal')}</p></div>}
+                    {cg('nivel_profesionalismo') && <div><p className="text-xs font-bold text-gray-500">Profesionalismo web: {cg('nivel_profesionalismo')}/10</p></div>}
                   </div>
                   <div className="space-y-3">
                     <div><p className="text-xs font-bold text-gray-500 mb-1">Ideas fuerza</p>
-                      {((clienteAnalisis.ideas_fuerza as string[]) || []).map((idea, i) => <p key={i} className="text-xs text-gray-700 mb-1">→ {idea}</p>)}
+                      {((ca.ideas_fuerza as string[]) || []).map((idea, i) => <p key={i} className="text-xs text-gray-700 mb-1">→ {idea}</p>)}
                     </div>
                     <div><p className="text-xs font-bold text-gray-500 mb-1">Diferenciadores reales</p>
-                      {((clienteAnalisis.diferenciadores_reales as string[]) || []).map((d, i) => <p key={i} className="text-xs text-green-700 mb-1">✓ {d}</p>)}
+                      {((ca.diferenciadores_reales as string[]) || []).map((d, i) => <p key={i} className="text-xs text-green-700 mb-1">✓ {d}</p>)}
                     </div>
                     <div><p className="text-xs font-bold text-red-500 mb-1">Debilidades</p>
-                      {((clienteAnalisis.debilidades_comunicacion as string[]) || []).map((d, i) => <p key={i} className="text-xs text-red-700 mb-1">⚠ {d}</p>)}
+                      {((ca.debilidades_comunicacion as string[]) || []).map((d, i) => <p key={i} className="text-xs text-red-700 mb-1">⚠ {d}</p>)}
                     </div>
                   </div>
                 </div>
