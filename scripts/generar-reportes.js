@@ -658,22 +658,32 @@ async function enviarResumen(resultados, periodo) {
   const fallidos = resultados.filter(r => r && r.status === 'error')
 
   const listaEnviados = enviados.map(r => `  - ${r.nombre} (${r.integraciones} integraciones)`).join('\n')
-  const listaSinDatos = sinDatos.map(r => `  - ${r.nombre} (${r.status})`).join('\n')
-  const listaErrores = [...errores, ...fallidos].map(r => `  - ${r.nombre}: ${r.error || r.status}`).join('\n')
+  const listaSinDatos = sinDatos.map(r => {
+    if (r.status === 'sin_integraciones') return `  - ${r.nombre} → ⚠️ Sin integraciones activas en Reportei (verificar conexión de plataformas)`
+    if (r.status === 'sin_datos') return `  - ${r.nombre} → ⚠️ Integraciones conectadas pero sin métricas (posible inversión $0 o token expirado)`
+    return `  - ${r.nombre} → ${r.status}`
+  }).join('\n')
+  const listaErrores = [...errores, ...fallidos].map(r => `  - ${r.nombre}: ❌ ${r.error || r.status}`).join('\n')
 
   const texto = `Reportes Mensuales M&P — ${periodo.mesNombre} ${periodo.mesYear}
 ${'='.repeat(50)}
 
-Enviados: ${enviados.length}
+✅ Enviados: ${enviados.length}
 ${listaEnviados || '  (ninguno)'}
 
-Sin datos: ${sinDatos.length}
+⚠️ Pendientes (sin reporte): ${sinDatos.length}
 ${listaSinDatos || '  (ninguno)'}
 
-${errores.length + fallidos.length > 0 ? `Errores: ${errores.length + fallidos.length}\n${listaErrores}` : 'Errores: 0'}
+${errores.length + fallidos.length > 0 ? `❌ Errores: ${errores.length + fallidos.length}\n${listaErrores}` : '❌ Errores: 0'}
 
-Total procesados: ${resultados.length}
-Destinatarios: ${Array.isArray(config.email_destino) ? config.email_destino.join(', ') : config.email_destino}`
+📊 Total procesados: ${resultados.length}
+📧 Destinatarios: ${Array.isArray(config.email_destino) ? config.email_destino.join(', ') : config.email_destino}
+
+💡 ACCIÓN REQUERIDA para pendientes:
+  1. Entrar a Reportei → Proyecto del cliente → Integraciones
+  2. Verificar que Meta Ads, Google Ads, GA4, Instagram estén conectados y activos
+  3. Si el token expiró, reconectar la plataforma
+  4. Si el cliente no tiene inversión ese mes, es esperado que no haya datos`
 
   const htmlResumen = `<div style="font-family:monospace;font-size:13px;white-space:pre-wrap;background:#F8FAFC;padding:20px;border-radius:8px;border:1px solid #E5E7EB;">${texto}</div>`
 
