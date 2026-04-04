@@ -209,11 +209,11 @@ El equipo editó copies anteriores. Aprende de estas correcciones:
 ${feedback.slice(0, 5).map(f => `ANTES: "${f.original?.substring(0, 150)}..." → DESPUÉS: "${f.editado?.substring(0, 150)}..."`).join('\n')}` : ''}
 
 === ESPECIFICACIONES TÉCNICAS ===
-- Genera exactamente 4 posts para la SEMANA_PLACEHOLDER de ${MESES[mes]} ${anio}
-- Usa los días DIAS_PLACEHOLDER (lunes a viernes de esa semana)
+- Genera exactamente ${pairs ? '2' : '2'} posts para los DIAS_PLACEHOLDER de ${MESES[mes]} ${anio}
 - Alterna plataformas: ${plataformas}
-- Tipos: Post (2-3), Carrusel (0-1), Reel (0-1)
-- NO generes Stories (esas las hace el equipo de diseño)
+- Tipos: Post (mayoría), Carrusel o Reel (ocasional)
+- NO generes Stories
+- CADA post debe ser COMPLETO y DESARROLLADO — no resúmenes ni ideas a medias
 
 === LARGO MÍNIMO OBLIGATORIO ===
 - Facebook/Instagram Post: MÍNIMO 100 palabras, ideal 120-160
@@ -278,55 +278,90 @@ Responde ÚNICAMENTE con un JSON array. Sin texto antes ni después. Sin markdow
   }
 ]`
 
-    // 6. Generate week by week (4 calls of 4 posts = 16 total, no truncation)
+    // 6. Generate in pairs (2 posts per call = 8 calls for 16 posts)
+    // This gives each post more room for length and quality
     const modelo = briefing.modelo || 'gpt-4o'
     const DIAS_SEMANA = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes']
 
-    // Calculate weeks of the month
     const daysInMonth = new Date(anio, mes, 0).getDate()
-    const weekRanges = [
-      { start: 1, end: 7, label: 'Semana 1' },
-      { start: 8, end: 14, label: 'Semana 2' },
-      { start: 15, end: 21, label: 'Semana 3' },
-      { start: 22, end: Math.min(28, daysInMonth), label: 'Semana 4' },
-    ]
 
-    type PostType = { dia: number; dia_semana: string; plataforma: string; tipo_post: string; copy: string; hashtags: string; nota_interna: string }
+    // Build all available weekdays in the month
+    const allWeekdays: { dia: number; nombre: string }[] = []
+    for (let d = 1; d <= daysInMonth; d++) {
+      const date = new Date(anio, mes - 1, d)
+      const dow = date.getDay()
+      if (dow >= 1 && dow <= 5) {
+        allWeekdays.push({ dia: d, nombre: DIAS_SEMANA[dow - 1] })
+      }
+    }
+
+    // Pick 16 posting days spread across the month (4 per week approx)
+    const postingDays: typeof allWeekdays = []
+    const weeksInMonth = Math.ceil(daysInMonth / 7)
+    const daysPerWeek = Math.ceil(16 / weeksInMonth)
+    for (let w = 0; w < weeksInMonth; w++) {
+      const weekStart = w * 7 + 1
+      const weekEnd = Math.min((w + 1) * 7, daysInMonth)
+      const weekDays = allWeekdays.filter(d => d.dia >= weekStart && d.dia <= weekEnd)
+      // Spread: pick every other day, up to daysPerWeek
+      const step = Math.max(1, Math.floor(weekDays.length / daysPerWeek))
+      for (let i = 0; i < weekDays.length && postingDays.length < 16; i += step) {
+        postingDays.push(weekDays[i])
+      }
+    }
+
+    // Generate in pairs of 2
+    type PostType = { dia: number; dia_semana: string; plataforma: string; tipo_post: string; copy: string; copy_grafica?: string; hashtags: string; nota_interna: string }
     let allPosts: PostType[] = []
 
-    for (const week of weekRanges) {
+    const pairs: Array<typeof postingDays> = []
+    for (let i = 0; i < postingDays.length; i += 2) {
+      pairs.push(postingDays.slice(i, i + 2))
+    }
+
+    for (const pair of pairs) {
+      const diasStr = pair.map(d => `${d.nombre} ${d.dia}`).join(' y ')
+      const pairPrompt = userPrompt
+        .replace('SEMANA_PLACEHOLDER', `días ${diasStr}`)
+        .replace('DIAS_PLACEHOLDER', diasStr)
+        .replace('exactamente 4 posts', `exactamente ${pair.length} posts`)
+
       try {
-        // Calculate which weekdays fall in this range
-        const weekDays: { dia: number; nombre: string }[] = []
-        for (let d = week.start; d <= week.end && d <= daysInMonth; d++) {
-          const date = new Date(anio, mes - 1, d)
-          const dow = date.getDay() // 0=Sun, 1=Mon...
-          if (dow >= 1 && dow <= 5) {
-            weekDays.push({ dia: d, nombre: DIAS_SEMANA[dow - 1] })
+        const rawResponse = await callModel(modelo, systemPrompt, pairPrompt)
+        const pairPosts = extractJSON(rawResponse) as PostType[]
+
+        if (Array.isArray(pairPosts)) {
+          for (const p of pairPosts) {
+            if (!p.copy || p.copy.trim().length < 30) continue
+            const wordCount = p.copy.split(/\s+/).filter(Boolean).length
+
+            // Validate minimum words — retry single post if too short
+            const minWords = p.plataforma === 'LinkedIn' ? 150 : 80
+            if (wordCount < minWords) {
+              try {
+                const retryPrompt = `El siguiente post para ${nombreCliente} (${rubroCliente}) está demasiado corto (${wordCount} palabras, mínimo ${minWords}). REESCRÍBELO más largo y desarrollado, manteniendo la misma idea pero con más profundidad, datos y desarrollo argumentativo.
+
+Post original:
+Plataforma: ${p.plataforma}
+Tipo: ${p.tipo_post}
+Copy: ${p.copy}
+
+Responde SOLO JSON: {"copy": "copy expandido mínimo ${minWords} palabras", "copy_grafica": "texto visual", "hashtags": "${p.hashtags}", "nota_interna": "instrucciones diseño"}`
+                const retryRaw = await callModel(modelo, systemPrompt, retryPrompt)
+                const retryPost = extractJSON(retryRaw) as Record<string, string>
+                if (retryPost.copy && retryPost.copy.split(/\s+/).length >= minWords * 0.8) {
+                  p.copy = retryPost.copy
+                  if (retryPost.copy_grafica) p.copy_grafica = retryPost.copy_grafica
+                  if (retryPost.nota_interna) p.nota_interna = retryPost.nota_interna
+                }
+              } catch { /* keep original */ }
+            }
+
+            allPosts.push(p)
           }
         }
-
-        if (weekDays.length === 0) continue
-
-        // Pick 3-4 days for posts
-        const postDays = weekDays.slice(0, 4)
-        const diasStr = postDays.map(d => `${d.nombre} ${d.dia}`).join(', ')
-
-        const weekPrompt = userPrompt
-          .replace('SEMANA_PLACEHOLDER', `${week.label} (días ${week.start}-${week.end})`)
-          .replace('DIAS_PLACEHOLDER', diasStr)
-
-        const rawResponse = await callModel(modelo, systemPrompt, weekPrompt)
-        const weekPosts = extractJSON(rawResponse) as PostType[]
-
-        if (Array.isArray(weekPosts)) {
-          // Filter valid posts only
-          const valid = weekPosts.filter(p => p.copy && p.copy.trim().length > 20)
-          allPosts = [...allPosts, ...valid]
-        }
       } catch (e) {
-        console.error(`Error generating ${week.label}:`, e)
-        // Continue with next week
+        console.error(`Error generating pair ${diasStr}:`, e)
       }
     }
 
