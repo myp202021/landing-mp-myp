@@ -1,0 +1,46 @@
+name: Generar Grillas de Contenido
+
+on:
+  workflow_dispatch:
+    inputs:
+      cliente_id:
+        description: 'ID del cliente (UUID) o "all" para todos'
+        required: true
+        default: 'all'
+      mes:
+        description: 'Mes (1-12)'
+        required: true
+      anio:
+        description: 'Año'
+        required: true
+        default: '2026'
+      contexto:
+        description: 'Contexto especial del mes (opcional)'
+        required: false
+
+jobs:
+  generar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install node-fetch@2
+
+      - name: Generate grillas
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: |
+          node scripts/generar-grilla-pro.js \
+            "${{ github.event.inputs.cliente_id }}" \
+            "${{ github.event.inputs.mes }}" \
+            "${{ github.event.inputs.anio }}" \
+            "${{ github.event.inputs.contexto }}"
