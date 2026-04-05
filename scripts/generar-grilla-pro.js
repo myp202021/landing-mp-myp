@@ -20,16 +20,24 @@ const OPENAI_KEY = process.env.OPENAI_API_KEY
 const SUPABASE_URL = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL
 const SUPABASE_KEY = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY
 
+if (!OPENAI_KEY) { console.error('❌ OPENAI_API_KEY no configurada'); process.exit(1) }
+if (!SUPABASE_URL) { console.error('❌ SUPABASE_URL no configurada'); process.exit(1) }
+if (!SUPABASE_KEY) { console.error('❌ SUPABASE_SERVICE_KEY no configurada'); process.exit(1) }
+console.log('🔑 Env vars OK: OpenAI ✓ Supabase ✓')
+
 const sleep = ms => new Promise(r => setTimeout(r, ms))
 
 // ============================================================
 // SUPABASE HELPERS
 // ============================================================
 async function supabaseGet(table, query) {
-  const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?${query}`, {
+  const url = `${SUPABASE_URL}/rest/v1/${table}?${query}`
+  const res = await fetch(url, {
     headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
   })
-  return res.json()
+  const data = await res.json()
+  if (data.error || data.message) console.log(`   ⚠️ Supabase GET ${table}: ${data.error || data.message}`)
+  return Array.isArray(data) ? data : []
 }
 
 async function supabasePost(table, data) {
@@ -38,7 +46,9 @@ async function supabasePost(table, data) {
     headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=representation' },
     body: JSON.stringify(data)
   })
-  return res.json()
+  const result = await res.json()
+  if (!res.ok) console.log(`   ⚠️ Supabase POST ${table}: ${res.status} ${JSON.stringify(result).substring(0, 200)}`)
+  return Array.isArray(result) ? result : [result]
 }
 
 async function supabaseUpdate(table, id, data) {
@@ -47,7 +57,9 @@ async function supabaseUpdate(table, id, data) {
     headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=representation' },
     body: JSON.stringify(data)
   })
-  return res.json()
+  const result = await res.json()
+  if (!res.ok) console.log(`   ⚠️ Supabase PATCH ${table}: ${res.status} ${JSON.stringify(result).substring(0, 200)}`)
+  return Array.isArray(result) ? result : [result]
 }
 
 // ============================================================
