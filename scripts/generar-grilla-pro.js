@@ -382,6 +382,43 @@ async function generateGrilla(clienteId, mes, anio, contextoMes) {
     console.log(`   💾 Grilla creada (${created?.id || 'ok'})`)
   }
 
+  // 11. Send notification email
+  const RESEND_KEY = process.env.RESEND || process.env.RESEND_API_KEY
+  if (RESEND_KEY) {
+    try {
+      const crmUrl = `https://www.mulleryperez.cl/crm/grillas/${clienteId}`
+      await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${RESEND_KEY}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          from: 'M&P Grillas <noreply@mulleryperez.cl>',
+          to: 'contacto@mulleryperez.cl',
+          subject: `✅ Grilla ${MESES[mes]} ${anio} generada — ${cliente.nombre}`,
+          html: `<div style="font-family:Arial,sans-serif;max-width:600px;">
+            <div style="background:linear-gradient(135deg,#0A1628,#0055A4);padding:20px;border-radius:12px 12px 0 0;">
+              <h2 style="color:white;margin:0;">Grilla Generada</h2>
+              <p style="color:#93C5FD;margin:5px 0 0;">${cliente.nombre} — ${MESES[mes]} ${anio}</p>
+            </div>
+            <div style="background:#f8fafc;padding:20px;border:1px solid #e5e7eb;border-top:none;border-radius:0 0 12px 12px;">
+              <table style="width:100%;border-collapse:collapse;">
+                <tr><td style="padding:6px 0;color:#64748b;">Posts generados</td><td style="padding:6px 0;font-weight:bold;">${posts.length}</td></tr>
+                <tr><td style="padding:6px 0;color:#64748b;">Promedio palabras</td><td style="padding:6px 0;font-weight:bold;">${avg}</td></tr>
+                <tr><td style="padding:6px 0;color:#64748b;">Posts cortos</td><td style="padding:6px 0;font-weight:bold;color:${short > 0 ? '#DC2626' : '#059669'};">${short}</td></tr>
+                <tr><td style="padding:6px 0;color:#64748b;">LinkedIn</td><td style="padding:6px 0;">${linkedin}</td></tr>
+                <tr><td style="padding:6px 0;color:#64748b;">IG / Facebook</td><td style="padding:6px 0;">${igfb}</td></tr>
+                <tr><td style="padding:6px 0;color:#64748b;">Carruseles</td><td style="padding:6px 0;">${carruseles}</td></tr>
+              </table>
+              <div style="margin-top:15px;text-align:center;">
+                <a href="${crmUrl}" style="background:#0055A4;color:white;padding:10px 24px;border-radius:8px;text-decoration:none;font-weight:bold;display:inline-block;">Ver Grilla en CRM →</a>
+              </div>
+            </div>
+          </div>`
+        })
+      })
+      console.log(`   📧 Notificación enviada`)
+    } catch (e) { console.log(`   ⚠️ Error email: ${e.message}`) }
+  }
+
   return { nombre: cliente.nombre, posts: posts.length, avg, short }
 }
 
