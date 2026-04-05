@@ -209,7 +209,7 @@ El equipo editó copies anteriores. Aprende de estas correcciones:
 ${feedback.slice(0, 5).map(f => `ANTES: "${f.original?.substring(0, 150)}..." → DESPUÉS: "${f.editado?.substring(0, 150)}..."`).join('\n')}` : ''}
 
 === ESPECIFICACIONES TÉCNICAS ===
-- Genera exactamente ${pairs ? '2' : '2'} posts para los DIAS_PLACEHOLDER de ${MESES[mes]} ${anio}
+- Genera exactamente 2 posts para los DIAS_PLACEHOLDER de ${MESES[mes]} ${anio}
 - Alterna plataformas: ${plataformas}
 - Tipos: Post (mayoría), Carrusel o Reel (ocasional)
 - NO generes Stories
