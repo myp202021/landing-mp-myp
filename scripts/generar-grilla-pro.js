@@ -172,8 +172,16 @@ Tipo: ${tipoPost}
 - nota_interna: instrucciones detalladas de diseño (tipo visual, paleta, formato, qué destacar)
 
 ${prevCopies.length > 0 ? `=== NO REPETIR ===\n${prevCopies.slice(0, 5).map(c => c.substring(0, 80) + '...').join('\n')}\n` : ''}
-${(briefing.palabras_prohibidas || []).length > 0 ? `Palabras prohibidas: ${briefing.palabras_prohibidas.join(', ')}` : ''}
-${briefing.reglas_adicionales ? `Regla adicional: ${briefing.reglas_adicionales}` : ''}
+=== PROHIBICIONES ABSOLUTAS (si las rompes, el post se rechaza y se regenera) ===
+- JAMÁS empezar con "¿Sabías que...?" — NUNCA, bajo ninguna circunstancia
+- JAMÁS usar "En un mundo donde...", "Hoy más que nunca...", "En la era digital..."
+- JAMÁS usar "solución integral", "revolucionario", "líder del mercado", "innovador", "a tu alcance"
+- JAMÁS empezar con emoji
+- JAMÁS inventar estadísticas sin fuente
+- JAMÁS hacer posts genéricos tipo "Feliz día de..." sin conexión sustantiva con el producto
+- La primera frase del copy DEBE ser un gancho original: dato concreto, pregunta provocadora, escenario real, o afirmación contraintuitiva
+${(briefing.palabras_prohibidas || []).length > 0 ? `- Palabras prohibidas del cliente: ${briefing.palabras_prohibidas.join(', ')}` : ''}
+${briefing.reglas_adicionales ? `- Regla adicional: ${briefing.reglas_adicionales}` : ''}
 
 Responde SOLO JSON:
 {
@@ -192,9 +200,28 @@ Responde SOLO JSON:
 
   const wordCount = post.copy.split(/\s+/).filter(Boolean).length
 
-  // Retry if too short (max 2 retries)
+  // Validate: no banned phrases
+  const BANNED = ['¿sabías que', 'sabías que', 'en un mundo donde', 'hoy más que nunca', 'en la era digital', 'solución integral', 'revolucionario', 'líder del mercado', 'a tu alcance', 'de vanguardia']
+  const copyLower = post.copy.toLowerCase()
+  const hasBanned = BANNED.find(b => copyLower.includes(b))
+
+  if (hasBanned && attempt < 3) {
+    console.log(`      ❌ Contiene "${hasBanned}" — retry ${attempt + 1}...`)
+    await sleep(3000)
+    return generateSinglePost(clienteInfo, postConfig, prevCopies, attempt + 1)
+  }
+
+  // Retry if too short (max 3 attempts total)
   if (wordCount < minWords && attempt < 3) {
     console.log(`      ⚠️ ${wordCount} palabras (min ${minWords}) — retry ${attempt + 1}...`)
+    await sleep(3000)
+    return generateSinglePost(clienteInfo, postConfig, prevCopies, attempt + 1)
+  }
+
+  // Validate: no emoji at start
+  const firstChar = post.copy.trim().charAt(0)
+  if (firstChar.match(/[\u{1F600}-\u{1F9FF}]/u) && attempt < 3) {
+    console.log(`      ❌ Empieza con emoji — retry ${attempt + 1}...`)
     await sleep(3000)
     return generateSinglePost(clienteInfo, postConfig, prevCopies, attempt + 1)
   }
