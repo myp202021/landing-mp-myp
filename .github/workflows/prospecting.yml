@@ -1,23 +1,22 @@
-name: Pipeline Prospección Automática
+name: Pipeline Prospección Semanal
 
 on:
-  # Manual — elige industria y modo
+  # Lunes 09:00 AM Chile (12:00 UTC)
+  schedule:
+    - cron: '0 12 * * 1'
+  # Manual con opciones
   workflow_dispatch:
     inputs:
       industry:
-        description: 'Industria: inmobiliarias, saas, o query libre'
+        description: 'Industria: inmobiliaria, saas, o ambas'
         required: true
-        default: 'inmobiliarias'
+        default: 'ambas'
       max_results:
         description: 'Max empresas por query de descubrimiento'
         required: false
-        default: '100'
-      mode:
-        description: 'Modo benchmark: basico o pro'
-        required: false
-        default: 'basico'
+        default: '30'
       stage:
-        description: 'Etapa: all, discover, enrich, benchmark, outreach'
+        description: 'Etapa: all, discover, enrich, outreach'
         required: false
         default: 'all'
       dry_run:
@@ -26,84 +25,126 @@ on:
         default: 'true'
 
 jobs:
-  prospect:
+  # ══════════════════════════════════════
+  # INMOBILIARIAS (30 empresas)
+  # ══════════════════════════════════════
+  inmobiliarias:
+    if: ${{ github.event.inputs.industry == 'inmobiliaria' || github.event.inputs.industry == 'ambas' || github.event_name == 'schedule' }}
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 30
 
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
+      - run: npm install node-fetch@2 @supabase/supabase-js
 
-      - name: Instalar dependencias
-        run: npm install node-fetch@2 @supabase/supabase-js
-
-      # ── ETAPA 1: Descubrimiento ──
-      - name: "Etapa 1: Descubrimiento de empresas"
-        if: ${{ github.event.inputs.stage == 'all' || github.event.inputs.stage == 'discover' }}
-        run: node scripts/prospect-discover.js "${{ github.event.inputs.industry }}" "${{ github.event.inputs.max_results }}"
+      # Descubrir empresas
+      - name: "Descubrir inmobiliarias"
+        if: ${{ github.event.inputs.stage == 'all' || github.event.inputs.stage == 'discover' || github.event_name == 'schedule' }}
+        run: node scripts/prospect-discover.js inmobiliarias ${{ github.event.inputs.max_results || '30' }}
         env:
           APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
 
-      # Pausa entre etapas
-      - name: Pausa entre descubrimiento y enriquecimiento
-        if: ${{ github.event.inputs.stage == 'all' }}
-        run: sleep 10
+      - run: sleep 10
+        if: ${{ github.event.inputs.stage == 'all' || github.event_name == 'schedule' }}
 
-      # ── ETAPA 2: Enriquecimiento ──
-      - name: "Etapa 2: Enriquecimiento (emails + RRSS)"
-        if: ${{ github.event.inputs.stage == 'all' || github.event.inputs.stage == 'enrich' }}
-        run: node scripts/prospect-enrich.js --industry "${{ github.event.inputs.industry }}" --limit 200
+      # Enriquecer (emails + RRSS)
+      - name: "Enriquecer inmobiliarias"
+        if: ${{ github.event.inputs.stage == 'all' || github.event.inputs.stage == 'enrich' || github.event_name == 'schedule' }}
+        run: node scripts/prospect-enrich.js --industry inmobiliaria --limit 30
         env:
           APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
 
-      - name: Pausa entre enriquecimiento y benchmark
-        if: ${{ github.event.inputs.stage == 'all' }}
-        run: sleep 10
-
-      # ── ETAPA 3: Benchmark ──
-      - name: "Etapa 3: Benchmark"
-        if: ${{ github.event.inputs.stage == 'all' || github.event.inputs.stage == 'benchmark' }}
-        run: |
-          PRO_FLAG=""
-          if [ "${{ github.event.inputs.mode }}" = "pro" ]; then
-            PRO_FLAG="--pro"
-          fi
-          node scripts/prospect-benchmark.js $PRO_FLAG --industry "${{ github.event.inputs.industry }}" --limit 200
-        env:
-          APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
-          GOOGLE_PAGESPEED_API_KEY: ${{ secrets.GOOGLE_PAGESPEED_API_KEY }}
-
-      - name: Pausa entre benchmark y outreach
-        if: ${{ github.event.inputs.stage == 'all' }}
-        run: sleep 5
-
-      # ── ETAPA 4: Outreach ──
-      - name: "Etapa 4: Outreach (email 1)"
-        if: ${{ github.event.inputs.stage == 'all' || github.event.inputs.stage == 'outreach' }}
+      # Outreach (solo si hay calificadas)
+      - name: "Enviar benchmark inmobiliarias"
+        if: ${{ github.event.inputs.stage == 'all' || github.event.inputs.stage == 'outreach' || github.event_name == 'schedule' }}
         run: |
           DRY_FLAG=""
           if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then
             DRY_FLAG="--dry-run"
           fi
-          node scripts/prospect-outreach.js $DRY_FLAG --industry "${{ github.event.inputs.industry }}" --limit 50
+          # En schedule (cron), siempre dry-run por seguridad
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            DRY_FLAG="--dry-run"
+          fi
+          node scripts/prospect-outreach.js --industry inmobiliaria --limit 30 $DRY_FLAG
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
           RESEND: ${{ secrets.RESEND }}
 
-      # ── Alerta si falla ──
-      - name: Alerta si falla
-        if: failure()
+  # ══════════════════════════════════════
+  # SAAS (30 empresas)
+  # ══════════════════════════════════════
+  saas:
+    if: ${{ github.event.inputs.industry == 'saas' || github.event.inputs.industry == 'ambas' || github.event_name == 'schedule' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm install node-fetch@2 @supabase/supabase-js
+
+      # Descubrir empresas
+      - name: "Descubrir SaaS"
+        if: ${{ github.event.inputs.stage == 'all' || github.event.inputs.stage == 'discover' || github.event_name == 'schedule' }}
+        run: node scripts/prospect-discover.js saas ${{ github.event.inputs.max_results || '30' }}
+        env:
+          APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+
+      - run: sleep 10
+        if: ${{ github.event.inputs.stage == 'all' || github.event_name == 'schedule' }}
+
+      # Enriquecer
+      - name: "Enriquecer SaaS"
+        if: ${{ github.event.inputs.stage == 'all' || github.event.inputs.stage == 'enrich' || github.event_name == 'schedule' }}
+        run: node scripts/prospect-enrich.js --industry saas --limit 30
+        env:
+          APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+
+      # Outreach
+      - name: "Enviar benchmark SaaS"
+        if: ${{ github.event.inputs.stage == 'all' || github.event.inputs.stage == 'outreach' || github.event_name == 'schedule' }}
         run: |
+          DRY_FLAG=""
+          if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then
+            DRY_FLAG="--dry-run"
+          fi
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            DRY_FLAG="--dry-run"
+          fi
+          node scripts/prospect-outreach.js --industry saas --limit 30 $DRY_FLAG
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          RESEND: ${{ secrets.RESEND }}
+
+  # ══════════════════════════════════════
+  # ALERTA SI FALLA
+  # ══════════════════════════════════════
+  notify-failure:
+    needs: [inmobiliarias, saas]
+    if: failure()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm install node-fetch@2
+      - run: |
           node -e "
           const fetch = require('node-fetch');
           fetch('https://api.resend.com/emails', {
@@ -112,8 +153,8 @@ jobs:
             body: JSON.stringify({
               from: 'Müller & Pérez <contacto@mulleryperez.cl>',
               to: ['contacto@mulleryperez.cl'],
-              subject: '⚠️ FALLO Pipeline Prospección — $(date -u +%Y-%m-%d)',
-              html: '<h2>El pipeline de prospección falló</h2><p>Industria: ${{ github.event.inputs.industry }}</p><p>Etapa: ${{ github.event.inputs.stage }}</p><p><a href=\"https://github.com/myp202021/landing-mp-myp/actions\">Ver logs</a></p>'
+              subject: '⚠️ FALLO Pipeline Prospección Semanal',
+              html: '<h2>El pipeline de prospección falló</h2><p><a href=\"https://github.com/myp202021/landing-mp-myp/actions\">Ver logs</a></p>'
             })
-          }).then(r => r.json()).then(d => console.log('Alerta enviada:', d.id)).catch(e => console.error(e));
+          }).catch(e => console.error(e));
           "
