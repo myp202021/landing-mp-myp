@@ -1,0 +1,91 @@
+name: "Prospección: Envío Benchmark (Martes 12:30)"
+
+on:
+  # Martes 12:30 PM Chile (16:30 UTC) — 30 min después del scraping
+  schedule:
+    - cron: '30 16 * * 2'
+  workflow_dispatch:
+    inputs:
+      industry:
+        description: 'Industria: inmobiliaria, saas, o ambas'
+        required: true
+        default: 'ambas'
+      dry_run:
+        description: 'Dry run (no envía): true/false'
+        required: false
+        default: 'false'
+      limit:
+        description: 'Max emails por industria'
+        required: false
+        default: '30'
+
+jobs:
+  outreach-inmobiliarias:
+    if: ${{ github.event.inputs.industry == 'inmobiliaria' || github.event.inputs.industry == 'ambas' || github.event_name == 'schedule' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm install node-fetch@2 @supabase/supabase-js
+
+      - name: "Enviar benchmark inmobiliarias"
+        run: |
+          DRY_FLAG=""
+          if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then
+            DRY_FLAG="--dry-run"
+          fi
+          node scripts/prospect-outreach.js --industry inmobiliaria --limit ${{ github.event.inputs.limit || '30' }} $DRY_FLAG
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          RESEND: ${{ secrets.RESEND }}
+
+  outreach-saas:
+    if: ${{ github.event.inputs.industry == 'saas' || github.event.inputs.industry == 'ambas' || github.event_name == 'schedule' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm install node-fetch@2 @supabase/supabase-js
+
+      - name: "Enviar benchmark SaaS"
+        run: |
+          DRY_FLAG=""
+          if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then
+            DRY_FLAG="--dry-run"
+          fi
+          node scripts/prospect-outreach.js --industry saas --limit ${{ github.event.inputs.limit || '30' }} $DRY_FLAG
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          RESEND: ${{ secrets.RESEND }}
+
+  notify-failure:
+    needs: [outreach-inmobiliarias, outreach-saas]
+    if: failure()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm install node-fetch@2
+      - run: |
+          node -e "
+          const fetch = require('node-fetch');
+          fetch('https://api.resend.com/emails', {
+            method: 'POST',
+            headers: { 'Authorization': 'Bearer ${{ secrets.RESEND }}', 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              from: 'Müller & Pérez <contacto@mulleryperez.cl>',
+              to: ['contacto@mulleryperez.cl'],
+              subject: '⚠️ FALLO Outreach Prospección',
+              html: '<p>El envío de benchmarks falló. <a href=\"https://github.com/myp202021/landing-mp-myp/actions\">Ver logs</a></p>'
+            })
+          }).catch(e => console.error(e));
+          "

@@ -1,10 +1,9 @@
-name: Pipeline Prospección Semanal
+name: "Prospección: Scraping + Verificación (Martes 12:00)"
 
 on:
-  # Lunes 09:00 AM Chile (12:00 UTC)
+  # Martes 12:00 PM Chile (16:00 UTC)
   schedule:
-    - cron: '0 12 * * 1'
-  # Manual con opciones
+    - cron: '0 16 * * 2'
   workflow_dispatch:
     inputs:
       industry:
@@ -12,27 +11,15 @@ on:
         required: true
         default: 'ambas'
       max_results:
-        description: 'Max empresas por query de descubrimiento'
+        description: 'Max empresas por query'
         required: false
         default: '30'
-      stage:
-        description: 'Etapa: all, discover, enrich, outreach'
-        required: false
-        default: 'all'
-      dry_run:
-        description: 'Dry run (no envía emails): true/false'
-        required: false
-        default: 'true'
 
 jobs:
-  # ══════════════════════════════════════
-  # INMOBILIARIAS (30 empresas)
-  # ══════════════════════════════════════
   inmobiliarias:
     if: ${{ github.event.inputs.industry == 'inmobiliaria' || github.event.inputs.industry == 'ambas' || github.event_name == 'schedule' }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
-
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -40,9 +27,7 @@ jobs:
           node-version: '20'
       - run: npm install node-fetch@2 @supabase/supabase-js
 
-      # Descubrir empresas
       - name: "Descubrir inmobiliarias"
-        if: ${{ github.event.inputs.stage == 'all' || github.event.inputs.stage == 'discover' || github.event_name == 'schedule' }}
         run: node scripts/prospect-discover.js inmobiliarias ${{ github.event.inputs.max_results || '30' }}
         env:
           APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
@@ -50,11 +35,8 @@ jobs:
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
 
       - run: sleep 10
-        if: ${{ github.event.inputs.stage == 'all' || github.event_name == 'schedule' }}
 
-      # Enriquecer (emails + RRSS)
       - name: "Enriquecer inmobiliarias"
-        if: ${{ github.event.inputs.stage == 'all' || github.event.inputs.stage == 'enrich' || github.event_name == 'schedule' }}
         run: node scripts/prospect-enrich.js --industry inmobiliaria --limit 30
         env:
           APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
@@ -62,11 +44,8 @@ jobs:
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
 
       - run: sleep 5
-        if: ${{ github.event.inputs.stage == 'all' || github.event_name == 'schedule' }}
 
-      # Verificar emails con Snov.io
-      - name: "Verificar emails inmobiliarias (Snov.io)"
-        if: ${{ github.event.inputs.stage == 'all' || github.event.inputs.stage == 'verify' || github.event_name == 'schedule' }}
+      - name: "Verificar emails (Snov.io)"
         run: node scripts/prospect-verify-emails.js --industry inmobiliaria --limit 30
         env:
           SNOVIO_CLIENT_ID: ${{ secrets.SNOVIO_CLIENT_ID }}
@@ -74,32 +53,10 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
 
-      # Outreach (solo si hay calificadas)
-      - name: "Enviar benchmark inmobiliarias"
-        if: ${{ github.event.inputs.stage == 'all' || github.event.inputs.stage == 'outreach' || github.event_name == 'schedule' }}
-        run: |
-          DRY_FLAG=""
-          if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then
-            DRY_FLAG="--dry-run"
-          fi
-          # En schedule (cron), siempre dry-run por seguridad
-          if [ "${{ github.event_name }}" = "schedule" ]; then
-            DRY_FLAG="--dry-run"
-          fi
-          node scripts/prospect-outreach.js --industry inmobiliaria --limit 30 $DRY_FLAG
-        env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
-          RESEND: ${{ secrets.RESEND }}
-
-  # ══════════════════════════════════════
-  # SAAS (30 empresas)
-  # ══════════════════════════════════════
   saas:
     if: ${{ github.event.inputs.industry == 'saas' || github.event.inputs.industry == 'ambas' || github.event_name == 'schedule' }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
-
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -107,9 +64,7 @@ jobs:
           node-version: '20'
       - run: npm install node-fetch@2 @supabase/supabase-js
 
-      # Descubrir empresas
       - name: "Descubrir SaaS"
-        if: ${{ github.event.inputs.stage == 'all' || github.event.inputs.stage == 'discover' || github.event_name == 'schedule' }}
         run: node scripts/prospect-discover.js saas ${{ github.event.inputs.max_results || '30' }}
         env:
           APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
@@ -117,11 +72,8 @@ jobs:
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
 
       - run: sleep 10
-        if: ${{ github.event.inputs.stage == 'all' || github.event_name == 'schedule' }}
 
-      # Enriquecer
       - name: "Enriquecer SaaS"
-        if: ${{ github.event.inputs.stage == 'all' || github.event.inputs.stage == 'enrich' || github.event_name == 'schedule' }}
         run: node scripts/prospect-enrich.js --industry saas --limit 30
         env:
           APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
@@ -129,11 +81,8 @@ jobs:
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
 
       - run: sleep 5
-        if: ${{ github.event.inputs.stage == 'all' || github.event_name == 'schedule' }}
 
-      # Verificar emails con Snov.io
-      - name: "Verificar emails SaaS (Snov.io)"
-        if: ${{ github.event.inputs.stage == 'all' || github.event.inputs.stage == 'verify' || github.event_name == 'schedule' }}
+      - name: "Verificar emails (Snov.io)"
         run: node scripts/prospect-verify-emails.js --industry saas --limit 30
         env:
           SNOVIO_CLIENT_ID: ${{ secrets.SNOVIO_CLIENT_ID }}
@@ -141,26 +90,6 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
 
-      # Outreach
-      - name: "Enviar benchmark SaaS"
-        if: ${{ github.event.inputs.stage == 'all' || github.event.inputs.stage == 'outreach' || github.event_name == 'schedule' }}
-        run: |
-          DRY_FLAG=""
-          if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then
-            DRY_FLAG="--dry-run"
-          fi
-          if [ "${{ github.event_name }}" = "schedule" ]; then
-            DRY_FLAG="--dry-run"
-          fi
-          node scripts/prospect-outreach.js --industry saas --limit 30 $DRY_FLAG
-        env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
-          RESEND: ${{ secrets.RESEND }}
-
-  # ══════════════════════════════════════
-  # ALERTA SI FALLA
-  # ══════════════════════════════════════
   notify-failure:
     needs: [inmobiliarias, saas]
     if: failure()
@@ -179,8 +108,8 @@ jobs:
             body: JSON.stringify({
               from: 'Müller & Pérez <contacto@mulleryperez.cl>',
               to: ['contacto@mulleryperez.cl'],
-              subject: '⚠️ FALLO Pipeline Prospección Semanal',
-              html: '<h2>El pipeline de prospección falló</h2><p><a href=\"https://github.com/myp202021/landing-mp-myp/actions\">Ver logs</a></p>'
+              subject: '⚠️ FALLO Scraping Prospección',
+              html: '<p>El scraping semanal falló. <a href=\"https://github.com/myp202021/landing-mp-myp/actions\">Ver logs</a></p>'
             })
           }).catch(e => console.error(e));
           "
