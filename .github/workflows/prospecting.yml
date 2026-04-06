@@ -61,6 +61,19 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
 
+      - run: sleep 5
+        if: ${{ github.event.inputs.stage == 'all' || github.event_name == 'schedule' }}
+
+      # Verificar emails con Snov.io
+      - name: "Verificar emails inmobiliarias (Snov.io)"
+        if: ${{ github.event.inputs.stage == 'all' || github.event.inputs.stage == 'verify' || github.event_name == 'schedule' }}
+        run: node scripts/prospect-verify-emails.js --industry inmobiliaria --limit 30
+        env:
+          SNOVIO_CLIENT_ID: ${{ secrets.SNOVIO_CLIENT_ID }}
+          SNOVIO_CLIENT_SECRET: ${{ secrets.SNOVIO_CLIENT_SECRET }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+
       # Outreach (solo si hay calificadas)
       - name: "Enviar benchmark inmobiliarias"
         if: ${{ github.event.inputs.stage == 'all' || github.event.inputs.stage == 'outreach' || github.event_name == 'schedule' }}
@@ -112,6 +125,19 @@ jobs:
         run: node scripts/prospect-enrich.js --industry saas --limit 30
         env:
           APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+
+      - run: sleep 5
+        if: ${{ github.event.inputs.stage == 'all' || github.event_name == 'schedule' }}
+
+      # Verificar emails con Snov.io
+      - name: "Verificar emails SaaS (Snov.io)"
+        if: ${{ github.event.inputs.stage == 'all' || github.event.inputs.stage == 'verify' || github.event_name == 'schedule' }}
+        run: node scripts/prospect-verify-emails.js --industry saas --limit 30
+        env:
+          SNOVIO_CLIENT_ID: ${{ secrets.SNOVIO_CLIENT_ID }}
+          SNOVIO_CLIENT_SECRET: ${{ secrets.SNOVIO_CLIENT_SECRET }}
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
 
