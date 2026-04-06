@@ -31,6 +31,7 @@ export default function CRMLayout({ children, title, authenticated = true, onRef
       { href: '/crm/integraciones', label: 'Integraciones', icon: '🔌' },
       { href: '/crm/grillas', label: 'Grillas', icon: '📅' },
       { href: '/crm/benchmark', label: 'Benchmark', icon: '📊' },
+      { href: '/crm/prospeccion', label: 'Prospección', icon: '🎯' },
       { href: '/crm/reportes', label: 'Reportes', icon: '📈' },
     ],
     equipo: [
