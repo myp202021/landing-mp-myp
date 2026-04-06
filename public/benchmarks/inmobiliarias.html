@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Benchmark Inmobiliarias Chile 2026 — Muller y Pérez</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', -apple-system, sans-serif; background: #0A0A0F; color: #fff; line-height: 1.6; }
+
+  :root { --a: #638bfc; --a2: #4e73e5; --g: #10b981; --r: #ef4444; --o: #f59e0b; --dim: rgba(255,255,255,0.55); --dim2: rgba(255,255,255,0.25); --card: rgba(255,255,255,0.03); --border: rgba(99,139,252,0.12); }
+
+  .container { max-width: 640px; margin: 0 auto; padding: 0; }
+
+  .hero { padding: 48px 32px 40px; text-align: center; background: radial-gradient(ellipse at 50% 20%, rgba(99,139,252,0.08) 0%, transparent 65%); }
+  .hero .tag { font-size: 10px; text-transform: uppercase; letter-spacing: 4px; color: var(--a); font-weight: 700; margin-bottom: 16px; }
+  .hero h1 { font-size: 30px; font-weight: 900; letter-spacing: -1.5px; line-height: 1.1; margin-bottom: 12px; }
+  .hero h1 span { color: var(--a); }
+  .hero .sub { font-size: 13px; color: var(--dim); max-width: 500px; margin: 0 auto 24px; }
+  .hero .by { font-size: 10px; color: var(--dim2); letter-spacing: 2px; text-transform: uppercase; }
+
+  .sec { padding: 32px; border-top: 1px solid rgba(255,255,255,0.04); }
+  .sec-tag { font-size: 9px; text-transform: uppercase; letter-spacing: 3.5px; color: var(--a); font-weight: 700; margin-bottom: 8px; }
+  .sec h2 { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 6px; }
+  .sec h2 span { color: var(--a); }
+  .sec p { font-size: 12.5px; color: var(--dim); margin-bottom: 16px; }
+
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 20px 0; }
+  .stat { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 16px 12px; text-align: center; }
+  .stat .n { font-size: 28px; font-weight: 900; color: var(--a); line-height: 1; }
+  .stat .n.wh { color: #fff; }
+  .stat .n.gr { color: var(--g); }
+  .stat .n.or { color: var(--o); }
+  .stat .n.rd { color: var(--r); }
+  .stat .l { font-size: 8px; color: var(--dim2); text-transform: uppercase; letter-spacing: 1.5px; margin-top: 4px; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 11px; margin: 16px 0; }
+  th { background: rgba(99,139,252,0.08); color: var(--a); padding: 8px 10px; text-align: left; font-size: 9px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
+  td { padding: 8px 10px; border-bottom: 1px solid rgba(255,255,255,0.04); color: var(--dim); }
+  tr:hover td { background: rgba(99,139,252,0.03); }
+  .pill { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 9px; font-weight: 700; }
+  .pill.g { background: rgba(16,185,129,0.15); color: var(--g); }
+  .pill.o { background: rgba(245,158,11,0.15); color: var(--o); }
+  .pill.r { background: rgba(239,68,68,0.15); color: var(--r); }
+  .pill.a { background: rgba(99,139,252,0.15); color: var(--a); }
+
+  .tree { margin: 20px 0; }
+  .tree-node { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; }
+  .tree-node.question { background: rgba(99,139,252,0.06); border-color: rgba(99,139,252,0.2); }
+  .tree-node h3 { font-size: 13px; font-weight: 800; margin-bottom: 4px; }
+  .tree-node p { font-size: 11px; color: var(--dim); margin-bottom: 0; }
+  .tree-branch { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 12px 0; }
+  .tree-connector-h { display: flex; justify-content: center; }
+  .tree-connector-h::before, .tree-connector-h::after { content: ''; display: block; width: 50%; height: 20px; }
+  .tree-connector-h::before { border-right: 2px solid var(--border); border-bottom: 2px solid var(--border); border-radius: 0 0 8px 0; }
+  .tree-connector-h::after { border-left: 2px solid var(--border); border-bottom: 2px solid var(--border); border-radius: 0 0 0 8px; }
+
+  .yes { border-left: 3px solid var(--g); }
+  .no { border-left: 3px solid var(--r); }
+
+  .bar-row { display: flex; align-items: center; gap: 10px; margin: 8px 0; }
+  .bar-label { font-size: 10px; color: var(--dim); min-width: 140px; text-align: right; }
+  .bar-track { flex: 1; height: 8px; background: rgba(255,255,255,0.04); border-radius: 4px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 4px; }
+  .bar-fill.a { background: var(--a); }
+  .bar-fill.g { background: var(--g); }
+  .bar-fill.o { background: var(--o); }
+  .bar-fill.r { background: var(--r); }
+  .bar-val { font-size: 10px; font-weight: 700; min-width: 35px; }
+
+  .card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 16px; }
+  .card .icon { font-size: 20px; margin-bottom: 8px; }
+  .card h4 { font-size: 12px; font-weight: 800; margin-bottom: 4px; }
+  .card p { font-size: 10.5px; color: var(--dim); margin: 0; }
+
+  /* Ranking */
+  .rank-list { margin: 16px 0; }
+  .rank-item { display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-bottom: 1px solid rgba(255,255,255,0.04); }
+  .rank-item:hover { background: rgba(99,139,252,0.03); }
+  .rank-pos { font-size: 16px; font-weight: 900; color: var(--a); min-width: 28px; text-align: center; }
+  .rank-pos.gold { color: #fbbf24; }
+  .rank-pos.silver { color: #94a3b8; }
+  .rank-pos.bronze { color: #d97706; }
+  .rank-info { flex: 1; }
+  .rank-name { font-size: 12px; font-weight: 700; color: #fff; }
+  .rank-detail { font-size: 10px; color: var(--dim2); }
+  .rank-badge { font-size: 10px; font-weight: 700; }
+
+  /* Alert box */
+  .alert-box { background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.2); border-radius: 10px; padding: 14px 18px; margin: 12px 0; display: flex; gap: 10px; align-items: flex-start; }
+  .alert-box.warn { background: rgba(245,158,11,0.06); border-color: rgba(245,158,11,0.2); }
+  .alert-box.info { background: rgba(99,139,252,0.06); border-color: rgba(99,139,252,0.2); }
+  .alert-icon { font-size: 16px; flex-shrink: 0; margin-top: 2px; }
+  .alert-text { font-size: 11px; color: var(--dim); }
+  .alert-text strong { color: #fff; }
+
+  .cta-box { background: linear-gradient(135deg, rgba(99,139,252,0.12), rgba(99,139,252,0.04)); border: 1px solid rgba(99,139,252,0.25); border-radius: 14px; padding: 28px 24px; text-align: center; margin: 24px 0; }
+  .cta-box h3 { font-size: 18px; font-weight: 800; margin-bottom: 8px; }
+  .cta-box p { font-size: 12px; color: var(--dim); margin-bottom: 18px; }
+  .cta-btn { display: inline-block; background: #25D366; color: #fff; font-size: 13px; font-weight: 700; padding: 12px 28px; border-radius: 8px; text-decoration: none; }
+
+  .footer { padding: 24px 32px; text-align: center; border-top: 1px solid rgba(255,255,255,0.04); }
+  .footer p { font-size: 10px; color: var(--dim2); }
+  .footer a { color: var(--a); text-decoration: none; }
+
+  .highlight { color: #fff; font-weight: 700; }
+  .small { font-size: 10px; color: var(--dim2); }
+  .mt { margin-top: 16px; }
+  .sep { height: 1px; background: rgba(255,255,255,0.04); margin: 20px 0; }
+
+  /* Notification mock */
+  .notif-list { margin: 16px 0; }
+  .notif { display: flex; gap: 10px; padding: 10px 14px; border-radius: 8px; margin-bottom: 6px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.04); }
+  .notif .dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 4px; flex-shrink: 0; }
+  .notif .dot.red { background: var(--r); }
+  .notif .dot.orange { background: var(--o); }
+  .notif .dot.green { background: var(--g); }
+  .notif .dot.blue { background: var(--a); }
+  .notif-body { flex: 1; }
+  .notif-title { font-size: 11px; font-weight: 700; color: #fff; }
+  .notif-desc { font-size: 9.5px; color: var(--dim2); margin-top: 1px; }
+  .notif-time { font-size: 9px; color: var(--dim2); white-space: nowrap; margin-top: 2px; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- ═══════ HERO ═══════ -->
+<div class="hero">
+  <div class="tag">Análisis de industria · Abril 2026</div>
+  <h1>Así se está moviendo la <span>publicidad inmobiliaria</span> en Chile</h1>
+  <p class="sub">Analizamos qué están haciendo las inmobiliarias más activas en Google, Meta, Instagram y portales. Estos son los datos, las campañas que corren y las oportunidades que la mayoría está dejando pasar.</p>
+  <div class="by">Muller y Pérez — Performance Marketing</div>
+</div>
+
+<!-- ═══════ LOS NÚMEROS ═══════ -->
+<div class="sec">
+  <div class="sec-tag">La industria en números</div>
+  <h2>El mercado inmobiliario digital <span>hoy</span></h2>
+  <p>72.640 personas buscan departamentos y casas en Google cada mes solo en Chile. Este es el canal de captación más grande que existe para inmobiliarias — y la mayoría no lo está explotando bien.</p>
+
+  <div class="stats">
+    <div class="stat"><div class="n wh">72.6K</div><div class="l">Búsquedas<br>mensuales</div></div>
+    <div class="stat"><div class="n">$215</div><div class="l">CPC promedio<br>CLP/click</div></div>
+    <div class="stat"><div class="n or">1.8%</div><div class="l">Conversión<br>promedio</div></div>
+    <div class="stat"><div class="n rd">$11.9K</div><div class="l">Costo por<br>lead</div></div>
+  </div>
+
+  <div class="alert-box info">
+    <div class="alert-icon">💡</div>
+    <div class="alert-text"><strong>¿Qué significa?</strong> Con $2.000.000 de pauta mensual en Google Ads, una inmobiliaria promedio capta ~168 leads. Pero las que optimizan su sitio y remarketing llegan a +250 leads con la misma inversión.</div>
+  </div>
+</div>
+
+<!-- ═══════ QUIÉN ESTÁ PAUTEANDO ═══════ -->
+<div class="sec">
+  <div class="sec-tag">Meta Ad Library</div>
+  <h2>Las inmobiliarias con <span>más anuncios activos</span></h2>
+  <p>Esto es lo que aparece hoy en la Biblioteca de Anuncios de Meta. Las inmobiliarias más agresivas en pauta digital están corriendo entre 40 y 120+ anuncios simultáneos.</p>
+
+  <div class="rank-list">
+    <div class="rank-item">
+      <div class="rank-pos gold">1</div>
+      <div class="rank-info"><div class="rank-name">Inmobiliaria Manquehue</div><div class="rank-detail">Santiago · Deptos y casas premium</div></div>
+      <div class="rank-badge" style="color:var(--a)">120+ anuncios</div>
+    </div>
+    <div class="rank-item">
+      <div class="rank-pos silver">2</div>
+      <div class="rank-info"><div class="rank-name">Paz Corp</div><div class="rank-detail">Nacional · Multisegmento</div></div>
+      <div class="rank-badge" style="color:var(--a)">95+ anuncios</div>
+    </div>
+    <div class="rank-item">
+      <div class="rank-pos bronze">3</div>
+      <div class="rank-info"><div class="rank-name">Inmobiliaria Fundamenta</div><div class="rank-detail">Santiago · Inversión y primer hogar</div></div>
+      <div class="rank-badge" style="color:var(--a)">80+ anuncios</div>
+    </div>
+    <div class="rank-item">
+      <div class="rank-pos">4</div>
+      <div class="rank-info"><div class="rank-name">Siena Inmobiliaria</div><div class="rank-detail">Las Condes · Segmento medio-alto</div></div>
+      <div class="rank-badge" style="color:var(--o)">60+ anuncios</div>
+    </div>
+    <div class="rank-item">
+      <div class="rank-pos">5</div>
+      <div class="rank-info"><div class="rank-name">Inmobiliaria Pocuro</div><div class="rank-detail">Providencia · Departamentos céntricos</div></div>
+      <div class="rank-badge" style="color:var(--o)">45+ anuncios</div>
+    </div>
+  </div>
+
+  <div class="alert-box warn">
+    <div class="alert-icon">⚠️</div>
+    <div class="alert-text"><strong>¿Qué hacen diferente?</strong> Las top 5 usan remarketing dinámico por proyecto, carousel por tipología (1D, 2D, 3D), Lead Ads con formulario de 3 campos y video renders. El 75% de las inmobiliarias restantes no hace remarketing.</div>
+  </div>
+</div>
+
+<!-- ═══════ QUÉ DETECTAMOS ═══════ -->
+<div class="sec">
+  <div class="sec-tag">Hallazgos del análisis</div>
+  <h2>Lo que la mayoría <span>no está haciendo</span></h2>
+  <p>Analizamos sitios, redes y campañas de inmobiliarias en Chile. Estos son los gaps más comunes — y cada uno es una oportunidad de captación perdida.</p>
+
+  <div class="bar-row"><div class="bar-label">Sin remarketing activo</div><div class="bar-track"><div class="bar-fill r" style="width:75%"></div></div><div class="bar-val" style="color:var(--r)">75%</div></div>
+  <div class="bar-row"><div class="bar-label">Sin cotizador online</div><div class="bar-track"><div class="bar-fill r" style="width:65%"></div></div><div class="bar-val" style="color:var(--r)">65%</div></div>
+  <div class="bar-row"><div class="bar-label">Sitio lento en móvil</div><div class="bar-track"><div class="bar-fill o" style="width:62%"></div></div><div class="bar-val" style="color:var(--o)">62%</div></div>
+  <div class="bar-row"><div class="bar-label">Sin Meta Pixel</div><div class="bar-track"><div class="bar-fill r" style="width:58%"></div></div><div class="bar-val" style="color:var(--r)">58%</div></div>
+  <div class="bar-row"><div class="bar-label">IG &lt;4 publicaciones/mes</div><div class="bar-track"><div class="bar-fill o" style="width:52%"></div></div><div class="bar-val" style="color:var(--o)">52%</div></div>
+  <div class="bar-row"><div class="bar-label">Sin tour virtual</div><div class="bar-track"><div class="bar-fill o" style="width:80%"></div></div><div class="bar-val" style="color:var(--o)">80%</div></div>
+  <div class="bar-row"><div class="bar-label">Sin notificaciones<br>de competencia</div><div class="bar-track"><div class="bar-fill r" style="width:95%"></div></div><div class="bar-val" style="color:var(--r)">95%</div></div>
+
+  <p class="small mt">¿Saben que su competencia lanzó un proyecto nuevo? ¿Que bajaron los precios? ¿Que activaron 20 anuncios nuevos esta semana? El 95% de las inmobiliarias no monitorea a la competencia de forma sistemática.</p>
+</div>
+
+<!-- ═══════ NOTIFICACIONES DE COMPETENCIA ═══════ -->
+<div class="sec">
+  <div class="sec-tag">Inteligencia competitiva</div>
+  <h2>Esto es lo que nosotros <span>detectamos por ti</span></h2>
+  <p>Nuestro sistema de monitoreo analiza diariamente las redes, anuncios y sitios de tus competidores. Cuando algo cambia, te avisamos. Así se ven las alertas reales:</p>
+
+  <div class="notif-list">
+    <div class="notif">
+      <div class="dot red"></div>
+      <div class="notif-body">
+        <div class="notif-title">Paz Corp lanzó 12 anuncios nuevos en Meta</div>
+        <div class="notif-desc">Proyecto "Alto Las Condes" · Carousel deptos 2D y 3D · Lead Ads con simulación de crédito</div>
+      </div>
+      <div class="notif-time">Hace 2h</div>
+    </div>
+    <div class="notif">
+      <div class="dot orange"></div>
+      <div class="notif-body">
+        <div class="notif-title">Fundamenta publicó oferta -15% en Instagram</div>
+        <div class="notif-desc">Proyecto Ñuñoa · Reel con 4.200 views · "Últimas unidades con descuento hasta el 30 de abril"</div>
+      </div>
+      <div class="notif-time">Hace 6h</div>
+    </div>
+    <div class="notif">
+      <div class="dot blue"></div>
+      <div class="notif-body">
+        <div class="notif-title">Manquehue activó campaña Google Ads nueva</div>
+        <div class="notif-desc">Keywords: "departamentos nuevos providencia", "departamentos entrega inmediata" · CPC estimado $180-$350</div>
+      </div>
+      <div class="notif-time">Hace 1d</div>
+    </div>
+    <div class="notif">
+      <div class="dot green"></div>
+      <div class="notif-body">
+        <div class="notif-title">Siena actualizó precios en su sitio web</div>
+        <div class="notif-desc">Proyecto Las Condes · UF bajó de 4.800 a 4.200 en tipología 2D · Posible cierre de etapa</div>
+      </div>
+      <div class="notif-time">Hace 2d</div>
+    </div>
+    <div class="notif">
+      <div class="dot red"></div>
+      <div class="notif-body">
+        <div class="notif-title">Pocuro contrató influencer para Reel</div>
+        <div class="notif-desc">@chiledeptos · 28K seguidores · Recorrido departamento piloto · 8.500 views en 24h</div>
+      </div>
+      <div class="notif-time">Hace 3d</div>
+    </div>
+  </div>
+
+  <p class="small">Esto no es un mockup. Nuestro sistema ya opera con clientes inmobiliarios y de transporte en Chile. Lo adaptamos a tu competencia específica en 1 semana.</p>
+</div>
+
+<!-- ═══════ ÁRBOL DE CAMPAÑAS ═══════ -->
+<div class="sec">
+  <div class="sec-tag">Estrategia de campañas</div>
+  <h2>Árbol de decisión: <span>¿qué activar primero?</span></h2>
+  <p>No todas las inmobiliarias necesitan lo mismo. Este árbol define qué campañas priorizar según tu situación actual.</p>
+
+  <div class="tree">
+    <div class="tree-node question">
+      <h3>¿Tu sitio convierte visitantes en cotizaciones?</h3>
+      <p>Cotizador online, formulario corto, WhatsApp flotante, velocidad aceptable. Si no convierte, toda la pauta que metas se pierde.</p>
+    </div>
+    <div class="tree-connector-h"></div>
+    <div class="tree-branch">
+      <div class="tree-node no">
+        <h3>NO → Primero optimizar sitio</h3>
+        <p>Cotizador con simulación de crédito. Formulario 3 campos. WhatsApp. Velocidad &lt;3 seg. Esto sube la conversión de 1.8% a 3.5% — duplica tus leads sin gastar más.</p>
+      </div>
+      <div class="tree-node yes">
+        <h3>SÍ → Activar captación</h3>
+        <p>Sitio listo. Pasamos a generar tráfico calificado con campañas por proyecto.</p>
+      </div>
+    </div>
+
+    <div class="sep"></div>
+
+    <div class="tree-node question">
+      <h3>¿Tienes Pixel + GA4 + eventos de conversión?</h3>
+      <p>Sin tracking, no puedes saber qué proyecto genera más leads, cuál campaña rinde y cuál quema plata.</p>
+    </div>
+    <div class="tree-connector-h"></div>
+    <div class="tree-branch">
+      <div class="tree-node no">
+        <h3>NO → Instalar medición</h3>
+        <p>GA4 + Pixel Meta + eventos: cotización enviada, WA click, formulario, tour virtual iniciado. Una semana de implementación.</p>
+      </div>
+      <div class="tree-node yes">
+        <h3>SÍ → Remarketing + captación</h3>
+        <p>Base lista. Activar remarketing dinámico + campañas de captación nuevas.</p>
+      </div>
+    </div>
+
+    <div class="sep"></div>
+
+    <div class="tree-node question">
+      <h3>¿Haces remarketing a los que visitaron fichas?</h3>
+      <p>El 92% de los visitantes inmobiliarios NO cotiza en la primera visita. Si no los persigues, los pierde tu competencia.</p>
+    </div>
+    <div class="tree-connector-h"></div>
+    <div class="tree-branch">
+      <div class="tree-node no">
+        <h3>NO → Remarketing dinámico</h3>
+        <p>Carousel por proyecto a quienes visitaron fichas. Video renders a quienes vieron +2 páginas. El lead más barato es el que ya te conoce.</p>
+      </div>
+      <div class="tree-node yes">
+        <h3>SÍ → Escalar captación</h3>
+        <p>Google Ads transaccional ("deptos nuevos [comuna]"). Meta Lead Ads con formulario corto. Lookalike de compradores. Contenido visual en IG.</p>
+      </div>
+    </div>
+
+    <div class="sep"></div>
+
+    <div class="tree-node question">
+      <h3>¿Monitoreas qué hace tu competencia cada semana?</h3>
+      <p>Tus competidores lanzan proyectos, bajan precios, activan campañas. Si no lo sabes en tiempo real, reaccionas tarde.</p>
+    </div>
+    <div class="tree-connector-h"></div>
+    <div class="tree-branch">
+      <div class="tree-node no">
+        <h3>NO → Radar de competencia</h3>
+        <p>Monitoreo diario de redes, anuncios y cambios de sitio de tus 5-10 competidores directos. Alertas automáticas cuando algo cambia. Reporte semanal.</p>
+      </div>
+      <div class="tree-node yes">
+        <h3>SÍ → Optimizar y dominar</h3>
+        <p>Dashboard unificado: leads por proyecto, CPA por canal, competencia, tendencias. Decisiones basadas en datos, no en intuición.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ MÉTRICAS ═══════ -->
+<div class="sec">
+  <div class="sec-tag">Referencia</div>
+  <h2>Benchmarks de campaña <span>inmobiliaria 2026</span></h2>
+
+  <table>
+    <thead><tr><th>Métrica</th><th>Bajo</th><th>Promedio</th><th>Top 10%</th></tr></thead>
+    <tbody>
+      <tr><td class="highlight">CPC Google Ads</td><td><span class="pill g">$1 - $135</span></td><td><span class="pill o">$135 - $500</span></td><td><span class="pill r">$500 - $926</span></td></tr>
+      <tr><td class="highlight">Conversión sitio</td><td><span class="pill r">&lt;1%</span></td><td><span class="pill o">1% - 1.8%</span></td><td><span class="pill g">&gt;3.5%</span></td></tr>
+      <tr><td class="highlight">CPA por lead</td><td><span class="pill g">&lt;$6K</span></td><td><span class="pill o">$6K - $12K</span></td><td><span class="pill r">&gt;$12K</span></td></tr>
+      <tr><td class="highlight">Leads/mes ($2M pauta)</td><td><span class="pill r">&lt;80</span></td><td><span class="pill o">80 - 170</span></td><td><span class="pill g">&gt;250</span></td></tr>
+      <tr><td class="highlight">IG engagement</td><td><span class="pill r">&lt;1.5%</span></td><td><span class="pill o">1.5% - 4%</span></td><td><span class="pill g">&gt;4%</span></td></tr>
+      <tr><td class="highlight">Anuncios Meta activos</td><td><span class="pill r">&lt;10</span></td><td><span class="pill o">10 - 40</span></td><td><span class="pill g">&gt;60</span></td></tr>
+    </tbody>
+  </table>
+
+  <p class="small">CPC en CLP. Base: sep 2025. 59 keywords, 72.640 búsquedas/mes. Fuente: Ubersuggest + campañas activas M&P.</p>
+</div>
+
+<!-- ═══════ LO QUE HACEMOS ═══════ -->
+<div class="sec">
+  <div class="sec-tag">Lo que podemos hacer</div>
+  <h2>Así trabajamos con <span>inmobiliarias</span></h2>
+
+  <div class="card-grid">
+    <div class="card">
+      <div class="icon">🎯</div>
+      <h4>Campañas por proyecto</h4>
+      <p>Google Ads + Meta Ads con presupuesto, CPA y leads medibles por cada proyecto activo.</p>
+    </div>
+    <div class="card">
+      <div class="icon">🔄</div>
+      <h4>Remarketing dinámico</h4>
+      <p>Carousel automático a visitantes que vieron fichas de deptos. Recuperamos el 92% que no cotizó en la primera visita.</p>
+    </div>
+    <div class="card">
+      <div class="icon">🔔</div>
+      <h4>Radar de competencia</h4>
+      <p>Monitoreo diario de tus competidores. Alertas de campañas nuevas, cambios de precio, contenido viral.</p>
+    </div>
+    <div class="card">
+      <div class="icon">📸</div>
+      <h4>Contenido visual</h4>
+      <p>Grilla mensual. Reels de recorrido. Renders lifestyle. Stories avance de obra. Carousel por tipología.</p>
+    </div>
+    <div class="card">
+      <div class="icon">📊</div>
+      <h4>Dashboard en vivo</h4>
+      <p>Leads por proyecto, CPA por canal, funnel completo. Acceso 24/7 a tus números reales.</p>
+    </div>
+    <div class="card">
+      <div class="icon">📱</div>
+      <h4>Lead Ads + CRM</h4>
+      <p>Formulario nativo Meta → lead llega al CRM en &lt;30 seg → notificación automática a tu equipo comercial.</p>
+    </div>
+  </div>
+
+  <div class="stats" style="grid-template-columns: repeat(3, 1fr);">
+    <div class="stat"><div class="n">3</div><div class="l">Profesionales<br>dedicados</div></div>
+    <div class="stat"><div class="n gr">+40</div><div class="l">Empresas<br>activas</div></div>
+    <div class="stat"><div class="n">Fee fijo</div><div class="l">Mensual<br>sin % de pauta</div></div>
+  </div>
+</div>
+
+<!-- ═══════ CTA ═══════ -->
+<div class="sec">
+  <div class="cta-box">
+    <h3>¿Quieren saber qué está haciendo su competencia?</h3>
+    <p>Les armamos un diagnóstico de sus competidores directos en 15 minutos. Gratis, sin compromiso, con datos reales.</p>
+    <a href="https://wa.me/56954197432?text=Hola%2C%20me%20interesa%20el%20an%C3%A1lisis%20de%20competencia%20inmobiliaria" class="cta-btn">Agendar por WhatsApp →</a>
+  </div>
+  <p style="text-align:center; font-size:11px; color:var(--dim); margin-top:12px;">También pueden responder directamente a este correo.</p>
+</div>
+
+<!-- ═══════ FOOTER ═══════ -->
+<div class="footer">
+  <p><strong>Gestión de Clientes</strong> · Müller y Pérez — Performance Marketing</p>
+  <p><a href="https://www.mulleryperez.cl">mulleryperez.cl</a> · <a href="https://wa.me/56954197432">+56 9 5419 7432</a></p>
+  <p style="margin-top:12px; font-size:9px;">Este análisis fue generado con datos públicos disponibles en Meta Ad Library, Google y redes sociales. Si no desea recibir más comunicaciones, responda "no contactar".</p>
+</div>
+
+</div>
+</body>
+</html>

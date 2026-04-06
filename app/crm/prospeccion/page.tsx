@@ -574,37 +574,67 @@ export default function ProspeccionPage() {
                             {previewEmail === b.id && (
                               <tr key={`${b.id}-email`}>
                                 <td colSpan={11} className="px-6 py-4 bg-yellow-50 border-l-4 border-yellow-400">
-                                  <div className="mb-2">
+                                  <div className="mb-3 flex items-center justify-between">
                                     <span className="text-xs font-semibold text-yellow-800 uppercase">Preview del email que se enviaría</span>
+                                    <a
+                                      href={`/benchmarks/${b.prospect_companies?.industry === 'saas' ? 'saas' : 'inmobiliarias'}.html`}
+                                      target="_blank"
+                                      rel="noopener"
+                                      className="text-xs px-3 py-1.5 bg-blue-600 text-white rounded font-semibold hover:bg-blue-700"
+                                    >
+                                      Ver HTML completo ↗
+                                    </a>
                                   </div>
-                                  <div className="bg-white rounded border p-4 max-w-xl">
+                                  <div className="bg-white rounded border p-4">
                                     <div className="text-xs text-gray-500 mb-3">
                                       <strong>De:</strong> Müller &amp; Pérez &lt;contacto@mulleryperez.cl&gt;<br/>
-                                      <strong>Para:</strong> [email del contacto]<br/>
-                                      <strong>Asunto:</strong> {b.prospect_companies?.name}: {b.final_score}/100 en madurez digital — benchmark gratuito
+                                      <strong>Para:</strong> [todos los emails verificados de {b.prospect_companies?.industry}]<br/>
+                                      <strong>Asunto:</strong> {b.prospect_companies?.industry === 'saas'
+                                        ? 'Así se adquieren clientes en SaaS B2B en Chile — Análisis abril 2026'
+                                        : 'Así se está moviendo la publicidad inmobiliaria en Chile — Análisis abril 2026'
+                                      }
                                     </div>
                                     <hr className="my-3"/>
-                                    <div className="text-sm text-gray-700 space-y-3">
-                                      <p>Hola,</p>
-                                      <p>Analizamos la presencia digital de <strong>{b.prospect_companies?.name}</strong> como parte de un estudio de la industria {b.prospect_companies?.industry} en {b.prospect_companies?.city || 'Chile'}.</p>
-                                      <p>El resultado: <strong style={{color: b.final_score <= 39 ? '#e74c3c' : b.final_score <= 69 ? '#f39c12' : '#27ae60'}}>{b.final_score}/100</strong> en madurez digital.</p>
-                                      <table className="w-full border-collapse text-xs my-2">
-                                        <tbody>
-                                          <tr className="bg-gray-50"><td className="p-2 border">Sitio Web</td><td className="p-2 border text-center font-bold">{b.website_score}/20</td></tr>
-                                          <tr><td className="p-2 border">Redes Sociales</td><td className="p-2 border text-center font-bold">{(b.instagram_score || 0) + (b.linkedin_score || 0) + (b.facebook_score || 0)}/40</td></tr>
-                                          <tr className="bg-gray-50"><td className="p-2 border">SEO</td><td className="p-2 border text-center font-bold">{b.seo_score}/10</td></tr>
-                                          <tr><td className="p-2 border">Preparación para Pauta</td><td className="p-2 border text-center font-bold">{b.paid_readiness_score}/15</td></tr>
-                                        </tbody>
-                                      </table>
-                                      <p><strong>Principal hallazgo:</strong> {b.brechas?.[0] || 'Brechas en su presencia digital'}</p>
-                                      {b.brechas && b.brechas.length > 1 && (
-                                        <ul className="list-disc pl-5 space-y-1">
-                                          {b.brechas.slice(1, 3).map((br, i) => <li key={i}>{br}</li>)}
-                                        </ul>
-                                      )}
-                                      <p>Tenemos el benchmark completo con acciones concretas. ¿Les interesa recibirlo? Son 15 minutos de revisión.</p>
-                                      <p className="text-xs text-gray-500 mt-4">Arturo Vargas · Müller &amp; Pérez — Performance Marketing · +56 9 5419 7432</p>
+                                    <div className="bg-gray-900 rounded-lg p-4 text-white">
+                                      <div className="text-center mb-4">
+                                        <div className="text-[9px] uppercase tracking-widest text-blue-400 font-bold mb-2">Análisis de industria · Abril 2026</div>
+                                        <div className="text-lg font-black leading-tight">
+                                          {b.prospect_companies?.industry === 'saas'
+                                            ? <>Así se adquieren clientes en <span className="text-blue-400">SaaS B2B</span> en Chile</>
+                                            : <>Así se está moviendo la <span className="text-blue-400">publicidad inmobiliaria</span> en Chile</>
+                                          }
+                                        </div>
+                                      </div>
+                                      <div className="grid grid-cols-4 gap-2 mb-4">
+                                        {b.prospect_companies?.industry === 'saas' ? (
+                                          <>
+                                            <div className="bg-gray-800 rounded p-2 text-center"><div className="text-sm font-black text-white">22.9K</div><div className="text-[8px] text-gray-400 uppercase">Búsquedas/mes</div></div>
+                                            <div className="bg-gray-800 rounded p-2 text-center"><div className="text-sm font-black text-blue-400">$39</div><div className="text-[8px] text-gray-400 uppercase">CPC promedio</div></div>
+                                            <div className="bg-gray-800 rounded p-2 text-center"><div className="text-sm font-black text-green-400">4.1%</div><div className="text-[8px] text-gray-400 uppercase">Conversión</div></div>
+                                            <div className="bg-gray-800 rounded p-2 text-center"><div className="text-sm font-black text-blue-400">$951</div><div className="text-[8px] text-gray-400 uppercase">CPA/lead</div></div>
+                                          </>
+                                        ) : (
+                                          <>
+                                            <div className="bg-gray-800 rounded p-2 text-center"><div className="text-sm font-black text-white">72.6K</div><div className="text-[8px] text-gray-400 uppercase">Búsquedas/mes</div></div>
+                                            <div className="bg-gray-800 rounded p-2 text-center"><div className="text-sm font-black text-blue-400">$215</div><div className="text-[8px] text-gray-400 uppercase">CPC promedio</div></div>
+                                            <div className="bg-gray-800 rounded p-2 text-center"><div className="text-sm font-black text-yellow-400">1.8%</div><div className="text-[8px] text-gray-400 uppercase">Conversión</div></div>
+                                            <div className="bg-gray-800 rounded p-2 text-center"><div className="text-sm font-black text-red-400">$11.9K</div><div className="text-[8px] text-gray-400 uppercase">CPA/lead</div></div>
+                                          </>
+                                        )}
+                                      </div>
+                                      <div className="text-[10px] text-gray-400 space-y-1.5">
+                                        <div className="font-bold text-white text-xs mb-1">Incluye:</div>
+                                        <div>📊 Ranking de empresas con más anuncios activos en Meta</div>
+                                        <div>🔔 Sistema de alertas de competencia (ejemplo real)</div>
+                                        <div>🌳 Árbol de decisión de campañas por industria</div>
+                                        <div>📋 Benchmarks de referencia (CPC, CVR, CPA, engagement)</div>
+                                        <div>🎯 Servicios M&P específicos para la industria</div>
+                                        <div>💬 CTA WhatsApp para agendar diagnóstico gratis</div>
+                                      </div>
                                     </div>
+                                    <p className="text-[10px] text-gray-400 mt-3 text-center">
+                                      Gestión de Clientes · Müller &amp; Pérez — Performance Marketing · mulleryperez.cl
+                                    </p>
                                   </div>
                                 </td>
                               </tr>
