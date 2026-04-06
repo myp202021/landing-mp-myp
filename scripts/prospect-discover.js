@@ -161,13 +161,23 @@ async function saveCompanies(results, industry, searchQuery, batchId) {
       status: 'discovered',
     }
 
-    // Upsert por dominio
+    // Check si ya existe por dominio
+    const { data: existing } = await supabase
+      .from('prospect_companies')
+      .select('id')
+      .eq('website_domain', domain)
+      .limit(1)
+      .single()
+
+    if (existing) {
+      skipped++
+      continue
+    }
+
+    // Insertar nueva
     const { error } = await supabase
       .from('prospect_companies')
-      .upsert(company, {
-        onConflict: 'website_domain',
-        ignoreDuplicates: true
-      })
+      .insert(company)
 
     if (error) {
       if (error.code === '23505') { // duplicate
