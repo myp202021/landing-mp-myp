@@ -24,7 +24,7 @@ export async function GET(request: Request) {
         .from('prospect_companies')
         .select(`
           *,
-          prospect_contacts(id, contact_email, email_type, is_primary),
+          prospect_contacts(id, contact_email, email_type, is_primary, is_valid, verification_status),
           prospect_benchmarks(id, final_score, generated_at)
         `, { count: 'exact' })
         .order('creado_en', { ascending: false })

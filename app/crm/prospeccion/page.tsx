@@ -22,7 +22,7 @@ interface Company {
   source_query: string | null
   batch_id: string | null
   creado_en: string
-  prospect_contacts: Array<{ id: number; contact_email: string; email_type: string; is_primary: boolean }>
+  prospect_contacts: Array<{ id: number; contact_email: string; email_type: string; is_primary: boolean; is_valid: boolean; verification_status: string | null }>
   prospect_benchmarks: Array<{ id: number; final_score: number; generated_at: string }>
 }
 
@@ -97,6 +97,15 @@ function scoreColor(score: number): string {
   if (score <= 39) return 'text-red-600 font-bold'
   if (score <= 69) return 'text-yellow-600 font-bold'
   return 'text-green-600 font-bold'
+}
+
+const VERIFY_LABELS: Record<string, { label: string; color: string }> = {
+  valid: { label: 'Verificado', color: 'bg-green-100 text-green-700' },
+  invalid: { label: 'Inválido', color: 'bg-red-100 text-red-700' },
+  disposable: { label: 'Desechable', color: 'bg-red-100 text-red-600' },
+  catch_all: { label: 'Catch-all', color: 'bg-yellow-100 text-yellow-700' },
+  pending: { label: 'Pendiente', color: 'bg-gray-100 text-gray-500' },
+  unknown: { label: 'Sin verificar', color: 'bg-gray-100 text-gray-400' },
 }
 
 function formatDate(dateStr: string | null): string {
@@ -350,7 +359,14 @@ export default function ProspeccionPage() {
                             <td className="px-4 py-3 text-gray-600">{emp.city || '—'}</td>
                             <td className="px-4 py-3">
                               {primaryContact ? (
-                                <span className="text-xs text-gray-700">{primaryContact.contact_email}</span>
+                                <div>
+                                  <span className="text-xs text-gray-700">{primaryContact.contact_email}</span>
+                                  {(() => {
+                                    const vs = primaryContact.verification_status || 'pending'
+                                    const vl = VERIFY_LABELS[vs] || VERIFY_LABELS.unknown
+                                    return <span className={`ml-1.5 px-1.5 py-0.5 rounded text-[9px] font-semibold ${vl.color}`}>{vl.label}</span>
+                                  })()}
+                                </div>
                               ) : (
                                 <span className="text-xs text-gray-400">Sin email</span>
                               )}

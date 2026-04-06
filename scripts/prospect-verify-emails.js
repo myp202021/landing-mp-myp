@@ -202,15 +202,14 @@ async function main() {
         case 'valid':
           console.log('✅ válido')
           valid++
+          await supabase.from('prospect_contacts').update({ is_valid: true, verification_status: 'valid' }).eq('id', contact.id)
           break
 
         case 'invalid':
         case 'not_valid':
           console.log('❌ inválido → suppression')
           invalid++
-          // Marcar contacto como inválido
-          await supabase.from('prospect_contacts').update({ is_valid: false }).eq('id', contact.id)
-          // Agregar a suppression list
+          await supabase.from('prospect_contacts').update({ is_valid: false, verification_status: 'invalid' }).eq('id', contact.id)
           await supabase.from('prospect_suppressions').upsert({
             email: email.toLowerCase(),
             reason: 'bounced',
@@ -220,7 +219,7 @@ async function main() {
         case 'disposable':
           console.log('🗑️ disposable → suppression')
           invalid++
-          await supabase.from('prospect_contacts').update({ is_valid: false }).eq('id', contact.id)
+          await supabase.from('prospect_contacts').update({ is_valid: false, verification_status: 'disposable' }).eq('id', contact.id)
           await supabase.from('prospect_suppressions').upsert({
             email: email.toLowerCase(),
             reason: 'manual',
@@ -231,12 +230,13 @@ async function main() {
         case 'catch-all':
           console.log('⚠️ catch-all (dominio acepta todo)')
           catchAll++
-          // No descartar, pero marcar para precaución
+          await supabase.from('prospect_contacts').update({ verification_status: 'catch_all' }).eq('id', contact.id)
           break
 
         default:
           console.log(`❓ ${status}`)
           unknown++
+          await supabase.from('prospect_contacts').update({ verification_status: status || 'unknown' }).eq('id', contact.id)
           break
       }
 
