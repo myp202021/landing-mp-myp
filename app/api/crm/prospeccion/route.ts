@@ -76,18 +76,20 @@ export async function GET(request: Request) {
 
     // Stats generales
     if (tab === 'stats') {
-      const [companies, enriched, benchmarked, emailed, replied] = await Promise.all([
+      const [companies, withEmail, enriched, qualified, emailed, replied] = await Promise.all([
         supabase.from('prospect_companies').select('id', { count: 'exact', head: true }),
-        supabase.from('prospect_companies').select('id', { count: 'exact', head: true }).eq('status', 'enriched'),
-        supabase.from('prospect_companies').select('id', { count: 'exact', head: true }).eq('status', 'benchmarked'),
+        supabase.from('prospect_contacts').select('id', { count: 'exact', head: true }).eq('is_valid', true),
+        supabase.from('prospect_companies').select('id', { count: 'exact', head: true }).in('status', ['enriched', 'benchmarked']),
+        supabase.from('prospect_companies').select('id', { count: 'exact', head: true }).eq('status', 'qualified'),
         supabase.from('prospect_companies').select('id', { count: 'exact', head: true }).eq('status', 'emailed'),
         supabase.from('prospect_companies').select('id', { count: 'exact', head: true }).eq('status', 'replied'),
       ])
 
       return NextResponse.json({
         total_empresas: companies.count || 0,
+        con_email: withEmail.count || 0,
         enriched: enriched.count || 0,
-        benchmarked: benchmarked.count || 0,
+        qualified: qualified.count || 0,
         emailed: emailed.count || 0,
         replied: replied.count || 0,
       })

@@ -62,8 +62,9 @@ interface Benchmark {
 
 interface Stats {
   total_empresas: number
+  con_email: number
   enriched: number
-  benchmarked: number
+  qualified: number
   emailed: number
   replied: number
 }
@@ -228,18 +229,22 @@ export default function ProspeccionPage() {
     <CRMLayout title="Prospección Automática">
       {/* Stats cards */}
       {stats && (
-        <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-6">
+        <div className="grid grid-cols-3 sm:grid-cols-6 gap-3 mb-6">
           <div className="bg-white rounded-lg shadow p-4 text-center">
             <div className="text-2xl font-bold text-gray-900">{stats.total_empresas}</div>
             <div className="text-xs text-gray-500 mt-1">Empresas</div>
           </div>
           <div className="bg-white rounded-lg shadow p-4 text-center">
-            <div className="text-2xl font-bold text-blue-600">{stats.enriched}</div>
+            <div className="text-2xl font-bold text-blue-600">{stats.con_email}</div>
+            <div className="text-xs text-gray-500 mt-1">Emails válidos</div>
+          </div>
+          <div className="bg-white rounded-lg shadow p-4 text-center">
+            <div className="text-2xl font-bold text-purple-600">{stats.enriched}</div>
             <div className="text-xs text-gray-500 mt-1">Enriquecidas</div>
           </div>
           <div className="bg-white rounded-lg shadow p-4 text-center">
-            <div className="text-2xl font-bold text-purple-600">{stats.benchmarked}</div>
-            <div className="text-xs text-gray-500 mt-1">Benchmarkeadas</div>
+            <div className="text-2xl font-bold text-indigo-600">{stats.qualified}</div>
+            <div className="text-xs text-gray-500 mt-1">Aprobadas</div>
           </div>
           <div className="bg-white rounded-lg shadow p-4 text-center">
             <div className="text-2xl font-bold text-yellow-600">{stats.emailed}</div>
