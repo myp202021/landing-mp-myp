@@ -72,11 +72,11 @@ async function findEmailsByDomain(domain) {
       body: JSON.stringify({ domain })
     })
     const searchData = await searchRes.json()
-    const taskHash = searchData.data?.task_hash
+    const taskHash = searchData.meta?.task_hash
 
     if (!taskHash) return results
 
-    // 3. Esperar y obtener resultado
+    // 3. Esperar y obtener resultado para sacar links
     await new Promise(r => setTimeout(r, 3000))
 
     const resultRes = await fetch(`https://api.snov.io/v2/domain-search/result/${taskHash}`, {
@@ -85,40 +85,70 @@ async function findEmailsByDomain(domain) {
     const resultData = await resultRes.json()
     results.companyName = resultData.data?.company_name || null
 
-    // 4. Obtener emails genéricos (info@, contacto@, ventas@)
-    const genericRes = await fetch(`https://api.snov.io/v2/domain-search/generic-contacts/result/${taskHash}`, {
-      headers: { 'Authorization': `Bearer ${token}` }
-    })
-    const genericData = await genericRes.json()
+    // 4. Si hay domain_emails link → iniciar búsqueda de emails (requiere 2do start)
+    const domainEmailsLink = resultData.links?.domain_emails
+    if (domainEmailsLink) {
+      const startEmailsRes = await fetch(domainEmailsLink, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({})
+      })
+      const startEmailsData = await startEmailsRes.json()
+      const emailTaskHash = startEmailsData.meta?.task_hash
 
-    if (genericData.data && Array.isArray(genericData.data)) {
-      for (const item of genericData.data) {
-        if (item.email) {
-          results.emails.push({
-            email: item.email.toLowerCase(),
-            type: classifyEmail(item.email),
-            status: 'valid', // Snov.io devuelve emails verificados
-            source: 'snovio_domain_search',
-          })
+      if (emailTaskHash) {
+        await new Promise(r => setTimeout(r, 3000))
+
+        const emailsResultRes = await fetch(`https://api.snov.io/v2/domain-search/domain-emails/result/${emailTaskHash}`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        })
+        const emailsResultData = await emailsResultRes.json()
+
+        if (emailsResultData.data && Array.isArray(emailsResultData.data)) {
+          for (const item of emailsResultData.data) {
+            if (item.email) {
+              results.emails.push({
+                email: item.email.toLowerCase(),
+                type: classifyEmail(item.email),
+                status: 'valid',
+                source: 'snovio_domain_search',
+              })
+            }
+          }
         }
       }
     }
 
-    // 5. Obtener emails de dominio
-    const domainEmailsRes = await fetch(`https://api.snov.io/v2/domain-search/domain-emails/result/${taskHash}`, {
-      headers: { 'Authorization': `Bearer ${token}` }
-    })
-    const domainEmailsData = await domainEmailsRes.json()
+    // 5. Si hay generic_contacts link → buscar genéricos también
+    const genericLink = resultData.links?.generic_contacts
+    if (genericLink) {
+      const startGenRes = await fetch(genericLink, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({})
+      })
+      const startGenData = await startGenRes.json()
+      const genTaskHash = startGenData.meta?.task_hash
 
-    if (domainEmailsData.data && Array.isArray(domainEmailsData.data)) {
-      for (const item of domainEmailsData.data) {
-        if (item.email && !results.emails.some(e => e.email === item.email.toLowerCase())) {
-          results.emails.push({
-            email: item.email.toLowerCase(),
-            type: classifyEmail(item.email),
-            status: 'valid',
-            source: 'snovio_domain_search',
-          })
+      if (genTaskHash) {
+        await new Promise(r => setTimeout(r, 2000))
+
+        const genResultRes = await fetch(`https://api.snov.io/v2/domain-search/generic-contacts/result/${genTaskHash}`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        })
+        const genResultData = await genResultRes.json()
+
+        if (genResultData.data && Array.isArray(genResultData.data)) {
+          for (const item of genResultData.data) {
+            if (item.email && !results.emails.some(e => e.email === item.email.toLowerCase())) {
+              results.emails.push({
+                email: item.email.toLowerCase(),
+                type: classifyEmail(item.email),
+                status: 'valid',
+                source: 'snovio_generic',
+              })
+            }
+          }
         }
       }
     }
