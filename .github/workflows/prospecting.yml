@@ -36,9 +36,11 @@ jobs:
 
       - run: sleep 10
 
-      - name: "Enriquecer inmobiliarias"
+      - name: "Enriquecer inmobiliarias (Snov.io + RRSS)"
         run: node scripts/prospect-enrich.js --industry inmobiliaria --limit 30
         env:
+          SNOVIO_CLIENT_ID: ${{ secrets.SNOVIO_CLIENT_ID }}
+          SNOVIO_CLIENT_SECRET: ${{ secrets.SNOVIO_CLIENT_SECRET }}
           APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
@@ -73,9 +75,11 @@ jobs:
 
       - run: sleep 10
 
-      - name: "Enriquecer SaaS"
+      - name: "Enriquecer SaaS (Snov.io + RRSS)"
         run: node scripts/prospect-enrich.js --industry saas --limit 30
         env:
+          SNOVIO_CLIENT_ID: ${{ secrets.SNOVIO_CLIENT_ID }}
+          SNOVIO_CLIENT_SECRET: ${{ secrets.SNOVIO_CLIENT_SECRET }}
           APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
