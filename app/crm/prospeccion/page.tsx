@@ -466,7 +466,7 @@ export default function ProspeccionPage() {
                         disabled={actionLoading}
                         className="px-4 py-1.5 bg-green-600 text-white rounded text-xs font-semibold hover:bg-green-700 disabled:opacity-50"
                       >
-                        Aprobar para envío
+                        {actionLoading ? 'Enviando...' : 'Aprobar y enviar email'}
                       </button>
                       <button
                         onClick={() => handleBulkAction('disqualify')}
@@ -557,9 +557,9 @@ export default function ProspeccionPage() {
                                         onClick={() => handleSingleAction(companyId, 'approve')}
                                         disabled={actionLoading}
                                         className="px-2 py-1 bg-green-100 text-green-700 rounded text-xs font-medium hover:bg-green-200 disabled:opacity-50"
-                                        title="Aprobar para envío"
+                                        title="Aprobar y enviar email ahora"
                                       >
-                                        Aprobar
+                                        {actionLoading ? '...' : 'Enviar'}
                                       </button>
                                       <button
                                         onClick={() => handleSingleAction(companyId, 'disqualify')}

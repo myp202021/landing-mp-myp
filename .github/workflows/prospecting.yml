@@ -1,9 +1,6 @@
 name: "Prospección: Scraping + Verificación (Martes 12:00)"
 
 on:
-  # Martes 12:00 PM Chile (16:00 UTC)
-  schedule:
-    - cron: '0 16 * * 2'
   workflow_dispatch:
     inputs:
       industry:
