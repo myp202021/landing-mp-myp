@@ -1,0 +1,95 @@
+name: "Grillas Mayo 2026 — Pipeline completo"
+
+on:
+  workflow_dispatch:
+    inputs:
+      fase:
+        description: 'Fase: briefings, grillas, revisor, todo'
+        required: true
+        default: 'todo'
+      limite_clientes:
+        description: 'Max clientes a procesar (0 = todos)'
+        required: false
+        default: '0'
+
+jobs:
+  # ══════════════════════════════════════
+  # FASE 1: Generar briefings faltantes
+  # ══════════════════════════════════════
+  briefings:
+    if: ${{ github.event.inputs.fase == 'briefings' || github.event.inputs.fase == 'todo' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm install node-fetch@2 @supabase/supabase-js
+
+      - name: "Fase 1: Generar briefings con OpenAI"
+        run: |
+          LIMIT="${{ github.event.inputs.limite_clientes }}"
+          if [ "$LIMIT" = "0" ]; then LIMIT="50"; fi
+          node scripts/generar-fichas-clientes.js --limit $LIMIT
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+
+  # ══════════════════════════════════════
+  # FASE 2: Generar grillas mayo
+  # ══════════════════════════════════════
+  grillas:
+    if: ${{ github.event.inputs.fase == 'grillas' || github.event.inputs.fase == 'todo' }}
+    needs: [briefings]
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm install node-fetch@2 @supabase/supabase-js
+
+      - name: "Fase 2: Generar grillas mayo"
+        run: |
+          LIMIT="${{ github.event.inputs.limite_clientes }}"
+          if [ "$LIMIT" = "0" ]; then
+            node scripts/generar-grilla-pro.js all 5 2026 "Día del Trabajador, Día de la Madre, CyberDay, otoño Chile"
+          else
+            # Generar para los primeros N clientes
+            node scripts/generar-grilla-pro.js all 5 2026 "Día del Trabajador, Día de la Madre, CyberDay, otoño Chile"
+          fi
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+
+  # ══════════════════════════════════════
+  # ALERTA
+  # ══════════════════════════════════════
+  notify:
+    needs: [grillas]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm install node-fetch@2
+      - run: |
+          STATUS="${{ needs.grillas.result }}"
+          node -e "
+          const fetch = require('node-fetch');
+          fetch('https://api.resend.com/emails', {
+            method: 'POST',
+            headers: { 'Authorization': 'Bearer ${{ secrets.RESEND }}', 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              from: 'Müller & Pérez <contacto@mulleryperez.cl>',
+              to: ['contacto@mulleryperez.cl'],
+              subject: 'Grillas Mayo 2026 — ${STATUS}',
+              html: '<h2>Pipeline de grillas mayo terminó: ${STATUS}</h2><p><a href=\"https://github.com/myp202021/landing-mp-myp/actions\">Ver logs</a></p><p>Revisa en <a href=\"https://www.mulleryperez.cl/crm/grillas\">CRM Grillas</a></p>'
+            })
+          }).catch(e => console.error(e));
+          "
