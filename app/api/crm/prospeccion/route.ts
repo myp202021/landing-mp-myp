@@ -60,38 +60,40 @@ export async function GET(request: Request) {
     }
 
     if (tab === 'benchmarks') {
-      const { data, count, error } = await supabase
-        .from('prospect_benchmarks')
+      // Mostrar empresas con email válido, listas para aprobar/enviar
+      let query = supabase
+        .from('prospect_companies')
         .select(`
           *,
-          prospect_companies(id, name, website, industry, city, instagram_url, linkedin_url, facebook_url)
+          prospect_contacts!inner(id, contact_email, email_type, is_primary, is_valid, verification_status)
         `, { count: 'exact' })
-        .order('generated_at', { ascending: false })
+        .in('status', ['enriched', 'benchmarked', 'qualified', 'discovered'])
+        .order('creado_en', { ascending: false })
         .range(offset, offset + limit - 1)
 
+      if (industry) query = query.eq('industry', industry)
+
+      const { data, count, error } = await query
       if (error) throw error
 
       return NextResponse.json({ benchmarks: data, total: count })
     }
 
-    // Stats generales
+    // Stats generales — usar select con count para evitar bugs de head:true
     if (tab === 'stats') {
-      const [companies, withEmail, enriched, qualified, emailed, replied] = await Promise.all([
-        supabase.from('prospect_companies').select('id', { count: 'exact', head: true }),
-        supabase.from('prospect_contacts').select('id', { count: 'exact', head: true }).eq('is_valid', true),
-        supabase.from('prospect_companies').select('id', { count: 'exact', head: true }).in('status', ['enriched', 'benchmarked']),
-        supabase.from('prospect_companies').select('id', { count: 'exact', head: true }).eq('status', 'qualified'),
-        supabase.from('prospect_companies').select('id', { count: 'exact', head: true }).eq('status', 'emailed'),
-        supabase.from('prospect_companies').select('id', { count: 'exact', head: true }).eq('status', 'replied'),
-      ])
+      const { data: allCompanies } = await supabase.from('prospect_companies').select('id, status')
+      const { data: allContacts } = await supabase.from('prospect_contacts').select('id, is_valid, verification_status')
+
+      const companies = allCompanies || []
+      const contacts = allContacts || []
 
       return NextResponse.json({
-        total_empresas: companies.count || 0,
-        con_email: withEmail.count || 0,
-        enriched: enriched.count || 0,
-        qualified: qualified.count || 0,
-        emailed: emailed.count || 0,
-        replied: replied.count || 0,
+        total_empresas: companies.length,
+        con_email: contacts.filter(c => c.is_valid === true).length,
+        enriched: companies.filter(c => ['enriched', 'benchmarked'].includes(c.status)).length,
+        qualified: companies.filter(c => c.status === 'qualified').length,
+        emailed: companies.filter(c => c.status === 'emailed').length,
+        replied: companies.filter(c => c.status === 'replied').length,
       })
     }
 

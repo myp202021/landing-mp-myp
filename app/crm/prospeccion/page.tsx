@@ -459,14 +459,14 @@ export default function ProspeccionPage() {
                 <div>
                   {/* Barra de acciones bulk */}
                   {selectedCompanies.size > 0 && (
-                    <div className="flex items-center gap-3 px-4 py-3 bg-blue-50 border-b">
-                      <span className="text-sm font-medium text-blue-800">{selectedCompanies.size} seleccionadas</span>
+                    <div className="flex items-center gap-3 px-4 py-3 bg-green-50 border-b">
+                      <span className="text-sm font-medium text-green-800">{selectedCompanies.size} seleccionadas</span>
                       <button
                         onClick={() => handleBulkAction('approve')}
                         disabled={actionLoading}
                         className="px-4 py-1.5 bg-green-600 text-white rounded text-xs font-semibold hover:bg-green-700 disabled:opacity-50"
                       >
-                        {actionLoading ? 'Enviando...' : 'Aprobar y enviar email'}
+                        {actionLoading ? 'Enviando...' : `Enviar benchmark a ${selectedCompanies.size} empresas`}
                       </button>
                       <button
                         onClick={() => handleBulkAction('disqualify')}
@@ -475,238 +475,106 @@ export default function ProspeccionPage() {
                       >
                         Descartar
                       </button>
-                      <button
-                        onClick={() => setSelectedCompanies(new Set())}
-                        className="px-3 py-1.5 text-xs text-gray-600 hover:text-gray-800"
-                      >
-                        Limpiar selección
-                      </button>
+                      <button onClick={() => setSelectedCompanies(new Set())} className="px-3 py-1.5 text-xs text-gray-600 hover:text-gray-800">Limpiar</button>
                     </div>
                   )}
+
+                  {/* Filtro por industria */}
+                  <div className="flex gap-3 px-4 py-3 bg-gray-50 border-b">
+                    <select
+                      value={filterIndustry}
+                      onChange={e => { setFilterIndustry(e.target.value); setPage(1) }}
+                      className="text-sm border rounded-lg px-3 py-2"
+                    >
+                      <option value="">Todas las industrias</option>
+                      <option value="inmobiliaria">Inmobiliaria</option>
+                      <option value="saas">SaaS</option>
+                    </select>
+                    <a
+                      href={`/benchmarks/${filterIndustry === 'saas' ? 'saas' : 'inmobiliarias'}.html`}
+                      target="_blank" rel="noopener"
+                      className="text-xs px-3 py-2 bg-blue-600 text-white rounded font-semibold hover:bg-blue-700"
+                    >
+                      Ver benchmark HTML ↗
+                    </a>
+                  </div>
 
                   <div className="overflow-x-auto">
                     <table className="w-full text-sm">
                       <thead className="bg-gray-50 text-left text-xs text-gray-500 uppercase">
                         <tr>
                           <th className="px-3 py-3 w-8">
-                            <input
-                              type="checkbox"
+                            <input type="checkbox"
                               onChange={e => {
-                                if (e.target.checked) {
-                                  setSelectedCompanies(new Set(benchmarks.map(b => b.prospect_companies?.id).filter(Boolean)))
-                                } else {
-                                  setSelectedCompanies(new Set())
-                                }
+                                if (e.target.checked) setSelectedCompanies(new Set(benchmarks.map((b: any) => b.id)))
+                                else setSelectedCompanies(new Set())
                               }}
                               checked={selectedCompanies.size > 0 && selectedCompanies.size === benchmarks.length}
                               className="rounded"
                             />
                           </th>
                           <th className="px-4 py-3">Empresa</th>
-                          <th className="px-4 py-3">Final</th>
-                          <th className="px-4 py-3">Web</th>
-                          <th className="px-4 py-3">IG</th>
-                          <th className="px-4 py-3">LI</th>
-                          <th className="px-4 py-3">FB</th>
-                          <th className="px-4 py-3">SEO</th>
-                          <th className="px-4 py-3">Pauta</th>
-                          <th className="px-4 py-3">Fecha</th>
+                          <th className="px-4 py-3">Industria</th>
+                          <th className="px-4 py-3">Ciudad</th>
+                          <th className="px-4 py-3">Email</th>
+                          <th className="px-4 py-3">Snov.io</th>
+                          <th className="px-4 py-3">Estado</th>
                           <th className="px-4 py-3">Acciones</th>
                         </tr>
                       </thead>
                       <tbody className="divide-y">
-                        {benchmarks.map(b => {
-                          const companyId = b.prospect_companies?.id
+                        {benchmarks.map((b: any) => {
+                          const contacts = b.prospect_contacts || []
+                          const primaryContact = contacts.find((c: any) => c.is_primary) || contacts[0]
+                          const vs = primaryContact?.verification_status || 'pending'
+                          const vl = VERIFY_LABELS[vs] || VERIFY_LABELS.unknown
+                          const st = STATUS_LABELS[b.status] || { label: b.status, color: 'bg-gray-100 text-gray-600' }
+
                           return (
-                          <>
                             <tr key={b.id} className="hover:bg-gray-50">
                               <td className="px-3 py-3">
-                                {companyId && (
-                                  <input
-                                    type="checkbox"
-                                    checked={selectedCompanies.has(companyId)}
-                                    onChange={() => toggleSelectCompany(companyId)}
-                                    className="rounded"
-                                  />
-                                )}
+                                <input type="checkbox" checked={selectedCompanies.has(b.id)} onChange={() => toggleSelectCompany(b.id)} className="rounded" />
                               </td>
-                              <td className="px-4 py-3 cursor-pointer" onClick={() => setExpandedBenchmark(expandedBenchmark === b.id ? null : b.id)}>
-                                <div className="font-medium">{b.prospect_companies?.name}</div>
-                                <div className="text-xs text-gray-500">{b.prospect_companies?.industry} · {b.prospect_companies?.city || 'Chile'}</div>
+                              <td className="px-4 py-3">
+                                <div className="font-medium text-gray-900">{b.name}</div>
+                                {b.website && <a href={b.website} target="_blank" rel="noopener" className="text-xs text-blue-500 hover:underline">{b.website.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '')}</a>}
                               </td>
-                              <td className={`px-4 py-3 ${scoreColor(b.final_score)}`}>{b.final_score}/100</td>
-                              <td className="px-4 py-3">{b.website_score}/20</td>
-                              <td className="px-4 py-3">{b.instagram_score}/15</td>
-                              <td className="px-4 py-3">{b.linkedin_score}/15</td>
-                              <td className="px-4 py-3">{b.facebook_score}/10</td>
-                              <td className="px-4 py-3">{b.seo_score}/10</td>
-                              <td className="px-4 py-3">{b.paid_readiness_score}/15</td>
-                              <td className="px-4 py-3 text-xs text-gray-500">{formatDate(b.generated_at)}</td>
+                              <td className="px-4 py-3 text-gray-600">{b.industry}</td>
+                              <td className="px-4 py-3 text-gray-600">{b.city || '—'}</td>
+                              <td className="px-4 py-3">
+                                {primaryContact ? (
+                                  <span className="text-xs text-gray-700">{primaryContact.contact_email}</span>
+                                ) : <span className="text-xs text-gray-400">Sin email</span>}
+                              </td>
+                              <td className="px-4 py-3">
+                                <span className={`px-2 py-0.5 rounded text-[10px] font-semibold ${vl.color}`}>{vl.label}</span>
+                              </td>
+                              <td className="px-4 py-3">
+                                <span className={`px-2 py-1 rounded-full text-xs font-medium ${st.color}`}>{st.label}</span>
+                              </td>
                               <td className="px-4 py-3">
                                 <div className="flex gap-1">
                                   <button
-                                    onClick={() => setPreviewEmail(previewEmail === b.id ? null : b.id)}
-                                    className="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-medium hover:bg-blue-200"
-                                    title="Preview email"
+                                    onClick={() => handleSingleAction(b.id, 'approve')}
+                                    disabled={actionLoading || !primaryContact}
+                                    className="px-2.5 py-1 bg-green-600 text-white rounded text-xs font-semibold hover:bg-green-700 disabled:opacity-30"
                                   >
-                                    👁 Email
+                                    {actionLoading ? '...' : 'Enviar'}
                                   </button>
-                                  {companyId && (
-                                    <>
-                                      <button
-                                        onClick={() => handleSingleAction(companyId, 'approve')}
-                                        disabled={actionLoading}
-                                        className="px-2 py-1 bg-green-100 text-green-700 rounded text-xs font-medium hover:bg-green-200 disabled:opacity-50"
-                                        title="Aprobar y enviar email ahora"
-                                      >
-                                        {actionLoading ? '...' : 'Enviar'}
-                                      </button>
-                                      <button
-                                        onClick={() => handleSingleAction(companyId, 'disqualify')}
-                                        disabled={actionLoading}
-                                        className="px-2 py-1 bg-red-100 text-red-700 rounded text-xs font-medium hover:bg-red-200 disabled:opacity-50"
-                                        title="Descartar"
-                                      >
-                                        Descartar
-                                      </button>
-                                    </>
-                                  )}
+                                  <button
+                                    onClick={() => handleSingleAction(b.id, 'disqualify')}
+                                    disabled={actionLoading}
+                                    className="px-2 py-1 bg-red-100 text-red-600 rounded text-xs font-medium hover:bg-red-200 disabled:opacity-50"
+                                  >
+                                    ✕
+                                  </button>
                                 </div>
                               </td>
                             </tr>
-
-                            {/* Preview del email */}
-                            {previewEmail === b.id && (
-                              <tr key={`${b.id}-email`}>
-                                <td colSpan={11} className="px-6 py-4 bg-yellow-50 border-l-4 border-yellow-400">
-                                  <div className="mb-3 flex items-center justify-between">
-                                    <span className="text-xs font-semibold text-yellow-800 uppercase">Preview del email que se enviaría</span>
-                                    <a
-                                      href={`/benchmarks/${b.prospect_companies?.industry === 'saas' ? 'saas' : 'inmobiliarias'}.html`}
-                                      target="_blank"
-                                      rel="noopener"
-                                      className="text-xs px-3 py-1.5 bg-blue-600 text-white rounded font-semibold hover:bg-blue-700"
-                                    >
-                                      Ver HTML completo ↗
-                                    </a>
-                                  </div>
-                                  <div className="bg-white rounded border p-4">
-                                    <div className="text-xs text-gray-500 mb-3">
-                                      <strong>De:</strong> Müller &amp; Pérez &lt;contacto@mulleryperez.cl&gt;<br/>
-                                      <strong>Para:</strong> [todos los emails verificados de {b.prospect_companies?.industry}]<br/>
-                                      <strong>Asunto:</strong> {b.prospect_companies?.industry === 'saas'
-                                        ? 'Así se adquieren clientes en SaaS B2B en Chile — Análisis abril 2026'
-                                        : 'Así se está moviendo la publicidad inmobiliaria en Chile — Análisis abril 2026'
-                                      }
-                                    </div>
-                                    <hr className="my-3"/>
-                                    <div className="bg-gray-900 rounded-lg p-4 text-white">
-                                      <div className="text-center mb-4">
-                                        <div className="text-[9px] uppercase tracking-widest text-blue-400 font-bold mb-2">Análisis de industria · Abril 2026</div>
-                                        <div className="text-lg font-black leading-tight">
-                                          {b.prospect_companies?.industry === 'saas'
-                                            ? <>Así se adquieren clientes en <span className="text-blue-400">SaaS B2B</span> en Chile</>
-                                            : <>Así se está moviendo la <span className="text-blue-400">publicidad inmobiliaria</span> en Chile</>
-                                          }
-                                        </div>
-                                      </div>
-                                      <div className="grid grid-cols-4 gap-2 mb-4">
-                                        {b.prospect_companies?.industry === 'saas' ? (
-                                          <>
-                                            <div className="bg-gray-800 rounded p-2 text-center"><div className="text-sm font-black text-white">22.9K</div><div className="text-[8px] text-gray-400 uppercase">Búsquedas/mes</div></div>
-                                            <div className="bg-gray-800 rounded p-2 text-center"><div className="text-sm font-black text-blue-400">$39</div><div className="text-[8px] text-gray-400 uppercase">CPC promedio</div></div>
-                                            <div className="bg-gray-800 rounded p-2 text-center"><div className="text-sm font-black text-green-400">4.1%</div><div className="text-[8px] text-gray-400 uppercase">Conversión</div></div>
-                                            <div className="bg-gray-800 rounded p-2 text-center"><div className="text-sm font-black text-blue-400">$951</div><div className="text-[8px] text-gray-400 uppercase">CPA/lead</div></div>
-                                          </>
-                                        ) : (
-                                          <>
-                                            <div className="bg-gray-800 rounded p-2 text-center"><div className="text-sm font-black text-white">72.6K</div><div className="text-[8px] text-gray-400 uppercase">Búsquedas/mes</div></div>
-                                            <div className="bg-gray-800 rounded p-2 text-center"><div className="text-sm font-black text-blue-400">$215</div><div className="text-[8px] text-gray-400 uppercase">CPC promedio</div></div>
-                                            <div className="bg-gray-800 rounded p-2 text-center"><div className="text-sm font-black text-yellow-400">1.8%</div><div className="text-[8px] text-gray-400 uppercase">Conversión</div></div>
-                                            <div className="bg-gray-800 rounded p-2 text-center"><div className="text-sm font-black text-red-400">$11.9K</div><div className="text-[8px] text-gray-400 uppercase">CPA/lead</div></div>
-                                          </>
-                                        )}
-                                      </div>
-                                      <div className="text-[10px] text-gray-400 space-y-1.5">
-                                        <div className="font-bold text-white text-xs mb-1">Incluye:</div>
-                                        <div>📊 Ranking de empresas con más anuncios activos en Meta</div>
-                                        <div>🔔 Sistema de alertas de competencia (ejemplo real)</div>
-                                        <div>🌳 Árbol de decisión de campañas por industria</div>
-                                        <div>📋 Benchmarks de referencia (CPC, CVR, CPA, engagement)</div>
-                                        <div>🎯 Servicios M&P específicos para la industria</div>
-                                        <div>💬 CTA WhatsApp para agendar diagnóstico gratis</div>
-                                      </div>
-                                    </div>
-                                    <p className="text-[10px] text-gray-400 mt-3 text-center">
-                                      Gestión de Clientes · Müller &amp; Pérez — Performance Marketing · mulleryperez.cl
-                                    </p>
-                                  </div>
-                                </td>
-                              </tr>
-                            )}
-
-                            {/* Detalle expandido */}
-                            {expandedBenchmark === b.id && (
-                              <tr key={`${b.id}-detail`}>
-                                <td colSpan={11} className="px-6 py-4 bg-gray-50">
-                                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                                    <div>
-                                      <h4 className="font-semibold text-green-700 mb-2">Fortalezas</h4>
-                                      <ul className="space-y-1">
-                                        {(b.fortalezas || []).map((f, i) => (
-                                          <li key={i} className="text-gray-700">✅ {f}</li>
-                                        ))}
-                                        {(!b.fortalezas || b.fortalezas.length === 0) && <li className="text-gray-400">Sin datos</li>}
-                                      </ul>
-                                    </div>
-                                    <div>
-                                      <h4 className="font-semibold text-red-700 mb-2">Brechas</h4>
-                                      <ul className="space-y-1">
-                                        {(b.brechas || []).map((br, i) => (
-                                          <li key={i} className="text-gray-700">⚠️ {br}</li>
-                                        ))}
-                                      </ul>
-                                    </div>
-                                    <div>
-                                      <h4 className="font-semibold text-blue-700 mb-2">Acciones recomendadas</h4>
-                                      <ul className="space-y-1">
-                                        {(b.acciones || []).map((a, i) => (
-                                          <li key={i} className="text-gray-700">🎯 {a}</li>
-                                        ))}
-                                      </ul>
-                                    </div>
-                                  </div>
-                                  {b.resumen_ejecutivo && (
-                                    <div className="mt-4 p-3 bg-white rounded border">
-                                      <h4 className="font-semibold text-gray-700 mb-1">Resumen ejecutivo</h4>
-                                      <p className="text-gray-600 text-sm">{b.resumen_ejecutivo}</p>
-                                    </div>
-                                  )}
-                                  {b.angulo_comercial && (
-                                    <div className="mt-3 p-3 bg-blue-50 rounded border border-blue-200">
-                                      <h4 className="font-semibold text-blue-800 mb-1">Ángulo comercial</h4>
-                                      <p className="text-blue-700 text-sm">{b.angulo_comercial}</p>
-                                    </div>
-                                  )}
-                                  <div className="mt-3 flex gap-2">
-                                    {b.prospect_companies?.website && (
-                                      <a href={b.prospect_companies.website} target="_blank" rel="noopener" className="text-xs px-3 py-1.5 bg-gray-200 rounded hover:bg-gray-300">🌐 Ver sitio</a>
-                                    )}
-                                    {b.prospect_companies?.instagram_url && (
-                                      <a href={b.prospect_companies.instagram_url} target="_blank" rel="noopener" className="text-xs px-3 py-1.5 bg-pink-100 rounded hover:bg-pink-200">📸 Instagram</a>
-                                    )}
-                                    {b.prospect_companies?.linkedin_url && (
-                                      <a href={b.prospect_companies.linkedin_url} target="_blank" rel="noopener" className="text-xs px-3 py-1.5 bg-blue-100 rounded hover:bg-blue-200">💼 LinkedIn</a>
-                                    )}
-                                  </div>
-                                </td>
-                              </tr>
-                            )}
-                          </>
                           )
                         })}
                         {benchmarks.length === 0 && (
-                          <tr><td colSpan={11} className="text-center py-12 text-gray-400">No hay benchmarks generados aún.</td></tr>
+                          <tr><td colSpan={8} className="text-center py-12 text-gray-400">No hay empresas con email pendientes de envío.</td></tr>
                         )}
                       </tbody>
                     </table>
