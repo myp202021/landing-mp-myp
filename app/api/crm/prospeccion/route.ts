@@ -24,14 +24,17 @@ export async function GET(request: Request) {
         .from('prospect_companies')
         .select(`
           *,
-          prospect_contacts(id, contact_email, email_type, is_primary, is_valid, verification_status),
-          prospect_benchmarks(id, final_score, generated_at)
+          prospect_contacts(id, contact_email, email_type, is_primary, is_valid, verification_status)
         `, { count: 'exact' })
         .order('creado_en', { ascending: false })
         .range(offset, offset + limit - 1)
 
       if (industry) query = query.eq('industry', industry)
       if (status) query = query.eq('status', status)
+
+      // Filtro por verificación Snov.io
+      const verified = searchParams.get('verified')
+      // Este filtro se aplica en frontend porque el filtro de relación es complejo
 
       const { data, count, error } = await query
       if (error) throw error
