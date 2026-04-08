@@ -41,8 +41,7 @@ jobs:
   # FASE 2: Generar grillas mayo
   # ══════════════════════════════════════
   grillas:
-    if: ${{ github.event.inputs.fase == 'grillas' || github.event.inputs.fase == 'todo' }}
-    needs: [briefings]
+    if: ${{ always() && (github.event.inputs.fase == 'grillas' || github.event.inputs.fase == 'todo') }}
     runs-on: ubuntu-latest
     timeout-minutes: 120
     steps:
