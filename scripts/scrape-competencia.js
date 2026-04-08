@@ -82,7 +82,7 @@ async function main() {
 
   await supabase.from('reportes_competencia').delete().eq('fecha_reporte', hoy)
 
-  // ── Instagram ──────────────────────────────────────────────────────────────
+  // ── Instagram Posts ──────────────────────────────────────────────────────
   const conIG = COMPETIDORES.filter(c => c.instagram)
   const profileUrls = conIG.map(c => `https://www.instagram.com/${c.instagram}/`)
   let postsIG = []
@@ -103,6 +103,39 @@ async function main() {
     console.log(`✅ Instagram: ${postsIG.length} posts en las últimas 24h`)
   } catch (err) {
     console.error('❌ Error Instagram:', err.message)
+  }
+
+  // ── Instagram Stories ────────────────────────────────────────────────────
+  let storiesIG = []
+  try {
+    const igUsernames = conIG.map(c => c.instagram)
+    console.log(`📱 Scrapeando Stories de ${igUsernames.length} cuentas...`)
+    const stRes = await fetch(
+      `https://api.apify.com/v2/acts/louisdeconinck~instagram-story-details-scraper/run-sync-get-dataset-items?token=${APIFY_TOKEN}&timeout=120`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ usernames: igUsernames }),
+      }
+    )
+    if (!stRes.ok) throw new Error(`Apify Stories: ${stRes.status} ${await stRes.text()}`)
+    const allStories = await stRes.json()
+    storiesIG = allStories.map(s => {
+      const username = s.user?.username || ''
+      const comp = conIG.find(c => c.instagram?.toLowerCase() === username.toLowerCase())
+      return {
+        competidor: comp?.nombre || username,
+        handle: username,
+        type: s.media_type === 2 || s.is_reel_media ? 'Video' : 'Imagen',
+        timestamp: s.taken_at ? new Date(s.taken_at * 1000) : null,
+        imageUrl: s.image_versions2?.candidates?.[0]?.url || '',
+        videoUrl: s.video_versions?.[0]?.url || '',
+        pk: s.pk || s.id || '',
+      }
+    })
+    console.log(`✅ Stories: ${storiesIG.length} stories activas`)
+  } catch (err) {
+    console.error('❌ Error Stories:', err.message)
   }
 
   // Guardar posts Instagram
@@ -143,7 +176,7 @@ async function main() {
   const postsFacebook = await scrapeFacebook(hace24h)
 
   // ── Email con PDF ──────────────────────────────────────────────────────────
-  await enviarEmail({ hoy, postsIG, competidoresConPost, sinActividad, postsLinkedin, postsFacebook })
+  await enviarEmail({ hoy, postsIG, competidoresConPost, sinActividad, postsLinkedin, postsFacebook, storiesIG })
 }
 
 // ─── Generación de PDF con wkhtmltopdf ──────────────────────────────────────
@@ -236,7 +269,7 @@ async function scrapeFacebook(hace24h) {
 }
 
 // ─── HTML del reporte (usado tanto en PDF como fallback del email) ────────────
-function generarHtmlReporte({ hoy, postsIG, competidoresConPost, sinActividad, postsLinkedin, postsFacebook }) {
+function generarHtmlReporte({ hoy, postsIG, competidoresConPost, sinActividad, postsLinkedin, postsFacebook, storiesIG }) {
   const fecha = new Date(hoy + 'T12:00:00').toLocaleDateString('es-CL', {
     weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
   })
@@ -275,6 +308,28 @@ function generarHtmlReporte({ hoy, postsIG, competidoresConPost, sinActividad, p
         </div>
       </div>`
   }).join('')
+
+  // Stories HTML
+  const storiesHtml = (storiesIG || []).length > 0 ? (storiesIG || []).map(s => {
+    const hora = s.timestamp ? s.timestamp.toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' }) : ''
+    const thumb = s.imageUrl
+      ? `<img src="${s.imageUrl}" alt="story" style="width:72px;height:72px;border-radius:8px;object-fit:cover;flex-shrink:0;">`
+      : `<div style="width:72px;height:72px;border-radius:8px;background:linear-gradient(135deg,#833AB4,#E1306C,#F77737);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;color:#fff;">📱</div>`
+    return `
+      <div style="display:flex;gap:12px;border:1px solid #E1306C;border-radius:10px;padding:12px;margin-bottom:10px;background:#FFF5F7;">
+        ${thumb}
+        <div style="flex:1;min-width:0;">
+          <div style="margin-bottom:5px;">
+            <strong style="color:#0F172A;font-size:13px;">${s.competidor}</strong>
+            <span style="background:linear-gradient(135deg,#833AB4,#E1306C);color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;margin-left:5px;">Story ${s.type}</span>
+            ${hora ? `<span style="color:#94A3B8;font-size:11px;margin-left:5px;">${hora}</span>` : ''}
+          </div>
+          <p style="font-size:12px;color:#475569;line-height:1.5;margin:0 0 6px;">@${s.handle} subió una story (${s.type.toLowerCase()})</p>
+          ${s.videoUrl ? `<a href="${s.videoUrl}" style="display:inline-block;font-size:11px;color:#fff;background:#E1306C;padding:4px 12px;border-radius:6px;font-weight:600;text-decoration:none;">Ver video →</a>` : ''}
+          ${!s.videoUrl && s.imageUrl ? `<a href="${s.imageUrl}" style="display:inline-block;font-size:11px;color:#fff;background:#E1306C;padding:4px 12px;border-radius:6px;font-weight:600;text-decoration:none;">Ver imagen →</a>` : ''}
+        </div>
+      </div>`
+  }).join('') : ''
 
   const postsLIHtml = postsLinkedin.map(p => {
     const url = p.postUrl || p.url || p.postLink || ''
@@ -359,6 +414,16 @@ function generarHtmlReporte({ hoy, postsIG, competidoresConPost, sinActividad, p
       </div>
       `}
 
+      <!-- Stories -->
+      ${(storiesIG || []).length > 0 ? `
+      <div style="margin-top:20px;border-top:1px solid #E2E8F0;padding-top:18px;">
+        <div style="background:linear-gradient(135deg,#833AB4,#E1306C);color:#fff;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;padding:6px 12px;border-radius:6px;display:inline-block;margin-bottom:14px;">
+          📱 Stories Instagram — ${storiesIG.length} activa${storiesIG.length > 1 ? 's' : ''}
+        </div>
+        ${storiesHtml}
+      </div>
+      ` : ''}
+
       <!-- LinkedIn -->
       <div style="margin-top:20px;border-top:1px solid #E2E8F0;padding-top:18px;">
         <div style="background:${postsLinkedin.length > 0 ? '#EFF6FF' : '#F1F5F9'};color:${postsLinkedin.length > 0 ? '#1E40AF' : '#64748B'};font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;padding:6px 12px;border-radius:6px;display:inline-block;margin-bottom:${postsLinkedin.length > 0 ? '14px' : '10px'};">
@@ -408,14 +473,14 @@ function generarHtmlReporte({ hoy, postsIG, competidoresConPost, sinActividad, p
 }
 
 // ─── Envío de email con PDF adjunto ─────────────────────────────────────────
-async function enviarEmail({ hoy, postsIG, competidoresConPost, sinActividad, postsLinkedin, postsFacebook }) {
+async function enviarEmail({ hoy, postsIG, competidoresConPost, sinActividad, postsLinkedin, postsFacebook, storiesIG }) {
   const RESEND_API_KEY = process.env.RESEND || process.env.RESEND_API_KEY
   if (!RESEND_API_KEY) {
     console.warn('⚠️  RESEND_API_KEY no definida — email no enviado.')
     return
   }
 
-  const reporteHtml = generarHtmlReporte({ hoy, postsIG, competidoresConPost, sinActividad, postsLinkedin, postsFacebook })
+  const reporteHtml = generarHtmlReporte({ hoy, postsIG, competidoresConPost, sinActividad, postsLinkedin, postsFacebook, storiesIG })
   const fecha = new Date(hoy + 'T12:00:00').toLocaleDateString('es-CL', {
     weekday: 'long', day: 'numeric', month: 'long'
   })
@@ -426,13 +491,15 @@ async function enviarEmail({ hoy, postsIG, competidoresConPost, sinActividad, po
 
   const payload = {
     from: 'Müller & Pérez <contacto@mulleryperez.cl>',
-    to: ['felipe.munoz@buseshualpen.cl', 'contacto@mulleryperez.cl'],
+    // TODO: restaurar felipe.munoz@buseshualpen.cl después de validar stories
+    to: ['contacto@mulleryperez.cl'],
     subject: `🚌 Competencia Hualpén — ${fecha}${totalOfertas > 0 ? ` · ⚠️ ${totalOfertas} oferta${totalOfertas > 1 ? 's' : ''} laboral${totalOfertas > 1 ? 'es' : ''}` : ''} (${totalPosts} posts)`,
     html: `<div style="font-family:'Segoe UI',sans-serif;max-width:500px;margin:0 auto;padding:32px 16px;color:#1E293B;">
     <h2 style="font-size:18px;font-weight:800;margin:0 0 8px;">🚌 Reporte Diario — Competencia Hualpén</h2>
     <p style="color:#64748B;font-size:13px;margin:0 0 20px;">${fecha}</p>
     <table style="width:100%;border-collapse:collapse;font-size:13px;margin-bottom:20px;">
       <tr style="border-bottom:1px solid #E2E8F0;"><td style="padding:8px 0;color:#64748B;">Posts Instagram</td><td style="padding:8px 0;font-weight:700;text-align:right;">${postsIG.length}</td></tr>
+      <tr style="border-bottom:1px solid #E2E8F0;"><td style="padding:8px 0;color:#64748B;">Stories Instagram</td><td style="padding:8px 0;font-weight:700;text-align:right;">${storiesIG.length}</td></tr>
       <tr style="border-bottom:1px solid #E2E8F0;"><td style="padding:8px 0;color:#64748B;">Posts LinkedIn</td><td style="padding:8px 0;font-weight:700;text-align:right;">${postsLinkedin.length}</td></tr>
       <tr style="border-bottom:1px solid #E2E8F0;"><td style="padding:8px 0;color:#64748B;">Posts Facebook</td><td style="padding:8px 0;font-weight:700;text-align:right;">${postsFacebook.length}</td></tr>
       <tr style="border-bottom:1px solid #E2E8F0;"><td style="padding:8px 0;color:#64748B;">Sin actividad</td><td style="padding:8px 0;font-weight:700;text-align:right;">${sinActividad.length}</td></tr>
