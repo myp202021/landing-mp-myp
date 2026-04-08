@@ -18,13 +18,25 @@ async function run() {
 
   const stories = await res.json()
   console.log('✅ Stories:', stories.length)
-  console.log('Raw data:', JSON.stringify(stories[0] || {}, null, 2).substring(0, 1000))
+  // Print ALL keys to find media fields
+  const s0 = stories[0] || {}
+  console.log('All top-level keys:', Object.keys(s0).join(', '))
+  // Look for nested media
+  if (s0.video_versions) console.log('video_versions:', JSON.stringify(s0.video_versions[0]).substring(0, 200))
+  if (s0.image_versions2) console.log('image_versions2:', JSON.stringify(s0.image_versions2?.candidates?.[0]).substring(0, 200))
+  // Print any key containing url/video/image
+  for (const [k, v] of Object.entries(s0)) {
+    if (typeof v === 'string' && (k.includes('url') || k.includes('video') || k.includes('image'))) {
+      console.log(`  ${k}: ${v.substring(0, 150)}`)
+    }
+  }
 
   // Build email with story data
   let storiesHtml = ''
   for (const s of stories) {
-    const mediaUrl = s.video_url || s.image_url || s.media_url || s.url || s.display_url || ''
-    const thumbUrl = s.thumbnail_url || s.image_url || s.display_url || mediaUrl || ''
+    // IG story fields: video in video_versions[], image in image_versions2.candidates[]
+    const mediaUrl = s.video_versions?.[0]?.url || s.image_versions2?.candidates?.[0]?.url || s.video_url || s.image_url || s.media_url || s.url || s.display_url || ''
+    const thumbUrl = s.image_versions2?.candidates?.[0]?.url || s.video_versions?.[0]?.url || s.thumbnail_url || mediaUrl || ''
     const ts = s.taken_at || s.timestamp || s.takenAt || 0
     const date = ts ? new Date(ts * 1000).toLocaleString('es-CL', {timeZone:'America/Santiago'}) : '?'
     const type = s.media_type === 2 || s.type === 2 ? 'Video' : 'Imagen'
