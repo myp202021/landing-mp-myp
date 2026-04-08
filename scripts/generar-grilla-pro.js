@@ -130,7 +130,7 @@ REGLAS QUE DEFINEN TU TRABAJO:
 // GENERATE SINGLE POST
 // ============================================================
 async function generateSinglePost(clienteInfo, postConfig, prevCopies, attempt = 1) {
-  const { nombre, rubro, briefing, estacionalidad, contingencia, contextoMes } = clienteInfo
+  const { nombre, rubro, briefing, estacionalidad, contingencia, contextoMes, historicalContext } = clienteInfo
   const { dia, diaSemana, plataforma, tipoPost } = postConfig
 
   const analisisWeb = briefing.analisis_web || {}
@@ -154,10 +154,11 @@ ${analisisTono.nivel_formalidad ? `Formalidad: ${analisisTono.nivel_formalidad}/
 ${analisisTono.temas_fuertes ? `Temas fuertes: ${JSON.stringify(analisisTono.temas_fuertes)}` : ''}
 ${briefing.cierre_obligatorio ? `CIERRE OBLIGATORIO: "${briefing.cierre_obligatorio}"` : ''}
 
-=== ESTACIONALIDAD ===
+=== ESTACIONALIDAD + TENDENCIAS + NOTICIAS ===
 ${estacionalidad}
-${contingencia ? `\nContingencia Chile: ${contingencia}` : ''}
+${contingencia ? `\nTendencias y contingencia del rubro:\n${contingencia}` : ''}
 ${contextoMes ? `\nContexto especial este mes: ${contextoMes}` : ''}
+${historicalContext || ''}
 
 === POST A GENERAR ===
 Día: ${diaSemana} ${dia} de ${MESES[postConfig.mes]} ${postConfig.anio}
@@ -251,6 +252,13 @@ async function generateGrilla(clienteId, mes, anio, contextoMes) {
   console.log(`\n📊 ${cliente.nombre} (${cliente.rubro})`)
   console.log(`   Mes: ${MESES[mes]} ${anio}`)
 
+  // 1b. Check if already has grilla for this month
+  const existingGrilla = await supabaseGet('grillas_contenido', `cliente_id=eq.${clienteId}&mes=eq.${mes}&anio=eq.${anio}&select=id`)
+  if (existingGrilla.length > 0) {
+    console.log(`   ⏭️ Ya tiene grilla de ${MESES[mes]} ${anio} — saltando`)
+    return null
+  }
+
   // 2. Load briefing
   const [briefing] = await supabaseGet('briefings_cliente', `cliente_id=eq.${clienteId}`)
   if (!briefing) throw new Error('Sin briefing — créalo primero en /crm/grillas/' + clienteId + '/briefing')
@@ -263,17 +271,37 @@ async function generateGrilla(clienteId, mes, anio, contextoMes) {
   const est = FECHAS_GENERALES[mes] || { fechas: [], contexto: '' }
   const estacionalidad = `Fechas: ${est.fechas.join(', ')}. ${est.contexto}`
 
-  // 5. Contingencia (1 call)
+  // 4b. Load historical grilla data from client_profiles
+  let historicalContext = ''
+  try {
+    const [profile] = await supabaseGet('client_profiles', `cliente_id=eq.${clienteId}&select=grilla_historica_data,rubro`)
+    if (profile && profile.grilla_historica_data && profile.grilla_historica_data.length > 0) {
+      const historicalPosts = profile.grilla_historica_data.slice(0, 10)
+      historicalContext = '\n=== HISTORIAL DE GRILLAS ANTERIORES (NO repetir estos enfoques) ===\n' +
+        historicalPosts.map((p, i) => `Post ${i+1} (${p.mes}): ${p.copy.substring(0, 150)}`).join('\n')
+      console.log(`   📚 Historial: ${profile.grilla_historica_data.length} posts anteriores cargados`)
+    }
+  } catch (e) { /* no pasa nada si no tiene */ }
+
+  // 5. Contingencia + tendencias + noticias del rubro (2 calls)
   let contingencia = ''
   try {
-    console.log('   🌐 Buscando contingencia Chile...')
+    console.log('   🌐 Buscando contingencia + tendencias Chile...')
     const contRaw = await callOpenAI(
-      'Eres analista de mercado en Chile. Solo datos concretos y verificables.',
-      `${MESES[mes]} ${anio}, Chile. Dame 5-6 hechos concretos sobre economía, mercado laboral, tendencias de consumo relevantes para "${cliente.rubro}". Solo hechos, sin opiniones.`,
-      600
+      'Eres analista de mercado en Chile con acceso a información actualizada a abril 2026. Solo datos concretos y verificables. No inventes.',
+      `${MESES[mes]} ${anio}, Chile. Para el rubro "${cliente.rubro}" necesito:
+
+1. ECONOMÍA CHILE (3 datos): inflación, empleo, tipo de cambio, consumo — lo que aplique al rubro
+2. TENDENCIAS DEL RUBRO (3 datos): qué está pasando específicamente en ${cliente.rubro} en Chile este 2026
+3. NOTICIAS RELEVANTES (2-3): regulaciones nuevas, competencia, eventos de industria, cambios tecnológicos que afecten a ${cliente.rubro}
+4. ESTACIONALIDAD MAYO: qué pasa en mayo para este rubro (Día de la Madre, CyberDay, otoño, etc.)
+5. OPORTUNIDADES DE CONTENIDO (3 ideas): temas que la audiencia de ${cliente.rubro} está buscando o discutiendo ahora
+
+Solo hechos concretos. Si no estás seguro de un dato, no lo incluyas. Mejor 3 datos reales que 6 inventados.`,
+      1000
     )
     contingencia = contRaw
-    console.log('   ✅ Contingencia OK')
+    console.log('   ✅ Contingencia + tendencias OK')
   } catch (e) { console.log('   ⚠️ Contingencia falló:', e.message) }
 
   // 6. Build posting days (16 posts spread across month)
@@ -322,6 +350,7 @@ async function generateGrilla(clienteId, mes, anio, contextoMes) {
     estacionalidad,
     contingencia,
     contextoMes,
+    historicalContext,
   }
 
   const posts = []
@@ -341,8 +370,8 @@ async function generateGrilla(clienteId, mes, anio, contextoMes) {
       console.log(`❌ ${e.message}`)
     }
 
-    // Pause between posts
-    await sleep(1500)
+    // Pause between posts (3s to avoid OpenAI rate limit)
+    await sleep(3000)
   }
 
   // 9. Stats
