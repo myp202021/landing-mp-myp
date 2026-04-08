@@ -1,0 +1,17 @@
+name: "Test: Stories → Email"
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm install node-fetch@2
+      - run: node scripts/test-stories-email.js
+        env:
+          APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
+          RESEND: ${{ secrets.RESEND }}
