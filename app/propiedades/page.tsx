@@ -82,7 +82,7 @@ export default function RadarCyM() {
                 <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 11 }}>
                   <thead>
                     <tr style={{ background: '#1B2A4A' }}>
-                      {['', 'Comuna', 'Barrio', 'Título', 'Precio UF', 'Dorm', 'Baños', 'M²', 'Publicado', 'Link'].map(h => (
+                      {['', 'Comuna', 'Barrio', 'Título', 'Precio UF', 'Dorm', 'Baños', 'M²', 'Publicado', 'Link', 'Contacto'].map(h => (
                         <th key={h} style={{ padding: '8px 10px', color: 'white', textAlign: 'left', fontSize: 9, textTransform: 'uppercase', letterSpacing: 0.5 }}>{h}</th>
                       ))}
                     </tr>
@@ -103,6 +103,9 @@ export default function RadarCyM() {
                         <td style={{ padding: '8px 10px', fontSize: 10, color: '#999' }}>{l.first_seen}</td>
                         <td style={{ padding: '8px 10px' }}>
                           <a href={l.link} target="_blank" rel="noopener" style={{ color: '#2563EB', textDecoration: 'none', fontSize: 10 }}>Ver →</a>
+                        </td>
+                        <td style={{ padding: '8px 10px' }}>
+                          <a href={l.link + '#contact'} target="_blank" rel="noopener" style={{ background: '#059669', color: 'white', padding: '3px 8px', borderRadius: 4, fontSize: 9, fontWeight: 700, textDecoration: 'none' }}>Contactar</a>
                         </td>
                       </tr>
                     ))}
