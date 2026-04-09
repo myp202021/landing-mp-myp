@@ -24,7 +24,7 @@ export default function RadarCyM() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    fetch('/api/radar/cym')
+    fetch('/api/propiedades')
       .then(r => r.json())
       .then(data => { setListings(data.listings || []); setLoading(false) })
       .catch(() => setLoading(false))
@@ -38,8 +38,8 @@ export default function RadarCyM() {
   return (
     <div style={{ minHeight: '100vh', background: '#f0f2f5', fontFamily: "'Segoe UI', Arial, sans-serif" }}>
       <div style={{ background: 'linear-gradient(135deg, #1B2A4A, #2D4A7A)', padding: '24px 32px', color: 'white' }}>
-        <h1 style={{ fontSize: 22, fontWeight: 800, margin: 0 }}>Radar de Propiedades — CyM Corredora</h1>
-        <p style={{ fontSize: 12, opacity: 0.8, marginTop: 4 }}>Casas usadas &gt;15.000 UF · Lo Barnechea · Vitacura · Las Condes · La Reina</p>
+        <h1 style={{ fontSize: 22, fontWeight: 800, margin: 0 }}>Propiedades Disponibles</h1>
+        <p style={{ fontSize: 12, opacity: 0.8, marginTop: 4 }}>Casas usadas &gt;15.000 UF · Lo Barnechea · Vitacura · Las Condes · La Reina · Actualización diaria</p>
       </div>
 
       <div style={{ maxWidth: 1200, margin: '0 auto', padding: 20 }}>
