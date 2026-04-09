@@ -1,0 +1,17 @@
+name: "Test: Portal Inmobiliario Scraper"
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm install node-fetch@2
+      - name: "Scrape PI — 4 comunas"
+        run: node scripts/test-pi-scraper.js
+        env:
+          APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
