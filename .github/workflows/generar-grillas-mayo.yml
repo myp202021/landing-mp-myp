@@ -41,6 +41,7 @@ jobs:
   # FASE 2: Generar grillas mayo
   # ══════════════════════════════════════
   grillas:
+    needs: [briefings]
     if: ${{ always() && (github.event.inputs.fase == 'grillas' || github.event.inputs.fase == 'todo') }}
     runs-on: ubuntu-latest
     timeout-minutes: 120
@@ -57,7 +58,6 @@ jobs:
           if [ "$LIMIT" = "0" ]; then
             node scripts/generar-grilla-pro.js all 5 2026 "Día del Trabajador, Día de la Madre, CyberDay, otoño Chile"
           else
-            # Generar para los primeros N clientes
             node scripts/generar-grilla-pro.js all 5 2026 "Día del Trabajador, Día de la Madre, CyberDay, otoño Chile"
           fi
         env:
@@ -66,11 +66,34 @@ jobs:
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
 
   # ══════════════════════════════════════
-  # ALERTA
+  # FASE 3: Revisor heurístico + auto-fix con OpenAI
+  # ══════════════════════════════════════
+  revisor:
+    needs: [grillas]
+    if: ${{ always() && needs.grillas.result == 'success' && (github.event.inputs.fase == 'revisor' || github.event.inputs.fase == 'todo') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm install node-fetch@2
+
+      - name: "Fase 3: Revisor + auto-fix"
+        run: node scripts/revisar-grillas.js 5 2026 --fix
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          RESEND: ${{ secrets.RESEND }}
+
+  # ══════════════════════════════════════
+  # ALERTA solo si falla algún job
   # ══════════════════════════════════════
   notify:
-    needs: [grillas]
-    if: always()
+    needs: [grillas, revisor]
+    if: always() && (needs.grillas.result == 'failure' || needs.revisor.result == 'failure')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/setup-node@v4
@@ -78,17 +101,18 @@ jobs:
           node-version: '20'
       - run: npm install node-fetch@2
       - run: |
-          STATUS="${{ needs.grillas.result }}"
+          GRILLAS_STATUS="${{ needs.grillas.result }}"
+          REVISOR_STATUS="${{ needs.revisor.result }}"
           node -e "
           const fetch = require('node-fetch');
           fetch('https://api.resend.com/emails', {
             method: 'POST',
             headers: { 'Authorization': 'Bearer ${{ secrets.RESEND }}', 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              from: 'Müller & Pérez <contacto@mulleryperez.cl>',
+              from: 'Muller y Perez <contacto@mulleryperez.cl>',
               to: ['contacto@mulleryperez.cl'],
-              subject: 'Grillas Mayo 2026 — ${STATUS}',
-              html: '<h2>Pipeline de grillas mayo terminó: ${STATUS}</h2><p><a href=\"https://github.com/myp202021/landing-mp-myp/actions\">Ver logs</a></p><p>Revisa en <a href=\"https://www.mulleryperez.cl/crm/grillas\">CRM Grillas</a></p>'
+              subject: 'Pipeline Grillas Mayo 2026 — FALLO',
+              html: '<h2>Pipeline falló</h2><p>Grillas: ${GRILLAS_STATUS}</p><p>Revisor: ${REVISOR_STATUS}</p><p><a href=\"https://github.com/myp202021/landing-mp-myp/actions\">Ver logs</a></p>'
             })
           }).catch(e => console.error(e));
           "

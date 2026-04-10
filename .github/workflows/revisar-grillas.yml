@@ -1,0 +1,49 @@
+name: "Revisor de Grillas (standalone)"
+
+on:
+  workflow_dispatch:
+    inputs:
+      mes:
+        description: 'Mes (1-12)'
+        required: true
+        default: '5'
+      anio:
+        description: 'Año'
+        required: true
+        default: '2026'
+      fix:
+        description: 'Auto-fix con OpenAI (true/false)'
+        required: true
+        default: 'true'
+      cliente:
+        description: 'ID cliente específico (vacío = todos)'
+        required: false
+        default: ''
+
+jobs:
+  revisor:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm install node-fetch@2
+
+      - name: "Ejecutar revisor"
+        run: |
+          CMD="node scripts/revisar-grillas.js ${{ github.event.inputs.mes }} ${{ github.event.inputs.anio }}"
+          if [ "${{ github.event.inputs.fix }}" = "true" ]; then
+            CMD="$CMD --fix"
+          fi
+          if [ -n "${{ github.event.inputs.cliente }}" ]; then
+            CMD="$CMD --cliente ${{ github.event.inputs.cliente }}"
+          fi
+          echo "Ejecutando: $CMD"
+          $CMD
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          RESEND: ${{ secrets.RESEND }}
