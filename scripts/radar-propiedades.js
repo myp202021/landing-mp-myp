@@ -18,25 +18,23 @@ const supabase = createClient(
 )
 const RESEND_API_KEY = process.env.RESEND || process.env.RESEND_API_KEY
 
+// Nota: PI rompió el filtro `_PriceRange_15000UF-0UF` en abril 2026 → ahora devuelve vacío.
+// Solución: pedir todas las casas usadas por comuna y filtrar por precio ≥ 15.000 UF en código.
+// Para capturar más resultados se paginan las primeras 4 páginas (49 items × 4 = ~196 por comuna).
 const SEARCHES = [
-  { comuna: 'Lo Barnechea', url: 'https://www.portalinmobiliario.com/venta/casa/usada/lo-barnechea-metropolitana/_PriceRange_15000UF-0UF_OrderId_BEGINS*DESC' },
-  { comuna: 'Vitacura', url: 'https://www.portalinmobiliario.com/venta/casa/usada/vitacura-metropolitana/_PriceRange_15000UF-0UF_OrderId_BEGINS*DESC' },
-  { comuna: 'Las Condes', url: 'https://www.portalinmobiliario.com/venta/casa/usada/las-condes-metropolitana/_PriceRange_15000UF-0UF_OrderId_BEGINS*DESC' },
-  { comuna: 'La Reina', url: 'https://www.portalinmobiliario.com/venta/casa/usada/la-reina-metropolitana/_PriceRange_15000UF-0UF_OrderId_BEGINS*DESC' },
+  { comuna: 'Lo Barnechea', baseUrl: 'https://www.portalinmobiliario.com/venta/casa/usada/lo-barnechea-metropolitana/' },
+  { comuna: 'Vitacura',     baseUrl: 'https://www.portalinmobiliario.com/venta/casa/usada/vitacura-metropolitana/' },
+  { comuna: 'Las Condes',   baseUrl: 'https://www.portalinmobiliario.com/venta/casa/usada/las-condes-metropolitana/' },
+  { comuna: 'La Reina',     baseUrl: 'https://www.portalinmobiliario.com/venta/casa/usada/la-reina-metropolitana/' },
 ]
 
 const INVALID_REGIONS = ['maule', 'curicó', 'valparaíso', 'biobío', 'araucanía', 'coquimbo', 'ohiggins', 'atacama', 'los lagos', 'los ríos']
 
-// ── Scrape one commune ──────────────────────────────────
+// ── Scrape one commune (paginado) ───────────────────────
+// PI usa `_Desde_N` para paginación (N = offset, 49 items por página)
 
-async function scrapePage(search) {
-  const cookieRes = await fetch('https://www.portalinmobiliario.com/', {
-    headers: { 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36' },
-    redirect: 'follow',
-  })
-  const cookies = cookieRes.headers.raw()['set-cookie']?.map(c => c.split(';')[0]).join('; ') || ''
-
-  const res = await fetch(search.url, {
+async function fetchOnePage(url, cookies) {
+  const res = await fetch(url, {
     headers: {
       'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
       'Accept': 'text/html,application/xhtml+xml',
@@ -45,12 +43,16 @@ async function scrapePage(search) {
     },
     redirect: 'follow',
   })
-  const html = await res.text()
+  return await res.text()
+}
 
+function parseListings(html, search) {
   const titleMatches = [...html.matchAll(/class="poly-component__title"[^>]*>([\s\S]*?)<\//g)]
-  const locMatches = [...html.matchAll(/class="[^"]*location[^"]*"[^>]*>([^<]+)</g)]
+  const locMatches = [...html.matchAll(/class="[^"]*poly-component__location[^"]*"[^>]*>([^<]+)</g)]
   const priceMatches = [...html.matchAll(/aria-label="([\d.,]+)\s*(UF|unidades de fomento|pesos)/gi)]
-  const linkMatches = [...new Set([...html.matchAll(/href="(https:\/\/[^"]*portalinmobiliario[^"]*MLC[^"]*)"/g)].map(m => m[1]))]
+  const linkMatches = [...new Set(
+    [...html.matchAll(/href="(https?:\/\/(?:www\.)?portalinmobiliario\.com\/MLC[^"]+)"/g)].map(m => m[1])
+  )]
   const attrMatches = [...html.matchAll(/class="poly-component__attributes-list"[^>]*>([\s\S]*?)<\/ul/g)]
 
   const count = Math.min(titleMatches.length, priceMatches.length, locMatches.length)
@@ -87,6 +89,34 @@ async function scrapePage(search) {
     listings.push({ id, comuna: search.comuna, barrio, title, price_uf: priceUF, beds, baths, m2, location, link })
   }
   return listings
+}
+
+async function scrapePage(search) {
+  // Fetch home para obtener cookies de sesión
+  const cookieRes = await fetch('https://www.portalinmobiliario.com/', {
+    headers: { 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36' },
+    redirect: 'follow',
+  })
+  const cookies = cookieRes.headers.raw()['set-cookie']?.map(c => c.split(';')[0]).join('; ') || ''
+
+  // Paginar: PI usa offsets 49, 97, 145 (49 items/página)
+  const seen = new Map() // dedupe por id
+  const offsets = [null, 49, 97, 145]
+  for (const offset of offsets) {
+    const url = offset ? `${search.baseUrl}_Desde_${offset + 1}` : search.baseUrl
+    try {
+      const html = await fetchOnePage(url, cookies)
+      const found = parseListings(html, search)
+      for (const l of found) if (!seen.has(l.id)) seen.set(l.id, l)
+      // Si la página devuelve menos de 30 items, asumimos que es la última
+      if (found.length < 30) break
+    } catch (e) {
+      console.warn(`   ⚠️ ${search.comuna} offset ${offset || 0}: ${e.message.substring(0, 60)}`)
+      break
+    }
+    await new Promise(r => setTimeout(r, 800))
+  }
+  return Array.from(seen.values())
 }
 
 // ── Save to Supabase and detect new ─────────────────────
