@@ -490,7 +490,7 @@ async function enviarEmail({ hoy, postsIG, competidoresConPost, sinActividad, po
     .filter(p => esOfertaLaboral(p.caption || p.text || p.commentary || p.content || p.message || '')).length
 
   const payload = {
-    from: 'Müller & Pérez <contacto@mulleryperez.cl>',
+    from: 'Muller y Perez <contacto@mulleryperez.cl>',
     to: ['felipe.munoz@buseshualpen.cl', 'contacto@mulleryperez.cl'],
     subject: `🚌 Competencia Hualpén — ${fecha}${totalOfertas > 0 ? ` · ⚠️ ${totalOfertas} oferta${totalOfertas > 1 ? 's' : ''} laboral${totalOfertas > 1 ? 'es' : ''}` : ''} (${totalPosts} posts)`,
     html: `<div style="font-family:'Segoe UI',sans-serif;max-width:500px;margin:0 auto;padding:32px 16px;color:#1E293B;">
