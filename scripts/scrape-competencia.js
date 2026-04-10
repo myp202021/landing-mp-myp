@@ -68,6 +68,7 @@ const KEYWORDS_OFERTA = [
 
 function esOfertaLaboral(texto) {
   if (!texto) return false
+  if (typeof texto !== 'string') return false
   const lower = texto.toLowerCase()
   return KEYWORDS_OFERTA.some(kw => lower.includes(kw))
 }
@@ -107,8 +108,17 @@ async function main() {
       const ts = all.map(p => p.timestamp).filter(Boolean).sort().reverse().slice(0, 3)
       console.log(`   IG timestamps recientes: ${ts.join(' | ')}`)
     }
-    postsIG = all.filter(p => p.timestamp && new Date(p.timestamp) > hace24h)
-    console.log(`✅ Instagram: ${postsIG.length} posts en las últimas 48h (de ${all.length} total)`)
+    const recientesIG = all.filter(p => p.timestamp && new Date(p.timestamp) > hace24h)
+    // Deduplicar: último post por owner
+    const igPorOwner = new Map()
+    for (const p of recientesIG) {
+      const k = (p.ownerUsername || '').toLowerCase()
+      if (!k) continue
+      const existing = igPorOwner.get(k)
+      if (!existing || new Date(p.timestamp) > new Date(existing.timestamp)) igPorOwner.set(k, p)
+    }
+    postsIG = Array.from(igPorOwner.values())
+    console.log(`✅ Instagram: ${postsIG.length} competidores con post en últimas 48h (de ${recientesIG.length} posts, ${all.length} total)`)
   } catch (err) {
     console.error('❌ Error Instagram:', err.message)
   }
@@ -272,7 +282,23 @@ async function scrapeLinkedin(hace24h) {
       return false
     })
     console.log(`✅ LinkedIn: ${recientes.length} posts en últimas 48h (de ${all.length} total)`)
-    return recientes
+
+    // Deduplicar por competidor: dejar solo el post más reciente de cada empresa
+    const porCompetidor = new Map()
+    for (const p of recientes) {
+      const nombre = p.author?.name || p.author?.universalName || 'unknown'
+      const fechaActual = p.postedAt?.date ? new Date(p.postedAt.date).getTime() : 0
+      const existing = porCompetidor.get(nombre)
+      if (!existing) {
+        porCompetidor.set(nombre, p)
+      } else {
+        const fechaExisting = existing.postedAt?.date ? new Date(existing.postedAt.date).getTime() : 0
+        if (fechaActual > fechaExisting) porCompetidor.set(nombre, p)
+      }
+    }
+    const ultimosPorCompetidor = Array.from(porCompetidor.values())
+    console.log(`✅ LinkedIn: ${ultimosPorCompetidor.length} competidores con post reciente (último de cada uno)`)
+    return ultimosPorCompetidor
   } catch (err) {
     console.warn('⚠️ Error LinkedIn (se omite):', err.message)
     return []
@@ -307,7 +333,18 @@ async function scrapeFacebook(hace24h) {
       return !isNaN(d.getTime()) && d > hace24h
     })
     console.log(`✅ Facebook: ${recientes.length} posts en últimas 48h (de ${all.length} total)`)
-    return recientes
+    // Deduplicar: último post por página
+    const fbPorPage = new Map()
+    for (const p of recientes) {
+      const k = (p.pageName || p.url || '').toLowerCase()
+      if (!k) continue
+      const t = p.time || p.timestamp || p.publishedAt
+      const fecha = typeof t === 'number' ? (t > 1e12 ? t : t * 1000) : new Date(t).getTime()
+      const existing = fbPorPage.get(k)
+      const fechaExisting = existing ? (typeof (existing.time || existing.timestamp) === 'number' ? (existing.time || existing.timestamp) * (((existing.time || existing.timestamp) > 1e12) ? 1 : 1000) : new Date(existing.time || existing.timestamp).getTime()) : 0
+      if (!existing || fecha > fechaExisting) fbPorPage.set(k, p)
+    }
+    return Array.from(fbPorPage.values())
   } catch (err) {
     console.warn('⚠️ Error Facebook (se omite):', err.message)
     return []
@@ -378,19 +415,31 @@ function generarHtmlReporte({ hoy, postsIG, competidoresConPost, sinActividad, p
   }).join('') : ''
 
   const postsLIHtml = postsLinkedin.map(p => {
-    const url = p.postUrl || p.url || p.postLink || ''
-    const nombre = p.companyName || p.authorName || p.author || 'Competidor'
-    const texto = (p.text || p.commentary || p.content || '').substring(0, 200)
-    const likes = p.likesCount || p.totalReactionCount || p.reactions || 0
+    // p.author es un objeto {name, universalName, ...}, NO un string
+    const nombre = p.author?.name || p.author?.universalName || p.companyName || p.authorName || 'Competidor'
+    const url = p.linkedinUrl || p.postUrl || p.url || p.postLink || ''
+    // p.content es el texto del post (no p.text)
+    const textoRaw = (typeof p.content === 'string' ? p.content : '') ||
+                     (typeof p.text === 'string' ? p.text : '') ||
+                     (typeof p.commentary === 'string' ? p.commentary : '') || ''
+    const texto = textoRaw.substring(0, 220)
+    // engagement.reactions o reactions count
+    const likes = p.engagement?.reactions || p.engagement?.likes || p.likesCount || p.totalReactionCount || 0
+    const comentarios = p.engagement?.comments || p.commentsCount || 0
+    // Hora desde postedAt.date
+    const postedDate = p.postedAt?.date ? new Date(p.postedAt.date) : null
+    const hora = postedDate ? postedDate.toLocaleString('es-CL', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }) : ''
     return `
       <div style="border:1px solid #E2E8F0;border-radius:10px;padding:12px;margin-bottom:10px;background:#fff;">
         <div style="margin-bottom:5px;">
           <strong style="color:#0F172A;font-size:13px;">${nombre}</strong>
           <span style="background:#DBEAFE;color:#1E40AF;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;margin-left:5px;">💼 LinkedIn</span>
-          ${ofertaBadge(p.text || p.commentary || p.content)}
+          ${ofertaBadge(textoRaw)}
+          ${hora ? `<span style="color:#94A3B8;font-size:11px;margin-left:5px;">${hora}</span>` : ''}
         </div>
-        <p style="font-size:12px;color:#475569;line-height:1.5;margin:0 0 6px;">${texto}${texto.length >= 200 ? '...' : ''}</p>
+        <p style="font-size:12px;color:#475569;line-height:1.5;margin:0 0 6px;">${texto}${textoRaw.length > 220 ? '...' : ''}</p>
         ${likes ? `<span style="font-size:11px;color:#64748B;margin-right:10px;">👍 ${likes}</span>` : ''}
+        ${comentarios ? `<span style="font-size:11px;color:#64748B;margin-right:10px;">💬 ${comentarios}</span>` : ''}
         ${url ? `<a href="${url}" style="display:inline-block;font-size:11px;color:#fff;background:#3B82F6;padding:4px 12px;border-radius:6px;font-weight:600;text-decoration:none;">Ver post →</a>` : ''}
       </div>`
   }).join('')
@@ -419,8 +468,13 @@ function generarHtmlReporte({ hoy, postsIG, competidoresConPost, sinActividad, p
   ).join('')
 
   const totalPosts = postsIG.length + postsLinkedin.length + postsFacebook.length
+  const getTexto = (p) => {
+    const candidatos = [p.caption, p.content, p.text, p.commentary, p.message]
+    for (const c of candidatos) if (typeof c === 'string') return c
+    return ''
+  }
   const totalOfertas = [...postsIG, ...postsLinkedin, ...postsFacebook]
-    .filter(p => esOfertaLaboral(p.caption || p.text || p.commentary || p.content || p.message || '')).length
+    .filter(p => esOfertaLaboral(getTexto(p))).length
 
   return `<!DOCTYPE html>
 <html lang="es">
@@ -532,8 +586,13 @@ async function enviarEmail({ hoy, postsIG, competidoresConPost, sinActividad, po
   })
 
   const totalPosts = postsIG.length + postsLinkedin.length + postsFacebook.length
+  const getTexto = (p) => {
+    const candidatos = [p.caption, p.content, p.text, p.commentary, p.message]
+    for (const c of candidatos) if (typeof c === 'string') return c
+    return ''
+  }
   const totalOfertas = [...postsIG, ...postsLinkedin, ...postsFacebook]
-    .filter(p => esOfertaLaboral(p.caption || p.text || p.commentary || p.content || p.message || '')).length
+    .filter(p => esOfertaLaboral(getTexto(p))).length
 
   const payload = {
     from: 'Muller y Perez <contacto@mulleryperez.cl>',
