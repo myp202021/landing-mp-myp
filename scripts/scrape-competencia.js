@@ -76,7 +76,8 @@ function esOfertaLaboral(texto) {
 // ─── Main ────────────────────────────────────────────────────────────────────
 async function main() {
   const hoy = new Date().toISOString().split('T')[0]
-  const hace24h = new Date(Date.now() - 24 * 60 * 60 * 1000)
+  // Ventana de 48h: tolera reportes que corren tarde y captura todo el día anterior + el actual
+  const hace24h = new Date(Date.now() - 48 * 60 * 60 * 1000)
 
   console.log(`📅 Generando reporte para ${hoy}...`)
 
@@ -99,8 +100,15 @@ async function main() {
     )
     if (!res.ok) throw new Error(`Apify IG: ${res.status} ${await res.text()}`)
     const all = await res.json()
+    console.log(`   IG total recibidos: ${all.length}`)
+    if (all.length > 0) {
+      const sample = all[0]
+      console.log(`   IG sample: owner=${sample.ownerUsername} timestamp=${sample.timestamp} type=${sample.type}`)
+      const ts = all.map(p => p.timestamp).filter(Boolean).sort().reverse().slice(0, 3)
+      console.log(`   IG timestamps recientes: ${ts.join(' | ')}`)
+    }
     postsIG = all.filter(p => p.timestamp && new Date(p.timestamp) > hace24h)
-    console.log(`✅ Instagram: ${postsIG.length} posts en las últimas 24h`)
+    console.log(`✅ Instagram: ${postsIG.length} posts en las últimas 48h (de ${all.length} total)`)
   } catch (err) {
     console.error('❌ Error Instagram:', err.message)
   }
@@ -115,11 +123,21 @@ async function main() {
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ usernames: igUsernames }),
+        // Enviar múltiples formatos para que el actor use el que reconozca
+        body: JSON.stringify({
+          usernames: igUsernames,
+          directUrls: igUsernames.map(u => `https://www.instagram.com/${u}/`),
+        }),
       }
     )
     if (!stRes.ok) throw new Error(`Apify Stories: ${stRes.status} ${await stRes.text()}`)
     const allStories = await stRes.json()
+    console.log(`   Stories raw recibidas: ${allStories.length}`)
+    if (allStories.length > 0) {
+      const s0 = allStories[0]
+      console.log(`   Stories sample keys: ${Object.keys(s0).join(', ')}`)
+      console.log(`   Stories sample: ${JSON.stringify(s0).substring(0, 400)}`)
+    }
     storiesIG = allStories.map(s => {
       const username = s.user?.username || ''
       const comp = conIG.find(c => c.instagram?.toLowerCase() === username.toLowerCase())
@@ -215,27 +233,45 @@ async function scrapeLinkedin(hace24h) {
     if (all.length > 0) {
       const sample = all[0]
       console.log(`   LinkedIn sample fields: ${Object.keys(sample).join(', ')}`)
+      // Loggear los postedAt reales de los primeros 5 posts
+      all.slice(0, 5).forEach((p, i) => {
+        console.log(`   LI[${i}] postedAt=${JSON.stringify(p.postedAt)} postedAtTimestamp=${p.postedAtTimestamp} timeSincePosted=${p.timeSincePosted} author=${p.author?.name || p.author?.universalName || ''}`)
+      })
     }
     const recientes = all.filter(p => {
-      const fecha = p.postedAt || p.posted_at || p.publishedAt || p.date || p.timestamp
-      if (!fecha) {
-        // Intentar parsear timeSincePosted ("3d", "1w", etc.)
-        if (p.timeSincePosted) {
-          const tsp = p.timeSincePosted.trim().toLowerCase()
-          const num = parseInt(tsp)
-          if (!isNaN(num)) {
-            if (tsp.includes('h') && num <= 24) return true
-            if (tsp.includes('d') && num <= 1) return true
-          }
+      // Intentar varios campos de fecha
+      const candidatos = [
+        p.postedAtTimestamp, p.postedAt?.timestamp, p.postedAt,
+        p.posted_at, p.publishedAt, p.date, p.timestamp
+      ].filter(Boolean)
+
+      for (const cand of candidatos) {
+        let fechaDate
+        if (typeof cand === 'number') {
+          fechaDate = cand > 1e12 ? new Date(cand) : new Date(cand * 1000)
+        } else if (typeof cand === 'string') {
+          fechaDate = new Date(cand)
+        } else if (typeof cand === 'object' && cand !== null) {
+          continue
         }
-        return false
+        if (fechaDate && !isNaN(fechaDate.getTime())) {
+          if (fechaDate > hace24h) return true
+          return false
+        }
       }
-      const fechaDate = typeof fecha === 'number'
-        ? (fecha > 1e12 ? new Date(fecha) : new Date(fecha * 1000))
-        : new Date(fecha)
-      return fechaDate > hace24h
+      // Fallback: parsear timeSincePosted ("3d", "1w", "2h", etc.)
+      if (p.timeSincePosted) {
+        const tsp = p.timeSincePosted.trim().toLowerCase()
+        const num = parseInt(tsp)
+        if (!isNaN(num)) {
+          if (tsp.includes('h') && num <= 48) return true
+          if (tsp.includes('d') && num <= 2) return true
+          if (tsp.includes('m') && !tsp.includes('mo')) return true
+        }
+      }
+      return false
     })
-    console.log(`✅ LinkedIn: ${recientes.length} posts en últimas 24h (de ${all.length} total)`)
+    console.log(`✅ LinkedIn: ${recientes.length} posts en últimas 48h (de ${all.length} total)`)
     return recientes
   } catch (err) {
     console.warn('⚠️ Error LinkedIn (se omite):', err.message)
@@ -259,8 +295,18 @@ async function scrapeFacebook(hace24h) {
     )
     if (!res.ok) { console.warn(`⚠️ Facebook: ${res.status}`); return [] }
     const all = await res.json()
-    const recientes = all.filter(p => p.time && new Date(p.time) > hace24h)
-    console.log(`✅ Facebook: ${recientes.length} posts en últimas 24h`)
+    console.log(`   FB total recibidos: ${all.length}`)
+    if (all.length > 0) {
+      console.log(`   FB sample keys: ${Object.keys(all[0]).join(', ')}`)
+      all.slice(0, 3).forEach((p, i) => console.log(`   FB[${i}] time=${p.time} timestamp=${p.timestamp} pageName=${p.pageName}`))
+    }
+    const recientes = all.filter(p => {
+      const t = p.time || p.timestamp || p.publishedAt
+      if (!t) return false
+      const d = typeof t === 'number' ? (t > 1e12 ? new Date(t) : new Date(t * 1000)) : new Date(t)
+      return !isNaN(d.getTime()) && d > hace24h
+    })
+    console.log(`✅ Facebook: ${recientes.length} posts en últimas 48h (de ${all.length} total)`)
     return recientes
   } catch (err) {
     console.warn('⚠️ Error Facebook (se omite):', err.message)
