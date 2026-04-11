@@ -17,6 +17,12 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY
 )
 const RESEND_API_KEY = process.env.RESEND || process.env.RESEND_API_KEY
+const APIFY_TOKEN = process.env.APIFY_TOKEN
+
+if (!APIFY_TOKEN) {
+  console.error('❌ APIFY_TOKEN no definido — PI bloquea IPs de datacenter, el scraping debe pasar por Apify')
+  process.exit(1)
+}
 
 // Nota: PI rompió el filtro `_PriceRange_15000UF-0UF` en abril 2026 → ahora devuelve vacío.
 // Solución: pedir todas las casas usadas por comuna y filtrar por precio ≥ 15.000 UF en código.
@@ -30,92 +36,136 @@ const SEARCHES = [
 
 const INVALID_REGIONS = ['maule', 'curicó', 'valparaíso', 'biobío', 'araucanía', 'coquimbo', 'ohiggins', 'atacama', 'los lagos', 'los ríos']
 
-// ── Scrape one commune (paginado) ───────────────────────
-// PI usa `_Desde_N` para paginación (N = offset, 49 items por página)
+// ─────────────────────────────────────────────────────────
+// Scraping vía Apify (apify/cheerio-scraper)
+// ─────────────────────────────────────────────────────────
+// PI bloquea IPs de datacenter (incluyendo GitHub Actions),
+// por eso pasamos todos los requests a través de Apify que
+// usa IPs residenciales y no es detectado como bot.
+//
+// Estrategia:
+// 1. Generamos 16 startUrls: 4 comunas × 4 páginas (_Desde_1, 50, 98, 146)
+// 2. Pasamos al actor apify/cheerio-scraper con una pageFunction
+//    que extrae cada listing del DOM con selectores CSS
+// 3. El actor ejecuta en Apify con IPs residenciales, retorna array
+//    de listings que nosotros juntamos por comuna
 
-async function fetchOnePage(url, cookies) {
-  const res = await fetch(url, {
-    headers: {
-      'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
-      'Accept': 'text/html,application/xhtml+xml',
-      'Accept-Language': 'es-CL,es;q=0.9',
-      'Cookie': cookies,
-    },
-    redirect: 'follow',
-  })
-  return await res.text()
+function buildStartUrls() {
+  const urls = []
+  const offsets = [null, 49, 97, 145]  // página 1, 2, 3, 4
+  for (const s of SEARCHES) {
+    for (const off of offsets) {
+      urls.push({
+        url: off ? `${s.baseUrl}_Desde_${off + 1}` : s.baseUrl,
+        userData: { comuna: s.comuna },
+      })
+    }
+  }
+  return urls
 }
 
-function parseListings(html, search) {
-  const titleMatches = [...html.matchAll(/class="poly-component__title"[^>]*>([\s\S]*?)<\//g)]
-  const locMatches = [...html.matchAll(/class="[^"]*poly-component__location[^"]*"[^>]*>([^<]+)</g)]
-  const priceMatches = [...html.matchAll(/aria-label="([\d.,]+)\s*(UF|unidades de fomento|pesos)/gi)]
-  const linkMatches = [...new Set(
-    [...html.matchAll(/href="(https?:\/\/(?:www\.)?portalinmobiliario\.com\/MLC[^"]+)"/g)].map(m => m[1])
-  )]
-  const attrMatches = [...html.matchAll(/class="poly-component__attributes-list"[^>]*>([\s\S]*?)<\/ul/g)]
+// Esta función se ejecuta DENTRO de Apify (no en Node de GH Actions)
+// Usa cheerio ($) para parsear el DOM y retorna un array de listings.
+const PAGE_FUNCTION = `async function pageFunction(context) {
+  const { $, request } = context
+  const comuna = request.userData.comuna
+  const results = []
 
-  const count = Math.min(titleMatches.length, priceMatches.length, locMatches.length)
-  const listings = []
+  $('.poly-card').each(function () {
+    const card = $(this)
+    const title = card.find('.poly-component__title').text().trim()
+    const location = card.find('.poly-component__location').text().trim()
 
-  for (let i = 0; i < count; i++) {
-    const title = titleMatches[i]?.[1]?.replace(/<[^>]+>/g, '').trim() || ''
-    const priceRaw = (priceMatches[i]?.[1] || '0').replace(/[.,]/g, '')
-    const currency = (priceMatches[i]?.[2] || '').toLowerCase()
-    let priceUF = parseInt(priceRaw)
-
+    // Precio en aria-label
+    const priceLabel = card.find('.poly-price__current [aria-label]').attr('aria-label') || ''
+    const priceMatch = priceLabel.match(/([\\d.,]+)\\s*(UF|unidades de fomento|pesos)/i)
+    const priceRaw = priceMatch ? priceMatch[1].replace(/[.,]/g, '') : '0'
+    const currency = priceMatch ? priceMatch[2].toLowerCase() : ''
+    let priceUF = parseInt(priceRaw, 10) || 0
     if (currency === 'pesos' || priceUF > 500000) {
       priceUF = Math.round(priceUF / 38000)
     }
 
-    const location = locMatches[i]?.[1]?.trim() || ''
-    const link = linkMatches[i] || ''
-    const id = link.match(/MLC-?\d+/)?.[0] || ''
+    // Link y ID MLC
+    const link = card.find('a[href*="portalinmobiliario.com/MLC"]').first().attr('href') || ''
+    const idMatch = link.match(/MLC-?\\d+/)
+    const id = idMatch ? idMatch[0] : ''
 
-    const locLower = location.toLowerCase()
-    const isWrongRegion = INVALID_REGIONS.some(r => locLower.includes(r))
-    if (priceUF < 15000 || isWrongRegion || !id) continue
-
+    // Atributos (dorm/baño/m²)
     let beds = '', baths = '', m2 = ''
-    if (attrMatches[i]) {
-      const attrItems = [...attrMatches[i][1].matchAll(/<li[^>]*>([\s\S]*?)<\/li/g)].map(a => a[1].replace(/<[^>]+>/g, '').trim())
-      beds = attrItems.find(a => a.includes('dormitorio'))?.match(/\d+/)?.[0] || ''
-      baths = attrItems.find(a => a.includes('baño'))?.match(/\d+/)?.[0] || ''
-      m2 = attrItems.find(a => a.includes('m²'))?.match(/[\d.,]+/)?.[0] || ''
+    card.find('.poly-component__attributes-list li').each(function () {
+      const t = $(this).text().trim()
+      if (/dormitorio/i.test(t) && !beds) { const m = t.match(/\\d+/); if (m) beds = m[0] }
+      else if (/baño/i.test(t) && !baths) { const m = t.match(/\\d+/); if (m) baths = m[0] }
+      else if (/m²/i.test(t) && !m2)     { const m = t.match(/[\\d.,]+/); if (m) m2 = m[0] }
+    })
+
+    const barrio = location.split(',')[0] ? location.split(',')[0].trim() : ''
+
+    if (id && title && priceUF > 0) {
+      results.push({
+        id, comuna, barrio, title, price_uf: priceUF,
+        beds, baths, m2, location, link
+      })
     }
-
-    const barrio = location.split(',')[0]?.trim() || ''
-
-    listings.push({ id, comuna: search.comuna, barrio, title, price_uf: priceUF, beds, baths, m2, location, link })
-  }
-  return listings
-}
-
-async function scrapePage(search) {
-  // Fetch home para obtener cookies de sesión
-  const cookieRes = await fetch('https://www.portalinmobiliario.com/', {
-    headers: { 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36' },
-    redirect: 'follow',
   })
-  const cookies = cookieRes.headers.raw()['set-cookie']?.map(c => c.split(';')[0]).join('; ') || ''
 
-  // Paginar: PI usa offsets 49, 97, 145 (49 items/página)
-  const seen = new Map() // dedupe por id
-  const offsets = [null, 49, 97, 145]
-  for (const offset of offsets) {
-    const url = offset ? `${search.baseUrl}_Desde_${offset + 1}` : search.baseUrl
-    try {
-      const html = await fetchOnePage(url, cookies)
-      const found = parseListings(html, search)
-      for (const l of found) if (!seen.has(l.id)) seen.set(l.id, l)
-      // Si la página devuelve menos de 30 items, asumimos que es la última
-      if (found.length < 30) break
-    } catch (e) {
-      console.warn(`   ⚠️ ${search.comuna} offset ${offset || 0}: ${e.message.substring(0, 60)}`)
-      break
-    }
-    await new Promise(r => setTimeout(r, 800))
+  return { comuna, url: request.url, count: results.length, listings: results }
+}`
+
+async function scrapeAllViaApify() {
+  const startUrls = buildStartUrls()
+  console.log(`🕸️  Apify cheerio-scraper — ${startUrls.length} URLs (${SEARCHES.length} comunas × 4 páginas)`)
+
+  const input = {
+    startUrls,
+    pageFunction: PAGE_FUNCTION,
+    proxyConfiguration: { useApifyProxy: true },
+    maxRequestRetries: 3,
+    maxConcurrency: 4,
+    ignoreSslErrors: false,
   }
+
+  // run-sync-get-dataset-items ejecuta sincrónico y devuelve directamente los items del dataset
+  const res = await fetch(
+    `https://api.apify.com/v2/acts/apify~cheerio-scraper/run-sync-get-dataset-items?token=${APIFY_TOKEN}&timeout=280&memory=1024`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(input),
+    }
+  )
+
+  if (!res.ok) {
+    const errText = await res.text()
+    throw new Error(`Apify ${res.status}: ${errText.substring(0, 300)}`)
+  }
+
+  const datasetItems = await res.json()
+  console.log(`   Apify devolvió ${datasetItems.length} páginas procesadas`)
+
+  // Cada item es { comuna, url, count, listings[] }. Unir todos y dedupe por id.
+  const porComuna = {}
+  const seen = new Map()
+  for (const item of datasetItems) {
+    const comuna = item.comuna || 'Desconocida'
+    porComuna[comuna] = porComuna[comuna] || []
+    for (const l of (item.listings || [])) {
+      // Filtros que hacíamos antes:
+      const locLower = (l.location || '').toLowerCase()
+      const wrongRegion = INVALID_REGIONS.some(r => locLower.includes(r))
+      if (l.price_uf < 15000 || wrongRegion || !l.id) continue
+      if (seen.has(l.id)) continue
+      seen.set(l.id, l)
+      porComuna[comuna].push(l)
+    }
+  }
+
+  // Log por comuna
+  for (const s of SEARCHES) {
+    console.log(`   ${s.comuna}: ${(porComuna[s.comuna] || []).length} casas (≥15.000 UF)`)
+  }
+
   return Array.from(seen.values())
 }
 
@@ -247,25 +297,57 @@ async function sendEmail(newListings, totalScraped) {
 // ── Main ────────────────────────────────────────────────
 
 async function main() {
+  const isDryRun = process.argv.includes('--dry-run')
+  const isBackfillSilent = process.argv.includes('--backfill-silent')
+
   console.log('🏠 RADAR PROPIEDADES — ' + new Date().toISOString().split('T')[0])
   console.log('   Comunas: Lo Barnechea, Vitacura, Las Condes, La Reina')
-  console.log('   Filtro: casas usadas >15.000 UF\n')
+  console.log('   Filtro: casas usadas >15.000 UF')
+  console.log('   Scraping vía Apify (PI bloquea IPs de datacenter)')
+  if (isDryRun) console.log('   ⚠️  DRY-RUN — solo scraping, sin Supabase ni email')
+  if (isBackfillSilent) console.log('   ⚠️  BACKFILL SILENCIOSO — inserta todo con is_new=false, sin email')
+  console.log('')
 
-  const allListings = []
-
-  for (const search of SEARCHES) {
-    process.stdout.write(`   ${search.comuna}...`)
-    try {
-      const listings = await scrapePage(search)
-      allListings.push(...listings)
-      console.log(` ${listings.length} propiedades`)
-    } catch (e) {
-      console.log(` ❌ ${e.message.substring(0, 50)}`)
-    }
-    await new Promise(r => setTimeout(r, 3000))
+  let allListings = []
+  try {
+    allListings = await scrapeAllViaApify()
+  } catch (e) {
+    console.error(`❌ Error Apify: ${e.message}`)
+    process.exit(1)
   }
 
   console.log(`\n   Total scrapeadas: ${allListings.length}`)
+
+  // Muestra sample de 3 listings para verificación
+  if (allListings.length > 0) {
+    console.log('\n   📋 Sample (primeros 3):')
+    allListings.slice(0, 3).forEach((l, i) => {
+      console.log(`      ${i + 1}. [${l.comuna}] ${l.price_uf.toLocaleString()} UF · ${l.beds || '?'}D/${l.baths || '?'}B/${l.m2 || '?'}m² · ${l.title.substring(0, 50)}`)
+    })
+  }
+
+  if (isDryRun) {
+    console.log('\n✅ Dry-run completado — sin tocar Supabase ni email')
+    return
+  }
+
+  if (isBackfillSilent) {
+    console.log('\n   🗃️  Backfill silencioso: insertando todo con is_new=false...')
+    const today = new Date().toISOString().split('T')[0]
+    let inserted = 0, skipped = 0
+    const { data: existing } = await supabase.from('pi_listings').select('id')
+    const existingIds = new Set((existing || []).map(e => e.id))
+    for (const l of allListings) {
+      if (existingIds.has(l.id)) { skipped++; continue }
+      const { error } = await supabase.from('pi_listings').insert({
+        ...l, first_seen: today, last_seen: today, is_new: false,
+      })
+      if (!error) inserted++
+    }
+    console.log(`   Insertadas: ${inserted} · Ya existían: ${skipped}`)
+    console.log('\n✅ Backfill completado — sin email')
+    return
+  }
 
   // Save and detect new
   const { newListings, updated, total } = await saveAndDetectNew(allListings)

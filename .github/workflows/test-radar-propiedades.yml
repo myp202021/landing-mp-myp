@@ -1,0 +1,43 @@
+name: "TEST Radar Propiedades (dry-run)"
+
+on:
+  workflow_dispatch:
+    inputs:
+      modo:
+        description: 'Modo: dry-run (solo scraping) / backfill (insertar silencioso) / real (con email)'
+        required: true
+        default: 'dry-run'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm install node-fetch@2 @supabase/supabase-js
+
+      - name: "Ejecutar scraper vía Apify"
+        run: |
+          case "${{ github.event.inputs.modo }}" in
+            dry-run)
+              node scripts/radar-propiedades.js --dry-run
+              ;;
+            backfill)
+              node scripts/radar-propiedades.js --backfill-silent
+              ;;
+            real)
+              node scripts/radar-propiedades.js
+              ;;
+            *)
+              echo "Modo inválido: ${{ github.event.inputs.modo }}"
+              exit 1
+              ;;
+          esac
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          RESEND: ${{ secrets.RESEND }}
+          APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
