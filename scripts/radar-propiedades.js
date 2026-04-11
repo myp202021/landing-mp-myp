@@ -64,53 +64,70 @@ function buildStartUrls() {
   return urls
 }
 
-// Esta función se ejecuta DENTRO de Apify (no en Node de GH Actions)
-// Usa cheerio ($) para parsear el DOM y retorna un array de listings.
+// Esta función se ejecuta DENTRO de Apify. Usamos regex directo sobre el HTML
+// crudo en lugar de selectores CSS porque PI a veces sirve HTML parcial.
 const PAGE_FUNCTION = `async function pageFunction(context) {
-  const { $, request } = context
+  const { request, body, $ } = context
   const comuna = request.userData.comuna
+
+  // Tomamos el HTML crudo (string) — 'body' en cheerio-scraper es Buffer
+  const html = typeof body === 'string' ? body : (body ? body.toString('utf8') : '')
+
+  // DEBUG: info general de la respuesta
+  const debug = {
+    htmlLength: html.length,
+    hasNoResults: html.indexOf('No encontramos') !== -1,
+    hasPolyCard: html.indexOf('poly-card') !== -1,
+    hasPolyTitle: html.indexOf('poly-component__title') !== -1,
+    hasMLC: (html.match(/MLC-?\\d+/g) || []).length,
+    firstMLC: (html.match(/portalinmobiliario\\.com\\/MLC-?\\d+[^"'\\s]*/i) || [])[0] || '',
+    polyCardCount: (html.match(/poly-card/g) || []).length,
+    polyTitleCount: (html.match(/poly-component__title/g) || []).length,
+  }
+
+  // Extraer listings con REGEX (el mismo approach que funciona local)
   const results = []
+  const titleMatches = [...html.matchAll(/class="poly-component__title"[^>]*>([\\s\\S]*?)<\\//g)]
+  const locMatches = [...html.matchAll(/class="[^"]*poly-component__location[^"]*"[^>]*>([^<]+)</g)]
+  const priceMatches = [...html.matchAll(/aria-label="([\\d.,]+)\\s*(UF|unidades de fomento|pesos)/gi)]
+  const linkArr = [...new Set(
+    [...html.matchAll(/href="(https?:\\/\\/(?:www\\.)?portalinmobiliario\\.com\\/MLC[^"]+)"/g)].map(function(m){return m[1]})
+  )]
+  const attrMatches = [...html.matchAll(/class="poly-component__attributes-list"[^>]*>([\\s\\S]*?)<\\/ul/g)]
 
-  $('.poly-card').each(function () {
-    const card = $(this)
-    const title = card.find('.poly-component__title').text().trim()
-    const location = card.find('.poly-component__location').text().trim()
+  const count = Math.min(titleMatches.length, priceMatches.length, locMatches.length)
 
-    // Precio en aria-label
-    const priceLabel = card.find('.poly-price__current [aria-label]').attr('aria-label') || ''
-    const priceMatch = priceLabel.match(/([\\d.,]+)\\s*(UF|unidades de fomento|pesos)/i)
-    const priceRaw = priceMatch ? priceMatch[1].replace(/[.,]/g, '') : '0'
-    const currency = priceMatch ? priceMatch[2].toLowerCase() : ''
+  for (let i = 0; i < count; i++) {
+    const title = titleMatches[i] && titleMatches[i][1] ? titleMatches[i][1].replace(/<[^>]+>/g, '').trim() : ''
+    const priceRaw = (priceMatches[i] && priceMatches[i][1] ? priceMatches[i][1] : '0').replace(/[.,]/g, '')
+    const currency = (priceMatches[i] && priceMatches[i][2] ? priceMatches[i][2] : '').toLowerCase()
     let priceUF = parseInt(priceRaw, 10) || 0
-    if (currency === 'pesos' || priceUF > 500000) {
-      priceUF = Math.round(priceUF / 38000)
-    }
+    if (currency === 'pesos' || priceUF > 500000) priceUF = Math.round(priceUF / 38000)
 
-    // Link y ID MLC
-    const link = card.find('a[href*="portalinmobiliario.com/MLC"]').first().attr('href') || ''
+    const location = locMatches[i] && locMatches[i][1] ? locMatches[i][1].trim() : ''
+    const link = linkArr[i] || ''
     const idMatch = link.match(/MLC-?\\d+/)
     const id = idMatch ? idMatch[0] : ''
 
-    // Atributos (dorm/baño/m²)
     let beds = '', baths = '', m2 = ''
-    card.find('.poly-component__attributes-list li').each(function () {
-      const t = $(this).text().trim()
-      if (/dormitorio/i.test(t) && !beds) { const m = t.match(/\\d+/); if (m) beds = m[0] }
-      else if (/baño/i.test(t) && !baths) { const m = t.match(/\\d+/); if (m) baths = m[0] }
-      else if (/m²/i.test(t) && !m2)     { const m = t.match(/[\\d.,]+/); if (m) m2 = m[0] }
-    })
-
-    const barrio = location.split(',')[0] ? location.split(',')[0].trim() : ''
-
-    if (id && title && priceUF > 0) {
-      results.push({
-        id, comuna, barrio, title, price_uf: priceUF,
-        beds, baths, m2, location, link
-      })
+    if (attrMatches[i] && attrMatches[i][1]) {
+      const attrHtml = attrMatches[i][1]
+      const items = [...attrHtml.matchAll(/<li[^>]*>([\\s\\S]*?)<\\/li/g)].map(function(a){return a[1].replace(/<[^>]+>/g, '').trim()})
+      for (const t of items) {
+        if (/dormitorio/i.test(t) && !beds) { const m = t.match(/\\d+/); if (m) beds = m[0] }
+        else if (/baño/i.test(t) && !baths) { const m = t.match(/\\d+/); if (m) baths = m[0] }
+        else if (/m²/i.test(t) && !m2)      { const m = t.match(/[\\d.,]+/); if (m) m2 = m[0] }
+      }
     }
-  })
 
-  return { comuna, url: request.url, count: results.length, listings: results }
+    const barrio = location.indexOf(',') >= 0 ? location.split(',')[0].trim() : location
+
+    if (id && priceUF > 0) {
+      results.push({ id, comuna, barrio, title, price_uf: priceUF, beds, baths, m2, location, link })
+    }
+  }
+
+  return { comuna, url: request.url, debug, count: results.length, listings: results }
 }`
 
 async function scrapeAllViaApify() {
@@ -143,6 +160,18 @@ async function scrapeAllViaApify() {
 
   const datasetItems = await res.json()
   console.log(`   Apify devolvió ${datasetItems.length} páginas procesadas`)
+
+  // DEBUG: mostrar info de la primera página para entender qué está llegando
+  if (datasetItems.length > 0 && datasetItems[0].debug) {
+    const d = datasetItems[0].debug
+    console.log(`   📊 Debug primera página (${datasetItems[0].comuna}):`)
+    console.log(`      htmlLength: ${d.htmlLength}`)
+    console.log(`      hasNoResults: ${d.hasNoResults}`)
+    console.log(`      polyCardCount: ${d.polyCardCount}`)
+    console.log(`      polyTitleCount: ${d.polyTitleCount}`)
+    console.log(`      MLC count: ${d.hasMLC}`)
+    console.log(`      firstMLC: ${d.firstMLC.substring(0, 80)}`)
+  }
 
   // Cada item es { comuna, url, count, listings[] }. Unir todos y dedupe por id.
   const porComuna = {}
