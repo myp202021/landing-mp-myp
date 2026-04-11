@@ -64,28 +64,37 @@ function buildStartUrls() {
   return urls
 }
 
-// Esta función se ejecuta DENTRO de Apify. Usamos regex directo sobre el HTML
-// crudo en lugar de selectores CSS porque PI a veces sirve HTML parcial.
+// Esta función se ejecuta DENTRO de Apify web-scraper (headless Chromium + cheerio).
+// Chromium ejecuta JS → PI sirve el HTML completo con listings renderizados.
 const PAGE_FUNCTION = `async function pageFunction(context) {
-  const { request, body, $ } = context
+  const { request, $, page, waitFor } = context
   const comuna = request.userData.comuna
 
-  // Tomamos el HTML crudo (string) — 'body' en cheerio-scraper es Buffer
-  const html = typeof body === 'string' ? body : (body ? body.toString('utf8') : '')
+  // Esperar a que los listings carguen (máximo 8 segundos)
+  try {
+    await page.waitForSelector('.poly-card, .ui-search-result__content', { timeout: 8000 })
+  } catch (e) {
+    // Ignorar timeout, seguimos con lo que haya
+  }
 
-  // DEBUG: info general de la respuesta
+  // Dar un respiro para que el lazy-load termine
+  await waitFor(1500)
+
+  // Tomar el HTML ya renderizado
+  const html = await page.content()
+
+  // DEBUG
   const debug = {
     htmlLength: html.length,
     hasNoResults: html.indexOf('No encontramos') !== -1,
-    hasPolyCard: html.indexOf('poly-card') !== -1,
-    hasPolyTitle: html.indexOf('poly-component__title') !== -1,
-    hasMLC: (html.match(/MLC-?\\d+/g) || []).length,
-    firstMLC: (html.match(/portalinmobiliario\\.com\\/MLC-?\\d+[^"'\\s]*/i) || [])[0] || '',
     polyCardCount: (html.match(/poly-card/g) || []).length,
     polyTitleCount: (html.match(/poly-component__title/g) || []).length,
+    hasMLC: (html.match(/MLC-?\\d+/g) || []).length,
+    firstMLC: (html.match(/portalinmobiliario\\.com\\/MLC-?\\d+[^"'\\s]*/i) || [])[0] || '',
+    uiSearchCount: (html.match(/ui-search-result/g) || []).length,
   }
 
-  // Extraer listings con REGEX (el mismo approach que funciona local)
+  // Extraer listings con REGEX (mismo approach que funciona local)
   const results = []
   const titleMatches = [...html.matchAll(/class="poly-component__title"[^>]*>([\\s\\S]*?)<\\//g)]
   const locMatches = [...html.matchAll(/class="[^"]*poly-component__location[^"]*"[^>]*>([^<]+)</g)]
@@ -139,13 +148,18 @@ async function scrapeAllViaApify() {
     pageFunction: PAGE_FUNCTION,
     proxyConfiguration: { useApifyProxy: true },
     maxRequestRetries: 3,
-    maxConcurrency: 4,
+    maxConcurrency: 2,  // Más bajo porque cada request levanta Chromium (más lento)
+    maxPagesPerCrawl: 20,
+    waitUntil: ['networkidle2'],
+    injectJQuery: false,
+    useChrome: true,
+    headless: true,
     ignoreSslErrors: false,
   }
 
   // run-sync-get-dataset-items ejecuta sincrónico y devuelve directamente los items del dataset
   const res = await fetch(
-    `https://api.apify.com/v2/acts/apify~cheerio-scraper/run-sync-get-dataset-items?token=${APIFY_TOKEN}&timeout=280&memory=1024`,
+    `https://api.apify.com/v2/acts/apify~web-scraper/run-sync-get-dataset-items?token=${APIFY_TOKEN}&timeout=540&memory=4096`,
     {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
