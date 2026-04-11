@@ -51,17 +51,12 @@ const INVALID_REGIONS = ['maule', 'curicó', 'valparaíso', 'biobío', 'araucan�
 //    de listings que nosotros juntamos por comuna
 
 function buildStartUrls() {
-  const urls = []
-  const offsets = [null, 49, 97, 145]  // página 1, 2, 3, 4
-  for (const s of SEARCHES) {
-    for (const off of offsets) {
-      urls.push({
-        url: off ? `${s.baseUrl}_Desde_${off + 1}` : s.baseUrl,
-        userData: { comuna: s.comuna },
-      })
-    }
-  }
-  return urls
+  // Solo primera página por comuna (49 listings cada una) para evitar timeouts
+  // de Chromium headless. Total = 4 URLs → ~196 listings máximo.
+  return SEARCHES.map(s => ({
+    url: s.baseUrl,
+    userData: { comuna: s.comuna },
+  }))
 }
 
 // Esta función se ejecuta DENTRO de Apify web-scraper (headless Chromium + cheerio).
@@ -139,17 +134,55 @@ const PAGE_FUNCTION = `async function pageFunction(context) {
   return { comuna, url: request.url, debug, count: results.length, listings: results }
 }`
 
+// Modo async robusto: inicia el run, pollea el status, baja items al terminar
+async function runApifyAsync(actorId, input, maxWaitSec = 600) {
+  // 1. Start run
+  const startRes = await fetch(
+    `https://api.apify.com/v2/acts/${actorId}/runs?token=${APIFY_TOKEN}`,
+    { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(input) }
+  )
+  if (!startRes.ok) throw new Error(`Apify start ${startRes.status}: ${(await startRes.text()).substring(0, 300)}`)
+  const startData = await startRes.json()
+  const runId = startData.data?.id
+  const datasetId = startData.data?.defaultDatasetId
+  if (!runId || !datasetId) throw new Error('Apify no devolvió runId/datasetId')
+  console.log(`   🏃 Run iniciado: ${runId}`)
+
+  // 2. Poll every 10 seconds
+  const tStart = Date.now()
+  while ((Date.now() - tStart) / 1000 < maxWaitSec) {
+    await new Promise(r => setTimeout(r, 10000))
+    const statusRes = await fetch(`https://api.apify.com/v2/actor-runs/${runId}?token=${APIFY_TOKEN}`)
+    const statusData = await statusRes.json()
+    const status = statusData.data?.status
+    const elapsed = Math.round((Date.now() - tStart) / 1000)
+    process.stdout.write(`   ⏱️  [${elapsed}s] ${status}\r`)
+    if (status === 'SUCCEEDED') {
+      console.log(`\n   ✅ Run terminado en ${elapsed}s`)
+      break
+    }
+    if (['FAILED', 'ABORTED', 'TIMED-OUT'].includes(status)) {
+      throw new Error(`Apify run ${status}`)
+    }
+  }
+
+  // 3. Fetch dataset items
+  const itemsRes = await fetch(`https://api.apify.com/v2/datasets/${datasetId}/items?token=${APIFY_TOKEN}&clean=true&format=json`)
+  if (!itemsRes.ok) throw new Error(`Apify dataset ${itemsRes.status}`)
+  return await itemsRes.json()
+}
+
 async function scrapeAllViaApify() {
   const startUrls = buildStartUrls()
-  console.log(`🕸️  Apify cheerio-scraper — ${startUrls.length} URLs (${SEARCHES.length} comunas × 4 páginas)`)
+  console.log(`🕸️  Apify web-scraper — ${startUrls.length} URLs (${SEARCHES.length} comunas × 1 página c/u)`)
 
   const input = {
     startUrls,
     pageFunction: PAGE_FUNCTION,
     proxyConfiguration: { useApifyProxy: true },
-    maxRequestRetries: 3,
-    maxConcurrency: 2,  // Más bajo porque cada request levanta Chromium (más lento)
-    maxPagesPerCrawl: 20,
+    maxRequestRetries: 2,
+    maxConcurrency: 2,
+    maxPagesPerCrawl: 10,
     waitUntil: ['networkidle2'],
     injectJQuery: false,
     useChrome: true,
@@ -157,22 +190,7 @@ async function scrapeAllViaApify() {
     ignoreSslErrors: false,
   }
 
-  // run-sync-get-dataset-items ejecuta sincrónico y devuelve directamente los items del dataset
-  const res = await fetch(
-    `https://api.apify.com/v2/acts/apify~web-scraper/run-sync-get-dataset-items?token=${APIFY_TOKEN}&timeout=540&memory=4096`,
-    {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(input),
-    }
-  )
-
-  if (!res.ok) {
-    const errText = await res.text()
-    throw new Error(`Apify ${res.status}: ${errText.substring(0, 300)}`)
-  }
-
-  const datasetItems = await res.json()
+  const datasetItems = await runApifyAsync('apify~web-scraper', input, 600)
   console.log(`   Apify devolvió ${datasetItems.length} páginas procesadas`)
 
   // DEBUG: mostrar info de la primera página para entender qué está llegando
