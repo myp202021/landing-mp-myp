@@ -209,8 +209,7 @@ async function scrapeAllViaApify() {
   const input = {
     startUrls,
     pageFunction: PAGE_FUNCTION,
-    // Sin proxy: Apify usa sus propias IPs (datacenter Apify ≠ datacenter GH Actions)
-    proxyConfiguration: { useApifyProxy: false },
+    proxyConfiguration: { useApifyProxy: true },
     maxRequestRetries: 2,
     maxConcurrency: 2,
     maxPagesPerCrawl: 10,
