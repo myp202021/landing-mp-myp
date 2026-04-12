@@ -64,24 +64,24 @@ function buildStartUrls() {
 // IMPORTANTE: siempre retornar algo, nunca undefined, con try/catch global.
 const PAGE_FUNCTION = `async function pageFunction(context) {
  try {
-  const { request, $, page, waitFor, log } = context
+  const { request, page, log } = context
   const comuna = (request.userData && request.userData.comuna) || 'desconocida'
 
-  log.info('INICIO pageFunction — ' + request.url)
+  log.info('INICIO — ' + request.url + ' — ' + comuna)
 
-  // Esperar a que algo relevante del DOM aparezca
+  // Esperar a que el JS renderice usando setTimeout directo (waitFor está deprecated)
+  await new Promise(function(r){ setTimeout(r, 5000) })
+
+  // Tomar el HTML ya renderizado (no importa si no cargó todo, mostraremos lo que hay)
+  let html = ''
   try {
-    await page.waitForSelector('body', { timeout: 5000 })
+    html = await page.content()
   } catch (e) {
-    log.warning('Timeout esperando body')
+    log.error('page.content() falló: ' + (e && e.message))
+    return { comuna, url: request.url, error: 'page.content failed: ' + (e && e.message), count: 0, listings: [] }
   }
 
-  // Esperar un poco más para que JS termine de hidratar
-  await waitFor(2500)
-
-  // Tomar el HTML ya renderizado
-  const html = await page.content()
-  log.info('HTML length: ' + html.length + ' chars — ' + comuna)
+  log.info('HTML length: ' + html.length + ' — ' + comuna)
 
   // DEBUG
   const debug = {
@@ -209,7 +209,8 @@ async function scrapeAllViaApify() {
   const input = {
     startUrls,
     pageFunction: PAGE_FUNCTION,
-    proxyConfiguration: { useApifyProxy: true },
+    // Sin proxy: Apify usa sus propias IPs (datacenter Apify ≠ datacenter GH Actions)
+    proxyConfiguration: { useApifyProxy: false },
     maxRequestRetries: 2,
     maxConcurrency: 2,
     maxPagesPerCrawl: 10,
