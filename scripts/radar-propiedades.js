@@ -69,33 +69,31 @@ const PAGE_FUNCTION = `async function pageFunction(context) {
 
   log.info('INICIO — ' + request.url + ' — ' + comuna)
 
-  // Primero visitar la home para obtener cookies de sesión (PI requiere esto)
+  // Setear User-Agent real de Chrome macOS (no Headless) para evitar detección
   try {
-    await page.goto('https://www.portalinmobiliario.com/', {
-      waitUntil: 'domcontentloaded',
-      timeout: 30000
+    await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36')
+    await page.setExtraHTTPHeaders({
+      'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+      'Accept-Language': 'es-CL,es;q=0.9,en;q=0.8',
     })
-    await new Promise(function(r){ setTimeout(r, 1500) })
-  } catch (e) {
-    log.warning('Fallo visitar home: ' + (e && e.message))
-  }
+  } catch (e) { log.warning('Fallo setear UA: ' + (e && e.message)) }
 
-  // Ahora navegar a la URL de búsqueda real (puppeteer-scraper hace la primera,
-  // pero re-visitamos manualmente con las cookies ya establecidas)
+  // Primero visitar la home para obtener cookies de sesión
   try {
-    await page.goto(request.url, {
-      waitUntil: 'domcontentloaded',
-      timeout: 30000
-    })
+    await page.goto('https://www.portalinmobiliario.com/', { waitUntil: 'domcontentloaded', timeout: 30000 })
+    await new Promise(function(r){ setTimeout(r, 2000) })
+  } catch (e) { log.warning('Fallo visitar home: ' + (e && e.message)) }
+
+  // Navegar a URL de búsqueda
+  try {
+    await page.goto(request.url, { waitUntil: 'networkidle2', timeout: 45000 })
     await new Promise(function(r){ setTimeout(r, 3000) })
-  } catch (e) {
-    log.warning('Fallo navegar a url: ' + (e && e.message))
-  }
+  } catch (e) { log.warning('Fallo navegar a url: ' + (e && e.message)) }
 
-  // Tomar HTML del DOM
   const html = await page.content()
-
   log.info('HTML length: ' + html.length + ' — ' + comuna)
+  // Loguear muestra del HTML para ver qué sirve PI
+  log.info('HTML sample: ' + html.substring(0, 300).replace(/\\n/g, ' ').replace(/\\s+/g, ' '))
 
   // DEBUG
   const debug = {
