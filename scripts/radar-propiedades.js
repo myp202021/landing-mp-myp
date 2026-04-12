@@ -61,22 +61,27 @@ function buildStartUrls() {
 
 // Esta función se ejecuta DENTRO de Apify web-scraper (headless Chromium + cheerio).
 // Chromium ejecuta JS → PI sirve el HTML completo con listings renderizados.
+// IMPORTANTE: siempre retornar algo, nunca undefined, con try/catch global.
 const PAGE_FUNCTION = `async function pageFunction(context) {
-  const { request, $, page, waitFor } = context
-  const comuna = request.userData.comuna
+ try {
+  const { request, $, page, waitFor, log } = context
+  const comuna = (request.userData && request.userData.comuna) || 'desconocida'
 
-  // Esperar a que los listings carguen (máximo 8 segundos)
+  log.info('INICIO pageFunction — ' + request.url)
+
+  // Esperar a que algo relevante del DOM aparezca
   try {
-    await page.waitForSelector('.poly-card, .ui-search-result__content', { timeout: 8000 })
+    await page.waitForSelector('body', { timeout: 5000 })
   } catch (e) {
-    // Ignorar timeout, seguimos con lo que haya
+    log.warning('Timeout esperando body')
   }
 
-  // Dar un respiro para que el lazy-load termine
-  await waitFor(1500)
+  // Esperar un poco más para que JS termine de hidratar
+  await waitFor(2500)
 
   // Tomar el HTML ya renderizado
   const html = await page.content()
+  log.info('HTML length: ' + html.length + ' chars — ' + comuna)
 
   // DEBUG
   const debug = {
@@ -131,7 +136,11 @@ const PAGE_FUNCTION = `async function pageFunction(context) {
     }
   }
 
+  log.info('Listings encontrados: ' + results.length + ' en ' + comuna)
   return { comuna, url: request.url, debug, count: results.length, listings: results }
+ } catch (err) {
+  return { error: err.message || String(err), stack: err.stack || '', url: (context.request && context.request.url) || '' }
+ }
 }`
 
 // Modo async robusto: inicia el run, pollea el status, baja items al terminar
@@ -150,11 +159,13 @@ async function runApifyAsync(actorId, input, maxWaitSec = 600) {
 
   // 2. Poll every 10 seconds
   const tStart = Date.now()
+  let finalStatus = 'UNKNOWN'
   while ((Date.now() - tStart) / 1000 < maxWaitSec) {
     await new Promise(r => setTimeout(r, 10000))
     const statusRes = await fetch(`https://api.apify.com/v2/actor-runs/${runId}?token=${APIFY_TOKEN}`)
     const statusData = await statusRes.json()
     const status = statusData.data?.status
+    finalStatus = status
     const elapsed = Math.round((Date.now() - tStart) / 1000)
     process.stdout.write(`   ⏱️  [${elapsed}s] ${status}\r`)
     if (status === 'SUCCEEDED') {
@@ -162,11 +173,30 @@ async function runApifyAsync(actorId, input, maxWaitSec = 600) {
       break
     }
     if (['FAILED', 'ABORTED', 'TIMED-OUT'].includes(status)) {
-      throw new Error(`Apify run ${status}`)
+      console.log(`\n   ❌ Run ${status} en ${elapsed}s`)
+      break
     }
   }
 
-  // 3. Fetch dataset items
+  // 3. Download Apify run logs (debug)
+  try {
+    const logRes = await fetch(`https://api.apify.com/v2/actor-runs/${runId}/log?token=${APIFY_TOKEN}`)
+    if (logRes.ok) {
+      const logText = await logRes.text()
+      const lines = logText.split('\n').filter(l => l.trim())
+      const relevant = lines.filter(l => /INFO|WARN|ERROR|pageFunction|HTML length|comuna|listings|poly/i.test(l)).slice(-40)
+      if (relevant.length > 0) {
+        console.log('\n   📜 Apify logs (últimos relevantes):')
+        relevant.forEach(l => console.log(`      ${l.substring(0, 200)}`))
+      }
+    }
+  } catch (e) { console.log(`   ⚠️  No se pudieron bajar logs: ${e.message}`) }
+
+  if (['FAILED', 'ABORTED', 'TIMED-OUT'].includes(finalStatus)) {
+    throw new Error(`Apify run ${finalStatus}`)
+  }
+
+  // 4. Fetch dataset items
   const itemsRes = await fetch(`https://api.apify.com/v2/datasets/${datasetId}/items?token=${APIFY_TOKEN}&clean=true&format=json`)
   if (!itemsRes.ok) throw new Error(`Apify dataset ${itemsRes.status}`)
   return await itemsRes.json()
