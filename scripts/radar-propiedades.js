@@ -64,22 +64,13 @@ function buildStartUrls() {
 // IMPORTANTE: siempre retornar algo, nunca undefined, con try/catch global.
 const PAGE_FUNCTION = `async function pageFunction(context) {
  try {
-  const { request, page, log } = context
+  const { request, body, log } = context
   const comuna = (request.userData && request.userData.comuna) || 'desconocida'
 
   log.info('INICIO — ' + request.url + ' — ' + comuna)
 
-  // Esperar a que el JS renderice usando setTimeout directo (waitFor está deprecated)
-  await new Promise(function(r){ setTimeout(r, 5000) })
-
-  // Tomar el HTML ya renderizado (no importa si no cargó todo, mostraremos lo que hay)
-  let html = ''
-  try {
-    html = await page.content()
-  } catch (e) {
-    log.error('page.content() falló: ' + (e && e.message))
-    return { comuna, url: request.url, error: 'page.content failed: ' + (e && e.message), count: 0, listings: [] }
-  }
+  // body ya es el HTML crudo que Chromium renderizó (string)
+  const html = typeof body === 'string' ? body : (body ? body.toString('utf8') : '')
 
   log.info('HTML length: ' + html.length + ' — ' + comuna)
 
