@@ -64,13 +64,13 @@ function buildStartUrls() {
 // IMPORTANTE: siempre retornar algo, nunca undefined, con try/catch global.
 const PAGE_FUNCTION = `async function pageFunction(context) {
  try {
-  const { request, body, log } = context
+  const { request, $, log } = context
   const comuna = (request.userData && request.userData.comuna) || 'desconocida'
 
   log.info('INICIO — ' + request.url + ' — ' + comuna)
 
-  // body ya es el HTML crudo que Chromium renderizó (string)
-  const html = typeof body === 'string' ? body : (body ? body.toString('utf8') : '')
+  // $ es el cheerio del DOM YA renderizado por Chromium. Sacamos el HTML completo.
+  const html = $ ? ($.html() || $('html').html() || '') : ''
 
   log.info('HTML length: ' + html.length + ' — ' + comuna)
 
