@@ -59,18 +59,41 @@ function buildStartUrls() {
   }))
 }
 
-// Esta función se ejecuta DENTRO de Apify web-scraper (headless Chromium + cheerio).
-// Chromium ejecuta JS → PI sirve el HTML completo con listings renderizados.
-// IMPORTANTE: siempre retornar algo, nunca undefined, con try/catch global.
+// Esta función se ejecuta DENTRO de Apify puppeteer-scraper.
+// Tenemos control total del Page. Visitamos primero la home para obtener
+// cookies de sesión, luego navegamos a la URL real con esas cookies.
 const PAGE_FUNCTION = `async function pageFunction(context) {
  try {
-  const { request, $, log } = context
+  const { request, page, log } = context
   const comuna = (request.userData && request.userData.comuna) || 'desconocida'
 
   log.info('INICIO — ' + request.url + ' — ' + comuna)
 
-  // $ es el cheerio del DOM YA renderizado por Chromium. Sacamos el HTML completo.
-  const html = $ ? ($.html() || $('html').html() || '') : ''
+  // Primero visitar la home para obtener cookies de sesión (PI requiere esto)
+  try {
+    await page.goto('https://www.portalinmobiliario.com/', {
+      waitUntil: 'domcontentloaded',
+      timeout: 30000
+    })
+    await new Promise(function(r){ setTimeout(r, 1500) })
+  } catch (e) {
+    log.warning('Fallo visitar home: ' + (e && e.message))
+  }
+
+  // Ahora navegar a la URL de búsqueda real (puppeteer-scraper hace la primera,
+  // pero re-visitamos manualmente con las cookies ya establecidas)
+  try {
+    await page.goto(request.url, {
+      waitUntil: 'domcontentloaded',
+      timeout: 30000
+    })
+    await new Promise(function(r){ setTimeout(r, 3000) })
+  } catch (e) {
+    log.warning('Fallo navegar a url: ' + (e && e.message))
+  }
+
+  // Tomar HTML del DOM
+  const html = await page.content()
 
   log.info('HTML length: ' + html.length + ' — ' + comuna)
 
@@ -204,14 +227,12 @@ async function scrapeAllViaApify() {
     maxRequestRetries: 2,
     maxConcurrency: 2,
     maxPagesPerCrawl: 10,
-    waitUntil: ['networkidle2'],
-    injectJQuery: false,
-    useChrome: true,
     headless: true,
+    useChrome: true,
     ignoreSslErrors: false,
   }
 
-  const datasetItems = await runApifyAsync('apify~web-scraper', input, 600)
+  const datasetItems = await runApifyAsync('apify~puppeteer-scraper', input, 600)
   console.log(`   Apify devolvió ${datasetItems.length} páginas procesadas`)
 
   // DEBUG: mostrar info de la primera página para entender qué está llegando
