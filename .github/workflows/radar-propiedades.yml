@@ -16,10 +16,10 @@ jobs:
         with:
           node-version: '20'
       - run: npm install node-fetch@2 @supabase/supabase-js
-      - name: "Scrape PI (ScrapingBee) + detectar nuevas + email"
+      - name: "Scrape PI (Apify + paginación) + detectar nuevas + email"
         run: node scripts/radar-propiedades.js
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
           RESEND: ${{ secrets.RESEND }}
-          SCRAPINGBEE_API_KEY: ${{ secrets.SCRAPINGBEE_API_KEY }}
+          APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}

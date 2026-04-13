@@ -1,13 +1,13 @@
 /**
  * RADAR DE PROPIEDADES — CyM Corredora
- * Scrapea PI con ScrapingBee (paginado), detecta nuevas, guarda en Supabase, envía email
+ * Scrapea PI con Apify cheerio-scraper (paginado), detecta nuevas, guarda en Supabase, envía email
  *
  * Comunas: Lo Barnechea, Vitacura, Las Condes, La Reina
  * Filtro: casas usadas ≥15.000 UF
  * Paginación: 4 páginas por comuna (~192 listings c/u)
  * Cron: 04:00 AM Chile (07:00 UTC)
  *
- * Env vars: SUPABASE_URL, SUPABASE_SERVICE_KEY, RESEND, SCRAPINGBEE_API_KEY
+ * Env vars: SUPABASE_URL, SUPABASE_SERVICE_KEY, RESEND, APIFY_TOKEN
  */
 
 const fetch = require('node-fetch')
@@ -18,10 +18,10 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY
 )
 const RESEND_API_KEY = process.env.RESEND || process.env.RESEND_API_KEY
-const SCRAPINGBEE_KEY = process.env.SCRAPINGBEE_API_KEY
+const APIFY_TOKEN = process.env.APIFY_TOKEN
 
-if (!SCRAPINGBEE_KEY) {
-  console.error('❌ SCRAPINGBEE_API_KEY no definida')
+if (!APIFY_TOKEN) {
+  console.error('❌ APIFY_TOKEN no definido')
   process.exit(1)
 }
 
@@ -37,114 +37,240 @@ const SEARCHES = [
 
 const INVALID_REGIONS = ['maule', 'curicó', 'valparaíso', 'biobío', 'araucanía', 'coquimbo', 'ohiggins', 'atacama', 'los lagos', 'los ríos']
 
-// ── ScrapingBee fetch ───────────────────────────────────
+// ── Apify async run helper ──────────────────────────────
 
-async function scrapeOnePage(url, comuna, pageNum) {
-  const params = new URLSearchParams({
-    api_key: SCRAPINGBEE_KEY,
-    url,
-    render_js: 'true',
-    premium_proxy: 'true',
-    country_code: 'cl',
-    wait: '5000',
-    block_ads: 'true',
-  })
+async function runApifyAsync(actorId, input, maxWaitSec = 600) {
+  const startRes = await fetch(
+    `https://api.apify.com/v2/acts/${actorId}/runs?token=${APIFY_TOKEN}`,
+    { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(input) }
+  )
+  if (!startRes.ok) throw new Error(`Apify start ${startRes.status}: ${(await startRes.text()).substring(0, 300)}`)
+  const startData = await startRes.json()
+  const runId = startData.data?.id
+  const datasetId = startData.data?.defaultDatasetId
+  if (!runId || !datasetId) throw new Error('Apify no devolvió runId/datasetId')
+  console.log(`   🏃 Run iniciado: ${runId}`)
 
-  const label = `${comuna} p${pageNum}`
-  console.log(`   🐝 ${label}...`)
-
-  const res = await fetch(`https://app.scrapingbee.com/api/v1?${params.toString()}`)
-  if (!res.ok) {
-    const body = await res.text()
-    console.error(`   ❌ ${label}: HTTP ${res.status} — ${body.substring(0, 200)}`)
-    return []
-  }
-
-  const html = await res.text()
-  const listings = extractListings(html, comuna)
-  console.log(`   ✅ ${label}: ${listings.length} listings`)
-  return listings
-}
-
-async function scrapeComuna(search) {
-  const allListings = []
-  for (let i = 0; i < OFFSETS.length; i++) {
-    const offset = OFFSETS[i]
-    const url = offset === 0 ? search.baseUrl : `${search.baseUrl}_Desde_${offset}`
-    const listings = await scrapeOnePage(url, search.comuna, i + 1)
-    allListings.push(...listings)
-    if (listings.length === 0) {
-      console.log(`   ⏹️  ${search.comuna}: página ${i + 1} vacía, deteniendo`)
+  const tStart = Date.now()
+  let finalStatus = 'UNKNOWN'
+  while ((Date.now() - tStart) / 1000 < maxWaitSec) {
+    await new Promise(r => setTimeout(r, 10000))
+    const statusRes = await fetch(`https://api.apify.com/v2/actor-runs/${runId}?token=${APIFY_TOKEN}`)
+    const statusData = await statusRes.json()
+    const status = statusData.data?.status
+    finalStatus = status
+    const elapsed = Math.round((Date.now() - tStart) / 1000)
+    process.stdout.write(`   ⏱️  [${elapsed}s] ${status}\r`)
+    if (status === 'SUCCEEDED') {
+      console.log(`\n   ✅ Run terminado en ${elapsed}s`)
       break
     }
-    if (i < OFFSETS.length - 1) await new Promise(r => setTimeout(r, 2000))
+    if (['FAILED', 'ABORTED', 'TIMED-OUT'].includes(status)) {
+      console.log(`\n   ❌ Run ${status} en ${elapsed}s`)
+      break
+    }
   }
-  return allListings
+
+  // Download logs for debug
+  try {
+    const logRes = await fetch(`https://api.apify.com/v2/actor-runs/${runId}/log?token=${APIFY_TOKEN}`)
+    if (logRes.ok) {
+      const logText = await logRes.text()
+      const lines = logText.split('\n').filter(l => l.trim())
+      const relevant = lines.filter(l => /INFO|WARN|ERROR|listings|comuna|HTML length/i.test(l)).slice(-30)
+      if (relevant.length > 0) {
+        console.log('\n   📜 Apify logs (últimos relevantes):')
+        relevant.forEach(l => console.log(`      ${l.substring(0, 200)}`))
+      }
+    }
+  } catch (e) { console.log(`   ⚠️  No se pudieron bajar logs: ${e.message}`) }
+
+  if (['FAILED', 'ABORTED', 'TIMED-OUT'].includes(finalStatus)) {
+    throw new Error(`Apify run ${finalStatus}`)
+  }
+
+  const itemsRes = await fetch(`https://api.apify.com/v2/datasets/${datasetId}/items?token=${APIFY_TOKEN}&clean=true&format=json`)
+  if (!itemsRes.ok) throw new Error(`Apify dataset ${itemsRes.status}`)
+  return await itemsRes.json()
 }
 
-// ── Extraer listings del HTML ───────────────────────────
+// ── Page function que se ejecuta dentro de Apify puppeteer ──
 
-function extractListings(html, comuna) {
-  const results = []
+const PAGE_FUNCTION = `async function pageFunction(context) {
+ try {
+  const { request, page, log } = context
+  const comuna = (request.userData && request.userData.comuna) || 'desconocida'
+  const pageNum = (request.userData && request.userData.pageNum) || 1
 
-  // Extraer tags de publicación por MLC ID desde el JSON embebido en PI
-  const pubTags = {}
-  const pubRegex = /"id":"(MLC-?\d+)"[\s\S]{0,3000}?(?:"float_highlight":\{"text":"(PUBLICADO (?:HOY|ESTA SEMANA))"|"components":\[)/g
-  let pm
+  log.info('INICIO — p' + pageNum + ' — ' + request.url + ' — ' + comuna)
+
+  try {
+    await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36')
+    await page.setExtraHTTPHeaders({
+      'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+      'Accept-Language': 'es-CL,es;q=0.9,en;q=0.8',
+    })
+  } catch (e) { log.warning('Fallo setear UA: ' + (e && e.message)) }
+
+  // Visitar home primero para cookies de sesión
+  try {
+    await page.goto('https://www.portalinmobiliario.com/', { waitUntil: 'domcontentloaded', timeout: 30000 })
+    await new Promise(function(r){ setTimeout(r, 2000) })
+  } catch (e) { log.warning('Fallo visitar home: ' + (e && e.message)) }
+
+  // Navegar a URL de búsqueda
+  try {
+    await page.goto(request.url, { waitUntil: 'networkidle2', timeout: 45000 })
+    await new Promise(function(r){ setTimeout(r, 3000) })
+  } catch (e) { log.warning('Fallo navegar a url: ' + (e && e.message)) }
+
+  const html = await page.content()
+  log.info('HTML length: ' + html.length + ' — ' + comuna + ' p' + pageNum)
+
+  // Extraer published_tag (PUBLICADO HOY / ESTA SEMANA) del JSON embebido
+  var pubTags = {}
+  var pubRegex = /"id":"(MLC-?\\d+)"[\\s\\S]{0,3000}?(?:"float_highlight":\\{"text":"(PUBLICADO (?:HOY|ESTA SEMANA))"|"components":\\[)/g
+  var pm
   while ((pm = pubRegex.exec(html)) !== null) {
-    const mlcId = pm[1].replace(/^MLC(\d)/, 'MLC-$1')
+    var mlcId = pm[1].replace(/^MLC(\\d)/, 'MLC-$1')
     if (pm[2]) pubTags[mlcId] = pm[2]
   }
 
-  // Extraer listings del HTML renderizado
-  const titleMatches = [...html.matchAll(/class="poly-component__title"[^>]*>([\s\S]*?)<\//g)]
-  const locMatches = [...html.matchAll(/class="[^"]*poly-component__location[^"]*"[^>]*>([^<]+)</g)]
-  const priceMatches = [...html.matchAll(/aria-label="([\d.,]+)\s*(UF|unidades de fomento|pesos)/gi)]
-  const linkArr = [...new Set(
-    [...html.matchAll(/href="(https?:\/\/(?:www\.)?portalinmobiliario\.com\/MLC[^"]+)"/g)].map(m => m[1])
-  )]
-  const attrMatches = [...html.matchAll(/class="poly-component__attributes-list"[^>]*>([\s\S]*?)<\/ul/g)]
+  // Extraer listings con regex
+  var results = []
+  var titleMatches = []
+  var m
+  var titleRe = /class="poly-component__title"[^>]*>([\\s\\S]*?)<\\//g
+  while ((m = titleRe.exec(html)) !== null) titleMatches.push(m)
 
-  const count = Math.min(titleMatches.length, priceMatches.length, locMatches.length)
+  var locMatches = []
+  var locRe = /class="[^"]*poly-component__location[^"]*"[^>]*>([^<]+)</g
+  while ((m = locRe.exec(html)) !== null) locMatches.push(m)
 
-  for (let i = 0; i < count; i++) {
-    const title = titleMatches[i]?.[1]?.replace(/<[^>]+>/g, '').trim() || ''
-    const priceRaw = (priceMatches[i]?.[1] || '0').replace(/[.,]/g, '')
-    const currency = (priceMatches[i]?.[2] || '').toLowerCase()
-    let priceUF = parseInt(priceRaw, 10) || 0
+  var priceMatches = []
+  var priceRe = /aria-label="([\\d.,]+)\\s*(UF|unidades de fomento|pesos)/gi
+  while ((m = priceRe.exec(html)) !== null) priceMatches.push(m)
+
+  var linkSet = {}
+  var linkArr = []
+  var linkRe = /href="(https?:\\/\\/(?:www\\.)?portalinmobiliario\\.com\\/MLC[^"]+)"/g
+  while ((m = linkRe.exec(html)) !== null) {
+    if (!linkSet[m[1]]) { linkSet[m[1]] = true; linkArr.push(m[1]) }
+  }
+
+  var attrMatches = []
+  var attrRe = /class="poly-component__attributes-list"[^>]*>([\\s\\S]*?)<\\/ul/g
+  while ((m = attrRe.exec(html)) !== null) attrMatches.push(m)
+
+  var count = Math.min(titleMatches.length, priceMatches.length, locMatches.length)
+
+  for (var i = 0; i < count; i++) {
+    var title = titleMatches[i] && titleMatches[i][1] ? titleMatches[i][1].replace(/<[^>]+>/g, '').trim() : ''
+    var priceRaw = (priceMatches[i] && priceMatches[i][1] ? priceMatches[i][1] : '0').replace(/[.,]/g, '')
+    var currency = (priceMatches[i] && priceMatches[i][2] ? priceMatches[i][2] : '').toLowerCase()
+    var priceUF = parseInt(priceRaw, 10) || 0
     if (currency === 'pesos' || priceUF > 500000) priceUF = Math.round(priceUF / 38000)
 
-    const location = locMatches[i]?.[1]?.trim() || ''
-    const link = linkArr[i] || ''
-    const idMatch = link.match(/MLC-?\d+/)
-    const id = idMatch ? idMatch[0] : ''
+    var location = locMatches[i] && locMatches[i][1] ? locMatches[i][1].trim() : ''
+    var link = linkArr[i] || ''
+    var idMatch = link.match(/MLC-?\\d+/)
+    var id = idMatch ? idMatch[0] : ''
 
-    let beds = '', baths = '', m2 = ''
-    if (attrMatches[i]?.[1]) {
-      const items = [...attrMatches[i][1].matchAll(/<li[^>]*>([\s\S]*?)<\/li/g)].map(a => a[1].replace(/<[^>]+>/g, '').trim())
-      for (const t of items) {
-        if (/dormitorio/i.test(t) && !beds) { const m = t.match(/\d+/); if (m) beds = m[0] }
-        else if (/baño/i.test(t) && !baths) { const m = t.match(/\d+/); if (m) baths = m[0] }
-        else if (/m²/i.test(t) && !m2)      { const m = t.match(/[\d.,]+/); if (m) m2 = m[0] }
+    var beds = '', baths = '', m2 = ''
+    if (attrMatches[i] && attrMatches[i][1]) {
+      var attrHtml = attrMatches[i][1]
+      var liRe = /<li[^>]*>([\\s\\S]*?)<\\/li/g
+      var items = []
+      var li
+      while ((li = liRe.exec(attrHtml)) !== null) items.push(li[1].replace(/<[^>]+>/g, '').trim())
+      for (var j = 0; j < items.length; j++) {
+        var t = items[j]
+        if (/dormitorio/i.test(t) && !beds) { var dm = t.match(/\\d+/); if (dm) beds = dm[0] }
+        else if (/baño/i.test(t) && !baths) { var bm = t.match(/\\d+/); if (bm) baths = bm[0] }
+        else if (/m²/i.test(t) && !m2)      { var sm = t.match(/[\\d.,]+/); if (sm) m2 = sm[0] }
       }
     }
 
-    const barrio = location.includes(',') ? location.split(',')[0].trim() : location
+    var barrio = location.indexOf(',') >= 0 ? location.split(',')[0].trim() : location
+    var normalId = id.replace(/^MLC(\\d)/, 'MLC-$1')
+    var published_tag = pubTags[normalId] || pubTags[id] || null
 
-    // Filtros
-    const locLower = location.toLowerCase()
-    const wrongRegion = INVALID_REGIONS.some(r => locLower.includes(r))
-
-    if (priceUF >= 15000 && !wrongRegion && id) {
-      // Normalizar ID para lookup de tag
-      const normalId = id.replace(/^MLC(\d)/, 'MLC-$1')
-      const published_tag = pubTags[normalId] || pubTags[id] || null
-
-      results.push({ id, comuna, barrio, title, price_uf: priceUF, beds, baths, m2, location, link, published_tag })
+    if (id && priceUF > 0) {
+      results.push({ id: id, comuna: comuna, barrio: barrio, title: title, price_uf: priceUF, beds: beds, baths: baths, m2: m2, location: location, link: link, published_tag: published_tag })
     }
   }
 
-  return results
+  log.info('Listings encontrados: ' + results.length + ' en ' + comuna + ' p' + pageNum)
+  return { comuna: comuna, pageNum: pageNum, url: request.url, count: results.length, listings: results }
+ } catch (err) {
+  return { error: err.message || String(err), stack: err.stack || '', url: (context.request && context.request.url) || '' }
+ }
+}`
+
+// ── Build startUrls con paginación ──────────────────────
+
+function buildStartUrls() {
+  const urls = []
+  for (const s of SEARCHES) {
+    for (let i = 0; i < OFFSETS.length; i++) {
+      const offset = OFFSETS[i]
+      const url = offset === 0 ? s.baseUrl : `${s.baseUrl}_Desde_${offset}`
+      urls.push({
+        url,
+        userData: { comuna: s.comuna, pageNum: i + 1 },
+      })
+    }
+  }
+  return urls
+}
+
+// ── Scrape all via Apify ────────────────────────────────
+
+async function scrapeAllViaApify() {
+  const startUrls = buildStartUrls()
+  console.log(`🕸️  Apify puppeteer-scraper — ${startUrls.length} URLs (${SEARCHES.length} comunas × ${PAGES_PER_COMUNA} páginas c/u)`)
+
+  const input = {
+    startUrls,
+    pageFunction: PAGE_FUNCTION,
+    proxyConfiguration: { useApifyProxy: true, apifyProxyGroups: ['RESIDENTIAL'] },
+    maxRequestRetries: 2,
+    maxConcurrency: 2,
+    maxPagesPerCrawl: 20,
+    headless: true,
+    useChrome: true,
+    ignoreSslErrors: false,
+  }
+
+  const datasetItems = await runApifyAsync('apify~puppeteer-scraper', input, 600)
+  console.log(`   Apify devolvió ${datasetItems.length} páginas procesadas`)
+
+  // Unir listings y dedupe por ID
+  const seen = new Map()
+  for (const item of datasetItems) {
+    if (item.error) {
+      console.log(`   ⚠️  Error en ${item.url}: ${item.error}`)
+      continue
+    }
+    const comuna = item.comuna || 'Desconocida'
+    for (const l of (item.listings || [])) {
+      const locLower = (l.location || '').toLowerCase()
+      const wrongRegion = INVALID_REGIONS.some(r => locLower.includes(r))
+      if (l.price_uf < 15000 || wrongRegion || !l.id) continue
+      if (!seen.has(l.id)) seen.set(l.id, l)
+    }
+  }
+
+  // Log por comuna
+  const porComuna = {}
+  for (const l of seen.values()) {
+    porComuna[l.comuna] = (porComuna[l.comuna] || 0) + 1
+  }
+  for (const s of SEARCHES) {
+    console.log(`   ${s.comuna}: ${porComuna[s.comuna] || 0} casas (≥15.000 UF)`)
+  }
+
+  return Array.from(seen.values())
 }
 
 // ── Save to Supabase and detect new ─────────────────────
@@ -178,7 +304,6 @@ async function saveAndDetectNew(listings) {
     }
   }
 
-  // Marcar las que no se vieron hoy como no nuevas
   await supabase.from('pi_listings').update({ is_new: false }).neq('last_seen', today)
 
   return { newListings, updated, total: listings.length }
@@ -299,41 +424,29 @@ async function main() {
   console.log('   Comunas: Lo Barnechea, Vitacura, Las Condes, La Reina')
   console.log(`   Páginas por comuna: ${PAGES_PER_COMUNA} (~${PAGES_PER_COMUNA * 48} listings/comuna)`)
   console.log('   Filtro: casas usadas ≥15.000 UF')
-  console.log('   Scraping vía ScrapingBee (IP residencial Chile)')
+  console.log('   Scraping vía Apify puppeteer-scraper (IP residencial)')
   if (isDryRun) console.log('   ⚠️  DRY-RUN — solo scraping, sin Supabase ni email')
   if (isBackfillSilent) console.log('   ⚠️  BACKFILL SILENCIOSO — inserta todo con is_new=false, sin email')
   console.log('')
 
-  // Scrapear secuencialmente por comuna
-  const allListings = []
-  for (const s of SEARCHES) {
-    console.log(`\n── ${s.comuna} ──`)
-    const listings = await scrapeComuna(s)
-    allListings.push(...listings)
-    console.log(`   Subtotal ${s.comuna}: ${listings.length} listings`)
-    if (SEARCHES.indexOf(s) < SEARCHES.length - 1) {
-      console.log('   ⏳ Pausa 3s...')
-      await new Promise(r => setTimeout(r, 3000))
-    }
+  let allListings = []
+  try {
+    allListings = await scrapeAllViaApify()
+  } catch (e) {
+    console.error(`❌ Error Apify: ${e.message}`)
+    process.exit(1)
   }
 
-  // Dedupe por ID
-  const seen = new Map()
-  for (const l of allListings) {
-    if (!seen.has(l.id)) seen.set(l.id, l)
-  }
-  const unique = Array.from(seen.values())
+  const pubHoy = allListings.filter(l => l.published_tag === 'PUBLICADO HOY').length
+  const pubSemana = allListings.filter(l => l.published_tag === 'PUBLICADO ESTA SEMANA').length
 
-  const pubHoy = unique.filter(l => l.published_tag === 'PUBLICADO HOY').length
-  const pubSemana = unique.filter(l => l.published_tag === 'PUBLICADO ESTA SEMANA').length
-
-  console.log(`\n   Total único: ${unique.length}`)
+  console.log(`\n   Total único: ${allListings.length}`)
   console.log(`   Publicadas hoy: ${pubHoy}`)
   console.log(`   Publicadas esta semana: ${pubSemana}`)
 
-  if (unique.length > 0) {
+  if (allListings.length > 0) {
     console.log('\n   📋 Sample (primeros 3):')
-    unique.slice(0, 3).forEach((l, i) => {
+    allListings.slice(0, 3).forEach((l, i) => {
       console.log(`      ${i + 1}. [${l.comuna}] ${l.price_uf.toLocaleString()} UF · ${l.beds || '?'}D/${l.baths || '?'}B/${l.m2 || '?'}m² · ${l.published_tag || 'antigua'} · ${l.title.substring(0, 50)}`)
     })
   }
@@ -349,7 +462,7 @@ async function main() {
     let inserted = 0, skipped = 0
     const { data: existing } = await supabase.from('pi_listings').select('id')
     const existingIds = new Set((existing || []).map(e => e.id))
-    for (const l of unique) {
+    for (const l of allListings) {
       if (existingIds.has(l.id)) { skipped++; continue }
       const { error } = await supabase.from('pi_listings').insert({
         ...l, first_seen: today, last_seen: today, is_new: false,
@@ -362,7 +475,7 @@ async function main() {
   }
 
   // Save and detect new
-  const { newListings, updated, total } = await saveAndDetectNew(unique)
+  const { newListings, updated, total } = await saveAndDetectNew(allListings)
   console.log(`   Nuevas: ${newListings.length}`)
   console.log(`   Actualizadas: ${updated}`)
 
