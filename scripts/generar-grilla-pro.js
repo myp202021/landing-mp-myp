@@ -274,10 +274,70 @@ Responde SOLO JSON array:
     6000
   )
 
-  const plan = extractJSON(raw)
-  if (!Array.isArray(plan) || plan.length < 10) {
-    throw new Error(`Brief PRO inválido: ${Array.isArray(plan) ? plan.length : 0} posts (esperados 16)`)
+  let plan = extractJSON(raw)
+  if (!Array.isArray(plan)) {
+    throw new Error('Brief PRO no devolvió un array JSON válido')
   }
+
+  // Si OpenAI devolvió menos de 16, reintentar UNA vez pidiendo los faltantes
+  if (plan.length < 16) {
+    console.log(`   ⚠️ Brief PRO: solo ${plan.length} posts — pidiendo ${16 - plan.length} más...`)
+    const faltantes = 16 - plan.length
+    const existingDays = plan.map(p => p.dia)
+    const retryRaw = await callOpenAI(
+      'Eres un estratega de contenido senior. Respondes SOLO en JSON válido.',
+      `Generaste ${plan.length} posts pero necesito exactamente 16. Genera ${faltantes} posts MÁS para ${cliente.nombre} (${cliente.rubro}) en ${MESES[mes]} ${anio}.
+
+Días ya usados: ${existingDays.join(', ')}. NO repitas esos días.
+Ángulos ya usados últimos 3: ${plan.slice(-3).map(p => p.angulo).join(', ')}. Varía.
+Plataformas: ${JSON.stringify(briefing.plataformas || ['Facebook/Instagram'])}
+
+Responde SOLO JSON array con ${faltantes} posts nuevos:
+[{"dia":X,"dia_semana":"...","plataforma":"...","tipo_post":"...","angulo":"...","tipo_contenido":"...","objetivo":"...","gancho":"...","argumento":"...","cta":"..."}]`,
+      3000
+    )
+    const extra = extractJSON(retryRaw)
+    if (Array.isArray(extra)) {
+      plan = [...plan, ...extra]
+    }
+  }
+
+  // Si aún faltan, completar con estructura propia (días y ángulos forzados)
+  if (plan.length < 16) {
+    console.log(`   ⚠️ Aún solo ${plan.length} posts — completando con estructura propia...`)
+    const daysInMonth = new Date(anio, mes, 0).getDate()
+    const allWeekdays = []
+    for (let d = 1; d <= daysInMonth; d++) {
+      const date = new Date(anio, mes - 1, d)
+      const dow = date.getDay()
+      if (dow >= 1 && dow <= 5) allWeekdays.push({ dia: d, diaSemana: DIAS_SEMANA[dow] })
+    }
+    const usedDays = new Set(plan.map(p => p.dia))
+    const available = allWeekdays.filter(d => !usedDays.has(d.dia))
+    const plats = briefing.plataformas || ['Facebook/Instagram']
+    const hasLI = plats.some(p => p.includes('LinkedIn'))
+
+    let idx = plan.length
+    while (plan.length < 16 && available.length > 0) {
+      const day = available.shift()
+      const angulo = ANGULOS[idx % ANGULOS.length].id
+      plan.push({
+        dia: day.dia, dia_semana: day.diaSemana,
+        plataforma: hasLI && idx % 2 === 0 ? 'LinkedIn' : 'Facebook/Instagram',
+        tipo_post: idx === 7 || idx === 14 ? 'Reel' : idx === 3 || idx === 10 ? 'Carrusel' : 'Post',
+        angulo,
+        tipo_contenido: 'contenido estratégico',
+        objetivo: 'engagement',
+        gancho: `Post sobre ${angulo} para ${cliente.nombre}`,
+        argumento: `Desarrollar tema ${angulo} con enfoque en ${cliente.rubro}`,
+        cta: 'Conoce más',
+      })
+      idx++
+    }
+  }
+
+  // Asegurar máximo 16
+  plan = plan.slice(0, 16)
 
   console.log(`   ✅ Brief PRO: ${plan.length} posts planificados`)
   return plan
