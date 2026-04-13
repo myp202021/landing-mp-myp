@@ -1,41 +1,63 @@
-name: Generar Grillas de Contenido
+# ═══════════════════════════════════════════════════════════════
+# FASE 1+2+3 — Generar Grillas de Contenido (Pipeline PRO v2)
+# ═══════════════════════════════════════════════════════════════
+#
+# Pipeline completo:
+#   FASE 1: OpenAI GPT-4o analiza briefing → genera Brief PRO mensual
+#   FASE 2: Claude Sonnet 4 genera 16 posts por cliente (1 post/llamada)
+#   FASE 3: Revisor heurístico inline → Claude regenera si score < 70
+#
+# PREREQUISITOS:
+#   - Correr "FASE 0 — Optimizar Briefings" antes del primer uso
+#   - Cada cliente debe tener briefing en Supabase (briefings_cliente)
+#
+# INPUTS:
+#   cliente_id → UUID de un cliente específico, o "all" para todos
+#   mes        → 1-12
+#   anio       → 2026
+#   contexto   → Contexto especial del mes (CyberDay, Día de la Madre, etc.)
+#
+# DURACIÓN: ~6-8 min por cliente, ~3-4 horas para 30+ clientes
+# COSTO: ~$0.09/cliente (OpenAI ~$0.03 + Claude ~$0.06)
+# ═══════════════════════════════════════════════════════════════
+
+name: "Generar Grillas PRO v2 (OpenAI→Claude)"
 
 on:
   workflow_dispatch:
     inputs:
       cliente_id:
-        description: 'ID del cliente (UUID) o "all" para todos'
+        description: 'UUID del cliente o "all" para todos'
         required: true
-        default: 'all'
+        default: "all"
       mes:
-        description: 'Mes (1-12)'
+        description: "Mes (1-12)"
         required: true
       anio:
-        description: 'Año'
+        description: "Año"
         required: true
-        default: '2026'
+        default: "2026"
       contexto:
-        description: 'Contexto especial del mes (opcional)'
+        description: "Contexto especial del mes (opcional, ej: CyberDay, Día de la Madre)"
         required: false
+        default: ""
 
 jobs:
   generar:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 240  # 4 horas para 30+ clientes
 
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: "20"
+      - run: npm install node-fetch@2
 
-      - name: Install dependencies
-        run: npm install node-fetch@2
-
-      - name: Generate grillas
+      - name: "Generar grillas (OpenAI Brief PRO → Claude Copies → Revisor)"
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          ANTHROPIC_API_KEY_GRILLAS: ${{ secrets.ANTHROPIC_API_KEY_GRILLAS }}
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
           RESEND: ${{ secrets.RESEND }}
