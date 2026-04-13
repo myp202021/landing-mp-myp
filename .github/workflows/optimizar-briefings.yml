@@ -1,0 +1,74 @@
+# ═══════════════════════════════════════════════════════════════
+# FASE 0 — Optimizar Briefings de Clientes
+# ═══════════════════════════════════════════════════════════════
+#
+# Recorre todos los briefings en Supabase y completa lo que falta:
+#   1. brief_estrategico — OpenAI genera uno basado en web + tono + productos
+#   2. analisis_competitivo — OpenAI analiza posicionamiento vs categoría
+#   3. copies_referencia — extrae los 5 mejores posts de grillas anteriores
+#
+# MODOS:
+#   dry-run  → Solo muestra qué haría, no modifica nada
+#   real     → Ejecuta y guarda en Supabase
+#   cliente  → Solo un cliente específico (requiere cliente_id)
+#
+# CUÁNDO CORRER:
+#   - Antes de generar grillas de un mes nuevo
+#   - Cuando se agregan clientes nuevos
+#   - Cuando se quiere mejorar la calidad de los briefings existentes
+#
+# COSTO ESTIMADO: ~$0.50 USD (43 llamadas GPT-4o)
+# DURACIÓN: ~5-8 minutos
+# ═══════════════════════════════════════════════════════════════
+
+name: "FASE 0 — Optimizar Briefings"
+
+on:
+  workflow_dispatch:
+    inputs:
+      modo:
+        description: "dry-run (solo muestra) / real (ejecuta) / cliente (solo uno)"
+        required: true
+        default: "dry-run"
+        type: choice
+        options:
+          - dry-run
+          - real
+          - cliente
+      cliente_id:
+        description: "UUID del cliente (solo si modo = cliente)"
+        required: false
+        default: ""
+
+jobs:
+  optimizar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: npm install node-fetch@2 @supabase/supabase-js
+
+      - name: "Optimizar briefings"
+        run: |
+          case "${{ github.event.inputs.modo }}" in
+            dry-run)
+              node scripts/optimizar-briefings.js --dry-run
+              ;;
+            real)
+              node scripts/optimizar-briefings.js
+              ;;
+            cliente)
+              if [ -z "${{ github.event.inputs.cliente_id }}" ]; then
+                echo "❌ cliente_id requerido en modo cliente"
+                exit 1
+              fi
+              node scripts/optimizar-briefings.js --cliente "${{ github.event.inputs.cliente_id }}"
+              ;;
+          esac
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
