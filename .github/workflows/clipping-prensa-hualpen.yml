@@ -1,0 +1,64 @@
+name: Clipping Prensa Transporte Hualpen
+
+on:
+  schedule:
+    - cron: '0 9 * * 1-5'    # 06:00 AM Chile (UTC-3)
+    - cron: '30 9 * * 1-5'   # 06:30 AM Chile — respaldo
+  workflow_dispatch:
+
+jobs:
+  clipping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verificar si ya corrió hoy
+        id: check
+        run: |
+          TODAY=$(date -u +%Y-%m-%d)
+          RESULT=$(curl -s -H "Authorization: Bearer ${{ secrets.SUPABASE_SERVICE_KEY }}" \
+            "${{ secrets.SUPABASE_URL }}/rest/v1/clipping_prensa?fecha_reporte=eq.${TODAY}&select=id&limit=1" \
+            -H "apikey: ${{ secrets.SUPABASE_SERVICE_KEY }}")
+          if echo "$RESULT" | grep -q '"id"'; then
+            echo "already_ran=true" >> $GITHUB_OUTPUT
+            echo "✅ Ya existe clipping para $TODAY — saltando"
+          else
+            echo "already_ran=false" >> $GITHUB_OUTPUT
+            echo "🔄 No hay clipping para $TODAY — ejecutando"
+          fi
+
+      - uses: actions/checkout@v4
+        if: steps.check.outputs.already_ran == 'false'
+
+      - uses: actions/setup-node@v4
+        if: steps.check.outputs.already_ran == 'false'
+        with:
+          node-version: '20'
+
+      - name: Instalar dependencias
+        if: steps.check.outputs.already_ran == 'false'
+        run: npm install node-fetch@2 @supabase/supabase-js
+
+      - name: Ejecutar clipping
+        if: steps.check.outputs.already_ran == 'false'
+        run: node scripts/clipping-prensa-hualpen.js
+        env:
+          APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          RESEND: ${{ secrets.RESEND }}
+
+      - name: Alerta si falla
+        if: failure() && steps.check.outputs.already_ran == 'false'
+        run: |
+          node -e "
+          const fetch = require('node-fetch');
+          fetch('https://api.resend.com/emails', {
+            method: 'POST',
+            headers: { 'Authorization': 'Bearer ${{ secrets.RESEND }}', 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              from: 'contacto@mulleryperez.cl',
+              to: 'contacto@mulleryperez.cl',
+              subject: '⚠️ FALLO Clipping Prensa Hualpén — $(date -u +%Y-%m-%d)',
+              html: '<h2>El clipping de prensa falló</h2><p>Revisa el workflow en <a href=\"https://github.com/myp202021/landing-mp-myp/actions\">GitHub Actions</a></p>'
+            })
+          }).then(r => r.json()).then(d => console.log('Alerta:', d.id)).catch(e => console.error(e));
+          "
