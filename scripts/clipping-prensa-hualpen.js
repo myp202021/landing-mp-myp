@@ -156,7 +156,7 @@ async function enviarEmail({ hoy, postsIG }) {
     headers: { 'Authorization': `Bearer ${process.env.RESEND}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({
       from: 'contacto@mulleryperez.cl',
-      to: 'contacto@mulleryperez.cl',
+      to: ['felipe.munoz@buseshualpen.cl', 'contacto@mulleryperez.cl'],
       subject: `📰 Clipping Prensa Transporte — ${hoy}`,
       html: bodyHtml,
     }),

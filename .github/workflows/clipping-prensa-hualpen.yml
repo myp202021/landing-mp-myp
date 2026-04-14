@@ -2,8 +2,8 @@ name: Clipping Prensa Transporte Hualpen
 
 on:
   schedule:
-    - cron: '0 9 * * 1-5'    # 06:00 AM Chile (UTC-3)
-    - cron: '30 9 * * 1-5'   # 06:30 AM Chile — respaldo
+    - cron: '0 9 * * *'    # 06:00 AM Chile (UTC-3) — todos los días
+    - cron: '30 9 * * *'   # 06:30 AM Chile — respaldo
   workflow_dispatch:
 
 jobs:
