@@ -590,7 +590,7 @@ async function generateGrilla(clienteId, mes, anio, contextoMes) {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${RESEND_KEY}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          from: 'Muller y Perez <noreply@mulleryperez.cl>',
+          from: 'Muller y Perez <contacto@mulleryperez.cl>',
           to: 'contacto@mulleryperez.cl',
           subject: `✅ Grilla ${MESES[mes]} ${anio} — ${cliente.nombre} (score ${avgScore})`,
           html: `<div style="font-family:Arial;max-width:600px;"><div style="background:linear-gradient(135deg,#0A1628,#0055A4);padding:20px;border-radius:12px 12px 0 0;"><h2 style="color:white;margin:0;">Grilla v2 Generada</h2><p style="color:#93C5FD;margin:5px 0 0;">${cliente.nombre} — ${MESES[mes]} ${anio}</p></div><div style="background:#f8fafc;padding:20px;border:1px solid #e5e7eb;border-radius:0 0 12px 12px;"><p><strong>Pipeline:</strong> OpenAI (Brief PRO) → Claude (Copies) → Revisor heurístico</p><table style="width:100%;"><tr><td>Posts</td><td><b>${finalPosts.length}</b></td></tr><tr><td>Promedio palabras</td><td><b>${avgWords}</b></td></tr><tr><td>Score promedio</td><td><b style="color:${avgScore >= 80 ? '#059669' : avgScore >= 60 ? '#D97706' : '#DC2626'}">${avgScore}/100</b></td></tr><tr><td>Auto-corregidos</td><td>${fixed}</td></tr><tr><td>Revisión manual</td><td>${manual}</td></tr></table><div style="margin-top:15px;text-align:center;"><a href="https://www.mulleryperez.cl/crm/grillas/${clienteId}" style="background:#0055A4;color:white;padding:10px 24px;border-radius:8px;text-decoration:none;font-weight:bold;">Ver Grilla →</a></div></div></div>`
