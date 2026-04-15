@@ -28,11 +28,14 @@ if (!APIFY_TOKEN) {
 const PAGES_PER_COMUNA = 4
 const OFFSETS = [0, 49, 97, 145]
 
+// NOTA: _OrderId_BEGIN*DESC* fuerza orden por fecha de publicación descendente (más recientes primero).
+// Sin este parámetro, PI devuelve por "relevancia" y las mismas casas aparecen día tras día → nunca detectamos novedades.
+const ORDER_SUFFIX = '_OrderId_BEGIN*DESC*'
 const SEARCHES = [
-  { comuna: 'Lo Barnechea', baseUrl: 'https://www.portalinmobiliario.com/venta/casa/usada/lo-barnechea-metropolitana/' },
-  { comuna: 'Vitacura',     baseUrl: 'https://www.portalinmobiliario.com/venta/casa/usada/vitacura-metropolitana/' },
-  { comuna: 'Las Condes',   baseUrl: 'https://www.portalinmobiliario.com/venta/casa/usada/las-condes-metropolitana/' },
-  { comuna: 'La Reina',     baseUrl: 'https://www.portalinmobiliario.com/venta/casa/usada/la-reina-metropolitana/' },
+  { comuna: 'Lo Barnechea', baseUrl: `https://www.portalinmobiliario.com/venta/casa/usada/lo-barnechea-metropolitana/${ORDER_SUFFIX}` },
+  { comuna: 'Vitacura',     baseUrl: `https://www.portalinmobiliario.com/venta/casa/usada/vitacura-metropolitana/${ORDER_SUFFIX}` },
+  { comuna: 'Las Condes',   baseUrl: `https://www.portalinmobiliario.com/venta/casa/usada/las-condes-metropolitana/${ORDER_SUFFIX}` },
+  { comuna: 'La Reina',     baseUrl: `https://www.portalinmobiliario.com/venta/casa/usada/la-reina-metropolitana/${ORDER_SUFFIX}` },
 ]
 
 const INVALID_REGIONS = ['maule', 'curicó', 'valparaíso', 'biobío', 'araucanía', 'coquimbo', 'ohiggins', 'atacama', 'los lagos', 'los ríos']
@@ -127,14 +130,17 @@ const PAGE_FUNCTION = `async function pageFunction(context) {
   const html = await page.content()
   log.info('HTML length: ' + html.length + ' — ' + comuna + ' p' + pageNum)
 
-  // Extraer published_tag (PUBLICADO HOY / ESTA SEMANA) del JSON embebido
+  // Extraer published_tag (PUBLICADO HOY / ESTA SEMANA) del JSON embebido.
+  // Regex tolerante: busca cualquier "PUBLICADO HOY" o "PUBLICADO ESTA SEMANA" dentro de 4000 chars del MLC id,
+  // sin depender de la clave "float_highlight" (PI cambia esa estructura con frecuencia).
   var pubTags = {}
-  var pubRegex = /"id":"(MLC-?\\d+)"[\\s\\S]{0,3000}?(?:"float_highlight":\\{"text":"(PUBLICADO (?:HOY|ESTA SEMANA))"|"components":\\[)/g
+  var pubRegex = /"id":"(MLC-?\\d+)"[\\s\\S]{0,4000}?"(PUBLICADO (?:HOY|ESTA SEMANA))"/g
   var pm
   while ((pm = pubRegex.exec(html)) !== null) {
     var mlcId = pm[1].replace(/^MLC(\\d)/, 'MLC-$1')
-    if (pm[2]) pubTags[mlcId] = pm[2]
+    if (!pubTags[mlcId]) pubTags[mlcId] = pm[2]
   }
+  log.info('published_tag extraídos: ' + Object.keys(pubTags).length)
 
   // Extraer listings con regex
   var results = []
@@ -278,8 +284,19 @@ async function scrapeAllViaApify() {
 async function saveAndDetectNew(listings) {
   const today = new Date().toISOString().split('T')[0]
 
-  const { data: existing } = await supabase.from('pi_listings').select('id')
-  const existingIds = new Set((existing || []).map(e => e.id))
+  // Traer TODOS los IDs existentes (paginado para esquivar el límite default de 1000 de Supabase).
+  const existingIds = new Set()
+  let from = 0
+  const pageSize = 1000
+  while (true) {
+    const { data, error } = await supabase.from('pi_listings').select('id').range(from, from + pageSize - 1)
+    if (error) { console.error('Error leyendo pi_listings:', error.message); break }
+    if (!data || data.length === 0) break
+    for (const e of data) existingIds.add(e.id)
+    if (data.length < pageSize) break
+    from += pageSize
+  }
+  console.log(`   IDs existentes en BD: ${existingIds.size}`)
 
   const newListings = []
   let updated = 0
@@ -440,7 +457,9 @@ async function main() {
   const pubHoy = allListings.filter(l => l.published_tag === 'PUBLICADO HOY').length
   const pubSemana = allListings.filter(l => l.published_tag === 'PUBLICADO ESTA SEMANA').length
 
+  const conTag = allListings.filter(l => l.published_tag).length
   console.log(`\n   Total único: ${allListings.length}`)
+  console.log(`   Con published_tag: ${conTag} / ${allListings.length}`)
   console.log(`   Publicadas hoy: ${pubHoy}`)
   console.log(`   Publicadas esta semana: ${pubSemana}`)
 
