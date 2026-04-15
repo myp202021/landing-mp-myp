@@ -28,14 +28,11 @@ if (!APIFY_TOKEN) {
 const PAGES_PER_COMUNA = 4
 const OFFSETS = [0, 49, 97, 145]
 
-// NOTA: _OrderId_BEGIN*DESC* fuerza orden por fecha de publicación descendente (más recientes primero).
-// Sin este parámetro, PI devuelve por "relevancia" y las mismas casas aparecen día tras día → nunca detectamos novedades.
-const ORDER_SUFFIX = '_OrderId_BEGIN*DESC*'
 const SEARCHES = [
-  { comuna: 'Lo Barnechea', baseUrl: `https://www.portalinmobiliario.com/venta/casa/usada/lo-barnechea-metropolitana/${ORDER_SUFFIX}` },
-  { comuna: 'Vitacura',     baseUrl: `https://www.portalinmobiliario.com/venta/casa/usada/vitacura-metropolitana/${ORDER_SUFFIX}` },
-  { comuna: 'Las Condes',   baseUrl: `https://www.portalinmobiliario.com/venta/casa/usada/las-condes-metropolitana/${ORDER_SUFFIX}` },
-  { comuna: 'La Reina',     baseUrl: `https://www.portalinmobiliario.com/venta/casa/usada/la-reina-metropolitana/${ORDER_SUFFIX}` },
+  { comuna: 'Lo Barnechea', baseUrl: 'https://www.portalinmobiliario.com/venta/casa/usada/lo-barnechea-metropolitana/' },
+  { comuna: 'Vitacura',     baseUrl: 'https://www.portalinmobiliario.com/venta/casa/usada/vitacura-metropolitana/' },
+  { comuna: 'Las Condes',   baseUrl: 'https://www.portalinmobiliario.com/venta/casa/usada/las-condes-metropolitana/' },
+  { comuna: 'La Reina',     baseUrl: 'https://www.portalinmobiliario.com/venta/casa/usada/la-reina-metropolitana/' },
 ]
 
 const INVALID_REGIONS = ['maule', 'curicó', 'valparaíso', 'biobío', 'araucanía', 'coquimbo', 'ohiggins', 'atacama', 'los lagos', 'los ríos']
@@ -130,17 +127,21 @@ const PAGE_FUNCTION = `async function pageFunction(context) {
   const html = await page.content()
   log.info('HTML length: ' + html.length + ' — ' + comuna + ' p' + pageNum)
 
-  // Extraer published_tag (PUBLICADO HOY / ESTA SEMANA) del JSON embebido.
-  // Regex tolerante: busca cualquier "PUBLICADO HOY" o "PUBLICADO ESTA SEMANA" dentro de 4000 chars del MLC id,
-  // sin depender de la clave "float_highlight" (PI cambia esa estructura con frecuencia).
+  // Extraer published_tag (PUBLICADO HOY / ESTA SEMANA).
+  // Contar ocurrencias globales primero para diagnóstico (si PI ya no expone estos tags, serán 0 y cambiamos estrategia).
+  var totalHoy = (html.match(/PUBLICADO HOY/g) || []).length
+  var totalSemana = (html.match(/PUBLICADO ESTA SEMANA/g) || []).length
+  log.info('Ocurrencias en HTML — HOY: ' + totalHoy + ' · SEMANA: ' + totalSemana)
+
   var pubTags = {}
-  var pubRegex = /"id":"(MLC-?\\d+)"[\\s\\S]{0,4000}?"(PUBLICADO (?:HOY|ESTA SEMANA))"/g
+  // Regex tolerante: cualquier MLC id seguido (dentro de 5000 chars) por PUBLICADO HOY/SEMANA.
+  var pubRegex = /"(MLC-?\\d+)"[\\s\\S]{0,5000}?"(PUBLICADO (?:HOY|ESTA SEMANA))"/g
   var pm
   while ((pm = pubRegex.exec(html)) !== null) {
     var mlcId = pm[1].replace(/^MLC(\\d)/, 'MLC-$1')
     if (!pubTags[mlcId]) pubTags[mlcId] = pm[2]
   }
-  log.info('published_tag extraídos: ' + Object.keys(pubTags).length)
+  log.info('published_tag asociados a ID: ' + Object.keys(pubTags).length)
 
   // Extraer listings con regex
   var results = []
