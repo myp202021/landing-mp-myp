@@ -1,0 +1,22 @@
+name: "Clipping Artistas Swing (07:00 AM Chile)"
+
+on:
+  schedule:
+    - cron: '0 10 * * *'
+  workflow_dispatch:
+
+jobs:
+  clipping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm install node-fetch@2
+      - name: "Scrape artistas IG + email"
+        run: node scripts/clipping-swing-artistas.js
+        env:
+          APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
+          RESEND: ${{ secrets.RESEND }}
