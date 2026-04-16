@@ -233,7 +233,7 @@ export function createOrganizationSchema() {
     // Dirección principal - Las Condes
     address: {
       '@type': 'PostalAddress',
-      streetAddress: 'Av Santa María 9300',
+      streetAddress: 'Badajoz 100, Of 523',
       addressLocality: 'Las Condes',
       addressRegion: 'Región Metropolitana',
       postalCode: '7560000',
@@ -560,6 +560,51 @@ export function createServiceSchema(service: {
       '@type': 'Country',
       name: 'Chile'
     }
+  }
+}
+
+export const SERVICE_CATALOG_SCHEMA = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: 'Performance Marketing',
+  provider: {
+    '@type': 'Organization',
+    name: 'Muller y Pérez',
+    url: siteConfig.url
+  },
+  areaServed: { '@type': 'Country', name: 'Chile' },
+  hasOfferCatalog: {
+    '@type': 'OfferCatalog',
+    name: 'Planes de Performance Marketing',
+    itemListElement: [
+      {
+        '@type': 'OfferCatalog',
+        name: 'Plan Silver',
+        itemListElement: [{
+          '@type': 'Offer',
+          itemOffered: { '@type': 'Service', name: 'Gestión Google Ads + Meta Ads', description: '1 producto en foco, reunión quincenal, grilla orgánica, reporte mensual' },
+          price: '950000', priceCurrency: 'CLP', priceSpecification: { '@type': 'UnitPriceSpecification', price: '950000', priceCurrency: 'CLP', unitText: 'mes', valueAddedTaxIncluded: false }
+        }]
+      },
+      {
+        '@type': 'OfferCatalog',
+        name: 'Plan Gold',
+        itemListElement: [{
+          '@type': 'Offer',
+          itemOffered: { '@type': 'Service', name: 'Performance Marketing Integral', description: 'Hasta 2 productos, reunión semanal, A/B testing, remarketing, reporte comercial lead a venta' },
+          price: '1350000', priceCurrency: 'CLP', priceSpecification: { '@type': 'UnitPriceSpecification', price: '1350000', priceCurrency: 'CLP', unitText: 'mes', valueAddedTaxIncluded: false }
+        }]
+      },
+      {
+        '@type': 'OfferCatalog',
+        name: 'Plan Platinum',
+        itemListElement: [{
+          '@type': 'Offer',
+          itemOffered: { '@type': 'Service', name: 'Ecosistema Completo + Expansión LATAM', description: 'Todos los canales, webinar mensual, dashboard tiempo real, expansión regional' },
+          price: '2200000', priceCurrency: 'CLP', priceSpecification: { '@type': 'UnitPriceSpecification', price: '2200000', priceCurrency: 'CLP', unitText: 'mes', valueAddedTaxIncluded: false }
+        }]
+      }
+    ]
   }
 }
 

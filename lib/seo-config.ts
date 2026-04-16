@@ -18,8 +18,8 @@ export interface PageSEO {
 export const SEO_CONFIG: Record<string, PageSEO> = {
   // HOMEPAGE
   home: {
-    title: 'Muller y Pérez - Agencia Marketing Digital y Performance Chile 2025',
-    description: 'Agencia líder en Marketing de Datos Chile 2025 | ROI +380% real | Expertos Google Ads & Meta | 95% retención clientes | Desde $950k/mes → Solicita auditoría gratis',
+    title: 'Muller y Pérez - Agencia Marketing Digital y Performance Chile 2026',
+    description: 'Agencia líder en Marketing de Datos Chile 2026 | ROI +380% real | Expertos Google Ads & Meta | 95% retención clientes | Desde $950k/mes → Solicita auditoría gratis',
     keywords: [
       'agencia marketing digital chile',
       'agencia marketing datos chile',
@@ -51,8 +51,8 @@ export const SEO_CONFIG: Record<string, PageSEO> = {
 
   // M&P LABS - PREDICTOR
   predictor: {
-    title: 'Predictor Google Ads Chile 2025 - Calcula ROI y Conversiones Gratis',
-    description: 'Predictor Google Ads con data real de +200 campañas Chile | Calcula conversiones, revenue y ROI en 60 segundos | 15 industrias | Gratis 2025 → Pruébalo ahora',
+    title: 'Predictor Google Ads Chile 2026 - Calcula ROI y Conversiones Gratis',
+    description: 'Predictor Google Ads con data real de +200 campañas Chile | Calcula conversiones, revenue y ROI en 60 segundos | 15 industrias | Gratis 2026 → Pruébalo ahora',
     keywords: [
       'predictor google ads chile',
       'calculadora google ads',
@@ -80,8 +80,8 @@ export const SEO_CONFIG: Record<string, PageSEO> = {
 
   // M&P LABS - BUYER GEN
   buyerGen: {
-    title: 'Buyer Gen 2025 - Generador de Buyer Personas IA Gratis Chile',
-    description: 'Crea buyer personas con IA en 4 pasos | +12 segmentos validados | Estrategia contenido + KPIs incluidos | Basado en data intelligence Chile 2025 → Genera tu buyer gratis',
+    title: 'Buyer Gen 2026 - Generador de Buyer Personas IA Gratis Chile',
+    description: 'Crea buyer personas con IA en 4 pasos | +12 segmentos validados | Estrategia contenido + KPIs incluidos | Basado en data intelligence Chile 2026 → Genera tu buyer gratis',
     keywords: [
       'generador buyer personas chile',
       'buyer persona gratis',
@@ -109,8 +109,8 @@ export const SEO_CONFIG: Record<string, PageSEO> = {
 
   // M&P LABS - RADAR INDUSTRIAS
   radarIndustrias: {
-    title: 'Radar Industrias Chile 2025 - Madurez Digital por Sector Gratis',
-    description: 'Benchmarking madurez digital Chile 2025 | Compara 15 industrias: Google Ads, ROAS, IA, Core Web Vitals | Data real +200 empresas → Explora tu sector gratis',
+    title: 'Radar Industrias Chile 2026 - Madurez Digital por Sector Gratis',
+    description: 'Benchmarking madurez digital Chile 2026 | Compara 15 industrias: Google Ads, ROAS, IA, Core Web Vitals | Data real +200 empresas → Explora tu sector gratis',
     keywords: [
       'madurez digital chile',
       'benchmarking digital chile',
@@ -138,8 +138,8 @@ export const SEO_CONFIG: Record<string, PageSEO> = {
 
   // UTILIDADES - CALCULADORA CAC
   calculadoraCAC: {
-    title: 'Calculadora CAC 2025 - Costo Adquisición Cliente Gratis Chile',
-    description: 'Calcula CAC real de tus campañas 2025 | Compara Google Ads vs Meta vs LinkedIn | Evalúa LTV/CAC ratio | 3 canales simultáneos → Optimiza tu inversión gratis',
+    title: 'Calculadora CAC 2026 - Costo Adquisición Cliente Gratis Chile',
+    description: 'Calcula CAC real de tus campañas 2026 | Compara Google Ads vs Meta vs LinkedIn | Evalúa LTV/CAC ratio | 3 canales simultáneos → Optimiza tu inversión gratis',
     keywords: [
       'calculadora cac chile',
       'costo adquisición cliente',
@@ -167,8 +167,8 @@ export const SEO_CONFIG: Record<string, PageSEO> = {
 
   // UTILIDADES - COMPARADOR WEB
   comparadorWeb: {
-    title: 'Comparador Web 2025 - PageSpeed + Core Web Vitals Gratis Chile',
-    description: 'Compara tu web vs 3 competidores 2025 | PageSpeed API real | Core Web Vitals: LCP, FCP, CLS, TBT | SEO performance mobile/desktop → Analiza gratis ahora',
+    title: 'Comparador Web 2026 - PageSpeed + Core Web Vitals Gratis Chile',
+    description: 'Compara tu web vs 3 competidores 2026 | PageSpeed API real | Core Web Vitals: LCP, FCP, CLS, TBT | SEO performance mobile/desktop → Analiza gratis ahora',
     keywords: [
       'comparador velocidad web chile',
       'pagespeed insights chile',
@@ -196,8 +196,8 @@ export const SEO_CONFIG: Record<string, PageSEO> = {
 
   // UTILIDADES - GENERADOR FUNNELS
   generadorFunnels: {
-    title: 'Generador Funnels 2025 - Crea Embudos CRM Gratis Chile',
-    description: 'Genera embudos ventas CRM en 4 pasos 2025 | B2B, B2C, e-commerce, WhatsApp | 8 modelos validados | Export CSV HubSpot/Pipedrive → Crea tu funnel gratis',
+    title: 'Generador Funnels 2026 - Crea Embudos CRM Gratis Chile',
+    description: 'Genera embudos ventas CRM en 4 pasos 2026 | B2B, B2C, e-commerce, WhatsApp | 8 modelos validados | Export CSV HubSpot/Pipedrive → Crea tu funnel gratis',
     keywords: [
       'generador funnels chile',
       'embudo ventas crm',
@@ -225,8 +225,8 @@ export const SEO_CONFIG: Record<string, PageSEO> = {
 
   // UTILIDADES - JUEGA Y APRENDE
   juegaAprende: {
-    title: 'Simulador Marketing Digital 2025 - Juega y Aprende Gratis Chile',
-    description: 'Simulador estrategias marketing 2025 | Invierte $1M virtual | 6 canales: Google Ads, Meta, SEO, Email, LinkedIn | Aprende ROI real jugando → Prueba gratis',
+    title: 'Simulador Marketing Digital 2026 - Juega y Aprende Gratis Chile',
+    description: 'Simulador estrategias marketing 2026 | Invierte $1M virtual | 6 canales: Google Ads, Meta, SEO, Email, LinkedIn | Aprende ROI real jugando → Prueba gratis',
     keywords: [
       'simulador marketing digital chile',
       'juego marketing digital',

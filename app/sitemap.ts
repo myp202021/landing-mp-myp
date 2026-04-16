@@ -13,7 +13,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   try {
     const entries = fs.readdirSync(blogDir, { withFileTypes: true })
     blogPosts = entries
-      .filter(entry => entry.isDirectory() && !entry.name.startsWith('_'))
+      .filter(entry => entry.isDirectory() && !entry.name.startsWith('_') && !entry.name.startsWith('['))
       .map(entry => entry.name)
   } catch (error) {
     console.warn('No se pudo leer el directorio de blog:', error)
