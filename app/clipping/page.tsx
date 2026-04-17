@@ -13,7 +13,8 @@ const FEATURES = [
   { label: 'Preview de texto + link directo al post', starter: true, pro: true, business: true },
   { label: 'Engagement por post (likes, comentarios)', starter: true, pro: true, business: true },
   { label: 'Facebook y LinkedIn', starter: false, pro: true, business: true },
-  { label: 'Resumen IA semanal (todos los domingos)', starter: false, pro: true, business: true },
+  { label: 'Resumen semanal con ranking (cada lunes)', starter: false, pro: true, business: true },
+  { label: 'Resumen mensual consolidado (1ro de cada mes)', starter: false, pro: true, business: true },
   { label: 'Análisis IA diario con insights accionables', starter: false, pro: false, business: true },
   { label: 'Alertas por keyword (cuando mencionan tu marca)', starter: false, pro: false, business: true },
   { label: 'Benchmark semanal vs tu propia cuenta', starter: false, pro: false, business: true },
@@ -89,7 +90,7 @@ export default function ClippingPage() {
             { icon: '📡', title: 'Monitoreo diario', desc: 'Scrapea Instagram, Facebook y LinkedIn de las cuentas que elijas. Cada día a las 7:00 AM.' },
             { icon: '📧', title: 'Email con todo', desc: 'Recibes un email con cada post nuevo: texto, engagement, link directo y tipo de contenido.' },
             { icon: '🤖', title: 'Análisis con IA', desc: 'La IA identifica patrones, oportunidades y te recomienda acciones concretas basadas en lo que hace tu competencia.' },
-            { icon: '📊', title: 'Resumen semanal', desc: 'Todos los domingos un cuadro comparativo: quién publicó más, quién tuvo mejor engagement, qué tendencias hay.' },
+            { icon: '📊', title: 'Resumen semanal y mensual', desc: 'Cada lunes un cuadro comparativo semanal. El 1ro de cada mes un informe consolidado con tendencias, ranking y evolución.' },
           ].map(item => (
             <div key={item.title} className="bg-gray-50 rounded-2xl p-6 border border-gray-100">
               <div className="text-3xl mb-3">{item.icon}</div>
@@ -133,7 +134,10 @@ export default function ClippingPage() {
             Informe diario
           </button>
           <button onClick={() => setTab('semanal')} className={`px-6 py-2.5 rounded-lg font-semibold text-sm transition ${tab === 'semanal' ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>
-            Resumen semanal (domingos)
+            Resumen semanal (lunes)
+          </button>
+          <button onClick={() => setTab('mensual')} className={`px-6 py-2.5 rounded-lg font-semibold text-sm transition ${tab === 'mensual' ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>
+            Resumen mensual (1ro)
           </button>
         </div>
 
@@ -299,7 +303,77 @@ export default function ClippingPage() {
             </div>
 
             <div className="px-8 py-4 bg-gray-50 border-t border-gray-200 text-center text-xs text-gray-400">
-              Radar by Muller y Pérez · Resumen semanal · Todos los domingos a las 9:00 AM
+              Radar by Muller y Pérez · Resumen semanal · Todos los lunes a las 9:00 AM
+            </div>
+          </div>
+        )}
+      </section>
+
+        {/* Email mensual */}
+        {tab === 'mensual' && (
+          <div className="bg-white rounded-2xl border border-gray-200 shadow-xl overflow-hidden max-w-3xl mx-auto">
+            <div className="bg-gradient-to-r from-purple-700 to-indigo-700 text-white px-8 py-6">
+              <p className="font-bold text-xl">📅 Resumen mensual</p>
+              <p className="text-sm opacity-90 mt-1">Abril 2026 · 5 cuentas · 127 posts totales · 30 días monitoreados</p>
+            </div>
+
+            {/* Ranking del mes */}
+            <div className="px-8 py-6">
+              <p className="font-bold text-gray-900 text-sm mb-4 uppercase tracking-wider">Ranking de actividad del mes</p>
+              <div className="space-y-3">
+                {[
+                  { pos: '1', cuenta: 'CafExpress', posts: 48, likes: '18.400', eng: '3.5%', trend: 'Subió 2 posiciones', trendColor: 'text-green-600' },
+                  { pos: '2', cuenta: 'Nespresso Pro', posts: 24, likes: '35.200', eng: '5.1%', trend: 'Bajó 1 posición', trendColor: 'text-red-500' },
+                  { pos: '3', cuenta: 'CorporateCoffee', posts: 32, likes: '11.800', eng: '2.3%', trend: 'Se mantuvo', trendColor: 'text-gray-500' },
+                  { pos: '4', cuenta: 'EssentialCoffee', posts: 16, likes: '1.280', eng: '0.8%', trend: 'Se mantuvo', trendColor: 'text-gray-500' },
+                  { pos: '5', cuenta: 'Vendomatica', posts: 7, likes: '310', eng: '0.3%', trend: 'Bajó 1 posición', trendColor: 'text-red-500' },
+                ].map((row) => (
+                  <div key={row.pos} className="flex items-center gap-4 bg-gray-50 rounded-xl p-4 border border-gray-100">
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${row.pos === '1' ? 'bg-yellow-100 text-yellow-700' : row.pos === '2' ? 'bg-gray-200 text-gray-600' : row.pos === '3' ? 'bg-orange-100 text-orange-700' : 'bg-gray-100 text-gray-500'}`}>{row.pos}</div>
+                    <div className="flex-1">
+                      <p className="font-bold text-sm text-gray-900">{row.cuenta}</p>
+                      <p className="text-xs text-gray-500">{row.posts} posts · {row.likes} likes · {row.eng} engagement</p>
+                    </div>
+                    <span className={`text-xs font-semibold ${row.trendColor}`}>{row.trend}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Evolución mensual */}
+            <div className="px-8 py-5 bg-indigo-50 border-t border-indigo-100">
+              <p className="font-bold text-indigo-800 text-sm mb-2">🤖 Análisis del mes</p>
+              <ul className="text-sm text-indigo-900 space-y-2">
+                <li>• <strong>CafExpress fue el más agresivo del mes</strong> con 48 posts (1.6 por día). Su estrategia cambió de branding a captación directa con promociones. Engagement promedio subió de 2.1% a 3.5%.</li>
+                <li>• <strong>Nespresso Pro mantiene el mejor engagement</strong> (5.1%) con solo 24 posts. Calidad sobre cantidad. Su contenido editorial premium sigue siendo referencia del mercado.</li>
+                <li>• <strong>Vendomatica en declive sostenido:</strong> de 28 posts en marzo a solo 7 en abril. Posible reestructuración interna o cambio de agencia.</li>
+              </ul>
+            </div>
+
+            {/* Tendencias del mes */}
+            <div className="px-8 py-5 bg-green-50 border-t border-green-100">
+              <p className="font-bold text-green-800 text-sm mb-2">📈 Tendencias del mes</p>
+              <ul className="text-sm text-green-900 space-y-1.5">
+                <li>• <strong>Formato ganador:</strong> Reels representaron el 45% de los posts y generaron el 68% del engagement total.</li>
+                <li>• <strong>Temas que traccionaron:</strong> sustentabilidad, origen del café, bienestar en la oficina.</li>
+                <li>• <strong>Mejor día para publicar:</strong> martes y jueves. Peor: sábado y domingo.</li>
+                <li>• <strong>Horario óptimo:</strong> 8:00-9:00 AM y 12:00-13:00 PM.</li>
+              </ul>
+            </div>
+
+            {/* Recomendaciones */}
+            <div className="px-8 py-5 bg-purple-50 border-t border-purple-100">
+              <p className="font-bold text-purple-800 text-sm mb-2">💡 Plan de acción para el próximo mes</p>
+              <ul className="text-sm text-purple-900 space-y-1.5">
+                <li>1. <strong>Aumenta Reels a 50%+ de tu contenido</strong> — es el formato que más tracciona en tu industria.</li>
+                <li>2. <strong>Publica martes y jueves entre 8-9 AM</strong> — es cuando tu audiencia está más activa.</li>
+                <li>3. <strong>Capitaliza la caída de Vendomatica</strong> — su audiencia está buscando alternativas. Aumenta frecuencia.</li>
+                <li>4. <strong>Prueba contenido de sustentabilidad</strong> — 3 de 5 competidores están hablando de esto y funciona.</li>
+              </ul>
+            </div>
+
+            <div className="px-8 py-4 bg-gray-50 border-t border-gray-200 text-center text-xs text-gray-400">
+              Radar by Muller y Pérez · Resumen mensual · El 1ro de cada mes a las 9:00 AM
             </div>
           </div>
         )}

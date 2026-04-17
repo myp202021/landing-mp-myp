@@ -42,6 +42,14 @@ export default function SiteHeader() {
             Clientes
           </Link>
 
+          {/* Radar */}
+          <Link
+            href="/clipping"
+            className="hidden md:block text-sm font-semibold text-gray-700 hover:text-blue-600 transition-all duration-200"
+          >
+            Radar
+          </Link>
+
           {/* M&P Labs Dropdown */}
           <div
             className="relative hidden md:block"
