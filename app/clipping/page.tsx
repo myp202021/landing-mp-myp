@@ -36,7 +36,7 @@ export default function ClippingPage() {
   const [trialUrls, setTrialUrls] = useState(['', '', ''])
   const [enviado, setEnviado] = useState(false)
   const [enviando, setEnviando] = useState(false)
-  const [tab, setTab] = useState<'diario' | 'semanal'>('diario')
+  const [tab, setTab] = useState<'diario' | 'semanal' | 'mensual'>('diario')
 
   const handleTrial = async (e: React.FormEvent) => {
     e.preventDefault()
