@@ -30,13 +30,14 @@ const COMPARATIVA = [
 
 function formatCLP(n: number) { return '$' + n.toLocaleString('es-CL') }
 
+type TabType = 'diario' | 'semanal' | 'mensual'
+
 export default function ClippingPage() {
   const [anual, setAnual] = useState(true)
   const [trialEmail, setTrialEmail] = useState('')
   const [trialUrls, setTrialUrls] = useState(['', '', ''])
   const [enviado, setEnviado] = useState(false)
   const [enviando, setEnviando] = useState(false)
-  type TabType = 'diario' | 'semanal' | 'mensual'
   const [tab, setTab] = useState('diario' as TabType)
 
   const handleTrial = async (e: React.FormEvent) => {
