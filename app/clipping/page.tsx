@@ -28,9 +28,7 @@ const COMPARATIVA = [
   { herramienta: 'Meltwater', entry: '$480.000', medio: '$960.000', contrato: 'Anual 12 meses', ia: 'Sí', trial: 'No', highlight: false },
 ]
 
-function formatCLP(n: number) { return '$' + n.toLocaleString('es-CL') }
-
-type TabType = 'diario' | 'semanal' | 'mensual'
+function formatCLP(n) { return '$' + n.toLocaleString('es-CL') }
 
 export default function ClippingPage() {
   const [anual, setAnual] = useState(true)
@@ -38,12 +36,12 @@ export default function ClippingPage() {
   const [trialUrls, setTrialUrls] = useState(['', '', ''])
   const [enviado, setEnviado] = useState(false)
   const [enviando, setEnviando] = useState(false)
-  const [tab, setTab] = useState('diario' as TabType)
+  const [tab, setTab] = useState('diario')
 
-  const handleTrial = async (e: React.FormEvent) => {
+  const handleTrial = async (e) => {
     e.preventDefault()
     setEnviando(true)
-    const cuentas = trialUrls.filter(u => u.trim()).map(u => {
+    const cuentas = trialUrls.filter(function(u) { return u.trim() }).map(function(u) {
       const match = u.match(/instagram\.com\/([^/?]+)/)
       return { red: 'instagram', handle: match ? match[1] : u.trim() }
     })
@@ -51,7 +49,7 @@ export default function ClippingPage() {
       const res = await fetch('/api/clipping/trial', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: trialEmail, cuentas }),
+        body: JSON.stringify({ email: trialEmail, cuentas: cuentas }),
       })
       if (res.ok) setEnviado(true)
     } catch (err) { console.error(err) }
