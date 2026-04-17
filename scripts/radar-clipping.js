@@ -5,6 +5,8 @@
 
 const fetch = require('node-fetch')
 const { createClient } = require('@supabase/supabase-js')
+const fs = require('fs')
+const { execSync } = require('child_process')
 
 const APIFY_TOKEN = process.env.APIFY_TOKEN
 const RESEND_KEY = process.env.RESEND
@@ -332,23 +334,51 @@ function renderSeccion(red, color, posts, porHandle) {
   return html
 }
 
+// --- GENERAR PDF ---
+function generarPDF(html, fecha, modo) {
+  const tmpHtml = `/tmp/radar-${fecha}-${modo}.html`
+  const tmpPdf = `/tmp/radar-${fecha}-${modo}.pdf`
+  const fullHtml = `<!DOCTYPE html><html><head><meta charset="utf-8"><style>body{margin:0;padding:0;background:#f5f5f5;}</style></head><body>${html}</body></html>`
+  fs.writeFileSync(tmpHtml, fullHtml)
+  try {
+    execSync(`wkhtmltopdf --quiet --enable-local-file-access --page-size A4 --margin-top 10 --margin-bottom 10 --margin-left 10 --margin-right 10 "${tmpHtml}" "${tmpPdf}"`, { timeout: 30000 })
+    const pdfBuffer = fs.readFileSync(tmpPdf)
+    console.log(`   PDF generado: ${(pdfBuffer.length / 1024).toFixed(0)} KB`)
+    return pdfBuffer.toString('base64')
+  } catch (err) {
+    console.error('   PDF error (enviando sin adjunto):', err.message)
+    return null
+  }
+}
+
 // --- ENVIAR EMAIL ---
 async function enviarEmail(destinos, html, fecha, nPosts, modo) {
   const titulo = modo === 'mensual' ? 'Resumen mensual' : modo === 'semanal' ? 'Resumen semanal' : 'Tu Radar diario'
+
+  // Generar PDF adjunto
+  const pdfBase64 = generarPDF(html, fecha, modo)
+  const nombrePdf = `Radar_${modo}_${fecha}.pdf`
+
+  const emailBody = {
+    from: 'Radar <contacto@mulleryperez.cl>',
+    to: destinos,
+    subject: `${titulo} | ${nPosts} posts | ${fecha}`,
+    html: html,
+  }
+
+  if (pdfBase64) {
+    emailBody.attachments = [{ filename: nombrePdf, content: pdfBase64 }]
+  }
+
   try {
     const res = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: { 'Authorization': `Bearer ${RESEND_KEY}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        from: 'Radar <contacto@mulleryperez.cl>',
-        to: destinos,
-        subject: `${titulo} | ${nPosts} posts | ${fecha}`,
-        html: html,
-      }),
+      body: JSON.stringify(emailBody),
     })
     const data = await res.json()
     if (!res.ok) console.error(`   Email error:`, data)
-    else console.log(`   Email enviado a ${destinos.join(',')}: ${data.id}`)
+    else console.log(`   Email enviado a ${destinos.join(',')}: ${data.id} ${pdfBase64 ? '(con PDF)' : '(sin PDF)'}`)
   } catch (err) { console.error('   Resend error:', err.message) }
 }
 
