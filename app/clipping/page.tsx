@@ -1,3 +1,4 @@
+import SiteHeader from '@/components/SiteHeader'
 import ClippingClient from './ClippingClient'
 
 export const metadata = {
@@ -7,5 +8,10 @@ export const metadata = {
 }
 
 export default function ClippingPage() {
-  return <ClippingClient />
+  return (
+    <>
+      <SiteHeader />
+      <ClippingClient />
+    </>
+  )
 }
