@@ -15,7 +15,7 @@ const MODO = process.argv.includes('--semanal') ? 'semanal'
            : process.argv.includes('--mensual') ? 'mensual'
            : 'diario'
 
-const VENTANA_HORAS = MODO === 'diario' ? 28 : MODO === 'semanal' ? 7 * 24 + 4 : 31 * 24
+const VENTANA_HORAS = MODO === 'diario' ? 72 : MODO === 'semanal' ? 7 * 24 + 4 : 31 * 24
 
 async function main() {
   const hoy = new Date().toISOString().split('T')[0]
