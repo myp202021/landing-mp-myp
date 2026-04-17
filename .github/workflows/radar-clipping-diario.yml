@@ -1,0 +1,25 @@
+name: "Radar Clipping Diario (07:30 AM Chile)"
+
+on:
+  schedule:
+    - cron: '30 10 * * *'
+  workflow_dispatch:
+
+jobs:
+  radar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm install node-fetch@2 @supabase/supabase-js
+      - name: "Radar diario - todos los suscriptores"
+        run: node scripts/radar-clipping.js --diario
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
+          RESEND: ${{ secrets.RESEND }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
