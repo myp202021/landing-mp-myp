@@ -10,6 +10,7 @@ var supabaseLib = require('@supabase/supabase-js')
 var fs = require('fs')
 var childProcess = require('child_process')
 var contenidoModule = require('./radar-contenido.js')
+var grillaModule = require('./radar-grilla-mensual.js')
 
 var APIFY_TOKEN = process.env.APIFY_TOKEN
 var RESEND_KEY = process.env.RESEND
@@ -240,6 +241,15 @@ async function main() {
     var contenidoSugerido = []
     if ((MODO === 'semanal' || MODO === 'mensual') && misPosts.length >= 2) {
       contenidoSugerido = await contenidoModule.generarContenidoSugerido(misPosts, empresas, MODO)
+    }
+
+    // Grilla mensual (solo mensual + plan business)
+    var grillaMensual = null
+    if (MODO === 'mensual' && sub.plan === 'business' && misPosts.length >= 5) {
+      var mesSig = new Date().getMonth() + 2
+      var anioSig = new Date().getFullYear()
+      if (mesSig > 12) { mesSig = 1; anioSig++ }
+      grillaMensual = await grillaModule.generarGrillaMensual(misPosts, empresas, sub, mesSig, anioSig)
     }
 
     var html = generarEmailHTML(misPosts, cuentas, hoy, MODO, resumenIA, empresas, trends, sub.id, contenidoSugerido)
