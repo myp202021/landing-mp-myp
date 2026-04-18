@@ -234,7 +234,7 @@ async function main() {
       }
     }
 
-    var html = generarEmailHTML(misPosts, cuentas, hoy, MODO, resumenIA, empresas, trends)
+    var html = generarEmailHTML(misPosts, cuentas, hoy, MODO, resumenIA, empresas, trends, sub.id)
     var pdf = generarPDF(html, hoy, MODO)
     await enviarEmail(destinos, html, hoy, misPosts.length, MODO, pdf)
   }
@@ -499,7 +499,7 @@ function renderTrend(pct, totalN, hasPrev) {
 }
 
 // === EMAIL HTML v5 ===
-function generarEmailHTML(posts, cuentas, fecha, modo, resumenIA, empresas, trends) {
+function generarEmailHTML(posts, cuentas, fecha, modo, resumenIA, empresas, trends, subId) {
   var fechaLegible = new Date(fecha + 'T12:00:00').toLocaleDateString('es-CL', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
   var titulo = modo === 'mensual' ? 'Resumen mensual' : modo === 'semanal' ? 'Resumen semanal' : 'Tu Radar diario'
   var ventanaLabel = modo === 'diario' ? '72 horas' : modo === 'semanal' ? '7 d&iacute;as' : '30 d&iacute;as'
@@ -665,6 +665,14 @@ function generarEmailHTML(posts, cuentas, fecha, modo, resumenIA, empresas, tren
       h += '<p style="margin:0;font-size:13px;color:#1f2937;line-height:1.65;">' + (sug.descripcion || '') + '</p>'
       h += '</div>'
     }
+    h += '</div>'
+  }
+
+  // DASHBOARD LINK
+  if (subId) {
+    h += '<div style="background:white;padding:18px 28px;text-align:center;border-bottom:1px solid #e5e7eb;">'
+    h += '<a href="https://www.mulleryperez.cl/radar/' + subId + '" style="display:inline-block;background:#4338CA;color:white;padding:12px 28px;border-radius:10px;font-size:14px;font-weight:700;text-decoration:none;">Ver tu dashboard completo &#8594;</a>'
+    h += '<p style="margin:8px 0 0;font-size:11px;color:#9ca3af;">mulleryperez.cl/radar/' + subId + '</p>'
     h += '</div>'
   }
 
