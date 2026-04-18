@@ -1,22 +1,24 @@
-// radar-clipping.js v4
+// radar-clipping.js v5
 // 4 canales: Instagram + LinkedIn + Facebook + Prensa
-// Usa campo "nombre" de cuentas para mostrar nombre de empresa (no handle)
+// Persiste posts en radar_posts, calcula trends vs periodo anterior
+// IA: Claude para semanal/mensual, OpenAI para diario
 // Modo: --diario | --semanal | --mensual | --dry-run
 
-const fetch = require('node-fetch')
-const { createClient } = require('@supabase/supabase-js')
-const fs = require('fs')
-const { execSync } = require('child_process')
+var fetch = require('node-fetch')
+var supabaseLib = require('@supabase/supabase-js')
+var fs = require('fs')
+var childProcess = require('child_process')
 
-const APIFY_TOKEN = process.env.APIFY_TOKEN
-const RESEND_KEY = process.env.RESEND
-const OPENAI_KEY = process.env.OPENAI_API_KEY
-const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY)
+var APIFY_TOKEN = process.env.APIFY_TOKEN
+var RESEND_KEY = process.env.RESEND
+var OPENAI_KEY = process.env.OPENAI_API_KEY
+var ANTHROPIC_KEY = process.env.ANTHROPIC_API_KEY_GRILLAS
+var supabase = supabaseLib.createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY)
 
-const MODO = process.argv.includes('--semanal') ? 'semanal'
-           : process.argv.includes('--mensual') ? 'mensual' : 'diario'
-const DRY_RUN = process.argv.includes('--dry-run')
-const VENTANA_HORAS = MODO === 'diario' ? 72 : MODO === 'semanal' ? 7 * 24 + 4 : 31 * 24
+var MODO = process.argv.includes('--semanal') ? 'semanal'
+         : process.argv.includes('--mensual') ? 'mensual' : 'diario'
+var DRY_RUN = process.argv.includes('--dry-run')
+var VENTANA_HORAS = MODO === 'diario' ? 72 : MODO === 'semanal' ? 7 * 24 + 4 : 31 * 24
 
 var MEDIOS_PRENSA = [
   { nombre: 'La Tercera', handle: 'latercera' },
@@ -32,12 +34,34 @@ var MEDIOS_PRENSA = [
   { nombre: 'Cooperativa', handle: 'cooperativa.cl' },
 ]
 
+// Fechas relevantes Chile para contexto estacional IA
+var FECHAS_CHILE = [
+  { mes: 1, dia: 1, nombre: 'Anio Nuevo' },
+  { mes: 3, dia: 8, nombre: 'Dia Internacional de la Mujer' },
+  { mes: 4, dia: 18, nombre: 'Viernes Santo' },
+  { mes: 5, dia: 1, nombre: 'Dia del Trabajo' },
+  { mes: 5, dia: 11, nombre: 'Dia de la Madre' },
+  { mes: 5, dia: 21, nombre: 'Dia de las Glorias Navales' },
+  { mes: 6, dia: 15, nombre: 'Dia del Padre' },
+  { mes: 6, dia: 20, nombre: 'Dia Nacional de los Pueblos Indigenas' },
+  { mes: 7, dia: 16, nombre: 'Dia de la Virgen del Carmen' },
+  { mes: 8, dia: 15, nombre: 'Asuncion de la Virgen' },
+  { mes: 9, dia: 18, nombre: 'Fiestas Patrias' },
+  { mes: 9, dia: 19, nombre: 'Dia de las Glorias del Ejercito' },
+  { mes: 10, dia: 12, nombre: 'Encuentro de Dos Mundos' },
+  { mes: 10, dia: 31, nombre: 'Dia de las Iglesias Evangelicas / Halloween' },
+  { mes: 11, dia: 1, nombre: 'Dia de Todos los Santos' },
+  { mes: 11, dia: 25, nombre: 'Black Friday (aprox)' },
+  { mes: 12, dia: 25, nombre: 'Navidad' },
+  { mes: 12, dia: 12, nombre: 'CyberMonday Chile (aprox)' },
+]
+
 // Mapa handle -> nombre empresa (se llena desde cuentas del suscriptor)
 var handleToNombre = {}
 
 async function main() {
   var hoy = new Date().toISOString().split('T')[0]
-  console.log('RADAR v4 | ' + MODO.toUpperCase() + ' | ' + hoy + (DRY_RUN ? ' | DRY-RUN' : ''))
+  console.log('RADAR v5 | ' + MODO.toUpperCase() + ' | ' + hoy + (DRY_RUN ? ' | DRY-RUN' : ''))
 
   var result = await supabase.from('clipping_suscripciones').select('*').in('estado', ['trial', 'activo'])
   if (result.error) { console.error('BD error:', result.error.message); process.exit(1) }
@@ -71,7 +95,7 @@ async function main() {
   var desde = new Date(Date.now() - VENTANA_HORAS * 60 * 60 * 1000)
   var allPosts = []
 
-  // ═══ INSTAGRAM ═══
+  // === INSTAGRAM ===
   if (igSet.size > 0) {
     console.log('\n--- INSTAGRAM: ' + igSet.size + ' cuentas ---')
     try {
@@ -92,7 +116,7 @@ async function main() {
     } catch (e) { console.error('   IG error: ' + e.message) }
   }
 
-  // ═══ LINKEDIN ═══
+  // === LINKEDIN ===
   if (liSet.size > 0) {
     console.log('\n--- LINKEDIN: ' + liSet.size + ' empresas ---')
     for (var handle of liSet) {
@@ -115,7 +139,7 @@ async function main() {
     }
   }
 
-  // ═══ FACEBOOK ═══
+  // === FACEBOOK ===
   if (fbSet.size > 0) {
     console.log('\n--- FACEBOOK: ' + fbSet.size + ' paginas ---')
     try {
@@ -140,7 +164,7 @@ async function main() {
     } catch (e) { console.error('   FB error: ' + e.message) }
   }
 
-  // ═══ PRENSA ═══
+  // === PRENSA ===
   if (prensaKws.length > 0) {
     console.log('\n--- PRENSA: ' + MEDIOS_PRENSA.length + ' medios, keywords: [' + prensaKws.join(', ') + '] ---')
     try {
@@ -170,7 +194,7 @@ async function main() {
     } catch (e) { console.error('   Prensa error: ' + e.message) }
   }
 
-  // ═══ TOTALES ═══
+  // === TOTALES ===
   var ig = allPosts.filter(function(p) { return p.red === 'Instagram' }).length
   var li = allPosts.filter(function(p) { return p.red === 'LinkedIn' }).length
   var fb = allPosts.filter(function(p) { return p.red === 'Facebook' }).length
@@ -179,7 +203,7 @@ async function main() {
 
   if (DRY_RUN) { console.log('DRY-RUN: fin.'); return }
 
-  // ═══ POR SUSCRIPTOR ═══
+  // === POR SUSCRIPTOR ===
   for (var si = 0; si < activos.length; si++) {
     var sub = activos[si]
     var cuentas = sub.cuentas || []
@@ -191,17 +215,135 @@ async function main() {
     var destinos = (sub.emails_destino && sub.emails_destino.length > 0) ? sub.emails_destino : [sub.email]
     console.log('\n' + sub.email + ': ' + misPosts.length + ' posts')
 
-    var resumenIA = ''
-    if (OPENAI_KEY && misPosts.length > 0) {
-      resumenIA = await generarResumenIA(misPosts, cuentas, MODO)
-    }
+    // Persist posts to radar_posts
+    await persistirPosts(sub.id, misPosts, MODO)
+
+    // Query previous period for trends
+    var trends = await calcularTrends(sub.id, misPosts, cuentas, MODO)
 
     var empresas = extraerEmpresas(cuentas)
-    var html = generarEmailHTML(misPosts, cuentas, hoy, MODO, resumenIA, empresas)
+
+    var resumenIA = ''
+    if (misPosts.length > 0) {
+      if (MODO === 'diario' && OPENAI_KEY) {
+        resumenIA = await generarResumenOpenAI(misPosts, cuentas, MODO, trends)
+      } else if ((MODO === 'semanal' || MODO === 'mensual') && ANTHROPIC_KEY) {
+        resumenIA = await generarResumenClaude(misPosts, cuentas, MODO, trends)
+      } else if (OPENAI_KEY) {
+        resumenIA = await generarResumenOpenAI(misPosts, cuentas, MODO, trends)
+      }
+    }
+
+    var html = generarEmailHTML(misPosts, cuentas, hoy, MODO, resumenIA, empresas, trends)
     var pdf = generarPDF(html, hoy, MODO)
     await enviarEmail(destinos, html, hoy, misPosts.length, MODO, pdf)
   }
   console.log('\nRadar ' + MODO + ' completado | ' + activos.length + ' suscriptores')
+}
+
+// === PERSISTIR POSTS ===
+async function persistirPosts(suscripcionId, posts, modo) {
+  if (posts.length === 0) return
+  var fechaScrape = new Date().toISOString()
+  var rows = posts.map(function(p) {
+    return {
+      suscripcion_id: suscripcionId,
+      red: p.red,
+      handle: p.handle,
+      nombre_empresa: p.nombre,
+      post_url: (p.url || '').substring(0, 2000),
+      texto: (p.texto || '').substring(0, 1000),
+      likes: p.likes || 0,
+      comments: p.comments || 0,
+      tipo_post: p.type || 'Post',
+      keywords_match: p.keywords || [],
+      fecha_post: p.timestamp ? new Date(p.timestamp).toISOString() : null,
+      fecha_scrape: fechaScrape,
+      modo: modo
+    }
+  })
+  // Insert in batches of 50
+  var batchSize = 50
+  for (var i = 0; i < rows.length; i += batchSize) {
+    var batch = rows.slice(i, i + batchSize)
+    var res = await supabase.from('radar_posts').insert(batch)
+    if (res.error) {
+      console.error('   radar_posts insert error: ' + res.error.message)
+    }
+  }
+  console.log('   Persistidos: ' + rows.length + ' posts en radar_posts')
+}
+
+// === CALCULAR TRENDS ===
+async function calcularTrends(suscripcionId, currentPosts, cuentas, modo) {
+  var trends = {}
+  // Determine previous period range
+  var ahora = new Date()
+  var prevDesde, prevHasta
+  if (modo === 'diario') {
+    // Yesterday = 24-48h ago
+    prevHasta = new Date(ahora.getTime() - 24 * 60 * 60 * 1000)
+    prevDesde = new Date(ahora.getTime() - 48 * 60 * 60 * 1000)
+  } else if (modo === 'semanal') {
+    // Previous week
+    prevHasta = new Date(ahora.getTime() - 7 * 24 * 60 * 60 * 1000)
+    prevDesde = new Date(ahora.getTime() - 14 * 24 * 60 * 60 * 1000)
+  } else {
+    // Previous month
+    prevHasta = new Date(ahora.getTime() - 30 * 24 * 60 * 60 * 1000)
+    prevDesde = new Date(ahora.getTime() - 60 * 24 * 60 * 60 * 1000)
+  }
+
+  try {
+    var res = await supabase.from('radar_posts')
+      .select('*')
+      .eq('suscripcion_id', suscripcionId)
+      .gte('fecha_scrape', prevDesde.toISOString())
+      .lte('fecha_scrape', prevHasta.toISOString())
+    var prevPosts = (res.data || [])
+
+    // Group current posts by empresa
+    var empresas = extraerEmpresas(cuentas)
+    Object.keys(empresas).forEach(function(nombre) {
+      var emp = empresas[nombre]
+      var empHandles = [emp.ig, emp.li, emp.fb].filter(Boolean)
+      var currEmp = currentPosts.filter(function(p) { return p.red !== 'Prensa' && empHandles.includes(p.handle) })
+      var prevEmp = prevPosts.filter(function(p) { return p.red !== 'Prensa' && empHandles.includes(p.handle) })
+
+      var currTotal = currEmp.length
+      var prevTotal = prevEmp.length
+      var currLikes = currEmp.reduce(function(s, p) { return s + (p.likes || 0) }, 0)
+      var prevLikes = prevEmp.reduce(function(s, p) { return s + (p.likes || 0) }, 0)
+      var currEng = currTotal > 0 ? Math.round((currLikes + currEmp.reduce(function(s, p) { return s + (p.comments || 0) }, 0)) / currTotal) : 0
+      var prevEng = prevTotal > 0 ? Math.round((prevLikes + prevEmp.reduce(function(s, p) { return s + (p.comments || 0) }, 0)) / prevTotal) : 0
+
+      var postsPct = 0
+      if (prevTotal > 0) postsPct = Math.round(((currTotal - prevTotal) / prevTotal) * 100)
+      else if (currTotal > 0) postsPct = 100
+
+      var likesPct = 0
+      if (prevLikes > 0) likesPct = Math.round(((currLikes - prevLikes) / prevLikes) * 100)
+      else if (currLikes > 0) likesPct = 100
+
+      var engPct = 0
+      if (prevEng > 0) engPct = Math.round(((currEng - prevEng) / prevEng) * 100)
+      else if (currEng > 0) engPct = 100
+
+      trends[nombre] = {
+        postsPct: postsPct,
+        likesPct: likesPct,
+        engPct: engPct,
+        prevTotal: prevTotal,
+        prevLikes: prevLikes,
+        prevEng: prevEng,
+        hasPrev: prevPosts.length > 0
+      }
+    })
+    console.log('   Trends: ' + Object.keys(trends).length + ' empresas, prev posts: ' + prevPosts.length)
+  } catch (e) {
+    console.error('   Trends error: ' + e.message)
+  }
+  return trends
 }
 
 function extraerEmpresas(cuentas) {
@@ -216,33 +358,151 @@ function extraerEmpresas(cuentas) {
   return empresas
 }
 
-// ═══ IA ═══
-async function generarResumenIA(posts, cuentas, modo) {
+// === CONTEXTO ESTACIONAL ===
+function getContextoEstacional() {
+  var ahora = new Date()
+  var mes = ahora.getMonth() + 1
+  var dia = ahora.getDate()
+  var proximas = []
+  for (var i = 0; i < FECHAS_CHILE.length; i++) {
+    var f = FECHAS_CHILE[i]
+    var diaFecha = new Date(ahora.getFullYear(), f.mes - 1, f.dia)
+    var diff = (diaFecha.getTime() - ahora.getTime()) / (1000 * 60 * 60 * 24)
+    if (diff >= -2 && diff <= 30) {
+      proximas.push(f.nombre + ' (' + f.dia + '/' + f.mes + ', en ' + Math.round(diff) + ' dias)')
+    }
+  }
+  if (proximas.length === 0) return 'Sin fechas comerciales relevantes en los proximos 30 dias.'
+  return 'Fechas proximas: ' + proximas.join('; ') + '.'
+}
+
+// === IA - OPENAI (diario) ===
+async function generarResumenOpenAI(posts, cuentas, modo, trends) {
   try {
     var empresas = cuentas.filter(function(c) { return c.nombre && c.red !== 'prensa' }).map(function(c) { return c.nombre })
     var unicas = Array.from(new Set(empresas)).join(', ')
     var data = posts.slice(0, 30).map(function(p) {
       return '[' + p.red + '] ' + p.nombre + ': "' + p.texto.substring(0, 120) + '" (' + p.likes + ' likes)'
     }).join('\n')
-    var prompt = modo === 'diario'
-      ? 'Eres un analista de redes sociales. Analiza posts de hoy de: ' + unicas + '. Genera resumen: 1) Actividad por empresa 2) Engagement destacado 3) Oportunidades 4) Recomendacion. Espanol profesional, sin emojis. Max 150 palabras.'
-      : modo === 'semanal'
-      ? 'Analiza posts de la semana de: ' + unicas + '. Genera: 1) Ranking 2) Formato ganador 3) Oportunidades 4) Recomendaciones. Max 200 palabras.'
-      : 'Analiza posts del mes de: ' + unicas + '. Genera: 1) Ranking mensual 2) Tendencias 3) Formato ganador 4) Plan de accion. Max 250 palabras.'
+
+    var trendTxt = ''
+    Object.keys(trends).forEach(function(nombre) {
+      var t = trends[nombre]
+      if (t.hasPrev) {
+        trendTxt = trendTxt + nombre + ': posts ' + (t.postsPct >= 0 ? '+' : '') + t.postsPct + '%, likes ' + (t.likesPct >= 0 ? '+' : '') + t.likesPct + '%. '
+      }
+    })
+
+    var prompt = 'Eres un analista de redes sociales. Analiza posts de hoy de: ' + unicas + '.'
+    if (trendTxt) prompt = prompt + ' Tendencias vs periodo anterior: ' + trendTxt
+    prompt = prompt + ' Contexto: ' + getContextoEstacional()
+    prompt = prompt + ' Genera un JSON con esta estructura exacta (sin markdown, solo JSON): {"contexto":"texto corto sobre el mercado hoy","empresas":[{"nombre":"X","badge":"green|yellow|red","texto":"analisis breve"}],"oportunidad":"texto","alerta":"texto"}'
+    prompt = prompt + ' Usa badge green=activa, yellow=moderada, red=inactiva. Max 200 palabras total. Espanol sin acentos ni emojis.'
+
     var r = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST', headers: { 'Authorization': 'Bearer ' + OPENAI_KEY, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ model: 'gpt-4o-mini', temperature: 0.7, max_tokens: 600,
+      body: JSON.stringify({ model: 'gpt-4o-mini', temperature: 0.7, max_tokens: 800,
         messages: [{ role: 'system', content: prompt }, { role: 'user', content: data }] }) })
     if (!r.ok) throw new Error('HTTP ' + r.status)
     var d = await r.json()
     return d.choices[0].message.content || ''
-  } catch (e) { console.error('   IA: ' + e.message); return '' }
+  } catch (e) { console.error('   IA OpenAI: ' + e.message); return '' }
 }
 
-// ═══ EMAIL ═══
-function generarEmailHTML(posts, cuentas, fecha, modo, resumenIA, empresas) {
+// === IA - CLAUDE (semanal/mensual) ===
+async function generarResumenClaude(posts, cuentas, modo, trends) {
+  try {
+    var empresas = cuentas.filter(function(c) { return c.nombre && c.red !== 'prensa' }).map(function(c) { return c.nombre })
+    var unicas = Array.from(new Set(empresas)).join(', ')
+    var data = posts.slice(0, 50).map(function(p) {
+      return '[' + p.red + '] ' + p.nombre + ': "' + p.texto.substring(0, 150) + '" (' + p.likes + ' likes, ' + p.comments + ' comments)'
+    }).join('\n')
+
+    var trendTxt = ''
+    Object.keys(trends).forEach(function(nombre) {
+      var t = trends[nombre]
+      if (t.hasPrev) {
+        trendTxt = trendTxt + nombre + ': posts ' + (t.postsPct >= 0 ? '+' : '') + t.postsPct + '% (prev ' + t.prevTotal + '), likes ' + (t.likesPct >= 0 ? '+' : '') + t.likesPct + '% (prev ' + t.prevLikes + '), eng prom ' + (t.engPct >= 0 ? '+' : '') + t.engPct + '%. '
+      }
+    })
+
+    var periodoLabel = modo === 'semanal' ? 'esta semana' : 'este mes'
+    var prompt = 'Eres un analista senior de marketing digital especializado en el mercado chileno.'
+    prompt = prompt + ' Empresas monitoreadas: ' + unicas + '.'
+    prompt = prompt + ' Industria: HR tech, control de asistencia, gestion de personas en Chile.'
+    prompt = prompt + ' Periodo: ' + periodoLabel + '.'
+    if (trendTxt) prompt = prompt + ' Comparacion vs periodo anterior: ' + trendTxt
+    prompt = prompt + ' Contexto estacional Chile: ' + getContextoEstacional()
+    prompt = prompt + '\n\nGenera un JSON con esta estructura exacta (sin markdown, sin backticks, solo JSON puro):'
+    prompt = prompt + ' {"contexto":"parrafo sobre el contexto de mercado esta semana/mes, mencionar fechas relevantes y como afectan al sector HR tech",'
+    prompt = prompt + '"empresas":[{"nombre":"X","badge":"green|yellow|red","texto":"analisis con numeros especificos del periodo y comparacion vs anterior"}],'
+    prompt = prompt + '"oportunidad":"oportunidad concreta basada en datos y contexto",'
+    prompt = prompt + '"alerta":"alerta o riesgo detectado",'
+    prompt = prompt + '"contenido_sugerido":[{"titulo":"titulo del post","red":"Instagram|LinkedIn|Facebook","descripcion":"que publicar y por que, con copy sugerido"}]}'
+    prompt = prompt + ' Incluir 2-3 ideas de contenido en contenido_sugerido. Usa badge green=muy activa, yellow=actividad moderada, red=inactiva/sin posts.'
+    prompt = prompt + ' Max 400 palabras total. Espanol profesional sin acentos ni emojis.'
+
+    var r = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'x-api-key': ANTHROPIC_KEY,
+        'anthropic-version': '2023-06-01',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1200,
+        messages: [{
+          role: 'user',
+          content: 'Aqui estan los posts del periodo:\n\n' + data + '\n\nGenera el JSON de analisis.'
+        }],
+        system: prompt
+      })
+    })
+    if (!r.ok) {
+      var errBody = await r.text()
+      throw new Error('HTTP ' + r.status + ' ' + errBody.substring(0, 200))
+    }
+    var d = await r.json()
+    var txt = d.content && d.content[0] ? d.content[0].text : ''
+    return txt
+  } catch (e) { console.error('   IA Claude: ' + e.message); return '' }
+}
+
+// === PARSE IA JSON SAFE ===
+function parseIAResponse(raw) {
+  if (!raw) return null
+  try {
+    // Strip markdown code fences if present
+    var cleaned = raw.replace(/```json\s*/g, '').replace(/```\s*/g, '').trim()
+    return JSON.parse(cleaned)
+  } catch (e) {
+    console.error('   IA JSON parse error, using raw text')
+    return null
+  }
+}
+
+// === RENDER TREND CELL ===
+function renderTrend(pct, totalN, hasPrev) {
+  if (totalN === 0) {
+    return '<td style="padding:10px 8px;text-align:center;color:#dc2626;font-weight:700;">&#9660; inactivo</td>'
+  }
+  if (!hasPrev) {
+    return '<td style="padding:10px 8px;text-align:center;color:#6b7280;">&#9644; nuevo</td>'
+  }
+  if (pct > 0) {
+    return '<td style="padding:10px 8px;text-align:center;color:#059669;font-weight:700;">&#9650; +' + pct + '%</td>'
+  } else if (pct < 0) {
+    return '<td style="padding:10px 8px;text-align:center;color:#dc2626;font-weight:700;">&#9660; ' + pct + '%</td>'
+  }
+  return '<td style="padding:10px 8px;text-align:center;color:#6b7280;">&#9644; =</td>'
+}
+
+// === EMAIL HTML v5 ===
+function generarEmailHTML(posts, cuentas, fecha, modo, resumenIA, empresas, trends) {
   var fechaLegible = new Date(fecha + 'T12:00:00').toLocaleDateString('es-CL', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
   var titulo = modo === 'mensual' ? 'Resumen mensual' : modo === 'semanal' ? 'Resumen semanal' : 'Tu Radar diario'
+  var ventanaLabel = modo === 'diario' ? '72 horas' : modo === 'semanal' ? '7 d&iacute;as' : '30 d&iacute;as'
   var totalLikes = posts.reduce(function(s, p) { return s + p.likes }, 0)
   var redesActivas = Array.from(new Set(posts.map(function(p) { return p.red }))).length
   var nEmpresas = Object.keys(empresas).length
@@ -253,31 +513,87 @@ function generarEmailHTML(posts, cuentas, fecha, modo, resumenIA, empresas) {
   var prPosts = posts.filter(function(p) { return p.red === 'Prensa' })
   var prensaKws = (cuentas.find(function(c) { return c.red === 'prensa' }) || {}).keywords || []
 
+  var ia = parseIAResponse(resumenIA)
+
   var h = ''
-  // HEADER
   h += '<div style="font-family:-apple-system,Helvetica,Arial,sans-serif;max-width:680px;margin:0 auto;color:#1a1a1a;">'
-  h += '<div style="background:linear-gradient(135deg,#4F46E5,#7C3AED);color:white;padding:28px 32px;border-radius:16px 16px 0 0;">'
-  h += '<h1 style="margin:0;font-size:24px;font-weight:800;">' + titulo + '</h1>'
-  h += '<p style="margin:6px 0 0;font-size:14px;opacity:0.9;">' + fechaLegible + '</p>'
-  h += '<table style="margin-top:16px;border-collapse:separate;border-spacing:8px 0;"><tr>'
-  h += '<td style="background:rgba(255,255,255,0.15);padding:10px 18px;border-radius:8px;text-align:center;"><div style="font-size:22px;font-weight:800;">' + posts.length + '</div><div style="font-size:10px;opacity:0.8;">Posts</div></td>'
-  h += '<td style="background:rgba(255,255,255,0.15);padding:10px 18px;border-radius:8px;text-align:center;"><div style="font-size:22px;font-weight:800;">' + redesActivas + '</div><div style="font-size:10px;opacity:0.8;">Redes</div></td>'
-  h += '<td style="background:rgba(255,255,255,0.15);padding:10px 18px;border-radius:8px;text-align:center;"><div style="font-size:22px;font-weight:800;">' + totalLikes.toLocaleString() + '</div><div style="font-size:10px;opacity:0.8;">Likes</div></td>'
-  h += '<td style="background:rgba(255,255,255,0.15);padding:10px 18px;border-radius:8px;text-align:center;"><div style="font-size:22px;font-weight:800;">' + nEmpresas + '</div><div style="font-size:10px;opacity:0.8;">Empresas</div></td>'
+
+  // HEADER
+  h += '<div style="background:linear-gradient(135deg,#4338CA,#7C3AED);color:white;padding:30px 32px;border-radius:16px 16px 0 0;">'
+  h += '<table style="width:100%;"><tr>'
+  h += '<td style="vertical-align:top;">'
+  h += '<p style="margin:0;font-size:12px;opacity:0.7;letter-spacing:1px;">RADAR BY MULLER Y PEREZ</p>'
+  h += '<h1 style="margin:8px 0 4px;font-size:26px;font-weight:800;">' + titulo + '</h1>'
+  h += '<p style="margin:0;font-size:14px;opacity:0.9;">' + fechaLegible + '</p>'
+  h += '</td>'
+  h += '<td style="vertical-align:top;text-align:right;width:200px;">'
+  h += '<div style="display:inline-block;background:rgba(255,255,255,0.12);padding:6px 14px;border-radius:8px;margin-bottom:4px;">'
+  h += '<span style="font-size:11px;opacity:0.7;">Ventana</span><br>'
+  h += '<span style="font-size:14px;font-weight:700;">' + ventanaLabel + '</span>'
+  h += '</div></td></tr></table>'
+  // KPI boxes
+  h += '<table style="margin-top:18px;width:100%;border-collapse:separate;border-spacing:8px 0;"><tr>'
+  h += '<td style="background:rgba(255,255,255,0.12);padding:12px 0;border-radius:10px;text-align:center;width:25%;"><div style="font-size:28px;font-weight:800;">' + posts.length + '</div><div style="font-size:10px;opacity:0.7;margin-top:2px;">Posts</div></td>'
+  h += '<td style="background:rgba(255,255,255,0.12);padding:12px 0;border-radius:10px;text-align:center;width:25%;"><div style="font-size:28px;font-weight:800;">' + redesActivas + '</div><div style="font-size:10px;opacity:0.7;margin-top:2px;">Redes activas</div></td>'
+  h += '<td style="background:rgba(255,255,255,0.12);padding:12px 0;border-radius:10px;text-align:center;width:25%;"><div style="font-size:28px;font-weight:800;">' + totalLikes.toLocaleString() + '</div><div style="font-size:10px;opacity:0.7;margin-top:2px;">Likes total</div></td>'
+  h += '<td style="background:rgba(255,255,255,0.12);padding:12px 0;border-radius:10px;text-align:center;width:25%;"><div style="font-size:28px;font-weight:800;">' + nEmpresas + '</div><div style="font-size:10px;opacity:0.7;margin-top:2px;">Empresas</div></td>'
   h += '</tr></table></div>'
 
-  // RESUMEN IA
-  if (resumenIA) {
-    h += '<div style="background:#EEF2FF;padding:20px 28px;border-left:4px solid #4F46E5;">'
-    h += '<p style="font-weight:700;color:#3730A3;font-size:15px;margin:0 0 10px;">Analisis inteligente</p>'
-    h += '<div style="font-size:13px;color:#312E81;line-height:1.7;white-space:pre-line;">' + resumenIA + '</div></div>'
+  // AI SECTION
+  h += '<div style="background:white;padding:24px 28px;border-bottom:1px solid #e5e7eb;">'
+  h += '<table style="margin-bottom:14px;"><tr>'
+  h += '<td style="vertical-align:middle;"><div style="background:#4338CA;color:white;width:28px;height:28px;border-radius:8px;text-align:center;line-height:28px;font-size:14px;">AI</div></td>'
+  h += '<td style="vertical-align:middle;padding-left:8px;"><p style="font-weight:700;color:#1e1b4b;font-size:15px;margin:0;">An&aacute;lisis inteligente</p></td>'
+  h += '</tr></table>'
+
+  if (ia) {
+    // Contexto de mercado box
+    if (ia.contexto) {
+      h += '<div style="background:#f5f3ff;padding:16px 20px;border-radius:12px;border:1px solid #e9e5ff;margin-bottom:12px;">'
+      h += '<p style="margin:0 0 4px;font-size:11px;font-weight:700;color:#6d28d9;letter-spacing:0.5px;">CONTEXTO DE MERCADO</p>'
+      h += '<p style="margin:0;font-size:13px;color:#4c1d95;line-height:1.6;">' + ia.contexto + '</p></div>'
+    }
+    // Per-empresa badges
+    h += '<div style="font-size:13px;color:#312E81;line-height:1.7;">'
+    if (ia.empresas && ia.empresas.length > 0) {
+      for (var ei = 0; ei < ia.empresas.length; ei++) {
+        var emp = ia.empresas[ei]
+        var badgeColor = '#dcfce7'
+        var badgeText = '#166534'
+        if (emp.badge === 'yellow') { badgeColor = '#fef9c3'; badgeText = '#854d0e' }
+        else if (emp.badge === 'red') { badgeColor = '#fee2e2'; badgeText = '#991b1b' }
+        h += '<p style="margin:0 0 10px;"><span style="background:' + badgeColor + ';color:' + badgeText + ';padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;">' + emp.nombre + '</span> ' + emp.texto + '</p>'
+      }
+    }
+    // Oportunidad
+    if (ia.oportunidad) {
+      h += '<p style="margin:0 0 10px;"><span style="background:#fef9c3;color:#854d0e;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;">Oportunidad</span> ' + ia.oportunidad + '</p>'
+    }
+    // Alerta
+    if (ia.alerta) {
+      h += '<p style="margin:0;"><span style="background:#fee2e2;color:#991b1b;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;">Alerta</span> ' + ia.alerta + '</p>'
+    }
+    h += '</div>'
+  } else if (resumenIA) {
+    // Fallback: raw text
+    h += '<div style="font-size:13px;color:#312E81;line-height:1.7;white-space:pre-line;">' + resumenIA + '</div>'
   }
+  h += '</div>'
 
   // TABLA COMPARATIVA POR EMPRESA
   h += '<div style="background:white;padding:20px 28px;border-bottom:1px solid #e5e7eb;">'
   h += '<p style="font-weight:700;color:#0F172A;font-size:13px;margin:0 0 14px;letter-spacing:0.3px;">ACTIVIDAD POR EMPRESA</p>'
   h += '<table style="width:100%;border-collapse:collapse;font-size:12px;">'
-  h += '<tr style="background:#0F172A;color:white;"><th style="padding:10px 14px;text-align:left;">Empresa</th><th style="padding:10px;text-align:center;">IG</th><th style="padding:10px;text-align:center;">LI</th><th style="padding:10px;text-align:center;">FB</th><th style="padding:10px;text-align:center;">Total</th><th style="padding:10px;text-align:center;">Likes</th><th style="padding:10px;text-align:center;">Eng. prom.</th></tr>'
+  h += '<tr style="background:#0F172A;color:white;">'
+  h += '<th style="padding:10px 14px;text-align:left;font-weight:600;">Empresa</th>'
+  h += '<th style="padding:10px 8px;text-align:center;font-weight:600;width:40px;">IG</th>'
+  h += '<th style="padding:10px 8px;text-align:center;font-weight:600;width:40px;">LI</th>'
+  h += '<th style="padding:10px 8px;text-align:center;font-weight:600;width:40px;">FB</th>'
+  h += '<th style="padding:10px 8px;text-align:center;font-weight:600;width:50px;">Total</th>'
+  h += '<th style="padding:10px 8px;text-align:center;font-weight:600;">Likes</th>'
+  h += '<th style="padding:10px 8px;text-align:center;font-weight:600;">Eng.</th>'
+  h += '<th style="padding:10px 8px;text-align:center;font-weight:600;">Trend</th>'
+  h += '</tr>'
   var idx = 0
   Object.keys(empresas).forEach(function(nombre) {
     var emp = empresas[nombre]
@@ -288,16 +604,29 @@ function generarEmailHTML(posts, cuentas, fecha, modo, resumenIA, empresas) {
     var fbN = empPosts.filter(function(p) { return p.red === 'Facebook' }).length
     var totalN = empPosts.length
     var totalL = empPosts.reduce(function(s, p) { return s + p.likes }, 0)
-    var avgL = totalN > 0 ? Math.round(totalL / totalN) : 0
-    var bg = idx % 2 === 0 ? '#ffffff' : '#f8fafc'
-    var z = function(n) { return n === 0 ? '<span style="color:#ddd;">0</span>' : '<strong>' + n + '</strong>' }
-    h += '<tr style="background:' + bg + ';border-bottom:1px solid #e5e7eb;"><td style="padding:10px 14px;font-weight:700;">' + nombre + '</td>'
-    h += '<td style="padding:10px;text-align:center;">' + z(igN) + '</td>'
-    h += '<td style="padding:10px;text-align:center;">' + z(liN) + '</td>'
-    h += '<td style="padding:10px;text-align:center;">' + z(fbN) + '</td>'
-    h += '<td style="padding:10px;text-align:center;font-weight:700;">' + totalN + '</td>'
-    h += '<td style="padding:10px;text-align:center;">' + totalL.toLocaleString() + '</td>'
-    h += '<td style="padding:10px;text-align:center;">' + avgL.toLocaleString() + '</td></tr>'
+    var totalC = empPosts.reduce(function(s, p) { return s + p.comments }, 0)
+    var avgEng = totalN > 0 ? Math.round((totalL + totalC) / totalN) : 0
+    var isInactive = totalN === 0
+    var bg = isInactive ? '#fef2f2' : (idx % 2 === 0 ? '#ffffff' : '#f8fafc')
+    var nameColor = isInactive ? '#991b1b' : '#0F172A'
+    var z = function(n) { return n === 0 ? '<span style="color:#d1d5db;">0</span>' : '<strong>' + n + '</strong>' }
+    var t = trends[nombre] || { postsPct: 0, hasPrev: false }
+
+    h += '<tr style="background:' + bg + ';border-bottom:1px solid #f1f5f9;">'
+    h += '<td style="padding:12px 14px;font-weight:700;color:' + nameColor + ';">' + nombre + '</td>'
+    h += '<td style="padding:10px 8px;text-align:center;">' + z(igN) + '</td>'
+    h += '<td style="padding:10px 8px;text-align:center;">' + z(liN) + '</td>'
+    h += '<td style="padding:10px 8px;text-align:center;">' + z(fbN) + '</td>'
+    h += '<td style="padding:10px 8px;text-align:center;font-weight:800;' + (isInactive ? 'color:#991b1b;' : '') + '">' + totalN + '</td>'
+    if (isInactive) {
+      h += '<td style="padding:10px 8px;text-align:center;color:#d1d5db;">-</td>'
+      h += '<td style="padding:10px 8px;text-align:center;color:#d1d5db;">-</td>'
+    } else {
+      h += '<td style="padding:10px 8px;text-align:center;">' + totalL.toLocaleString() + '</td>'
+      h += '<td style="padding:10px 8px;text-align:center;">' + avgEng.toLocaleString() + '</td>'
+    }
+    h += renderTrend(t.postsPct, totalN, t.hasPrev)
+    h += '</tr>'
     idx++
   })
   h += '</table></div>'
@@ -307,21 +636,43 @@ function generarEmailHTML(posts, cuentas, fecha, modo, resumenIA, empresas) {
   if (liPosts.length > 0) h += renderSeccion('LinkedIn', '#0A66C2', liPosts)
   if (fbPosts.length > 0) h += renderSeccion('Facebook', '#1877F2', fbPosts)
   if (prPosts.length > 0) {
-    h += renderSeccion('Prensa y medios', '#F59E0B', prPosts)
-    h += '<div style="background:#FFFBEB;padding:12px 20px;border:1px solid #FDE68A;margin:0;">'
-    h += '<p style="margin:0;font-size:11px;color:#92400E;"><strong>Medios analizados (' + MEDIOS_PRENSA.length + '):</strong> ' + MEDIOS_PRENSA.map(function(m) { return m.nombre }).join(', ') + '</p>'
-    h += '<p style="margin:4px 0 0;font-size:11px;color:#92400E;"><strong>Keywords buscados:</strong> ' + prensaKws.join(', ') + '</p></div>'
+    h += renderSeccionPrensa(prPosts, prensaKws)
   }
 
   if (posts.length === 0) {
     h += '<div style="background:white;padding:32px 28px;text-align:center;"><p style="color:#6b7280;">Sin publicaciones en el periodo.</p></div>'
   }
 
+  // CONTENIDO SUGERIDO (semanal/mensual only)
+  if (ia && ia.contenido_sugerido && ia.contenido_sugerido.length > 0 && (modo === 'semanal' || modo === 'mensual')) {
+    h += '<div style="background:white;padding:22px 28px;border-top:4px solid #10b981;margin-top:3px;">'
+    h += '<table style="width:100%;margin-bottom:16px;"><tr>'
+    h += '<td><span style="background:#10b981;color:white;padding:6px 16px;border-radius:8px;font-size:13px;font-weight:700;">Contenido sugerido</span></td>'
+    h += '<td style="text-align:right;font-size:12px;color:#6b7280;">' + ia.contenido_sugerido.length + ' ideas</td>'
+    h += '</tr></table>'
+    for (var ci = 0; ci < ia.contenido_sugerido.length; ci++) {
+      var sug = ia.contenido_sugerido[ci]
+      var redBadge = sug.red || 'General'
+      var redColor = '#6b7280'
+      if (redBadge === 'Instagram') redColor = '#E4405F'
+      else if (redBadge === 'LinkedIn') redColor = '#0A66C2'
+      else if (redBadge === 'Facebook') redColor = '#1877F2'
+      h += '<div style="padding:16px;background:#f0fdf4;border-radius:12px;border-left:4px solid #10b981;margin-bottom:8px;">'
+      h += '<table style="width:100%;margin-bottom:8px;"><tr>'
+      h += '<td><strong style="font-size:14px;color:#064e3b;">' + (sug.titulo || 'Idea ' + (ci + 1)) + '</strong></td>'
+      h += '<td style="text-align:right;"><span style="background:' + redColor + ';color:white;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:600;">' + redBadge + '</span></td>'
+      h += '</tr></table>'
+      h += '<p style="margin:0;font-size:13px;color:#1f2937;line-height:1.65;">' + (sug.descripcion || '') + '</p>'
+      h += '</div>'
+    }
+    h += '</div>'
+  }
+
   // FOOTER
-  h += '<div style="padding:16px 28px;background:#e8e8e8;border-radius:0 0 16px 16px;text-align:center;">'
-  h += '<p style="margin:0;font-size:11px;color:#6b7280;">Radar by Muller y Perez | '
+  h += '<div style="padding:20px 28px;background:#1e1b4b;border-radius:0 0 16px 16px;text-align:center;">'
+  h += '<p style="margin:0;font-size:12px;color:rgba(255,255,255,0.7);">Radar by <strong style="color:white;">Muller y Perez</strong> | '
   h += modo === 'diario' ? 'Informe diario 7:30 AM' : modo === 'semanal' ? 'Resumen semanal, lunes 9 AM' : 'Resumen mensual, 1ro de cada mes'
-  h += '</p><p style="margin:4px 0 0;font-size:10px;color:#9ca3af;">mulleryperez.cl/clipping</p></div></div>'
+  h += '</p><p style="margin:6px 0 0;font-size:11px;color:rgba(255,255,255,0.4);">mulleryperez.cl/clipping | Responde este email para ajustar cuentas</p></div></div>'
   return h
 }
 
@@ -329,46 +680,97 @@ function renderSeccion(red, color, posts) {
   var porNombre = new Map()
   posts.forEach(function(p) { var n = p.nombre || p.handle; if (!porNombre.has(n)) porNombre.set(n, []); porNombre.get(n).push(p) })
 
-  var h = '<div style="background:white;padding:20px 28px;border-top:3px solid ' + color + ';margin-top:2px;">'
-  h += '<div style="display:inline-block;background:' + color + ';color:white;padding:5px 14px;border-radius:6px;font-size:12px;font-weight:700;">' + red + '</div>'
-  h += '<span style="font-size:12px;color:#6b7280;margin-left:8px;">' + posts.length + ' posts de ' + porNombre.size + ' empresa' + (porNombre.size > 1 ? 's' : '') + '</span>'
+  var h = '<div style="background:white;padding:22px 28px;border-top:4px solid ' + color + ';margin-top:3px;">'
+  h += '<table style="width:100%;margin-bottom:16px;"><tr>'
+  h += '<td><span style="background:' + color + ';color:white;padding:6px 16px;border-radius:8px;font-size:13px;font-weight:700;">' + red + '</span></td>'
+  h += '<td style="text-align:right;font-size:12px;color:#6b7280;">' + posts.length + ' posts | ' + porNombre.size + ' empresa' + (porNombre.size > 1 ? 's' : '') + '</td>'
+  h += '</tr></table>'
 
   porNombre.forEach(function(hPosts, nombre) {
     var handle = hPosts[0].handle
-    h += '<p style="font-weight:700;font-size:14px;color:#0F172A;margin:16px 0 8px;padding-bottom:6px;border-bottom:2px solid ' + color + ';">' + nombre + ' <span style="font-weight:400;font-size:11px;color:#6b7280;">@' + handle + '</span></p>'
+    h += '<div style="margin-bottom:18px;">'
+    h += '<table style="width:100%;margin-bottom:10px;"><tr>'
+    h += '<td><span style="font-weight:800;font-size:15px;color:#0F172A;">' + nombre + '</span> <span style="font-size:11px;color:#9ca3af;">@' + handle + '</span></td>'
+    h += '<td style="text-align:right;"><span style="background:#dcfce7;color:#166534;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:600;">' + hPosts.length + ' posts</span></td>'
+    h += '</tr></table>'
     hPosts.forEach(function(p) {
       var preview = p.texto.substring(0, 250).replace(/\n/g, ' ')
       var isHigh = p.likes > 500
-      h += '<div style="margin-bottom:8px;padding:14px;background:#fafafa;border-radius:10px;border-left:3px solid ' + (isHigh ? '#EF4444' : color) + ';">'
-      h += '<p style="margin:0 0 8px;font-size:13px;color:#1f2937;line-height:1.6;">' + preview + (p.texto.length > 250 ? '...' : '') + '</p>'
-      h += '<div style="font-size:12px;color:#6b7280;">'
-      h += '<span style="color:' + (isHigh ? '#EF4444' : '#374151') + ';font-weight:' + (isHigh ? '700' : '400') + ';">' + p.likes.toLocaleString() + ' likes</span>'
-      h += ' | ' + p.comments.toLocaleString() + ' comentarios'
-      h += ' | <span style="background:#f3f4f6;padding:2px 8px;border-radius:4px;font-size:11px;">' + p.type + '</span>'
-      if (isHigh) h += ' | <span style="background:#FEE2E2;color:#DC2626;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;">Alto engagement</span>'
-      if (p.keywords && p.keywords.length > 0) h += ' | <span style="background:#FEF3C7;color:#92400E;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;">Menciona: ' + p.keywords.join(', ') + '</span>'
-      if (p.url) h += ' | <a href="' + p.url + '" style="color:' + color + ';font-weight:600;text-decoration:none;">Ver post</a>'
-      h += '</div></div>'
+      h += '<div style="padding:16px;background:#fafafa;border-radius:12px;border-left:4px solid ' + (isHigh ? '#dc2626' : color) + ';margin-bottom:8px;">'
+      h += '<p style="margin:0 0 10px;font-size:13px;color:#1f2937;line-height:1.65;">' + preview + (p.texto.length > 250 ? '...' : '') + '</p>'
+      h += '<table style="width:100%;font-size:12px;color:#6b7280;"><tr>'
+      h += '<td>'
+      h += '<span style="color:' + (isHigh ? '#dc2626' : '#1f2937') + ';font-weight:' + (isHigh ? '700' : '600') + ';">' + p.likes.toLocaleString() + ' likes</span>'
+      h += ' &nbsp; ' + p.comments.toLocaleString() + ' comentarios'
+      if (isHigh) h += ' &nbsp; <span style="background:#fee2e2;color:#dc2626;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:600;">Alto engagement</span>'
+      h += '</td><td style="text-align:right;">'
+      h += '<span style="background:#f3e8ff;color:#7c3aed;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:600;">' + p.type + '</span>'
+      if (p.url) h += ' &nbsp; <a href="' + p.url + '" style="color:' + color + ';font-weight:600;text-decoration:none;">Ver &#8594;</a>'
+      h += '</td></tr></table></div>'
     })
+    h += '</div>'
   })
   h += '</div>'
   return h
 }
 
-// ═══ PDF ═══
+function renderSeccionPrensa(posts, prensaKws) {
+  var porNombre = new Map()
+  posts.forEach(function(p) { var n = p.nombre || p.handle; if (!porNombre.has(n)) porNombre.set(n, []); porNombre.get(n).push(p) })
+
+  var color = '#d97706'
+  var h = '<div style="background:white;padding:22px 28px;border-top:4px solid ' + color + ';margin-top:3px;">'
+  h += '<table style="width:100%;margin-bottom:16px;"><tr>'
+  h += '<td><span style="background:' + color + ';color:white;padding:6px 16px;border-radius:8px;font-size:13px;font-weight:700;">Prensa y medios</span></td>'
+  h += '<td style="text-align:right;font-size:12px;color:#6b7280;">' + posts.length + ' menciones encontradas</td>'
+  h += '</tr></table>'
+
+  porNombre.forEach(function(hPosts, nombre) {
+    var handle = hPosts[0].handle
+    h += '<div style="margin-bottom:18px;">'
+    h += '<table style="width:100%;margin-bottom:10px;"><tr>'
+    h += '<td><span style="font-weight:800;font-size:15px;color:#0F172A;">' + nombre + '</span> <span style="font-size:11px;color:#9ca3af;">@' + handle + '</span></td>'
+    h += '</tr></table>'
+    hPosts.forEach(function(p) {
+      var preview = p.texto.substring(0, 250).replace(/\n/g, ' ')
+      var isHigh = p.likes > 500
+      h += '<div style="padding:16px;background:#fffbeb;border-radius:12px;border-left:4px solid ' + color + ';margin-bottom:8px;">'
+      h += '<p style="margin:0 0 10px;font-size:13px;color:#1f2937;line-height:1.65;">' + preview + (p.texto.length > 250 ? '...' : '') + '</p>'
+      h += '<table style="width:100%;font-size:12px;color:#6b7280;"><tr>'
+      h += '<td>'
+      h += '<span style="color:' + (isHigh ? '#dc2626' : '#1f2937') + ';font-weight:' + (isHigh ? '700' : '600') + ';">' + p.likes.toLocaleString() + ' likes</span>'
+      h += ' &nbsp; ' + p.comments.toLocaleString() + ' comentarios'
+      if (isHigh) h += ' &nbsp; <span style="background:#fee2e2;color:#dc2626;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:600;">Alto engagement</span>'
+      if (p.keywords && p.keywords.length > 0) h += ' &nbsp; <span style="background:#fef3c7;color:#92400e;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:600;">Menciona: ' + p.keywords.join(', ') + '</span>'
+      h += '</td></tr><tr><td style="padding-top:6px;">'
+      if (p.url) h += '<a href="' + p.url + '" style="color:' + color + ';font-weight:600;text-decoration:none;">Ver &#8594;</a>'
+      h += '</td></tr></table></div>'
+    })
+    h += '</div>'
+  })
+
+  // Medios box
+  h += '<div style="background:#fefce8;padding:14px 18px;border-radius:10px;border:1px solid #fde68a;margin-top:14px;">'
+  h += '<p style="margin:0 0 4px;font-size:11px;color:#854d0e;"><strong>Medios analizados (' + MEDIOS_PRENSA.length + '):</strong> ' + MEDIOS_PRENSA.map(function(m) { return m.nombre }).join(', ') + '</p>'
+  h += '<p style="margin:0;font-size:11px;color:#854d0e;"><strong>Keywords:</strong> ' + prensaKws.join(', ') + '</p></div>'
+  h += '</div>'
+  return h
+}
+
+// === PDF ===
 function generarPDF(html, fecha, modo) {
   var tmpH = '/tmp/radar-' + fecha + '-' + modo + '.html'
   var tmpP = '/tmp/radar-' + fecha + '-' + modo + '.pdf'
-  fs.writeFileSync(tmpH, '<!DOCTYPE html><html><head><meta charset="utf-8"><style>body{margin:0;padding:20px;background:#f0f0f0;}</style></head><body>' + html + '</body></html>')
+  fs.writeFileSync(tmpH, '<!DOCTYPE html><html><head><meta charset="utf-8"><style>body{margin:0;padding:20px;background:#eef0f4;font-family:-apple-system,Helvetica,Arial,sans-serif;}</style></head><body>' + html + '</body></html>')
   try {
-    execSync('wkhtmltopdf --quiet --enable-local-file-access --page-size A4 --margin-top 10 --margin-bottom 10 --margin-left 10 --margin-right 10 "' + tmpH + '" "' + tmpP + '"', { timeout: 30000 })
+    childProcess.execSync('wkhtmltopdf --quiet --enable-local-file-access --page-size A4 --margin-top 10 --margin-bottom 10 --margin-left 10 --margin-right 10 "' + tmpH + '" "' + tmpP + '"', { timeout: 30000 })
     var buf = fs.readFileSync(tmpP)
     console.log('   PDF: ' + (buf.length / 1024).toFixed(0) + ' KB')
     return buf.toString('base64')
   } catch (e) { console.error('   PDF: ' + e.message); return null }
 }
 
-// ═══ ENVIAR ═══
+// === ENVIAR ===
 async function enviarEmail(destinos, html, fecha, nPosts, modo, pdf) {
   var titulo = modo === 'mensual' ? 'Resumen mensual' : modo === 'semanal' ? 'Resumen semanal' : 'Tu Radar diario'
   var body = { from: 'Radar <contacto@mulleryperez.cl>', to: destinos,
