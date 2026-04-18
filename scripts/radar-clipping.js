@@ -1,13 +1,15 @@
-// radar-clipping.js v5
+// radar-clipping.js v6
 // 4 canales: Instagram + LinkedIn + Facebook + Prensa
 // Persiste posts en radar_posts, calcula trends vs periodo anterior
 // IA: Claude para semanal/mensual, OpenAI para diario
+// Pipeline contenido: OpenAI analiza → Claude crea → OpenAI QA
 // Modo: --diario | --semanal | --mensual | --dry-run
 
 var fetch = require('node-fetch')
 var supabaseLib = require('@supabase/supabase-js')
 var fs = require('fs')
 var childProcess = require('child_process')
+var contenidoModule = require('./radar-contenido.js')
 
 var APIFY_TOKEN = process.env.APIFY_TOKEN
 var RESEND_KEY = process.env.RESEND
@@ -234,7 +236,13 @@ async function main() {
       }
     }
 
-    var html = generarEmailHTML(misPosts, cuentas, hoy, MODO, resumenIA, empresas, trends, sub.id)
+    // Pipeline contenido sugerido (semanal/mensual)
+    var contenidoSugerido = []
+    if ((MODO === 'semanal' || MODO === 'mensual') && misPosts.length >= 2) {
+      contenidoSugerido = await contenidoModule.generarContenidoSugerido(misPosts, empresas, MODO)
+    }
+
+    var html = generarEmailHTML(misPosts, cuentas, hoy, MODO, resumenIA, empresas, trends, sub.id, contenidoSugerido)
     var pdf = generarPDF(html, hoy, MODO)
     await enviarEmail(destinos, html, hoy, misPosts.length, MODO, pdf)
   }
@@ -499,7 +507,8 @@ function renderTrend(pct, totalN, hasPrev) {
 }
 
 // === EMAIL HTML v5 ===
-function generarEmailHTML(posts, cuentas, fecha, modo, resumenIA, empresas, trends, subId) {
+function generarEmailHTML(posts, cuentas, fecha, modo, resumenIA, empresas, trends, subId, contenidoSugerido) {
+  contenidoSugerido = contenidoSugerido || []
   var fechaLegible = new Date(fecha + 'T12:00:00').toLocaleDateString('es-CL', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
   var titulo = modo === 'mensual' ? 'Resumen mensual' : modo === 'semanal' ? 'Resumen semanal' : 'Tu Radar diario'
   var ventanaLabel = modo === 'diario' ? '72 horas' : modo === 'semanal' ? '7 d&iacute;as' : '30 d&iacute;as'
@@ -663,6 +672,35 @@ function generarEmailHTML(posts, cuentas, fecha, modo, resumenIA, empresas, tren
       h += '<td style="text-align:right;"><span style="background:' + redColor + ';color:white;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:600;">' + redBadge + '</span></td>'
       h += '</tr></table>'
       h += '<p style="margin:0;font-size:13px;color:#1f2937;line-height:1.65;">' + (sug.descripcion || '') + '</p>'
+      h += '</div>'
+    }
+    h += '</div>'
+  }
+
+  // CONTENIDO SUGERIDO (pipeline 3 agentes)
+  if (contenidoSugerido.length > 0) {
+    h += '<div style="background:white;padding:22px 28px;border-top:4px solid #10b981;margin-top:3px;">'
+    h += '<table style="width:100%;margin-bottom:16px;"><tr><td><span style="background:#10b981;color:white;padding:6px 16px;border-radius:8px;font-size:13px;font-weight:700;">Contenido sugerido</span></td>'
+    h += '<td style="text-align:right;font-size:11px;color:#6b7280;">' + contenidoSugerido.length + ' ideas con copy listo | OpenAI + Claude + QA</td></tr></table>'
+    for (var ci = 0; ci < contenidoSugerido.length; ci++) {
+      var cs = contenidoSugerido[ci]
+      var pColor = cs.plataforma === 'Instagram' ? '#E4405F' : cs.plataforma === 'LinkedIn' ? '#0A66C2' : '#1877F2'
+      h += '<div style="padding:18px;background:#f0fdf4;border-radius:12px;border-left:4px solid #10b981;margin-bottom:12px;">'
+      h += '<table style="width:100%;margin-bottom:8px;font-size:11px;"><tr>'
+      h += '<td><span style="background:' + pColor + ';color:white;padding:2px 8px;border-radius:4px;font-weight:600;">' + cs.plataforma + ' ' + cs.tipo + '</span></td>'
+      h += '<td style="text-align:right;"><span style="background:#dbeafe;color:#1e40af;padding:2px 8px;border-radius:4px;font-weight:600;">' + cs.angulo + '</span> '
+      h += '<span style="background:#fef3c7;color:#92400e;padding:2px 8px;border-radius:4px;font-weight:600;">' + cs.objetivo + '</span>'
+      if (cs.score) h += ' <span style="background:' + (cs.score >= 80 ? '#dcfce7;color:#166534' : '#fef3c7;color:#92400e') + ';padding:2px 8px;border-radius:4px;font-weight:600;">Score: ' + cs.score + '</span>'
+      h += '</td></tr></table>'
+      h += '<p style="margin:0 0 8px;font-size:15px;font-weight:700;color:#0F172A;">' + (cs.titulo || '') + '</p>'
+      h += '<div style="background:white;padding:14px;border-radius:8px;border:1px solid #d1fae5;margin-bottom:8px;">'
+      h += '<p style="margin:0 0 4px;font-size:10px;font-weight:700;color:#059669;letter-spacing:0.5px;">COPY LISTO PARA PUBLICAR</p>'
+      h += '<p style="margin:0;font-size:13px;color:#374151;line-height:1.7;white-space:pre-line;">' + (cs.copy || '').replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</p>'
+      h += '</div>'
+      if (cs.justificacion) {
+        h += '<p style="margin:0;font-size:12px;color:#059669;line-height:1.5;"><strong>Por que funciona:</strong> ' + cs.justificacion + '</p>'
+      }
+      if (cs.fixed) h += '<p style="margin:4px 0 0;font-size:10px;color:#d97706;">* Copy corregido automaticamente por QA</p>'
       h += '</div>'
     }
     h += '</div>'
