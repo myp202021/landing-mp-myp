@@ -34,6 +34,17 @@ Cada cliente trabaja con un equipo dedicado de 3 personas: Paid Media Planner, P
 - 3 profesionales dedicados por cuenta
 - Fee fijo sin comisión sobre pauta
 
+## Radar — Inteligencia Competitiva en Redes Sociales
+Radar es un producto standalone de Muller y Perez que monitorea las redes sociales de tu competencia y te envia un email diario con analisis IA.
+- Monitorea Instagram, Facebook, LinkedIn y menciones en prensa chilena (11 medios)
+- Email diario a las 7:30 AM con posts, engagement, trends vs dia anterior
+- Resumen semanal (lunes) y mensual (1ro) con ranking, benchmarking y contenido sugerido por IA
+- Analisis inteligente con contexto estacional y recomendaciones accionables
+- PDF adjunto en cada informe
+- Planes: Starter $27.990/mes (5 cuentas IG), Pro $54.990/mes (15 cuentas multi-red), Business $94.990/mes (30 cuentas + benchmarking)
+- 7 dias gratis sin tarjeta
+- URL: https://www.mulleryperez.cl/clipping
+
 ## Industrias atendidas
 Tecnología B2B, SaaS, e-commerce, educación, transporte, inmobiliarias, salud, eventos, construcción, servicios profesionales, retail.
 

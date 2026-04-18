@@ -70,6 +70,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'weekly',
       priority: 1.0,
     },
+    // Radar - Inteligencia Competitiva
+    {
+      url: `${baseUrl}/clipping`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly' as const,
+      priority: 0.9,
+    },
     // Página Pilar SEO - Agencia Marketing Digital Chile
     {
       url: `${baseUrl}/agencia-marketing-digital-chile`,
