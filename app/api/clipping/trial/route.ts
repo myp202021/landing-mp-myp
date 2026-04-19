@@ -58,7 +58,7 @@ export async function POST(req: NextRequest) {
       const cuentasStr = cuentas.filter((c: any) => c.red !== 'prensa').map((c: any) => c.red + ':' + c.handle).join(', ')
       await fetch('https://api.resend.com/emails', {
         method: 'POST',
-        headers: { 'Authorization': `Bearer ${process.env.RESEND_API_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY}`, 'Content-Type': 'application/json' },
+        headers: { 'Authorization': `Bearer ${process.env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({
           from: 'Radar <contacto@mulleryperez.cl>',
           to: ['contacto@mulleryperez.cl'],
