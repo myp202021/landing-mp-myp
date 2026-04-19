@@ -74,7 +74,19 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Error creando cliente en Flow', detail: custData }, { status: 500 })
     }
 
-    // Paso 2: Crear suscripcion
+    // Paso 2: Registrar tarjeta del customer (genera URL de pago)
+    const regData = await flowRequest('/customer/register', {
+      customerId: customerId,
+      url_return: 'https://www.mulleryperez.cl/clipping/confirmacion',
+    })
+
+    if (regData.url && regData.token) {
+      // Customer necesita inscribir tarjeta primero
+      // Guardamos el planId para crear la suscripcion despues del registro
+      return NextResponse.json({ url: regData.url + '?token=' + regData.token, subscriptionPending: planId })
+    }
+
+    // Si customer ya tiene tarjeta, crear suscripcion directamente
     const subData = await flowRequest('/subscription/create', {
       planId: planId,
       customerId: customerId,
@@ -82,13 +94,12 @@ export async function POST(req: NextRequest) {
       url_callback: 'https://www.mulleryperez.cl/api/webhooks/flow',
     })
 
-    if (!subData.url && !subData.token) {
-      console.error('Flow subscription error:', subData)
-      return NextResponse.json({ error: 'Error creando suscripcion en Flow', detail: subData }, { status: 500 })
+    if (subData.subscriptionId) {
+      return NextResponse.json({ url: 'https://www.mulleryperez.cl/clipping/confirmacion', subscriptionId: subData.subscriptionId })
     }
 
-    const redirectUrl = subData.url ? subData.url + '?token=' + subData.token : 'https://www.flow.cl/app/pay/suscription?token=' + subData.token
-    return NextResponse.json({ url: redirectUrl })
+    console.error('Flow error:', subData)
+    return NextResponse.json({ error: 'Error en Flow', detail: subData }, { status: 500 })
   } catch (err: any) {
     console.error('Checkout error:', err.message)
     return NextResponse.json({ error: err.message }, { status: 500 })
