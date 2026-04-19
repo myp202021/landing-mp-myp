@@ -34,6 +34,7 @@ export default function ClippingClient() {
   var [enviando, setEnviando] = useState(false)
   var [tab, setTab] = useState('diario')
   var [faqOpen, setFaqOpen] = useState(-1)
+  var [modalOpen, setModalOpen] = useState('')
 
   useScrollReveal()
 
@@ -472,6 +473,51 @@ export default function ClippingClient() {
           </div>
         </div>
       </section>
+
+      {/* SOCIAL PROOF */}
+      <section className="px-6 py-20 reveal">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-3xl font-bold text-center mb-4">Radar en accion</h2>
+          <p className="text-gray-500 text-center mb-10">Usado por el equipo de Muller y Perez para sus propios clientes</p>
+          <div className="bg-white rounded-2xl border border-gray-200 shadow-lg overflow-hidden">
+            <div className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-8 py-6">
+              <p className="text-sm opacity-80">Caso de uso real</p>
+              <h3 className="text-xl font-bold mt-1">Genera HR monitorea a su competencia con Radar</h3>
+            </div>
+            <div className="px-8 py-6">
+              <div className="grid grid-cols-4 gap-4 mb-6">
+                <div className="text-center"><div className="text-2xl font-bold text-indigo-600">5</div><div className="text-xs text-gray-500">Empresas monitoreadas</div></div>
+                <div className="text-center"><div className="text-2xl font-bold text-purple-600">4</div><div className="text-xs text-gray-500">Redes sociales</div></div>
+                <div className="text-center"><div className="text-2xl font-bold text-green-600">11</div><div className="text-xs text-gray-500">Medios de prensa</div></div>
+                <div className="text-center"><div className="text-2xl font-bold text-gray-900">7:30 AM</div><div className="text-xs text-gray-500">Informe cada dia</div></div>
+              </div>
+              <p className="text-gray-700 text-sm leading-relaxed mb-4">Genera HR usa Radar para monitorear a Buk, Talana, Workera y GeoVictoria en Instagram, LinkedIn, Facebook y 11 medios de prensa chilenos. Cada lunes reciben 3 copies sugeridos listos para publicar basados en lo que funciona en su industria.</p>
+              <div className="flex gap-3 flex-wrap">
+                <button onClick={function() { setModalOpen('diario') }} className="text-sm font-semibold text-indigo-600 border border-indigo-200 px-4 py-2 rounded-lg hover:bg-indigo-50 transition">Ver informe diario</button>
+                <button onClick={function() { setModalOpen('semanal') }} className="text-sm font-semibold text-indigo-600 border border-indigo-200 px-4 py-2 rounded-lg hover:bg-indigo-50 transition">Ver informe semanal</button>
+                <button onClick={function() { setModalOpen('mensual') }} className="text-sm font-semibold text-indigo-600 border border-indigo-200 px-4 py-2 rounded-lg hover:bg-indigo-50 transition">Ver informe mensual</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* MODAL INFORME COMPLETO */}
+      {modalOpen !== '' && (
+        <div className="fixed inset-0 bg-black/60 z-50 flex items-start justify-center pt-8 pb-8 overflow-y-auto" onClick={function() { setModalOpen('') }}>
+          <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full mx-4 relative" onClick={function(e: any) { e.stopPropagation() }}>
+            <button onClick={function() { setModalOpen('') }} className="absolute top-4 right-4 w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-200 text-lg font-bold z-10">x</button>
+            <div className="p-1">
+              <iframe
+                src={'/radar-ejemplos/' + modalOpen + '.html'}
+                className="w-full border-0 rounded-xl"
+                style={{ height: modalOpen === 'mensual' ? '3000px' : modalOpen === 'semanal' ? '4000px' : '2800px' }}
+                title={'Ejemplo informe ' + modalOpen}
+              />
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* FOOTER */}
       <footer className="bg-white px-6 py-12 text-center border-t border-gray-200">
