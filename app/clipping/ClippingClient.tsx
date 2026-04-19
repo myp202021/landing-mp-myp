@@ -499,6 +499,7 @@ export default function ClippingClient() {
                 <button onClick={function() { setModalOpen('diario') }} className="text-sm font-semibold text-indigo-600 border border-indigo-200 px-4 py-2 rounded-lg hover:bg-indigo-50 transition">Ver informe diario</button>
                 <button onClick={function() { setModalOpen('semanal') }} className="text-sm font-semibold text-indigo-600 border border-indigo-200 px-4 py-2 rounded-lg hover:bg-indigo-50 transition">Ver informe semanal</button>
                 <button onClick={function() { setModalOpen('mensual') }} className="text-sm font-semibold text-indigo-600 border border-indigo-200 px-4 py-2 rounded-lg hover:bg-indigo-50 transition">Ver informe mensual</button>
+                <button onClick={function() { setModalOpen('grilla') }} className="text-sm font-semibold text-green-700 border border-green-200 px-4 py-2 rounded-lg hover:bg-green-50 transition">Ver grilla 16 posts</button>
               </div>
             </div>
           </div>
@@ -508,13 +509,13 @@ export default function ClippingClient() {
       {/* MODAL INFORME COMPLETO */}
       {modalOpen !== '' && (
         <div className="fixed inset-0 bg-black/60 z-50 flex items-start justify-center pt-8 pb-8 overflow-y-auto" onClick={function() { setModalOpen('') }}>
-          <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full mx-4 relative" onClick={function(e: any) { e.stopPropagation() }}>
+          <div className={'bg-white rounded-2xl shadow-2xl w-full mx-4 relative ' + (modalOpen === 'grilla' ? 'max-w-6xl' : 'max-w-3xl')} onClick={function(e: any) { e.stopPropagation() }}>
             <button onClick={function() { setModalOpen('') }} className="absolute top-4 right-4 w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-200 text-lg font-bold z-10">x</button>
             <div className="p-1">
               <iframe
                 src={'/radar-ejemplos/' + modalOpen + '.html'}
                 className="w-full border-0 rounded-xl"
-                style={{ height: modalOpen === 'mensual' ? '3000px' : modalOpen === 'semanal' ? '4000px' : '2800px' }}
+                style={{ height: modalOpen === 'grilla' ? '3500px' : modalOpen === 'mensual' ? '3000px' : modalOpen === 'semanal' ? '4000px' : '2800px' }}
                 title={'Ejemplo informe ' + modalOpen}
               />
             </div>
