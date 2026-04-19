@@ -76,13 +76,13 @@ export default function ClippingClient() {
       <style>{'\
         @keyframes gradientShift { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }\
         @keyframes fadeInUp { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:translateY(0)} }\
-        @keyframes float { 0%{transform:translateY(0) rotate(-1deg)} 50%{transform:translateY(-8px) rotate(0.5deg)} 100%{transform:translateY(0) rotate(-1deg)} }\
+        @keyframes float { 0%{transform:translateY(0)} 50%{transform:translateY(-4px)} 100%{transform:translateY(0)} }\
         .gradient-text { background:linear-gradient(135deg,#4F46E5,#7C3AED,#4F46E5); background-size:200% 200%; animation:gradientShift 4s ease infinite; -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }\
         .reveal { opacity:0; transform:translateY(28px); transition:opacity 0.7s ease,transform 0.7s ease; }\
         .revealed { opacity:1; transform:translateY(0); }\
         .card-hover { transition:transform 0.3s ease,box-shadow 0.3s ease; }\
         .card-hover:hover { transform:translateY(-4px); box-shadow:0 12px 32px rgba(79,70,229,0.12); }\
-        .email-float { animation:float 5s ease-in-out infinite; }\
+        .email-static { }\
         .toggle-knob { transition:transform 0.3s cubic-bezier(0.4,0,0.2,1); }\
       '}</style>
 
@@ -91,7 +91,7 @@ export default function ClippingClient() {
         <div className="max-w-4xl mx-auto text-center">
           <div className="inline-block bg-indigo-50 text-indigo-700 text-xs font-bold px-5 py-2 rounded-full mb-8 tracking-wide border border-indigo-100" style={{animation:'fadeInUp 0.6s ease forwards'}}>Nuevo producto M&P</div>
           <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-gray-900 mb-6 leading-tight" style={{animation:'fadeInUp 0.6s ease 0.15s forwards',opacity:0}}>
-            Sabe que publica tu competencia.<br/><span className="gradient-text">Y que deberias publicar tu.</span>
+            Publica contenido que funciona.<br/><span className="gradient-text">Basado en lo que hace tu competencia.</span>
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-4 leading-relaxed" style={{animation:'fadeInUp 0.6s ease 0.3s forwards',opacity:0}}>
             Tres entregas automaticas en tu email: monitor diario con alertas, resumen semanal con 3 copies listos para publicar, y grilla mensual con 16 posts planificados.
@@ -172,7 +172,7 @@ export default function ClippingClient() {
 
           <div className="reveal">
           {tab === 'diario' && (
-            <div className="bg-white rounded-2xl border border-gray-200 shadow-2xl overflow-hidden max-w-3xl mx-auto email-float">
+            <div className="bg-white rounded-2xl border border-gray-200 shadow-2xl overflow-hidden max-w-3xl mx-auto email-static">
               <div className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-8 py-7">
                 <p className="font-bold text-xl">Tu Radar diario</p>
                 <p className="text-sm opacity-90 mt-1">Martes 15 de abril de 2026 | 5 cuentas | 8 posts nuevos</p>
@@ -197,11 +197,12 @@ export default function ClippingClient() {
                 </div>
               </div>
               <div className="px-8 py-3 bg-gray-50 border-t border-gray-200 text-center text-xs text-gray-400">Radar by Muller y Perez | Informe diario | 7:30 AM</div>
+              <div className="text-center py-4"><button onClick={function() { setModalOpen('diario') }} className="text-sm font-semibold text-indigo-600 border border-indigo-200 px-6 py-2.5 rounded-lg hover:bg-indigo-50 transition">Ver informe diario completo</button></div>
             </div>
           )}
 
           {tab === 'semanal' && (
-            <div className="bg-white rounded-2xl border border-gray-200 shadow-2xl overflow-hidden max-w-3xl mx-auto email-float">
+            <div className="bg-white rounded-2xl border border-gray-200 shadow-2xl overflow-hidden max-w-3xl mx-auto email-static">
               <div className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-8 py-7">
                 <p className="font-bold text-xl">Resumen semanal + copies sugeridos</p>
                 <p className="text-sm opacity-90 mt-1">Semana del 7 al 13 de abril | 5 cuentas | 31 posts</p>
@@ -244,11 +245,12 @@ export default function ClippingClient() {
                 <p className="text-xs text-green-700 mt-4 font-medium">Generados con OpenAI + Claude + revision QA automatica. Listos para adaptar y publicar.</p>
               </div>
               <div className="px-8 py-3 bg-gray-50 border-t border-gray-200 text-center text-xs text-gray-400">Radar by Muller y Perez | Semanal | Lunes 9:00 AM</div>
+              <div className="text-center py-4"><button onClick={function() { setModalOpen('semanal') }} className="text-sm font-semibold text-indigo-600 border border-indigo-200 px-6 py-2.5 rounded-lg hover:bg-indigo-50 transition">Ver informe semanal completo</button></div>
             </div>
           )}
 
           {tab === 'mensual' && (
-            <div className="bg-white rounded-2xl border border-gray-200 shadow-2xl overflow-hidden max-w-3xl mx-auto email-float">
+            <div className="bg-white rounded-2xl border border-gray-200 shadow-2xl overflow-hidden max-w-3xl mx-auto email-static">
               <div className="bg-gradient-to-r from-purple-700 to-indigo-600 text-white px-8 py-7">
                 <p className="font-bold text-xl">Brief mensual + grilla de contenido</p>
                 <p className="text-sm opacity-90 mt-1">Abril 2026 | 5 cuentas | 127 posts analizados</p>
@@ -290,6 +292,7 @@ export default function ClippingClient() {
                 <p className="text-xs text-green-700 mt-2">+ 12 posts mas en el PDF adjunto con copy completo y hashtags.</p>
               </div>
               <div className="px-8 py-3 bg-gray-50 border-t border-gray-200 text-center text-xs text-gray-400">Radar by Muller y Perez | Brief mensual | 1ro de cada mes 9:00 AM</div>
+              <div className="text-center py-4"><button onClick={function() { setModalOpen('mensual') }} className="text-sm font-semibold text-indigo-600 border border-indigo-200 px-6 py-2.5 rounded-lg hover:bg-indigo-50 transition">Ver brief mensual completo</button></div>
             </div>
           )}
           </div>
