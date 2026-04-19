@@ -11,6 +11,7 @@ var fs = require('fs')
 var childProcess = require('child_process')
 var contenidoModule = require('./radar-contenido.js')
 var grillaModule = require('./radar-grilla-mensual.js')
+var perfilModule = require('./radar-perfil.js')
 
 var APIFY_TOKEN = process.env.APIFY_TOKEN
 var RESEND_KEY = process.env.RESEND
@@ -237,6 +238,20 @@ async function main() {
       }
     }
 
+    // Verificar/generar perfil empresa antes de contenido (semanal/mensual)
+    if ((MODO === 'semanal' || MODO === 'mensual') && misPosts.length >= 2) {
+      var perfilActual = sub.perfil_empresa || {}
+      if (!perfilActual.rubro || !perfilActual.productos || !perfilActual.propuesta_valor) {
+        console.log('   Perfil incompleto, generando automaticamente...')
+        var nuevoPerfil = await perfilModule.generarPerfil(sub)
+        if (nuevoPerfil && nuevoPerfil.rubro) {
+          sub.perfil_empresa = nuevoPerfil
+          await supabase.from('clipping_suscripciones').update({ perfil_empresa: nuevoPerfil, updated_at: new Date().toISOString() }).eq('id', sub.id)
+          console.log('   Perfil actualizado: ' + nuevoPerfil.rubro)
+        }
+      }
+    }
+
     // Pipeline contenido sugerido (semanal/mensual)
     var contenidoSugerido = []
     if ((MODO === 'semanal' || MODO === 'mensual') && misPosts.length >= 2) {
@@ -252,7 +267,7 @@ async function main() {
       grillaMensual = await grillaModule.generarGrillaMensual(misPosts, empresas, sub, mesSig, anioSig)
     }
 
-    var html = generarEmailHTML(misPosts, cuentas, hoy, MODO, resumenIA, empresas, trends, sub.id, contenidoSugerido)
+    var html = generarEmailHTML(misPosts, cuentas, hoy, MODO, resumenIA, empresas, trends, sub.id, contenidoSugerido, sub.estado, sub.plan, sub.trial_ends)
     var pdf = generarPDF(html, hoy, MODO)
     await enviarEmail(destinos, html, hoy, misPosts.length, MODO, pdf)
   }
@@ -517,8 +532,10 @@ function renderTrend(pct, totalN, hasPrev) {
 }
 
 // === EMAIL HTML v5 ===
-function generarEmailHTML(posts, cuentas, fecha, modo, resumenIA, empresas, trends, subId, contenidoSugerido) {
+function generarEmailHTML(posts, cuentas, fecha, modo, resumenIA, empresas, trends, subId, contenidoSugerido, estado, plan, trialEnds) {
   contenidoSugerido = contenidoSugerido || []
+  estado = estado || 'trial'
+  plan = plan || 'starter'
   var fechaLegible = new Date(fecha + 'T12:00:00').toLocaleDateString('es-CL', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
   var titulo = modo === 'mensual' ? 'Resumen mensual' : modo === 'semanal' ? 'Resumen semanal' : 'Tu Radar diario'
   var ventanaLabel = modo === 'diario' ? '72 horas' : modo === 'semanal' ? '7 d&iacute;as' : '30 d&iacute;as'
@@ -719,8 +736,18 @@ function generarEmailHTML(posts, cuentas, fecha, modo, resumenIA, empresas, tren
   // DASHBOARD LINK
   if (subId) {
     h += '<div style="background:white;padding:18px 28px;text-align:center;border-bottom:1px solid #e5e7eb;">'
-    h += '<a href="https://www.mulleryperez.cl/radar/' + subId + '" style="display:inline-block;background:#4338CA;color:white;padding:12px 28px;border-radius:10px;font-size:14px;font-weight:700;text-decoration:none;">Ver tu dashboard completo &#8594;</a>'
-    h += '<p style="margin:8px 0 0;font-size:11px;color:#9ca3af;"><a href="https://www.mulleryperez.cl/radar/configurar/' + subId + '" style="color:#6366f1;text-decoration:none;">Configurar cuentas</a> | <a href="https://www.mulleryperez.cl/radar/' + subId + '" style="color:#6366f1;text-decoration:none;">Ver dashboard</a></p>'
+    if (estado === 'trial') {
+      // Trial: CTA principal es contratar
+      var diasRestantes = trialEnds ? Math.max(0, Math.ceil((new Date(trialEnds).getTime() - Date.now()) / (1000*60*60*24))) : 7
+      h += '<div style="background:#fef3c7;padding:8px 16px;border-radius:8px;margin-bottom:12px;display:inline-block;"><span style="font-size:12px;color:#92400e;font-weight:600;">Prueba gratuita | ' + diasRestantes + ' dias restantes</span></div><br>'
+      h += '<a href="https://www.mulleryperez.cl/clipping/contratar/' + subId + '" style="display:inline-block;background:#4338CA;color:white;padding:12px 28px;border-radius:10px;font-size:14px;font-weight:700;text-decoration:none;">Contrata tu plan &#8594;</a>'
+      h += '<p style="margin:8px 0 0;font-size:11px;color:#9ca3af;"><a href="https://www.mulleryperez.cl/radar/' + subId + '" style="color:#6366f1;text-decoration:none;">Ver dashboard</a></p>'
+    } else {
+      // Activo: CTA principal es configurar cuentas
+      h += '<div style="background:#dcfce7;padding:8px 16px;border-radius:8px;margin-bottom:12px;display:inline-block;"><span style="font-size:12px;color:#166534;font-weight:600;">Plan ' + plan + '</span></div><br>'
+      h += '<a href="https://www.mulleryperez.cl/radar/configurar/' + subId + '" style="display:inline-block;background:#4338CA;color:white;padding:12px 28px;border-radius:10px;font-size:14px;font-weight:700;text-decoration:none;">Configurar cuentas &#8594;</a>'
+      h += '<p style="margin:8px 0 0;font-size:11px;color:#9ca3af;"><a href="https://www.mulleryperez.cl/radar/' + subId + '" style="color:#6366f1;text-decoration:none;">Ver dashboard</a></p>'
+    }
     h += '</div>'
   }
 
