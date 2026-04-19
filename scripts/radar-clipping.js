@@ -720,7 +720,7 @@ function generarEmailHTML(posts, cuentas, fecha, modo, resumenIA, empresas, tren
   if (subId) {
     h += '<div style="background:white;padding:18px 28px;text-align:center;border-bottom:1px solid #e5e7eb;">'
     h += '<a href="https://www.mulleryperez.cl/radar/' + subId + '" style="display:inline-block;background:#4338CA;color:white;padding:12px 28px;border-radius:10px;font-size:14px;font-weight:700;text-decoration:none;">Ver tu dashboard completo &#8594;</a>'
-    h += '<p style="margin:8px 0 0;font-size:11px;color:#9ca3af;">mulleryperez.cl/radar/' + subId + '</p>'
+    h += '<p style="margin:8px 0 0;font-size:11px;color:#9ca3af;"><a href="https://www.mulleryperez.cl/radar/configurar/' + subId + '" style="color:#6366f1;text-decoration:none;">Configurar cuentas</a> | <a href="https://www.mulleryperez.cl/radar/' + subId + '" style="color:#6366f1;text-decoration:none;">Ver dashboard</a></p>'
     h += '</div>'
   }
 

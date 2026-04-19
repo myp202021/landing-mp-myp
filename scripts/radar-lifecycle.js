@@ -106,6 +106,11 @@ function emailBienvenida(sub) {
     + '<p style="margin:0;font-size:14px;color:#4c1d95;"><strong>1ro de cada mes</strong> — Informe mensual con benchmarking y PDF</p>'
     + '</div>'
     + '<p style="font-size:14px;color:#6b7280;">Tu prueba dura 7 dias. Si te sirve, eliges un plan. Si no, se desactiva solo. Sin cargos.</p>'
+    + '<div style="background:#f0fdf4;padding:14px 18px;border-radius:10px;margin:16px 0;border:1px solid #bbf7d0;">'
+    + '<p style="margin:0 0 6px;font-size:13px;color:#166534;"><strong>Tus links privados (guardalos):</strong></p>'
+    + '<p style="margin:0 0 4px;font-size:13px;color:#166534;">Ver tu Radar: <a href="https://www.mulleryperez.cl/radar/' + sub.id + '" style="color:#4338CA;">mulleryperez.cl/radar/' + sub.id.substring(0,8) + '...</a></p>'
+    + '<p style="margin:0;font-size:13px;color:#166534;">Configurar cuentas: <a href="https://www.mulleryperez.cl/radar/configurar/' + sub.id + '" style="color:#4338CA;">Configurar</a></p>'
+    + '</div>'
     + '</div>'
     + footer()
 }
@@ -121,7 +126,7 @@ function emailDia5(sub) {
     + '<li>Te sirvieron las recomendaciones de la IA?</li>'
     + '</ul>'
     + '<p style="font-size:14px;color:#6b7280;">Tu prueba termina en 2 dias. Si Radar te esta sirviendo, elige tu plan para seguir recibiendo informes.</p>'
-    + boton('Ver planes', 'https://www.mulleryperez.cl/clipping#planes')
+    + boton('Ver planes', 'https://www.mulleryperez.cl/clipping/contratar/' + sub.id)
     + '</div>'
     + footer()
 }
@@ -136,7 +141,7 @@ function emailFinTrial(sub) {
     + '<p style="margin:0 0 6px;font-size:14px;color:#166534;"><strong>Pro</strong> — $54.990/mes (anual) — 15 cuentas multi-red + IA</p>'
     + '<p style="margin:0;font-size:14px;color:#166534;"><strong>Business</strong> — $94.990/mes (anual) — 30 cuentas + benchmarking + PDF</p>'
     + '</div>'
-    + boton('Elegir plan', 'https://www.mulleryperez.cl/clipping#planes')
+    + boton('Elegir plan', 'https://www.mulleryperez.cl/clipping/contratar/' + sub.id)
     + '<p style="font-size:13px;color:#9ca3af;text-align:center;">Si no eliges plan, el servicio se desactiva solo. Sin cargos.</p>'
     + '</div>'
     + footer()
@@ -148,7 +153,7 @@ function emailDesactivado(sub) {
     + '<p style="font-size:15px;line-height:1.7;color:#374151;">Hola ' + (sub.nombre || sub.email.split('@')[0]) + ',</p>'
     + '<p style="font-size:15px;line-height:1.7;color:#374151;">Tu prueba gratuita de Radar termino y no elegiste un plan. Tus informes diarios, semanales y mensuales dejaran de llegar.</p>'
     + '<p style="font-size:15px;line-height:1.7;color:#374151;">Si cambias de opinion, puedes reactivar tu Radar en cualquier momento:</p>'
-    + boton('Reactivar Radar', 'https://www.mulleryperez.cl/clipping#planes')
+    + boton('Reactivar Radar', 'https://www.mulleryperez.cl/clipping/contratar/' + sub.id)
     + '<p style="font-size:13px;color:#9ca3af;text-align:center;">Tus cuentas monitoreadas se mantienen guardadas. Al suscribirte, todo vuelve a funcionar.</p>'
     + '</div>'
     + footer()
