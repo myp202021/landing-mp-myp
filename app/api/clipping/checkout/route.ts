@@ -12,6 +12,7 @@ const PLAN_MAP: Record<string, string> = {
   'pro-anual': 'RADAR-PRO-ANUAL',
   'business-mensual': 'RADAR-BUSINESS-MENSUAL',
   'business-anual': 'RADAR-BUSINESS-ANUAL',
+  'test-mensual': 'RADAR-TEST',
 }
 
 function signFlow(params: Record<string, string>): string {
