@@ -57,13 +57,16 @@ export async function POST(req: NextRequest) {
     if (custData.customerId) {
       customerId = String(custData.customerId)
     } else if (custData.code === 300 || custData.code === 501 || (custData.message && custData.message.includes('externalId'))) {
-      // Customer ya existe, obtenerlo
-      const getParams: Record<string, string> = { apiKey: FLOW_API_KEY, email: email }
-      getParams.s = signFlow(getParams)
-      const getBody = Object.keys(getParams).map(function(k) { return encodeURIComponent(k) + '=' + encodeURIComponent(getParams[k]) }).join('&')
-      const getRes = await fetch(FLOW_URL + '/customer/getByEmail?' + getBody)
-      const getData = await getRes.json()
-      customerId = String(getData.customerId || '')
+      // Customer ya existe, buscarlo en la lista
+      const listParams: Record<string, string> = { apiKey: FLOW_API_KEY, start: '0', limit: '100' }
+      listParams.s = signFlow(listParams)
+      const listQs = Object.keys(listParams).map(function(k) { return encodeURIComponent(k) + '=' + encodeURIComponent(listParams[k]) }).join('&')
+      const listRes = await fetch(FLOW_URL + '/customer/list?' + listQs)
+      const listData = await listRes.json()
+      if (listData.data && Array.isArray(listData.data)) {
+        const found = listData.data.find(function(c: any) { return c.email === email })
+        if (found) customerId = String(found.customerId)
+      }
     }
 
     if (!customerId) {
