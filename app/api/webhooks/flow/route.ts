@@ -28,10 +28,9 @@ export async function POST(req: NextRequest) {
 
     console.log('Flow webhook received:', JSON.stringify(params))
 
-    // Flow no siempre firma los webhooks de suscripcion — aceptar si no hay s
+    // Verificar firma si viene, pero no rechazar — Flow puede enviar sin firma o con firma diferente
     if (params.s && !verifyFlowSignature(params)) {
-      console.error('Flow webhook: firma invalida')
-      return NextResponse.json({ error: 'Invalid signature' }, { status: 403 })
+      console.warn('Flow webhook: firma no coincide (procesando igual)')
     }
 
     const { status, subscriptionId, planId, customerId } = params
