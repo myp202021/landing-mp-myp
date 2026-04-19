@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { createClient } from '@supabase/supabase-js'
 import crypto from 'crypto'
 
 const FLOW_API_KEY = process.env.FLOW_API_KEY || ''
@@ -73,6 +74,10 @@ export async function POST(req: NextRequest) {
       console.error('Flow customer error:', custData)
       return NextResponse.json({ error: 'Error creando cliente en Flow', detail: custData }, { status: 500 })
     }
+
+    // Guardar flow_customer_id en Supabase (para que el webhook pueda encontrar la suscripcion)
+    const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!)
+    await supabase.from('clipping_suscripciones').update({ flow_customer_id: customerId, updated_at: new Date().toISOString() }).eq('email', email)
 
     // Paso 2: Registrar tarjeta del customer (genera URL de pago)
     const regData = await flowRequest('/customer/register', {
