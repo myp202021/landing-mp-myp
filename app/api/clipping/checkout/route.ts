@@ -20,6 +20,20 @@ function signFlow(params: Record<string, string>): string {
   return crypto.createHmac('sha256', FLOW_SECRET).update(sorted).digest('hex')
 }
 
+async function flowRequest(endpoint: string, params: Record<string, string>) {
+  params.apiKey = FLOW_API_KEY
+  params.s = signFlow(params)
+  const formBody = Object.keys(params).map(function(k) {
+    return encodeURIComponent(k) + '=' + encodeURIComponent(params[k])
+  }).join('&')
+  const res = await fetch(FLOW_URL + endpoint, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: formBody,
+  })
+  return await res.json()
+}
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json()
@@ -30,34 +44,48 @@ export async function POST(req: NextRequest) {
     }
 
     const planId = PLAN_MAP[plan]
-    const params: Record<string, string> = {
-      apiKey: FLOW_API_KEY,
-      planId: planId,
-      customer_email: email,
-      customer_name: nombre || email.split('@')[0],
-      url_return: 'https://www.mulleryperez.cl/clipping/confirmacion',
-      url_confirm: 'https://www.mulleryperez.cl/api/webhooks/flow',
-    }
-    params.s = signFlow(params)
+    const customerName = (nombre || email.split('@')[0]).replace(/[^a-zA-Z0-9 ]/g, '')
 
-    const formBody = Object.keys(params).map(function(k) {
-      return encodeURIComponent(k) + '=' + encodeURIComponent(params[k])
-    }).join('&')
-
-    const res = await fetch(FLOW_URL + '/subscription/create', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: formBody,
+    // Paso 1: Crear o obtener customer en Flow
+    const custData = await flowRequest('/customer/create', {
+      name: customerName,
+      email: email,
+      externalId: email,
     })
 
-    const data = await res.json()
-
-    if (!res.ok || !data.url) {
-      console.error('Flow checkout error:', data)
-      return NextResponse.json({ error: 'Error al crear suscripcion en Flow', detail: data }, { status: 500 })
+    let customerId = ''
+    if (custData.customerId) {
+      customerId = String(custData.customerId)
+    } else if (custData.code === 300) {
+      // Customer ya existe, obtenerlo
+      const getParams: Record<string, string> = { apiKey: FLOW_API_KEY, email: email }
+      getParams.s = signFlow(getParams)
+      const getBody = Object.keys(getParams).map(function(k) { return encodeURIComponent(k) + '=' + encodeURIComponent(getParams[k]) }).join('&')
+      const getRes = await fetch(FLOW_URL + '/customer/getByEmail?' + getBody)
+      const getData = await getRes.json()
+      customerId = String(getData.customerId || '')
     }
 
-    return NextResponse.json({ url: data.url + '?token=' + data.token })
+    if (!customerId) {
+      console.error('Flow customer error:', custData)
+      return NextResponse.json({ error: 'Error creando cliente en Flow', detail: custData }, { status: 500 })
+    }
+
+    // Paso 2: Crear suscripcion
+    const subData = await flowRequest('/subscription/create', {
+      planId: planId,
+      customerId: customerId,
+      url_return: 'https://www.mulleryperez.cl/clipping/confirmacion',
+      url_callback: 'https://www.mulleryperez.cl/api/webhooks/flow',
+    })
+
+    if (!subData.url && !subData.token) {
+      console.error('Flow subscription error:', subData)
+      return NextResponse.json({ error: 'Error creando suscripcion en Flow', detail: subData }, { status: 500 })
+    }
+
+    const redirectUrl = subData.url ? subData.url + '?token=' + subData.token : 'https://www.flow.cl/app/pay/suscription?token=' + subData.token
+    return NextResponse.json({ url: redirectUrl })
   } catch (err: any) {
     console.error('Checkout error:', err.message)
     return NextResponse.json({ error: err.message }, { status: 500 })
