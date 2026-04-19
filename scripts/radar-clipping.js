@@ -616,6 +616,20 @@ function generarEmailHTML(posts, cuentas, fecha, modo, resumenIA, empresas, tren
   }
   h += '</div>'
 
+  // CTA PRINCIPAL (arriba, visible sin scroll)
+  if (subId) {
+    h += '<div style="background:white;padding:16px 28px;text-align:center;border-bottom:1px solid #e5e7eb;">'
+    if (estado === 'trial') {
+      var diasR = trialEnds ? Math.max(0, Math.ceil((new Date(trialEnds).getTime() - Date.now()) / (1000*60*60*24))) : 7
+      h += '<span style="background:#fef3c7;padding:6px 14px;border-radius:8px;font-size:12px;color:#92400e;font-weight:600;">Prueba gratuita | ' + diasR + ' dias restantes</span> '
+      h += '<a href="https://www.mulleryperez.cl/clipping/contratar/' + subId + '" style="display:inline-block;background:#4338CA;color:white;padding:10px 24px;border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;margin-left:8px;">Contrata tu plan</a>'
+    } else {
+      h += '<span style="background:#dcfce7;padding:6px 14px;border-radius:8px;font-size:12px;color:#166534;font-weight:600;">Plan ' + plan + '</span> '
+      h += '<a href="https://www.mulleryperez.cl/radar/configurar/' + subId + '" style="display:inline-block;background:#4338CA;color:white;padding:10px 24px;border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;margin-left:8px;">Configurar cuentas</a>'
+    }
+    h += '</div>'
+  }
+
   // TABLA COMPARATIVA POR EMPRESA
   h += '<div style="background:white;padding:20px 28px;border-bottom:1px solid #e5e7eb;">'
   h += '<p style="font-weight:700;color:#0F172A;font-size:13px;margin:0 0 14px;letter-spacing:0.3px;">ACTIVIDAD POR EMPRESA</p>'
