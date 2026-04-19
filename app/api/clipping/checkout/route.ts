@@ -56,7 +56,7 @@ export async function POST(req: NextRequest) {
     let customerId = ''
     if (custData.customerId) {
       customerId = String(custData.customerId)
-    } else if (custData.code === 300) {
+    } else if (custData.code === 300 || custData.code === 501 || (custData.message && custData.message.includes('externalId'))) {
       // Customer ya existe, obtenerlo
       const getParams: Record<string, string> = { apiKey: FLOW_API_KEY, email: email }
       getParams.s = signFlow(getParams)
