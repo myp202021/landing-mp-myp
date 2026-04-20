@@ -38,11 +38,13 @@ async function flowRequest(endpoint: string, params: Record<string, string>) {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json()
-    const { plan, email, nombre } = body
+    const { plan, email, nombre, suscripcionId } = body
 
     if (!plan || !email || !PLAN_MAP[plan]) {
       return NextResponse.json({ error: 'Plan o email invalido' }, { status: 400 })
     }
+
+    const returnUrl = 'https://www.mulleryperez.cl/clipping/confirmacion?email=' + encodeURIComponent(email)
 
     const planId = PLAN_MAP[plan]
     const customerName = (nombre || email.split('@')[0]).replace(/[^a-zA-Z0-9 ]/g, '')
@@ -77,30 +79,48 @@ export async function POST(req: NextRequest) {
 
     // Guardar flow_customer_id en Supabase (para que el webhook pueda encontrar la suscripcion)
     const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!)
-    await supabase.from('clipping_suscripciones').update({ flow_customer_id: customerId, updated_at: new Date().toISOString() }).eq('email', email)
+    const updateFilter = suscripcionId
+      ? supabase.from('clipping_suscripciones').update({ flow_customer_id: customerId, updated_at: new Date().toISOString() }).eq('id', suscripcionId)
+      : supabase.from('clipping_suscripciones').update({ flow_customer_id: customerId, updated_at: new Date().toISOString() }).eq('email', email)
+    await updateFilter
 
     // Paso 2: Registrar tarjeta del customer (genera URL de pago)
     const regData = await flowRequest('/customer/register', {
       customerId: customerId,
-      url_return: 'https://www.mulleryperez.cl/clipping/confirmacion',
+      url_return: returnUrl,
     })
 
     if (regData.url && regData.token) {
-      // Customer necesita inscribir tarjeta primero
-      // Guardamos el planId para crear la suscripcion despues del registro
-      return NextResponse.json({ url: regData.url + '?token=' + regData.token, subscriptionPending: planId })
+      const planBase = plan.split('-')[0]
+      const periodo = plan.split('-')[1] || 'mensual'
+      await supabase.from('clipping_suscripciones').update({
+        plan: planBase,
+        periodo: periodo,
+        flow_plan_pendiente: planId,
+        updated_at: new Date().toISOString(),
+      }).eq(suscripcionId ? 'id' : 'email', suscripcionId || email)
+      return NextResponse.json({ url: regData.url + '?token=' + regData.token })
     }
 
     // Si customer ya tiene tarjeta, crear suscripcion directamente
     const subData = await flowRequest('/subscription/create', {
       planId: planId,
       customerId: customerId,
-      url_return: 'https://www.mulleryperez.cl/clipping/confirmacion',
+      url_return: returnUrl,
       url_callback: 'https://www.mulleryperez.cl/api/webhooks/flow',
     })
 
     if (subData.subscriptionId) {
-      return NextResponse.json({ url: 'https://www.mulleryperez.cl/clipping/confirmacion', subscriptionId: subData.subscriptionId })
+      const planBase = plan.split('-')[0]
+      const periodo = plan.split('-')[1] || 'mensual'
+      await supabase.from('clipping_suscripciones').update({
+        flow_subscription_id: String(subData.subscriptionId),
+        plan: planBase,
+        periodo: periodo,
+        estado: 'activo',
+        updated_at: new Date().toISOString(),
+      }).eq(suscripcionId ? 'id' : 'email', suscripcionId || email)
+      return NextResponse.json({ url: returnUrl, subscriptionId: subData.subscriptionId })
     }
 
     console.error('Flow error:', subData)

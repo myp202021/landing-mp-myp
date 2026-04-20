@@ -267,7 +267,7 @@ async function main() {
       grillaMensual = await grillaModule.generarGrillaMensual(misPosts, empresas, sub, mesSig, anioSig)
     }
 
-    var html = generarEmailHTML(misPosts, cuentas, hoy, MODO, resumenIA, empresas, trends, sub.id, contenidoSugerido, sub.estado, sub.plan, sub.trial_ends)
+    var html = generarEmailHTML(misPosts, cuentas, hoy, MODO, resumenIA, empresas, trends, sub.id, contenidoSugerido, sub.estado, sub.plan, sub.trial_ends, grillaMensual)
     var pdf = generarPDF(html, hoy, MODO)
     await enviarEmail(destinos, html, hoy, misPosts.length, MODO, pdf)
   }
@@ -532,8 +532,9 @@ function renderTrend(pct, totalN, hasPrev) {
 }
 
 // === EMAIL HTML v5 ===
-function generarEmailHTML(posts, cuentas, fecha, modo, resumenIA, empresas, trends, subId, contenidoSugerido, estado, plan, trialEnds) {
+function generarEmailHTML(posts, cuentas, fecha, modo, resumenIA, empresas, trends, subId, contenidoSugerido, estado, plan, trialEnds, grillaMensual) {
   contenidoSugerido = contenidoSugerido || []
+  grillaMensual = grillaMensual || null
   estado = estado || 'trial'
   plan = plan || 'starter'
   var fechaLegible = new Date(fecha + 'T12:00:00').toLocaleDateString('es-CL', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
@@ -742,6 +743,31 @@ function generarEmailHTML(posts, cuentas, fecha, modo, resumenIA, empresas, tren
         h += '<p style="margin:0;font-size:12px;color:#059669;line-height:1.5;"><strong>Por que funciona:</strong> ' + cs.justificacion + '</p>'
       }
       if (cs.fixed) h += '<p style="margin:4px 0 0;font-size:10px;color:#d97706;">* Copy corregido automaticamente por QA</p>'
+      h += '</div>'
+    }
+    h += '</div>'
+  }
+
+  // GRILLA MENSUAL (solo plan business, solo modo mensual)
+  if (grillaMensual && grillaMensual.posts && grillaMensual.posts.length > 0) {
+    h += '<div style="background:white;padding:22px 28px;border-top:4px solid #8b5cf6;margin-top:3px;">'
+    h += '<table style="width:100%;margin-bottom:16px;"><tr><td><span style="background:#8b5cf6;color:white;padding:6px 16px;border-radius:8px;font-size:13px;font-weight:700;">Grilla mensual</span></td>'
+    h += '<td style="text-align:right;font-size:11px;color:#6b7280;">' + grillaMensual.posts.length + ' posts | Calendario ' + (grillaMensual.mes || '') + '</td></tr></table>'
+    for (var gi = 0; gi < grillaMensual.posts.length; gi++) {
+      var gp = grillaMensual.posts[gi]
+      var gpColor = (gp.plataforma || '').includes('Instagram') ? '#E4405F' : (gp.plataforma || '').includes('LinkedIn') ? '#0A66C2' : '#1877F2'
+      h += '<div style="padding:14px;background:#f5f3ff;border-radius:10px;border-left:4px solid #8b5cf6;margin-bottom:10px;">'
+      h += '<table style="width:100%;margin-bottom:6px;font-size:11px;"><tr>'
+      h += '<td><span style="background:' + gpColor + ';color:white;padding:2px 8px;border-radius:4px;font-weight:600;">' + (gp.plataforma || 'IG') + '</span>'
+      h += ' <span style="color:#6b7280;">' + (gp.fecha_sugerida || 'Dia ' + (gi + 1)) + '</span></td>'
+      h += '<td style="text-align:right;"><span style="background:#ede9fe;color:#5b21b6;padding:2px 8px;border-radius:4px;font-weight:600;">' + (gp.tipo_post || 'Post') + '</span></td>'
+      h += '</tr></table>'
+      h += '<p style="margin:0 0 6px;font-size:14px;font-weight:700;color:#0F172A;">' + (gp.titulo || '') + '</p>'
+      h += '<div style="background:white;padding:12px;border-radius:8px;border:1px solid #ddd6fe;margin-bottom:6px;">'
+      h += '<p style="margin:0 0 3px;font-size:10px;font-weight:700;color:#7c3aed;letter-spacing:0.5px;">COPY</p>'
+      h += '<p style="margin:0;font-size:12px;color:#374151;line-height:1.6;white-space:pre-line;">' + (gp.copy || '').replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</p>'
+      h += '</div>'
+      if (gp.nota_diseno) h += '<p style="margin:0;font-size:11px;color:#7c3aed;">Diseno: ' + gp.nota_diseno + '</p>'
       h += '</div>'
     }
     h += '</div>'

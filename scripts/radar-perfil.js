@@ -154,7 +154,8 @@ async function generarPerfil(suscriptor) {
     })
     if (!r.ok) throw new Error('HTTP ' + r.status)
     var data = await r.json()
-    var perfil = JSON.parse(data.choices[0].message.content)
+    var raw = data.choices[0].message.content.replace(/^```json\s*/, '').replace(/\s*```$/, '')
+    var perfil = JSON.parse(raw)
 
     // Merge con datos existentes (no sobreescribir lo que el usuario puso)
     var resultado = {

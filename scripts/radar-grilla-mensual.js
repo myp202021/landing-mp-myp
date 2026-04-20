@@ -249,7 +249,8 @@ async function generarBrief(nombre, rubro, tono, difs, plats, insights, mes, ani
     })
     if (!res.ok) throw new Error('HTTP ' + res.status)
     var data = await res.json()
-    return JSON.parse(data.choices[0].message.content)
+    var raw = data.choices[0].message.content.replace(/^```json\s*/, '').replace(/\s*```$/, '')
+    return JSON.parse(raw)
   } catch (e) {
     console.error('   Brief error: ' + e.message)
     return null

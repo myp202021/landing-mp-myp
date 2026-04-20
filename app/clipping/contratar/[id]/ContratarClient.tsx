@@ -42,7 +42,7 @@ export default function ContratarClient(props: { suscripcionId: string }) {
       var res = await fetch('/api/clipping/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ plan: planId + '-' + periodo, email: sub.email, nombre: sub.nombre || sub.email }),
+        body: JSON.stringify({ plan: planId + '-' + periodo, email: sub.email, nombre: sub.nombre || sub.email, suscripcionId: props.suscripcionId }),
       })
       var data = await res.json()
       if (data.url) {
