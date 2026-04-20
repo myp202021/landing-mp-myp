@@ -25,8 +25,13 @@ export default function ContratarClient(props: { suscripcionId: string }) {
   var [error, setError] = useState('')
   var [anual, setAnual] = useState(true)
   var [procesando, setProcesando] = useState(false)
-  var isTest = typeof window !== 'undefined' && window.location.search.includes('test=1')
-  var PLANES = isTest ? [PLAN_TEST].concat(PLANES_BASE) : PLANES_BASE
+  var [showTest, setShowTest] = useState(false)
+
+  useEffect(function() {
+    if (window.location.search.includes('test=1')) setShowTest(true)
+  }, [])
+
+  var PLANES = showTest ? [PLAN_TEST].concat(PLANES_BASE) : PLANES_BASE
 
   useEffect(function() {
     fetch(SUPABASE_URL + '/rest/v1/clipping_suscripciones?id=eq.' + props.suscripcionId + '&select=*', { headers: hdrs() })
