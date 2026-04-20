@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect } from 'react'
 
-var SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
-var SUPABASE_ANON = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
+var SUPABASE_URL = (process.env.NEXT_PUBLIC_SUPABASE_URL || '').trim()
+var SUPABASE_ANON = (process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '').trim()
 
 function headers() {
   return { 'apikey': SUPABASE_ANON, 'Authorization': 'Bearer ' + SUPABASE_ANON, 'Content-Type': 'application/json' }
