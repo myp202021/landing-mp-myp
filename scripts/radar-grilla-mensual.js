@@ -46,15 +46,24 @@ async function generarGrillaMensual(posts, empresas, suscriptor, mesSiguiente, a
   var tono = perfil.tono || 'profesional y directo'
   var diferenciadores = perfil.diferenciadores || []
   var plataformas = extraerPlataformas(suscriptor.cuentas || [])
+  var webCliente = perfil.web || ''
+  var igCliente = perfil.instagram || ''
+  var liCliente = perfil.linkedin || ''
+  var fbCliente = perfil.facebook || ''
+  var propuestaValor = perfil.propuesta_valor || ''
+  var descripcionCliente = perfil.descripcion || ''
 
-  console.log('   Empresa: ' + nombreEmpresa + ' | Rubro: ' + rubro + ' | Plataformas: ' + plataformas.join(', '))
+  console.log('   Empresa: ' + nombreEmpresa + ' | Rubro: ' + rubro + ' | Web: ' + (webCliente || 'n/a') + ' | Plataformas: ' + plataformas.join(', '))
 
   // Extraer insights de los posts de competencia
   var insights = extraerInsights(posts)
 
   // ═══ PASO 1: OpenAI genera brief ═══
   console.log('   GRILLA PASO 1: OpenAI genera brief...')
-  var brief = await generarBrief(nombreEmpresa, rubro, tono, diferenciadores, plataformas, insights, mesSiguiente, anio)
+  var brief = await generarBrief(nombreEmpresa, rubro, tono, diferenciadores, plataformas, insights, mesSiguiente, anio, {
+    web: webCliente, instagram: igCliente, linkedin: liCliente, facebook: fbCliente,
+    propuesta_valor: propuestaValor, descripcion: descripcionCliente
+  })
   if (!brief || !brief.posts || brief.posts.length === 0) {
     console.log('   Brief vacio, abortando grilla')
     return null
@@ -203,14 +212,24 @@ function extraerInsights(posts) {
 // ═══════════════════════════════════════════════
 // PASO 1: OpenAI genera brief
 // ═══════════════════════════════════════════════
-async function generarBrief(nombre, rubro, tono, difs, plats, insights, mes, anio) {
+async function generarBrief(nombre, rubro, tono, difs, plats, insights, mes, anio, extra) {
   var est = ESTACIONALIDAD[mes] || ''
+  extra = extra || {}
 
-  var prompt = 'Eres director de estrategia de contenido para redes sociales B2B en Chile. '
+  var empresaExtra = ''
+  if (extra.descripcion) empresaExtra += 'Descripcion: ' + extra.descripcion + '\n'
+  if (extra.propuesta_valor) empresaExtra += 'Propuesta de valor: ' + extra.propuesta_valor + '\n'
+  if (extra.web) empresaExtra += 'Web: ' + extra.web + '\n'
+  if (extra.instagram) empresaExtra += 'Instagram: ' + extra.instagram + '\n'
+  if (extra.linkedin) empresaExtra += 'LinkedIn: ' + extra.linkedin + '\n'
+  if (extra.facebook) empresaExtra += 'Facebook: ' + extra.facebook + '\n'
+
+  var prompt = 'Eres director de estrategia de contenido para redes sociales en Chile. '
     + 'Genera un plan de 16 posts para ' + MESES[mes] + ' ' + anio + '.\n\n'
     + '=== EMPRESA ===\n' + nombre + ' | Rubro: ' + rubro + '\n'
     + 'Tono: ' + tono + '\n'
     + (difs.length > 0 ? 'Diferenciadores: ' + difs.join(', ') + '\n' : '')
+    + empresaExtra
     + 'Plataformas: ' + plats.join(', ') + '\n\n'
     + '=== CONTEXTO COMPETITIVO (datos reales de Radar) ===\n'
     + 'Posts de competencia analizados: ' + insights.totalPosts + '\n'

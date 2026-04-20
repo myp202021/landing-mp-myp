@@ -20,7 +20,7 @@ var PALABRAS_PROHIBIDAS = [
 // ═══════════════════════════════════════════════
 // PASO 1: OpenAI analiza y genera briefs
 // ═══════════════════════════════════════════════
-async function paso1_analizar(posts, empresas, modo) {
+async function paso1_analizar(posts, empresas, modo, perfil) {
   console.log('   CONTENIDO PASO 1: OpenAI analiza...')
 
   var postsSummary = posts.slice(0, 40).map(function(p) {
@@ -29,11 +29,27 @@ async function paso1_analizar(posts, empresas, modo) {
 
   var empresasStr = Object.keys(empresas).join(', ')
 
-  var prompt = 'Eres un estratega de contenido digital para empresas B2B en Chile. '
-    + 'Analiza estos posts de la competencia de la industria de RRHH y control de asistencia.\n\n'
+  var clienteInfo = ''
+  if (perfil && perfil.nombre) {
+    clienteInfo = '\nCLIENTE (para quien creas contenido):\n'
+    clienteInfo += '- Empresa: ' + perfil.nombre + '\n'
+    if (perfil.rubro) clienteInfo += '- Rubro: ' + perfil.rubro + '\n'
+    if (perfil.descripcion) clienteInfo += '- Descripcion: ' + perfil.descripcion + '\n'
+    if (perfil.tono) clienteInfo += '- Tono: ' + perfil.tono + '\n'
+    if (perfil.web) clienteInfo += '- Web: ' + perfil.web + '\n'
+    if (perfil.instagram) clienteInfo += '- Instagram: ' + perfil.instagram + '\n'
+    if (perfil.linkedin) clienteInfo += '- LinkedIn: ' + perfil.linkedin + '\n'
+    if (perfil.facebook) clienteInfo += '- Facebook: ' + perfil.facebook + '\n'
+    if (perfil.propuesta_valor) clienteInfo += '- Propuesta de valor: ' + perfil.propuesta_valor + '\n'
+    if (perfil.diferenciadores && perfil.diferenciadores.length) clienteInfo += '- Diferenciadores: ' + perfil.diferenciadores.join(', ') + '\n'
+  }
+
+  var prompt = 'Eres un estratega de contenido digital para empresas en Chile. '
+    + 'Analiza estos posts de la competencia y genera contenido para el cliente.\n\n'
+    + clienteInfo + '\n'
     + 'POSTS DE LA SEMANA:\n' + postsSummary + '\n\n'
-    + 'EMPRESAS MONITOREADAS: ' + empresasStr + '\n\n'
-    + 'TAREA: Genera exactamente 3 briefs de contenido para que el cliente (la empresa que contrata Radar) publique esta semana. '
+    + 'EMPRESAS MONITOREADAS (competencia): ' + empresasStr + '\n\n'
+    + 'TAREA: Genera exactamente 3 briefs de contenido para que el cliente publique esta semana. '
     + 'Cada brief debe ser distinto en angulo y plataforma.\n\n'
     + 'Para cada brief incluye:\n'
     + '- plataforma: Instagram|LinkedIn|Facebook\n'
@@ -72,9 +88,23 @@ async function paso1_analizar(posts, empresas, modo) {
 // ═══════════════════════════════════════════════
 // PASO 2: Claude crea copies completos
 // ═══════════════════════════════════════════════
-async function paso2_crear(briefs, posts) {
+async function paso2_crear(briefs, posts, perfil) {
   console.log('   CONTENIDO PASO 2: Claude crea copies...')
   var copies = []
+  perfil = perfil || {}
+
+  var clienteCtx = ''
+  if (perfil.nombre) {
+    clienteCtx = '\nEMPRESA CLIENTE: ' + perfil.nombre
+    if (perfil.rubro) clienteCtx += ' | Rubro: ' + perfil.rubro
+    if (perfil.descripcion) clienteCtx += '\nDescripcion: ' + perfil.descripcion
+    if (perfil.propuesta_valor) clienteCtx += '\nPropuesta de valor: ' + perfil.propuesta_valor
+    if (perfil.tono) clienteCtx += '\nTono deseado: ' + perfil.tono
+    if (perfil.web) clienteCtx += '\nWeb: ' + perfil.web
+    if (perfil.instagram) clienteCtx += ' | IG: ' + perfil.instagram
+    if (perfil.linkedin) clienteCtx += ' | LI: ' + perfil.linkedin
+    clienteCtx += '\n'
+  }
 
   for (var i = 0; i < briefs.length; i++) {
     var brief = briefs[i]
@@ -84,8 +114,9 @@ async function paso2_crear(briefs, posts) {
       return (p.nombre || p.handle) + ' publico: "' + p.texto.substring(0, 80) + '"'
     }).join('\n')
 
-    var prompt = 'Eres un copywriter senior especializado en redes sociales B2B para empresas chilenas. '
+    var prompt = 'Eres un copywriter senior especializado en redes sociales para empresas chilenas. '
       + 'Escribes en espanol chileno profesional: directo, sin rodeos, sin ChatGPT speak, sin frases cliche.\n\n'
+      + clienteCtx + '\n'
       + 'BRIEF:\n'
       + '- Plataforma: ' + brief.plataforma + '\n'
       + '- Tipo de post: ' + brief.tipo + '\n'
@@ -230,7 +261,7 @@ async function paso3_revisar(copies) {
 // ═══════════════════════════════════════════════
 // FUNCION PRINCIPAL (llamada desde radar-clipping.js)
 // ═══════════════════════════════════════════════
-async function generarContenidoSugerido(posts, empresas, modo) {
+async function generarContenidoSugerido(posts, empresas, modo, perfil) {
   console.log('\n   === PIPELINE CONTENIDO SUGERIDO ===')
 
   if (!OPENAI_KEY || !ANTHROPIC_KEY) {
@@ -244,14 +275,14 @@ async function generarContenidoSugerido(posts, empresas, modo) {
   }
 
   // Paso 1: OpenAI analiza
-  var briefs = await paso1_analizar(posts, empresas, modo)
+  var briefs = await paso1_analizar(posts, empresas, modo, perfil || {})
   if (briefs.length === 0) {
     console.log('   Sin briefs, abortando pipeline')
     return []
   }
 
   // Paso 2: Claude crea
-  var copies = await paso2_crear(briefs, posts)
+  var copies = await paso2_crear(briefs, posts, perfil || {})
   if (copies.length === 0) {
     console.log('   Sin copies, abortando pipeline')
     return []

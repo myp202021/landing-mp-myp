@@ -21,6 +21,10 @@ export default function ConfigClient(props: { suscripcionId: string }) {
   var [nombre, setNombre] = useState('')
   var [descripcion, setDescripcion] = useState('')
   var [tono, setTono] = useState('profesional')
+  var [web, setWeb] = useState('')
+  var [igPropio, setIgPropio] = useState('')
+  var [liPropio, setLiPropio] = useState('')
+  var [fbPropio, setFbPropio] = useState('')
   var [kwStr, setKwStr] = useState('')
 
   useEffect(function() { loadData() }, [])
@@ -41,6 +45,10 @@ export default function ConfigClient(props: { suscripcionId: string }) {
       setNombre(perfil.nombre || s.nombre || '')
       setDescripcion(perfil.descripcion || '')
       setTono(perfil.tono || 'profesional')
+      setWeb(perfil.web || '')
+      setIgPropio(perfil.instagram || '')
+      setLiPropio(perfil.linkedin || '')
+      setFbPropio(perfil.facebook || '')
     } catch (e) { setError('Error cargando datos') }
     setLoading(false)
   }
@@ -78,7 +86,15 @@ export default function ConfigClient(props: { suscripcionId: string }) {
         body: JSON.stringify({
           cuentas: allCuentas,
           nombre: nombre,
-          perfil_empresa: { nombre: nombre, descripcion: descripcion, tono: tono },
+          perfil_empresa: {
+            nombre: nombre,
+            descripcion: descripcion,
+            tono: tono,
+            web: web,
+            instagram: igPropio,
+            linkedin: liPropio,
+            facebook: fbPropio,
+          },
           updated_at: new Date().toISOString(),
         }),
       })
@@ -104,10 +120,22 @@ export default function ConfigClient(props: { suscripcionId: string }) {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="bg-gradient-to-r from-indigo-700 to-purple-700 text-white px-6 py-8">
-        <div className="max-w-3xl mx-auto">
-          <p className="text-xs opacity-60 tracking-widest mb-2">RADAR BY MULLER Y PEREZ</p>
-          <h1 className="text-2xl font-bold">Configurar tu Radar</h1>
-          <p className="text-sm opacity-80 mt-1">Plan {sub.plan} | {used} de {limit} cuentas usadas</p>
+        <div className="max-w-3xl mx-auto flex justify-between items-center">
+          <div>
+            <p className="text-xs opacity-60 tracking-widest mb-2">RADAR BY MULLER Y PEREZ</p>
+            <h1 className="text-2xl font-bold">Configurar tu Radar</h1>
+            <p className="text-sm opacity-80 mt-1">Plan {sub.plan} | {used} de {limit} cuentas usadas</p>
+          </div>
+          {sub.estado === 'trial' && (
+            <a href={'/clipping/contratar/' + props.suscripcionId} className="bg-white text-indigo-700 font-bold px-6 py-3 rounded-xl text-sm hover:bg-indigo-50 transition shadow-lg">
+              Contratar plan
+            </a>
+          )}
+          {sub.estado === 'activo' && sub.plan !== 'business' && (
+            <a href={'/clipping/contratar/' + props.suscripcionId} className="bg-white text-indigo-700 font-bold px-6 py-3 rounded-xl text-sm hover:bg-indigo-50 transition shadow-lg">
+              Subir de plan
+            </a>
+          )}
         </div>
       </div>
 
@@ -136,10 +164,37 @@ export default function ConfigClient(props: { suscripcionId: string }) {
           </div>
         </div>
 
-        {/* CUENTAS */}
+        {/* WEB Y RRSS DEL CLIENTE */}
+        <div className="bg-white rounded-xl border border-gray-200 p-6 mb-6">
+          <h2 className="font-bold text-gray-900 mb-2">Tu presencia digital</h2>
+          <p className="text-sm text-gray-500 mb-4">Usamos esta info para generar copies y grillas de contenido alineados a tu marca.</p>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-1">Sitio web</label>
+              <input type="text" value={web} onChange={function(e: any) { setWeb(e.target.value) }} placeholder="www.tuempresa.cl" className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500" />
+            </div>
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-1">Instagram</label>
+              <input type="text" value={igPropio} onChange={function(e: any) { setIgPropio(e.target.value) }} placeholder="@tuempresa" className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500" />
+            </div>
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-1">LinkedIn</label>
+              <input type="text" value={liPropio} onChange={function(e: any) { setLiPropio(e.target.value) }} placeholder="linkedin.com/company/tuempresa" className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500" />
+            </div>
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-1">Facebook</label>
+              <input type="text" value={fbPropio} onChange={function(e: any) { setFbPropio(e.target.value) }} placeholder="facebook.com/tuempresa" className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500" />
+            </div>
+          </div>
+        </div>
+
+        {/* CUENTAS COMPETIDORES */}
         <div className="bg-white rounded-xl border border-gray-200 p-6 mb-6">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="font-bold text-gray-900">Cuentas a monitorear</h2>
+            <div>
+              <h2 className="font-bold text-gray-900">Competidores a monitorear</h2>
+              <p className="text-sm text-gray-500 mt-1">Cuentas de la competencia que Radar analiza diariamente.</p>
+            </div>
             <span className={'text-sm font-semibold ' + (used >= limit ? 'text-red-500' : 'text-gray-500')}>{used} / {limit}</span>
           </div>
 
@@ -162,7 +217,10 @@ export default function ConfigClient(props: { suscripcionId: string }) {
             <button onClick={addCuenta} className="mt-2 text-sm text-indigo-600 font-semibold hover:text-indigo-700">+ Agregar cuenta</button>
           )}
           {used >= limit && (
-            <p className="mt-2 text-sm text-amber-600">Llegaste al limite de tu plan ({limit} cuentas). Sube de plan para agregar mas.</p>
+            <div className="mt-3 flex items-center gap-3">
+              <p className="text-sm text-amber-600">Llegaste al limite de tu plan ({limit} cuentas).</p>
+              <a href={'/clipping/contratar/' + props.suscripcionId} className="text-sm font-bold text-indigo-600 hover:underline">Subir de plan</a>
+            </div>
           )}
         </div>
 

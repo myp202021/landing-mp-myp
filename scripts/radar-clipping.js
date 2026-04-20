@@ -255,7 +255,7 @@ async function main() {
     // Pipeline contenido sugerido (semanal/mensual)
     var contenidoSugerido = []
     if ((MODO === 'semanal' || MODO === 'mensual') && misPosts.length >= 2) {
-      contenidoSugerido = await contenidoModule.generarContenidoSugerido(misPosts, empresas, MODO)
+      contenidoSugerido = await contenidoModule.generarContenidoSugerido(misPosts, empresas, MODO, sub.perfil_empresa || {})
     }
 
     // Grilla mensual (solo mensual + plan business)
