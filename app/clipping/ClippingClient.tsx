@@ -31,6 +31,7 @@ export default function ClippingClient() {
   var [url2, setUrl2] = useState('')
   var [url3, setUrl3] = useState('')
   var [enviado, setEnviado] = useState(false)
+  var [trialId, setTrialId] = useState('')
   var [enviando, setEnviando] = useState(false)
   var [tab, setTab] = useState('diario')
   var [faqOpen, setFaqOpen] = useState(-1)
@@ -52,7 +53,11 @@ export default function ClippingClient() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: trialEmail, cuentas: cuentas, nombre_empresa: nombreEmpresa, descripcion: descripcion }),
       })
-      if (res.ok) { setEnviado(true) }
+      if (res.ok) {
+        var d = await res.json()
+        setTrialId(d.id || '')
+        setEnviado(true)
+      }
     } catch (err) { console.error(err) }
     setEnviando(false)
   }
@@ -420,7 +425,14 @@ export default function ClippingClient() {
             <div className="text-center py-8">
               <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center text-3xl mx-auto mb-4">&#10003;</div>
               <h3 className="text-xl font-bold mb-2">Radar activado</h3>
-              <p className="text-gray-500">Manana a las 7:30 AM recibiras tu primer informe en <strong className="text-gray-900">{trialEmail}</strong></p>
+              <p className="text-gray-500 mb-6">Manana a las 7:30 AM recibiras tu primer informe en <strong className="text-gray-900">{trialEmail}</strong></p>
+              {trialId && (
+                <div className="space-y-3">
+                  <a href={'/radar/configurar/' + trialId} className="block bg-indigo-600 text-white text-center py-3 rounded-lg font-semibold text-sm hover:bg-indigo-700 transition">Configurar mis cuentas</a>
+                  <a href={'/radar/' + trialId} className="block bg-gray-100 text-gray-700 text-center py-3 rounded-lg font-semibold text-sm hover:bg-gray-200 transition">Ver mi dashboard</a>
+                </div>
+              )}
+              <p className="text-gray-400 text-xs mt-4">Revisa tu email para tus links privados</p>
             </div>
           ) : (
             <form onSubmit={handleTrial} className="space-y-4">

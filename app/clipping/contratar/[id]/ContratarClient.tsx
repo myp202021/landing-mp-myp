@@ -11,11 +11,13 @@ function hdrs() {
 
 function fmt(n: number) { return '$' + n.toLocaleString('es-CL') }
 
-var PLANES = [
+var PLANES_BASE = [
   { id: 'starter', nombre: 'Starter', cuentas: 5, canales: 'Instagram', mensual: 34990, anual: 27990, features: ['Email diario con posts', 'Engagement por post', 'Trends vs dia anterior', 'Analisis IA diario', 'PDF adjunto'] },
   { id: 'pro', nombre: 'Pro', cuentas: 15, canales: 'IG + LI + FB', mensual: 69990, anual: 54990, popular: true, features: ['Todo lo de Starter', 'Facebook y LinkedIn', 'Resumen semanal con ranking (lunes)', 'Resumen mensual (1ro)', '3 copies sugeridos por semana', 'Dashboard web'] },
   { id: 'business', nombre: 'Business', cuentas: 30, canales: 'IG + LI + FB', mensual: 119990, anual: 94990, features: ['Todo lo de Pro', 'Grilla mensual 16 posts con copy', 'Calendario sugerido', 'PDF consultoria + Excel', 'Analisis de posicionamiento', 'Benchmark acumulativo'] },
 ]
+
+var PLAN_TEST = { id: 'test', nombre: 'Test', cuentas: 5, canales: 'Instagram', mensual: 1000, anual: 1000, features: ['Plan de prueba $1.000', 'Solo para testing interno'] }
 
 export default function ContratarClient(props: { suscripcionId: string }) {
   var [sub, setSub] = useState(null as any)
@@ -23,6 +25,8 @@ export default function ContratarClient(props: { suscripcionId: string }) {
   var [error, setError] = useState('')
   var [anual, setAnual] = useState(true)
   var [procesando, setProcesando] = useState(false)
+  var isTest = typeof window !== 'undefined' && window.location.search.includes('test=1')
+  var PLANES = isTest ? [PLAN_TEST].concat(PLANES_BASE) : PLANES_BASE
 
   useEffect(function() {
     fetch(SUPABASE_URL + '/rest/v1/clipping_suscripciones?id=eq.' + props.suscripcionId + '&select=*', { headers: hdrs() })
@@ -82,8 +86,8 @@ export default function ContratarClient(props: { suscripcionId: string }) {
         <div className="grid md:grid-cols-3 gap-6">
           {PLANES.map(function(plan) {
             return (
-              <div key={plan.id} className={'rounded-2xl p-6 border-2 bg-white ' + (plan.popular ? 'border-indigo-600 shadow-xl shadow-indigo-100 relative' : 'border-gray-200')}>
-                {plan.popular && <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-indigo-600 text-white text-xs font-bold px-4 py-1 rounded-full">Recomendado</div>}
+              <div key={plan.id} className={'rounded-2xl p-6 border-2 bg-white ' + ((plan as any).popular ? 'border-indigo-600 shadow-xl shadow-indigo-100 relative' : 'border-gray-200')}>
+                {(plan as any).popular && <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-indigo-600 text-white text-xs font-bold px-4 py-1 rounded-full">Recomendado</div>}
                 <h3 className="text-xl font-bold mb-1">{plan.nombre}</h3>
                 <p className="text-gray-500 text-sm mb-4">{plan.cuentas} cuentas | {plan.canales}</p>
                 <div className="mb-4">
@@ -98,7 +102,7 @@ export default function ContratarClient(props: { suscripcionId: string }) {
                 <button
                   onClick={function() { contratar(plan.id) }}
                   disabled={procesando}
-                  className={'w-full py-3 rounded-xl font-bold text-sm transition disabled:opacity-50 ' + (plan.popular ? 'bg-indigo-600 text-white hover:bg-indigo-700' : 'bg-gray-100 text-gray-700 hover:bg-gray-200')}
+                  className={'w-full py-3 rounded-xl font-bold text-sm transition disabled:opacity-50 ' + ((plan as any).popular ? 'bg-indigo-600 text-white hover:bg-indigo-700' : 'bg-gray-100 text-gray-700 hover:bg-gray-200')}
                 >
                   {procesando ? 'Procesando...' : 'Suscribirme'}
                 </button>
