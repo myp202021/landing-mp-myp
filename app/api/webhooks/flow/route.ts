@@ -22,9 +22,21 @@ function verifyFlowSignature(params: Record<string, string>): boolean {
 
 export async function POST(req: NextRequest) {
   try {
-    const formData = await req.formData()
     const params: Record<string, string> = {}
-    formData.forEach((value, key) => { params[key] = value.toString() })
+    const contentType = req.headers.get('content-type') || ''
+    if (contentType.includes('application/json')) {
+      const body = await req.json()
+      Object.keys(body).forEach(k => { params[k] = String(body[k]) })
+    } else {
+      try {
+        const formData = await req.formData()
+        formData.forEach((value, key) => { params[key] = value.toString() })
+      } catch (e) {
+        const text = await req.text()
+        const urlParams = new URLSearchParams(text)
+        urlParams.forEach((value, key) => { params[key] = value })
+      }
+    }
 
     console.log('Flow webhook received:', JSON.stringify(params))
 
