@@ -46,6 +46,11 @@ export default function RadarAdminPage() {
     setLoading(false)
   }
 
+  async function deleteSub(id: string) {
+    await supabase.from('clipping_suscripciones').delete().eq('id', id)
+    loadData()
+  }
+
   const filtered = filtro === 'todos' ? subs : subs.filter(function(s: any) { return s.estado === filtro })
 
   function formatDate(d: string) {
@@ -102,14 +107,15 @@ export default function RadarAdminPage() {
                 <th className="px-4 py-3 text-center font-semibold text-gray-700">Cuentas</th>
                 <th className="px-4 py-3 text-left font-semibold text-gray-700">Trial termina</th>
                 <th className="px-4 py-3 text-left font-semibold text-gray-700">Creado</th>
+                <th className="px-4 py-3 text-center font-semibold text-gray-700">Acciones</th>
               </tr>
             </thead>
             <tbody>
               {loading && (
-                <tr><td colSpan={7} className="px-4 py-8 text-center text-gray-400">Cargando...</td></tr>
+                <tr><td colSpan={8} className="px-4 py-8 text-center text-gray-400">Cargando...</td></tr>
               )}
               {!loading && filtered.length === 0 && (
-                <tr><td colSpan={7} className="px-4 py-8 text-center text-gray-400">Sin suscriptores {filtro !== 'todos' ? 'con estado ' + filtro : ''}</td></tr>
+                <tr><td colSpan={8} className="px-4 py-8 text-center text-gray-400">Sin suscriptores {filtro !== 'todos' ? 'con estado ' + filtro : ''}</td></tr>
               )}
               {filtered.map(function(sub: any) {
                 var cuentas = Array.isArray(sub.cuentas) ? sub.cuentas : []
@@ -137,6 +143,9 @@ export default function RadarAdminPage() {
                     </td>
                     <td className="px-4 py-3 text-gray-600">{formatDate(sub.trial_ends)}</td>
                     <td className="px-4 py-3 text-gray-600">{formatDate(sub.created_at)}</td>
+                    <td className="px-4 py-3 text-center">
+                      <button onClick={function() { if (confirm('Eliminar ' + sub.email + '? Se detienen todos los envios.')) { deleteSub(sub.id) } }} className="text-xs text-red-500 hover:text-red-700 font-semibold">Eliminar</button>
+                    </td>
                   </tr>
                 )
               })}
