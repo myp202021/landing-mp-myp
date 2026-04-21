@@ -266,7 +266,10 @@ export default function RadarDashboard(props: { suscripcionId: string }) {
               <div className="bg-white rounded-xl border border-gray-200 overflow-hidden mb-8">
                 <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
                   <h2 className="text-sm font-bold text-gray-900">Grilla {MESES_NOMBRES[mesFiltro]} — {grillasMes[0].datos.length} posts</h2>
-                  <span className="text-xs text-gray-400">Score promedio: {grillasMes[0].score_promedio || '-'}</span>
+                  <div className="flex items-center gap-3">
+                    <span className="text-xs text-gray-400">Score promedio: {grillasMes[0].score_promedio || '-'}</span>
+                    <a href={'/api/radar/export-grilla?id=' + props.suscripcionId + '&mes=' + mesFiltro} className="bg-green-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg hover:bg-green-700 transition">Descargar Excel</a>
+                  </div>
                 </div>
                 <table className="w-full text-sm">
                   <thead>
