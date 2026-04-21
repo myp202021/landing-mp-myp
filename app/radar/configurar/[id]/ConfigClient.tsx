@@ -76,7 +76,19 @@ export default function ConfigClient(props: { suscripcionId: string }) {
   async function guardar() {
     setSaving(true)
     setSaved(false)
-    var allCuentas = cuentas.filter(function(c: any) { return c.handle.trim() !== '' })
+    var allCuentas = cuentas.filter(function(c: any) { return c.handle.trim() !== '' }).map(function(c: any) {
+      var h = c.handle.trim()
+      if (c.red === 'instagram') {
+        h = h.replace(/^https?:\/\/(www\.)?instagram\.com\//, '').replace(/\/$/, '').replace(/^@/, '')
+      } else if (c.red === 'linkedin') {
+        var m = h.match(/linkedin\.com\/company\/([^/?]+)/)
+        if (m) h = m[1]
+      } else if (c.red === 'facebook') {
+        var mf = h.match(/facebook\.com\/([^/?]+)/)
+        if (mf) h = mf[1]
+      }
+      return Object.assign({}, c, { handle: h })
+    })
     if (kwStr.trim()) {
       allCuentas.push({ red: 'prensa', keywords: kwStr.split(',').map(function(k: string) { return k.trim().toLowerCase() }).filter(function(k: string) { return k !== '' }) })
     }
