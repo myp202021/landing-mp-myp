@@ -252,19 +252,21 @@ async function main() {
       }
     }
 
-    // Pipeline contenido sugerido (semanal/mensual)
+    // Pipeline contenido sugerido (semanal/mensual, pro y business)
     var contenidoSugerido = []
-    if ((MODO === 'semanal' || MODO === 'mensual') && misPosts.length >= 2) {
-      contenidoSugerido = await contenidoModule.generarContenidoSugerido(misPosts, empresas, MODO, sub.perfil_empresa || {})
+    if ((MODO === 'semanal' || MODO === 'mensual') && misPosts.length >= 2 && (sub.plan === 'pro' || sub.plan === 'business' || sub.plan === 'test')) {
+      contenidoSugerido = await contenidoModule.generarContenidoSugerido(misPosts, empresas, MODO, sub.perfil_empresa || {}, supabase, sub.id)
     }
 
-    // Grilla mensual (solo mensual + plan business)
+    // Grilla mensual (todos los planes, cantidad de posts varía)
     var grillaMensual = null
-    if (MODO === 'mensual' && sub.plan === 'business' && misPosts.length >= 5) {
+    if (MODO === 'mensual' && misPosts.length >= 2) {
+      var POSTS_POR_PLAN = { starter: 4, pro: 8, business: 16, test: 16 }
+      var cantidadPosts = POSTS_POR_PLAN[sub.plan] || 8
       var mesSig = new Date().getMonth() + 2
       var anioSig = new Date().getFullYear()
       if (mesSig > 12) { mesSig = 1; anioSig++ }
-      grillaMensual = await grillaModule.generarGrillaMensual(misPosts, empresas, sub, mesSig, anioSig)
+      grillaMensual = await grillaModule.generarGrillaMensual(misPosts, empresas, sub, mesSig, anioSig, supabase, cantidadPosts)
     }
 
     var html = generarEmailHTML(misPosts, cuentas, hoy, MODO, resumenIA, empresas, trends, sub.id, contenidoSugerido, sub.estado, sub.plan, sub.trial_ends, grillaMensual)

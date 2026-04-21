@@ -261,7 +261,7 @@ async function paso3_revisar(copies) {
 // ═══════════════════════════════════════════════
 // FUNCION PRINCIPAL (llamada desde radar-clipping.js)
 // ═══════════════════════════════════════════════
-async function generarContenidoSugerido(posts, empresas, modo, perfil) {
+async function generarContenidoSugerido(posts, empresas, modo, perfil, supabase, suscripcionId) {
   console.log('\n   === PIPELINE CONTENIDO SUGERIDO ===')
 
   if (!OPENAI_KEY || !ANTHROPIC_KEY) {
@@ -292,6 +292,24 @@ async function generarContenidoSugerido(posts, empresas, modo, perfil) {
   var revisados = await paso3_revisar(copies)
 
   console.log('   === PIPELINE COMPLETADO: ' + revisados.length + ' copies ===\n')
+
+  if (supabase && suscripcionId && revisados.length > 0) {
+    try {
+      var ahora = new Date()
+      var avgScore = revisados.reduce(function(s, c) { return s + (c.score || 0) }, 0) / revisados.length
+      await supabase.from('radar_contenido').insert({
+        suscripcion_id: suscripcionId,
+        tipo: 'copy',
+        datos: revisados,
+        semana: Math.ceil(ahora.getDate() / 7),
+        mes: ahora.getMonth() + 1,
+        anio: ahora.getFullYear(),
+        score_promedio: Math.round(avgScore),
+      })
+      console.log('   Copies guardados en radar_contenido')
+    } catch (e) { console.error('   Error guardando copies: ' + e.message) }
+  }
+
   return revisados
 }
 

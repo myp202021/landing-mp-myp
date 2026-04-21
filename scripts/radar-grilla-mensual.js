@@ -31,7 +31,8 @@ var ESTACIONALIDAD = {
 // ═══════════════════════════════════════════════
 // GENERAR GRILLA COMPLETA
 // ═══════════════════════════════════════════════
-async function generarGrillaMensual(posts, empresas, suscriptor, mesSiguiente, anio) {
+async function generarGrillaMensual(posts, empresas, suscriptor, mesSiguiente, anio, supabase, cantidadPosts) {
+  cantidadPosts = cantidadPosts || 16
   console.log('\n   === GRILLA MENSUAL: ' + MESES[mesSiguiente] + ' ' + anio + ' ===')
 
   if (!OPENAI_KEY || !ANTHROPIC_KEY) {
@@ -63,7 +64,7 @@ async function generarGrillaMensual(posts, empresas, suscriptor, mesSiguiente, a
   var brief = await generarBrief(nombreEmpresa, rubro, tono, diferenciadores, plataformas, insights, mesSiguiente, anio, {
     web: webCliente, instagram: igCliente, linkedin: liCliente, facebook: fbCliente,
     propuesta_valor: propuestaValor, descripcion: descripcionCliente
-  })
+  }, cantidadPosts)
   if (!brief || !brief.posts || brief.posts.length === 0) {
     console.log('   Brief vacio, abortando grilla')
     return null
@@ -152,6 +153,21 @@ async function generarGrillaMensual(posts, empresas, suscriptor, mesSiguiente, a
   console.log('   Score promedio: ' + Math.round(grilla.reduce(function(s, g) { return s + g.score }, 0) / grilla.length))
   console.log('   === GRILLA COMPLETADA: ' + grilla.length + ' posts ===\n')
 
+  if (supabase && suscriptor.id && grilla.length > 0) {
+    try {
+      var avgScore = grilla.reduce(function(s, g) { return s + g.score }, 0) / grilla.length
+      await supabase.from('radar_contenido').insert({
+        suscripcion_id: suscriptor.id,
+        tipo: 'grilla',
+        datos: grilla,
+        mes: mesSiguiente,
+        anio: anio,
+        score_promedio: Math.round(avgScore),
+      })
+      console.log('   Grilla guardada en radar_contenido')
+    } catch (e) { console.error('   Error guardando grilla: ' + e.message) }
+  }
+
   return grilla
 }
 
@@ -212,7 +228,8 @@ function extraerInsights(posts) {
 // ═══════════════════════════════════════════════
 // PASO 1: OpenAI genera brief
 // ═══════════════════════════════════════════════
-async function generarBrief(nombre, rubro, tono, difs, plats, insights, mes, anio, extra) {
+async function generarBrief(nombre, rubro, tono, difs, plats, insights, mes, anio, extra, cantidadPosts) {
+  cantidadPosts = cantidadPosts || 16
   var est = ESTACIONALIDAD[mes] || ''
   extra = extra || {}
 
@@ -225,7 +242,7 @@ async function generarBrief(nombre, rubro, tono, difs, plats, insights, mes, ani
   if (extra.facebook) empresaExtra += 'Facebook: ' + extra.facebook + '\n'
 
   var prompt = 'Eres director de estrategia de contenido para redes sociales en Chile. '
-    + 'Genera un plan de 16 posts para ' + MESES[mes] + ' ' + anio + '.\n\n'
+    + 'Genera un plan de ' + cantidadPosts + ' posts para ' + MESES[mes] + ' ' + anio + '.\n\n'
     + '=== EMPRESA ===\n' + nombre + ' | Rubro: ' + rubro + '\n'
     + 'Tono: ' + tono + '\n'
     + (difs.length > 0 ? 'Diferenciadores: ' + difs.join(', ') + '\n' : '')
@@ -238,7 +255,7 @@ async function generarBrief(nombre, rubro, tono, difs, plats, insights, mes, ani
     + 'Temas de competencia: ' + insights.temasCompetencia.substring(0, 500) + '\n\n'
     + '=== ESTACIONALIDAD ' + MESES[mes].toUpperCase() + ' ===\n' + est + '\n\n'
     + '=== TAREA ===\n'
-    + 'Genera 16 posts. Para CADA post define:\n'
+    + 'Genera ' + cantidadPosts + ' posts. Para CADA post define:\n'
     + '- semana: 1-4\n- dia: numero del mes\n- dia_semana: Lunes-Viernes\n'
     + '- plataforma: ' + plats.join(' o ') + ' (alternar)\n'
     + '- tipo_post: Post|Carrusel|Reel|Video|Articulo\n'
