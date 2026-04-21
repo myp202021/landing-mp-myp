@@ -276,7 +276,11 @@ async function main() {
 
     var html = generarEmailHTML(misPosts, cuentas, hoy, MODO, resumenIA, empresas, trends, sub.id, contenidoSugerido, sub.estado, sub.plan, sub.trial_ends, grillaMensual)
     var pdf = generarPDF(html, hoy, MODO)
-    await enviarEmail(destinos, html, hoy, misPosts.length, MODO, pdf)
+    var excel = null
+    if (MODO === 'mensual' && grillaMensual && grillaMensual.length > 0) {
+      excel = generarExcel(grillaMensual, sub.nombre || sub.email, hoy)
+    }
+    await enviarEmail(destinos, html, hoy, misPosts.length, MODO, pdf, excel)
   }
   console.log('\nRadar ' + MODO + ' completado | ' + activos.length + ' suscriptores')
 }
@@ -900,19 +904,50 @@ function generarPDF(html, fecha, modo) {
   } catch (e) { console.error('   PDF: ' + e.message); return null }
 }
 
+// === EXCEL GRILLA ===
+function generarExcel(grilla, nombre, fecha) {
+  try {
+    var XLSX = require('xlsx')
+    var rows = grilla.map(function(g, i) {
+      return {
+        '#': i + 1,
+        'Fecha': g.fecha_sugerida || g.dia_semana || ('Dia ' + (g.dia || i + 1)),
+        'Plataforma': g.plataforma || '',
+        'Tipo': g.tipo_post || g.tipo || '',
+        'Angulo': g.angulo || '',
+        'Titulo': g.titulo || g.titulo_grafico || g.gancho || '',
+        'Copy': g.copy || '',
+        'Hashtags': g.hashtags || '',
+        'Nota diseno': g.nota_diseno || '',
+        'Score': g.score || '',
+      }
+    })
+    var wb = XLSX.utils.book_new()
+    var ws = XLSX.utils.json_to_sheet(rows)
+    ws['!cols'] = [{ wch: 4 }, { wch: 14 }, { wch: 12 }, { wch: 12 }, { wch: 14 }, { wch: 30 }, { wch: 60 }, { wch: 30 }, { wch: 25 }, { wch: 8 }]
+    XLSX.utils.book_append_sheet(wb, ws, 'Grilla')
+    var buf = XLSX.write(wb, { type: 'buffer', bookType: 'xlsx' })
+    console.log('   Excel: ' + (buf.length / 1024).toFixed(0) + ' KB, ' + rows.length + ' posts')
+    return buf.toString('base64')
+  } catch (e) { console.error('   Excel: ' + e.message); return null }
+}
+
 // === ENVIAR ===
-async function enviarEmail(destinos, html, fecha, nPosts, modo, pdf) {
+async function enviarEmail(destinos, html, fecha, nPosts, modo, pdf, excel) {
   var titulo = modo === 'mensual' ? 'Resumen mensual' : modo === 'semanal' ? 'Resumen semanal' : 'Tu Radar diario'
   var body = { from: 'Radar <contacto@mulleryperez.cl>', to: destinos,
     subject: titulo + ' | ' + nPosts + ' posts | ' + fecha, html: html }
-  if (pdf) body.attachments = [{ filename: 'Radar_' + modo + '_' + fecha + '.pdf', content: pdf }]
+  var attachments = []
+  if (pdf) attachments.push({ filename: 'Radar_' + modo + '_' + fecha + '.pdf', content: pdf })
+  if (excel) attachments.push({ filename: 'Grilla_' + fecha + '.xlsx', content: excel })
+  if (attachments.length > 0) body.attachments = attachments
   try {
     var r = await fetch('https://api.resend.com/emails', { method: 'POST',
       headers: { 'Authorization': 'Bearer ' + RESEND_KEY, 'Content-Type': 'application/json' },
       body: JSON.stringify(body) })
     var d = await r.json()
     if (!r.ok) console.error('   Email error:', d)
-    else console.log('   Email: ' + destinos.join(',') + ' ' + d.id + (pdf ? ' (PDF)' : ''))
+    else console.log('   Email: ' + destinos.join(',') + ' ' + d.id + (pdf ? ' +PDF' : '') + (excel ? ' +Excel' : ''))
   } catch (e) { console.error('   Resend: ' + e.message) }
 }
 

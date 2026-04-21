@@ -37,6 +37,10 @@ export default function ContratarClient(props: { suscripcionId: string }) {
     fetch(SUPABASE_URL + '/rest/v1/clipping_suscripciones?id=eq.' + props.suscripcionId + '&select=*', { headers: hdrs() })
       .then(function(r) { return r.json() })
       .then(function(data) {
+        if (data && data.length > 0) {
+          var email = data[0].email || ''
+          if (email.includes('mulleryperez') || email.includes('chmuller5')) setShowTest(true)
+        }
         if (!data || data.length === 0) { setError('Suscripcion no encontrada') }
         else { setSub(data[0]) }
         setLoading(false)
