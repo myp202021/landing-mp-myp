@@ -23,6 +23,8 @@ var MODO = process.argv.includes('--semanal') ? 'semanal'
          : process.argv.includes('--mensual') ? 'mensual' : 'diario'
 var DRY_RUN = process.argv.includes('--dry-run')
 var VENTANA_HORAS = MODO === 'diario' ? 72 : MODO === 'semanal' ? 7 * 24 + 4 : 31 * 24
+var SOLO_ID = (process.argv.find(function(a) { return a.startsWith('--id=') }) || '').replace('--id=', '')
+var SOLO_EMAIL = (process.argv.find(function(a) { return a.startsWith('--email=') }) || '').replace('--email=', '')
 
 var MEDIOS_PRENSA = [
   { nombre: 'La Tercera', handle: 'latercera' },
@@ -78,8 +80,11 @@ async function main() {
       supabase.from('clipping_suscripciones').update({ estado: 'cancelado' }).eq('id', s.id)
       return false
     }
+    if (SOLO_ID && s.id !== SOLO_ID) return false
+    if (SOLO_EMAIL && s.email !== SOLO_EMAIL) return false
     return true
   })
+  if (SOLO_ID || SOLO_EMAIL) console.log('Filtro: ' + (SOLO_ID || SOLO_EMAIL))
   console.log('Suscriptores: ' + activos.length)
 
   // Construir mapa handle->nombre y sets por red
