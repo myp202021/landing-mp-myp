@@ -26,25 +26,33 @@ const MEDIOS = [
   { nombre: 'Cooperativa',        instagram: 'cooperativa.cl' },
 ]
 
-// Keywords filtro "transporte"
-const KEYWORDS_TRANSPORTE = [
-  'transporte', 'transportes', 'transportista', 'transportistas',
-  'bus ', 'buses', 'micro ', 'micros', 'locomoción', 'locomocion',
-  'camionero', 'camioneros', 'camión', 'camion', 'camiones',
-  'paro nacional', 'paro de', 'paralización', 'paralizacion',
-  'combustible', 'combustibles', 'bencina', 'diésel', 'diesel', 'enap',
-  'mtt', 'ministerio de transporte', 'ministro de transporte', 'grange',
-  'red movilidad', 'transantiago', 'metro de santiago', 'efe ',
-  'pasaje', 'pasajes', 'evasión', 'evasion', 'antievasión', 'antievasion',
-  'conductor', 'chofer', 'flota',
-  'transporte público', 'transporte publico', 'transporte escolar',
-  'colectivo', 'colectivos', 'taxi ', 'taxis',
+// Keywords: menciones de Hualpén y competidores directos
+const KEYWORDS_MENCIONES = [
+  // Hualpén (el cliente)
+  'hualpén', 'hualpen', 'buses hualpén', 'buses hualpen',
+  // Competidores directos
+  'viggo', 'viggo chile',
+  'tándem industrial', 'tandem industrial',
+  'yanguas', 'buses yanguas',
+  'buses jm', 'busesjm',
+  'cvu', 'transportes cvu',
+  'nortrans',
+  'géminis', 'geminis', 'buses géminis', 'buses geminis',
+  'verschae', 'flota verschae',
+  'calderón', 'calderon', 'transportes calderón', 'transportes calderon',
+  'pullman yuris', 'buses yuris',
+  'sokol', 'grupo sokol',
+  'pullman san luis',
+  // Industria específica
+  'transporte de personal', 'transporte de trabajadores',
+  'buses de acercamiento', 'bus de acercamiento',
+  'servicio especial de transporte', 'transporte minero',
 ]
 
-function mencionaTransporte(texto) {
+function mencionaCompetencia(texto) {
   if (!texto || typeof texto !== 'string') return { match: false, kws: [] }
   const lower = texto.toLowerCase()
-  const kws = KEYWORDS_TRANSPORTE.filter(kw => lower.includes(kw))
+  const kws = KEYWORDS_MENCIONES.filter(kw => lower.includes(kw))
   return { match: kws.length > 0, kws }
 }
 
@@ -53,7 +61,7 @@ async function main() {
   // Ventana 24h: clipping del día (el workflow corre a las 06:00 AM)
   const desde = new Date(Date.now() - 24 * 60 * 60 * 1000)
 
-  console.log(`📅 Clipping Prensa Transporte — ${hoy}`)
+  console.log(`📅 Clipping Prensa Hualpen — ${hoy}`)
 
   // Limpiar reporte del día si ya existe (re-runs)
   await supabase.from('clipping_prensa').delete().eq('fecha_reporte', hoy)
@@ -83,12 +91,12 @@ async function main() {
         const handle = (p.ownerUsername || '').toLowerCase()
         const medio = MEDIOS.find(m => m.instagram.toLowerCase() === handle)
         const texto = p.caption || ''
-        const { match, kws } = mencionaTransporte(texto)
+        const { match, kws } = mencionaCompetencia(texto)
         return { medio: medio?.nombre || handle, handle, texto, url: p.url || `https://www.instagram.com/p/${p.shortCode}/`, timestamp: p.timestamp, match, kws }
       })
       .filter(p => p.match)
 
-    console.log(`✅ Filtrados por transporte: ${postsIG.length}`)
+    console.log(`✅ Filtrados por menciones: ${postsIG.length}`)
   } catch (err) {
     console.error('❌ Error Instagram:', err.message)
   }
@@ -127,13 +135,13 @@ async function enviarEmail({ hoy, postsIG }) {
       <p style="margin: 4px 0 0; font-size: 14px; opacity: 0.95;">${fechaLegible}</p>
     </div>
     <div style="background: #f8f9fa; padding: 16px 24px; border-bottom: 1px solid #e5e7eb;">
-      <strong>${postsIG.length} post${postsIG.length === 1 ? '' : 's'}</strong> sobre transporte en los últimos medios chilenos en Instagram.
+      <strong>${postsIG.length} post${postsIG.length === 1 ? '' : 's'}</strong> con menciones de Hualpén o competidores en medios chilenos.
     </div>
     <div style="background: white; padding: 24px; border: 1px solid #e5e7eb; border-top: none; border-radius: 0 0 12px 12px;">
   `
 
   if (postsIG.length === 0) {
-    bodyHtml += `<p style="color: #6b7280; font-style: italic;">Sin posts de transporte detectados en las últimas 24 horas.</p>`
+    bodyHtml += `<p style="color: #6b7280; font-style: italic;">Sin menciones de Hualpén ni competidores en las últimas 24 horas.</p>`
   } else {
     for (const [medio, posts] of porMedio) {
       bodyHtml += `<h3 style="margin: 20px 0 8px; font-size: 15px; color: #ff6b35; border-bottom: 2px solid #ff6b35; padding-bottom: 4px;">${medio}</h3><ul style="margin: 8px 0; padding-left: 20px;">`
@@ -157,7 +165,7 @@ async function enviarEmail({ hoy, postsIG }) {
     body: JSON.stringify({
       from: 'contacto@mulleryperez.cl',
       to: ['felipe.munoz@buseshualpen.cl', 'contacto@mulleryperez.cl'],
-      subject: `📰 Clipping Prensa Transporte — ${hoy}`,
+      subject: `📰 Clipping Prensa Hualpen — ${hoy}`,
       html: bodyHtml,
     }),
   })
