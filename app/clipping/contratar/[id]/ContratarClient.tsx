@@ -61,11 +61,13 @@ export default function ContratarClient(props: { suscripcionId: string }) {
       if (data.url) {
         window.location.href = data.url
       } else {
-        setError('Error al procesar. Intenta de nuevo o contactanos.')
+        console.error('Checkout response:', JSON.stringify(data))
+        setError('Error: ' + (data.error || data.detail?.message || JSON.stringify(data)))
         setProcesando(false)
       }
-    } catch (e) {
-      setError('Error de conexion. Intenta de nuevo.')
+    } catch (e: any) {
+      console.error('Checkout exception:', e)
+      setError('Error de conexion: ' + (e.message || 'intenta de nuevo'))
       setProcesando(false)
     }
   }

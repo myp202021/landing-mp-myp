@@ -50,11 +50,13 @@ export async function POST(req: NextRequest) {
     const customerName = (nombre || email.split('@')[0]).replace(/[^a-zA-Z0-9 ]/g, '')
 
     // Paso 1: Crear o obtener customer en Flow
+    console.log('Checkout: plan=' + plan + ' email=' + email + ' planId=' + planId)
     const custData = await flowRequest('/customer/create', {
       name: customerName,
       email: email,
       externalId: email,
     })
+    console.log('Flow customer/create response:', JSON.stringify(custData))
 
     let customerId = ''
     if (custData.customerId) {
@@ -89,6 +91,7 @@ export async function POST(req: NextRequest) {
       customerId: customerId,
       url_return: returnUrl,
     })
+    console.log('Flow customer/register response:', JSON.stringify(regData))
 
     if (regData.url && regData.token) {
       const planBase = plan.split('-')[0]
