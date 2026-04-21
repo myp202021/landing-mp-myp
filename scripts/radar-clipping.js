@@ -280,7 +280,7 @@ async function main() {
     if (MODO === 'mensual' && grillaMensual && grillaMensual.length > 0) {
       excel = generarExcel(grillaMensual, sub.nombre || sub.email, hoy)
     }
-    await enviarEmail(destinos, html, hoy, misPosts.length, MODO, pdf, excel)
+    await enviarEmail(destinos, html, hoy, misPosts.length, MODO, pdf, excel, sub.nombre || sub.email)
   }
   console.log('\nRadar ' + MODO + ' completado | ' + activos.length + ' suscriptores')
 }
@@ -933,10 +933,11 @@ function generarExcel(grilla, nombre, fecha) {
 }
 
 // === ENVIAR ===
-async function enviarEmail(destinos, html, fecha, nPosts, modo, pdf, excel) {
+async function enviarEmail(destinos, html, fecha, nPosts, modo, pdf, excel, nombreCliente) {
   var titulo = modo === 'mensual' ? 'Resumen mensual' : modo === 'semanal' ? 'Resumen semanal' : 'Tu Radar diario'
+  var asunto = (nombreCliente ? nombreCliente + ' | ' : '') + titulo + ' | ' + nPosts + ' posts | ' + fecha
   var body = { from: 'Radar <contacto@mulleryperez.cl>', to: destinos,
-    subject: titulo + ' | ' + nPosts + ' posts | ' + fecha, html: html }
+    subject: asunto, html: html }
   var attachments = []
   if (pdf) attachments.push({ filename: 'Radar_' + modo + '_' + fecha + '.pdf', content: pdf })
   if (excel) attachments.push({ filename: 'Grilla_' + fecha + '.xlsx', content: excel })

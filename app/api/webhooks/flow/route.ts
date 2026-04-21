@@ -60,25 +60,26 @@ export async function POST(req: NextRequest) {
     // Buscar suscripcion por flow_customer_id o flow_subscription_id
     let subId = ''
     let subEmail = ''
+    let subNombre = ''
 
     // Intento 1: por flow_subscription_id
     if (subscriptionId) {
       const { data } = await supabase
         .from('clipping_suscripciones')
-        .select('id, email')
+        .select('id, email, nombre')
         .eq('flow_subscription_id', subscriptionId)
         .limit(1)
-      if (data && data.length > 0) { subId = data[0].id; subEmail = data[0].email }
+      if (data && data.length > 0) { subId = data[0].id; subEmail = data[0].email; subNombre = data[0].nombre || '' }
     }
 
     // Intento 2: por flow_customer_id
     if (!subId && customerId) {
       const { data } = await supabase
         .from('clipping_suscripciones')
-        .select('id, email')
+        .select('id, email, nombre')
         .eq('flow_customer_id', customerId)
         .limit(1)
-      if (data && data.length > 0) { subId = data[0].id; subEmail = data[0].email }
+      if (data && data.length > 0) { subId = data[0].id; subEmail = data[0].email; subNombre = data[0].nombre || '' }
     }
 
     if (subId && nuevoEstado) {
@@ -96,7 +97,7 @@ export async function POST(req: NextRequest) {
 
       // Enviar email de confirmacion si se activa
       if (nuevoEstado === 'activo' && subEmail && RESEND_KEY) {
-        await enviarConfirmacion(subEmail, subId)
+        await enviarConfirmacion(subEmail, subId, subNombre)
       }
     } else {
       console.log('Flow webhook: no se encontro suscripcion para sub=' + subscriptionId + ' cust=' + customerId)
@@ -109,7 +110,7 @@ export async function POST(req: NextRequest) {
   }
 }
 
-async function enviarConfirmacion(email: string, subId: string) {
+async function enviarConfirmacion(email: string, subId: string, nombre: string) {
   try {
     const dashUrl = 'https://www.mulleryperez.cl/radar/' + subId
     const configUrl = 'https://www.mulleryperez.cl/radar/configurar/' + subId
@@ -118,8 +119,8 @@ async function enviarConfirmacion(email: string, subId: string) {
       headers: { 'Authorization': 'Bearer ' + RESEND_KEY, 'Content-Type': 'application/json' },
       body: JSON.stringify({
         from: 'Radar <contacto@mulleryperez.cl>',
-        to: [email, 'contacto@mulleryperez.cl'],
-        subject: 'Tu Radar esta activo | Configura tus cuentas',
+        to: [email],
+        subject: (nombre || 'Hola') + ', tu Radar esta activo | Configura tus cuentas',
         html: '<div style="font-family:-apple-system,sans-serif;max-width:580px;margin:0 auto;">'
           + '<div style="background:linear-gradient(135deg,#4338CA,#7C3AED);color:white;padding:28px 32px;border-radius:16px 16px 0 0;">'
           + '<p style="margin:0;font-size:11px;opacity:0.6;letter-spacing:1.5px;">RADAR BY MULLER Y PEREZ</p>'
@@ -147,6 +148,19 @@ async function enviarConfirmacion(email: string, subId: string) {
       }),
     })
     console.log('Email confirmacion enviado a ' + email)
+    await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + RESEND_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        from: 'Radar <contacto@mulleryperez.cl>',
+        to: ['contacto@mulleryperez.cl'],
+        subject: '[Admin] Pago confirmado: ' + (nombre || email),
+        html: '<div style="font-family:sans-serif;padding:20px;"><h2 style="color:#10B981;">Pago confirmado</h2>'
+          + '<p><strong>Cliente:</strong> ' + (nombre || '(sin nombre)') + '</p>'
+          + '<p><strong>Email:</strong> ' + email + '</p>'
+          + '<p><a href="https://www.mulleryperez.cl/crm/radar" style="color:#4338CA;font-weight:bold;">Ver en CRM</a></p></div>',
+      }),
+    })
   } catch (e) { console.error('Error enviando confirmacion') }
 }
 

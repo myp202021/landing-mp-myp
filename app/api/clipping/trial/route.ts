@@ -66,7 +66,7 @@ export async function POST(req: NextRequest) {
         body: JSON.stringify({
           from: 'Radar <contacto@mulleryperez.cl>',
           to: [email],
-          subject: 'Bienvenido a Radar | Tu prueba de 7 dias comienza ahora',
+          subject: (nombre_empresa || 'Hola') + ', bienvenido a Radar | Tu prueba de 7 dias comienza ahora',
           html: '<div style="font-family:-apple-system,sans-serif;max-width:580px;margin:0 auto;">'
             + '<div style="background:linear-gradient(135deg,#4338CA,#7C3AED);color:white;padding:28px 32px;border-radius:16px 16px 0 0;">'
             + '<p style="margin:0;font-size:11px;opacity:0.6;letter-spacing:1.5px;">RADAR BY MULLER Y PEREZ</p>'
@@ -107,7 +107,7 @@ export async function POST(req: NextRequest) {
         body: JSON.stringify({
           from: 'Radar <contacto@mulleryperez.cl>',
           to: ['contacto@mulleryperez.cl'],
-          subject: 'Nuevo trial Radar: ' + email,
+          subject: '[Admin] Nuevo trial Radar: ' + (nombre_empresa || email),
           html: '<div style="font-family:sans-serif;padding:20px;">'
             + '<h2 style="color:#4338CA;">Nuevo trial Radar</h2>'
             + '<p><strong>Email:</strong> ' + email + '</p>'
