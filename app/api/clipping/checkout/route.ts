@@ -110,9 +110,10 @@ export async function POST(req: NextRequest) {
       url_callback: 'https://www.mulleryperez.cl/api/webhooks/flow',
     })
 
+    const planBase = plan.split('-')[0]
+    const periodo = plan.split('-')[1] || 'mensual'
+
     if (subData.subscriptionId) {
-      const planBase = plan.split('-')[0]
-      const periodo = plan.split('-')[1] || 'mensual'
       await supabase.from('clipping_suscripciones').update({
         flow_subscription_id: String(subData.subscriptionId),
         plan: planBase,
@@ -121,6 +122,19 @@ export async function POST(req: NextRequest) {
         updated_at: new Date().toISOString(),
       }).eq(suscripcionId ? 'id' : 'email', suscripcionId || email)
       return NextResponse.json({ url: returnUrl, subscriptionId: subData.subscriptionId })
+    }
+
+    // Si Flow rechaza (suscripcion duplicada u otro error), activar de todas formas
+    // ya que el customer tiene tarjeta registrada
+    console.warn('Flow subscription/create respondio:', JSON.stringify(subData))
+    if (subData.code === 300 || subData.code === 501 || (subData.message && subData.message.includes('already'))) {
+      await supabase.from('clipping_suscripciones').update({
+        plan: planBase,
+        periodo: periodo,
+        estado: 'activo',
+        updated_at: new Date().toISOString(),
+      }).eq(suscripcionId ? 'id' : 'email', suscripcionId || email)
+      return NextResponse.json({ url: returnUrl })
     }
 
     console.error('Flow error:', subData)
