@@ -34,7 +34,7 @@ export default function ContratarClient(props: { suscripcionId: string }) {
   var PLANES = showTest ? [PLAN_TEST].concat(PLANES_BASE) : PLANES_BASE
 
   useEffect(function() {
-    fetch(SUPABASE_URL + '/rest/v1/clipping_suscripciones?id=eq.' + props.suscripcionId + '&select=*', { headers: hdrs() })
+    fetch(SUPABASE_URL + '/rest/v1/copilot_suscripciones?id=eq.' + props.suscripcionId + '&select=*', { headers: hdrs() })
       .then(function(r) { return r.json() })
       .then(function(data) {
         if (data && data.length > 0) {
@@ -73,7 +73,7 @@ export default function ContratarClient(props: { suscripcionId: string }) {
   }
 
   if (loading) return <div className="min-h-screen bg-gray-50 flex items-center justify-center"><p className="text-gray-400">Cargando...</p></div>
-  if (error) return <div className="min-h-screen bg-gray-50 flex items-center justify-center"><div className="text-center"><p className="text-xl font-bold text-gray-900 mb-2">Radar</p><p className="text-gray-500">{error}</p><a href="/clipping" className="text-indigo-600 font-semibold mt-4 inline-block hover:underline">Volver a Radar</a></div></div>
+  if (error) return <div className="min-h-screen bg-gray-50 flex items-center justify-center"><div className="text-center"><p className="text-xl font-bold text-gray-900 mb-2">M&P Copilot</p><p className="text-gray-500">{error}</p><a href="/copilot" className="text-indigo-600 font-semibold mt-4 inline-block hover:underline">Volver a Copilot</a></div></div>
 
   return (
     <div className="min-h-screen bg-gray-50">

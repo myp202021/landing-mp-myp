@@ -16,7 +16,7 @@ const ESTADO_COLORS: Record<string, string> = {
   cancelado: 'bg-red-100 text-red-800',
 }
 
-export default function RadarAdminPage() {
+export default function CopilotAdminPage() {
   const [subs, setSubs] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [filtro, setFiltro] = useState('todos')
@@ -47,7 +47,7 @@ export default function RadarAdminPage() {
   }
 
   async function deleteSub(id: string) {
-    await supabase.from('radar_posts').delete().eq('suscripcion_id', id)
+    await supabase.from('copilot_posts').delete().eq('suscripcion_id', id)
     await supabase.from('clipping_suscripciones').delete().eq('id', id)
     loadData()
   }

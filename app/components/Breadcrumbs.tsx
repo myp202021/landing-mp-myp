@@ -35,7 +35,7 @@ export default function Breadcrumbs() {
     'mp-intelligence': 'M&P Intelligence',
     'buyer-gen': 'Buyer Gen',
     'predictor': 'Predictor Google Ads',
-    'radar-industrias': 'Radar Industrias',
+    'copilot-industrias': 'Copilot Industrias',
     'calculadora-cac': 'Calculadora CAC',
     'calculadora-ltv': 'Calculadora LTV',
     'calculadora-roi-roas': 'Calculadora ROI/ROAS',

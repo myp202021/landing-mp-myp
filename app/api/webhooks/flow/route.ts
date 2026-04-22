@@ -143,7 +143,7 @@ async function enviarConfirmacion(email: string, subId: string, nombre: string) 
           + '<p style="font-size:13px;color:#6b7280;">Una vez que configures tus cuentas, tu primer informe llega manana a las 7:30 AM.</p>'
           + '</div>'
           + '<div style="padding:16px 28px;background:#1e1b4b;border-radius:0 0 16px 16px;text-align:center;">'
-          + '<p style="margin:0;font-size:12px;color:rgba(255,255,255,0.7);">Radar by Muller y Perez</p>'
+          + '<p style="margin:0;font-size:12px;color:rgba(255,255,255,0.7);">M&P Copilot by Muller y Perez</p>'
           + '</div></div>',
       }),
     })

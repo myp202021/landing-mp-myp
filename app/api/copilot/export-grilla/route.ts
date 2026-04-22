@@ -14,7 +14,7 @@ export async function GET(req: NextRequest) {
     if (!subId) return NextResponse.json({ error: 'id requerido' }, { status: 400 })
 
     let query = supabase
-      .from('radar_contenido')
+      .from('copilot_contenido')
       .select('*')
       .eq('suscripcion_id', subId)
       .eq('tipo', 'grilla')

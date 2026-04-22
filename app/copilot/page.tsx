@@ -50,7 +50,7 @@ const faqLd = {
   ],
 }
 
-export default function ClippingPage() {
+export default function CopilotPage() {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />

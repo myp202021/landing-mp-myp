@@ -3,7 +3,7 @@ import { createClient } from '@supabase/supabase-js'
 import crypto from 'crypto'
 
 export const metadata = {
-  title: 'Confirmacion — Radar | Muller y Perez',
+  title: 'Confirmacion — M&P Copilot | Muller y Perez',
   robots: 'noindex',
 }
 
@@ -143,8 +143,8 @@ export default async function ConfirmacionPage({ searchParams }: { searchParams:
           </div>
         )}
 
-        <Link href="/clipping" className="text-indigo-600 font-semibold hover:underline text-sm">
-          Volver a Radar
+        <Link href="/copilot" className="text-indigo-600 font-semibold hover:underline text-sm">
+          Volver a Copilot
         </Link>
       </div>
     </div>

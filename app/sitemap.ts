@@ -70,7 +70,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'weekly',
       priority: 1.0,
     },
-    // Radar - Inteligencia Competitiva
+    // Copilot - Inteligencia Competitiva
     {
       url: `${baseUrl}/copilot`,
       lastModified: currentDate,

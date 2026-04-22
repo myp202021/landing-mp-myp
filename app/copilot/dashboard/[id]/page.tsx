@@ -1,10 +1,10 @@
 import CopilotDashboard from './CopilotDashboard'
 
 export const metadata = {
-  title: 'Mi Radar — Inteligencia Competitiva | Muller y Perez',
+  title: 'M&P Copilot — Dashboard Competitiva | Muller y Perez',
   robots: 'noindex',
 }
 
-export default function RadarPage({ params }: { params: { id: string } }) {
+export default function CopilotPage({ params }: { params: { id: string } }) {
   return <CopilotDashboard suscripcionId={params.id} />
 }

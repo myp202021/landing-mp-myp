@@ -66,7 +66,7 @@ export async function POST(req: NextRequest) {
         body: JSON.stringify({
           from: 'M&P Copilot <contacto@mulleryperez.cl>',
           to: [email],
-          subject: (nombre_empresa || 'Hola') + ', bienvenido a Radar | Tu prueba de 7 dias comienza ahora',
+          subject: (nombre_empresa || 'Hola') + ', bienvenido a M&P Copilot | Tu prueba de 7 dias comienza ahora',
           html: '<div style="font-family:-apple-system,sans-serif;max-width:580px;margin:0 auto;">'
             + '<div style="background:linear-gradient(135deg,#4338CA,#7C3AED);color:white;padding:28px 32px;border-radius:16px 16px 0 0;">'
             + '<p style="margin:0;font-size:11px;opacity:0.6;letter-spacing:1.5px;">M&P COPILOT</p>'

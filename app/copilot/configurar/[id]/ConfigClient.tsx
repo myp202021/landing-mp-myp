@@ -32,7 +32,7 @@ export default function ConfigClient(props: { suscripcionId: string }) {
   async function loadData() {
     setLoading(true)
     try {
-      var r = await fetch(SUPABASE_URL + '/rest/v1/clipping_suscripciones?id=eq.' + props.suscripcionId + '&select=*', { headers: hdrs() })
+      var r = await fetch(SUPABASE_URL + '/rest/v1/copilot_suscripciones?id=eq.' + props.suscripcionId + '&select=*', { headers: hdrs() })
       var data = await r.json()
       if (!data || data.length === 0) { setError('Suscripcion no encontrada'); setLoading(false); return }
       var s = data[0]
@@ -93,7 +93,7 @@ export default function ConfigClient(props: { suscripcionId: string }) {
       allCuentas.push({ red: 'prensa', keywords: kwStr.split(',').map(function(k: string) { return k.trim().toLowerCase() }).filter(function(k: string) { return k !== '' }) })
     }
     try {
-      var r = await fetch(SUPABASE_URL + '/rest/v1/clipping_suscripciones?id=eq.' + props.suscripcionId, {
+      var r = await fetch(SUPABASE_URL + '/rest/v1/copilot_suscripciones?id=eq.' + props.suscripcionId, {
         method: 'PATCH', headers: hdrs(),
         body: JSON.stringify({
           cuentas: allCuentas,
@@ -205,7 +205,7 @@ export default function ConfigClient(props: { suscripcionId: string }) {
           <div className="flex justify-between items-center mb-4">
             <div>
               <h2 className="font-bold text-gray-900">Competidores a monitorear</h2>
-              <p className="text-sm text-gray-500 mt-1">Cuentas de la competencia que Radar analiza diariamente.</p>
+              <p className="text-sm text-gray-500 mt-1">Cuentas de la competencia que Copilot analiza diariamente.</p>
             </div>
             <span className={'text-sm font-semibold ' + (used >= limit ? 'text-red-500' : 'text-gray-500')}>{used} / {limit}</span>
           </div>
@@ -255,7 +255,7 @@ export default function ConfigClient(props: { suscripcionId: string }) {
         <div className="mt-8 text-center text-sm text-gray-400">
           <a href={'/copilot/dashboard/' + props.suscripcionId} className="text-indigo-600 font-semibold hover:underline">Ver mi dashboard</a>
           <span className="mx-3">|</span>
-          <a href="/clipping" className="text-indigo-600 font-semibold hover:underline">Volver a Radar</a>
+          <a href="/copilot" className="text-indigo-600 font-semibold hover:underline">Volver a Copilot</a>
         </div>
       </div>
     </div>

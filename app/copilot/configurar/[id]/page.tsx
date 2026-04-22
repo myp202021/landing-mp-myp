@@ -1,7 +1,7 @@
 import ConfigClient from './ConfigClient'
 
 export const metadata = {
-  title: 'Configurar Radar | Muller y Perez',
+  title: 'Configurar — M&P Copilot | Muller y Perez',
   robots: 'noindex',
 }
 

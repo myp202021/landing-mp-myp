@@ -24,18 +24,18 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
   async function loadData() {
     setLoading(true)
     try {
-      var r1 = await fetch(SUPABASE_URL + '/rest/v1/clipping_suscripciones?id=eq.' + props.suscripcionId + '&select=*', { headers: hdrs() })
+      var r1 = await fetch(SUPABASE_URL + '/rest/v1/copilot_suscripciones?id=eq.' + props.suscripcionId + '&select=*', { headers: hdrs() })
       var subs = await r1.json()
       if (!subs || subs.length === 0) { setError('Suscripcion no encontrada'); setLoading(false); return }
       setSub(subs[0])
 
       var dias = periodo === '7d' ? 7 : periodo === '30d' ? 30 : 90
       var desde = new Date(Date.now() - dias * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
-      var r2 = await fetch(SUPABASE_URL + '/rest/v1/radar_posts?suscripcion_id=eq.' + props.suscripcionId + '&fecha_scrape=gte.' + desde + '&select=*&order=fecha_scrape.desc', { headers: hdrs() })
+      var r2 = await fetch(SUPABASE_URL + '/rest/v1/copilot_posts?suscripcion_id=eq.' + props.suscripcionId + '&fecha_scrape=gte.' + desde + '&select=*&order=fecha_scrape.desc', { headers: hdrs() })
       var data = await r2.json()
       setPosts(Array.isArray(data) ? data : [])
 
-      var r3 = await fetch(SUPABASE_URL + '/rest/v1/radar_contenido?suscripcion_id=eq.' + props.suscripcionId + '&select=*&order=created_at.desc', { headers: hdrs() })
+      var r3 = await fetch(SUPABASE_URL + '/rest/v1/copilot_contenido?suscripcion_id=eq.' + props.suscripcionId + '&select=*&order=created_at.desc', { headers: hdrs() })
       var cData = await r3.json()
       setContenido(Array.isArray(cData) ? cData : [])
     } catch (e) { setError('Error cargando datos') }
@@ -44,13 +44,13 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
 
   if (error) return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-      <div className="text-center"><p className="text-xl font-bold text-gray-900 mb-2">Radar</p><p className="text-gray-500">{error}</p></div>
+      <div className="text-center"><p className="text-xl font-bold text-gray-900 mb-2">M&P Copilot</p><p className="text-gray-500">{error}</p></div>
     </div>
   )
 
   if (loading || !sub) return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-      <p className="text-gray-400">Cargando tu Radar...</p>
+      <p className="text-gray-400">Cargando tu Copilot...</p>
     </div>
   )
 
@@ -348,7 +348,7 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
         <div className="text-center mt-8 text-xs text-gray-400">
           <a href={'/copilot/configurar/' + props.suscripcionId} className="text-indigo-600 font-semibold hover:underline">Configurar cuentas</a>
           <span className="mx-3">|</span>
-          <a href="/clipping" className="text-indigo-600 font-semibold hover:underline">Volver a Radar</a>
+          <a href="/copilot" className="text-indigo-600 font-semibold hover:underline">Volver a Copilot</a>
         </div>
       </div>
     </div>
