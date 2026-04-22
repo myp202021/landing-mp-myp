@@ -2287,7 +2287,7 @@ Simula el rendimiento de tus campanas antes de invertir.
     id: 'link_predictor',
     type: 'external_link',
     text: 'Abriendo MP Predictor...',
-    externalUrl: 'https://www.mulleryperez.cl/mp-predictor',
+    externalUrl: 'https://www.mulleryperez.cl/predictor',
     nextNode: 'herramientas_menu',
     category: 'herramientas'
   },

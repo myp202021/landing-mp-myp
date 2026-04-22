@@ -119,7 +119,7 @@ export default function PopupBalance2025() {
             </a>
             <a href="/labs/radar-industrias" className="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-50 transition-colors group">
               <span className="text-base">📡</span>
-              <span className="text-xs text-gray-700 group-hover:text-[#667eea]">Radar Industrias</span>
+              <span className="text-xs text-gray-700 group-hover:text-[#667eea]">Copilot Industrias</span>
             </a>
             <a href="/utilidades" className="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-50 transition-colors group">
               <span className="text-base">🔢</span>

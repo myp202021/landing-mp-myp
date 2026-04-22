@@ -193,6 +193,24 @@ const nextConfig = {
         permanent: true,
       },
       // ========================================
+      // Radar/Clipping → Copilot (abril 2026)
+      // ========================================
+      {
+        source: '/clipping',
+        destination: '/copilot',
+        permanent: true,
+      },
+      {
+        source: '/clipping/:path*',
+        destination: '/copilot/:path*',
+        permanent: true,
+      },
+      {
+        source: '/radar/:id((?!industrias).*)',
+        destination: '/copilot/dashboard/:id',
+        permanent: true,
+      },
+      // ========================================
       // Trailing slash fixes
       // ========================================
       {

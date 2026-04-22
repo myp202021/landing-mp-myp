@@ -89,7 +89,7 @@ export default function BlogMonitoreoPage() {
           </div>
 
           <div className="text-center my-8">
-            <Link href="/clipping" className="inline-block bg-indigo-600 text-white font-bold px-8 py-4 rounded-xl text-lg hover:bg-indigo-700 transition shadow-lg shadow-indigo-200">
+            <Link href="/copilot" className="inline-block bg-indigo-600 text-white font-bold px-8 py-4 rounded-xl text-lg hover:bg-indigo-700 transition shadow-lg shadow-indigo-200">
               Prueba Radar gratis 7 dias
             </Link>
           </div>
