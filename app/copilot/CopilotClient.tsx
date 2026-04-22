@@ -48,7 +48,7 @@ export default function ClippingClient() {
       return { red: 'instagram', handle: m ? m[1] : u.trim() }
     })
     try {
-      var res = await fetch('/api/clipping/trial', {
+      var res = await fetch('/api/copilot/trial', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: trialEmail, cuentas: cuentas, nombre_empresa: nombreEmpresa, descripcion: descripcion }),
@@ -179,7 +179,7 @@ export default function ClippingClient() {
           {tab === 'diario' && (
             <div className="bg-white rounded-2xl border border-gray-200 shadow-2xl overflow-hidden max-w-3xl mx-auto email-static">
               <div className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-8 py-7">
-                <p className="font-bold text-xl">Tu Radar diario</p>
+                <p className="font-bold text-xl">Tu Copilot diario</p>
                 <p className="text-sm opacity-90 mt-1">Martes 15 de abril de 2026 | 5 cuentas | 8 posts nuevos</p>
               </div>
               <div className="px-8 py-5 bg-indigo-50 border-b border-indigo-100">
@@ -201,7 +201,7 @@ export default function ClippingClient() {
                   <p className="text-sm text-amber-800 font-medium">Vendomatica: 5 dias sin publicar</p>
                 </div>
               </div>
-              <div className="px-8 py-3 bg-gray-50 border-t border-gray-200 text-center text-xs text-gray-400">Radar by Muller y Perez | Informe diario | 7:30 AM</div>
+              <div className="px-8 py-3 bg-gray-50 border-t border-gray-200 text-center text-xs text-gray-400">M&P Copilot by Muller y Perez | Informe diario | 7:30 AM</div>
               <div className="text-center py-4"><button onClick={function() { setModalOpen('diario') }} className="text-sm font-semibold text-indigo-600 border border-indigo-200 px-6 py-2.5 rounded-lg hover:bg-indigo-50 transition">Ver informe diario completo</button></div>
             </div>
           )}
@@ -249,7 +249,7 @@ export default function ClippingClient() {
                 </div>
                 <p className="text-xs text-green-700 mt-4 font-medium">Generados con OpenAI + Claude + revision QA automatica. Listos para adaptar y publicar.</p>
               </div>
-              <div className="px-8 py-3 bg-gray-50 border-t border-gray-200 text-center text-xs text-gray-400">Radar by Muller y Perez | Semanal | Lunes 9:00 AM</div>
+              <div className="px-8 py-3 bg-gray-50 border-t border-gray-200 text-center text-xs text-gray-400">M&P Copilot by Muller y Perez | Semanal | Lunes 9:00 AM</div>
               <div className="text-center py-4"><button onClick={function() { setModalOpen('semanal') }} className="text-sm font-semibold text-indigo-600 border border-indigo-200 px-6 py-2.5 rounded-lg hover:bg-indigo-50 transition">Ver informe semanal completo</button></div>
             </div>
           )}
@@ -296,7 +296,7 @@ export default function ClippingClient() {
                 </div>
                 <p className="text-xs text-green-700 mt-2">+ 12 posts mas en el PDF adjunto con copy completo y hashtags.</p>
               </div>
-              <div className="px-8 py-3 bg-gray-50 border-t border-gray-200 text-center text-xs text-gray-400">Radar by Muller y Perez | Brief mensual | 1ro de cada mes 9:00 AM</div>
+              <div className="px-8 py-3 bg-gray-50 border-t border-gray-200 text-center text-xs text-gray-400">M&P Copilot by Muller y Perez | Brief mensual | 1ro de cada mes 9:00 AM</div>
               <div className="text-center py-4"><button onClick={function() { setModalOpen('mensual') }} className="text-sm font-semibold text-indigo-600 border border-indigo-200 px-6 py-2.5 rounded-lg hover:bg-indigo-50 transition">Ver brief mensual completo</button></div>
             </div>
           )}
@@ -424,12 +424,12 @@ export default function ClippingClient() {
           {enviado ? (
             <div className="text-center py-8">
               <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center text-3xl mx-auto mb-4">&#10003;</div>
-              <h3 className="text-xl font-bold mb-2">Radar activado</h3>
+              <h3 className="text-xl font-bold mb-2">Copilot activado</h3>
               <p className="text-gray-500 mb-6">Manana a las 7:30 AM recibiras tu primer informe en <strong className="text-gray-900">{trialEmail}</strong></p>
               {trialId && (
                 <div className="space-y-3">
-                  <a href={'/radar/configurar/' + trialId} className="block bg-indigo-600 text-white text-center py-3 rounded-lg font-semibold text-sm hover:bg-indigo-700 transition">Configurar mis cuentas</a>
-                  <a href={'/radar/' + trialId} className="block bg-gray-100 text-gray-700 text-center py-3 rounded-lg font-semibold text-sm hover:bg-gray-200 transition">Ver mi dashboard</a>
+                  <a href={'/copilot/configurar/' + trialId} className="block bg-indigo-600 text-white text-center py-3 rounded-lg font-semibold text-sm hover:bg-indigo-700 transition">Configurar mis cuentas</a>
+                  <a href={'/copilot/dashboard/' + trialId} className="block bg-gray-100 text-gray-700 text-center py-3 rounded-lg font-semibold text-sm hover:bg-gray-200 transition">Ver mi dashboard</a>
                 </div>
               )}
               <p className="text-gray-400 text-xs mt-4">Revisa tu email para tus links privados</p>

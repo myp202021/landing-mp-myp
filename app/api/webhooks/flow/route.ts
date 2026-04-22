@@ -112,22 +112,22 @@ export async function POST(req: NextRequest) {
 
 async function enviarConfirmacion(email: string, subId: string, nombre: string) {
   try {
-    const dashUrl = 'https://www.mulleryperez.cl/radar/' + subId
-    const configUrl = 'https://www.mulleryperez.cl/radar/configurar/' + subId
+    const dashUrl = 'https://www.mulleryperez.cl/copilot/dashboard/' + subId
+    const configUrl = 'https://www.mulleryperez.cl/copilot/configurar/' + subId
     await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: { 'Authorization': 'Bearer ' + RESEND_KEY, 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        from: 'Radar <contacto@mulleryperez.cl>',
+        from: 'M&P Copilot <contacto@mulleryperez.cl>',
         to: [email],
-        subject: (nombre || 'Hola') + ', tu Radar esta activo | Configura tus cuentas',
+        subject: (nombre || 'Hola') + ', tu Copilot esta activo | Configura tus cuentas',
         html: '<div style="font-family:-apple-system,sans-serif;max-width:580px;margin:0 auto;">'
           + '<div style="background:linear-gradient(135deg,#4338CA,#7C3AED);color:white;padding:28px 32px;border-radius:16px 16px 0 0;">'
-          + '<p style="margin:0;font-size:11px;opacity:0.6;letter-spacing:1.5px;">RADAR BY MULLER Y PEREZ</p>'
-          + '<h1 style="margin:8px 0;font-size:22px;font-weight:800;">Tu Radar esta activo</h1>'
+          + '<p style="margin:0;font-size:11px;opacity:0.6;letter-spacing:1.5px;">M&P COPILOT</p>'
+          + '<h1 style="margin:8px 0;font-size:22px;font-weight:800;">Tu Copilot esta activo</h1>'
           + '</div>'
           + '<div style="background:white;padding:28px 32px;">'
-          + '<p style="font-size:15px;color:#374151;line-height:1.7;">Tu suscripcion fue procesada exitosamente. Tu Radar de inteligencia competitiva esta funcionando.</p>'
+          + '<p style="font-size:15px;color:#374151;line-height:1.7;">Tu suscripcion fue procesada exitosamente. Tu Copilot de inteligencia competitiva esta funcionando.</p>'
           + '<div style="background:#f0fdf4;padding:16px 20px;border-radius:10px;margin:20px 0;border:1px solid #bbf7d0;">'
           + '<p style="margin:0 0 8px;font-size:14px;color:#166534;font-weight:700;">Siguiente paso: configura tus cuentas</p>'
           + '<p style="margin:0;font-size:13px;color:#166534;">Agrega las cuentas de Instagram, LinkedIn y Facebook que quieres monitorear:</p>'
@@ -152,13 +152,13 @@ async function enviarConfirmacion(email: string, subId: string, nombre: string) 
       method: 'POST',
       headers: { 'Authorization': 'Bearer ' + RESEND_KEY, 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        from: 'Radar <contacto@mulleryperez.cl>',
+        from: 'M&P Copilot <contacto@mulleryperez.cl>',
         to: ['contacto@mulleryperez.cl'],
         subject: '[Admin] Pago confirmado: ' + (nombre || email),
         html: '<div style="font-family:sans-serif;padding:20px;"><h2 style="color:#10B981;">Pago confirmado</h2>'
           + '<p><strong>Cliente:</strong> ' + (nombre || '(sin nombre)') + '</p>'
           + '<p><strong>Email:</strong> ' + email + '</p>'
-          + '<p><a href="https://www.mulleryperez.cl/crm/radar" style="color:#4338CA;font-weight:bold;">Ver en CRM</a></p></div>',
+          + '<p><a href="https://www.mulleryperez.cl/crm/copilot" style="color:#4338CA;font-weight:bold;">Ver en CRM</a></p></div>',
       }),
     })
   } catch (e) { console.error('Error enviando confirmacion') }

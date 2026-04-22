@@ -1,7 +1,7 @@
 import ContratarClient from './ContratarClient'
 
 export const metadata = {
-  title: 'Elige tu plan Radar | Muller y Perez',
+  title: 'Elige tu plan — M&P Copilot | Muller y Perez',
   robots: 'noindex',
 }
 

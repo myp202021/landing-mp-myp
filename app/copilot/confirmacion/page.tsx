@@ -43,7 +43,7 @@ async function getSuscripcionYActivar(email: string) {
       const subData = await flowRequest('/subscription/create', {
         planId: sub.flow_plan_pendiente,
         customerId: sub.flow_customer_id,
-        url_return: 'https://www.mulleryperez.cl/clipping/confirmacion?email=' + encodeURIComponent(email),
+        url_return: 'https://www.mulleryperez.cl/copilot/confirmacion?email=' + encodeURIComponent(email),
         url_callback: 'https://www.mulleryperez.cl/api/webhooks/flow',
       })
 
@@ -81,15 +81,15 @@ export default async function ConfirmacionPage({ searchParams }: { searchParams:
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
             </div>
-            <h1 className="text-2xl font-bold text-gray-900 mb-3">Radar activado</h1>
+            <h1 className="text-2xl font-bold text-gray-900 mb-3">Copilot activado</h1>
             <p className="text-gray-600 mb-6">Tu suscripcion fue procesada exitosamente. Ya puedes configurar tus cuentas.</p>
             <div className="bg-gray-50 rounded-xl p-5 mb-6 text-left">
               <p className="text-sm text-gray-700 mb-3"><strong>Siguiente paso: configura tus cuentas</strong></p>
               <div className="space-y-2">
-                <a href={'/radar/configurar/' + sub.id} className="block bg-indigo-600 text-white text-center py-3 rounded-lg font-semibold text-sm hover:bg-indigo-700 transition">
+                <a href={'/copilot/configurar/' + sub.id} className="block bg-indigo-600 text-white text-center py-3 rounded-lg font-semibold text-sm hover:bg-indigo-700 transition">
                   Configurar mis cuentas
                 </a>
-                <a href={'/radar/' + sub.id} className="block bg-gray-200 text-gray-700 text-center py-3 rounded-lg font-semibold text-sm hover:bg-gray-300 transition">
+                <a href={'/copilot/dashboard/' + sub.id} className="block bg-gray-200 text-gray-700 text-center py-3 rounded-lg font-semibold text-sm hover:bg-gray-300 transition">
                   Ver mi dashboard
                 </a>
               </div>
@@ -109,7 +109,7 @@ export default async function ConfirmacionPage({ searchParams }: { searchParams:
             <div className="bg-yellow-50 rounded-xl p-5 mb-6 text-left border border-yellow-200">
               <p className="text-sm text-yellow-800"><strong>Mientras tanto puedes seguir usando tu trial:</strong></p>
               <div className="space-y-2 mt-3">
-                <a href={'/radar/' + sub.id} className="block bg-yellow-600 text-white text-center py-3 rounded-lg font-semibold text-sm hover:bg-yellow-700 transition">
+                <a href={'/copilot/dashboard/' + sub.id} className="block bg-yellow-600 text-white text-center py-3 rounded-lg font-semibold text-sm hover:bg-yellow-700 transition">
                   Ver mi dashboard
                 </a>
               </div>

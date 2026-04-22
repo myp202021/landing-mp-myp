@@ -134,17 +134,17 @@ export default function ConfigClient(props: { suscripcionId: string }) {
       <div className="bg-gradient-to-r from-indigo-700 to-purple-700 text-white px-6 py-8">
         <div className="max-w-3xl mx-auto flex justify-between items-center">
           <div>
-            <p className="text-xs opacity-60 tracking-widest mb-2">RADAR BY MULLER Y PEREZ</p>
-            <h1 className="text-2xl font-bold">Configurar tu Radar</h1>
+            <p className="text-xs opacity-60 tracking-widest mb-2">M&P COPILOT</p>
+            <h1 className="text-2xl font-bold">Configurar tu Copilot</h1>
             <p className="text-sm opacity-80 mt-1">Plan {sub.plan} | {used} de {limit} cuentas usadas</p>
           </div>
           {sub.estado === 'trial' && (
-            <a href={'/clipping/contratar/' + props.suscripcionId} className="bg-white text-indigo-700 font-bold px-6 py-3 rounded-xl text-sm hover:bg-indigo-50 transition shadow-lg">
+            <a href={'/copilot/contratar/' + props.suscripcionId} className="bg-white text-indigo-700 font-bold px-6 py-3 rounded-xl text-sm hover:bg-indigo-50 transition shadow-lg">
               Contratar plan
             </a>
           )}
           {sub.estado === 'activo' && sub.plan !== 'business' && (
-            <a href={'/clipping/contratar/' + props.suscripcionId} className="bg-white text-indigo-700 font-bold px-6 py-3 rounded-xl text-sm hover:bg-indigo-50 transition shadow-lg">
+            <a href={'/copilot/contratar/' + props.suscripcionId} className="bg-white text-indigo-700 font-bold px-6 py-3 rounded-xl text-sm hover:bg-indigo-50 transition shadow-lg">
               Subir de plan
             </a>
           )}
@@ -231,7 +231,7 @@ export default function ConfigClient(props: { suscripcionId: string }) {
           {used >= limit && (
             <div className="mt-3 flex items-center gap-3">
               <p className="text-sm text-amber-600">Llegaste al limite de tu plan ({limit} cuentas).</p>
-              <a href={'/clipping/contratar/' + props.suscripcionId} className="text-sm font-bold text-indigo-600 hover:underline">Subir de plan</a>
+              <a href={'/copilot/contratar/' + props.suscripcionId} className="text-sm font-bold text-indigo-600 hover:underline">Subir de plan</a>
             </div>
           )}
         </div>
@@ -253,7 +253,7 @@ export default function ConfigClient(props: { suscripcionId: string }) {
 
         {/* LINKS */}
         <div className="mt-8 text-center text-sm text-gray-400">
-          <a href={'/radar/' + props.suscripcionId} className="text-indigo-600 font-semibold hover:underline">Ver mi dashboard</a>
+          <a href={'/copilot/dashboard/' + props.suscripcionId} className="text-indigo-600 font-semibold hover:underline">Ver mi dashboard</a>
           <span className="mx-3">|</span>
           <a href="/clipping" className="text-indigo-600 font-semibold hover:underline">Volver a Radar</a>
         </div>

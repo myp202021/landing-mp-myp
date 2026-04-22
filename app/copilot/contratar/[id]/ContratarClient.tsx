@@ -52,7 +52,7 @@ export default function ContratarClient(props: { suscripcionId: string }) {
     setProcesando(true)
     try {
       var periodo = anual ? 'anual' : 'mensual'
-      var res = await fetch('/api/clipping/checkout', {
+      var res = await fetch('/api/copilot/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ plan: planId + '-' + periodo, email: sub.email, nombre: sub.nombre || sub.email, suscripcionId: props.suscripcionId }),
@@ -78,7 +78,7 @@ export default function ContratarClient(props: { suscripcionId: string }) {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="bg-gradient-to-r from-indigo-700 to-purple-700 text-white px-6 py-10 text-center">
-        <p className="text-xs opacity-60 tracking-widest mb-3">RADAR BY MULLER Y PEREZ</p>
+        <p className="text-xs opacity-60 tracking-widest mb-3">M&P COPILOT</p>
         <h1 className="text-3xl font-bold mb-2">Elige tu plan</h1>
         <p className="text-sm opacity-80">{sub.email} | Trial {sub.estado === 'trial' ? 'activo' : 'finalizado'}</p>
       </div>

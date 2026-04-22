@@ -570,7 +570,7 @@ export default function LandingClient() {
 
             {/* Radar */}
             <Link
-              href="/clipping"
+              href="/copilot"
               className="hidden md:block text-sm font-semibold text-gray-700 hover:text-blue-600 transition-all duration-200"
             >
               Radar

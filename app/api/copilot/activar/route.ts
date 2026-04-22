@@ -56,7 +56,7 @@ export async function POST(req: NextRequest) {
     const subData = await flowRequest('/subscription/create', {
       planId: sub.flow_plan_pendiente,
       customerId: sub.flow_customer_id,
-      url_return: 'https://www.mulleryperez.cl/clipping/confirmacion?email=' + encodeURIComponent(email),
+      url_return: 'https://www.mulleryperez.cl/copilot/confirmacion?email=' + encodeURIComponent(email),
       url_callback: 'https://www.mulleryperez.cl/api/webhooks/flow',
     })
 

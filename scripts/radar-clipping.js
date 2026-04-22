@@ -570,7 +570,7 @@ function generarEmailHTML(posts, cuentas, fecha, modo, resumenIA, empresas, tren
   h += '<div style="background:linear-gradient(135deg,#4338CA,#7C3AED);color:white;padding:30px 32px;border-radius:16px 16px 0 0;">'
   h += '<table style="width:100%;"><tr>'
   h += '<td style="vertical-align:top;">'
-  h += '<p style="margin:0;font-size:12px;opacity:0.7;letter-spacing:1px;">RADAR BY MULLER Y PEREZ</p>'
+  h += '<p style="margin:0;font-size:12px;opacity:0.7;letter-spacing:1px;">M&P COPILOT</p>'
   h += '<h1 style="margin:8px 0 4px;font-size:26px;font-weight:800;">' + titulo + '</h1>'
   h += '<p style="margin:0;font-size:14px;opacity:0.9;">' + fechaLegible + '</p>'
   h += '</td>'
@@ -634,10 +634,10 @@ function generarEmailHTML(posts, cuentas, fecha, modo, resumenIA, empresas, tren
     if (estado === 'trial') {
       var diasR = trialEnds ? Math.max(0, Math.ceil((new Date(trialEnds).getTime() - Date.now()) / (1000*60*60*24))) : 7
       h += '<span style="background:#fef3c7;padding:6px 14px;border-radius:8px;font-size:12px;color:#92400e;font-weight:600;">Prueba gratuita | ' + diasR + ' dias restantes</span> '
-      h += '<a href="https://www.mulleryperez.cl/clipping/contratar/' + subId + '" style="display:inline-block;background:#4338CA;color:white;padding:10px 24px;border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;margin-left:8px;">Contrata tu plan</a>'
+      h += '<a href="https://www.mulleryperez.cl/copilot/contratar/' + subId + '" style="display:inline-block;background:#4338CA;color:white;padding:10px 24px;border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;margin-left:8px;">Contrata tu plan</a>'
     } else {
       h += '<span style="background:#dcfce7;padding:6px 14px;border-radius:8px;font-size:12px;color:#166534;font-weight:600;">Plan ' + plan + '</span> '
-      h += '<a href="https://www.mulleryperez.cl/radar/configurar/' + subId + '" style="display:inline-block;background:#4338CA;color:white;padding:10px 24px;border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;margin-left:8px;">Configurar cuentas</a>'
+      h += '<a href="https://www.mulleryperez.cl/copilot/configurar/' + subId + '" style="display:inline-block;background:#4338CA;color:white;padding:10px 24px;border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;margin-left:8px;">Configurar cuentas</a>'
     }
     h += '</div>'
   }
@@ -791,13 +791,13 @@ function generarEmailHTML(posts, cuentas, fecha, modo, resumenIA, empresas, tren
       // Trial: CTA principal es contratar
       var diasRestantes = trialEnds ? Math.max(0, Math.ceil((new Date(trialEnds).getTime() - Date.now()) / (1000*60*60*24))) : 7
       h += '<div style="background:#fef3c7;padding:8px 16px;border-radius:8px;margin-bottom:12px;display:inline-block;"><span style="font-size:12px;color:#92400e;font-weight:600;">Prueba gratuita | ' + diasRestantes + ' dias restantes</span></div><br>'
-      h += '<a href="https://www.mulleryperez.cl/clipping/contratar/' + subId + '" style="display:inline-block;background:#4338CA;color:white;padding:12px 28px;border-radius:10px;font-size:14px;font-weight:700;text-decoration:none;">Contrata tu plan &#8594;</a>'
-      h += '<p style="margin:8px 0 0;font-size:11px;color:#9ca3af;"><a href="https://www.mulleryperez.cl/radar/' + subId + '" style="color:#6366f1;text-decoration:none;">Ver dashboard</a></p>'
+      h += '<a href="https://www.mulleryperez.cl/copilot/contratar/' + subId + '" style="display:inline-block;background:#4338CA;color:white;padding:12px 28px;border-radius:10px;font-size:14px;font-weight:700;text-decoration:none;">Contrata tu plan &#8594;</a>'
+      h += '<p style="margin:8px 0 0;font-size:11px;color:#9ca3af;"><a href="https://www.mulleryperez.cl/copilot/dashboard/' + subId + '" style="color:#6366f1;text-decoration:none;">Ver dashboard</a></p>'
     } else {
       // Activo: CTA principal es configurar cuentas
       h += '<div style="background:#dcfce7;padding:8px 16px;border-radius:8px;margin-bottom:12px;display:inline-block;"><span style="font-size:12px;color:#166534;font-weight:600;">Plan ' + plan + '</span></div><br>'
-      h += '<a href="https://www.mulleryperez.cl/radar/configurar/' + subId + '" style="display:inline-block;background:#4338CA;color:white;padding:12px 28px;border-radius:10px;font-size:14px;font-weight:700;text-decoration:none;">Configurar cuentas &#8594;</a>'
-      h += '<p style="margin:8px 0 0;font-size:11px;color:#9ca3af;"><a href="https://www.mulleryperez.cl/radar/' + subId + '" style="color:#6366f1;text-decoration:none;">Ver dashboard</a></p>'
+      h += '<a href="https://www.mulleryperez.cl/copilot/configurar/' + subId + '" style="display:inline-block;background:#4338CA;color:white;padding:12px 28px;border-radius:10px;font-size:14px;font-weight:700;text-decoration:none;">Configurar cuentas &#8594;</a>'
+      h += '<p style="margin:8px 0 0;font-size:11px;color:#9ca3af;"><a href="https://www.mulleryperez.cl/copilot/dashboard/' + subId + '" style="color:#6366f1;text-decoration:none;">Ver dashboard</a></p>'
     }
     h += '</div>'
   }
@@ -806,7 +806,7 @@ function generarEmailHTML(posts, cuentas, fecha, modo, resumenIA, empresas, tren
   h += '<div style="padding:20px 28px;background:#1e1b4b;border-radius:0 0 16px 16px;text-align:center;">'
   h += '<p style="margin:0;font-size:12px;color:rgba(255,255,255,0.7);">Radar by <strong style="color:white;">Muller y Perez</strong> | '
   h += modo === 'diario' ? 'Informe diario 7:30 AM' : modo === 'semanal' ? 'Resumen semanal, lunes 9 AM' : 'Resumen mensual, 1ro de cada mes'
-  h += '</p><p style="margin:6px 0 0;font-size:11px;color:rgba(255,255,255,0.4);">mulleryperez.cl/clipping | Responde este email para ajustar cuentas</p></div></div>'
+  h += '</p><p style="margin:6px 0 0;font-size:11px;color:rgba(255,255,255,0.4);">mulleryperez.cl/copilot | Responde este email para ajustar cuentas</p></div></div>'
   return h
 }
 

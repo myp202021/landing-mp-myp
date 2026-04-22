@@ -75,7 +75,7 @@ async function main() {
 function header(titulo, subtitulo) {
   return '<div style="font-family:-apple-system,Helvetica,Arial,sans-serif;max-width:580px;margin:0 auto;color:#1a1a1a;">'
     + '<div style="background:linear-gradient(135deg,#4338CA,#7C3AED);color:white;padding:28px 32px;border-radius:16px 16px 0 0;">'
-    + '<p style="margin:0;font-size:11px;opacity:0.6;letter-spacing:1px;">RADAR BY MULLER Y PEREZ</p>'
+    + '<p style="margin:0;font-size:11px;opacity:0.6;letter-spacing:1px;">M&P COPILOT</p>'
     + '<h1 style="margin:8px 0 4px;font-size:22px;font-weight:800;">' + titulo + '</h1>'
     + '<p style="margin:0;font-size:14px;opacity:0.9;">' + subtitulo + '</p>'
     + '</div>'
@@ -83,8 +83,8 @@ function header(titulo, subtitulo) {
 
 function footer() {
   return '<div style="padding:20px 28px;background:#1e1b4b;border-radius:0 0 16px 16px;text-align:center;">'
-    + '<p style="margin:0;font-size:12px;color:rgba(255,255,255,0.6);">Radar by Muller y Perez</p>'
-    + '<p style="margin:4px 0 0;font-size:11px;color:rgba(255,255,255,0.4);">mulleryperez.cl/clipping</p>'
+    + '<p style="margin:0;font-size:12px;color:rgba(255,255,255,0.6);">M&P Copilot by Muller y Perez</p>'
+    + '<p style="margin:4px 0 0;font-size:11px;color:rgba(255,255,255,0.4);">mulleryperez.cl/copilot</p>'
     + '</div></div>'
 }
 
@@ -108,8 +108,8 @@ function emailBienvenida(sub) {
     + '<p style="font-size:14px;color:#6b7280;">Tu prueba dura 7 dias. Si te sirve, eliges un plan. Si no, se desactiva solo. Sin cargos.</p>'
     + '<div style="background:#f0fdf4;padding:14px 18px;border-radius:10px;margin:16px 0;border:1px solid #bbf7d0;">'
     + '<p style="margin:0 0 6px;font-size:13px;color:#166534;"><strong>Tus links privados (guardalos):</strong></p>'
-    + '<p style="margin:0 0 4px;font-size:13px;color:#166534;">Ver tu Radar: <a href="https://www.mulleryperez.cl/radar/' + sub.id + '" style="color:#4338CA;">mulleryperez.cl/radar/' + sub.id.substring(0,8) + '...</a></p>'
-    + '<p style="margin:0;font-size:13px;color:#166534;">Configurar cuentas: <a href="https://www.mulleryperez.cl/radar/configurar/' + sub.id + '" style="color:#4338CA;">Configurar</a></p>'
+    + '<p style="margin:0 0 4px;font-size:13px;color:#166534;">Ver tu Radar: <a href="https://www.mulleryperez.cl/copilot/dashboard/' + sub.id + '" style="color:#4338CA;">mulleryperez.cl/copilot/dashboard/' + sub.id.substring(0,8) + '...</a></p>'
+    + '<p style="margin:0;font-size:13px;color:#166534;">Configurar cuentas: <a href="https://www.mulleryperez.cl/copilot/dashboard/configurar/' + sub.id + '" style="color:#4338CA;">Configurar</a></p>'
     + '</div>'
     + '</div>'
     + footer()
@@ -126,7 +126,7 @@ function emailDia5(sub) {
     + '<li>Te sirvieron las recomendaciones de la IA?</li>'
     + '</ul>'
     + '<p style="font-size:14px;color:#6b7280;">Tu prueba termina en 2 dias. Si Radar te esta sirviendo, elige tu plan para seguir recibiendo informes.</p>'
-    + boton('Ver planes', 'https://www.mulleryperez.cl/clipping/contratar/' + sub.id)
+    + boton('Ver planes', 'https://www.mulleryperez.cl/copilot/contratar/' + sub.id)
     + '</div>'
     + footer()
 }
@@ -141,7 +141,7 @@ function emailFinTrial(sub) {
     + '<p style="margin:0 0 6px;font-size:14px;color:#166534;"><strong>Pro</strong> — $54.990/mes (anual) — 15 cuentas multi-red + IA</p>'
     + '<p style="margin:0;font-size:14px;color:#166534;"><strong>Business</strong> — $94.990/mes (anual) — 30 cuentas + benchmarking + PDF</p>'
     + '</div>'
-    + boton('Elegir plan', 'https://www.mulleryperez.cl/clipping/contratar/' + sub.id)
+    + boton('Elegir plan', 'https://www.mulleryperez.cl/copilot/contratar/' + sub.id)
     + '<p style="font-size:13px;color:#9ca3af;text-align:center;">Si no eliges plan, el servicio se desactiva solo. Sin cargos.</p>'
     + '</div>'
     + footer()
@@ -153,7 +153,7 @@ function emailDesactivado(sub) {
     + '<p style="font-size:15px;line-height:1.7;color:#374151;">Hola ' + (sub.nombre || sub.email.split('@')[0]) + ',</p>'
     + '<p style="font-size:15px;line-height:1.7;color:#374151;">Tu prueba gratuita de Radar termino y no elegiste un plan. Tus informes diarios, semanales y mensuales dejaran de llegar.</p>'
     + '<p style="font-size:15px;line-height:1.7;color:#374151;">Si cambias de opinion, puedes reactivar tu Radar en cualquier momento:</p>'
-    + boton('Reactivar Radar', 'https://www.mulleryperez.cl/clipping/contratar/' + sub.id)
+    + boton('Reactivar Radar', 'https://www.mulleryperez.cl/copilot/contratar/' + sub.id)
     + '<p style="font-size:13px;color:#9ca3af;text-align:center;">Tus cuentas monitoreadas se mantienen guardadas. Al suscribirte, todo vuelve a funcionar.</p>'
     + '</div>'
     + footer()
@@ -165,7 +165,7 @@ function emailPagoFallido(sub) {
     + '<p style="font-size:15px;line-height:1.7;color:#374151;">Hola ' + (sub.nombre || sub.email.split('@')[0]) + ',</p>'
     + '<p style="font-size:15px;line-height:1.7;color:#374151;">Intentamos cobrar tu plan <strong>' + sub.plan + '</strong> pero el pago fue rechazado. Tu Radar esta suspendido temporalmente.</p>'
     + '<p style="font-size:15px;line-height:1.7;color:#374151;">Para seguir recibiendo informes, actualiza tu medio de pago:</p>'
-    + boton('Actualizar pago', 'https://www.mulleryperez.cl/clipping#planes')
+    + boton('Actualizar pago', 'https://www.mulleryperez.cl/copilot#planes')
     + '<p style="font-size:13px;color:#9ca3af;text-align:center;">Si el pago no se regulariza en 7 dias, tu suscripcion se cancelara.</p>'
     + '</div>'
     + footer()

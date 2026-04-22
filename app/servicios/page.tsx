@@ -10,7 +10,7 @@ import SiteHeader from '@/components/SiteHeader'
 
 export const metadata: Metadata = createMetadata({
   title: 'Servicios de Marketing Digital Chile | Google Ads, Meta Ads, IA, SEO, Dron y Diseño',
-  description: 'Servicios de marketing digital en Chile: Google Ads, Meta Ads, LinkedIn Ads, TikTok Ads, SEO, Performance Marketing, Inteligencia Competitiva con IA (M&P Radar), Video con Dron, Diseño Digital y Automatización. Agencia data-driven con equipo dedicado y resultados medibles.',
+  description: 'Servicios de marketing digital en Chile: Google Ads, Meta Ads, LinkedIn Ads, TikTok Ads, SEO, Performance Marketing, Inteligencia Competitiva con IA (M&P Copilot), Video con Dron, Diseño Digital y Automatización. Agencia data-driven con equipo dedicado y resultados medibles.',
   keywords: [
     // Servicios core
     'servicios marketing digital chile',
@@ -227,7 +227,7 @@ const categories = [
     services: [
       {
         slug: 'mp-radar-inteligencia-competitiva',
-        title: 'M&P Radar',
+        title: 'M&P Copilot',
         subtitle: 'Inteligencia Competitiva con IA — monitoreo automatizado',
         description: 'Sistema propietario de Muller y Pérez que monitorea automáticamente la actividad digital de tus competidores usando inteligencia artificial. Scraping automatizado de Instagram, LinkedIn y Facebook con reportes diarios que incluyen: posts publicados, engagement, ofertas laborales detectadas, promociones agresivas y alertas ejecutivas. Sabrás qué hace tu competencia antes que ellos sepan qué hiciste tú.',
         icon: '🤖',
@@ -344,15 +344,15 @@ const allServices = categories.flatMap(c => c.services)
 const faqItems = [
   {
     question: '¿Qué servicios de marketing digital ofrece Muller y Pérez?',
-    answer: 'Muller y Pérez ofrece 13 servicios de marketing digital organizados en 4 áreas: Campañas Pagadas (Google Ads, Meta Ads, LinkedIn Ads, Instagram Ads, TikTok Ads), Estrategia & Data (Performance Marketing, SEO, Analítica & Atribución), IA & Tecnología (M&P Radar — Inteligencia Competitiva con IA, Automatización & Email Marketing) y Contenido & Producción (Diseño Digital, Video con Dron, Community Management). Todos los planes incluyen equipo dedicado de 3 profesionales.'
+    answer: 'Muller y Pérez ofrece 13 servicios de marketing digital organizados en 4 áreas: Campañas Pagadas (Google Ads, Meta Ads, LinkedIn Ads, Instagram Ads, TikTok Ads), Estrategia & Data (Performance Marketing, SEO, Analítica & Atribución), IA & Tecnología (M&P Copilot — Inteligencia Competitiva con IA, Automatización & Email Marketing) y Contenido & Producción (Diseño Digital, Video con Dron, Community Management). Todos los planes incluyen equipo dedicado de 3 profesionales.'
   },
   {
     question: '¿Cuál es la diferencia entre Google Ads y Meta Ads?',
     answer: 'Google Ads captura demanda existente — usuarios que buscan activamente tu producto o servicio. Es ideal para B2B, servicios profesionales y leads de alta intención. Meta Ads (Facebook + Instagram) genera demanda nueva mediante segmentación por intereses, comportamiento y audiencias lookalike. Es ideal para eCommerce, B2C y awareness. Una estrategia completa combina ambas plataformas con un árbol de decisión que maximiza el retorno.'
   },
   {
-    question: '¿Qué es M&P Radar y cómo funciona la inteligencia competitiva con IA?',
-    answer: 'M&P Radar es un sistema propietario de Muller y Pérez que monitorea automáticamente la actividad digital de tus competidores usando inteligencia artificial. Hace scraping automatizado de Instagram, LinkedIn y Facebook, y envía reportes diarios con: posts publicados, niveles de engagement, ofertas laborales detectadas, promociones agresivas y alertas ejecutivas. Es tecnología exclusiva desarrollada por M&P, no disponible en otras agencias de Chile.'
+    question: '¿Qué es M&P Copilot y cómo funciona la inteligencia competitiva con IA?',
+    answer: 'M&P Copilot es un sistema propietario de Muller y Pérez que monitorea automáticamente la actividad digital de tus competidores usando inteligencia artificial. Hace scraping automatizado de Instagram, LinkedIn y Facebook, y envía reportes diarios con: posts publicados, niveles de engagement, ofertas laborales detectadas, promociones agresivas y alertas ejecutivas. Es tecnología exclusiva desarrollada por M&P, no disponible en otras agencias de Chile.'
   },
   {
     question: '¿Qué es Performance Marketing y por qué es diferente?',
@@ -607,7 +607,7 @@ export default function ServiciosPage() {
                 </svg>
               </div>
               <h3 className="text-lg font-bold text-gray-900 mb-2">Tecnología Propia</h3>
-              <p className="text-gray-600 text-sm">M&P Radar con IA, dashboards propios, automatización — tecnología que otras agencias no tienen.</p>
+              <p className="text-gray-600 text-sm">M&P Copilot con IA, dashboards propios, automatización — tecnología que otras agencias no tienen.</p>
             </div>
           </div>
         </div>

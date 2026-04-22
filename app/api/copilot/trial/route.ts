@@ -54,8 +54,8 @@ export async function POST(req: NextRequest) {
     }
 
     const subId = data?.id || ''
-    const configUrl = 'https://www.mulleryperez.cl/radar/configurar/' + subId
-    const dashUrl = 'https://www.mulleryperez.cl/radar/' + subId
+    const configUrl = 'https://www.mulleryperez.cl/copilot/configurar/' + subId
+    const dashUrl = 'https://www.mulleryperez.cl/copilot/dashboard/' + subId
     const cuentasStr = cuentas.filter((c: any) => c.red !== 'prensa').map((c: any) => c.red + ':' + c.handle).join(', ')
 
     // Email de bienvenida al usuario
@@ -64,17 +64,17 @@ export async function POST(req: NextRequest) {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${process.env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          from: 'Radar <contacto@mulleryperez.cl>',
+          from: 'M&P Copilot <contacto@mulleryperez.cl>',
           to: [email],
           subject: (nombre_empresa || 'Hola') + ', bienvenido a Radar | Tu prueba de 7 dias comienza ahora',
           html: '<div style="font-family:-apple-system,sans-serif;max-width:580px;margin:0 auto;">'
             + '<div style="background:linear-gradient(135deg,#4338CA,#7C3AED);color:white;padding:28px 32px;border-radius:16px 16px 0 0;">'
-            + '<p style="margin:0;font-size:11px;opacity:0.6;letter-spacing:1.5px;">RADAR BY MULLER Y PEREZ</p>'
-            + '<h1 style="margin:8px 0;font-size:22px;font-weight:800;">Bienvenido a Radar</h1>'
+            + '<p style="margin:0;font-size:11px;opacity:0.6;letter-spacing:1.5px;">M&P COPILOT</p>'
+            + '<h1 style="margin:8px 0;font-size:22px;font-weight:800;">Bienvenido a M&P Copilot</h1>'
             + '<p style="margin:0;font-size:14px;opacity:0.9;">Tu prueba gratuita de 7 dias esta activa</p>'
             + '</div>'
             + '<div style="background:white;padding:28px 32px;">'
-            + '<p style="font-size:15px;color:#374151;line-height:1.7;">Hola! Tu Radar de inteligencia competitiva esta funcionando. Manana a las 7:30 AM recibiras tu primer informe diario con el monitoreo de tus competidores.</p>'
+            + '<p style="font-size:15px;color:#374151;line-height:1.7;">Hola! Tu Copilot de inteligencia competitiva esta funcionando. Manana a las 7:30 AM recibiras tu primer informe diario con el monitoreo de tus competidores.</p>'
             + '<div style="background:#f0fdf4;padding:16px 20px;border-radius:10px;margin:20px 0;border:1px solid #bbf7d0;">'
             + '<p style="margin:0 0 8px;font-size:14px;color:#166534;font-weight:700;">Configura tus cuentas</p>'
             + '<p style="margin:0;font-size:13px;color:#166534;">Agrega las cuentas de Instagram, LinkedIn y Facebook de tus competidores:</p>'
@@ -88,12 +88,12 @@ export async function POST(req: NextRequest) {
             + '<p style="margin:0;font-size:13px;color:#4c1d95;">Configurar: <a href="' + configUrl + '" style="color:#4338CA;">Configurar cuentas</a></p>'
             + '</div>'
             + '<div style="text-align:center;margin:20px 0 8px;">'
-            + '<a href="https://www.mulleryperez.cl/clipping/contratar/' + subId + '" style="display:inline-block;background:#10B981;color:white;padding:12px 28px;border-radius:10px;font-weight:700;font-size:14px;text-decoration:none;">Contratar plan</a>'
+            + '<a href="https://www.mulleryperez.cl/copilot/contratar/' + subId + '" style="display:inline-block;background:#10B981;color:white;padding:12px 28px;border-radius:10px;font-weight:700;font-size:14px;text-decoration:none;">Contratar plan</a>'
             + '</div>'
             + '<p style="font-size:13px;color:#6b7280;text-align:center;">Tu trial vence el ' + trialEnds.toISOString().split('T')[0] + '. Planes desde $34.990/mes.</p>'
             + '</div>'
             + '<div style="padding:16px 28px;background:#1e1b4b;border-radius:0 0 16px 16px;text-align:center;">'
-            + '<p style="margin:0;font-size:12px;color:rgba(255,255,255,0.7);">Radar by Muller y Perez</p>'
+            + '<p style="margin:0;font-size:12px;color:rgba(255,255,255,0.7);">M&P Copilot by Muller y Perez</p>'
             + '</div></div>',
         }),
       })
@@ -105,17 +105,17 @@ export async function POST(req: NextRequest) {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${process.env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          from: 'Radar <contacto@mulleryperez.cl>',
+          from: 'M&P Copilot <contacto@mulleryperez.cl>',
           to: ['contacto@mulleryperez.cl'],
-          subject: '[Admin] Nuevo trial Radar: ' + (nombre_empresa || email),
+          subject: '[Admin] Nuevo trial Copilot: ' + (nombre_empresa || email),
           html: '<div style="font-family:sans-serif;padding:20px;">'
-            + '<h2 style="color:#4338CA;">Nuevo trial Radar</h2>'
+            + '<h2 style="color:#4338CA;">Nuevo trial Copilot</h2>'
             + '<p><strong>Email:</strong> ' + email + '</p>'
             + '<p><strong>Empresa:</strong> ' + (nombre_empresa || '(no especificado)') + '</p>'
             + '<p><strong>Descripcion:</strong> ' + (descripcion || '(no especificado)') + '</p>'
             + '<p><strong>Cuentas:</strong> ' + cuentasStr + '</p>'
             + '<p><strong>Trial hasta:</strong> ' + trialEnds.toISOString().split('T')[0] + '</p>'
-            + '<p style="margin-top:16px;"><a href="https://www.mulleryperez.cl/crm/radar" style="color:#4338CA;font-weight:bold;">Ver en panel CRM</a></p>'
+            + '<p style="margin-top:16px;"><a href="https://www.mulleryperez.cl/crm/copilot" style="color:#4338CA;font-weight:bold;">Ver en panel CRM</a></p>'
             + '</div>',
         }),
       })

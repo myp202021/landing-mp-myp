@@ -9,7 +9,7 @@ function hdrs() {
   return { 'apikey': SUPABASE_ANON, 'Authorization': 'Bearer ' + SUPABASE_ANON, 'Content-Type': 'application/json' }
 }
 
-export default function RadarDashboard(props: { suscripcionId: string }) {
+export default function CopilotDashboard(props: { suscripcionId: string }) {
   var [sub, setSub] = useState(null as any)
   var [posts, setPosts] = useState([] as any[])
   var [contenido, setContenido] = useState([] as any[])
@@ -96,11 +96,11 @@ export default function RadarDashboard(props: { suscripcionId: string }) {
       <div className="bg-gradient-to-r from-indigo-700 to-purple-700 text-white px-6 py-8">
         <div className="max-w-5xl mx-auto flex justify-between items-center">
           <div>
-            <p className="text-xs opacity-60 tracking-widest mb-2">RADAR BY MULLER Y PEREZ</p>
-            <h1 className="text-2xl font-bold mb-1">Tu Radar</h1>
+            <p className="text-xs opacity-60 tracking-widest mb-2">M&P COPILOT</p>
+            <h1 className="text-2xl font-bold mb-1">Tu Copilot</h1>
             <p className="text-sm opacity-80">{sub.nombre || sub.email} | Plan {sub.plan} | {cuentas.length} cuentas</p>
           </div>
-          <a href={'/radar/configurar/' + props.suscripcionId} className="bg-white/20 text-white font-semibold px-5 py-2.5 rounded-lg text-sm hover:bg-white/30 transition">Configurar</a>
+          <a href={'/copilot/configurar/' + props.suscripcionId} className="bg-white/20 text-white font-semibold px-5 py-2.5 rounded-lg text-sm hover:bg-white/30 transition">Configurar</a>
         </div>
       </div>
 
@@ -268,7 +268,7 @@ export default function RadarDashboard(props: { suscripcionId: string }) {
                   <h2 className="text-sm font-bold text-gray-900">Grilla {MESES_NOMBRES[mesFiltro]} — {grillasMes[0].datos.length} posts</h2>
                   <div className="flex items-center gap-3">
                     <span className="text-xs text-gray-400">Score promedio: {grillasMes[0].score_promedio || '-'}</span>
-                    <a href={'/api/radar/export-grilla?id=' + props.suscripcionId + '&mes=' + mesFiltro} className="bg-green-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg hover:bg-green-700 transition">Descargar Excel</a>
+                    <a href={'/api/copilot/dashboard/export-grilla?id=' + props.suscripcionId + '&mes=' + mesFiltro} className="bg-green-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg hover:bg-green-700 transition">Descargar Excel</a>
                   </div>
                 </div>
                 <table className="w-full text-sm">
@@ -346,7 +346,7 @@ export default function RadarDashboard(props: { suscripcionId: string }) {
         )}
 
         <div className="text-center mt-8 text-xs text-gray-400">
-          <a href={'/radar/configurar/' + props.suscripcionId} className="text-indigo-600 font-semibold hover:underline">Configurar cuentas</a>
+          <a href={'/copilot/configurar/' + props.suscripcionId} className="text-indigo-600 font-semibold hover:underline">Configurar cuentas</a>
           <span className="mx-3">|</span>
           <a href="/clipping" className="text-indigo-600 font-semibold hover:underline">Volver a Radar</a>
         </div>

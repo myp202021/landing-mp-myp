@@ -45,7 +45,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Plan o email invalido' }, { status: 400 })
     }
 
-    const returnUrl = 'https://www.mulleryperez.cl/clipping/confirmacion?email=' + encodeURIComponent(email)
+    const returnUrl = 'https://www.mulleryperez.cl/copilot/confirmacion?email=' + encodeURIComponent(email)
 
     const planId = PLAN_MAP[plan]
     const customerName = (nombre || email.split('@')[0]).replace(/[^a-zA-Z0-9 ]/g, '')

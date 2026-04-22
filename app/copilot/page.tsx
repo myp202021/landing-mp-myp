@@ -1,9 +1,9 @@
 import SiteHeader from '@/components/SiteHeader'
-import ClippingClient from './ClippingClient'
+import CopilotClient from './CopilotClient'
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Radar — Inteligencia Competitiva en Redes Sociales | Muller y Perez',
+  title: 'M&P Copilot — Tu copiloto de marketing digital en Redes Sociales | Muller y Perez',
   description: 'Monitorea Instagram, Facebook, LinkedIn y prensa de tu competencia. Recibe cada manana un email con analisis IA, trends, contenido sugerido y PDF. Desde $27.990/mes. Prueba gratis 7 dias.',
   keywords: [
     'monitoreo competencia redes sociales chile',
@@ -15,11 +15,11 @@ export const metadata: Metadata = {
     'brand monitoring chile',
     'analisis competencia redes sociales',
   ],
-  alternates: { canonical: 'https://www.mulleryperez.cl/clipping' },
+  alternates: { canonical: 'https://www.mulleryperez.cl/copilot' },
   openGraph: {
-    title: 'Radar — Inteligencia Competitiva en Redes Sociales',
+    title: 'M&P Copilot — Tu copiloto de marketing digital en Redes Sociales',
     description: 'Monitorea a tu competencia en IG, FB, LinkedIn y prensa. Analisis IA + contenido sugerido + PDF. Desde $27.990/mes.',
-    url: 'https://www.mulleryperez.cl/clipping',
+    url: 'https://www.mulleryperez.cl/copilot',
     siteName: 'Muller y Perez',
     type: 'website',
   },
@@ -28,10 +28,10 @@ export const metadata: Metadata = {
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Product',
-  name: 'Radar by Muller y Perez',
+  name: 'M&P Copilot by Muller y Perez',
   description: 'Servicio de inteligencia competitiva en redes sociales. Monitoreo diario de Instagram, Facebook, LinkedIn y prensa con analisis IA y contenido sugerido.',
   brand: { '@type': 'Organization', name: 'Muller y Perez', url: 'https://www.mulleryperez.cl' },
-  url: 'https://www.mulleryperez.cl/clipping',
+  url: 'https://www.mulleryperez.cl/copilot',
   offers: [
     { '@type': 'Offer', name: 'Starter', price: '27990', priceCurrency: 'CLP', priceSpecification: { '@type': 'UnitPriceSpecification', price: '27990', priceCurrency: 'CLP', unitText: 'mes', valueAddedTaxIncluded: false } },
     { '@type': 'Offer', name: 'Pro', price: '54990', priceCurrency: 'CLP', priceSpecification: { '@type': 'UnitPriceSpecification', price: '54990', priceCurrency: 'CLP', unitText: 'mes', valueAddedTaxIncluded: false } },
@@ -55,7 +55,7 @@ export default function ClippingPage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />
       <SiteHeader />
-      <ClippingClient />
+      <CopilotClient />
     </>
   )
 }
