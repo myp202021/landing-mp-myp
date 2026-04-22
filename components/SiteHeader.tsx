@@ -42,12 +42,12 @@ export default function SiteHeader() {
             Clientes
           </Link>
 
-          {/* Radar */}
+          {/* Copilot */}
           <Link
-            href="/clipping"
+            href="/copilot"
             className="hidden md:block text-sm font-semibold text-gray-700 hover:text-blue-600 transition-all duration-200"
           >
-            Radar
+            Copilot
           </Link>
 
           {/* M&P Labs Dropdown */}
@@ -76,7 +76,7 @@ export default function SiteHeader() {
                   <div className="text-xs text-gray-500 mt-0.5">Genera buyer personas</div>
                 </Link>
                 <Link href="/labs/radar-industrias" className="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
-                  <div className="font-semibold">Radar Industrias</div>
+                  <div className="font-semibold">Copilot Industrias</div>
                   <div className="text-xs text-gray-500 mt-0.5">Madurez digital por sector</div>
                 </Link>
                 <div className="border-t border-gray-100 mt-2 pt-2">
