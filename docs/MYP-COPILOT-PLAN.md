@@ -90,12 +90,52 @@ Plataforma de inteligencia competitiva + generación de contenido + reportería 
 - [ ] Sugerencia de horario óptimo por plataforma
 - [ ] Estado por post: borrador → aprobado → publicado
 
-### FASE 6: Agente de perfil avanzado (octubre 2026)
+### FASE 6: Auditoría de perfil mensual (octubre 2026)
 
-- [ ] Scrape web del cliente + competidores → análisis automático
-- [ ] Propuesta de posicionamiento: "Tu diferenciador vs X es..."
-- [ ] Sugerencia de tono, temas a evitar, oportunidades
-- [ ] Se actualiza cada mes con datos nuevos
+Score automático de cada red del cliente cada mes:
+- [ ] Frecuencia de publicación vs recomendado
+- [ ] Engagement rate vs promedio industria
+- [ ] Bio optimizada: CTA, link, keywords
+- [ ] Highlights/fijados actualizados
+- [ ] Consistencia visual (detectar si hay períodos sin publicar)
+- [ ] Score global 1-10 por red
+- [ ] Recomendaciones concretas: "Sube frecuencia en LI de 2 a 4/semana"
+- [ ] Evolución mes a mes del score
+- [ ] Solo Pro y Business
+
+### FASE 7: Guiones de historias y reels (noviembre 2026)
+
+Además de copies para posts, generar guiones audiovisuales:
+- [ ] Guión de reel 15-30 seg: hook + desarrollo + CTA
+- [ ] Texto en pantalla por slide/escena
+- [ ] Sugerencia de audio/música (tendencias)
+- [ ] Brief visual: "tipo lifestyle, colores cálidos, texto arriba"
+- [ ] Formatos: Reel IG, Story IG, Short YouTube, TikTok
+- [ ] 2 guiones/semana en Pro, 4 en Business
+- [ ] Incluir en la grilla mensual como tipo de post
+
+### FASE 8: Banco de ideas acumulativo (noviembre 2026)
+
+Cada idea generada que no se usa queda guardada:
+- [ ] Tabla ideas_contenido en Supabase
+- [ ] Las copies no publicados pasan al banco automáticamente
+- [ ] Tags: plataforma, ángulo, tipo, score QA
+- [ ] Dashboard: "Tienes 47 ideas guardadas, 12 con score >90"
+- [ ] Filtrar por plataforma, ángulo, estacionalidad
+- [ ] Reusar: un clic para incluir en la grilla del mes siguiente
+- [ ] Nunca se pierde una buena idea
+
+### FASE 9: Reporte ejecutivo 1 página (diciembre 2026)
+
+PDF automático para que el cliente reenvíe a su gerente/directorio:
+- [ ] 1 página A4 con diseño premium M&P
+- [ ] Resumen: qué hizo la competencia, qué publicó el cliente, resultados
+- [ ] KPIs clave: posts, engagement, followers, mejores posts
+- [ ] Oportunidades detectadas: "X no publicó, Y bajó engagement"
+- [ ] Gráfico comparativo simple (cliente vs competencia)
+- [ ] Generado automáticamente el 1ro de cada mes
+- [ ] Se adjunta al email mensual
+- [ ] Solo Pro y Business
 
 ---
 
@@ -106,12 +146,16 @@ Plataforma de inteligencia competitiva + generación de contenido + reportería 
 | **Monitoreo** | IG (5 cuentas) | IG+LI+FB (15 cuentas) | IG+LI+FB (30 cuentas) |
 | **Análisis IA** | Diario básico | Diario + semanal profundo | Diario + semanal + mensual |
 | **Copies sugeridos** | No | 3/semana | 3/semana |
+| **Guiones reels/stories** | No | 2/semana | 4/semana |
 | **Grilla mensual** | 4 posts | 8 posts | 16 posts + imágenes |
 | **Excel grilla** | No | Sí | Sí |
+| **Banco de ideas** | No | Sí (acumulativo) | Sí (acumulativo) |
 | **WhatsApp** | No | Resumen diario | Resumen + alertas en tiempo real |
 | **Reportei (mi marca)** | No | Dashboard básico | Dashboard + PDF mensual |
+| **Auditoría perfil** | No | Score mensual por red | Score + recomendaciones detalladas |
 | **Benchmark** | No | No | Evolución + score competidores |
-| **Dashboard** | Competencia | Competencia + Contenido | Todo + Benchmark + Mi marca |
+| **Reporte ejecutivo** | No | PDF 1 página mensual | PDF + comparativa competencia |
+| **Dashboard** | Competencia | Competencia + Contenido + Mi marca | Todo + Benchmark |
 | **Soporte** | Email | Email + WhatsApp | Reunión mensual |
 
 ---
@@ -136,12 +180,14 @@ Plataforma de inteligencia competitiva + generación de contenido + reportería 
 
 | Mes | Fase | Entregable |
 |---|---|---|
-| Mayo 2026 | Rename + WhatsApp | M&P Copilot live, WhatsApp básico |
+| Mayo 2026 | Rename + WhatsApp | M&P Copilot live, alertas WhatsApp |
 | Junio 2026 | Reportei | Dashboard "Mi marca" con métricas propias |
-| Julio 2026 | Imágenes | Templates con logo, 6 layouts |
+| Julio 2026 | Imágenes | Templates con logo del cliente, 6 layouts |
 | Agosto 2026 | Benchmark | Evolución competidores, score, gráficos |
 | Septiembre 2026 | Calendario | Vista calendario, drag&drop, Google Calendar |
-| Octubre 2026 | Agente perfil | Análisis automático de posicionamiento |
+| Octubre 2026 | Auditoría perfil | Score mensual por red, recomendaciones |
+| Noviembre 2026 | Reels + banco ideas | Guiones audiovisuales + backlog infinito |
+| Diciembre 2026 | Reporte ejecutivo | PDF 1 página para el jefe/directorio |
 
 ---
 
