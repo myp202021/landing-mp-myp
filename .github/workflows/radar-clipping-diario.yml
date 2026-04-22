@@ -1,10 +1,7 @@
 name: "Radar Clipping Diario (07:30 AM Chile)"
 
 on:
-  schedule:
-    # PAUSADO - cron: '30 10 * * *'
-  workflow_dispatch:
-    inputs:
+  workflow_dispatch:    inputs:
       suscriptor_id:
         description: 'ID de suscriptor específico (vacío = todos)'
         required: false

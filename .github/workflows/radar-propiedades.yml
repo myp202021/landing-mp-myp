@@ -1,11 +1,7 @@
 name: "Radar Propiedades CyM (04:00 AM Chile)"
 
 on:
-  schedule:
-    # 04:00 AM Chile = 07:00 UTC
-    # PAUSADO - cron: '0 7 * * *'
   workflow_dispatch:
-
 jobs:
   radar:
     runs-on: ubuntu-latest
