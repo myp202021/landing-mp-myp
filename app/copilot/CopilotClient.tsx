@@ -29,8 +29,9 @@ var IMG_TEAM = 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&
 var IMG_MOBILE = 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=600&h=400&fit=crop'
 var IMG_CALENDAR = 'https://images.unsplash.com/photo-1506784983877-45594efa4cbe?w=600&h=400&fit=crop'
 var IMG_AI = 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=600&h=400&fit=crop'
-var IMG_REPORTS = 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=400&fit=crop'
-var IMG_ENGAGEMENT = 'https://images.unsplash.com/photo-1563986768609-322da13575f2?w=600&h=400&fit=crop'
+var IMG_REPORTS = 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=600&h=400&fit=crop'
+var IMG_ENGAGEMENT = 'https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=600&h=400&fit=crop'
+var IMG_BENCHMARK = 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=400&fit=crop'
 
 /* ─── FEATURE CARDS DATA ─── */
 var featureCards = [
@@ -109,7 +110,7 @@ var deepDive = [
   {
     title: 'Benchmark competitivo',
     desc: 'Observa como evolucionan tus competidores mes a mes. Frecuencia de publicacion, tipo de contenido, engagement y tendencias.',
-    img: IMG_ENGAGEMENT,
+    img: IMG_BENCHMARK,
     reverse: false,
   },
   {

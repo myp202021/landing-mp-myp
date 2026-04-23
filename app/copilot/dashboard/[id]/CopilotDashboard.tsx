@@ -13,11 +13,22 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
   var [sub, setSub] = useState(null as any)
   var [posts, setPosts] = useState([] as any[])
   var [contenido, setContenido] = useState([] as any[])
+  var [auditorias, setAuditorias] = useState([] as any[])
+  var [guiones, setGuiones] = useState([] as any[])
+  var [ideas, setIdeas] = useState([] as any[])
   var [loading, setLoading] = useState(true)
   var [error, setError] = useState('')
   var [periodo, setPeriodo] = useState('7d')
   var [tab, setTab] = useState('competencia')
   var [mesFiltro, setMesFiltro] = useState(new Date().getMonth() + 1)
+  var [ideaForm, setIdeaForm] = useState(false)
+  var [ideaTitulo, setIdeaTitulo] = useState('')
+  var [ideaDesc, setIdeaDesc] = useState('')
+  var [ideaCat, setIdeaCat] = useState('educativo')
+  var [ideaPri, setIdeaPri] = useState('media')
+  var [ideaSaving, setIdeaSaving] = useState(false)
+  var [ideaFiltroCategoria, setIdeaFiltroCategoria] = useState('todas')
+  var [ideaFiltroEstado, setIdeaFiltroEstado] = useState('todos')
 
   useEffect(function() { loadData() }, [periodo])
 
@@ -38,6 +49,18 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
       var r3 = await fetch(SUPABASE_URL + '/rest/v1/copilot_contenido?suscripcion_id=eq.' + props.suscripcionId + '&select=*&order=created_at.desc', { headers: hdrs() })
       var cData = await r3.json()
       setContenido(Array.isArray(cData) ? cData : [])
+
+      var r4 = await fetch(SUPABASE_URL + '/rest/v1/copilot_auditorias?suscripcion_id=eq.' + props.suscripcionId + '&select=*&order=created_at.desc', { headers: hdrs() })
+      var aData = await r4.json()
+      setAuditorias(Array.isArray(aData) ? aData : [])
+
+      var r5 = await fetch(SUPABASE_URL + '/rest/v1/copilot_guiones?suscripcion_id=eq.' + props.suscripcionId + '&select=*&order=created_at.desc', { headers: hdrs() })
+      var gData = await r5.json()
+      setGuiones(Array.isArray(gData) ? gData : [])
+
+      var r6 = await fetch(SUPABASE_URL + '/rest/v1/copilot_ideas?suscripcion_id=eq.' + props.suscripcionId + '&select=*&order=created_at.desc', { headers: hdrs() })
+      var iData = await r6.json()
+      setIdeas(Array.isArray(iData) ? iData : [])
     } catch (e) { setError('Error cargando datos') }
     setLoading(false)
   }
@@ -107,13 +130,19 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
       <div className="max-w-5xl mx-auto px-6 py-6">
 
         {/* TABS */}
-        <div className="flex gap-1 mb-6 bg-gray-100 rounded-xl p-1">
-          <button onClick={function() { setTab('competencia') }} className={'flex-1 py-2.5 rounded-lg text-sm font-semibold transition ' + (tab === 'competencia' ? 'bg-white text-indigo-700 shadow-sm' : 'text-gray-500 hover:text-gray-700')}>
-            Competencia
-          </button>
-          <button onClick={function() { setTab('contenido') }} className={'flex-1 py-2.5 rounded-lg text-sm font-semibold transition ' + (tab === 'contenido' ? 'bg-white text-purple-700 shadow-sm' : 'text-gray-500 hover:text-gray-700')}>
-            Contenido ({totalCopies + totalGrillaPosts})
-          </button>
+        <div className="flex gap-1 mb-6 bg-gray-100 rounded-xl p-1 overflow-x-auto">
+          {[
+            { key: 'competencia', label: 'Competencia', icon: '\uD83D\uDD0D', color: 'text-indigo-700' },
+            { key: 'contenido', label: 'Contenido', icon: '\u270D\uFE0F', color: 'text-purple-700' },
+            { key: 'auditoria', label: 'Auditor\u00EDa', icon: '\uD83D\uDCCA', color: 'text-teal-700' },
+            { key: 'guiones', label: 'Guiones', icon: '\uD83C\uDFAC', color: 'text-pink-700' },
+            { key: 'ideas', label: 'Ideas', icon: '\uD83D\uDCA1', color: 'text-amber-700' },
+            { key: 'reporte', label: 'Reporte', icon: '\uD83D\uDCCB', color: 'text-emerald-700' },
+          ].map(function(t) {
+            return <button key={t.key} onClick={function() { setTab(t.key) }} className={'flex-shrink-0 flex-1 py-2.5 rounded-lg text-sm font-semibold transition whitespace-nowrap px-3 ' + (tab === t.key ? 'bg-white ' + t.color + ' shadow-sm' : 'text-gray-500 hover:text-gray-700')}>
+              <span className="mr-1">{t.icon}</span> {t.label}
+            </button>
+          })}
         </div>
 
         {/* TAB: COMPETENCIA */}
@@ -344,6 +373,505 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
             )}
           </>
         )}
+
+        {/* TAB: AUDITORIA */}
+        {tab === 'auditoria' && (function() {
+          var mesAuditoria = mesFiltro
+          var anioAuditoria = new Date().getFullYear()
+          var audMes = auditorias.filter(function(a: any) { return a.mes === mesAuditoria && a.anio === anioAuditoria })
+          var aud = audMes.length > 0 ? audMes[0] : null
+
+          var criterios = [
+            'Frecuencia de publicaci\u00F3n',
+            'Engagement rate',
+            'Consistencia visual',
+            'Calidad de copies',
+            'Uso de hashtags',
+            'Horarios de publicaci\u00F3n',
+            'Variedad de formatos',
+            'Interacci\u00F3n con audiencia',
+          ]
+
+          function scoreColor(s: number) { return s >= 8 ? 'text-green-600' : s >= 6 ? 'text-yellow-600' : 'text-red-600' }
+          function scoreBg(s: number) { return s >= 8 ? 'bg-green-500' : s >= 6 ? 'bg-yellow-500' : 'bg-red-500' }
+          function overallColor(s: number) { return s >= 80 ? 'text-green-600' : s >= 60 ? 'text-yellow-600' : 'text-red-600' }
+
+          return <>
+            <div className="flex gap-2 mb-6 flex-wrap">
+              {[1,2,3,4,5,6,7,8,9,10,11,12].map(function(m) {
+                return <button key={m} onClick={function() { setMesFiltro(m) }}
+                  className={'px-3 py-2 rounded-lg text-sm font-semibold transition ' + (mesFiltro === m ? 'bg-teal-600 text-white' : 'bg-white text-gray-600 border border-gray-200 hover:border-teal-300')}>
+                  {MESES_NOMBRES[m].substring(0, 3)}
+                </button>
+              })}
+            </div>
+
+            {aud ? (
+              <>
+                <div className="bg-white rounded-xl border border-gray-200 p-6 mb-6">
+                  <div className="flex items-center justify-between mb-6">
+                    <div>
+                      <h2 className="text-lg font-bold text-gray-900">Auditor&iacute;a de {MESES_NOMBRES[mesAuditoria]} {anioAuditoria}</h2>
+                      {aud.proxima_auditoria && <p className="text-xs text-gray-400 mt-1">Pr&oacute;xima auditor&iacute;a: {aud.proxima_auditoria}</p>}
+                    </div>
+                    <div className="text-center">
+                      <div className={'text-5xl font-black ' + overallColor(aud.score_global || 0)}>{aud.score_global || 0}</div>
+                      <div className="text-xs text-gray-500 mt-1">Score global</div>
+                    </div>
+                  </div>
+
+                  {/* Score by network */}
+                  <div className="grid grid-cols-3 gap-4 mb-6">
+                    {[
+                      { label: 'Instagram', key: 'score_ig', color: 'bg-pink-500' },
+                      { label: 'LinkedIn', key: 'score_li', color: 'bg-blue-600' },
+                      { label: 'Facebook', key: 'score_fb', color: 'bg-blue-500' },
+                    ].map(function(red) {
+                      var val = aud[red.key] || 0
+                      return <div key={red.key} className="bg-gray-50 rounded-xl p-4">
+                        <div className="flex justify-between items-center mb-2">
+                          <span className="text-sm font-semibold text-gray-700">{red.label}</span>
+                          <span className={'text-sm font-bold ' + overallColor(val)}>{val}/100</span>
+                        </div>
+                        <div className="w-full bg-gray-200 rounded-full h-2.5">
+                          <div className={red.color + ' h-2.5 rounded-full transition-all'} style={{ width: val + '%' }} />
+                        </div>
+                      </div>
+                    })}
+                  </div>
+
+                  {/* Criteria breakdown */}
+                  <h3 className="text-sm font-bold text-gray-900 mb-3">Detalle por criterio</h3>
+                  <div className="grid grid-cols-2 gap-3">
+                    {criterios.map(function(cr, ci) {
+                      var val = aud.criterios ? (aud.criterios[ci] || 0) : 0
+                      return <div key={ci} className="flex items-center gap-3 bg-gray-50 rounded-lg p-3">
+                        <div className="flex-1">
+                          <div className="text-xs text-gray-600 mb-1">{cr}</div>
+                          <div className="w-full bg-gray-200 rounded-full h-1.5">
+                            <div className={scoreBg(val) + ' h-1.5 rounded-full'} style={{ width: (val * 10) + '%' }} />
+                          </div>
+                        </div>
+                        <span className={'text-sm font-bold ' + scoreColor(val)}>{val}/10</span>
+                      </div>
+                    })}
+                  </div>
+                </div>
+              </>
+            ) : (
+              <div className="bg-white rounded-xl border border-gray-200 px-6 py-12 text-center">
+                <div className="text-4xl mb-3">{'\uD83D\uDCCA'}</div>
+                <p className="text-gray-400 mb-2">La auditor&iacute;a de {MESES_NOMBRES[mesAuditoria]} se genera el d&iacute;a 1 de cada mes</p>
+                <p className="text-xs text-gray-300">Revisa los meses anteriores para ver auditor&iacute;as completadas.</p>
+              </div>
+            )}
+          </>
+        })()}
+
+        {/* TAB: GUIONES */}
+        {tab === 'guiones' && (function() {
+          var guionesMes = guiones.filter(function(g: any) { return g.mes === mesFiltro })
+
+          return <>
+            <div className="flex gap-2 mb-6 flex-wrap">
+              {[1,2,3,4,5,6,7,8,9,10,11,12].filter(function(m) {
+                return guiones.some(function(g: any) { return g.mes === m }) || m === new Date().getMonth() + 1
+              }).map(function(m) {
+                return <button key={m} onClick={function() { setMesFiltro(m) }}
+                  className={'px-3 py-2 rounded-lg text-sm font-semibold transition ' + (mesFiltro === m ? 'bg-pink-600 text-white' : 'bg-white text-gray-600 border border-gray-200 hover:border-pink-300')}>
+                  {MESES_NOMBRES[m].substring(0, 3)}
+                </button>
+              })}
+            </div>
+
+            {guionesMes.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {guionesMes.map(function(g: any, gi: number) {
+                  var scripts = Array.isArray(g.datos) ? g.datos : [g]
+                  return scripts.map(function(s: any, si: number) {
+                    var isReel = (s.tipo || '').toLowerCase() === 'reel'
+                    var typeColor = isReel ? 'bg-purple-100 text-purple-700 border-purple-200' : 'bg-pink-100 text-pink-700 border-pink-200'
+                    var borderColor = isReel ? 'border-purple-200' : 'border-pink-200'
+                    return <div key={gi + '-' + si} className={'bg-white rounded-xl border p-5 ' + borderColor}>
+                      <div className="flex items-center gap-2 mb-3">
+                        <span className={'text-[11px] font-bold px-2.5 py-1 rounded-full border ' + typeColor}>
+                          {s.tipo || 'Reel'} &middot; {s.duracion || '30s'}
+                        </span>
+                      </div>
+                      <h3 className="text-base font-bold text-gray-900 mb-3">{s.titulo || 'Gui\u00F3n ' + (si + 1)}</h3>
+
+                      <div className="space-y-3 text-sm">
+                        <div>
+                          <span className="text-xs font-semibold text-purple-600 uppercase tracking-wider">Gancho</span>
+                          <p className="text-gray-700 mt-1">{s.gancho || '-'}</p>
+                        </div>
+                        <div>
+                          <span className="text-xs font-semibold text-indigo-600 uppercase tracking-wider">Desarrollo</span>
+                          <p className="text-gray-600 mt-1 whitespace-pre-line">{s.desarrollo || '-'}</p>
+                        </div>
+                        <div>
+                          <span className="text-xs font-semibold text-pink-600 uppercase tracking-wider">Cierre / CTA</span>
+                          <p className="text-gray-700 mt-1">{s.cierre || '-'}</p>
+                        </div>
+                        {s.sugerencia_visual && (
+                          <div>
+                            <span className="text-xs font-semibold text-teal-600 uppercase tracking-wider">Sugerencia visual</span>
+                            <p className="text-gray-500 mt-1 text-xs italic">{s.sugerencia_visual}</p>
+                          </div>
+                        )}
+                        {s.hashtags && (
+                          <div className="pt-2 border-t border-gray-100">
+                            <span className="text-xs text-gray-400">{Array.isArray(s.hashtags) ? s.hashtags.join(' ') : s.hashtags}</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  })
+                })}
+              </div>
+            ) : (
+              <div className="bg-white rounded-xl border border-gray-200 px-6 py-12 text-center">
+                <div className="text-4xl mb-3">{'\uD83C\uDFAC'}</div>
+                <p className="text-gray-400 mb-2">Los guiones se generan cada lunes junto con los copies semanales</p>
+                <p className="text-xs text-gray-300">Selecciona un mes con contenido generado.</p>
+              </div>
+            )}
+          </>
+        })()}
+
+        {/* TAB: IDEAS */}
+        {tab === 'ideas' && (function() {
+          var categorias = ['educativo', 'entretenimiento', 'producto', 'testimonial', 'tendencia', 'behind-the-scenes']
+          var estados = ['nueva', 'en_progreso', 'publicada', 'descartada']
+
+          var ideasFiltradas = ideas.filter(function(idea: any) {
+            if (ideaFiltroCategoria !== 'todas' && idea.categoria !== ideaFiltroCategoria) return false
+            if (ideaFiltroEstado !== 'todos' && idea.estado !== ideaFiltroEstado) return false
+            return true
+          })
+
+          var conteoEstados = { nueva: 0, en_progreso: 0, publicada: 0, descartada: 0 } as Record<string, number>
+          ideas.forEach(function(idea: any) {
+            if (conteoEstados[idea.estado] !== undefined) conteoEstados[idea.estado]++
+          })
+
+          function estadoColor(e: string) {
+            if (e === 'nueva') return 'bg-blue-100 text-blue-700'
+            if (e === 'en_progreso') return 'bg-yellow-100 text-yellow-700'
+            if (e === 'publicada') return 'bg-green-100 text-green-700'
+            return 'bg-gray-100 text-gray-500'
+          }
+
+          function prioridadColor(p: string) {
+            if (p === 'alta') return 'bg-red-100 text-red-700'
+            if (p === 'media') return 'bg-yellow-100 text-yellow-700'
+            return 'bg-gray-100 text-gray-500'
+          }
+
+          function estadoLabel(e: string) {
+            if (e === 'nueva') return 'Nueva'
+            if (e === 'en_progreso') return 'En progreso'
+            if (e === 'publicada') return 'Publicada'
+            return 'Descartada'
+          }
+
+          async function guardarIdea() {
+            if (!ideaTitulo.trim()) return
+            setIdeaSaving(true)
+            try {
+              var body = {
+                suscripcion_id: props.suscripcionId,
+                titulo: ideaTitulo,
+                descripcion: ideaDesc,
+                categoria: ideaCat,
+                prioridad: ideaPri,
+                estado: 'nueva',
+              }
+              var r = await fetch(SUPABASE_URL + '/rest/v1/copilot_ideas', {
+                method: 'POST',
+                headers: Object.assign({}, hdrs(), { 'Prefer': 'return=representation' }),
+                body: JSON.stringify(body),
+              })
+              var newIdea = await r.json()
+              if (Array.isArray(newIdea) && newIdea.length > 0) {
+                setIdeas([newIdea[0]].concat(ideas))
+              }
+              setIdeaTitulo('')
+              setIdeaDesc('')
+              setIdeaCat('educativo')
+              setIdeaPri('media')
+              setIdeaForm(false)
+            } catch (e) { alert('Error al guardar la idea') }
+            setIdeaSaving(false)
+          }
+
+          return <>
+            {/* Status summary */}
+            <div className="grid grid-cols-4 gap-4 mb-6">
+              {estados.map(function(e) {
+                return <div key={e} className="bg-white rounded-xl p-4 border border-gray-200 text-center">
+                  <div className="text-2xl font-bold text-gray-900">{conteoEstados[e] || 0}</div>
+                  <div className="text-xs text-gray-500 mt-1">{estadoLabel(e)}</div>
+                </div>
+              })}
+            </div>
+
+            {/* Filters + add button */}
+            <div className="flex items-center gap-3 mb-6 flex-wrap">
+              <select value={ideaFiltroCategoria} onChange={function(e) { setIdeaFiltroCategoria(e.target.value) }}
+                className="px-3 py-2 rounded-lg text-sm border border-gray-200 bg-white text-gray-700">
+                <option value="todas">Todas las categor&iacute;as</option>
+                {categorias.map(function(c) { return <option key={c} value={c}>{c.charAt(0).toUpperCase() + c.slice(1).replace('-', ' ')}</option> })}
+              </select>
+              <select value={ideaFiltroEstado} onChange={function(e) { setIdeaFiltroEstado(e.target.value) }}
+                className="px-3 py-2 rounded-lg text-sm border border-gray-200 bg-white text-gray-700">
+                <option value="todos">Todos los estados</option>
+                {estados.map(function(e) { return <option key={e} value={e}>{estadoLabel(e)}</option> })}
+              </select>
+              <button onClick={function() { setIdeaForm(!ideaForm) }}
+                className="ml-auto bg-amber-600 text-white text-sm font-bold px-4 py-2 rounded-lg hover:bg-amber-700 transition">
+                {ideaForm ? 'Cancelar' : '+ Agregar idea'}
+              </button>
+            </div>
+
+            {/* Add idea form */}
+            {ideaForm && (
+              <div className="bg-white rounded-xl border border-amber-200 p-5 mb-6">
+                <h3 className="text-sm font-bold text-gray-900 mb-3">Nueva idea</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
+                  <input type="text" placeholder="T\u00EDtulo de la idea" value={ideaTitulo} onChange={function(e) { setIdeaTitulo(e.target.value) }}
+                    className="px-3 py-2 rounded-lg text-sm border border-gray-200 w-full" />
+                  <div className="flex gap-2">
+                    <select value={ideaCat} onChange={function(e) { setIdeaCat(e.target.value) }}
+                      className="px-3 py-2 rounded-lg text-sm border border-gray-200 flex-1">
+                      {categorias.map(function(c) { return <option key={c} value={c}>{c.charAt(0).toUpperCase() + c.slice(1).replace('-', ' ')}</option> })}
+                    </select>
+                    <select value={ideaPri} onChange={function(e) { setIdeaPri(e.target.value) }}
+                      className="px-3 py-2 rounded-lg text-sm border border-gray-200 flex-1">
+                      <option value="alta">Alta</option>
+                      <option value="media">Media</option>
+                      <option value="baja">Baja</option>
+                    </select>
+                  </div>
+                </div>
+                <textarea placeholder="Descripci\u00F3n (opcional)" value={ideaDesc} onChange={function(e) { setIdeaDesc(e.target.value) }}
+                  className="px-3 py-2 rounded-lg text-sm border border-gray-200 w-full mb-3" rows={3} />
+                <button onClick={guardarIdea} disabled={ideaSaving || !ideaTitulo.trim()}
+                  className="bg-amber-600 text-white text-sm font-bold px-5 py-2 rounded-lg hover:bg-amber-700 transition disabled:opacity-50">
+                  {ideaSaving ? 'Guardando...' : 'Guardar idea'}
+                </button>
+              </div>
+            )}
+
+            {/* Ideas list */}
+            {ideasFiltradas.length > 0 ? (
+              <div className="space-y-3">
+                {ideasFiltradas.map(function(idea: any, ii: number) {
+                  return <div key={idea.id || ii} className="bg-white rounded-xl border border-gray-200 p-5 hover:shadow-sm transition">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-2 flex-wrap">
+                          <h3 className="text-sm font-bold text-gray-900">{idea.titulo}</h3>
+                          <span className={'text-[10px] font-bold px-2 py-0.5 rounded-full ' + estadoColor(idea.estado)}>{estadoLabel(idea.estado)}</span>
+                          <span className={'text-[10px] font-bold px-2 py-0.5 rounded-full ' + prioridadColor(idea.prioridad)}>{(idea.prioridad || 'media').charAt(0).toUpperCase() + (idea.prioridad || 'media').slice(1)}</span>
+                          <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">{(idea.categoria || '').replace('-', ' ')}</span>
+                        </div>
+                        {idea.descripcion && <p className="text-xs text-gray-500">{idea.descripcion}</p>}
+                      </div>
+                      <span className="text-[10px] text-gray-400 flex-shrink-0">{(idea.created_at || '').substring(0, 10)}</span>
+                    </div>
+                  </div>
+                })}
+              </div>
+            ) : ideas.length === 0 ? (
+              <div className="bg-white rounded-xl border border-gray-200 px-6 py-12 text-center">
+                <div className="text-4xl mb-3">{'\uD83D\uDCA1'}</div>
+                <p className="text-gray-400 mb-2">Tu banco de ideas se llena autom&aacute;ticamente con sugerencias de la IA y puedes agregar las tuyas</p>
+                <p className="text-xs text-gray-300">Usa el bot&oacute;n &quot;Agregar idea&quot; para empezar.</p>
+              </div>
+            ) : (
+              <div className="bg-white rounded-xl border border-gray-200 px-6 py-8 text-center">
+                <p className="text-gray-400">Sin ideas con los filtros seleccionados</p>
+              </div>
+            )}
+          </>
+        })()}
+
+        {/* TAB: REPORTE */}
+        {tab === 'reporte' && (function() {
+          var mesReporte = mesFiltro
+          var nombreMes = MESES_NOMBRES[mesReporte]
+          var anio = new Date().getFullYear()
+
+          /* Competencia stats */
+          var totalPostsComp = posts.length
+          var topCompetidor = ''
+          var maxPostsEmp = 0
+          Object.keys(empresas).forEach(function(n) {
+            var t = empresas[n].ig + empresas[n].li + empresas[n].fb
+            if (t > maxPostsEmp) { maxPostsEmp = t; topCompetidor = n }
+          })
+          var redesActivas = [] as string[]
+          var igTotal = 0; var liTotal = 0; var fbTotal = 0
+          Object.keys(empresas).forEach(function(n) { igTotal += empresas[n].ig; liTotal += empresas[n].li; fbTotal += empresas[n].fb })
+          if (igTotal > liTotal && igTotal > fbTotal) redesActivas.push('Instagram')
+          else if (liTotal > igTotal && liTotal > fbTotal) redesActivas.push('LinkedIn')
+          else redesActivas.push('Facebook')
+
+          /* Contenido stats */
+          var copiesTotal = copies.reduce(function(s: number, c: any) { return s + (Array.isArray(c.datos) ? c.datos.length : 0) }, 0)
+          var grillaPosts = grillas.reduce(function(s: number, c: any) { return s + (Array.isArray(c.datos) ? c.datos.length : 0) }, 0)
+          var scoreSum = 0; var scoreCount = 0
+          grillas.forEach(function(g: any) {
+            if (Array.isArray(g.datos)) g.datos.forEach(function(d: any) {
+              if (d.score) { scoreSum += d.score; scoreCount++ }
+            })
+          })
+          var avgScore = scoreCount > 0 ? Math.round(scoreSum / scoreCount) : 0
+
+          /* Auditoria data */
+          var audMes = auditorias.filter(function(a: any) { return a.mes === mesReporte && a.anio === anio })
+          var aud = audMes.length > 0 ? audMes[0] : null
+
+          var criteriosNombres = [
+            'Frecuencia de publicaci\u00F3n', 'Engagement rate', 'Consistencia visual', 'Calidad de copies',
+            'Uso de hashtags', 'Horarios de publicaci\u00F3n', 'Variedad de formatos', 'Interacci\u00F3n con audiencia',
+          ]
+
+          var fortalezas = [] as string[]
+          var mejoras = [] as string[]
+          if (aud && aud.criterios) {
+            var pares = criteriosNombres.map(function(n, i) { return { nombre: n, val: aud.criterios[i] || 0 } })
+            pares.sort(function(a: any, b: any) { return b.val - a.val })
+            fortalezas = pares.slice(0, 3).map(function(p: any) { return p.nombre + ' (' + p.val + '/10)' })
+            mejoras = pares.slice(-3).reverse().map(function(p: any) { return p.nombre + ' (' + p.val + '/10)' })
+          }
+
+          /* Acciones */
+          var acciones = [] as string[]
+          if (totalPostsComp > 0 && topCompetidor) acciones.push('Analizar la estrategia de ' + topCompetidor + ' que lider\u00F3 con ' + maxPostsEmp + ' posts')
+          if (copiesTotal > 0) acciones.push('Publicar los ' + copiesTotal + ' copies generados esta semana')
+          if (aud && mejoras.length > 0) acciones.push('Mejorar ' + mejoras[0].split(' (')[0].toLowerCase())
+          if (grillaPosts > 0) acciones.push('Seguir la grilla de ' + grillaPosts + ' posts planificados')
+          acciones.push('Revisar el dashboard la pr\u00F3xima semana para nuevos insights')
+
+          return <>
+            <style dangerouslySetInnerHTML={{ __html: '@media print { .no-print { display: none !important; } .print-break { page-break-inside: avoid; } }' }} />
+
+            <div className="flex items-center justify-between mb-6 no-print">
+              <div className="flex gap-2 flex-wrap">
+                {[1,2,3,4,5,6,7,8,9,10,11,12].map(function(m) {
+                  return <button key={m} onClick={function() { setMesFiltro(m) }}
+                    className={'px-3 py-2 rounded-lg text-sm font-semibold transition ' + (mesFiltro === m ? 'bg-emerald-600 text-white' : 'bg-white text-gray-600 border border-gray-200 hover:border-emerald-300')}>
+                    {MESES_NOMBRES[m].substring(0, 3)}
+                  </button>
+                })}
+              </div>
+              <button onClick={function() { window.print() }}
+                className="bg-emerald-600 text-white text-sm font-bold px-4 py-2 rounded-lg hover:bg-emerald-700 transition">
+                Descargar PDF
+              </button>
+            </div>
+
+            <div className="bg-white rounded-xl border border-gray-200 overflow-hidden print-break">
+              {/* Header */}
+              <div className="bg-gradient-to-r from-indigo-700 to-purple-700 text-white p-6">
+                <div className="flex justify-between items-center">
+                  <div>
+                    <p className="text-xs opacity-60 tracking-widest mb-1">M&P COPILOT</p>
+                    <h2 className="text-xl font-bold">Reporte ejecutivo — {nombreMes} {anio}</h2>
+                    <p className="text-sm opacity-80 mt-1">{sub.nombre || sub.email}</p>
+                  </div>
+                  <div className="text-right text-xs opacity-60">
+                    <p>Generado: {new Date().toLocaleDateString('es-CL')}</p>
+                    <p>Plan {sub.plan}</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="p-6 space-y-6">
+                {/* Section 1: Competencia */}
+                <div>
+                  <h3 className="text-sm font-bold text-indigo-700 uppercase tracking-wider mb-3">Competencia</h3>
+                  <div className="grid grid-cols-3 gap-4">
+                    <div className="bg-indigo-50 rounded-lg p-4 text-center">
+                      <div className="text-2xl font-bold text-indigo-600">{totalPostsComp}</div>
+                      <div className="text-xs text-gray-500 mt-1">Posts detectados</div>
+                    </div>
+                    <div className="bg-indigo-50 rounded-lg p-4 text-center">
+                      <div className="text-sm font-bold text-indigo-600">{topCompetidor || '-'}</div>
+                      <div className="text-xs text-gray-500 mt-1">Top competidor</div>
+                    </div>
+                    <div className="bg-indigo-50 rounded-lg p-4 text-center">
+                      <div className="text-sm font-bold text-indigo-600">{redesActivas.join(', ') || '-'}</div>
+                      <div className="text-xs text-gray-500 mt-1">Red m&aacute;s activa</div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Section 2: Contenido */}
+                <div>
+                  <h3 className="text-sm font-bold text-purple-700 uppercase tracking-wider mb-3">Tu contenido</h3>
+                  <div className="grid grid-cols-3 gap-4">
+                    <div className="bg-purple-50 rounded-lg p-4 text-center">
+                      <div className="text-2xl font-bold text-purple-600">{copiesTotal}</div>
+                      <div className="text-xs text-gray-500 mt-1">Copies generados</div>
+                    </div>
+                    <div className="bg-purple-50 rounded-lg p-4 text-center">
+                      <div className="text-2xl font-bold text-purple-600">{grillaPosts}</div>
+                      <div className="text-xs text-gray-500 mt-1">Posts en grilla</div>
+                    </div>
+                    <div className="bg-purple-50 rounded-lg p-4 text-center">
+                      <div className="text-2xl font-bold text-purple-600">{avgScore || '-'}</div>
+                      <div className="text-xs text-gray-500 mt-1">Score promedio QA</div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Section 3: Auditoria */}
+                <div>
+                  <h3 className="text-sm font-bold text-teal-700 uppercase tracking-wider mb-3">Auditor&iacute;a</h3>
+                  {aud ? (
+                    <div className="grid grid-cols-3 gap-4">
+                      <div className="bg-teal-50 rounded-lg p-4 text-center">
+                        <div className={'text-2xl font-bold ' + (aud.score_global >= 80 ? 'text-green-600' : aud.score_global >= 60 ? 'text-yellow-600' : 'text-red-600')}>{aud.score_global}/100</div>
+                        <div className="text-xs text-gray-500 mt-1">Score global</div>
+                      </div>
+                      <div className="bg-teal-50 rounded-lg p-4">
+                        <div className="text-xs font-semibold text-green-600 mb-1">Fortalezas</div>
+                        {fortalezas.map(function(f, fi) { return <div key={fi} className="text-xs text-gray-600">{f}</div> })}
+                      </div>
+                      <div className="bg-teal-50 rounded-lg p-4">
+                        <div className="text-xs font-semibold text-red-600 mb-1">&Aacute;reas a mejorar</div>
+                        {mejoras.map(function(m, mi) { return <div key={mi} className="text-xs text-gray-600">{m}</div> })}
+                      </div>
+                    </div>
+                  ) : (
+                    <p className="text-sm text-gray-400">Sin auditor&iacute;a disponible para este mes</p>
+                  )}
+                </div>
+
+                {/* Section 4: Acciones */}
+                <div>
+                  <h3 className="text-sm font-bold text-emerald-700 uppercase tracking-wider mb-3">Pr&oacute;ximas acciones</h3>
+                  <ul className="space-y-2">
+                    {acciones.map(function(a, ai) {
+                      return <li key={ai} className="flex items-start gap-2 text-sm text-gray-700">
+                        <span className="text-emerald-500 font-bold mt-0.5">{'>'}</span>
+                        {a}
+                      </li>
+                    })}
+                  </ul>
+                </div>
+              </div>
+
+              {/* Footer */}
+              <div className="border-t border-gray-100 px-6 py-3 bg-gray-50 text-center">
+                <p className="text-[10px] text-gray-400">M&P Copilot by Muller y P&eacute;rez &middot; mulleryperez.cl &middot; Generado autom&aacute;ticamente</p>
+              </div>
+            </div>
+          </>
+        })()}
 
         <div className="text-center mt-8 text-xs text-gray-400">
           <a href={'/copilot/configurar/' + props.suscripcionId} className="text-indigo-600 font-semibold hover:underline">Configurar cuentas</a>
