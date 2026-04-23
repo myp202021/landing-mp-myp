@@ -297,7 +297,7 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
                   <h2 className="text-sm font-bold text-white">Grilla {MESES_NOMBRES[mesFiltro]} — {grillasMes[0].datos.length} posts</h2>
                   <div className="flex items-center gap-3">
                     <span className="text-xs text-[#64748b]">Score promedio: {grillasMes[0].score_promedio || '-'}</span>
-                    <a href={'/api/copilot/dashboard/export-grilla?id=' + props.suscripcionId + '&mes=' + mesFiltro} className="bg-green-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg hover:bg-green-700 transition">Descargar Excel</a>
+                    <a href={'/api/copilot/export-grilla?id=' + props.suscripcionId + '&mes=' + mesFiltro} className="bg-green-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg hover:bg-green-700 transition">Descargar Excel</a>
                   </div>
                 </div>
                 <table className="w-full text-sm">
