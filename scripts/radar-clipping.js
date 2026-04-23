@@ -138,9 +138,12 @@ async function main() {
     console.log('\n--- LINKEDIN: ' + liSet.size + ' empresas ---')
     for (var handle of liSet) {
       try {
+        var liUrl = 'https://www.linkedin.com/company/' + handle + '/'
+        console.log('   Scraping: ' + liUrl)
         var r = await fetch('https://api.apify.com/v2/acts/harvestapi~linkedin-company-posts/run-sync-get-dataset-items?token=' + APIFY_TOKEN + '&timeout=120',
           { method: 'POST', headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ urls: ['https://www.linkedin.com/company/' + handle + '/posts/'], maxPosts: MODO === 'diario' ? 5 : 15 }) })
+            body: JSON.stringify({ urls: [liUrl], maxPosts: MODO === 'diario' ? 5 : 15 }) })
+        console.log('   HTTP status: ' + r.status)
         if (!r.ok) throw new Error('HTTP ' + r.status)
         var raw = await r.json()
         console.log('   ' + handle + ' raw: ' + raw.length + ' items')
