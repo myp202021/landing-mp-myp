@@ -22,25 +22,25 @@ function useScrollReveal() {
   }, [])
 }
 
-/* ─── IMAGE URLS ─── */
-var IMG_DASHBOARD = 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=400&fit=crop'
-var IMG_SOCIAL = 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=600&h=400&fit=crop'
-var IMG_TEAM = 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&h=400&fit=crop'
-var IMG_MOBILE = 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=600&h=400&fit=crop'
-var IMG_CALENDAR = 'https://images.unsplash.com/photo-1506784983877-45594efa4cbe?w=600&h=400&fit=crop'
-var IMG_AI = 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=600&h=400&fit=crop'
-var IMG_REPORTS = 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=600&h=400&fit=crop'
-var IMG_ENGAGEMENT = 'https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=600&h=400&fit=crop'
-var IMG_BENCHMARK = 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=400&fit=crop'
+/* ─── IMAGE URLS (mockups reales del producto) ─── */
+var IMG_DASHBOARD = '/copilot/mockup-dashboard.png'
+var IMG_SOCIAL = '/copilot/mockup-email-diario.png'
+var IMG_TEAM = '/copilot/mockup-copies.png'
+var IMG_MOBILE = '/copilot/mockup-email-diario.png'
+var IMG_CALENDAR = '/copilot/mockup-grilla.png'
+var IMG_AI = '/copilot/mockup-copies.png'
+var IMG_REPORTS = '/copilot/mockup-reporte.png'
+var IMG_ENGAGEMENT = '/copilot/mockup-auditoria.png'
+var IMG_BENCHMARK = '/copilot/mockup-dashboard.png'
 
 /* ─── FEATURE CARDS DATA ─── */
 var featureCards = [
-  { title: 'Monitoreo de competencia', desc: 'Observa que publican tus competidores en Instagram, LinkedIn, Facebook y prensa. Cada dia, sin que muevas un dedo.', img: IMG_SOCIAL, icon: '🔍' },
-  { title: 'Copies listos para publicar', desc: 'Tres agentes de IA trabajan en cadena: briefing, redaccion y control de calidad. Recibes el copy final listo.', img: IMG_AI, icon: '✍️' },
-  { title: 'Grilla mensual con calendario', desc: 'Hasta 16 posts por mes con copy, hashtags y sugerencia de diseno. Todo organizado por semana.', img: IMG_CALENDAR, icon: '📅' },
-  { title: 'Guiones de reels y stories', desc: 'Scripts listos para grabar: gancho, desarrollo y cierre. Con timing y sugerencias visuales.', img: IMG_ENGAGEMENT, icon: '🎬' },
-  { title: 'WhatsApp + Email', desc: 'Te llega todo donde ya estas. Notificaciones diarias, semanales y mensuales segun tu plan.', img: IMG_MOBILE, icon: '📲' },
-  { title: 'Reporte ejecutivo', desc: 'Un PDF de 1 pagina con lo esencial: que hizo la competencia, que publicaste, que viene. Para tu jefe.', img: IMG_REPORTS, icon: '📊' },
+  { title: 'Monitoreo de competencia', desc: 'Observa qué publican tus competidores en Instagram, LinkedIn, Facebook y prensa. Cada día, sin que muevas un dedo.', img: '/copilot/mockup-email-diario.png', icon: '🔍' },
+  { title: 'Copies listos para publicar', desc: 'Tres agentes de IA trabajan en cadena: briefing, redacción y control de calidad. Recibes el copy final listo.', img: '/copilot/mockup-copies.png', icon: '✍️' },
+  { title: 'Grilla mensual con calendario', desc: 'Hasta 16 posts por mes con copy, hashtags y sugerencia de diseño. Todo organizado por semana.', img: '/copilot/mockup-grilla.png', icon: '📅' },
+  { title: 'Guiones de reels y stories', desc: 'Scripts listos para grabar: gancho, desarrollo y cierre. Con timing y sugerencias visuales.', img: '/copilot/mockup-auditoria.png', icon: '🎬' },
+  { title: 'WhatsApp + Email', desc: 'Te llega todo donde ya estás. Notificaciones diarias, semanales y mensuales según tu plan.', img: '/copilot/mockup-email-diario.png', icon: '📲' },
+  { title: 'Reporte ejecutivo', desc: 'Un PDF de 1 página con lo esencial: qué hizo la competencia, qué publicaste, qué viene. Para tu jefe.', img: '/copilot/mockup-reporte.png', icon: '📊' },
 ]
 
 /* ─── PLANS DATA ─── */
@@ -96,27 +96,27 @@ var plans = [
 /* ─── DEEP DIVE DATA ─── */
 var deepDive = [
   {
-    title: 'Auditoria de perfil',
-    desc: 'Cada mes, Copilot evalua tus redes sociales y te entrega un score por canal con recomendaciones concretas para mejorar tu presencia digital.',
-    img: IMG_DASHBOARD,
+    title: 'Informe diario en tu correo',
+    desc: 'Cada mañana recibes un email con todo lo que publicó tu competencia, análisis de IA, y oportunidades detectadas. Sin abrir ninguna red social.',
+    img: '/copilot/mockup-email-diario.png',
     reverse: false,
   },
   {
-    title: 'Banco de ideas infinito',
-    desc: 'Cada copy generado, cada insight de competencia, cada idea se acumula automaticamente. Nunca mas pierdas una buena idea por no anotarla.',
-    img: IMG_TEAM,
+    title: 'Copies y grilla listos para publicar',
+    desc: 'Tres agentes de IA generan copies semanales con score de calidad. La grilla mensual llega con 16 posts organizados por fecha, plataforma y tipo.',
+    img: '/copilot/mockup-grilla.png',
     reverse: true,
   },
   {
-    title: 'Benchmark competitivo',
-    desc: 'Observa como evolucionan tus competidores mes a mes. Frecuencia de publicacion, tipo de contenido, engagement y tendencias.',
-    img: IMG_BENCHMARK,
+    title: 'Auditoría mensual de tu marca',
+    desc: 'Cada mes, Copilot evalúa tus redes sociales y te entrega un score por canal con recomendaciones concretas para mejorar tu presencia digital.',
+    img: '/copilot/mockup-auditoria.png',
     reverse: false,
   },
   {
-    title: 'Metricas integradas',
-    desc: 'Conecta tus cuentas y ve tus numeros vs la competencia en un solo lugar. Seguidores, alcance, interaccion y crecimiento.',
-    img: IMG_REPORTS,
+    title: 'Dashboard completo en tiempo real',
+    desc: 'Competencia, contenido, auditoría, guiones, ideas y reporte ejecutivo. Todo en un solo lugar con datos que se actualizan cada día.',
+    img: '/copilot/mockup-dashboard.png',
     reverse: true,
   },
 ]
