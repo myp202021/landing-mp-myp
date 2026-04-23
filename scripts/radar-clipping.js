@@ -543,14 +543,17 @@ function renderTrend(pct, totalN, hasPrev) {
 }
 
 // === EMAIL HTML v5 ===
-function generarEmailHTML(posts, cuentas, fecha, modo, resumenIA, empresas, trends, subId, contenidoSugerido, estado, plan, trialEnds, grillaMensual) {
+function generarEmailHTML(posts, cuentas, fecha, modo, resumenIA, empresas, trends, subId, contenidoSugerido, estado, plan, trialEnds, grillaMensual, guionesData, ideasData, auditoriaData) {
   contenidoSugerido = contenidoSugerido || []
   grillaMensual = grillaMensual || null
+  guionesData = guionesData || null
+  ideasData = ideasData || null
+  auditoriaData = auditoriaData || null
   estado = estado || 'trial'
   plan = plan || 'starter'
   var fechaLegible = new Date(fecha + 'T12:00:00').toLocaleDateString('es-CL', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
-  var titulo = modo === 'mensual' ? 'Resumen mensual' : modo === 'semanal' ? 'Resumen semanal' : 'Tu Radar diario'
-  var ventanaLabel = modo === 'diario' ? '72 horas' : modo === 'semanal' ? '7 d&iacute;as' : '30 d&iacute;as'
+  var titulo = modo === 'mensual' ? 'Resumen mensual Copilot' : modo === 'semanal' ? 'Resumen semanal Copilot' : 'Tu Copilot diario'
+  var ventanaLabel = modo === 'diario' ? '72 horas' : modo === 'semanal' ? '7 días' : '30 días'
   var totalLikes = posts.reduce(function(s, p) { return s + p.likes }, 0)
   var redesActivas = Array.from(new Set(posts.map(function(p) { return p.red }))).length
   var nEmpresas = Object.keys(empresas).length
@@ -591,7 +594,7 @@ function generarEmailHTML(posts, cuentas, fecha, modo, resumenIA, empresas, tren
   h += '<div style="background:white;padding:24px 28px;border-bottom:1px solid #e5e7eb;">'
   h += '<table style="margin-bottom:14px;"><tr>'
   h += '<td style="vertical-align:middle;"><div style="background:#4338CA;color:white;width:28px;height:28px;border-radius:8px;text-align:center;line-height:28px;font-size:14px;">AI</div></td>'
-  h += '<td style="vertical-align:middle;padding-left:8px;"><p style="font-weight:700;color:#1e1b4b;font-size:15px;margin:0;">An&aacute;lisis inteligente</p></td>'
+  h += '<td style="vertical-align:middle;padding-left:8px;"><p style="font-weight:700;color:#1e1b4b;font-size:15px;margin:0;">Análisis inteligente</p></td>'
   h += '</tr></table>'
 
   if (ia) {
@@ -784,6 +787,105 @@ function generarEmailHTML(posts, cuentas, fecha, modo, resumenIA, empresas, tren
     h += '</div>'
   }
 
+  // GUIONES DE REELS (semanal/mensual, si hay data)
+  if (guionesData && guionesData.length > 0 && (modo === 'semanal' || modo === 'mensual')) {
+    var maxGuiones = Math.min(guionesData.length, 3)
+    h += '<div style="background:white;padding:22px 28px;border-top:4px solid #E4405F;margin-top:3px;">'
+    h += '<table style="width:100%;margin-bottom:16px;"><tr><td><span style="background:#E4405F;color:white;padding:6px 16px;border-radius:8px;font-size:13px;font-weight:700;">Guiones de reels</span></td>'
+    h += '<td style="text-align:right;font-size:12px;color:#6b7280;">' + maxGuiones + ' guiones</td></tr></table>'
+    for (var gui = 0; gui < maxGuiones; gui++) {
+      var guion = guionesData[gui]
+      var durColor = (guion.duracion || '30s') === '15s' ? '#10b981' : (guion.duracion || '30s') === '60s' ? '#dc2626' : '#f59e0b'
+      var tipoGuion = guion.tipo || 'Reel'
+      h += '<div style="padding:16px;background:#fff1f2;border-radius:12px;border-left:4px solid #E4405F;margin-bottom:10px;">'
+      h += '<table style="width:100%;margin-bottom:10px;"><tr><td>'
+      h += '<span style="background:' + durColor + ';color:white;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;">' + (guion.duracion || '30s') + '</span> '
+      h += '<span style="background:#fecdd3;color:#9f1239;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;">' + tipoGuion + '</span>'
+      h += '</td></tr></table>'
+      if (guion.gancho) {
+        h += '<p style="margin:0 0 6px;font-size:14px;font-weight:700;color:#9f1239;">Gancho: ' + guion.gancho + '</p>'
+      }
+      if (guion.desarrollo) {
+        var devPreview = guion.desarrollo.length > 100 ? guion.desarrollo.substring(0, 100) + '...' : guion.desarrollo
+        h += '<p style="margin:0 0 6px;font-size:13px;color:#1f2937;line-height:1.6;">' + devPreview + '</p>'
+      }
+      if (guion.cierre) {
+        h += '<p style="margin:0 0 6px;font-size:13px;color:#1f2937;"><strong>CTA:</strong> ' + guion.cierre + '</p>'
+      }
+      if (guion.visual) {
+        h += '<p style="margin:0;font-size:12px;color:#9ca3af;font-style:italic;">Visual: ' + guion.visual + '</p>'
+      }
+      h += '</div>'
+    }
+    h += '</div>'
+  }
+
+  // BANCO DE IDEAS (semanal/mensual, si hay data)
+  if (ideasData && ideasData.length > 0 && (modo === 'semanal' || modo === 'mensual')) {
+    var maxIdeas = Math.min(ideasData.length, 5)
+    h += '<div style="background:white;padding:22px 28px;border-top:4px solid #F59E0B;margin-top:3px;">'
+    h += '<table style="width:100%;margin-bottom:16px;"><tr><td><span style="background:#F59E0B;color:white;padding:6px 16px;border-radius:8px;font-size:13px;font-weight:700;">Ideas para tu contenido</span></td>'
+    h += '<td style="text-align:right;font-size:12px;color:#6b7280;">' + maxIdeas + ' ideas</td></tr></table>'
+    for (var idi = 0; idi < maxIdeas; idi++) {
+      var idea = ideasData[idi]
+      var catMap = { educativo: { bg: '#e0e7ff', color: '#3730a3' }, entretenimiento: { bg: '#fce7f3', color: '#9d174d' }, producto: { bg: '#dcfce7', color: '#166534' }, testimonial: { bg: '#fef3c7', color: '#92400e' }, tendencia: { bg: '#f3e8ff', color: '#6b21a8' } }
+      var catStyle = catMap[(idea.categoria || '').toLowerCase()] || { bg: '#f3f4f6', color: '#374151' }
+      var prioMap = { alta: '#dc2626', media: '#f59e0b', baja: '#9ca3af' }
+      var prioColor = prioMap[(idea.prioridad || '').toLowerCase()] || '#9ca3af'
+      h += '<div style="padding:14px;background:#fffbeb;border-radius:12px;border-left:4px solid #F59E0B;margin-bottom:8px;">'
+      h += '<table style="width:100%;margin-bottom:6px;"><tr><td>'
+      h += '<span style="background:' + catStyle.bg + ';color:' + catStyle.color + ';padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;">' + (idea.categoria || 'General') + '</span>'
+      h += ' <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:' + prioColor + ';vertical-align:middle;margin-left:6px;"></span>'
+      h += '</td></tr></table>'
+      h += '<p style="margin:0 0 4px;font-size:14px;font-weight:700;color:#0F172A;">' + (idea.titulo || 'Idea ' + (idi + 1)) + '</p>'
+      if (idea.descripcion) {
+        h += '<p style="margin:0;font-size:13px;color:#1f2937;line-height:1.6;">' + idea.descripcion + '</p>'
+      }
+      h += '</div>'
+    }
+    h += '</div>'
+  }
+
+  // AUDITORIA MENSUAL (solo mensual, si hay data)
+  if (auditoriaData && modo === 'mensual') {
+    var scoreColor = auditoriaData.score >= 75 ? '#059669' : auditoriaData.score >= 50 ? '#d97706' : '#dc2626'
+    var scoreBg = auditoriaData.score >= 75 ? '#dcfce7' : auditoriaData.score >= 50 ? '#fef3c7' : '#fee2e2'
+    h += '<div style="background:white;padding:22px 28px;border-top:4px solid #6366F1;margin-top:3px;">'
+    h += '<table style="width:100%;margin-bottom:16px;"><tr><td><span style="background:#6366F1;color:white;padding:6px 16px;border-radius:8px;font-size:13px;font-weight:700;">Auditoría mensual de tu marca</span></td></tr></table>'
+    // Score principal
+    h += '<div style="text-align:center;margin-bottom:18px;">'
+    h += '<div style="display:inline-block;background:' + scoreBg + ';padding:20px 32px;border-radius:16px;">'
+    h += '<div style="font-size:48px;font-weight:800;color:' + scoreColor + ';">' + (auditoriaData.score || 0) + '</div>'
+    h += '<div style="font-size:12px;color:#6b7280;margin-top:4px;">Puntaje general</div>'
+    h += '</div></div>'
+    // Mini bars por red
+    var redes = [
+      { nombre: 'Instagram', valor: auditoriaData.instagram || 0, color: '#E4405F' },
+      { nombre: 'LinkedIn', valor: auditoriaData.linkedin || 0, color: '#0A66C2' },
+      { nombre: 'Facebook', valor: auditoriaData.facebook || 0, color: '#1877F2' }
+    ]
+    h += '<table style="width:100%;margin-bottom:16px;border-collapse:separate;border-spacing:8px 0;"><tr>'
+    for (var ri = 0; ri < redes.length; ri++) {
+      var red = redes[ri]
+      h += '<td style="background:#f8fafc;padding:12px;border-radius:10px;text-align:center;width:33%;">'
+      h += '<div style="font-size:11px;color:#6b7280;margin-bottom:4px;">' + red.nombre + '</div>'
+      h += '<div style="background:#e5e7eb;border-radius:4px;height:8px;overflow:hidden;"><div style="background:' + red.color + ';height:100%;width:' + Math.min(red.valor, 100) + '%;border-radius:4px;"></div></div>'
+      h += '<div style="font-size:14px;font-weight:700;color:#0F172A;margin-top:4px;">' + red.valor + '</div>'
+      h += '</td>'
+    }
+    h += '</tr></table>'
+    // Fortaleza y debilidad
+    if (auditoriaData.fortaleza) {
+      h += '<div style="background:#dcfce7;padding:12px 16px;border-radius:10px;margin-bottom:8px;">'
+      h += '<p style="margin:0;font-size:12px;"><span style="font-weight:700;color:#166534;">Fortaleza principal:</span> <span style="color:#1f2937;">' + auditoriaData.fortaleza + '</span></p></div>'
+    }
+    if (auditoriaData.debilidad) {
+      h += '<div style="background:#fee2e2;padding:12px 16px;border-radius:10px;">'
+      h += '<p style="margin:0;font-size:12px;"><span style="font-weight:700;color:#991b1b;">Área de mejora:</span> <span style="color:#1f2937;">' + auditoriaData.debilidad + '</span></p></div>'
+    }
+    h += '</div>'
+  }
+
   // DASHBOARD LINK
   if (subId) {
     h += '<div style="background:white;padding:18px 28px;text-align:center;border-bottom:1px solid #e5e7eb;">'
@@ -791,12 +893,12 @@ function generarEmailHTML(posts, cuentas, fecha, modo, resumenIA, empresas, tren
       // Trial: CTA principal es contratar
       var diasRestantes = trialEnds ? Math.max(0, Math.ceil((new Date(trialEnds).getTime() - Date.now()) / (1000*60*60*24))) : 7
       h += '<div style="background:#fef3c7;padding:8px 16px;border-radius:8px;margin-bottom:12px;display:inline-block;"><span style="font-size:12px;color:#92400e;font-weight:600;">Prueba gratuita | ' + diasRestantes + ' dias restantes</span></div><br>'
-      h += '<a href="https://www.mulleryperez.cl/copilot/contratar/' + subId + '" style="display:inline-block;background:#4338CA;color:white;padding:12px 28px;border-radius:10px;font-size:14px;font-weight:700;text-decoration:none;">Contrata tu plan &#8594;</a>'
+      h += '<a href="https://www.mulleryperez.cl/copilot/contratar/' + subId + '" style="display:inline-block;background:#4338CA;color:white;padding:12px 28px;border-radius:10px;font-size:14px;font-weight:700;text-decoration:none;">Contrata tu plan →</a>'
       h += '<p style="margin:8px 0 0;font-size:11px;color:#9ca3af;"><a href="https://www.mulleryperez.cl/copilot/dashboard/' + subId + '" style="color:#6366f1;text-decoration:none;">Ver dashboard</a></p>'
     } else {
       // Activo: CTA principal es configurar cuentas
       h += '<div style="background:#dcfce7;padding:8px 16px;border-radius:8px;margin-bottom:12px;display:inline-block;"><span style="font-size:12px;color:#166534;font-weight:600;">Plan ' + plan + '</span></div><br>'
-      h += '<a href="https://www.mulleryperez.cl/copilot/configurar/' + subId + '" style="display:inline-block;background:#4338CA;color:white;padding:12px 28px;border-radius:10px;font-size:14px;font-weight:700;text-decoration:none;">Configurar cuentas &#8594;</a>'
+      h += '<a href="https://www.mulleryperez.cl/copilot/configurar/' + subId + '" style="display:inline-block;background:#4338CA;color:white;padding:12px 28px;border-radius:10px;font-size:14px;font-weight:700;text-decoration:none;">Configurar cuentas →</a>'
       h += '<p style="margin:8px 0 0;font-size:11px;color:#9ca3af;"><a href="https://www.mulleryperez.cl/copilot/dashboard/' + subId + '" style="color:#6366f1;text-decoration:none;">Ver dashboard</a></p>'
     }
     h += '</div>'
@@ -804,9 +906,14 @@ function generarEmailHTML(posts, cuentas, fecha, modo, resumenIA, empresas, tren
 
   // FOOTER
   h += '<div style="padding:20px 28px;background:#1e1b4b;border-radius:0 0 16px 16px;text-align:center;">'
-  h += '<p style="margin:0;font-size:12px;color:rgba(255,255,255,0.7);">Radar by <strong style="color:white;">Muller y Perez</strong> | '
+  h += '<p style="margin:0;font-size:12px;color:rgba(255,255,255,0.7);">Copilot by <strong style="color:white;">Muller y Pérez</strong> | '
   h += modo === 'diario' ? 'Informe diario 7:30 AM' : modo === 'semanal' ? 'Resumen semanal, lunes 9 AM' : 'Resumen mensual, 1ro de cada mes'
-  h += '</p><p style="margin:6px 0 0;font-size:11px;color:rgba(255,255,255,0.4);">mulleryperez.cl/copilot | Responde este email para ajustar cuentas</p></div></div>'
+  h += '</p>'
+  var planIncluye = plan === 'business' ? 'Todo incluido: informes + copies + grilla + guiones + auditoría + reporte'
+    : plan === 'pro' ? 'Informe diario + copies + grilla mensual'
+    : 'Informe diario + copies semanales'
+  h += '<p style="margin:4px 0 0;font-size:10px;color:rgba(255,255,255,0.5);">' + planIncluye + '</p>'
+  h += '<p style="margin:6px 0 0;font-size:11px;color:rgba(255,255,255,0.4);">mulleryperez.cl/copilot | Responde este email para ajustar cuentas</p></div></div>'
   return h
 }
 
@@ -839,7 +946,7 @@ function renderSeccion(red, color, posts) {
       if (isHigh) h += ' &nbsp; <span style="background:#fee2e2;color:#dc2626;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:600;">Alto engagement</span>'
       h += '</td><td style="text-align:right;">'
       h += '<span style="background:#f3e8ff;color:#7c3aed;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:600;">' + p.type + '</span>'
-      if (p.url) h += ' &nbsp; <a href="' + p.url + '" style="color:' + color + ';font-weight:600;text-decoration:none;">Ver &#8594;</a>'
+      if (p.url) h += ' &nbsp; <a href="' + p.url + '" style="color:' + color + ';font-weight:600;text-decoration:none;">Ver →</a>'
       h += '</td></tr></table></div>'
     })
     h += '</div>'
@@ -877,7 +984,7 @@ function renderSeccionPrensa(posts, prensaKws) {
       if (isHigh) h += ' &nbsp; <span style="background:#fee2e2;color:#dc2626;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:600;">Alto engagement</span>'
       if (p.keywords && p.keywords.length > 0) h += ' &nbsp; <span style="background:#fef3c7;color:#92400e;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:600;">Menciona: ' + p.keywords.join(', ') + '</span>'
       h += '</td></tr><tr><td style="padding-top:6px;">'
-      if (p.url) h += '<a href="' + p.url + '" style="color:' + color + ';font-weight:600;text-decoration:none;">Ver &#8594;</a>'
+      if (p.url) h += '<a href="' + p.url + '" style="color:' + color + ';font-weight:600;text-decoration:none;">Ver →</a>'
       h += '</td></tr></table></div>'
     })
     h += '</div>'
@@ -934,12 +1041,12 @@ function generarExcel(grilla, nombre, fecha) {
 
 // === ENVIAR ===
 async function enviarEmail(destinos, html, fecha, nPosts, modo, pdf, excel, nombreCliente) {
-  var titulo = modo === 'mensual' ? 'Resumen mensual' : modo === 'semanal' ? 'Resumen semanal' : 'Tu Radar diario'
+  var titulo = modo === 'mensual' ? 'Resumen mensual Copilot' : modo === 'semanal' ? 'Resumen semanal Copilot' : 'Tu Copilot diario'
   var asunto = (nombreCliente ? nombreCliente + ' | ' : '') + titulo + ' | ' + nPosts + ' posts | ' + fecha
-  var body = { from: 'Radar <contacto@mulleryperez.cl>', to: destinos,
+  var body = { from: 'Copilot <contacto@mulleryperez.cl>', to: destinos,
     subject: asunto, html: html }
   var attachments = []
-  if (pdf) attachments.push({ filename: 'Radar_' + modo + '_' + fecha + '.pdf', content: pdf })
+  if (pdf) attachments.push({ filename: 'Copilot_' + modo + '_' + fecha + '.pdf', content: pdf })
   if (excel) attachments.push({ filename: 'Grilla_' + fecha + '.xlsx', content: excel })
   if (attachments.length > 0) body.attachments = attachments
   try {
