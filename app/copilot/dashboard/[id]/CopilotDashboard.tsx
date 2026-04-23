@@ -42,11 +42,11 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
 
       var dias = periodo === '7d' ? 7 : periodo === '30d' ? 30 : 90
       var desde = new Date(Date.now() - dias * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
-      var r2 = await fetch(SUPABASE_URL + '/rest/v1/copilot_posts?suscripcion_id=eq.' + props.suscripcionId + '&fecha_scrape=gte.' + desde + '&select=*&order=fecha_scrape.desc', { headers: hdrs() })
+      var r2 = await fetch(SUPABASE_URL + '/rest/v1/radar_posts?suscripcion_id=eq.' + props.suscripcionId + '&fecha_scrape=gte.' + desde + '&select=*&order=fecha_scrape.desc', { headers: hdrs() })
       var data = await r2.json()
       setPosts(Array.isArray(data) ? data : [])
 
-      var r3 = await fetch(SUPABASE_URL + '/rest/v1/copilot_contenido?suscripcion_id=eq.' + props.suscripcionId + '&select=*&order=created_at.desc', { headers: hdrs() })
+      var r3 = await fetch(SUPABASE_URL + '/rest/v1/radar_contenido?suscripcion_id=eq.' + props.suscripcionId + '&select=*&order=created_at.desc', { headers: hdrs() })
       var cData = await r3.json()
       setContenido(Array.isArray(cData) ? cData : [])
 
