@@ -298,11 +298,23 @@ async function main() {
 
     var html = generarEmailHTML(misPosts, cuentas, hoy, MODO, resumenIA, empresas, trends, sub.id, contenidoSugerido, sub.estado, sub.plan, sub.trial_ends, grillaMensual, guionesData, auditoriaData)
     var pdf = generarPDF(html, hoy, MODO)
-    var excel = null
-    if (MODO === 'mensual' && grillaMensual && grillaMensual.length > 0) {
-      excel = generarExcel(grillaMensual, sub.nombre || sub.email, hoy)
+
+    // Generar Excel adjuntos según modo y plan
+    var attachments = []
+    if (pdf) attachments.push({ filename: 'Copilot_' + MODO + '_' + hoy + '.pdf', content: pdf })
+    if ((MODO === 'semanal' || MODO === 'mensual') && contenidoSugerido.length > 0) {
+      var excelCopies = await generarExcelCopies(contenidoSugerido)
+      if (excelCopies) attachments.push({ filename: 'Copies_' + hoy + '.xlsx', content: excelCopies })
     }
-    await enviarEmail(destinos, html, hoy, misPosts.length, MODO, pdf, excel, sub.nombre || sub.email)
+    if (MODO === 'mensual' && grillaMensual && grillaMensual.posts && grillaMensual.posts.length > 0) {
+      var excelGrilla = await generarExcel(grillaMensual.posts, sub.nombre || sub.email, hoy)
+      if (excelGrilla) attachments.push({ filename: 'Grilla_' + hoy + '.xlsx', content: excelGrilla })
+    }
+    if ((MODO === 'semanal' || MODO === 'mensual') && guionesData && guionesData.length > 0) {
+      var excelGuiones = await generarExcelGuiones(guionesData)
+      if (excelGuiones) attachments.push({ filename: 'Guiones_' + hoy + '.xlsx', content: excelGuiones })
+    }
+    await enviarEmailV2(destinos, html, hoy, misPosts.length, MODO, attachments, sub.nombre || sub.email)
   }
   console.log('\nRadar ' + MODO + ' completado | ' + activos.length + ' suscriptores')
 }
@@ -901,31 +913,114 @@ function generarPDF(html, fecha, modo) {
 }
 
 // === EXCEL GRILLA ===
-function generarExcel(grilla, nombre, fecha) {
+// === EXCEL HELPERS (ExcelJS con formato) ===
+var HEADER_FILL = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF4338CA' } }
+var HEADER_FONT = { bold: true, color: { argb: 'FFFFFFFF' }, size: 11 }
+var BODY_FONT = { size: 10 }
+var BORDER_STYLE = { top: { style: 'thin', color: { argb: 'FFE2E8F0' } }, bottom: { style: 'thin', color: { argb: 'FFE2E8F0' } }, left: { style: 'thin', color: { argb: 'FFE2E8F0' } }, right: { style: 'thin', color: { argb: 'FFE2E8F0' } } }
+var ROW_EVEN = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF5F3FF' } }
+var ROW_ODD = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFFFFF' } }
+var PLAT_COLORS = { Instagram: 'FFE4405F', LinkedIn: 'FF0A66C2', Facebook: 'FF1877F2' }
+
+function styleSheet(ws, colCount, dataCount) {
+  var hr = ws.getRow(1)
+  hr.height = 28
+  for (var c = 1; c <= colCount; c++) {
+    var cell = hr.getCell(c)
+    cell.fill = HEADER_FILL; cell.font = HEADER_FONT
+    cell.alignment = { vertical: 'middle', horizontal: 'center', wrapText: true }
+    cell.border = BORDER_STYLE
+  }
+  for (var r = 2; r <= dataCount + 1; r++) {
+    var row = ws.getRow(r)
+    row.height = 40
+    for (var c2 = 1; c2 <= colCount; c2++) {
+      var cell2 = row.getCell(c2)
+      cell2.font = BODY_FONT
+      cell2.alignment = { vertical: 'top', wrapText: true }
+      cell2.border = BORDER_STYLE
+      cell2.fill = (r % 2 === 0) ? ROW_EVEN : ROW_ODD
+    }
+  }
+}
+
+async function generarExcel(grilla, nombre, fecha) {
   try {
-    var XLSX = require('xlsx')
-    var rows = grilla.map(function(g, i) {
-      return {
-        '#': i + 1,
-        'Fecha': g.fecha_sugerida || g.dia_semana || ('Dia ' + (g.dia || i + 1)),
-        'Plataforma': g.plataforma || '',
-        'Tipo': g.tipo_post || g.tipo || '',
-        'Angulo': g.angulo || '',
-        'Titulo': g.titulo || g.titulo_grafico || g.gancho || '',
-        'Copy': g.copy || '',
-        'Hashtags': g.hashtags || '',
-        'Nota diseno': g.nota_diseno || '',
-        'Score': g.score || '',
-      }
+    var ExcelJS = require('exceljs')
+    var wb = new ExcelJS.Workbook()
+    wb.creator = 'M&P Copilot'
+    var ws = wb.addWorksheet('Grilla', { properties: { tabColor: { argb: '4338CA' } } })
+    ws.columns = [
+      { header: '#', key: 'n', width: 5 }, { header: 'Fecha', key: 'fecha', width: 14 },
+      { header: 'Plataforma', key: 'plat', width: 14 }, { header: 'Tipo', key: 'tipo', width: 12 },
+      { header: 'Ángulo', key: 'angulo', width: 16 }, { header: 'Título', key: 'titulo', width: 30 },
+      { header: 'Copy', key: 'copy', width: 55 }, { header: 'Hashtags', key: 'hash', width: 30 },
+      { header: 'Nota diseño', key: 'diseno', width: 25 }, { header: 'Score QA', key: 'score', width: 10 },
+    ]
+    grilla.forEach(function(g, i) {
+      var row = ws.addRow([i + 1, g.fecha_sugerida || g.dia_semana || ('Día ' + (g.dia || i + 1)),
+        g.plataforma || '', g.tipo_post || g.tipo || '', g.angulo || '',
+        g.titulo || g.titulo_grafico || g.gancho || '', g.copy || '',
+        g.hashtags || '', g.nota_diseno || '', g.score || ''])
+      var pc = PLAT_COLORS[g.plataforma] || null
+      if (pc) row.getCell(3).font = { bold: true, size: 10, color: { argb: pc } }
+      var sv = g.score || 0
+      row.getCell(10).font = { bold: true, size: 10, color: { argb: sv >= 80 ? 'FF166534' : sv >= 70 ? 'FF92400E' : 'FF991B1B' } }
+      row.getCell(10).alignment = { horizontal: 'center', vertical: 'middle' }
     })
-    var wb = XLSX.utils.book_new()
-    var ws = XLSX.utils.json_to_sheet(rows)
-    ws['!cols'] = [{ wch: 4 }, { wch: 14 }, { wch: 12 }, { wch: 12 }, { wch: 14 }, { wch: 30 }, { wch: 60 }, { wch: 30 }, { wch: 25 }, { wch: 8 }]
-    XLSX.utils.book_append_sheet(wb, ws, 'Grilla')
-    var buf = XLSX.write(wb, { type: 'buffer', bookType: 'xlsx' })
-    console.log('   Excel: ' + (buf.length / 1024).toFixed(0) + ' KB, ' + rows.length + ' posts')
+    styleSheet(ws, 10, grilla.length)
+    var buf = await wb.xlsx.writeBuffer()
+    console.log('   Excel grilla: ' + (buf.length / 1024).toFixed(0) + ' KB, ' + grilla.length + ' posts')
     return buf.toString('base64')
-  } catch (e) { console.error('   Excel: ' + e.message); return null }
+  } catch (e) { console.error('   Excel grilla: ' + e.message); return null }
+}
+
+async function generarExcelCopies(copies) {
+  try {
+    var ExcelJS = require('exceljs')
+    var wb = new ExcelJS.Workbook()
+    var ws = wb.addWorksheet('Copies', { properties: { tabColor: { argb: '10B981' } } })
+    ws.columns = [
+      { header: '#', key: 'n', width: 5 }, { header: 'Plataforma', key: 'plat', width: 14 },
+      { header: 'Tipo', key: 'tipo', width: 12 }, { header: 'Ángulo', key: 'angulo', width: 18 },
+      { header: 'Título', key: 'titulo', width: 30 }, { header: 'Copy completo', key: 'copy', width: 60 },
+      { header: 'Hashtags', key: 'hash', width: 30 }, { header: 'Score QA', key: 'score', width: 10 },
+    ]
+    copies.forEach(function(c, i) {
+      var row = ws.addRow([i + 1, c.plataforma || '', c.tipo || '', c.angulo || '',
+        c.titulo || '', c.copy || '', c.hashtags || '', c.score || ''])
+      row.height = 60
+      var pc = PLAT_COLORS[c.plataforma] || null
+      if (pc) row.getCell(2).font = { bold: true, size: 10, color: { argb: pc } }
+    })
+    styleSheet(ws, 8, copies.length)
+    var buf = await wb.xlsx.writeBuffer()
+    console.log('   Excel copies: ' + (buf.length / 1024).toFixed(0) + ' KB, ' + copies.length + ' copies')
+    return buf.toString('base64')
+  } catch (e) { console.error('   Excel copies: ' + e.message); return null }
+}
+
+async function generarExcelGuiones(guiones) {
+  try {
+    var ExcelJS = require('exceljs')
+    var wb = new ExcelJS.Workbook()
+    var ws = wb.addWorksheet('Guiones', { properties: { tabColor: { argb: 'E4405F' } } })
+    ws.columns = [
+      { header: '#', key: 'n', width: 5 }, { header: 'Tipo', key: 'tipo', width: 10 },
+      { header: 'Duración', key: 'dur', width: 10 }, { header: 'Título', key: 'titulo', width: 30 },
+      { header: 'Gancho (hook)', key: 'gancho', width: 40 }, { header: 'Desarrollo', key: 'desarrollo', width: 50 },
+      { header: 'Cierre / CTA', key: 'cierre', width: 35 }, { header: 'Sugerencia visual', key: 'visual', width: 40 },
+    ]
+    guiones.forEach(function(g, i) {
+      var row = ws.addRow([i + 1, g.tipo || 'Reel', g.duracion || '30s', g.titulo || '',
+        g.gancho || '', g.desarrollo || '', g.cierre || '', g.sugerencia_visual || g.visual || ''])
+      row.height = 60
+    })
+    styleSheet(ws, 8, guiones.length)
+    var buf = await wb.xlsx.writeBuffer()
+    console.log('   Excel guiones: ' + (buf.length / 1024).toFixed(0) + ' KB, ' + guiones.length + ' guiones')
+    return buf.toString('base64')
+  } catch (e) { console.error('   Excel guiones: ' + e.message); return null }
 }
 
 // === ENVIAR ===
@@ -945,6 +1040,22 @@ async function enviarEmail(destinos, html, fecha, nPosts, modo, pdf, excel, nomb
     var d = await r.json()
     if (!r.ok) console.error('   Email error:', d)
     else console.log('   Email: ' + destinos.join(',') + ' ' + d.id + (pdf ? ' +PDF' : '') + (excel ? ' +Excel' : ''))
+  } catch (e) { console.error('   Resend: ' + e.message) }
+}
+
+async function enviarEmailV2(destinos, html, fecha, nPosts, modo, attachments, nombreCliente) {
+  var titulo = modo === 'mensual' ? 'Resumen mensual Copilot' : modo === 'semanal' ? 'Resumen semanal Copilot' : 'Tu Copilot diario'
+  var asunto = (nombreCliente ? nombreCliente + ' | ' : '') + titulo + ' | ' + nPosts + ' posts | ' + fecha
+  var body = { from: 'Copilot <contacto@mulleryperez.cl>', to: destinos, subject: asunto, html: html }
+  if (attachments && attachments.length > 0) body.attachments = attachments
+  var adjLabel = attachments.map(function(a) { return a.filename.split('.').pop().toUpperCase() }).join('+')
+  try {
+    var r = await fetch('https://api.resend.com/emails', { method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + RESEND_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify(body) })
+    var d = await r.json()
+    if (!r.ok) console.error('   Email error:', d)
+    else console.log('   Email: ' + destinos.join(',') + ' ' + d.id + (adjLabel ? ' +' + adjLabel : ''))
   } catch (e) { console.error('   Resend: ' + e.message) }
 }
 

@@ -20,7 +20,7 @@ jobs:
         with:
           node-version: '20'
       - run: sudo apt-get update && sudo apt-get install -y wkhtmltopdf
-      - run: npm install node-fetch@2 @supabase/supabase-js xlsx
+      - run: npm install node-fetch@2 @supabase/supabase-js xlsx exceljs
       - name: "Radar semanal"
         run: node scripts/radar-clipping.js --semanal ${{ inputs.suscriptor_id && format('--id={0}', inputs.suscriptor_id) || '' }}
         env:
