@@ -138,21 +138,12 @@ async function main() {
     console.log('\n--- LINKEDIN: ' + liSet.size + ' empresas ---')
     for (var handle of liSet) {
       try {
-        var liUrl = 'https://www.linkedin.com/company/' + handle + '/'
-        console.log('   Scraping: ' + liUrl)
+        var liUrl = 'https://www.linkedin.com/company/' + handle + '/posts/'
         var r = await fetch('https://api.apify.com/v2/acts/harvestapi~linkedin-company-posts/run-sync-get-dataset-items?token=' + APIFY_TOKEN + '&timeout=120',
           { method: 'POST', headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ urls: [liUrl], maxPosts: MODO === 'diario' ? 5 : 15 }) })
-        console.log('   HTTP status: ' + r.status)
         if (!r.ok) throw new Error('HTTP ' + r.status)
         var raw = await r.json()
-        console.log('   ' + handle + ' raw: ' + raw.length + ' items')
-        if (raw.length > 0) {
-          var sample = raw[0]
-          console.log('   Sample keys: ' + Object.keys(sample).join(', '))
-          console.log('   Sample date fields: postedAt=' + sample.postedAt + ' date=' + sample.date + ' publishedAt=' + sample.publishedAt)
-          console.log('   Filtro desde: ' + desde.toISOString())
-        }
         var posts = raw.filter(function(p) { var d = p.postedAt || p.date || p.publishedAt; return d && new Date(d) > desde })
           .map(function(p) { return {
             red: 'LinkedIn', handle: handle, nombre: handleToNombre[handle] || handle,

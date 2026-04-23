@@ -163,10 +163,10 @@ async function main() {
       cuenta.validada = resultado.valida
       cuenta.motivo_invalida = resultado.motivo || null
       cuenta.fecha_validacion = new Date().toISOString()
-      // Auto-corregir handle si LinkedIn redirige
+      // LinkedIn: NO auto-corregir handles. Apify necesita el handle original, no el redirect.
+      // Solo informar si hay redirect para que el usuario sepa.
       if (resultado.handle_correcto) {
-        console.log('   → Handle corregido: ' + cuenta.handle + ' → ' + resultado.handle_correcto)
-        cuenta.handle = resultado.handle_correcto
+        console.log('   ℹ LinkedIn redirige ' + cuenta.handle + ' → ' + resultado.handle_correcto + ' (NO se corrige, Apify usa el original)')
       }
       cuentasActualizadas.push(cuenta)
 

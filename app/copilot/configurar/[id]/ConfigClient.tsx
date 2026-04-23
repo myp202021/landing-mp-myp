@@ -11,6 +11,12 @@ function hdrs() {
 
 var PLAN_LIMITS: Record<string, number> = { starter: 5, pro: 15, business: 30 }
 
+var PLACEHOLDERS: Record<string, string> = {
+  instagram: '@competidor o instagram.com/competidor',
+  linkedin: 'linkedin.com/company/nombre-empresa',
+  facebook: 'facebook.com/pagina'
+}
+
 export default function ConfigClient(props: { suscripcionId: string }) {
   var [sub, setSub] = useState(null as any)
   var [loading, setLoading] = useState(true)
@@ -32,7 +38,7 @@ export default function ConfigClient(props: { suscripcionId: string }) {
   async function loadData() {
     setLoading(true)
     try {
-      var r = await fetch(SUPABASE_URL + '/rest/v1/copilot_suscripciones?id=eq.' + props.suscripcionId + '&select=*', { headers: hdrs() })
+      var r = await fetch(SUPABASE_URL + '/rest/v1/clipping_suscripciones?id=eq.' + props.suscripcionId + '&select=*', { headers: hdrs() })
       var data = await r.json()
       if (!data || data.length === 0) { setError('Suscripcion no encontrada'); setLoading(false); return }
       var s = data[0]
@@ -93,7 +99,7 @@ export default function ConfigClient(props: { suscripcionId: string }) {
       allCuentas.push({ red: 'prensa', keywords: kwStr.split(',').map(function(k: string) { return k.trim().toLowerCase() }).filter(function(k: string) { return k !== '' }) })
     }
     try {
-      var r = await fetch(SUPABASE_URL + '/rest/v1/copilot_suscripciones?id=eq.' + props.suscripcionId, {
+      var r = await fetch(SUPABASE_URL + '/rest/v1/clipping_suscripciones?id=eq.' + props.suscripcionId, {
         method: 'PATCH', headers: hdrs(),
         body: JSON.stringify({
           cuentas: allCuentas,
@@ -116,13 +122,13 @@ export default function ConfigClient(props: { suscripcionId: string }) {
   }
 
   if (error) return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-      <p className="text-gray-500">{error}</p>
+    <div className="min-h-screen bg-[#0F0D2E] flex items-center justify-center">
+      <p className="text-[#94a3b8]">{error}</p>
     </div>
   )
   if (loading || !sub) return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-      <p className="text-gray-400">Cargando configuracion...</p>
+    <div className="min-h-screen bg-[#0F0D2E] flex items-center justify-center">
+      <p className="text-[#64748b]">Cargando configuracion...</p>
     </div>
   )
 
@@ -130,7 +136,7 @@ export default function ConfigClient(props: { suscripcionId: string }) {
   var used = cuentas.length
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[#0F0D2E]">
       <div className="bg-gradient-to-r from-indigo-700 to-purple-700 text-white px-6 py-8">
         <div className="max-w-3xl mx-auto flex justify-between items-center">
           <div>
@@ -153,16 +159,16 @@ export default function ConfigClient(props: { suscripcionId: string }) {
 
       <div className="max-w-3xl mx-auto px-6 py-8">
         {/* PERFIL EMPRESA */}
-        <div className="bg-white rounded-xl border border-gray-200 p-6 mb-6">
-          <h2 className="font-bold text-gray-900 mb-4">Tu empresa</h2>
+        <div className="bg-[#1a1745] rounded-xl border border-white/[0.06] p-6 mb-6">
+          <h2 className="font-bold text-white mb-4">Tu empresa</h2>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1">Nombre</label>
-              <input type="text" value={nombre} onChange={function(e: any) { setNombre(e.target.value) }} className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent" />
+              <label className="block text-sm font-semibold text-[#c4b5fd] mb-1">Nombre</label>
+              <input type="text" value={nombre} onChange={function(e: any) { setNombre(e.target.value) }} className="w-full border border-white/10 rounded-lg px-4 py-2.5 text-sm bg-[#12102a] text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent" />
             </div>
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1">Tono de comunicacion</label>
-              <select value={tono} onChange={function(e: any) { setTono(e.target.value) }} className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500">
+              <label className="block text-sm font-semibold text-[#c4b5fd] mb-1">Tono de comunicacion</label>
+              <select value={tono} onChange={function(e: any) { setTono(e.target.value) }} className="w-full border border-white/10 rounded-lg px-4 py-2.5 text-sm bg-[#12102a] text-white focus:ring-2 focus:ring-indigo-500">
                 <option value="profesional">Profesional y directo</option>
                 <option value="cercano">Cercano y amigable</option>
                 <option value="tecnico">Tecnico y especializado</option>
@@ -171,55 +177,62 @@ export default function ConfigClient(props: { suscripcionId: string }) {
             </div>
           </div>
           <div className="mt-4">
-            <label className="block text-sm font-semibold text-gray-700 mb-1">A que se dedica tu empresa</label>
-            <textarea value={descripcion} onChange={function(e: any) { setDescripcion(e.target.value) }} rows={2} className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent" placeholder="Ej: Software de control de asistencia y gestion de personas para empresas medianas y grandes en Chile" />
+            <label className="block text-sm font-semibold text-[#c4b5fd] mb-1">A que se dedica tu empresa</label>
+            <textarea value={descripcion} onChange={function(e: any) { setDescripcion(e.target.value) }} rows={2} className="w-full border border-white/10 rounded-lg px-4 py-2.5 text-sm bg-[#12102a] text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent" placeholder="Ej: Software de control de asistencia y gestion de personas para empresas medianas y grandes en Chile" />
           </div>
         </div>
 
         {/* WEB Y RRSS DEL CLIENTE */}
-        <div className="bg-white rounded-xl border border-gray-200 p-6 mb-6">
-          <h2 className="font-bold text-gray-900 mb-2">Tu presencia digital</h2>
-          <p className="text-sm text-gray-500 mb-4">Usamos esta info para generar copies y grillas de contenido alineados a tu marca.</p>
+        <div className="bg-[#1a1745] rounded-xl border border-white/[0.06] p-6 mb-6">
+          <h2 className="font-bold text-white mb-2">Tu presencia digital</h2>
+          <p className="text-sm text-[#94a3b8] mb-4">Usamos esta info para generar copies y grillas de contenido alineados a tu marca.</p>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1">Sitio web</label>
-              <input type="text" value={web} onChange={function(e: any) { setWeb(e.target.value) }} placeholder="www.tuempresa.cl" className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500" />
+              <label className="block text-sm font-semibold text-[#c4b5fd] mb-1">Sitio web</label>
+              <input type="text" value={web} onChange={function(e: any) { setWeb(e.target.value) }} placeholder="www.tuempresa.cl" className="w-full border border-white/10 rounded-lg px-4 py-2.5 text-sm bg-[#12102a] text-white focus:ring-2 focus:ring-indigo-500" />
             </div>
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1">Instagram</label>
-              <input type="text" value={igPropio} onChange={function(e: any) { setIgPropio(e.target.value) }} placeholder="@tuempresa" className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500" />
+              <label className="block text-sm font-semibold text-[#c4b5fd] mb-1">Instagram</label>
+              <input type="text" value={igPropio} onChange={function(e: any) { setIgPropio(e.target.value) }} placeholder="@tuempresa" className="w-full border border-white/10 rounded-lg px-4 py-2.5 text-sm bg-[#12102a] text-white focus:ring-2 focus:ring-indigo-500" />
             </div>
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1">LinkedIn</label>
-              <input type="text" value={liPropio} onChange={function(e: any) { setLiPropio(e.target.value) }} placeholder="linkedin.com/company/tuempresa" className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500" />
+              <label className="block text-sm font-semibold text-[#c4b5fd] mb-1">LinkedIn</label>
+              <input type="text" value={liPropio} onChange={function(e: any) { setLiPropio(e.target.value) }} placeholder="linkedin.com/company/tuempresa" className="w-full border border-white/10 rounded-lg px-4 py-2.5 text-sm bg-[#12102a] text-white focus:ring-2 focus:ring-indigo-500" />
             </div>
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1">Facebook</label>
-              <input type="text" value={fbPropio} onChange={function(e: any) { setFbPropio(e.target.value) }} placeholder="facebook.com/tuempresa" className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500" />
+              <label className="block text-sm font-semibold text-[#c4b5fd] mb-1">Facebook</label>
+              <input type="text" value={fbPropio} onChange={function(e: any) { setFbPropio(e.target.value) }} placeholder="facebook.com/tuempresa" className="w-full border border-white/10 rounded-lg px-4 py-2.5 text-sm bg-[#12102a] text-white focus:ring-2 focus:ring-indigo-500" />
             </div>
           </div>
         </div>
 
         {/* CUENTAS COMPETIDORES */}
-        <div className="bg-white rounded-xl border border-gray-200 p-6 mb-6">
+        <div className="bg-[#1a1745] rounded-xl border border-white/[0.06] p-6 mb-6">
           <div className="flex justify-between items-center mb-4">
             <div>
-              <h2 className="font-bold text-gray-900">Competidores a monitorear</h2>
-              <p className="text-sm text-gray-500 mt-1">Cuentas de la competencia que Copilot analiza diariamente.</p>
+              <h2 className="font-bold text-white">Competidores a monitorear</h2>
+              <p className="text-sm text-[#94a3b8] mt-1">Cuentas de la competencia que Copilot analiza diariamente.</p>
             </div>
-            <span className={'text-sm font-semibold ' + (used >= limit ? 'text-red-500' : 'text-gray-500')}>{used} / {limit}</span>
+            <span className={'text-sm font-semibold ' + (used >= limit ? 'text-red-500' : 'text-[#94a3b8]')}>{used} / {limit}</span>
+          </div>
+
+          <div style={{background:'#12102a',padding:'12px 16px',borderRadius:'10px',marginBottom:'16px',fontSize:'12px',color:'#94a3b8',lineHeight:'1.6'}}>
+            <strong style={{color:'#a5b4fc'}}>Formato correcto:</strong><br/>
+            Instagram: el nombre de usuario sin @ (ej: buk_chile)<br/>
+            LinkedIn: el slug de la URL de empresa (ej: de linkedin.com/company/<strong style={{color:'#fff'}}>bukhr</strong>/ usa &quot;bukhr&quot;)<br/>
+            Facebook: el nombre de la pagina (ej: bukRRHH)
           </div>
 
           {cuentas.map(function(c: any, i: number) {
             return (
               <div key={i} className="flex gap-3 mb-3 items-center">
-                <select value={c.red} onChange={function(e: any) { updateCuenta(i, 'red', e.target.value) }} className="border border-gray-300 rounded-lg px-3 py-2.5 text-sm w-36 focus:ring-2 focus:ring-indigo-500">
+                <select value={c.red} onChange={function(e: any) { updateCuenta(i, 'red', e.target.value) }} className="border border-white/10 rounded-lg px-3 py-2.5 text-sm w-36 bg-[#12102a] text-white focus:ring-2 focus:ring-indigo-500">
                   <option value="instagram">Instagram</option>
                   <option value="linkedin">LinkedIn</option>
                   <option value="facebook">Facebook</option>
                 </select>
-                <input type="text" value={c.handle} onChange={function(e: any) { updateCuenta(i, 'handle', e.target.value) }} placeholder="handle o URL" className="flex-1 border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500" />
-                <input type="text" value={c.nombre || ''} onChange={function(e: any) { updateCuenta(i, 'nombre', e.target.value) }} placeholder="Nombre empresa" className="w-40 border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500" />
+                <input type="text" value={c.handle} onChange={function(e: any) { updateCuenta(i, 'handle', e.target.value) }} placeholder={PLACEHOLDERS[c.red] || 'handle o URL'} className="flex-1 border border-white/10 rounded-lg px-4 py-2.5 text-sm bg-[#12102a] text-white focus:ring-2 focus:ring-indigo-500" />
+                <input type="text" value={c.nombre || ''} onChange={function(e: any) { updateCuenta(i, 'nombre', e.target.value) }} placeholder="Nombre empresa" className="w-40 border border-white/10 rounded-lg px-4 py-2.5 text-sm bg-[#12102a] text-white focus:ring-2 focus:ring-indigo-500" />
                 <button onClick={function() { removeCuenta(i) }} className="text-red-400 hover:text-red-600 text-lg font-bold px-2">x</button>
               </div>
             )
@@ -237,10 +250,10 @@ export default function ConfigClient(props: { suscripcionId: string }) {
         </div>
 
         {/* KEYWORDS PRENSA */}
-        <div className="bg-white rounded-xl border border-gray-200 p-6 mb-6">
-          <h2 className="font-bold text-gray-900 mb-2">Keywords de prensa</h2>
-          <p className="text-sm text-gray-500 mb-3">Palabras que buscaremos en 11 medios chilenos. Separadas por coma.</p>
-          <input type="text" value={kwStr} onChange={function(e: any) { setKwStr(e.target.value) }} placeholder="Ej: genera hr, control de asistencia, buk chile" className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500" />
+        <div className="bg-[#1a1745] rounded-xl border border-white/[0.06] p-6 mb-6">
+          <h2 className="font-bold text-white mb-2">Keywords de prensa</h2>
+          <p className="text-sm text-[#94a3b8] mb-3">Palabras que buscaremos en 11 medios chilenos. Separadas por coma.</p>
+          <input type="text" value={kwStr} onChange={function(e: any) { setKwStr(e.target.value) }} placeholder="Ej: genera hr, control de asistencia, buk chile" className="w-full border border-white/10 rounded-lg px-4 py-2.5 text-sm bg-[#12102a] text-white focus:ring-2 focus:ring-indigo-500" />
         </div>
 
         {/* GUARDAR */}
@@ -252,7 +265,7 @@ export default function ConfigClient(props: { suscripcionId: string }) {
         </div>
 
         {/* LINKS */}
-        <div className="mt-8 text-center text-sm text-gray-400">
+        <div className="mt-8 text-center text-sm text-[#64748b]">
           <a href={'/copilot/dashboard/' + props.suscripcionId} className="text-indigo-600 font-semibold hover:underline">Ver mi dashboard</a>
           <span className="mx-3">|</span>
           <a href="/copilot" className="text-indigo-600 font-semibold hover:underline">Volver a Copilot</a>
