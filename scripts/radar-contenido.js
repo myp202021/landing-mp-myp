@@ -310,6 +310,24 @@ async function generarContenidoSugerido(posts, empresas, modo, perfil, supabase,
     } catch (e) { console.error('   Error guardando copies: ' + e.message) }
   }
 
+  // Extraer ideas del analisis para el banco de ideas
+  if (supabase && suscripcionId && revisados.length > 0) {
+    try {
+      var ideas = revisados.map(function(c) {
+        return {
+          suscripcion_id: suscripcionId,
+          titulo: c.titulo || 'Idea de contenido',
+          descripcion: (c.angulo || '') + ': ' + (c.justificacion || c.titulo || ''),
+          categoria: (c.tipo || '').includes('Reel') ? 'entretenimiento' : (c.plataforma || '').includes('LinkedIn') ? 'educativo' : 'producto',
+          prioridad: (c.score || 0) >= 80 ? 'alta' : 'media',
+          estado: 'nueva',
+        }
+      })
+      await supabase.from('copilot_ideas').insert(ideas)
+      console.log('   ' + ideas.length + ' ideas guardadas en copilot_ideas')
+    } catch (e) { console.log('   Ideas skip: ' + e.message) }
+  }
+
   return revisados
 }
 

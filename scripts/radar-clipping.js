@@ -12,6 +12,8 @@ var childProcess = require('child_process')
 var contenidoModule = require('./radar-contenido.js')
 var grillaModule = require('./radar-grilla-mensual.js')
 var perfilModule = require('./radar-perfil.js')
+var guionesModule = require('./radar-guiones.js')
+var auditoriaModule = require('./radar-auditoria.js')
 
 var APIFY_TOKEN = process.env.APIFY_TOKEN
 var RESEND_KEY = process.env.RESEND
@@ -274,7 +276,20 @@ async function main() {
       grillaMensual = await grillaModule.generarGrillaMensual(misPosts, empresas, sub, mesSig, anioSig, supabase, cantidadPosts)
     }
 
-    var html = generarEmailHTML(misPosts, cuentas, hoy, MODO, resumenIA, empresas, trends, sub.id, contenidoSugerido, sub.estado, sub.plan, sub.trial_ends, grillaMensual)
+    // Guiones de reels (semanal/mensual, solo business)
+    var guionesData = null
+    if ((MODO === 'semanal' || MODO === 'mensual') && (sub.plan === 'business' || sub.plan === 'test') && misPosts.length >= 2) {
+      guionesData = await guionesModule.generarGuiones(misPosts, empresas, sub.perfil_empresa || {}, contenidoSugerido, supabase, sub.id)
+    }
+
+    // Auditoría mensual (mensual, todos los planes)
+    var auditoriaData = null
+    if (MODO === 'mensual') {
+      var contenidoMes = contenidoSugerido || []
+      auditoriaData = await auditoriaModule.generarAuditoria(misPosts, contenidoMes, cuentas, supabase, sub.id)
+    }
+
+    var html = generarEmailHTML(misPosts, cuentas, hoy, MODO, resumenIA, empresas, trends, sub.id, contenidoSugerido, sub.estado, sub.plan, sub.trial_ends, grillaMensual, guionesData, auditoriaData)
     var pdf = generarPDF(html, hoy, MODO)
     var excel = null
     if (MODO === 'mensual' && grillaMensual && grillaMensual.length > 0) {

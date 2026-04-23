@@ -1,7 +1,10 @@
 name: "Radar Clipping Mensual (1ro 09:00 AM Chile)"
 
 on:
-  workflow_dispatch:    inputs:
+  schedule:
+    - cron: '0 12 1 * *'
+  workflow_dispatch:
+    inputs:
       suscriptor_id:
         description: 'ID de suscriptor específico (vacío = todos)'
         required: false

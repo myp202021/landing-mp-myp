@@ -1,6 +1,8 @@
 name: "Radar Lifecycle Emails (08:00 AM Chile)"
 
 on:
+  schedule:
+    - cron: '0 11 * * *'
   workflow_dispatch:
 jobs:
   lifecycle:
