@@ -562,7 +562,7 @@ function renderTrend(pct, totalN, hasPrev) {
   return '<td style="padding:10px 8px;text-align:center;color:#6b7280;">&#9644; =</td>'
 }
 
-// === EMAIL HTML v5 ===
+// === EMAIL HTML v6 — Dark theme, Gmail-safe, compact ===
 function generarEmailHTML(posts, cuentas, fecha, modo, resumenIA, empresas, trends, subId, contenidoSugerido, estado, plan, trialEnds, grillaMensual, guionesData, ideasData, auditoriaData) {
   contenidoSugerido = contenidoSugerido || []
   grillaMensual = grillaMensual || null
@@ -572,451 +572,318 @@ function generarEmailHTML(posts, cuentas, fecha, modo, resumenIA, empresas, tren
   estado = estado || 'trial'
   plan = plan || 'starter'
   var fechaLegible = new Date(fecha + 'T12:00:00').toLocaleDateString('es-CL', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
-  var titulo = modo === 'mensual' ? 'Resumen mensual Copilot' : modo === 'semanal' ? 'Resumen semanal Copilot' : 'Tu Copilot diario'
-  var ventanaLabel = modo === 'diario' ? '72 horas' : modo === 'semanal' ? '7 días' : '30 días'
+  var titulo = modo === 'mensual' ? 'Resumen mensual' : modo === 'semanal' ? 'Resumen semanal' : 'Tu Copilot diario'
+  var ventanaLabel = modo === 'diario' ? '72h' : modo === 'semanal' ? '7 d\u00edas' : '30 d\u00edas'
   var totalLikes = posts.reduce(function(s, p) { return s + p.likes }, 0)
   var redesActivas = Array.from(new Set(posts.map(function(p) { return p.red }))).length
   var nEmpresas = Object.keys(empresas).length
 
-  var igPosts = posts.filter(function(p) { return p.red === 'Instagram' })
-  var liPosts = posts.filter(function(p) { return p.red === 'LinkedIn' })
-  var fbPosts = posts.filter(function(p) { return p.red === 'Facebook' })
-  var prPosts = posts.filter(function(p) { return p.red === 'Prensa' })
-  var prensaKws = (cuentas.find(function(c) { return c.red === 'prensa' }) || {}).keywords || []
-
   var ia = parseIAResponse(resumenIA)
 
+  // Helper: truncate text safely
+  var truncar = function(txt, max) {
+    if (!txt) return ''
+    var clean = txt.replace(/\n/g, ' ').replace(/<[^>]*>/g, '')
+    return clean.length > max ? clean.substring(0, max) + '...' : clean
+  }
+
   var h = ''
-  h += '<div style="font-family:-apple-system,Helvetica,Arial,sans-serif;max-width:680px;margin:0 auto;color:#1a1a1a;">'
+  // Outer wrapper table for Gmail
+  h += '<table cellpadding="0" cellspacing="0" border="0" width="100%" style="font-family:-apple-system,Helvetica,Arial,sans-serif;"><tr><td align="center" bgcolor="#0F0D2E" style="padding:16px 0;">'
+  h += '<table cellpadding="0" cellspacing="0" border="0" width="640" style="max-width:640px;width:100%;">'
 
-  // HEADER
-  h += '<div style="background:linear-gradient(135deg,#4338CA,#7C3AED);color:white;padding:30px 32px;border-radius:16px 16px 0 0;">'
-  h += '<table style="width:100%;"><tr>'
+  // === 1. HEADER ===
+  h += '<tr><td bgcolor="#4F46E5" style="padding:28px 28px 20px 28px;">'
+  h += '<table cellpadding="0" cellspacing="0" border="0" width="100%"><tr>'
   h += '<td style="vertical-align:top;">'
-  h += '<p style="margin:0;font-size:12px;opacity:0.7;letter-spacing:1px;">M&P COPILOT</p>'
-  h += '<h1 style="margin:8px 0 4px;font-size:26px;font-weight:800;">' + titulo + '</h1>'
-  h += '<p style="margin:0;font-size:14px;opacity:0.9;">' + fechaLegible + '</p>'
+  h += '<p style="margin:0 0 6px;font-size:11px;color:#a5b4fc;letter-spacing:1.5px;font-weight:600;">M&amp;P COPILOT</p>'
+  h += '<p style="margin:0 0 6px;font-size:24px;font-weight:800;color:#ffffff;">' + titulo + '</p>'
+  h += '<p style="margin:0;font-size:13px;color:#c4b5fd;">' + fechaLegible + '</p>'
   h += '</td>'
-  h += '<td style="vertical-align:top;text-align:right;width:200px;">'
-  h += '<div style="display:inline-block;background:rgba(255,255,255,0.12);padding:6px 14px;border-radius:8px;margin-bottom:4px;">'
-  h += '<span style="font-size:11px;opacity:0.7;">Ventana</span><br>'
-  h += '<span style="font-size:14px;font-weight:700;">' + ventanaLabel + '</span>'
-  h += '</div></td></tr></table>'
-  // KPI boxes
-  h += '<table style="margin-top:18px;width:100%;border-collapse:separate;border-spacing:8px 0;"><tr>'
-  h += '<td style="background:rgba(255,255,255,0.12);padding:12px 0;border-radius:10px;text-align:center;width:25%;"><div style="font-size:28px;font-weight:800;">' + posts.length + '</div><div style="font-size:10px;opacity:0.7;margin-top:2px;">Posts</div></td>'
-  h += '<td style="background:rgba(255,255,255,0.12);padding:12px 0;border-radius:10px;text-align:center;width:25%;"><div style="font-size:28px;font-weight:800;">' + redesActivas + '</div><div style="font-size:10px;opacity:0.7;margin-top:2px;">Redes activas</div></td>'
-  h += '<td style="background:rgba(255,255,255,0.12);padding:12px 0;border-radius:10px;text-align:center;width:25%;"><div style="font-size:28px;font-weight:800;">' + totalLikes.toLocaleString() + '</div><div style="font-size:10px;opacity:0.7;margin-top:2px;">Likes total</div></td>'
-  h += '<td style="background:rgba(255,255,255,0.12);padding:12px 0;border-radius:10px;text-align:center;width:25%;"><div style="font-size:28px;font-weight:800;">' + nEmpresas + '</div><div style="font-size:10px;opacity:0.7;margin-top:2px;">Empresas</div></td>'
-  h += '</tr></table></div>'
+  h += '<td width="90" style="vertical-align:top;text-align:right;">'
+  h += '<table cellpadding="0" cellspacing="0" border="0"><tr><td bgcolor="#3730a3" style="padding:8px 14px;text-align:center;border-radius:8px;">'
+  h += '<p style="margin:0;font-size:10px;color:#a5b4fc;">Ventana</p>'
+  h += '<p style="margin:2px 0 0;font-size:16px;font-weight:800;color:#ffffff;">' + ventanaLabel + '</p>'
+  h += '</td></tr></table>'
+  h += '</td></tr></table>'
+  h += '</td></tr>'
 
-  // AI SECTION
-  h += '<div style="background:white;padding:24px 28px;border-bottom:1px solid #e5e7eb;">'
-  h += '<table style="margin-bottom:14px;"><tr>'
-  h += '<td style="vertical-align:middle;"><div style="background:#4338CA;color:white;width:28px;height:28px;border-radius:8px;text-align:center;line-height:28px;font-size:14px;">AI</div></td>'
-  h += '<td style="vertical-align:middle;padding-left:8px;"><p style="font-weight:700;color:#1e1b4b;font-size:15px;margin:0;">Análisis inteligente</p></td>'
+  // === 2. KPI ROW ===
+  h += '<tr><td bgcolor="#1a1745" style="padding:16px 20px;">'
+  h += '<table cellpadding="0" cellspacing="0" border="0" width="100%"><tr>'
+  h += '<td width="25%" style="text-align:center;padding:8px 4px;"><p style="margin:0;font-size:24px;font-weight:800;color:#a5b4fc;">' + posts.length + '</p><p style="margin:4px 0 0;font-size:10px;color:#94a3b8;">Posts</p></td>'
+  h += '<td width="25%" style="text-align:center;padding:8px 4px;"><p style="margin:0;font-size:24px;font-weight:800;color:#a5b4fc;">' + redesActivas + '</p><p style="margin:4px 0 0;font-size:10px;color:#94a3b8;">Redes</p></td>'
+  h += '<td width="25%" style="text-align:center;padding:8px 4px;"><p style="margin:0;font-size:24px;font-weight:800;color:#a5b4fc;">' + totalLikes.toLocaleString() + '</p><p style="margin:4px 0 0;font-size:10px;color:#94a3b8;">Likes</p></td>'
+  h += '<td width="25%" style="text-align:center;padding:8px 4px;"><p style="margin:0;font-size:24px;font-weight:800;color:#a5b4fc;">' + nEmpresas + '</p><p style="margin:4px 0 0;font-size:10px;color:#94a3b8;">Empresas</p></td>'
   h += '</tr></table>'
+  h += '</td></tr>'
 
-  if (ia) {
-    // Contexto de mercado box
-    if (ia.contexto) {
-      h += '<div style="background:#f5f3ff;padding:16px 20px;border-radius:12px;border:1px solid #e9e5ff;margin-bottom:12px;">'
-      h += '<p style="margin:0 0 4px;font-size:11px;font-weight:700;color:#6d28d9;letter-spacing:0.5px;">CONTEXTO DE MERCADO</p>'
-      h += '<p style="margin:0;font-size:13px;color:#4c1d95;line-height:1.6;">' + ia.contexto + '</p></div>'
-    }
-    // Per-empresa badges
-    h += '<div style="font-size:13px;color:#312E81;line-height:1.7;">'
-    if (ia.empresas && ia.empresas.length > 0) {
-      for (var ei = 0; ei < ia.empresas.length; ei++) {
-        var emp = ia.empresas[ei]
-        var badgeColor = '#dcfce7'
-        var badgeText = '#166534'
-        if (emp.badge === 'yellow') { badgeColor = '#fef9c3'; badgeText = '#854d0e' }
-        else if (emp.badge === 'red') { badgeColor = '#fee2e2'; badgeText = '#991b1b' }
-        h += '<p style="margin:0 0 10px;"><span style="background:' + badgeColor + ';color:' + badgeText + ';padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;">' + emp.nombre + '</span> ' + emp.texto + '</p>'
+  // === 3. AI ANALYSIS ===
+  if (ia || resumenIA) {
+    h += '<tr><td bgcolor="#0F0D2E" style="padding:4px 0 0 0;"></td></tr>'
+    h += '<tr><td bgcolor="#1a1745" style="padding:20px 28px;border-left:4px solid #7C3AED;">'
+    h += '<table cellpadding="0" cellspacing="0" border="0" style="margin-bottom:12px;"><tr>'
+    h += '<td bgcolor="#7C3AED" style="padding:4px 10px;border-radius:4px;"><p style="margin:0;font-size:11px;font-weight:700;color:#ffffff;">An\u00e1lisis IA</p></td>'
+    h += '</tr></table>'
+    if (ia) {
+      if (ia.contexto) {
+        h += '<p style="margin:0 0 12px;font-size:13px;color:#c4b5fd;line-height:1.6;">' + truncar(ia.contexto, 300) + '</p>'
       }
+      if (ia.empresas && ia.empresas.length > 0) {
+        for (var ei = 0; ei < ia.empresas.length; ei++) {
+          var emp = ia.empresas[ei]
+          var bColor = emp.badge === 'red' ? '#7f1d1d' : emp.badge === 'yellow' ? '#713f12' : '#14532d'
+          var bBg = emp.badge === 'red' ? '#450a0a' : emp.badge === 'yellow' ? '#422006' : '#052e16'
+          var bText = emp.badge === 'red' ? '#EF4444' : emp.badge === 'yellow' ? '#F59E0B' : '#10B981'
+          h += '<p style="margin:0 0 8px;font-size:12px;color:#c4b5fd;line-height:1.5;">'
+          h += '<span style="background:' + bBg + ';color:' + bText + ';padding:2px 8px;border-radius:3px;font-size:10px;font-weight:700;border:1px solid ' + bColor + ';">' + emp.nombre + '</span> '
+          h += truncar(emp.texto, 150) + '</p>'
+        }
+      }
+      if (ia.oportunidad) {
+        h += '<p style="margin:8px 0 4px;font-size:12px;color:#c4b5fd;line-height:1.5;">'
+        h += '<span style="background:#422006;color:#F59E0B;padding:2px 8px;border-radius:3px;font-size:10px;font-weight:700;border:1px solid #713f12;">Oportunidad</span> '
+        h += truncar(ia.oportunidad, 200) + '</p>'
+      }
+      if (ia.alerta) {
+        h += '<p style="margin:4px 0 0;font-size:12px;color:#c4b5fd;line-height:1.5;">'
+        h += '<span style="background:#450a0a;color:#EF4444;padding:2px 8px;border-radius:3px;font-size:10px;font-weight:700;border:1px solid #7f1d1d;">Alerta</span> '
+        h += truncar(ia.alerta, 200) + '</p>'
+      }
+    } else if (resumenIA) {
+      h += '<p style="margin:0;font-size:12px;color:#c4b5fd;line-height:1.6;">' + truncar(resumenIA, 500) + '</p>'
     }
-    // Oportunidad
-    if (ia.oportunidad) {
-      h += '<p style="margin:0 0 10px;"><span style="background:#fef9c3;color:#854d0e;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;">Oportunidad</span> ' + ia.oportunidad + '</p>'
-    }
-    // Alerta
-    if (ia.alerta) {
-      h += '<p style="margin:0;"><span style="background:#fee2e2;color:#991b1b;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;">Alerta</span> ' + ia.alerta + '</p>'
-    }
-    h += '</div>'
-  } else if (resumenIA) {
-    // Fallback: raw text
-    h += '<div style="font-size:13px;color:#312E81;line-height:1.7;white-space:pre-line;">' + resumenIA + '</div>'
-  }
-  h += '</div>'
-
-  // CTA PRINCIPAL (arriba, visible sin scroll)
-  if (subId) {
-    h += '<div style="background:white;padding:16px 28px;text-align:center;border-bottom:1px solid #e5e7eb;">'
-    if (estado === 'trial') {
-      var diasR = trialEnds ? Math.max(0, Math.ceil((new Date(trialEnds).getTime() - Date.now()) / (1000*60*60*24))) : 7
-      h += '<span style="background:#fef3c7;padding:6px 14px;border-radius:8px;font-size:12px;color:#92400e;font-weight:600;">Prueba gratuita | ' + diasR + ' dias restantes</span> '
-      h += '<a href="https://www.mulleryperez.cl/copilot/contratar/' + subId + '" style="display:inline-block;background:#4338CA;color:white;padding:10px 24px;border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;margin-left:8px;">Contrata tu plan</a>'
-    } else {
-      h += '<span style="background:#dcfce7;padding:6px 14px;border-radius:8px;font-size:12px;color:#166534;font-weight:600;">Plan ' + plan + '</span> '
-      h += '<a href="https://www.mulleryperez.cl/copilot/configurar/' + subId + '" style="display:inline-block;background:#4338CA;color:white;padding:10px 24px;border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;margin-left:8px;">Configurar cuentas</a>'
-    }
-    h += '</div>'
+    h += '</td></tr>'
   }
 
-  // TABLA COMPARATIVA POR EMPRESA
-  h += '<div style="background:white;padding:20px 28px;border-bottom:1px solid #e5e7eb;">'
-  h += '<p style="font-weight:700;color:#0F172A;font-size:13px;margin:0 0 14px;letter-spacing:0.3px;">ACTIVIDAD POR EMPRESA</p>'
-  h += '<table style="width:100%;border-collapse:collapse;font-size:12px;">'
-  h += '<tr style="background:#0F172A;color:white;">'
-  h += '<th style="padding:10px 14px;text-align:left;font-weight:600;">Empresa</th>'
-  h += '<th style="padding:10px 8px;text-align:center;font-weight:600;width:40px;">IG</th>'
-  h += '<th style="padding:10px 8px;text-align:center;font-weight:600;width:40px;">LI</th>'
-  h += '<th style="padding:10px 8px;text-align:center;font-weight:600;width:40px;">FB</th>'
-  h += '<th style="padding:10px 8px;text-align:center;font-weight:600;width:50px;">Total</th>'
-  h += '<th style="padding:10px 8px;text-align:center;font-weight:600;">Likes</th>'
-  h += '<th style="padding:10px 8px;text-align:center;font-weight:600;">Eng.</th>'
-  h += '<th style="padding:10px 8px;text-align:center;font-weight:600;">Trend</th>'
+  // === 4. COMPANY TABLE ===
+  h += '<tr><td bgcolor="#0F0D2E" style="padding:4px 0 0 0;"></td></tr>'
+  h += '<tr><td bgcolor="#0F0D2E" style="padding:0 0 0 0;">'
+  h += '<table cellpadding="0" cellspacing="0" border="0" width="100%" style="font-size:12px;">'
+  // Table header
+  h += '<tr>'
+  h += '<td bgcolor="#1e1b4b" style="padding:10px 12px;font-weight:700;color:#ffffff;text-align:left;">Empresa</td>'
+  h += '<td bgcolor="#1e1b4b" style="padding:10px 6px;font-weight:700;color:#ffffff;text-align:center;width:36px;">IG</td>'
+  h += '<td bgcolor="#1e1b4b" style="padding:10px 6px;font-weight:700;color:#ffffff;text-align:center;width:36px;">LI</td>'
+  h += '<td bgcolor="#1e1b4b" style="padding:10px 6px;font-weight:700;color:#ffffff;text-align:center;width:36px;">FB</td>'
+  h += '<td bgcolor="#1e1b4b" style="padding:10px 6px;font-weight:700;color:#ffffff;text-align:center;width:44px;">Total</td>'
+  h += '<td bgcolor="#1e1b4b" style="padding:10px 6px;font-weight:700;color:#ffffff;text-align:center;">Likes</td>'
   h += '</tr>'
   var idx = 0
   Object.keys(empresas).forEach(function(nombre) {
-    var emp = empresas[nombre]
-    var empHandles = [emp.ig, emp.li, emp.fb].filter(Boolean)
+    var empData = empresas[nombre]
+    var empHandles = [empData.ig, empData.li, empData.fb].filter(Boolean)
     var empPosts = posts.filter(function(p) { return p.red !== 'Prensa' && empHandles.includes(p.handle) })
     var igN = empPosts.filter(function(p) { return p.red === 'Instagram' }).length
     var liN = empPosts.filter(function(p) { return p.red === 'LinkedIn' }).length
     var fbN = empPosts.filter(function(p) { return p.red === 'Facebook' }).length
     var totalN = empPosts.length
     var totalL = empPosts.reduce(function(s, p) { return s + p.likes }, 0)
-    var totalC = empPosts.reduce(function(s, p) { return s + p.comments }, 0)
-    var avgEng = totalN > 0 ? Math.round((totalL + totalC) / totalN) : 0
     var isInactive = totalN === 0
-    var bg = isInactive ? '#fef2f2' : (idx % 2 === 0 ? '#ffffff' : '#f8fafc')
-    var nameColor = isInactive ? '#991b1b' : '#0F172A'
-    var z = function(n) { return n === 0 ? '<span style="color:#d1d5db;">0</span>' : '<strong>' + n + '</strong>' }
-    var t = trends[nombre] || { postsPct: 0, hasPrev: false }
+    var rowBg = idx % 2 === 0 ? '#1a1745' : '#12102a'
+    var nameColor = isInactive ? '#EF4444' : '#ffffff'
+    var dimColor = '#64748b'
+    var zv = function(n, color) { return n === 0 ? '<span style="color:' + dimColor + ';">0</span>' : '<span style="color:' + color + ';font-weight:700;">' + n + '</span>' }
 
-    h += '<tr style="background:' + bg + ';border-bottom:1px solid #f1f5f9;">'
-    h += '<td style="padding:12px 14px;font-weight:700;color:' + nameColor + ';">' + nombre + '</td>'
-    h += '<td style="padding:10px 8px;text-align:center;">' + z(igN) + '</td>'
-    h += '<td style="padding:10px 8px;text-align:center;">' + z(liN) + '</td>'
-    h += '<td style="padding:10px 8px;text-align:center;">' + z(fbN) + '</td>'
-    h += '<td style="padding:10px 8px;text-align:center;font-weight:800;' + (isInactive ? 'color:#991b1b;' : '') + '">' + totalN + '</td>'
-    if (isInactive) {
-      h += '<td style="padding:10px 8px;text-align:center;color:#d1d5db;">-</td>'
-      h += '<td style="padding:10px 8px;text-align:center;color:#d1d5db;">-</td>'
-    } else {
-      h += '<td style="padding:10px 8px;text-align:center;">' + totalL.toLocaleString() + '</td>'
-      h += '<td style="padding:10px 8px;text-align:center;">' + avgEng.toLocaleString() + '</td>'
-    }
-    h += renderTrend(t.postsPct, totalN, t.hasPrev)
+    h += '<tr>'
+    h += '<td bgcolor="' + rowBg + '" style="padding:10px 12px;font-weight:700;color:' + nameColor + ';border-bottom:1px solid #2d2a5e;">' + nombre + '</td>'
+    h += '<td bgcolor="' + rowBg + '" style="padding:10px 6px;text-align:center;border-bottom:1px solid #2d2a5e;">' + zv(igN, '#E4405F') + '</td>'
+    h += '<td bgcolor="' + rowBg + '" style="padding:10px 6px;text-align:center;border-bottom:1px solid #2d2a5e;">' + zv(liN, '#0A66C2') + '</td>'
+    h += '<td bgcolor="' + rowBg + '" style="padding:10px 6px;text-align:center;border-bottom:1px solid #2d2a5e;">' + zv(fbN, '#1877F2') + '</td>'
+    h += '<td bgcolor="' + rowBg + '" style="padding:10px 6px;text-align:center;font-weight:800;color:' + (isInactive ? '#EF4444' : '#ffffff') + ';border-bottom:1px solid #2d2a5e;">' + totalN + '</td>'
+    h += '<td bgcolor="' + rowBg + '" style="padding:10px 6px;text-align:center;color:' + (isInactive ? dimColor : '#c4b5fd') + ';border-bottom:1px solid #2d2a5e;">' + (isInactive ? '-' : totalL.toLocaleString()) + '</td>'
     h += '</tr>'
     idx++
   })
-  h += '</table></div>'
+  h += '</table></td></tr>'
 
-  // SECCIONES POR RED
-  if (igPosts.length > 0) h += renderSeccion('Instagram', '#E4405F', igPosts)
-  if (liPosts.length > 0) h += renderSeccion('LinkedIn', '#0A66C2', liPosts)
-  if (fbPosts.length > 0) h += renderSeccion('Facebook', '#1877F2', fbPosts)
-  if (prPosts.length > 0) {
-    h += renderSeccionPrensa(prPosts, prensaKws)
+  // === 5. TOP 5 POSTS ===
+  if (posts.length > 0) {
+    var sortedPosts = posts.filter(function(p) { return p.red !== 'Prensa' }).slice().sort(function(a, b) { return b.likes - a.likes })
+    var topPosts = sortedPosts.slice(0, 5)
+    if (topPosts.length > 0) {
+      h += '<tr><td bgcolor="#0F0D2E" style="padding:4px 0 0 0;"></td></tr>'
+      h += '<tr><td bgcolor="#1a1745" style="padding:20px 28px;">'
+      h += '<table cellpadding="0" cellspacing="0" border="0" style="margin-bottom:14px;"><tr>'
+      h += '<td bgcolor="#4F46E5" style="padding:4px 10px;border-radius:4px;"><p style="margin:0;font-size:11px;font-weight:700;color:#ffffff;">Top ' + topPosts.length + ' posts</p></td>'
+      h += '</tr></table>'
+      for (var ti = 0; ti < topPosts.length; ti++) {
+        var tp = topPosts[ti]
+        var netColor = tp.red === 'Instagram' ? '#E4405F' : tp.red === 'LinkedIn' ? '#0A66C2' : tp.red === 'Facebook' ? '#1877F2' : '#d97706'
+        var tpDate = ''
+        if (tp.fecha) { try { tpDate = new Date(tp.fecha).toLocaleDateString('es-CL', { day: 'numeric', month: 'short' }) } catch(e) { tpDate = '' } }
+        h += '<table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom:8px;"><tr>'
+        h += '<td width="4" bgcolor="' + netColor + '" style="padding:0;"></td>'
+        h += '<td bgcolor="#12102a" style="padding:10px 14px;border-bottom:1px solid #2d2a5e;">'
+        h += '<table cellpadding="0" cellspacing="0" border="0" width="100%"><tr>'
+        h += '<td style="vertical-align:top;">'
+        h += '<p style="margin:0 0 2px;font-size:11px;"><span style="color:' + netColor + ';font-weight:700;">' + (tp.nombre || tp.handle) + '</span>'
+        if (tpDate) h += ' <span style="color:#64748b;font-size:10px;">' + tpDate + '</span>'
+        h += '</p>'
+        h += '<p style="margin:0;font-size:12px;color:#94a3b8;line-height:1.5;">' + truncar(tp.texto, 100) + '</p>'
+        h += '</td>'
+        h += '<td width="60" style="text-align:right;vertical-align:top;"><p style="margin:0;font-size:14px;font-weight:800;color:#a5b4fc;">' + tp.likes.toLocaleString() + '</p><p style="margin:0;font-size:9px;color:#64748b;">likes</p></td>'
+        h += '</tr></table>'
+        h += '</td></tr></table>'
+      }
+      h += '</td></tr>'
+    }
   }
 
   if (posts.length === 0) {
-    h += '<div style="background:white;padding:32px 28px;text-align:center;"><p style="color:#6b7280;">Sin publicaciones en el periodo.</p></div>'
+    h += '<tr><td bgcolor="#1a1745" style="padding:28px;text-align:center;"><p style="margin:0;color:#64748b;font-size:13px;">Sin publicaciones en el per\u00edodo.</p></td></tr>'
   }
 
-  // CONTENIDO SUGERIDO (semanal/mensual only)
-  if (ia && ia.contenido_sugerido && ia.contenido_sugerido.length > 0 && (modo === 'semanal' || modo === 'mensual')) {
-    h += '<div style="background:white;padding:22px 28px;border-top:4px solid #10b981;margin-top:3px;">'
-    h += '<table style="width:100%;margin-bottom:16px;"><tr>'
-    h += '<td><span style="background:#10b981;color:white;padding:6px 16px;border-radius:8px;font-size:13px;font-weight:700;">Contenido sugerido</span></td>'
-    h += '<td style="text-align:right;font-size:12px;color:#6b7280;">' + ia.contenido_sugerido.length + ' ideas</td>'
+  // === 6. COPIES PREVIEW (semanal/mensual, Pro+Business) ===
+  var hasCopies = (contenidoSugerido.length > 0 || (ia && ia.contenido_sugerido && ia.contenido_sugerido.length > 0)) && (modo === 'semanal' || modo === 'mensual')
+  if (hasCopies && (plan === 'pro' || plan === 'business')) {
+    var copiesList = contenidoSugerido.length > 0 ? contenidoSugerido : ia.contenido_sugerido
+    var maxCopies = Math.min(copiesList.length, 5)
+    h += '<tr><td bgcolor="#0F0D2E" style="padding:4px 0 0 0;"></td></tr>'
+    h += '<tr><td bgcolor="#1a1745" style="padding:20px 28px;border-left:4px solid #10B981;">'
+    h += '<table cellpadding="0" cellspacing="0" border="0" style="margin-bottom:12px;"><tr>'
+    h += '<td bgcolor="#10B981" style="padding:4px 10px;border-radius:4px;"><p style="margin:0;font-size:11px;font-weight:700;color:#ffffff;">Copies sugeridos</p></td>'
+    h += '<td style="padding-left:10px;"><p style="margin:0;font-size:11px;color:#64748b;">' + copiesList.length + ' ideas</p></td>'
     h += '</tr></table>'
-    for (var ci = 0; ci < ia.contenido_sugerido.length; ci++) {
-      var sug = ia.contenido_sugerido[ci]
-      var redBadge = sug.red || 'General'
-      var redColor = '#6b7280'
-      if (redBadge === 'Instagram') redColor = '#E4405F'
-      else if (redBadge === 'LinkedIn') redColor = '#0A66C2'
-      else if (redBadge === 'Facebook') redColor = '#1877F2'
-      h += '<div style="padding:16px;background:#f0fdf4;border-radius:12px;border-left:4px solid #10b981;margin-bottom:8px;">'
-      h += '<table style="width:100%;margin-bottom:8px;"><tr>'
-      h += '<td><strong style="font-size:14px;color:#064e3b;">' + (sug.titulo || 'Idea ' + (ci + 1)) + '</strong></td>'
-      h += '<td style="text-align:right;"><span style="background:' + redColor + ';color:white;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:600;">' + redBadge + '</span></td>'
-      h += '</tr></table>'
-      h += '<p style="margin:0;font-size:13px;color:#1f2937;line-height:1.65;">' + (sug.descripcion || '') + '</p>'
-      h += '</div>'
-    }
-    h += '</div>'
-  }
-
-  // CONTENIDO SUGERIDO (pipeline 3 agentes)
-  if (contenidoSugerido.length > 0) {
-    h += '<div style="background:white;padding:22px 28px;border-top:4px solid #10b981;margin-top:3px;">'
-    h += '<table style="width:100%;margin-bottom:16px;"><tr><td><span style="background:#10b981;color:white;padding:6px 16px;border-radius:8px;font-size:13px;font-weight:700;">Contenido sugerido</span></td>'
-    h += '<td style="text-align:right;font-size:11px;color:#6b7280;">' + contenidoSugerido.length + ' ideas con copy listo | OpenAI + Claude + QA</td></tr></table>'
-    for (var ci = 0; ci < contenidoSugerido.length; ci++) {
-      var cs = contenidoSugerido[ci]
-      var pColor = cs.plataforma === 'Instagram' ? '#E4405F' : cs.plataforma === 'LinkedIn' ? '#0A66C2' : '#1877F2'
-      h += '<div style="padding:18px;background:#f0fdf4;border-radius:12px;border-left:4px solid #10b981;margin-bottom:12px;">'
-      h += '<table style="width:100%;margin-bottom:8px;font-size:11px;"><tr>'
-      h += '<td><span style="background:' + pColor + ';color:white;padding:2px 8px;border-radius:4px;font-weight:600;">' + cs.plataforma + ' ' + cs.tipo + '</span></td>'
-      h += '<td style="text-align:right;"><span style="background:#dbeafe;color:#1e40af;padding:2px 8px;border-radius:4px;font-weight:600;">' + cs.angulo + '</span> '
-      h += '<span style="background:#fef3c7;color:#92400e;padding:2px 8px;border-radius:4px;font-weight:600;">' + cs.objetivo + '</span>'
-      if (cs.score) h += ' <span style="background:' + (cs.score >= 80 ? '#dcfce7;color:#166534' : '#fef3c7;color:#92400e') + ';padding:2px 8px;border-radius:4px;font-weight:600;">Score: ' + cs.score + '</span>'
-      h += '</td></tr></table>'
-      h += '<p style="margin:0 0 8px;font-size:15px;font-weight:700;color:#0F172A;">' + (cs.titulo || '') + '</p>'
-      h += '<div style="background:white;padding:14px;border-radius:8px;border:1px solid #d1fae5;margin-bottom:8px;">'
-      h += '<p style="margin:0 0 4px;font-size:10px;font-weight:700;color:#059669;letter-spacing:0.5px;">COPY LISTO PARA PUBLICAR</p>'
-      h += '<p style="margin:0;font-size:13px;color:#374151;line-height:1.7;white-space:pre-line;">' + (cs.copy || '').replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</p>'
-      h += '</div>'
-      if (cs.justificacion) {
-        h += '<p style="margin:0;font-size:12px;color:#059669;line-height:1.5;"><strong>Por que funciona:</strong> ' + cs.justificacion + '</p>'
+    for (var ci = 0; ci < maxCopies; ci++) {
+      var cs = copiesList[ci]
+      var cPlat = cs.plataforma || cs.red || 'General'
+      var cColor = cPlat === 'Instagram' ? '#E4405F' : cPlat === 'LinkedIn' ? '#0A66C2' : cPlat === 'Facebook' ? '#1877F2' : '#94a3b8'
+      var cTitle = cs.titulo || 'Idea ' + (ci + 1)
+      h += '<table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom:6px;"><tr>'
+      h += '<td bgcolor="#12102a" style="padding:8px 12px;border-bottom:1px solid #2d2a5e;">'
+      h += '<span style="color:' + cColor + ';font-size:10px;font-weight:700;">' + cPlat + '</span> '
+      h += '<span style="color:#c4b5fd;font-size:12px;">' + truncar(cTitle, 60) + '</span>'
+      if (cs.score) {
+        var scColor = cs.score >= 80 ? '#10B981' : cs.score >= 50 ? '#F59E0B' : '#EF4444'
+        h += ' <span style="color:' + scColor + ';font-size:10px;font-weight:700;">' + cs.score + '</span>'
       }
-      if (cs.fixed) h += '<p style="margin:4px 0 0;font-size:10px;color:#d97706;">* Copy corregido automaticamente por QA</p>'
-      h += '</div>'
+      h += '</td></tr></table>'
     }
-    h += '</div>'
+    if (copiesList.length > maxCopies) {
+      h += '<p style="margin:6px 0 0;font-size:11px;color:#64748b;">+ ' + (copiesList.length - maxCopies) + ' m\u00e1s</p>'
+    }
+    h += '<p style="margin:10px 0 0;font-size:11px;color:#94a3b8;">Ver copies completos en el Excel adjunto</p>'
+    h += '</td></tr>'
   }
 
-  // GRILLA MENSUAL (solo plan business, solo modo mensual)
-  if (grillaMensual && grillaMensual.posts && grillaMensual.posts.length > 0) {
-    h += '<div style="background:white;padding:22px 28px;border-top:4px solid #8b5cf6;margin-top:3px;">'
-    h += '<table style="width:100%;margin-bottom:16px;"><tr><td><span style="background:#8b5cf6;color:white;padding:6px 16px;border-radius:8px;font-size:13px;font-weight:700;">Grilla mensual</span></td>'
-    h += '<td style="text-align:right;font-size:11px;color:#6b7280;">' + grillaMensual.posts.length + ' posts | Calendario ' + (grillaMensual.mes || '') + '</td></tr></table>'
-    for (var gi = 0; gi < grillaMensual.posts.length; gi++) {
-      var gp = grillaMensual.posts[gi]
+  // === 7. GRILLA PREVIEW (mensual only, Pro+Business) ===
+  if (grillaMensual && grillaMensual.posts && grillaMensual.posts.length > 0 && modo === 'mensual' && (plan === 'pro' || plan === 'business')) {
+    var grillaPosts = grillaMensual.posts
+    var maxGrilla = Math.min(grillaPosts.length, 3)
+    h += '<tr><td bgcolor="#0F0D2E" style="padding:4px 0 0 0;"></td></tr>'
+    h += '<tr><td bgcolor="#1a1745" style="padding:20px 28px;border-left:4px solid #8B5CF6;">'
+    h += '<table cellpadding="0" cellspacing="0" border="0" style="margin-bottom:12px;"><tr>'
+    h += '<td bgcolor="#8B5CF6" style="padding:4px 10px;border-radius:4px;"><p style="margin:0;font-size:11px;font-weight:700;color:#ffffff;">Grilla ' + (grillaMensual.mes || '') + '</p></td>'
+    h += '<td style="padding-left:10px;"><p style="margin:0;font-size:11px;color:#64748b;">' + grillaPosts.length + ' posts</p></td>'
+    h += '</tr></table>'
+    for (var gi = 0; gi < maxGrilla; gi++) {
+      var gp = grillaPosts[gi]
       var gpColor = (gp.plataforma || '').includes('Instagram') ? '#E4405F' : (gp.plataforma || '').includes('LinkedIn') ? '#0A66C2' : '#1877F2'
-      h += '<div style="padding:14px;background:#f5f3ff;border-radius:10px;border-left:4px solid #8b5cf6;margin-bottom:10px;">'
-      h += '<table style="width:100%;margin-bottom:6px;font-size:11px;"><tr>'
-      h += '<td><span style="background:' + gpColor + ';color:white;padding:2px 8px;border-radius:4px;font-weight:600;">' + (gp.plataforma || 'IG') + '</span>'
-      h += ' <span style="color:#6b7280;">' + (gp.fecha_sugerida || 'Dia ' + (gi + 1)) + '</span></td>'
-      h += '<td style="text-align:right;"><span style="background:#ede9fe;color:#5b21b6;padding:2px 8px;border-radius:4px;font-weight:600;">' + (gp.tipo_post || 'Post') + '</span></td>'
-      h += '</tr></table>'
-      h += '<p style="margin:0 0 6px;font-size:14px;font-weight:700;color:#0F172A;">' + (gp.titulo || '') + '</p>'
-      h += '<div style="background:white;padding:12px;border-radius:8px;border:1px solid #ddd6fe;margin-bottom:6px;">'
-      h += '<p style="margin:0 0 3px;font-size:10px;font-weight:700;color:#7c3aed;letter-spacing:0.5px;">COPY</p>'
-      h += '<p style="margin:0;font-size:12px;color:#374151;line-height:1.6;white-space:pre-line;">' + (gp.copy || '').replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</p>'
-      h += '</div>'
-      if (gp.nota_diseno) h += '<p style="margin:0;font-size:11px;color:#7c3aed;">Diseno: ' + gp.nota_diseno + '</p>'
-      h += '</div>'
+      h += '<table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom:6px;"><tr>'
+      h += '<td bgcolor="#12102a" style="padding:8px 12px;border-bottom:1px solid #2d2a5e;">'
+      h += '<span style="color:' + gpColor + ';font-size:10px;font-weight:700;">' + (gp.plataforma || 'IG') + '</span> '
+      h += '<span style="color:#64748b;font-size:10px;">' + (gp.fecha_sugerida || '') + '</span> '
+      h += '<span style="color:#c4b5fd;font-size:12px;">' + truncar(gp.titulo, 50) + '</span>'
+      h += '</td></tr></table>'
     }
-    h += '</div>'
+    if (grillaPosts.length > maxGrilla) {
+      h += '<p style="margin:6px 0 0;font-size:11px;color:#64748b;">+ ' + (grillaPosts.length - maxGrilla) + ' posts m\u00e1s</p>'
+    }
+    h += '<p style="margin:10px 0 0;font-size:11px;color:#94a3b8;">Descargar grilla completa en el Excel adjunto</p>'
+    h += '</td></tr>'
   }
 
-  // GUIONES DE REELS (semanal/mensual, si hay data)
-  if (guionesData && guionesData.length > 0 && (modo === 'semanal' || modo === 'mensual')) {
+  // === 8. GUIONES PREVIEW (semanal/mensual, Business only) ===
+  if (guionesData && guionesData.length > 0 && (modo === 'semanal' || modo === 'mensual') && plan === 'business') {
     var maxGuiones = Math.min(guionesData.length, 3)
-    h += '<div style="background:white;padding:22px 28px;border-top:4px solid #E4405F;margin-top:3px;">'
-    h += '<table style="width:100%;margin-bottom:16px;"><tr><td><span style="background:#E4405F;color:white;padding:6px 16px;border-radius:8px;font-size:13px;font-weight:700;">Guiones de reels</span></td>'
-    h += '<td style="text-align:right;font-size:12px;color:#6b7280;">' + maxGuiones + ' guiones</td></tr></table>'
+    h += '<tr><td bgcolor="#0F0D2E" style="padding:4px 0 0 0;"></td></tr>'
+    h += '<tr><td bgcolor="#1a1745" style="padding:20px 28px;border-left:4px solid #E4405F;">'
+    h += '<table cellpadding="0" cellspacing="0" border="0" style="margin-bottom:12px;"><tr>'
+    h += '<td bgcolor="#E4405F" style="padding:4px 10px;border-radius:4px;"><p style="margin:0;font-size:11px;font-weight:700;color:#ffffff;">Guiones de reels</p></td>'
+    h += '<td style="padding-left:10px;"><p style="margin:0;font-size:11px;color:#64748b;">' + guionesData.length + ' guiones</p></td>'
+    h += '</tr></table>'
     for (var gui = 0; gui < maxGuiones; gui++) {
       var guion = guionesData[gui]
-      var durColor = (guion.duracion || '30s') === '15s' ? '#10b981' : (guion.duracion || '30s') === '60s' ? '#dc2626' : '#f59e0b'
-      var tipoGuion = guion.tipo || 'Reel'
-      h += '<div style="padding:16px;background:#fff1f2;border-radius:12px;border-left:4px solid #E4405F;margin-bottom:10px;">'
-      h += '<table style="width:100%;margin-bottom:10px;"><tr><td>'
-      h += '<span style="background:' + durColor + ';color:white;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;">' + (guion.duracion || '30s') + '</span> '
-      h += '<span style="background:#fecdd3;color:#9f1239;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;">' + tipoGuion + '</span>'
+      h += '<table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom:6px;"><tr>'
+      h += '<td bgcolor="#12102a" style="padding:8px 12px;border-bottom:1px solid #2d2a5e;">'
+      h += '<span style="color:#E4405F;font-size:10px;font-weight:700;">' + (guion.duracion || '30s') + '</span> '
+      h += '<span style="color:#c4b5fd;font-size:12px;">' + truncar(guion.gancho || guion.titulo || 'Guion ' + (gui + 1), 60) + '</span>'
       h += '</td></tr></table>'
-      if (guion.gancho) {
-        h += '<p style="margin:0 0 6px;font-size:14px;font-weight:700;color:#9f1239;">Gancho: ' + guion.gancho + '</p>'
-      }
-      if (guion.desarrollo) {
-        var devPreview = guion.desarrollo.length > 100 ? guion.desarrollo.substring(0, 100) + '...' : guion.desarrollo
-        h += '<p style="margin:0 0 6px;font-size:13px;color:#1f2937;line-height:1.6;">' + devPreview + '</p>'
-      }
-      if (guion.cierre) {
-        h += '<p style="margin:0 0 6px;font-size:13px;color:#1f2937;"><strong>CTA:</strong> ' + guion.cierre + '</p>'
-      }
-      if (guion.visual) {
-        h += '<p style="margin:0;font-size:12px;color:#9ca3af;font-style:italic;">Visual: ' + guion.visual + '</p>'
-      }
-      h += '</div>'
     }
-    h += '</div>'
+    if (guionesData.length > maxGuiones) {
+      h += '<p style="margin:6px 0 0;font-size:11px;color:#64748b;">+ ' + (guionesData.length - maxGuiones) + ' guiones m\u00e1s</p>'
+    }
+    h += '<p style="margin:10px 0 0;font-size:11px;color:#94a3b8;">Ver guiones completos en el Excel adjunto</p>'
+    h += '</td></tr>'
   }
 
-  // BANCO DE IDEAS (semanal/mensual, si hay data)
-  if (ideasData && ideasData.length > 0 && (modo === 'semanal' || modo === 'mensual')) {
-    var maxIdeas = Math.min(ideasData.length, 5)
-    h += '<div style="background:white;padding:22px 28px;border-top:4px solid #F59E0B;margin-top:3px;">'
-    h += '<table style="width:100%;margin-bottom:16px;"><tr><td><span style="background:#F59E0B;color:white;padding:6px 16px;border-radius:8px;font-size:13px;font-weight:700;">Ideas para tu contenido</span></td>'
-    h += '<td style="text-align:right;font-size:12px;color:#6b7280;">' + maxIdeas + ' ideas</td></tr></table>'
-    for (var idi = 0; idi < maxIdeas; idi++) {
-      var idea = ideasData[idi]
-      var catMap = { educativo: { bg: '#e0e7ff', color: '#3730a3' }, entretenimiento: { bg: '#fce7f3', color: '#9d174d' }, producto: { bg: '#dcfce7', color: '#166534' }, testimonial: { bg: '#fef3c7', color: '#92400e' }, tendencia: { bg: '#f3e8ff', color: '#6b21a8' } }
-      var catStyle = catMap[(idea.categoria || '').toLowerCase()] || { bg: '#f3f4f6', color: '#374151' }
-      var prioMap = { alta: '#dc2626', media: '#f59e0b', baja: '#9ca3af' }
-      var prioColor = prioMap[(idea.prioridad || '').toLowerCase()] || '#9ca3af'
-      h += '<div style="padding:14px;background:#fffbeb;border-radius:12px;border-left:4px solid #F59E0B;margin-bottom:8px;">'
-      h += '<table style="width:100%;margin-bottom:6px;"><tr><td>'
-      h += '<span style="background:' + catStyle.bg + ';color:' + catStyle.color + ';padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;">' + (idea.categoria || 'General') + '</span>'
-      h += ' <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:' + prioColor + ';vertical-align:middle;margin-left:6px;"></span>'
-      h += '</td></tr></table>'
-      h += '<p style="margin:0 0 4px;font-size:14px;font-weight:700;color:#0F172A;">' + (idea.titulo || 'Idea ' + (idi + 1)) + '</p>'
-      if (idea.descripcion) {
-        h += '<p style="margin:0;font-size:13px;color:#1f2937;line-height:1.6;">' + idea.descripcion + '</p>'
-      }
-      h += '</div>'
-    }
-    h += '</div>'
-  }
-
-  // AUDITORIA MENSUAL (solo mensual, si hay data)
+  // === 9. AUDITORIA (mensual, all plans) ===
   if (auditoriaData && modo === 'mensual') {
-    var scoreColor = auditoriaData.score >= 75 ? '#059669' : auditoriaData.score >= 50 ? '#d97706' : '#dc2626'
-    var scoreBg = auditoriaData.score >= 75 ? '#dcfce7' : auditoriaData.score >= 50 ? '#fef3c7' : '#fee2e2'
-    h += '<div style="background:white;padding:22px 28px;border-top:4px solid #6366F1;margin-top:3px;">'
-    h += '<table style="width:100%;margin-bottom:16px;"><tr><td><span style="background:#6366F1;color:white;padding:6px 16px;border-radius:8px;font-size:13px;font-weight:700;">Auditoría mensual de tu marca</span></td></tr></table>'
-    // Score principal
-    h += '<div style="text-align:center;margin-bottom:18px;">'
-    h += '<div style="display:inline-block;background:' + scoreBg + ';padding:20px 32px;border-radius:16px;">'
-    h += '<div style="font-size:48px;font-weight:800;color:' + scoreColor + ';">' + (auditoriaData.score || 0) + '</div>'
-    h += '<div style="font-size:12px;color:#6b7280;margin-top:4px;">Puntaje general</div>'
-    h += '</div></div>'
-    // Mini bars por red
-    var redes = [
-      { nombre: 'Instagram', valor: auditoriaData.instagram || 0, color: '#E4405F' },
-      { nombre: 'LinkedIn', valor: auditoriaData.linkedin || 0, color: '#0A66C2' },
-      { nombre: 'Facebook', valor: auditoriaData.facebook || 0, color: '#1877F2' }
-    ]
-    h += '<table style="width:100%;margin-bottom:16px;border-collapse:separate;border-spacing:8px 0;"><tr>'
-    for (var ri = 0; ri < redes.length; ri++) {
-      var red = redes[ri]
-      h += '<td style="background:#f8fafc;padding:12px;border-radius:10px;text-align:center;width:33%;">'
-      h += '<div style="font-size:11px;color:#6b7280;margin-bottom:4px;">' + red.nombre + '</div>'
-      h += '<div style="background:#e5e7eb;border-radius:4px;height:8px;overflow:hidden;"><div style="background:' + red.color + ';height:100%;width:' + Math.min(red.valor, 100) + '%;border-radius:4px;"></div></div>'
-      h += '<div style="font-size:14px;font-weight:700;color:#0F172A;margin-top:4px;">' + red.valor + '</div>'
-      h += '</td>'
-    }
+    var scoreVal = auditoriaData.score || 0
+    var scoreColor = scoreVal >= 75 ? '#10B981' : scoreVal >= 50 ? '#F59E0B' : '#EF4444'
+    h += '<tr><td bgcolor="#0F0D2E" style="padding:4px 0 0 0;"></td></tr>'
+    h += '<tr><td bgcolor="#1a1745" style="padding:20px 28px;border-left:4px solid #6366F1;">'
+    h += '<table cellpadding="0" cellspacing="0" border="0" style="margin-bottom:14px;"><tr>'
+    h += '<td bgcolor="#6366F1" style="padding:4px 10px;border-radius:4px;"><p style="margin:0;font-size:11px;font-weight:700;color:#ffffff;">Auditor\u00eda mensual</p></td>'
     h += '</tr></table>'
-    // Fortaleza y debilidad
+    // Score + network scores in one row
+    h += '<table cellpadding="0" cellspacing="0" border="0" width="100%"><tr>'
+    h += '<td width="80" style="text-align:center;vertical-align:middle;"><p style="margin:0;font-size:40px;font-weight:800;color:' + scoreColor + ';">' + scoreVal + '</p><p style="margin:2px 0 0;font-size:9px;color:#64748b;">PUNTAJE</p></td>'
+    h += '<td style="vertical-align:middle;padding-left:16px;">'
+    var auditRedes = [
+      { n: 'IG', v: auditoriaData.instagram || 0, c: '#E4405F' },
+      { n: 'LI', v: auditoriaData.linkedin || 0, c: '#0A66C2' },
+      { n: 'FB', v: auditoriaData.facebook || 0, c: '#1877F2' }
+    ]
+    for (var ri = 0; ri < auditRedes.length; ri++) {
+      var ar = auditRedes[ri]
+      h += '<span style="color:' + ar.c + ';font-size:12px;font-weight:700;">' + ar.n + ' ' + ar.v + '</span>'
+      if (ri < auditRedes.length - 1) h += '<span style="color:#2d2a5e;"> &nbsp;|&nbsp; </span>'
+    }
+    h += '</td></tr></table>'
     if (auditoriaData.fortaleza) {
-      h += '<div style="background:#dcfce7;padding:12px 16px;border-radius:10px;margin-bottom:8px;">'
-      h += '<p style="margin:0;font-size:12px;"><span style="font-weight:700;color:#166534;">Fortaleza principal:</span> <span style="color:#1f2937;">' + auditoriaData.fortaleza + '</span></p></div>'
+      h += '<p style="margin:12px 0 4px;font-size:12px;color:#c4b5fd;line-height:1.5;"><span style="color:#10B981;font-weight:700;">Fortaleza:</span> ' + truncar(auditoriaData.fortaleza, 120) + '</p>'
     }
     if (auditoriaData.debilidad) {
-      h += '<div style="background:#fee2e2;padding:12px 16px;border-radius:10px;">'
-      h += '<p style="margin:0;font-size:12px;"><span style="font-weight:700;color:#991b1b;">Área de mejora:</span> <span style="color:#1f2937;">' + auditoriaData.debilidad + '</span></p></div>'
+      h += '<p style="margin:0;font-size:12px;color:#c4b5fd;line-height:1.5;"><span style="color:#EF4444;font-weight:700;">\u00c1rea de mejora:</span> ' + truncar(auditoriaData.debilidad, 120) + '</p>'
     }
-    h += '</div>'
+    h += '</td></tr>'
   }
 
-  // DASHBOARD LINK
+  // === 10. CTA ===
   if (subId) {
-    h += '<div style="background:white;padding:18px 28px;text-align:center;border-bottom:1px solid #e5e7eb;">'
+    h += '<tr><td bgcolor="#0F0D2E" style="padding:4px 0 0 0;"></td></tr>'
+    h += '<tr><td bgcolor="#1a1745" style="padding:20px 28px;text-align:center;">'
     if (estado === 'trial') {
-      // Trial: CTA principal es contratar
-      var diasRestantes = trialEnds ? Math.max(0, Math.ceil((new Date(trialEnds).getTime() - Date.now()) / (1000*60*60*24))) : 7
-      h += '<div style="background:#fef3c7;padding:8px 16px;border-radius:8px;margin-bottom:12px;display:inline-block;"><span style="font-size:12px;color:#92400e;font-weight:600;">Prueba gratuita | ' + diasRestantes + ' dias restantes</span></div><br>'
-      h += '<a href="https://www.mulleryperez.cl/copilot/contratar/' + subId + '" style="display:inline-block;background:#4338CA;color:white;padding:12px 28px;border-radius:10px;font-size:14px;font-weight:700;text-decoration:none;">Contrata tu plan →</a>'
-      h += '<p style="margin:8px 0 0;font-size:11px;color:#9ca3af;"><a href="https://www.mulleryperez.cl/copilot/dashboard/' + subId + '" style="color:#6366f1;text-decoration:none;">Ver dashboard</a></p>'
-    } else {
-      // Activo: CTA principal es configurar cuentas
-      h += '<div style="background:#dcfce7;padding:8px 16px;border-radius:8px;margin-bottom:12px;display:inline-block;"><span style="font-size:12px;color:#166534;font-weight:600;">Plan ' + plan + '</span></div><br>'
-      h += '<a href="https://www.mulleryperez.cl/copilot/configurar/' + subId + '" style="display:inline-block;background:#4338CA;color:white;padding:12px 28px;border-radius:10px;font-size:14px;font-weight:700;text-decoration:none;">Configurar cuentas →</a>'
-      h += '<p style="margin:8px 0 0;font-size:11px;color:#9ca3af;"><a href="https://www.mulleryperez.cl/copilot/dashboard/' + subId + '" style="color:#6366f1;text-decoration:none;">Ver dashboard</a></p>'
+      var diasR = trialEnds ? Math.max(0, Math.ceil((new Date(trialEnds).getTime() - Date.now()) / (1000*60*60*24))) : 7
+      h += '<p style="margin:0 0 10px;font-size:11px;color:#F59E0B;font-weight:600;">Prueba gratuita | ' + diasR + ' d\u00edas restantes</p>'
     }
-    h += '</div>'
+    h += '<table cellpadding="0" cellspacing="0" border="0" align="center"><tr>'
+    h += '<td bgcolor="#4F46E5" style="padding:12px 28px;border-radius:8px;">'
+    var ctaUrl = estado === 'trial' ? 'https://www.mulleryperez.cl/copilot/contratar/' + subId : 'https://www.mulleryperez.cl/copilot/dashboard/' + subId
+    var ctaText = estado === 'trial' ? 'Contrata tu plan' : 'Ver dashboard'
+    h += '<a href="' + ctaUrl + '" style="color:#ffffff;font-size:14px;font-weight:700;text-decoration:none;">' + ctaText + '</a>'
+    h += '</td></tr></table>'
+    h += '</td></tr>'
   }
 
-  // FOOTER
-  h += '<div style="padding:20px 28px;background:#1e1b4b;border-radius:0 0 16px 16px;text-align:center;">'
-  h += '<p style="margin:0;font-size:12px;color:rgba(255,255,255,0.7);">Copilot by <strong style="color:white;">Muller y Pérez</strong> | '
-  h += modo === 'diario' ? 'Informe diario 7:30 AM' : modo === 'semanal' ? 'Resumen semanal, lunes 9 AM' : 'Resumen mensual, 1ro de cada mes'
-  h += '</p>'
-  var planIncluye = plan === 'business' ? 'Todo incluido: informes + copies + grilla + guiones + auditoría + reporte'
-    : plan === 'pro' ? 'Informe diario + copies + grilla mensual'
-    : 'Informe diario + copies semanales'
-  h += '<p style="margin:4px 0 0;font-size:10px;color:rgba(255,255,255,0.5);">' + planIncluye + '</p>'
-  h += '<p style="margin:6px 0 0;font-size:11px;color:rgba(255,255,255,0.4);">mulleryperez.cl/copilot | Responde este email para ajustar cuentas</p></div></div>'
+  // === 11. FOOTER ===
+  h += '<tr><td bgcolor="#0a0922" style="padding:18px 28px;text-align:center;">'
+  h += '<p style="margin:0 0 4px;font-size:12px;color:#94a3b8;">Copilot by <span style="color:#ffffff;font-weight:700;">Muller y P\u00e9rez</span></p>'
+  var scheduleText = modo === 'diario' ? 'Informe diario 7:30 AM' : modo === 'semanal' ? 'Resumen semanal, lunes 9 AM' : 'Resumen mensual, 1ro de cada mes'
+  h += '<p style="margin:0 0 4px;font-size:10px;color:#64748b;">' + scheduleText + '</p>'
+  var planIncluye = plan === 'business' ? 'Informes + copies + grilla + guiones + auditor\u00eda + reporte'
+    : plan === 'pro' ? 'Informes + copies + grilla mensual'
+    : 'Informes + copies semanales'
+  h += '<p style="margin:0;font-size:10px;color:#64748b;">' + planIncluye + '</p>'
+  h += '</td></tr>'
+
+  // Close wrapper tables
+  h += '</table></td></tr></table>'
   return h
 }
 
-function renderSeccion(red, color, posts) {
-  var porNombre = new Map()
-  posts.forEach(function(p) { var n = p.nombre || p.handle; if (!porNombre.has(n)) porNombre.set(n, []); porNombre.get(n).push(p) })
-
-  var h = '<div style="background:white;padding:22px 28px;border-top:4px solid ' + color + ';margin-top:3px;">'
-  h += '<table style="width:100%;margin-bottom:16px;"><tr>'
-  h += '<td><span style="background:' + color + ';color:white;padding:6px 16px;border-radius:8px;font-size:13px;font-weight:700;">' + red + '</span></td>'
-  h += '<td style="text-align:right;font-size:12px;color:#6b7280;">' + posts.length + ' posts | ' + porNombre.size + ' empresa' + (porNombre.size > 1 ? 's' : '') + '</td>'
-  h += '</tr></table>'
-
-  porNombre.forEach(function(hPosts, nombre) {
-    var handle = hPosts[0].handle
-    h += '<div style="margin-bottom:18px;">'
-    h += '<table style="width:100%;margin-bottom:10px;"><tr>'
-    h += '<td><span style="font-weight:800;font-size:15px;color:#0F172A;">' + nombre + '</span> <span style="font-size:11px;color:#9ca3af;">@' + handle + '</span></td>'
-    h += '<td style="text-align:right;"><span style="background:#dcfce7;color:#166534;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:600;">' + hPosts.length + ' posts</span></td>'
-    h += '</tr></table>'
-    hPosts.forEach(function(p) {
-      var preview = p.texto.substring(0, 250).replace(/\n/g, ' ')
-      var isHigh = p.likes > 500
-      h += '<div style="padding:16px;background:#fafafa;border-radius:12px;border-left:4px solid ' + (isHigh ? '#dc2626' : color) + ';margin-bottom:8px;">'
-      h += '<p style="margin:0 0 10px;font-size:13px;color:#1f2937;line-height:1.65;">' + preview + (p.texto.length > 250 ? '...' : '') + '</p>'
-      h += '<table style="width:100%;font-size:12px;color:#6b7280;"><tr>'
-      h += '<td>'
-      h += '<span style="color:' + (isHigh ? '#dc2626' : '#1f2937') + ';font-weight:' + (isHigh ? '700' : '600') + ';">' + p.likes.toLocaleString() + ' likes</span>'
-      h += ' &nbsp; ' + p.comments.toLocaleString() + ' comentarios'
-      if (isHigh) h += ' &nbsp; <span style="background:#fee2e2;color:#dc2626;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:600;">Alto engagement</span>'
-      h += '</td><td style="text-align:right;">'
-      h += '<span style="background:#f3e8ff;color:#7c3aed;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:600;">' + p.type + '</span>'
-      if (p.url) h += ' &nbsp; <a href="' + p.url + '" style="color:' + color + ';font-weight:600;text-decoration:none;">Ver →</a>'
-      h += '</td></tr></table></div>'
-    })
-    h += '</div>'
-  })
-  h += '</div>'
-  return h
-}
-
-function renderSeccionPrensa(posts, prensaKws) {
-  var porNombre = new Map()
-  posts.forEach(function(p) { var n = p.nombre || p.handle; if (!porNombre.has(n)) porNombre.set(n, []); porNombre.get(n).push(p) })
-
-  var color = '#d97706'
-  var h = '<div style="background:white;padding:22px 28px;border-top:4px solid ' + color + ';margin-top:3px;">'
-  h += '<table style="width:100%;margin-bottom:16px;"><tr>'
-  h += '<td><span style="background:' + color + ';color:white;padding:6px 16px;border-radius:8px;font-size:13px;font-weight:700;">Prensa y medios</span></td>'
-  h += '<td style="text-align:right;font-size:12px;color:#6b7280;">' + posts.length + ' menciones encontradas</td>'
-  h += '</tr></table>'
-
-  porNombre.forEach(function(hPosts, nombre) {
-    var handle = hPosts[0].handle
-    h += '<div style="margin-bottom:18px;">'
-    h += '<table style="width:100%;margin-bottom:10px;"><tr>'
-    h += '<td><span style="font-weight:800;font-size:15px;color:#0F172A;">' + nombre + '</span> <span style="font-size:11px;color:#9ca3af;">@' + handle + '</span></td>'
-    h += '</tr></table>'
-    hPosts.forEach(function(p) {
-      var preview = p.texto.substring(0, 250).replace(/\n/g, ' ')
-      var isHigh = p.likes > 500
-      h += '<div style="padding:16px;background:#fffbeb;border-radius:12px;border-left:4px solid ' + color + ';margin-bottom:8px;">'
-      h += '<p style="margin:0 0 10px;font-size:13px;color:#1f2937;line-height:1.65;">' + preview + (p.texto.length > 250 ? '...' : '') + '</p>'
-      h += '<table style="width:100%;font-size:12px;color:#6b7280;"><tr>'
-      h += '<td>'
-      h += '<span style="color:' + (isHigh ? '#dc2626' : '#1f2937') + ';font-weight:' + (isHigh ? '700' : '600') + ';">' + p.likes.toLocaleString() + ' likes</span>'
-      h += ' &nbsp; ' + p.comments.toLocaleString() + ' comentarios'
-      if (isHigh) h += ' &nbsp; <span style="background:#fee2e2;color:#dc2626;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:600;">Alto engagement</span>'
-      if (p.keywords && p.keywords.length > 0) h += ' &nbsp; <span style="background:#fef3c7;color:#92400e;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:600;">Menciona: ' + p.keywords.join(', ') + '</span>'
-      h += '</td></tr><tr><td style="padding-top:6px;">'
-      if (p.url) h += '<a href="' + p.url + '" style="color:' + color + ';font-weight:600;text-decoration:none;">Ver →</a>'
-      h += '</td></tr></table></div>'
-    })
-    h += '</div>'
-  })
-
-  // Medios box
-  h += '<div style="background:#fefce8;padding:14px 18px;border-radius:10px;border:1px solid #fde68a;margin-top:14px;">'
-  h += '<p style="margin:0 0 4px;font-size:11px;color:#854d0e;"><strong>Medios analizados (' + MEDIOS_PRENSA.length + '):</strong> ' + MEDIOS_PRENSA.map(function(m) { return m.nombre }).join(', ') + '</p>'
-  h += '<p style="margin:0;font-size:11px;color:#854d0e;"><strong>Keywords:</strong> ' + prensaKws.join(', ') + '</p></div>'
-  h += '</div>'
-  return h
-}
 
 // === PDF ===
 function generarPDF(html, fecha, modo) {
