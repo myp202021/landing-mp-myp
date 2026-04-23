@@ -143,6 +143,13 @@ async function main() {
             body: JSON.stringify({ urls: ['https://www.linkedin.com/company/' + handle + '/posts/'], maxPosts: MODO === 'diario' ? 5 : 15 }) })
         if (!r.ok) throw new Error('HTTP ' + r.status)
         var raw = await r.json()
+        console.log('   ' + handle + ' raw: ' + raw.length + ' items')
+        if (raw.length > 0) {
+          var sample = raw[0]
+          console.log('   Sample keys: ' + Object.keys(sample).join(', '))
+          console.log('   Sample date fields: postedAt=' + sample.postedAt + ' date=' + sample.date + ' publishedAt=' + sample.publishedAt)
+          console.log('   Filtro desde: ' + desde.toISOString())
+        }
         var posts = raw.filter(function(p) { var d = p.postedAt || p.date || p.publishedAt; return d && new Date(d) > desde })
           .map(function(p) { return {
             red: 'LinkedIn', handle: handle, nombre: handleToNombre[handle] || handle,
@@ -151,7 +158,7 @@ async function main() {
             likes: p.likesCount || p.numLikes || 0, comments: p.commentsCount || p.numComments || 0, type: 'Post'
           }})
         allPosts = allPosts.concat(posts)
-        console.log('   ' + (handleToNombre[handle] || handle) + ': ' + posts.length)
+        console.log('   ' + (handleToNombre[handle] || handle) + ': ' + posts.length + ' (after filter)')
       } catch (e) { console.error('   ' + handle + ': ' + e.message) }
     }
   }
