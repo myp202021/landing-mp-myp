@@ -2595,7 +2595,7 @@ Agencia de marketing digital enfocada en performance.
 
   'copilot_info': {
     id: 'copilot_info',
-    type: 'info',
+    type: 'menu',
     text: `**M&P Copilot** — Tu copiloto de marketing digital
 
 Copilot monitorea a tu competencia en Instagram, LinkedIn y Facebook con IA. Cada dia recibes un informe con:
@@ -2620,7 +2620,7 @@ Pruebalo en mulleryperez.cl/copilot`,
 
   'copilot_trial': {
     id: 'copilot_trial',
-    type: 'info',
+    type: 'external_link',
     text: `**Activa tu Copilot gratis**
 
 Solo necesitas:
@@ -2638,7 +2638,7 @@ En 2 minutos estas configurado. Tu primer informe llega manana a las 7:30 AM.`,
 
   'copilot_planes': {
     id: 'copilot_planes',
-    type: 'info',
+    type: 'menu',
     text: `**Planes Copilot**
 
 | Plan | Precio/mes | Cuentas | Contenido |
