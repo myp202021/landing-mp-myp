@@ -597,7 +597,7 @@ async function enviarEmail({ hoy, postsIG, competidoresConPost, sinActividad, po
 
   const payload = {
     from: 'Muller y Perez <contacto@mulleryperez.cl>',
-    to: ['felipe.munoz@buseshualpen.cl', 'contacto@mulleryperez.cl'],
+    to: ['chmuller5@gmail.com'],
     subject: `🚌 Competencia Hualpén — ${fecha}${totalOfertas > 0 ? ` · ⚠️ ${totalOfertas} oferta${totalOfertas > 1 ? 's' : ''} laboral${totalOfertas > 1 ? 'es' : ''}` : ''} (${totalPosts} posts)`,
     html: `<div style="font-family:'Segoe UI',sans-serif;max-width:500px;margin:0 auto;padding:32px 16px;color:#1E293B;">
     <h2 style="font-size:18px;font-weight:800;margin:0 0 8px;">🚌 Reporte Diario — Competencia Hualpén</h2>
