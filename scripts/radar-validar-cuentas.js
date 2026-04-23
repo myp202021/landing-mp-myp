@@ -48,15 +48,25 @@ async function validarLinkedIn(handle) {
       redirect: 'follow',
       timeout: 10000,
     })
+    // Detectar redirect a otro handle (ej: bukhr → buk-cl)
+    var finalUrl = r.url || ''
+    var handleCorrecto = null
+    var matchCompany = finalUrl.match(/linkedin\.com\/company\/([^\/\?]+)/)
+    if (matchCompany && matchCompany[1].toLowerCase() !== handle.toLowerCase()) {
+      handleCorrecto = matchCompany[1]
+    }
     if (r.status === 200) {
       var body = await r.text()
       if (body.includes('Page not found') || body.includes('page-not-found')) {
         return { valida: false, motivo: 'Empresa no encontrada en LinkedIn' }
       }
+      if (handleCorrecto) {
+        return { valida: true, motivo: 'Redirige a ' + handleCorrecto + ' — handle corregido automáticamente', handle_correcto: handleCorrecto }
+      }
       return { valida: true, motivo: null }
     }
     if (r.status === 404) return { valida: false, motivo: 'Empresa no existe en LinkedIn (404)' }
-    if (r.status === 999) return { valida: true, motivo: null } // LinkedIn anti-bot, asumimos existe
+    if (r.status === 999) return { valida: true, motivo: null }
     return { valida: true, motivo: null }
   } catch (e) {
     return { valida: false, motivo: 'Error de conexión: ' + e.message }
@@ -153,6 +163,11 @@ async function main() {
       cuenta.validada = resultado.valida
       cuenta.motivo_invalida = resultado.motivo || null
       cuenta.fecha_validacion = new Date().toISOString()
+      // Auto-corregir handle si LinkedIn redirige
+      if (resultado.handle_correcto) {
+        console.log('   → Handle corregido: ' + cuenta.handle + ' → ' + resultado.handle_correcto)
+        cuenta.handle = resultado.handle_correcto
+      }
       cuentasActualizadas.push(cuenta)
 
       if (resultado.valida) totalValidas++
