@@ -51,10 +51,10 @@ var plans = [
     desc: 'Ideal para comenzar a monitorear',
     features: [
       '5 cuentas Instagram',
-      'Analisis diario con IA',
+      'Análisis diario con IA',
       '4 posts en grilla mensual',
       'Email diario',
-      'Dashboard basico',
+      'Dashboard básico',
     ],
     cta: 'Comenzar gratis',
     popular: false,
@@ -62,17 +62,17 @@ var plans = [
   {
     name: 'Pro',
     price: 69990,
-    desc: 'El mas elegido por equipos de marketing',
+    desc: 'El más elegido por equipos de marketing',
     features: [
       '15 cuentas IG + LinkedIn + Facebook',
       'Copies semanales listos para publicar',
       '8 posts en grilla mensual',
       'WhatsApp + Email',
-      'Auditoria mensual de perfil',
+      'Auditoría mensual de perfil',
       'Reporte ejecutivo PDF',
       'Banco de ideas acumulativo',
     ],
-    cta: 'Probar gratis 7 dias',
+    cta: 'Probar gratis 7 días',
     popular: true,
   },
   {
@@ -84,7 +84,7 @@ var plans = [
       'Guiones de reels y stories',
       '16 posts + sugerencias de imagen',
       'Benchmark mensual de competidores',
-      'Reunion estrategica mensual',
+      'Reunión estratégica mensual',
       'Excel descargable de grilla',
       'Todo lo de Pro incluido',
     ],
@@ -209,14 +209,14 @@ export default function CopilotClient() {
               Tu <span className="gradient-text">copiloto</span> de marketing digital
             </h1>
             <p className="reveal" style={{ fontSize: 19, lineHeight: 1.65, color: '#6B7280', margin: '0 0 32px', maxWidth: 520 }}>
-              Monitorea a tu competencia, genera contenido con IA, recibe grillas mensuales y reportes ejecutivos. Todo automatico, cada semana en tu email y WhatsApp.
+              Monitorea a tu competencia, genera contenido con IA, recibe grillas mensuales y reportes ejecutivos. Todo automático, cada semana en tu email y WhatsApp.
             </p>
             <div className="reveal" style={{ display: 'flex', gap: 16, flexWrap: 'wrap', marginBottom: 20 }}>
               <button className="btn-primary" onClick={function() { scrollTo('trial') }}>
-                Probar gratis 7 dias
+                Probar gratis 7 días
               </button>
               <button className="btn-secondary" onClick={function() { scrollTo('que-incluye') }}>
-                Ver que incluye
+                Ver qué incluye
               </button>
             </div>
             <p className="reveal" style={{ fontSize: 13, color: '#9CA3AF', margin: 0 }}>
@@ -240,17 +240,51 @@ export default function CopilotClient() {
               </div>
               {/* Card content */}
               <div style={{ padding: 24 }}>
-                <div style={{ display: 'flex', gap: 16, marginBottom: 16 }}>
-                  <div style={{ flex: 1, background: '#F5F3FF', borderRadius: 12, padding: 16 }}>
-                    <div style={{ fontSize: 12, color: '#6B7280', marginBottom: 4 }}>Posts detectados hoy</div>
-                    <div style={{ fontSize: 28, fontWeight: 800, color: '#4338CA' }}>24</div>
-                  </div>
-                  <div style={{ flex: 1, background: '#F0FDF4', borderRadius: 12, padding: 16 }}>
-                    <div style={{ fontSize: 12, color: '#6B7280', marginBottom: 4 }}>Copies generados</div>
-                    <div style={{ fontSize: 28, fontWeight: 800, color: '#059669' }}>8</div>
-                  </div>
-                </div>
-                <img src={IMG_DASHBOARD} alt="Dashboard de monitoreo" style={{ width: '100%', borderRadius: 12, height: 180, objectFit: 'cover' }} />
+                {tab === 'competencia' && (
+                  <>
+                    <div style={{ display: 'flex', gap: 16, marginBottom: 16 }}>
+                      <div style={{ flex: 1, background: '#F5F3FF', borderRadius: 12, padding: 16 }}>
+                        <div style={{ fontSize: 12, color: '#6B7280', marginBottom: 4 }}>Posts detectados hoy</div>
+                        <div style={{ fontSize: 28, fontWeight: 800, color: '#4338CA' }}>24</div>
+                      </div>
+                      <div style={{ flex: 1, background: '#F0FDF4', borderRadius: 12, padding: 16 }}>
+                        <div style={{ fontSize: 12, color: '#6B7280', marginBottom: 4 }}>Empresas monitoreadas</div>
+                        <div style={{ fontSize: 28, fontWeight: 800, color: '#059669' }}>5</div>
+                      </div>
+                    </div>
+                    <img src="/copilot/mockup-email-diario.png" alt="Informe diario de competencia" style={{ width: '100%', borderRadius: 12, height: 180, objectFit: 'cover' }} />
+                  </>
+                )}
+                {tab === 'contenido' && (
+                  <>
+                    <div style={{ display: 'flex', gap: 16, marginBottom: 16 }}>
+                      <div style={{ flex: 1, background: '#F5F3FF', borderRadius: 12, padding: 16 }}>
+                        <div style={{ fontSize: 12, color: '#6B7280', marginBottom: 4 }}>Copies generados</div>
+                        <div style={{ fontSize: 28, fontWeight: 800, color: '#4338CA' }}>8</div>
+                      </div>
+                      <div style={{ flex: 1, background: '#F0FDF4', borderRadius: 12, padding: 16 }}>
+                        <div style={{ fontSize: 12, color: '#6B7280', marginBottom: 4 }}>Score promedio</div>
+                        <div style={{ fontSize: 28, fontWeight: 800, color: '#059669' }}>84</div>
+                      </div>
+                    </div>
+                    <img src="/copilot/mockup-copies.png" alt="Copies generados por IA" style={{ width: '100%', borderRadius: 12, height: 180, objectFit: 'cover' }} />
+                  </>
+                )}
+                {tab === 'mi-marca' && (
+                  <>
+                    <div style={{ display: 'flex', gap: 16, marginBottom: 16 }}>
+                      <div style={{ flex: 1, background: '#F5F3FF', borderRadius: 12, padding: 16 }}>
+                        <div style={{ fontSize: 12, color: '#6B7280', marginBottom: 4 }}>Score de perfil</div>
+                        <div style={{ fontSize: 28, fontWeight: 800, color: '#4338CA' }}>76</div>
+                      </div>
+                      <div style={{ flex: 1, background: '#F0FDF4', borderRadius: 12, padding: 16 }}>
+                        <div style={{ fontSize: 12, color: '#6B7280', marginBottom: 4 }}>Redes auditadas</div>
+                        <div style={{ fontSize: 28, fontWeight: 800, color: '#059669' }}>3</div>
+                      </div>
+                    </div>
+                    <img src="/copilot/mockup-auditoria.png" alt="Auditoría de marca" style={{ width: '100%', borderRadius: 12, height: 180, objectFit: 'cover' }} />
+                  </>
+                )}
               </div>
             </div>
           </div>
@@ -267,7 +301,7 @@ export default function CopilotClient() {
               Todo lo que hace <span className="gradient-text">Copilot</span> por ti
             </h2>
             <p style={{ fontSize: 18, color: '#6B7280', maxWidth: 600, margin: '0 auto' }}>
-              Seis capacidades que trabajan juntas, cada dia, sin que tengas que hacer nada.
+              Seis capacidades que trabajan juntas, cada día, sin que tengas que hacer nada.
             </p>
           </div>
 
@@ -295,16 +329,16 @@ export default function CopilotClient() {
         <div style={{ maxWidth: 1000, margin: '0 auto' }}>
           <div className="reveal" style={{ textAlign: 'center', marginBottom: 56 }}>
             <h2 style={{ fontSize: 38, fontWeight: 800, color: '#111827', margin: '0 0 16px' }}>
-              Como funciona
+              Cómo funciona
             </h2>
             <p style={{ fontSize: 18, color: '#6B7280' }}>
-              Tres pasos. Cinco minutos de setup. Despues, Copilot trabaja solo.
+              Tres pasos. Cinco minutos de setup. Después, Copilot trabaja solo.
             </p>
           </div>
 
           <div className="steps-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 32 }}>
             {[
-              { step: '1', title: 'Configura tus competidores', desc: 'Elige las cuentas de Instagram, LinkedIn y Facebook que quieres observar. Solo URLs, nada mas.', icon: '⚙️' },
+              { step: '1', title: 'Configura tus competidores', desc: 'Elige las cuentas de Instagram, LinkedIn y Facebook que quieres observar. Solo URLs, nada más.', icon: '⚙️' },
               { step: '2', title: 'Copilot trabaja por ti', desc: 'Analiza publicaciones, genera copies con 3 agentes IA, arma tu grilla mensual y audita tu perfil.', icon: '🤖' },
               { step: '3', title: 'Recibe todo listo', desc: 'Email diario con insights, semanal con copies, mensual con grilla completa + Excel + PDF ejecutivo.', icon: '📬' },
             ].map(function(s, i) {
@@ -351,6 +385,68 @@ export default function CopilotClient() {
       </section>
 
       {/* ═══════════════════════════════════════════════════════════ */}
+      {/* SECTION 4B — EJEMPLO DE INFORMES */}
+      {/* ═══════════════════════════════════════════════════════════ */}
+      <section style={{ padding: '80px 24px', background: 'linear-gradient(180deg, #111827 0%, #1E1B4B 100%)' }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+          <div className="reveal" style={{ textAlign: 'center', marginBottom: 56 }}>
+            <h2 style={{ fontSize: 38, fontWeight: 800, color: '#FFFFFF', margin: '0 0 16px' }}>
+              Así se ven tus informes
+            </h2>
+            <p style={{ fontSize: 18, color: '#94a3b8' }}>
+              Recibes todo en tu correo, listo para leer. Sin login, sin apps.
+            </p>
+          </div>
+
+          <div className="feature-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 28 }}>
+            {[
+              { img: '/copilot/mockup-email-diario.png', title: 'Informe diario', desc: 'Cada mañana: qué publicó tu competencia, análisis IA y oportunidades detectadas.', tag: 'Email diario' },
+              { img: '/copilot/mockup-copies.png', title: 'Resumen semanal', desc: 'Copies sugeridos con score QA, guiones de reels y acciones recomendadas. Con Excel adjunto.', tag: 'Email + Excel' },
+              { img: '/copilot/mockup-reporte.png', title: 'Resumen mensual', desc: 'Grilla completa, auditoría de perfil, reporte ejecutivo. Con Excel y PDF adjuntos.', tag: 'Email + Excel + PDF' },
+            ].map(function(item, i) {
+              return (
+                <div key={i} className="reveal card-hover" style={{ background: '#0F0D2E', borderRadius: 20, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.08)' }}>
+                  <img src={item.img} alt={item.title} style={{ width: '100%', height: 200, objectFit: 'cover', borderRadius: '20px 20px 0 0' }} />
+                  <div style={{ padding: '24px 24px 28px' }}>
+                    <h3 style={{ fontSize: 18, fontWeight: 700, color: '#FFFFFF', margin: '0 0 8px' }}>{item.title}</h3>
+                    <p style={{ fontSize: 14, color: '#94a3b8', margin: '0 0 16px', lineHeight: 1.6 }}>{item.desc}</p>
+                    <span style={{ display: 'inline-block', background: 'rgba(124,58,237,0.2)', color: '#A78BFA', fontSize: 12, fontWeight: 600, padding: '6px 14px', borderRadius: 100 }}>{item.tag}</span>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════════ */}
+      {/* SECTION 4C — SOCIAL PROOF */}
+      {/* ═══════════════════════════════════════════════════════════ */}
+      <section style={{ padding: '80px 24px', background: '#F5F3FF' }}>
+        <div style={{ maxWidth: 800, margin: '0 auto', textAlign: 'center' }}>
+          <div className="reveal">
+            <h2 style={{ fontSize: 32, fontWeight: 800, color: '#111827', margin: '0 0 40px' }}>
+              Empresas que ya usan <span className="gradient-text">Copilot</span>
+            </h2>
+            <div style={{ background: 'white', borderRadius: 20, padding: '48px 40px', border: '1px solid #E5E7EB', boxShadow: '0 4px 20px rgba(0,0,0,0.04)' }}>
+              <p style={{ fontSize: 20, fontStyle: 'italic', color: '#374151', lineHeight: 1.7, margin: '0 0 24px' }}>
+                &ldquo;Copilot nos permite saber exactamente qué está haciendo nuestra competencia cada día. Los copies sugeridos nos ahorran horas de trabajo semanal.&rdquo;
+              </p>
+              <p style={{ fontSize: 16, fontWeight: 700, color: '#111827', margin: '0 0 4px' }}>
+                Genera HR
+              </p>
+              <p style={{ fontSize: 14, color: '#6B7280', margin: '0 0 32px' }}>
+                Control de asistencia líder en Chile
+              </p>
+              <p style={{ fontSize: 13, color: '#9CA3AF', margin: 0 }}>
+                100+ empresas confían en Copilot
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════════ */}
       {/* SECTION 5 — PLANS */}
       {/* ═══════════════════════════════════════════════════════════ */}
       <section style={{ padding: '80px 24px', background: '#FAFAFA' }}>
@@ -359,7 +455,7 @@ export default function CopilotClient() {
             <h2 style={{ fontSize: 38, fontWeight: 800, color: '#111827', margin: '0 0 16px' }}>
               Planes simples, sin letra chica
             </h2>
-            <p style={{ fontSize: 18, color: '#6B7280' }}>Todos los planes incluyen 7 dias gratis. Precios + IVA.</p>
+            <p style={{ fontSize: 18, color: '#6B7280' }}>Todos los planes incluyen 7 días gratis. Precios + IVA.</p>
           </div>
 
           <div className="plans-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 28, alignItems: 'start' }}>
@@ -368,7 +464,7 @@ export default function CopilotClient() {
                 <div key={i} className={'reveal plan-card' + (plan.popular ? ' popular' : '')}>
                   {plan.popular && (
                     <div style={{ position: 'absolute', top: -14, left: '50%', transform: 'translateX(-50%)', background: 'linear-gradient(135deg, #4338CA, #7C3AED)', color: 'white', fontSize: 12, fontWeight: 700, padding: '6px 20px', borderRadius: 100, textTransform: 'uppercase' as const, letterSpacing: 1 }}>
-                      Mas elegido
+                      Más elegido
                     </div>
                   )}
                   <h3 style={{ fontSize: 24, fontWeight: 800, color: '#111827', margin: '0 0 8px' }}>{plan.name}</h3>
@@ -406,14 +502,14 @@ export default function CopilotClient() {
             <h2 style={{ fontSize: 36, fontWeight: 800, color: '#111827', margin: '0 0 12px' }}>
               Activa tu <span className="gradient-text">Copilot</span> gratis
             </h2>
-            <p style={{ fontSize: 17, color: '#6B7280' }}>7 dias sin costo. Configura en 2 minutos.</p>
+            <p style={{ fontSize: 17, color: '#6B7280' }}>7 días sin costo. Configura en 2 minutos.</p>
           </div>
 
           {enviado ? (
             <div className="reveal" style={{ textAlign: 'center', background: 'white', borderRadius: 20, padding: 48, border: '1px solid #E5E7EB' }}>
               <div style={{ fontSize: 48, marginBottom: 16 }}>🚀</div>
               <h3 style={{ fontSize: 24, fontWeight: 700, color: '#111827', margin: '0 0 12px' }}>Copilot activado</h3>
-              <p style={{ fontSize: 16, color: '#6B7280' }}>Revisa tu email para los proximos pasos.</p>
+              <p style={{ fontSize: 16, color: '#6B7280' }}>Revisa tu email para los próximos pasos.</p>
             </div>
           ) : (
             <form onSubmit={handleTrial} className="reveal" style={{ background: 'white', borderRadius: 20, padding: '40px 36px', border: '1px solid #E5E7EB', boxShadow: '0 8px 40px rgba(0,0,0,0.04)' }}>
@@ -426,7 +522,7 @@ export default function CopilotClient() {
                 <input type="text" required className="input-field" placeholder="Mi Empresa SpA" value={nombreEmpresa} onChange={function(e) { setNombreEmpresa(e.target.value) }} />
               </div>
               <div style={{ marginBottom: 20 }}>
-                <label style={{ display: 'block', fontSize: 14, fontWeight: 600, color: '#374151', marginBottom: 6 }}>Describe tu empresa en 1 linea</label>
+                <label style={{ display: 'block', fontSize: 14, fontWeight: 600, color: '#374151', marginBottom: 6 }}>Describe tu empresa en 1 línea</label>
                 <input type="text" className="input-field" placeholder="Vendemos X a Y en Chile" value={descripcion} onChange={function(e) { setDescripcion(e.target.value) }} />
               </div>
               <div style={{ marginBottom: 8 }}>
@@ -445,7 +541,7 @@ export default function CopilotClient() {
                 {enviando ? 'Activando...' : 'Activar mi Copilot gratis'}
               </button>
               <p style={{ fontSize: 13, color: '#9CA3AF', textAlign: 'center', marginTop: 16, marginBottom: 0 }}>
-                Sin tarjeta de credito · Cancela cuando quieras
+                Sin tarjeta de crédito · Cancela cuando quieras
               </p>
             </form>
           )}
@@ -457,7 +553,7 @@ export default function CopilotClient() {
       {/* ═══════════════════════════════════════════════════════════ */}
       <footer style={{ padding: '40px 24px', background: '#111827', textAlign: 'center' }}>
         <p style={{ fontSize: 15, color: '#9CA3AF', margin: 0 }}>
-          M&amp;P Copilot by <a href="https://www.mulleryperez.cl" style={{ color: '#A5B4FC', textDecoration: 'none' }}>Muller y Perez</a> · mulleryperez.cl
+          M&amp;P Copilot by <a href="https://www.mulleryperez.cl" style={{ color: '#A5B4FC', textDecoration: 'none' }}>Muller y Pérez</a> · mulleryperez.cl
         </p>
       </footer>
     </div>
