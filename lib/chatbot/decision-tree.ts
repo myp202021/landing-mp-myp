@@ -2586,8 +2586,72 @@ Agencia de marketing digital enfocada en performance.
       { id: 'metodologia', label: 'Como trabajamos', emoji: '🔧', nextNodeId: 'metodologia_info' },
       { id: 'diferencial', label: 'Por que M&P', emoji: '⭐', nextNodeId: 'diferencial_info' },
       { id: 'casos', label: 'Casos de exito', emoji: '🏆', nextNodeId: 'casos_info' },
+      { id: 'copilot', label: 'Copilot: monitoreo con IA', emoji: '🤖', nextNodeId: 'copilot_info' },
       { id: 'cotizar', label: 'Pedir cotizacion', emoji: '📋', nextNodeId: 'contacto_lead' },
       { id: 'volver', label: '← Menu principal', nextNodeId: 'root' }
+    ],
+    category: 'servicios'
+  },
+
+  'copilot_info': {
+    id: 'copilot_info',
+    type: 'info',
+    text: `**M&P Copilot** — Tu copiloto de marketing digital
+
+Copilot monitorea a tu competencia en Instagram, LinkedIn y Facebook con IA. Cada dia recibes un informe con:
+
+- Que publico tu competencia y analisis inteligente
+- Copies listos para publicar con score de calidad
+- Grilla mensual de contenido (hasta 16 posts)
+- Guiones de reels y stories
+- Auditoria mensual de tu perfil
+- Reporte ejecutivo PDF
+
+**Planes desde $34.990/mes** | 7 dias gratis | Sin tarjeta
+
+Pruebalo en mulleryperez.cl/copilot`,
+    options: [
+      { id: 'copilot_probar', label: 'Probar gratis 7 dias', emoji: '🚀', nextNodeId: 'copilot_trial' },
+      { id: 'copilot_planes', label: 'Ver planes Copilot', emoji: '💰', nextNodeId: 'copilot_planes' },
+      { id: 'volver', label: '← Servicios', nextNodeId: 'servicios_menu' }
+    ],
+    category: 'servicios'
+  },
+
+  'copilot_trial': {
+    id: 'copilot_trial',
+    type: 'info',
+    text: `**Activa tu Copilot gratis**
+
+Solo necesitas:
+1. Tu email corporativo
+2. El nombre de tu empresa
+3. Las URLs de 3 competidores (Instagram o LinkedIn)
+
+En 2 minutos estas configurado. Tu primer informe llega manana a las 7:30 AM.`,
+    externalUrl: 'https://www.mulleryperez.cl/copilot',
+    options: [
+      { id: 'volver', label: '← Copilot', nextNodeId: 'copilot_info' }
+    ],
+    category: 'servicios'
+  },
+
+  'copilot_planes': {
+    id: 'copilot_planes',
+    type: 'info',
+    text: `**Planes Copilot**
+
+| Plan | Precio/mes | Cuentas | Contenido |
+|------|-----------|---------|-----------|
+| Starter | $34.990 | 5 IG | Informe diario + auditoria |
+| **Pro** | **$69.990** | **15 multi-red** | **+ copies + grilla 8 posts** |
+| Business | $119.990 | 30 multi-red | + guiones + reporte + 16 posts |
+
+Todos incluyen 7 dias gratis. Sin tarjeta. Se cancela solo.`,
+    externalUrl: 'https://www.mulleryperez.cl/copilot',
+    options: [
+      { id: 'probar', label: 'Probar gratis', emoji: '🚀', nextNodeId: 'copilot_trial' },
+      { id: 'volver', label: '← Copilot', nextNodeId: 'copilot_info' }
     ],
     category: 'servicios'
   },
