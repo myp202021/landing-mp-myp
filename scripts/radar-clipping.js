@@ -96,6 +96,11 @@ async function main() {
     for (var j = 0; j < cuentas.length; j++) {
       var c = cuentas[j]
       if (c.nombre) handleToNombre[c.handle.toLowerCase()] = c.nombre
+      // Saltar cuentas marcadas como inválidas por el validador
+      if (c.validada === false) {
+        console.log('   Saltando ' + c.red + ' @' + c.handle + ' (inválida: ' + (c.motivo_invalida || 'sin motivo') + ')')
+        continue
+      }
       if (c.red === 'instagram') igSet.add(c.handle.toLowerCase())
       else if (c.red === 'linkedin') liSet.add(c.handle.toLowerCase())
       else if (c.red === 'facebook') fbSet.add(c.handle.toLowerCase())

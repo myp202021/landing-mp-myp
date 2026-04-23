@@ -1,0 +1,26 @@
+name: "Copilot — Validar cuentas"
+
+on:
+  workflow_dispatch:
+    inputs:
+      suscriptor_id:
+        description: 'ID de suscriptor específico (vacío = todos)'
+        required: false
+        default: ''
+
+jobs:
+  validar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm install node-fetch@2 @supabase/supabase-js
+      - name: "Validar cuentas"
+        run: node scripts/radar-validar-cuentas.js ${{ inputs.suscriptor_id && format('--id={0}', inputs.suscriptor_id) || '' }}
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          RESEND: ${{ secrets.RESEND }}
