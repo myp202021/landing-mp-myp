@@ -24,6 +24,7 @@ const COMPETIDORES = [
   { nombre: 'Pullman Yuris',        instagram: 'busesyuris',          linkedin: null,                                                 facebook: 'https://www.facebook.com/busesyuris',                                        web: 'pullmanyuris.cl' },
   { nombre: 'Sokol',                instagram: null,                  linkedin: 'https://www.linkedin.com/company/sokol-s-a/',        facebook: null,                                                                         web: 'gruposokol.com' },
   { nombre: 'Pullman San Luis',     instagram: 'pullmansanluis',      linkedin: 'https://www.linkedin.com/company/pullman-san-luis-spa/', facebook: null,                                                                      web: 'pullmansanluis.cl' },
+  { nombre: 'Transdiaram',         instagram: 'transdiaram',         linkedin: null,                                                 facebook: null,                                                                         web: null },
 ]
 
 // ─── Detección de ofertas laborales ─────────────────────────────────────────
