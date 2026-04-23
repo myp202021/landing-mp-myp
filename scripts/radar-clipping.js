@@ -101,10 +101,11 @@ async function main() {
         console.log('   Saltando ' + c.red + ' @' + c.handle + ' (inválida: ' + (c.motivo_invalida || 'sin motivo') + ')')
         continue
       }
-      if (c.red === 'instagram') igSet.add(c.handle.toLowerCase())
-      else if (c.red === 'linkedin') liSet.add(c.handle.toLowerCase())
-      else if (c.red === 'facebook') fbSet.add(c.handle.toLowerCase())
-      else if (c.red === 'prensa' && c.keywords) prensaKws = c.keywords.map(function(k) { return k.toLowerCase() })
+      var redLower = (c.red || '').toLowerCase()
+      if (redLower === 'instagram') igSet.add(c.handle.toLowerCase())
+      else if (redLower === 'linkedin') liSet.add(c.handle.toLowerCase())
+      else if (redLower === 'facebook') fbSet.add(c.handle.toLowerCase())
+      else if (redLower === 'prensa' && c.keywords) prensaKws = c.keywords.map(function(k) { return k.toLowerCase() })
     }
   }
 
