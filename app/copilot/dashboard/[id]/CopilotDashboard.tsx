@@ -35,7 +35,7 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
   async function loadData() {
     setLoading(true)
     try {
-      var r1 = await fetch(SUPABASE_URL + '/rest/v1/copilot_suscripciones?id=eq.' + props.suscripcionId + '&select=*', { headers: hdrs() })
+      var r1 = await fetch(SUPABASE_URL + '/rest/v1/clipping_suscripciones?id=eq.' + props.suscripcionId + '&select=*', { headers: hdrs() })
       var subs = await r1.json()
       if (!subs || subs.length === 0) { setError('Suscripcion no encontrada'); setLoading(false); return }
       setSub(subs[0])
