@@ -126,41 +126,70 @@ async function main() {
   }
 
   // ── Instagram Stories ────────────────────────────────────────────────────
+  // Intento 1: actor principal de IG con resultsType 'stories'
+  // Intento 2: fallback al actor louisdeconinck si el principal no soporta stories
   let storiesIG = []
   try {
     const igUsernames = conIG.map(c => c.instagram)
+    const storyUrls = igUsernames.map(u => `https://www.instagram.com/stories/${u}/`)
     console.log(`📱 Scrapeando Stories de ${igUsernames.length} cuentas...`)
-    const stRes = await fetch(
-      `https://api.apify.com/v2/acts/louisdeconinck~instagram-story-details-scraper/run-sync-get-dataset-items?token=${APIFY_TOKEN}&timeout=120`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        // Enviar múltiples formatos para que el actor use el que reconozca
-        body: JSON.stringify({
-          usernames: igUsernames,
-          directUrls: igUsernames.map(u => `https://www.instagram.com/${u}/`),
-        }),
+
+    // Intento 1: actor principal con resultsType stories
+    let allStories = []
+    try {
+      const stRes = await fetch(
+        `https://api.apify.com/v2/acts/apify~instagram-scraper/run-sync-get-dataset-items?token=${APIFY_TOKEN}&timeout=120`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ directUrls: storyUrls, resultsType: 'stories', resultsLimit: 3, addParentData: true }),
+        }
+      )
+      if (stRes.ok) {
+        allStories = await stRes.json()
+        console.log(`   Stories (actor principal): ${allStories.length} recibidas`)
+      } else {
+        console.log(`   Actor principal no soporta stories (${stRes.status}), intentando fallback...`)
       }
-    )
-    if (!stRes.ok) throw new Error(`Apify Stories: ${stRes.status} ${await stRes.text()}`)
-    const allStories = await stRes.json()
-    console.log(`   Stories raw recibidas: ${allStories.length}`)
+    } catch (e) {
+      console.log(`   Actor principal stories error: ${e.message}`)
+    }
+
+    // Intento 2: fallback al actor especializado
+    if (allStories.length === 0) {
+      try {
+        const stRes2 = await fetch(
+          `https://api.apify.com/v2/acts/louisdeconinck~instagram-story-details-scraper/run-sync-get-dataset-items?token=${APIFY_TOKEN}&timeout=120`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ usernames: igUsernames, directUrls: igUsernames.map(u => `https://www.instagram.com/${u}/`) }),
+          }
+        )
+        if (stRes2.ok) {
+          allStories = await stRes2.json()
+          console.log(`   Stories (fallback louisdeconinck): ${allStories.length} recibidas`)
+        }
+      } catch (e) {
+        console.log(`   Fallback stories error: ${e.message}`)
+      }
+    }
+
     if (allStories.length > 0) {
       const s0 = allStories[0]
       console.log(`   Stories sample keys: ${Object.keys(s0).join(', ')}`)
-      console.log(`   Stories sample: ${JSON.stringify(s0).substring(0, 400)}`)
     }
     storiesIG = allStories.map(s => {
-      const username = s.user?.username || ''
+      const username = s.ownerUsername || s.user?.username || ''
       const comp = conIG.find(c => c.instagram?.toLowerCase() === username.toLowerCase())
       return {
         competidor: comp?.nombre || username,
         handle: username,
-        type: s.media_type === 2 || s.is_reel_media ? 'Video' : 'Imagen',
-        timestamp: s.taken_at ? new Date(s.taken_at * 1000) : null,
-        imageUrl: s.image_versions2?.candidates?.[0]?.url || '',
-        videoUrl: s.video_versions?.[0]?.url || '',
-        pk: s.pk || s.id || '',
+        type: s.type || (s.media_type === 2 || s.is_reel_media ? 'Video' : 'Imagen'),
+        timestamp: s.timestamp ? new Date(s.timestamp) : (s.taken_at ? new Date(s.taken_at * 1000) : null),
+        imageUrl: s.displayUrl || s.image_versions2?.candidates?.[0]?.url || '',
+        videoUrl: s.videoUrl || s.video_versions?.[0]?.url || '',
+        pk: s.pk || s.id || s.shortCode || '',
       }
     })
     console.log(`✅ Stories: ${storiesIG.length} stories activas`)
