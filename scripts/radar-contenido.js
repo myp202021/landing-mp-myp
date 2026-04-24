@@ -20,54 +20,149 @@ var PALABRAS_PROHIBIDAS = [
 // ═══════════════════════════════════════════════
 // PASO 1: OpenAI analiza y genera briefs
 // ═══════════════════════════════════════════════
-async function paso1_analizar(posts, empresas, modo, perfil) {
+async function paso1_analizar(posts, empresas, modo, perfil, copiesPrevios) {
   console.log('   CONTENIDO PASO 1: OpenAI analiza...')
 
-  var postsSummary = posts.slice(0, 40).map(function(p) {
-    return '[' + p.red + '] ' + (p.nombre || p.handle) + ': "' + p.texto.substring(0, 100) + '" (' + p.likes + ' likes, ' + p.type + ')'
+  // Ordenar posts por engagement real (likes + comments)
+  var postsOrdenados = posts.slice().sort(function(a, b) {
+    var engA = (parseInt(a.likes) || 0) + (parseInt(a.comments) || 0)
+    var engB = (parseInt(b.likes) || 0) + (parseInt(b.comments) || 0)
+    return engB - engA
+  })
+
+  // Top 10 posts por engagement con texto completo (no truncado)
+  var top10 = postsOrdenados.slice(0, 10).map(function(p, idx) {
+    var eng = (parseInt(p.likes) || 0) + (parseInt(p.comments) || 0)
+    return 'TOP ' + (idx + 1) + ' [' + (p.red || 'IG') + '] ' + (p.nombre || p.handle || 'desconocido')
+      + ' | Engagement: ' + eng + ' (likes: ' + (p.likes || 0) + ', comments: ' + (p.comments || 0) + ')'
+      + ' | Tipo: ' + (p.type || 'post')
+      + '\nTexto completo: "' + (p.texto || '').substring(0, 500) + '"'
+      + '\n---'
+  }).join('\n')
+
+  // Todos los posts para contexto general (resumen)
+  var postsSummary = postsOrdenados.slice(10, 40).map(function(p) {
+    var eng = (parseInt(p.likes) || 0) + (parseInt(p.comments) || 0)
+    return '[' + (p.red || 'IG') + '] ' + (p.nombre || p.handle) + ': "' + (p.texto || '').substring(0, 120) + '" (eng: ' + eng + ', tipo: ' + (p.type || 'post') + ')'
   }).join('\n')
 
   var empresasStr = Object.keys(empresas).join(', ')
 
+  // Perfil completo del cliente
   var clienteInfo = ''
   if (perfil && perfil.nombre) {
-    clienteInfo = '\nCLIENTE (para quien creas contenido):\n'
+    clienteInfo = '\n══════════════════════════════════\n'
+    clienteInfo += 'CLIENTE (para quien creas contenido):\n'
+    clienteInfo += '══════════════════════════════════\n'
     clienteInfo += '- Empresa: ' + perfil.nombre + '\n'
-    if (perfil.rubro) clienteInfo += '- Rubro: ' + perfil.rubro + '\n'
-    if (perfil.descripcion) clienteInfo += '- Descripcion: ' + perfil.descripcion + '\n'
-    if (perfil.tono) clienteInfo += '- Tono: ' + perfil.tono + '\n'
-    if (perfil.web) clienteInfo += '- Web: ' + perfil.web + '\n'
+    if (perfil.rubro) clienteInfo += '- Rubro/Industria: ' + perfil.rubro + '\n'
+    if (perfil.descripcion) clienteInfo += '- Descripcion del negocio: ' + perfil.descripcion + '\n'
+    if (perfil.tono) clienteInfo += '- Tono de comunicacion: ' + perfil.tono + '\n'
+    if (perfil.web) clienteInfo += '- Sitio web: ' + perfil.web + '\n'
     if (perfil.instagram) clienteInfo += '- Instagram: ' + perfil.instagram + '\n'
     if (perfil.linkedin) clienteInfo += '- LinkedIn: ' + perfil.linkedin + '\n'
     if (perfil.facebook) clienteInfo += '- Facebook: ' + perfil.facebook + '\n'
-    if (perfil.propuesta_valor) clienteInfo += '- Propuesta de valor: ' + perfil.propuesta_valor + '\n'
-    if (perfil.diferenciadores && perfil.diferenciadores.length) clienteInfo += '- Diferenciadores: ' + perfil.diferenciadores.join(', ') + '\n'
+    if (perfil.propuesta_valor) clienteInfo += '- Propuesta de valor UNICA: ' + perfil.propuesta_valor + '\n'
+    if (perfil.diferenciadores && perfil.diferenciadores.length) clienteInfo += '- Diferenciadores vs competencia: ' + perfil.diferenciadores.join(', ') + '\n'
   }
 
-  var prompt = 'Eres un estratega de contenido digital para empresas en Chile. '
-    + 'Analiza estos posts de la competencia y genera contenido para el cliente.\n\n'
+  // Contexto estacional
+  var ahora = new Date()
+  var meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre']
+  var mesActual = meses[ahora.getMonth()]
+  var anioActual = ahora.getFullYear()
+  var estacionalidad = '\n══════════════════════════════════\n'
+  estacionalidad += 'CONTEXTO ESTACIONAL:\n'
+  estacionalidad += '══════════════════════════════════\n'
+  estacionalidad += '- Mes: ' + mesActual + ' ' + anioActual + '\n'
+  estacionalidad += '- Semana del mes: ' + Math.ceil(ahora.getDate() / 7) + '\n'
+  // Fechas relevantes por mes en Chile
+  var fechasChile = {
+    0: 'Vuelta de vacaciones, inicio ano escolar, rebajas verano',
+    1: 'San Valentin (14/2), Carnaval, temporada verano',
+    2: 'Dia de la Mujer (8/3), inicio otono, vuelta a la rutina',
+    3: 'Semana Santa, Dia de la Tierra (22/4), inicio Q2',
+    4: 'Dia de la Madre (Chile: mayo), Dia del Trabajo (1/5)',
+    5: 'Dia del Padre, inicio invierno, CyberDay Chile',
+    6: 'Vacaciones invierno, mitad de ano, Black Winter',
+    7: 'Dia del Nino (agosto Chile), fiestas patrias se acercan',
+    8: 'Fiestas Patrias Chile (18-19/9), Cyber Monday, empanadas y chilenidad',
+    9: 'Halloween, Dia de la Salud Mental, inicio primavera pleno',
+    10: 'Black Friday, CyberMonday Chile, preventa Navidad',
+    11: 'Navidad, Ano Nuevo, cierre de ano, retrospectivas, regalos',
+  }
+  estacionalidad += '- Fechas y eventos relevantes: ' + (fechasChile[ahora.getMonth()] || '') + '\n'
+  estacionalidad += '- Considera: que eventos del sector de ' + (perfil.rubro || 'la industria') + ' ocurren en ' + mesActual + '?\n'
+
+  // Copies previos para evitar repeticion
+  var previosCtx = ''
+  if (copiesPrevios && copiesPrevios.length > 0) {
+    previosCtx = '\n══════════════════════════════════\n'
+    previosCtx += 'COPIES GENERADOS ANTERIORMENTE (NO REPETIR estos temas/angulos):\n'
+    previosCtx += '══════════════════════════════════\n'
+    previosCtx += copiesPrevios.map(function(c) {
+      return '- [' + (c.plataforma || '') + ' ' + (c.tipo || '') + '] ' + (c.titulo || '') + ' (angulo: ' + (c.angulo || '') + ')'
+    }).join('\n')
+    previosCtx += '\n'
+  }
+
+  var prompt = 'Eres un DIRECTOR CREATIVO senior con 15 anos de experiencia en marketing digital en Chile. '
+    + 'NO eres un asistente generico. Eres un estratega que analiza datos REALES de la competencia para crear contenido que SUPERE lo que ellos publican.\n\n'
     + clienteInfo + '\n'
-    + 'POSTS DE LA SEMANA:\n' + postsSummary + '\n\n'
-    + 'EMPRESAS MONITOREADAS (competencia): ' + empresasStr + '\n\n'
-    + 'TAREA: Genera exactamente 3 briefs de contenido para que el cliente publique esta semana. '
-    + 'Cada brief debe ser distinto en angulo y plataforma.\n\n'
+    + estacionalidad + '\n'
+    + '══════════════════════════════════\n'
+    + 'TOP 10 POSTS DE LA COMPETENCIA POR ENGAGEMENT (estos son los que MAS funcionaron):\n'
+    + '══════════════════════════════════\n'
+    + top10 + '\n\n'
+    + (postsSummary ? 'OTROS POSTS RELEVANTES:\n' + postsSummary + '\n\n' : '')
+    + 'EMPRESAS MONITOREADAS (competencia directa): ' + empresasStr + '\n'
+    + previosCtx + '\n'
+    + '══════════════════════════════════\n'
+    + 'INSTRUCCIONES DE ANALISIS (OBLIGATORIAS):\n'
+    + '══════════════════════════════════\n\n'
+    + 'PRIMERO analiza los top 10 posts y responde estas preguntas en tu razonamiento:\n'
+    + '1. Que FORMATO funciona mejor? (carrusel, reel, imagen, articulo) — cita posts especificos\n'
+    + '2. Que TEMAS generan mas engagement? — identifica patrones (ej: posts educativos > promocionales)\n'
+    + '3. Que TONO usan los posts exitosos? (tecnico, cercano, aspiracional, datos duros)\n'
+    + '4. Que LARGO tienen? (cortos <50 palabras o largos >150?)\n'
+    + '5. Que GAPS hay? (temas que la competencia NO cubre pero deberia, o que el cliente puede abordar mejor)\n'
+    + '6. Que ESTACIONALIDAD aplica en ' + mesActual + ' para el rubro ' + (perfil.rubro || 'del cliente') + '?\n\n'
+    + 'LUEGO genera exactamente 3 briefs de contenido para ' + (perfil.nombre || 'el cliente') + '.\n'
+    + 'CADA brief debe tener MINIMO 200 palabras en la instrucciones_copy.\n'
+    + 'CADA brief debe incluir datos concretos del mercado y justificacion basada en la competencia.\n'
+    + 'CADA brief debe ser distinto en angulo, plataforma y formato.\n\n'
     + 'Para cada brief incluye:\n'
     + '- plataforma: Instagram|LinkedIn|Facebook\n'
     + '- tipo: Reel|Carrusel|Post|Imagen|Articulo|Video\n'
-    + '- angulo: educativo|comercial|caso_exito|estacional|diferenciacion|objecion\n'
+    + '- angulo: educativo|comercial|caso_exito|estacional|diferenciacion|objecion|tendencia|detras_de_camaras\n'
     + '- objetivo: awareness|engagement|conversion|posicionamiento\n'
-    + '- titulo: titulo del post (maximo 15 palabras)\n'
-    + '- justificacion: por que este contenido, basado en datos reales de los posts analizados (maximo 2 oraciones)\n'
-    + '- instrucciones_copy: que tono usar, que incluir, que evitar (para el copywriter)\n\n'
-    + 'Responde SOLO en JSON valido: {"briefs": [{plataforma, tipo, angulo, objetivo, titulo, justificacion, instrucciones_copy}, ...]}\n'
-    + 'No inventes datos ni porcentajes. Usa solo lo que esta en los posts de arriba.'
+    + '- titulo: titulo del post (maximo 15 palabras, especifico al rubro, no generico)\n'
+    + '- justificacion: OBLIGATORIO explicar POR QUE este contenido funciona citando posts especificos de la competencia. '
+    + 'Ejemplo: "El post de [competidor] sobre [tema] tuvo [X] engagement. Nuestro angulo diferenciador es [Y] porque [Z]." (minimo 3 oraciones)\n'
+    + '- instrucciones_copy: instrucciones DETALLADAS para el copywriter que incluyan:\n'
+    + '  * Tono exacto a usar (con ejemplos de frases que SI y frases que NO)\n'
+    + '  * Estructura del copy (gancho, desarrollo, CTA)\n'
+    + '  * Datos o argumentos especificos a incluir (del rubro del cliente)\n'
+    + '  * Que EVITAR basado en lo que la competencia hace mal\n'
+    + '  * Referencia a temporada/fecha si aplica\n'
+    + '  * Si es carrusel: tema de cada slide\n'
+    + '  * Si es reel: escenas y texto en pantalla\n'
+    + '  * Hashtags sugeridos (5-8)\n'
+    + '  * CTA especifico (no generico, una accion medible)\n'
+    + '  (minimo 200 palabras en este campo)\n'
+    + '- competidor_referencia: nombre del competidor cuyo post inspira este brief\n'
+    + '- post_referencia_texto: extracto del post de referencia (primeras 100 palabras)\n'
+    + '- engagement_referencia: engagement del post de referencia\n\n'
+    + 'Responde SOLO en JSON valido: {"analisis_competencia": "resumen de 3-5 oraciones de que funciona y que no en la competencia esta semana", "briefs": [{plataforma, tipo, angulo, objetivo, titulo, justificacion, instrucciones_copy, competidor_referencia, post_referencia_texto, engagement_referencia}, ...]}\n'
+    + 'NO inventes datos ni porcentajes. USA SOLO lo que esta en los posts de arriba.\n'
+    + 'NO generes briefs genericos que sirvan para cualquier empresa. Cada brief debe ser ESPECIFICO para ' + (perfil.nombre || 'el cliente') + ' en el rubro de ' + (perfil.rubro || 'su industria') + '.'
 
   try {
     var res = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: { 'Authorization': 'Bearer ' + OPENAI_KEY, 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'gpt-4o-mini', temperature: 0.7, max_tokens: 1200,
+        model: 'gpt-4o-mini', temperature: 0.6, max_tokens: 3000,
         response_format: { type: 'json_object' },
         messages: [{ role: 'user', content: prompt }],
       }),
@@ -77,6 +172,9 @@ async function paso1_analizar(posts, empresas, modo, perfil) {
     var content = data.choices[0].message.content
     var parsed = JSON.parse(content)
     var briefs = parsed.briefs || []
+    if (parsed.analisis_competencia) {
+      console.log('   Analisis competencia: ' + parsed.analisis_competencia.substring(0, 200))
+    }
     console.log('   PASO 1 OK: ' + briefs.length + ' briefs generados')
     return briefs
   } catch (e) {
@@ -186,24 +284,52 @@ async function paso2_crear(briefs, posts, perfil) {
 // PASO 3: OpenAI revisa calidad (QA)
 // ═══════════════════════════════════════════════
 async function paso3_revisar(copies) {
-  console.log('   CONTENIDO PASO 3: OpenAI revisa calidad...')
+  console.log('   CONTENIDO PASO 3: OpenAI revisa calidad (scoring estricto)...')
   var revisados = []
+
+  // Frases genericas que penalizan (ademas de PALABRAS_PROHIBIDAS)
+  var FRASES_GENERICAS = [
+    'te invitamos a', 'no te pierdas', 'descubre como', 'conoce mas',
+    'haz clic aqui', 'siguenos', 'te esperamos', 'lo mejor de lo mejor',
+    'somos lideres', 'los mejores del mercado', 'calidad premium',
+    'no te lo pierdas', 'aprovecha esta oportunidad', 'oferta imperdible',
+    'contactanos hoy', 'estamos para ti', 'tu mejor opcion',
+    'comprometidos con', 'pasion por', 'excelencia en',
+  ]
 
   for (var i = 0; i < copies.length; i++) {
     var c = copies[i]
     if (c.error) { revisados.push(c); continue }
 
-    // Check basico local
-    var score = 100
+    // Score parte en 85 (NUNCA 100 automatico, hay que ganarselo)
+    var score = 85
     var problemas = []
+    var bonos = []
 
-    // Largo minimo
-    if (c.plataforma === 'LinkedIn' && c.palabras < 120) { score -= 20; problemas.push('Muy corto para LinkedIn (min 120 pal)') }
-    if (c.plataforma === 'Instagram' && c.palabras < 80) { score -= 15; problemas.push('Muy corto para Instagram (min 80 pal)') }
-    if (c.plataforma === 'Facebook' && c.palabras < 60) { score -= 10; problemas.push('Muy corto para Facebook (min 60 pal)') }
-
-    // Palabras prohibidas
     var copyLower = c.copy.toLowerCase()
+    var palabras = c.palabras || c.copy.split(/\s+/).length
+
+    // ── PENALIZACIONES DURAS ──
+
+    // Copies bajo 150 palabras son inaceptables
+    if (palabras < 150) {
+      score -= 20
+      problemas.push('Copy demasiado corto: ' + palabras + ' palabras (minimo 150)')
+    } else if (palabras < 200) {
+      score -= 10
+      problemas.push('Copy corto: ' + palabras + ' palabras (ideal >200)')
+    }
+
+    // Largo minimo por plataforma (adicional)
+    if (c.plataforma === 'LinkedIn' && palabras < 180) { score -= 10; problemas.push('LinkedIn requiere minimo 180 palabras para aportar valor') }
+    if (c.plataforma === 'Instagram' && palabras < 120) { score -= 10; problemas.push('Instagram copy profesional necesita minimo 120 palabras') }
+
+    // Sin hashtags
+    var hashtagCount = (c.copy.match(/#\w+/g) || []).length
+    if (hashtagCount === 0) { score -= 10; problemas.push('Sin hashtags (se necesitan 5-8)') }
+    else if (hashtagCount < 3) { score -= 5; problemas.push('Pocos hashtags: ' + hashtagCount + ' (minimo 5)') }
+
+    // Palabras prohibidas (ChatGPT speak)
     PALABRAS_PROHIBIDAS.forEach(function(palabra) {
       if (copyLower.includes(palabra)) {
         score -= 10
@@ -211,50 +337,123 @@ async function paso3_revisar(copies) {
       }
     })
 
-    // Sin hashtags
-    if (!c.copy.includes('#')) { score -= 5; problemas.push('Sin hashtags') }
+    // Frases genericas (-10 cada una, max -30)
+    var genericasEncontradas = 0
+    FRASES_GENERICAS.forEach(function(frase) {
+      if (copyLower.includes(frase) && genericasEncontradas < 3) {
+        score -= 10
+        genericasEncontradas++
+        problemas.push('Frase generica: "' + frase + '"')
+      }
+    })
 
-    // Si score < 70, pedir a OpenAI que corrija
-    if (score < 70 && OPENAI_KEY) {
+    // Sin referencia a datos de competencia o mercado
+    var tieneContexto = copyLower.includes('mercado') || copyLower.includes('industria')
+      || copyLower.includes('sector') || copyLower.includes('tendencia')
+      || copyLower.includes('dato') || copyLower.includes('estudio')
+      || copyLower.includes('%') || /\d{2,}/.test(c.copy)
+    if (!tieneContexto) {
+      score -= 15
+      problemas.push('Sin referencia a datos concretos del mercado o industria')
+    }
+
+    // Sin contexto estacional
+    var ahora = new Date()
+    var meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre']
+    var mesActual = meses[ahora.getMonth()]
+    var tieneEstacionalidad = copyLower.includes(mesActual) || copyLower.includes('temporada')
+      || copyLower.includes('este mes') || copyLower.includes('esta semana')
+      || copyLower.includes('hoy') || copyLower.includes('' + ahora.getFullYear())
+    if (!tieneEstacionalidad) {
+      score -= 10
+      problemas.push('Sin contexto estacional o temporal relevante')
+    }
+
+    // Sin CTA claro
+    var tieneCTA = copyLower.includes('link en bio') || copyLower.includes('comenta')
+      || copyLower.includes('comparte') || copyLower.includes('escribe')
+      || copyLower.includes('agenda') || copyLower.includes('cotiza')
+      || copyLower.includes('visita') || copyLower.includes('descarga')
+      || copyLower.includes('registrate') || copyLower.includes('inscribete')
+      || copyLower.includes('whatsapp') || copyLower.includes('dm')
+    if (!tieneCTA) {
+      score -= 10
+      problemas.push('Sin CTA claro y medible')
+    }
+
+    // Copy demasiado corto en parrafos (solo una linea larga = wall of text)
+    var lineas = c.copy.split('\n').filter(function(l) { return l.trim().length > 0 })
+    if (palabras > 100 && lineas.length < 3) {
+      score -= 5
+      problemas.push('Sin estructura visual (necesita parrafos/saltos de linea)')
+    }
+
+    // ── BONOS (max +15) ──
+    if (palabras >= 250) { score += 5; bonos.push('Copy extenso y detallado (+5)') }
+    if (hashtagCount >= 5 && hashtagCount <= 10) { score += 3; bonos.push('Hashtags bien calibrados (+3)') }
+    if (lineas.length >= 5) { score += 3; bonos.push('Buena estructura visual (+3)') }
+    if (c.copy.includes('?')) { score += 2; bonos.push('Incluye preguntas que generan engagement (+2)') }
+    if (/\d/.test(c.copy) && !c.copy.match(/^\d/)) { score += 2; bonos.push('Usa datos numericos concretos (+2)') }
+
+    // Clamp score
+    score = Math.max(0, Math.min(score, 95))
+
+    // Si score < 65, pedir a OpenAI que corrija
+    if (score < 65 && OPENAI_KEY) {
       console.log('   Copy ' + (i+1) + ' score=' + score + ', corrigiendo con OpenAI...')
       try {
-        var fixPrompt = 'Este copy tiene problemas: ' + problemas.join(', ') + '.\n\n'
+        var fixPrompt = 'Eres un editor de copy profesional. Este copy para ' + (c.plataforma || 'redes sociales') + ' tiene los siguientes problemas:\n\n'
+          + 'PROBLEMAS DETECTADOS:\n' + problemas.map(function(p) { return '- ' + p }).join('\n') + '\n\n'
           + 'COPY ORIGINAL:\n' + c.copy + '\n\n'
-          + 'CORRIGE los problemas manteniendo el mensaje. '
-          + 'Elimina frases cliche, agrega hashtags si faltan, extiende si es muy corto. '
-          + 'Responde SOLO con el copy corregido.'
+          + 'INSTRUCCIONES DE CORRECCION:\n'
+          + '1. El copy debe tener MINIMO 200 palabras\n'
+          + '2. Elimina TODAS las frases genericas y cliche\n'
+          + '3. Agrega datos concretos del mercado o industria (puedes usar contexto del rubro)\n'
+          + '4. Agrega referencia temporal (mes actual, temporada, tendencia del momento)\n'
+          + '5. Incluye 5-8 hashtags relevantes al final\n'
+          + '6. Incluye un CTA especifico y medible (no generico como "siguenos")\n'
+          + '7. Estructura en parrafos con saltos de linea para legibilidad\n'
+          + '8. Escribe en espanol chileno profesional, directo, sin rodeos\n'
+          + '9. NO uses ninguna de estas frases: ' + FRASES_GENERICAS.slice(0, 10).join(', ') + '\n\n'
+          + 'Responde SOLO con el copy corregido y mejorado. Nada mas.'
 
         var res = await fetch('https://api.openai.com/v1/chat/completions', {
           method: 'POST',
           headers: { 'Authorization': 'Bearer ' + OPENAI_KEY, 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            model: 'gpt-4o-mini', temperature: 0.5, max_tokens: 800,
+            model: 'gpt-4o-mini', temperature: 0.5, max_tokens: 1200,
             messages: [{ role: 'user', content: fixPrompt }],
           }),
         })
         if (res.ok) {
           var data = await res.json()
-          c.copy = data.choices[0].message.content || c.copy
-          c.palabras = c.copy.split(/\s+/).length
-          c.fixed = true
-          score = Math.min(score + 20, 85)
-          console.log('   Copy ' + (i+1) + ' corregido, nuevo score=' + score)
+          var fixedCopy = data.choices[0].message.content || ''
+          if (fixedCopy.split(/\s+/).length > c.copy.split(/\s+/).length) {
+            c.copy = fixedCopy
+            c.palabras = fixedCopy.split(/\s+/).length
+            c.fixed = true
+            score = Math.min(score + 15, 80)
+            console.log('   Copy ' + (i+1) + ' corregido, nuevo score=' + score + ' (' + c.palabras + ' palabras)')
+          }
         }
       } catch (e) { console.error('   Fix error: ' + e.message) }
     }
 
     c.score = score
     c.problemas = problemas
-    if (score >= 70) {
-      console.log('   Copy ' + (i+1) + ' APROBADO (score=' + score + ')')
+    c.bonos = bonos
+    if (score >= 75) {
+      console.log('   Copy ' + (i+1) + ' APROBADO (score=' + score + ', ' + palabras + ' pal, ' + problemas.length + ' issues)')
+    } else if (score >= 60) {
+      console.log('   Copy ' + (i+1) + ' ACEPTABLE (score=' + score + ') — ' + problemas.join('; '))
     } else {
-      console.log('   Copy ' + (i+1) + ' BAJO (score=' + score + ') pero se incluye con advertencia')
+      console.log('   Copy ' + (i+1) + ' BAJO (score=' + score + ') — ' + problemas.join('; '))
     }
     revisados.push(c)
   }
 
   var avgScore = revisados.reduce(function(s, c) { return s + (c.score || 0) }, 0) / (revisados.length || 1)
-  console.log('   PASO 3 OK: score promedio=' + Math.round(avgScore))
+  console.log('   PASO 3 OK: score promedio=' + Math.round(avgScore) + ' (escala estricta, >75 = bueno, >85 = excelente)')
   return revisados
 }
 
@@ -274,8 +473,29 @@ async function generarContenidoSugerido(posts, empresas, modo, perfil, supabase,
     return []
   }
 
+  // Cargar copies previos de Supabase para evitar repeticion
+  var copiesPrevios = []
+  if (supabase && suscripcionId) {
+    try {
+      var prevRes = await supabase.from('radar_contenido')
+        .select('datos')
+        .eq('suscripcion_id', suscripcionId)
+        .eq('tipo', 'copy')
+        .order('id', { ascending: false })
+        .limit(3)
+      if (prevRes.data && prevRes.data.length > 0) {
+        prevRes.data.forEach(function(row) {
+          if (Array.isArray(row.datos)) {
+            row.datos.forEach(function(c) { copiesPrevios.push(c) })
+          }
+        })
+        console.log('   Copies previos cargados: ' + copiesPrevios.length + ' (para evitar repeticion)')
+      }
+    } catch (e) { console.log('   No se pudieron cargar copies previos: ' + e.message) }
+  }
+
   // Paso 1: OpenAI analiza
-  var briefs = await paso1_analizar(posts, empresas, modo, perfil || {})
+  var briefs = await paso1_analizar(posts, empresas, modo, perfil || {}, copiesPrevios)
   if (briefs.length === 0) {
     console.log('   Sin briefs, abortando pipeline')
     return []
@@ -310,21 +530,103 @@ async function generarContenidoSugerido(posts, empresas, modo, perfil, supabase,
     } catch (e) { console.error('   Error guardando copies: ' + e.message) }
   }
 
-  // Extraer ideas del analisis para el banco de ideas
+  // Extraer ideas basadas en analisis de competencia y gaps
   if (supabase && suscripcionId && revisados.length > 0) {
     try {
-      var ideas = revisados.map(function(c) {
-        return {
-          suscripcion_id: suscripcionId,
-          titulo: c.titulo || 'Idea de contenido',
-          descripcion: (c.angulo || '') + ': ' + (c.justificacion || c.titulo || ''),
-          categoria: (c.tipo || '').includes('Reel') ? 'entretenimiento' : (c.plataforma || '').includes('LinkedIn') ? 'educativo' : 'producto',
-          prioridad: (c.score || 0) >= 80 ? 'alta' : 'media',
-          estado: 'nueva',
+      // Ordenar posts por engagement para analisis de gaps
+      var postsOrdenados = posts.slice().sort(function(a, b) {
+        var engA = (parseInt(a.likes) || 0) + (parseInt(a.comments) || 0)
+        var engB = (parseInt(b.likes) || 0) + (parseInt(b.comments) || 0)
+        return engB - engA
+      })
+      var top5 = postsOrdenados.slice(0, 5)
+
+      // Analizar temas de los top 5
+      var temasCompetencia = {}
+      top5.forEach(function(p) {
+        var texto = (p.texto || '').toLowerCase()
+        var nombre = p.nombre || p.handle || 'competidor'
+        var eng = (parseInt(p.likes) || 0) + (parseInt(p.comments) || 0)
+        // Detectar categorias tematicas del post
+        var temaDetectado = 'general'
+        if (texto.includes('oferta') || texto.includes('descuento') || texto.includes('promo') || texto.includes('precio')) temaDetectado = 'promocional'
+        else if (texto.includes('equipo') || texto.includes('detras') || texto.includes('cultura') || texto.includes('historia')) temaDetectado = 'marca_humana'
+        else if (texto.includes('tip') || texto.includes('consejo') || texto.includes('como') || texto.includes('guia') || texto.includes('aprende')) temaDetectado = 'educativo'
+        else if (texto.includes('cliente') || texto.includes('testimonio') || texto.includes('caso') || texto.includes('resultado')) temaDetectado = 'caso_exito'
+        else if (texto.includes('tendencia') || texto.includes('novedad') || texto.includes('nuevo') || texto.includes('lanz')) temaDetectado = 'tendencia'
+        else if (texto.includes('dato') || texto.includes('estadistic') || texto.includes('estudio') || texto.includes('%')) temaDetectado = 'datos_mercado'
+
+        if (!temasCompetencia[temaDetectado]) {
+          temasCompetencia[temaDetectado] = { count: 0, totalEng: 0, posts: [], competidores: [] }
+        }
+        temasCompetencia[temaDetectado].count++
+        temasCompetencia[temaDetectado].totalEng += eng
+        temasCompetencia[temaDetectado].posts.push({ nombre: nombre, texto: (p.texto || '').substring(0, 80), eng: eng })
+        if (temasCompetencia[temaDetectado].competidores.indexOf(nombre) === -1) {
+          temasCompetencia[temaDetectado].competidores.push(nombre)
         }
       })
+
+      // Generar ideas basadas en gaps y datos reales
+      var ideas = []
+
+      // Ideas desde los copies generados (con contexto enriquecido)
+      revisados.forEach(function(c) {
+        ideas.push({
+          suscripcion_id: suscripcionId,
+          titulo: c.titulo || 'Idea de contenido',
+          descripcion: 'Basado en competencia: ' + (c.justificacion || '')
+            + (c.competidor_referencia ? ' | Referencia: ' + c.competidor_referencia + ' (eng: ' + (c.engagement_referencia || 'N/A') + ')' : '')
+            + ' | Angulo: ' + (c.angulo || 'sin definir'),
+          categoria: (c.angulo || 'general'),
+          prioridad: (c.score || 0) >= 80 ? 'alta' : (c.score || 0) >= 65 ? 'media' : 'baja',
+          estado: 'nueva',
+        })
+      })
+
+      // Ideas desde gaps detectados en la competencia
+      var categoriasTemas = Object.keys(temasCompetencia)
+      var temasOrdenados = categoriasTemas.sort(function(a, b) {
+        return temasCompetencia[b].totalEng - temasCompetencia[a].totalEng
+      })
+
+      // Top temas donde la competencia es activa = oportunidad
+      temasOrdenados.slice(0, 3).forEach(function(tema) {
+        var datos = temasCompetencia[tema]
+        var avgEng = Math.round(datos.totalEng / datos.count)
+        var competidoresStr = datos.competidores.join(', ')
+        var mejorPost = datos.posts.sort(function(a, b) { return b.eng - a.eng })[0]
+
+        ideas.push({
+          suscripcion_id: suscripcionId,
+          titulo: 'GAP: ' + tema.replace(/_/g, ' ') + ' — competencia activa con alto engagement',
+          descripcion: 'Los competidores ' + competidoresStr + ' publican sobre "' + tema.replace(/_/g, ' ') + '" con engagement promedio de ' + avgEng
+            + '. Mejor post: ' + mejorPost.nombre + ' ("' + mejorPost.texto + '", eng: ' + mejorPost.eng + '). '
+            + 'OPORTUNIDAD: crear contenido en este tema superando el angulo de la competencia.',
+          categoria: tema,
+          prioridad: 'alta',
+          estado: 'nueva',
+        })
+      })
+
+      // Detectar temas que FALTAN (gaps reales)
+      var temasEsperados = ['educativo', 'caso_exito', 'marca_humana', 'datos_mercado', 'tendencia', 'promocional']
+      temasEsperados.forEach(function(tema) {
+        if (!temasCompetencia[tema]) {
+          ideas.push({
+            suscripcion_id: suscripcionId,
+            titulo: 'OPORTUNIDAD: ningun competidor cubre "' + tema.replace(/_/g, ' ') + '"',
+            descripcion: 'En el top 5 de posts por engagement, ningun competidor publica contenido de tipo "' + tema.replace(/_/g, ' ')
+              + '". Esto representa una oportunidad de diferenciacion: ser el primero en abordar este angulo puede capturar atencion sin competencia directa.',
+            categoria: tema,
+            prioridad: 'alta',
+            estado: 'nueva',
+          })
+        }
+      })
+
       await supabase.from('copilot_ideas').insert(ideas)
-      console.log('   ' + ideas.length + ' ideas guardadas en copilot_ideas')
+      console.log('   ' + ideas.length + ' ideas guardadas en copilot_ideas (' + (ideas.length - revisados.length) + ' de gap analysis)')
     } catch (e) { console.log('   Ideas skip: ' + e.message) }
   }
 

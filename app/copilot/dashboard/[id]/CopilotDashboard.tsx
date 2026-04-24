@@ -30,7 +30,7 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
   var [ideaFiltroCategoria, setIdeaFiltroCategoria] = useState('todas')
   var [ideaFiltroEstado, setIdeaFiltroEstado] = useState('todos')
 
-  useEffect(function() { loadData() }, [periodo])
+  useEffect(function() { loadData() }, [periodo, mesFiltro])
 
   async function loadData() {
     setLoading(true)
@@ -440,7 +440,8 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
                   <h3 className="text-sm font-bold text-white mb-3">Detalle por criterio</h3>
                   <div className="grid grid-cols-2 gap-3">
                     {criterios.map(function(cr, ci) {
-                      var val = aud.criterios ? (aud.criterios[ci] || 0) : 0
+                      var rawVal = aud.criterios ? (aud.criterios[ci] || 0) : 0
+                      var val = typeof rawVal === 'object' && rawVal !== null ? (rawVal.score || 0) : (rawVal || 0)
                       return <div key={ci} className="flex items-center gap-3 bg-[#12102a] rounded-lg p-3">
                         <div className="flex-1">
                           <div className="text-xs text-[#a5b4fc] mb-1">{cr}</div>
@@ -736,7 +737,7 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
           var fortalezas = [] as string[]
           var mejoras = [] as string[]
           if (aud && aud.criterios) {
-            var pares = criteriosNombres.map(function(n, i) { return { nombre: n, val: aud.criterios[i] || 0 } })
+            var pares = criteriosNombres.map(function(n, i) { var c = aud.criterios[i]; return { nombre: n, val: typeof c === 'object' && c !== null ? (c.score || 0) : (c || 0) } })
             pares.sort(function(a: any, b: any) { return b.val - a.val })
             fortalezas = pares.slice(0, 3).map(function(p: any) { return p.nombre + ' (' + p.val + '/10)' })
             mejoras = pares.slice(-3).reverse().map(function(p: any) { return p.nombre + ' (' + p.val + '/10)' })
