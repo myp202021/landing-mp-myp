@@ -689,6 +689,7 @@ function generarEmailHTML(posts, cuentas, fecha, modo, resumenIA, empresas, tren
   // Helper: truncate text safely
   var truncar = function(txt, max) {
     if (!txt) return ''
+    if (typeof txt !== 'string') txt = String(txt)
     var clean = txt.replace(/\n/g, ' ').replace(/<[^>]*>/g, '')
     return clean.length > max ? clean.substring(0, max) + '...' : clean
   }
