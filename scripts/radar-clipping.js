@@ -198,12 +198,13 @@ async function main() {
           return { companyUrls: ['https://www.linkedin.com/company/' + handle + '/'], maxPosts: liLimit }
         },
         parsePost: function(p) {
+          // apimaestro usa snake_case: posted_at, post_url, reactions_count
           return {
-            texto: (p.text || p.postText || p.content || p.commentary || '').substring(0, 500),
-            url: p.postUrl || p.url || '',
-            timestamp: p.publishedAt || p.postedAt || p.date || p.createdAt || null,
-            likes: p.reactionsCount || p.likesCount || p.reactions || 0,
-            comments: p.commentsCount || p.comments || 0,
+            texto: (p.text || p.postText || p.content || '').substring(0, 500),
+            url: p.post_url || p.postUrl || p.url || '',
+            timestamp: p.posted_at || p.publishedAt || p.postedAt || p.date || null,
+            likes: p.reactions_count || p.reactionsCount || p.likesCount || 0,
+            comments: p.comments_count || p.commentsCount || 0,
           }
         }
       },
