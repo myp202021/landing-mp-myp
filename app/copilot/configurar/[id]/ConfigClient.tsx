@@ -229,7 +229,6 @@ export default function ConfigClient(props: { suscripcionId: string }) {
                 <select value={c.red} onChange={function(e: any) { updateCuenta(i, 'red', e.target.value) }} className="border border-white/10 rounded-lg px-3 py-2.5 text-sm w-36 bg-[#12102a] text-white focus:ring-2 focus:ring-indigo-500">
                   <option value="instagram">Instagram</option>
                   <option value="linkedin">LinkedIn</option>
-                  <option value="facebook">Facebook</option>
                 </select>
                 <input type="text" value={c.handle} onChange={function(e: any) { updateCuenta(i, 'handle', e.target.value) }} placeholder={PLACEHOLDERS[c.red] || 'handle o URL'} className="flex-1 border border-white/10 rounded-lg px-4 py-2.5 text-sm bg-[#12102a] text-white focus:ring-2 focus:ring-indigo-500" />
                 <input type="text" value={c.nombre || ''} onChange={function(e: any) { updateCuenta(i, 'nombre', e.target.value) }} placeholder="Nombre empresa" className="w-40 border border-white/10 rounded-lg px-4 py-2.5 text-sm bg-[#12102a] text-white focus:ring-2 focus:ring-indigo-500" />
