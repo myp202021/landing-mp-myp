@@ -79,6 +79,8 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
   var [periodo, setPeriodo] = useState('7d')
   var [tab, setTab] = useState('competencia')
   var [mesFiltro, setMesFiltro] = useState(new Date().getMonth() + 1)
+  var [mesAuditoriaFiltro, setMesAuditoriaFiltro] = useState(0)
+  var [mesGuionesFiltro, setMesGuionesFiltro] = useState(0)
   var [ideaForm, setIdeaForm] = useState(false)
   var [ideaTitulo, setIdeaTitulo] = useState('')
   var [ideaDesc, setIdeaDesc] = useState('')
@@ -89,7 +91,38 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
   var [ideaFiltroEstado, setIdeaFiltroEstado] = useState('todos')
   var [copiedIndex, setCopiedIndex] = useState(null as string | null)
 
-  useEffect(function() { loadData() }, [periodo, mesFiltro])
+  useEffect(function() { loadData() }, [periodo])
+
+  // Initialize mesAuditoriaFiltro to latest month with audit data
+  useEffect(function() {
+    if (auditorias.length > 0 && mesAuditoriaFiltro === 0) {
+      setMesAuditoriaFiltro(auditorias[0].mes)
+    }
+  }, [auditorias])
+
+  // Initialize mesGuionesFiltro to latest month with guiones data
+  useEffect(function() {
+    if (guiones.length > 0 && mesGuionesFiltro === 0) {
+      setMesGuionesFiltro(guiones[0].mes)
+    }
+  }, [guiones])
+
+  // Initialize mesFiltro to month with most content
+  useEffect(function() {
+    if (contenido.length > 0) {
+      var mesesCount = {} as Record<number, number>
+      contenido.forEach(function(c: any) {
+        var m = c.mes
+        if (m) mesesCount[m] = (mesesCount[m] || 0) + (Array.isArray(c.datos) ? c.datos.length : 1)
+      })
+      var bestMes = new Date().getMonth() + 1
+      var bestCount = 0
+      Object.keys(mesesCount).forEach(function(k) {
+        if (mesesCount[Number(k)] > bestCount) { bestCount = mesesCount[Number(k)]; bestMes = Number(k) }
+      })
+      setMesFiltro(bestMes)
+    }
+  }, [contenido])
 
   async function loadData() {
     setLoading(true)
@@ -346,7 +379,7 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
             <div className="flex items-center justify-between mb-6">
               <div className="flex gap-2">
                 {[1,2,3,4,5,6,7,8,9,10,11,12].filter(function(m) {
-                  return contenido.some(function(c: any) { return c.mes === m }) || m === new Date().getMonth() + 1
+                  return contenido.some(function(c: any) { return c.mes === m })
                 }).map(function(m) {
                   return <button key={m} onClick={function() { setMesFiltro(m) }}
                     className={'px-3 py-2 rounded-lg text-sm font-semibold transition ' + (mesFiltro === m ? 'bg-purple-600 text-white' : 'bg-[#1a1745] text-[#a5b4fc] border border-white/[0.06] hover:border-purple-300')}>
@@ -470,10 +503,11 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
 
         {/* TAB: AUDITORIA */}
         {tab === 'auditoria' && (function() {
-          var mesAuditoria = mesFiltro
+          var mesAuditoria = mesAuditoriaFiltro || (auditorias.length > 0 ? auditorias[0].mes : (new Date().getMonth() + 1))
           var anioAuditoria = new Date().getFullYear()
           var audMes = auditorias.filter(function(a: any) { return a.mes === mesAuditoria && a.anio === anioAuditoria })
           var aud = audMes.length > 0 ? audMes[0] : null
+          var mesesConAuditoria = auditorias.map(function(a: any) { return a.mes }).filter(function(m: number, i: number, arr: number[]) { return arr.indexOf(m) === i })
 
           var criteriosDefault = [
             'Frecuencia de publicaci\u00F3n',
@@ -511,12 +545,12 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
 
           return <>
             <div className="flex gap-2 mb-6 flex-wrap">
-              {[1,2,3,4,5,6,7,8,9,10,11,12].map(function(m) {
-                return <button key={m} onClick={function() { setMesFiltro(m) }}
-                  className={'px-3 py-2 rounded-lg text-sm font-semibold transition ' + (mesFiltro === m ? 'bg-teal-600 text-white' : 'bg-[#1a1745] text-[#a5b4fc] border border-white/[0.06] hover:border-teal-300')}>
+              {mesesConAuditoria.length > 0 ? mesesConAuditoria.sort().map(function(m: number) {
+                return <button key={m} onClick={function() { setMesAuditoriaFiltro(m) }}
+                  className={'px-3 py-2 rounded-lg text-sm font-semibold transition ' + (mesAuditoria === m ? 'bg-teal-600 text-white' : 'bg-[#1a1745] text-[#a5b4fc] border border-white/[0.06] hover:border-teal-300')}>
                   {MESES_NOMBRES[m].substring(0, 3)}
                 </button>
-              })}
+              }) : <span className="text-xs text-[#64748b]">Sin auditorias disponibles</span>}
             </div>
 
             {aud ? (
@@ -588,18 +622,20 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
 
         {/* TAB: GUIONES */}
         {tab === 'guiones' && (function() {
-          var guionesMes = guiones.filter(function(g: any) { return g.mes === mesFiltro })
+          var mesGuionesActivo = mesGuionesFiltro || (guiones.length > 0 ? guiones[0].mes : (new Date().getMonth() + 1))
+          var guionesMes = guiones.filter(function(g: any) { return g.mes === mesGuionesActivo })
 
           return <>
             <div className="flex gap-2 mb-6 flex-wrap">
               {[1,2,3,4,5,6,7,8,9,10,11,12].filter(function(m) {
-                return guiones.some(function(g: any) { return g.mes === m }) || m === new Date().getMonth() + 1
+                return guiones.some(function(g: any) { return g.mes === m })
               }).map(function(m) {
-                return <button key={m} onClick={function() { setMesFiltro(m) }}
-                  className={'px-3 py-2 rounded-lg text-sm font-semibold transition ' + (mesFiltro === m ? 'bg-pink-600 text-white' : 'bg-[#1a1745] text-[#a5b4fc] border border-white/[0.06] hover:border-pink-300')}>
+                return <button key={m} onClick={function() { setMesGuionesFiltro(m) }}
+                  className={'px-3 py-2 rounded-lg text-sm font-semibold transition ' + (mesGuionesActivo === m ? 'bg-pink-600 text-white' : 'bg-[#1a1745] text-[#a5b4fc] border border-white/[0.06] hover:border-pink-300')}>
                   {MESES_NOMBRES[m].substring(0, 3)}
                 </button>
               })}
+              {guiones.length === 0 && <span className="text-xs text-[#64748b]">Sin guiones disponibles</span>}
             </div>
 
             {guionesMes.length > 0 ? (
@@ -894,9 +930,10 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
           })
           var avgScore = scoreCount > 0 ? Math.round(scoreSum / scoreCount) : 0
 
-          /* Auditoria data */
+          /* Auditoria data — try selected month first, fallback to latest available */
           var audMes = auditorias.filter(function(a: any) { return a.mes === mesReporte && a.anio === anio })
-          var aud = audMes.length > 0 ? audMes[0] : null
+          var aud = audMes.length > 0 ? audMes[0] : (auditorias.length > 0 ? auditorias[0] : null)
+          var audIsLatestFallback = audMes.length === 0 && aud !== null
 
           var criteriosNombres = [
             'Frecuencia de publicaci\u00f3n', 'Engagement rate', 'Consistencia visual', 'Calidad de copies',
@@ -916,14 +953,27 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
             mejoras = pares.slice(-3).reverse().map(function(p: any) { return p.nombre + ' (' + p.val + '/10)' })
           }
 
+          /* Summary paragraph */
+          var summaryParts = [] as string[]
+          summaryParts.push('En ' + nombreMes + ' ' + anio + ', se detectaron ' + totalPostsComp + ' posts de la competencia con ' + totalLikesComp.toLocaleString() + ' likes totales.')
+          if (topCompetidor) summaryParts.push(topCompetidor + ' fue el competidor mas activo con ' + maxPostsEmp + ' publicaciones.')
+          if (topEngCompetidor && topEngCompetidor !== topCompetidor) summaryParts.push(topEngCompetidor + ' destaco en engagement con ' + maxEng.toLocaleString() + ' interacciones.')
+          if (copiesTotal > 0 || grillaPosts > 0) summaryParts.push('Se generaron ' + copiesTotal + ' copies y ' + grillaPosts + ' posts en grilla para tu marca.')
+          if (aud) {
+            var audLabel = audIsLatestFallback ? ' (ultima disponible, ' + MESES_NOMBRES[aud.mes] + ')' : ''
+            summaryParts.push('La auditoria' + audLabel + ' arrojo un score global de ' + (aud.score_global || 0) + '/100.')
+          }
+          var summaryText = summaryParts.join(' ')
+
           /* Acciones */
           var acciones = [] as string[]
-          if (totalPostsComp > 0 && topCompetidor) acciones.push('Analizar la estrategia de ' + topCompetidor + ' que lider\u00f3 con ' + maxPostsEmp + ' posts')
-          if (topEngCompetidor && topEngCompetidor !== topCompetidor) acciones.push(topEngCompetidor + ' lidera en engagement con ' + maxEng.toLocaleString() + ' interacciones — estudiar su formato')
-          if (copiesTotal > 0) acciones.push('Publicar los ' + copiesTotal + ' copies generados esta semana')
-          if (aud && mejoras.length > 0) acciones.push('Mejorar ' + mejoras[0].split(' (')[0].toLowerCase() + ' — \u00e1rea con menor score en la auditor\u00eda')
-          if (grillaPosts > 0) acciones.push('Seguir la grilla de ' + grillaPosts + ' posts planificados para el mes')
-          acciones.push('Revisar el dashboard la pr\u00f3xima semana para nuevos insights')
+          if (totalPostsComp > 0 && topCompetidor) acciones.push('Analizar la estrategia de ' + topCompetidor + ' que lidero con ' + maxPostsEmp + ' posts — identificar formatos y frecuencia')
+          if (topEngCompetidor && topEngCompetidor !== topCompetidor) acciones.push('Estudiar el contenido de ' + topEngCompetidor + ' (' + maxEng.toLocaleString() + ' interacciones) — replicar elementos de alto engagement')
+          if (copiesTotal > 0) acciones.push('Publicar los ' + copiesTotal + ' copies sugeridos para mantener la frecuencia')
+          if (aud && mejoras.length > 0) acciones.push('Priorizar mejora en ' + mejoras[0].split(' (')[0].toLowerCase() + ' — area con menor puntaje en la auditoria')
+          if (grillaPosts > 0) acciones.push('Ejecutar la grilla de ' + grillaPosts + ' posts planificados segun calendario')
+          if (aud && (aud.score_global || 0) < 60) acciones.push('Solicitar revision de estrategia — score global bajo 60 requiere ajustes')
+          if (acciones.length === 0) acciones.push('Esperar a que se acumulen datos de competencia e inteligencia de contenido')
 
           return <>
             <style dangerouslySetInnerHTML={{ __html: '@media print { .no-print { display: none !important; } .print-break { page-break-inside: avoid; } }' }} />
@@ -960,6 +1010,11 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
               </div>
 
               <div className="p-6 space-y-6">
+                {/* Summary */}
+                <div className="bg-indigo-900/10 rounded-lg p-4">
+                  <p className="text-sm text-[#c4b5fd] leading-relaxed">{summaryText}</p>
+                </div>
+
                 {/* Section 1: Competencia */}
                 <div>
                   <h3 className="text-sm font-bold text-indigo-700 uppercase tracking-wider mb-3">Competencia</h3>
@@ -1006,14 +1061,18 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
 
                 {/* Section 3: Auditoria */}
                 <div>
-                  <h3 className="text-sm font-bold text-teal-700 uppercase tracking-wider mb-3">Auditor\u00eda</h3>
+                  <h3 className="text-sm font-bold text-teal-700 uppercase tracking-wider mb-3">
+                    Auditor{'í'}a
+                    {audIsLatestFallback && <span className="text-xs font-normal text-[#64748b] ml-2">(datos de {MESES_NOMBRES[aud.mes]} — sin auditor{'í'}a para {nombreMes})</span>}
+                  </h3>
                   {aud ? (
                     <>
                       <div className="grid grid-cols-3 gap-4 mb-3">
                         <div className="bg-teal-900/20 rounded-lg p-4 text-center">
                           {(function() {
-                            var cc = aud.score_global >= 75 ? 'text-green-600' : aud.score_global >= 50 ? 'text-yellow-600' : 'text-red-600'
-                            return <div className={'text-2xl font-bold ' + cc}>{aud.score_global}/100</div>
+                            var scoreVal = aud.score_global || 0
+                            var cc = scoreVal >= 75 ? 'text-green-600' : scoreVal >= 50 ? 'text-yellow-600' : 'text-red-600'
+                            return <div className={'text-2xl font-bold ' + cc}>{scoreVal}/100</div>
                           })()}
                           <div className="text-xs text-[#94a3b8] mt-1">Score global</div>
                         </div>
@@ -1029,7 +1088,7 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
                       <p className="text-xs text-[#64748b] italic">vs mes anterior: evoluci\u00f3n de score disponible pr\u00f3ximamente</p>
                     </>
                   ) : (
-                    <p className="text-sm text-[#64748b]">Sin auditor\u00eda disponible para este mes</p>
+                    <p className="text-sm text-[#64748b]">Sin auditor{'í'}a disponible a{'ú'}n</p>
                   )}
                 </div>
 
