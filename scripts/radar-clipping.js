@@ -112,48 +112,126 @@ async function main() {
   var desde = new Date(Date.now() - VENTANA_HORAS * 60 * 60 * 1000)
   var allPosts = []
 
-  // === INSTAGRAM ===
+  // === INSTAGRAM (multi-actor) ===
   if (igSet.size > 0) {
     console.log('\n--- INSTAGRAM: ' + igSet.size + ' cuentas ---')
+    var igLimit = MODO === 'diario' ? 5 : 15
+    var igUrls = Array.from(igSet).map(function(h) { return 'https://www.instagram.com/' + h + '/' })
+
+    // Actor 1: apify~instagram-scraper (principal)
+    var igRaw = []
     try {
-      var urls = Array.from(igSet).map(function(h) { return 'https://www.instagram.com/' + h + '/' })
+      console.log('   Actor 1: apify~instagram-scraper')
       var r = await fetch('https://api.apify.com/v2/acts/apify~instagram-scraper/run-sync-get-dataset-items?token=' + APIFY_TOKEN + '&timeout=300',
         { method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ directUrls: urls, resultsType: 'posts', resultsLimit: MODO === 'diario' ? 5 : 15, addParentData: true }) })
-      if (!r.ok) throw new Error('HTTP ' + r.status)
-      var raw = await r.json()
-      var posts = raw.filter(function(p) { return p.timestamp && new Date(p.timestamp) > desde })
-        .map(function(p) { var h = (p.ownerUsername || '').toLowerCase(); return {
-          red: 'Instagram', handle: h, nombre: handleToNombre[h] || h,
-          texto: (p.caption || '').substring(0, 500), url: p.url || 'https://www.instagram.com/p/' + p.shortCode + '/',
-          timestamp: p.timestamp, likes: p.likesCount || 0, comments: p.commentsCount || 0, type: p.type || 'Image'
-        }})
-      allPosts = allPosts.concat(posts)
-      Array.from(igSet).forEach(function(h) { var n = posts.filter(function(p) { return p.handle === h }).length; console.log('   ' + (handleToNombre[h] || h) + ': ' + n) })
-    } catch (e) { console.error('   IG error: ' + e.message) }
+          body: JSON.stringify({ directUrls: igUrls, resultsType: 'posts', resultsLimit: igLimit, addParentData: true }) })
+      if (r.ok) {
+        igRaw = await r.json()
+        console.log('   Actor 1: ' + igRaw.length + ' raw items')
+      } else {
+        console.log('   Actor 1 falló: HTTP ' + r.status)
+      }
+    } catch (e) { console.log('   Actor 1 error: ' + e.message) }
+
+    // Actor 2 fallback: apify~instagram-post-scraper (si actor 1 trajo 0)
+    if (igRaw.length === 0) {
+      try {
+        console.log('   Actor 2 fallback: apify~instagram-post-scraper')
+        var r2 = await fetch('https://api.apify.com/v2/acts/apify~instagram-post-scraper/run-sync-get-dataset-items?token=' + APIFY_TOKEN + '&timeout=300',
+          { method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ directUrls: igUrls, resultsLimit: igLimit }) })
+        if (r2.ok) {
+          igRaw = await r2.json()
+          console.log('   Actor 2: ' + igRaw.length + ' raw items')
+        }
+      } catch (e) { console.log('   Actor 2 error: ' + e.message) }
+    }
+
+    var igPosts = igRaw.filter(function(p) { return p.timestamp && new Date(p.timestamp) > desde })
+      .map(function(p) { var h = (p.ownerUsername || '').toLowerCase(); return {
+        red: 'Instagram', handle: h, nombre: handleToNombre[h] || h,
+        texto: (p.caption || '').substring(0, 500), url: p.url || 'https://www.instagram.com/p/' + (p.shortCode || '') + '/',
+        timestamp: p.timestamp, likes: p.likesCount || 0, comments: p.commentsCount || 0, type: p.type || 'Image'
+      }})
+    allPosts = allPosts.concat(igPosts)
+    Array.from(igSet).forEach(function(h) { var n = igPosts.filter(function(p) { return p.handle === h }).length; console.log('   ' + (handleToNombre[h] || h) + ': ' + n) })
   }
 
-  // === LINKEDIN ===
+  // === LINKEDIN (multi-actor) ===
   if (liSet.size > 0) {
     console.log('\n--- LINKEDIN: ' + liSet.size + ' empresas ---')
+    var liLimit = MODO === 'diario' ? 5 : 15
+
+    // Actores disponibles (se prueban en orden hasta que uno funcione)
+    var LI_ACTORS = [
+      {
+        name: 'harvestapi~linkedin-company-posts',
+        buildInput: function(handle) {
+          return { urls: ['https://www.linkedin.com/company/' + handle + '/posts/'], maxPosts: liLimit }
+        },
+        parsePost: function(p) {
+          // harvestapi usa postedAt como objeto con .date o como string
+          var dateStr = null
+          if (p.postedAt) {
+            if (typeof p.postedAt === 'object' && p.postedAt.date) dateStr = p.postedAt.date
+            else if (typeof p.postedAt === 'string') dateStr = p.postedAt
+          }
+          if (!dateStr) dateStr = p.date || p.publishedAt || p.postedAtTimestamp || null
+          return {
+            texto: (p.text || p.commentary || p.content || '').substring(0, 500),
+            url: p.url || p.postUrl || '',
+            timestamp: dateStr,
+            likes: p.likesCount || p.numLikes || p.socialCount || 0,
+            comments: p.commentsCount || p.numComments || 0,
+          }
+        }
+      },
+      {
+        name: 'curious_coder~linkedin-post-search-scraper',
+        buildInput: function(handle) {
+          return { searchUrl: 'https://www.linkedin.com/company/' + handle + '/posts/', maxResults: liLimit }
+        },
+        parsePost: function(p) {
+          return {
+            texto: (p.text || p.content || p.commentary || '').substring(0, 500),
+            url: p.postUrl || p.url || '',
+            timestamp: p.postedDate || p.publishedAt || p.date || null,
+            likes: p.reactionCount || p.likesCount || 0,
+            comments: p.commentCount || p.commentsCount || 0,
+          }
+        }
+      },
+    ]
+
     for (var handle of liSet) {
-      try {
-        var liUrl = 'https://www.linkedin.com/company/' + handle + '/posts/'
-        var r = await fetch('https://api.apify.com/v2/acts/harvestapi~linkedin-company-posts/run-sync-get-dataset-items?token=' + APIFY_TOKEN + '&timeout=120',
-          { method: 'POST', headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ urls: [liUrl], maxPosts: MODO === 'diario' ? 5 : 15 }) })
-        if (!r.ok) throw new Error('HTTP ' + r.status)
-        var raw = await r.json()
-        var posts = raw.filter(function(p) { var d = p.postedAt || p.date || p.publishedAt; return d && new Date(d) > desde })
-          .map(function(p) { return {
-            red: 'LinkedIn', handle: handle, nombre: handleToNombre[handle] || handle,
-            texto: (p.text || p.commentary || '').substring(0, 500), url: p.url || p.postUrl || '',
-            timestamp: p.postedAt || p.date || p.publishedAt,
-            likes: p.likesCount || p.numLikes || 0, comments: p.commentsCount || p.numComments || 0, type: 'Post'
-          }})
-        allPosts = allPosts.concat(posts)
-        console.log('   ' + (handleToNombre[handle] || handle) + ': ' + posts.length + ' (after filter)')
-      } catch (e) { console.error('   ' + handle + ': ' + e.message) }
+      var liPosts = []
+      for (var ai = 0; ai < LI_ACTORS.length; ai++) {
+        var actor = LI_ACTORS[ai]
+        try {
+          console.log('   ' + handle + ' → Actor ' + (ai + 1) + ': ' + actor.name)
+          var input = actor.buildInput(handle)
+          var r = await fetch('https://api.apify.com/v2/acts/' + actor.name + '/run-sync-get-dataset-items?token=' + APIFY_TOKEN + '&timeout=120',
+            { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(input) })
+          if (!r.ok) { console.log('   HTTP ' + r.status + ' — probando siguiente actor'); continue }
+          var raw = await r.json()
+          console.log('   Raw: ' + raw.length + ' items')
+          if (raw.length === 0) { console.log('   0 items — probando siguiente actor'); continue }
+
+          liPosts = raw.map(function(p) {
+            var parsed = actor.parsePost(p)
+            return {
+              red: 'LinkedIn', handle: handle, nombre: handleToNombre[handle] || handle,
+              texto: parsed.texto, url: parsed.url,
+              timestamp: parsed.timestamp,
+              likes: parsed.likes, comments: parsed.comments, type: 'Post'
+            }
+          }).filter(function(p) { return p.timestamp && new Date(p.timestamp) > desde })
+
+          console.log('   ' + (handleToNombre[handle] || handle) + ': ' + liPosts.length + ' posts (filtrados por fecha)')
+          if (liPosts.length > 0 || raw.length > 0) break // Este actor funciona, no probar más
+        } catch (e) { console.log('   Actor ' + (ai + 1) + ' error: ' + e.message) }
+      }
+      allPosts = allPosts.concat(liPosts)
     }
   }
 
