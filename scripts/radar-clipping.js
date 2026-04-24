@@ -162,21 +162,26 @@ async function main() {
     console.log('\n--- LINKEDIN: ' + liSet.size + ' empresas ---')
     var liLimit = MODO === 'diario' ? 5 : 15
 
-    // Actores disponibles (se prueban en orden hasta que uno funcione)
+    // Actores disponibles — se prueban en orden hasta que uno devuelva datos
+    // Verificados en Apify Store abril 2026, todos sin cookies
     var LI_ACTORS = [
       {
         name: 'harvestapi~linkedin-company-posts',
+        rating: '5.0',
         buildInput: function(handle) {
           return { urls: ['https://www.linkedin.com/company/' + handle + '/posts/'], maxPosts: liLimit }
         },
         parsePost: function(p) {
-          // harvestapi usa postedAt como objeto con .date o como string
+          // harvestapi devuelve postedAt como objeto {timestamp, date, postedAgoShort} o string
           var dateStr = null
           if (p.postedAt) {
             if (typeof p.postedAt === 'object' && p.postedAt.date) dateStr = p.postedAt.date
+            else if (typeof p.postedAt === 'object' && p.postedAt.timestamp) dateStr = new Date(p.postedAt.timestamp).toISOString()
             else if (typeof p.postedAt === 'string') dateStr = p.postedAt
           }
-          if (!dateStr) dateStr = p.date || p.publishedAt || p.postedAtTimestamp || null
+          if (!dateStr) dateStr = p.date || p.publishedAt || null
+          // Si postedAtTimestamp es número (ms epoch)
+          if (!dateStr && p.postedAtTimestamp && typeof p.postedAtTimestamp === 'number') dateStr = new Date(p.postedAtTimestamp).toISOString()
           return {
             texto: (p.text || p.commentary || p.content || '').substring(0, 500),
             url: p.url || p.postUrl || '',
@@ -187,7 +192,24 @@ async function main() {
         }
       },
       {
-        name: 'curious_coder~linkedin-post-search-scraper',
+        name: 'apimaestro~linkedin-company-posts',
+        rating: '5.0 (15 reviews)',
+        buildInput: function(handle) {
+          return { companyUrls: ['https://www.linkedin.com/company/' + handle + '/'], maxPosts: liLimit }
+        },
+        parsePost: function(p) {
+          return {
+            texto: (p.text || p.postText || p.content || p.commentary || '').substring(0, 500),
+            url: p.postUrl || p.url || '',
+            timestamp: p.publishedAt || p.postedAt || p.date || p.createdAt || null,
+            likes: p.reactionsCount || p.likesCount || p.reactions || 0,
+            comments: p.commentsCount || p.comments || 0,
+          }
+        }
+      },
+      {
+        name: 'harvestapi~linkedin-post-search',
+        rating: '5.0 (18 reviews)',
         buildInput: function(handle) {
           return { searchUrl: 'https://www.linkedin.com/company/' + handle + '/posts/', maxResults: liLimit }
         },
@@ -196,7 +218,7 @@ async function main() {
             texto: (p.text || p.content || p.commentary || '').substring(0, 500),
             url: p.postUrl || p.url || '',
             timestamp: p.postedDate || p.publishedAt || p.date || null,
-            likes: p.reactionCount || p.likesCount || 0,
+            likes: p.reactionCount || p.likesCount || p.totalReactions || 0,
             comments: p.commentCount || p.commentsCount || 0,
           }
         }
@@ -215,6 +237,10 @@ async function main() {
           if (!r.ok) { console.log('   HTTP ' + r.status + ' — probando siguiente actor'); continue }
           var raw = await r.json()
           console.log('   Raw: ' + raw.length + ' items')
+          if (raw.length > 0) {
+            var sampleKeys = Object.keys(raw[0]).slice(0, 8).join(', ')
+            console.log('   Sample keys: ' + sampleKeys)
+          }
           if (raw.length === 0) { console.log('   0 items — probando siguiente actor'); continue }
 
           liPosts = raw.map(function(p) {
