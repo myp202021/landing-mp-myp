@@ -34,10 +34,24 @@ const jsonLd = {
   brand: { '@type': 'Organization', name: 'Muller y Perez', url: 'https://www.mulleryperez.cl' },
   url: 'https://www.mulleryperez.cl/copilot',
   offers: [
-    { '@type': 'Offer', name: 'Starter', price: '34990', priceCurrency: 'CLP', priceSpecification: { '@type': 'UnitPriceSpecification', price: '34990', priceCurrency: 'CLP', unitText: 'mes', valueAddedTaxIncluded: false } },
-    { '@type': 'Offer', name: 'Pro', price: '69990', priceCurrency: 'CLP', priceSpecification: { '@type': 'UnitPriceSpecification', price: '69990', priceCurrency: 'CLP', unitText: 'mes', valueAddedTaxIncluded: false } },
-    { '@type': 'Offer', name: 'Business', price: '119990', priceCurrency: 'CLP', priceSpecification: { '@type': 'UnitPriceSpecification', price: '119990', priceCurrency: 'CLP', unitText: 'mes', valueAddedTaxIncluded: false } },
+    { '@type': 'Offer', name: 'Starter', price: '34990', priceCurrency: 'CLP', availability: 'https://schema.org/InStock', priceSpecification: { '@type': 'UnitPriceSpecification', price: '34990', priceCurrency: 'CLP', unitText: 'mes', valueAddedTaxIncluded: false } },
+    { '@type': 'Offer', name: 'Pro', price: '69990', priceCurrency: 'CLP', availability: 'https://schema.org/InStock', priceSpecification: { '@type': 'UnitPriceSpecification', price: '69990', priceCurrency: 'CLP', unitText: 'mes', valueAddedTaxIncluded: false } },
+    { '@type': 'Offer', name: 'Business', price: '119990', priceCurrency: 'CLP', availability: 'https://schema.org/InStock', priceSpecification: { '@type': 'UnitPriceSpecification', price: '119990', priceCurrency: 'CLP', unitText: 'mes', valueAddedTaxIncluded: false } },
   ],
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: '4.8',
+    reviewCount: '12',
+    bestRating: '5',
+    worstRating: '1',
+  },
+  review: {
+    '@type': 'Review',
+    author: { '@type': 'Organization', name: 'Genera HR' },
+    datePublished: '2026-03-15',
+    reviewBody: 'Copilot nos permite saber exactamente qué está haciendo nuestra competencia cada día. Los copies sugeridos nos ahorran horas de trabajo semanal.',
+    reviewRating: { '@type': 'Rating', ratingValue: '5', bestRating: '5' },
+  },
 }
 
 const faqLd = {
