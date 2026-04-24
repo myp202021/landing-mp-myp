@@ -212,27 +212,50 @@ async function paso2_crear(briefs, posts, perfil) {
       return (p.nombre || p.handle) + ' publico: "' + p.texto.substring(0, 80) + '"'
     }).join('\n')
 
-    var prompt = 'Eres un copywriter senior especializado en redes sociales para empresas chilenas. '
-      + 'Escribes en espanol chileno profesional: directo, sin rodeos, sin ChatGPT speak, sin frases cliche.\n\n'
+    // Minimo de palabras por plataforma
+    var minPalabras = brief.plataforma === 'LinkedIn' ? 250 : brief.tipo === 'Reel' ? 80 : 150
+
+    // Extraer datos de competidor de referencia
+    var refInfo = ''
+    if (brief.competidor_referencia) {
+      refInfo = '\nCOMPETIDOR DE REFERENCIA: ' + brief.competidor_referencia
+      if (brief.post_referencia_texto) refInfo += '\nPost que inspira este copy: "' + brief.post_referencia_texto + '"'
+      if (brief.engagement_referencia) refInfo += '\nEngagement de ese post: ' + brief.engagement_referencia
+      refInfo += '\nTu copy debe SUPERAR ese post tomando el mismo tema pero con el angulo unico de ' + (perfil.nombre || 'la empresa') + '.\n'
+    }
+
+    var prompt = 'Eres un copywriter senior que escribe contenido que COMPITE Y SUPERA a la competencia. '
+      + 'No escribes copies genericos. Cada copy esta basado en un INSIGHT REAL de la competencia y tiene un angulo diferenciador concreto.\n\n'
       + clienteCtx + '\n'
+      + refInfo + '\n'
       + 'BRIEF:\n'
       + '- Plataforma: ' + brief.plataforma + '\n'
       + '- Tipo de post: ' + brief.tipo + '\n'
       + '- Angulo: ' + brief.angulo + '\n'
       + '- Objetivo: ' + brief.objetivo + '\n'
       + '- Titulo: ' + brief.titulo + '\n'
-      + '- Justificacion: ' + brief.justificacion + '\n'
-      + '- Instrucciones: ' + brief.instrucciones_copy + '\n\n'
-      + 'CONTEXTO (posts reales de la competencia esta semana):\n' + contextPosts + '\n\n'
-      + 'REGLAS:\n'
-      + '- Copy de minimo 150 palabras para LinkedIn, 100 para Instagram, 80 para Facebook\n'
-      + '- Si es Carrusel: escribe el contenido de cada slide (minimo 5 slides)\n'
-      + '- Si es Reel: escribe el guion con texto en pantalla\n'
-      + '- Incluye hashtags relevantes (5-8)\n'
-      + '- Incluye CTA claro\n'
-      + '- NO uses: "en el vertiginoso", "no es solo", "es fundamental", "sin lugar a dudas", "paradigma", "sinergia"\n'
-      + '- NO inventes estadisticas ni porcentajes sin fuente\n'
-      + '- Escribe como si fueras el community manager de la empresa, no como un robot\n\n'
+      + '- Justificacion estrategica: ' + brief.justificacion + '\n'
+      + '- Instrucciones detalladas: ' + brief.instrucciones_copy + '\n\n'
+      + 'CONTEXTO COMPETITIVO (posts reales de la competencia esta semana):\n' + contextPosts + '\n\n'
+      + 'REGLAS DE CALIDAD (si las rompes, el copy sera rechazado):\n'
+      + '1. HOOK (primera linea): NUNCA empieces con una pregunta generica sin dato. Buenos hooks:\n'
+      + '   - "3 de cada 5 empresas en Chile [dato relevante]" — empieza con un numero\n'
+      + '   - "[Competidor] publico sobre [tema] y obtuvo [N] likes. Nosotros lo hacemos diferente:" — confronta\n'
+      + '   - "[Dato de industria] cambio esta semana. Esto es lo que significa para tu [rubro]:" — news-jacking\n'
+      + '   NUNCA: "Sabias que...?" sin dato, "En un mundo donde...", "Te has preguntado...?"\n'
+      + '2. CUERPO: Incluye AL MENOS 1 dato concreto (porcentaje real, numero de la industria, referencia a tendencia verificable)\n'
+      + '3. CTA: DEBE ser una accion MEDIBLE y especifica. Buenos CTAs:\n'
+      + '   - "Comenta con el emoji [X] si tu empresa ya implemento esto"\n'
+      + '   - "Guarda este post y revisalo el lunes cuando planifiques tu semana"\n'
+      + '   - "Envianos un DM con la palabra [X] para recibir [recurso concreto]"\n'
+      + '   NUNCA: "Contactanos", "Mas informacion en el link", "Visita nuestro sitio", "Siguenos"\n'
+      + '4. MINIMO ' + minPalabras + ' palabras (no negociable)\n'
+      + '5. Si es Carrusel: contenido de cada slide (minimo 5 slides), cada slide con titulo y texto\n'
+      + '6. Si es Reel: guion con texto en pantalla por escena\n'
+      + '7. Incluye 5-8 hashtags relevantes al final\n'
+      + '8. NO uses: "en el vertiginoso", "no es solo", "es fundamental", "paradigma", "sinergia", "te invitamos"\n'
+      + '9. NO inventes estadisticas. Si citas un dato, debe ser plausible para la industria\n'
+      + '10. Escribe como community manager senior, no como chatbot\n\n'
       + 'Responde SOLO el copy listo para publicar. Nada mas.'
 
     try {
@@ -311,18 +334,18 @@ async function paso3_revisar(copies) {
 
     // ── PENALIZACIONES DURAS ──
 
-    // Copies bajo 150 palabras son inaceptables
-    if (palabras < 150) {
-      score -= 20
-      problemas.push('Copy demasiado corto: ' + palabras + ' palabras (minimo 150)')
-    } else if (palabras < 200) {
-      score -= 10
-      problemas.push('Copy corto: ' + palabras + ' palabras (ideal >200)')
+    // Largo minimo absoluto
+    if (palabras < 80) {
+      score -= 25
+      problemas.push('Copy inaceptablemente corto: ' + palabras + ' palabras (minimo 80 para reels, 150 IG, 250 LI)')
+    } else if (palabras < 150) {
+      score -= 15
+      problemas.push('Copy corto: ' + palabras + ' palabras (minimo 150 para IG)')
     }
 
-    // Largo minimo por plataforma (adicional)
-    if (c.plataforma === 'LinkedIn' && palabras < 180) { score -= 10; problemas.push('LinkedIn requiere minimo 180 palabras para aportar valor') }
-    if (c.plataforma === 'Instagram' && palabras < 120) { score -= 10; problemas.push('Instagram copy profesional necesita minimo 120 palabras') }
+    // Largo minimo por plataforma
+    if (c.plataforma === 'LinkedIn' && palabras < 250) { score -= 15; problemas.push('LinkedIn requiere minimo 250 palabras para aportar valor real') }
+    if (c.plataforma === 'Instagram' && c.tipo !== 'Reel' && palabras < 150) { score -= 10; problemas.push('Instagram copy profesional necesita minimo 150 palabras') }
 
     // Sin hashtags
     var hashtagCount = (c.copy.match(/#\w+/g) || []).length
@@ -347,14 +370,52 @@ async function paso3_revisar(copies) {
       }
     })
 
-    // Sin referencia a datos de competencia o mercado
-    var tieneContexto = copyLower.includes('mercado') || copyLower.includes('industria')
-      || copyLower.includes('sector') || copyLower.includes('tendencia')
-      || copyLower.includes('dato') || copyLower.includes('estudio')
-      || copyLower.includes('%') || /\d{2,}/.test(c.copy)
-    if (!tieneContexto) {
+    // ── NUEVAS PENALIZACIONES: INTELIGENCIA ──
+
+    // Sin referencia a insight competitivo (-20)
+    var tieneInsightCompetitivo = false
+    if (c.competidor_referencia || c.engagement_referencia) tieneInsightCompetitivo = true
+    // Tambien verificar en el texto del copy si menciona competencia/mercado con dato
+    var mencionaCompetencia = copyLower.includes('competencia') || copyLower.includes('mercado')
+      || copyLower.includes('industria') || copyLower.includes('sector')
+      || copyLower.includes('lider') || copyLower.includes('tendencia')
+    var tieneDatoReal = /\d{2,}/.test(c.copy) || copyLower.includes('%')
+    if (!tieneInsightCompetitivo && !(mencionaCompetencia && tieneDatoReal)) {
+      score -= 20
+      problemas.push('Sin referencia a insight competitivo: el copy no conecta con datos de la competencia')
+    }
+
+    // CTA generico (-15)
+    var CTA_GENERICOS = ['contactanos', 'contáctanos', 'mas informacion', 'más información', 'visita nuestro sitio', 'siguenos', 'síguenos', 'te esperamos', 'haz clic', 'dale like']
+    var ctaGenerico = false
+    CTA_GENERICOS.forEach(function(cta) {
+      if (copyLower.includes(cta)) { ctaGenerico = true }
+    })
+    if (ctaGenerico) {
       score -= 15
-      problemas.push('Sin referencia a datos concretos del mercado o industria')
+      problemas.push('CTA generico detectado: usar CTAs medibles como "comenta con [X]", "guarda este post", "envia DM con [palabra]"')
+    }
+
+    // Hook generico sin dato (-10)
+    var primeraLinea = c.copy.split('\n')[0] || ''
+    var primeraLineaLower = primeraLinea.toLowerCase()
+    var hookGenerico = (primeraLineaLower.includes('sabias que') || primeraLineaLower.includes('sabías que')
+      || primeraLineaLower.includes('te has preguntado') || primeraLineaLower.includes('alguna vez')
+      || primeraLineaLower.includes('en un mundo')) && !/\d/.test(primeraLinea)
+    if (hookGenerico) {
+      score -= 10
+      problemas.push('Hook generico sin dato: "' + primeraLinea.substring(0, 50) + '..." — agregar numero o referencia concreta')
+    }
+
+    // Sin CTA en absoluto
+    var tieneCTA = copyLower.includes('comenta') || copyLower.includes('comparte')
+      || copyLower.includes('escribe') || copyLower.includes('agenda') || copyLower.includes('cotiza')
+      || copyLower.includes('descarga') || copyLower.includes('registrate') || copyLower.includes('inscribete')
+      || copyLower.includes('whatsapp') || copyLower.includes('dm') || copyLower.includes('guarda')
+      || copyLower.includes('envia') || copyLower.includes('envía') || copyLower.includes('link en bio')
+    if (!tieneCTA) {
+      score -= 10
+      problemas.push('Sin CTA detectado en el copy')
     }
 
     // Sin contexto estacional
@@ -365,35 +426,39 @@ async function paso3_revisar(copies) {
       || copyLower.includes('este mes') || copyLower.includes('esta semana')
       || copyLower.includes('hoy') || copyLower.includes('' + ahora.getFullYear())
     if (!tieneEstacionalidad) {
-      score -= 10
-      problemas.push('Sin contexto estacional o temporal relevante')
+      score -= 5
+      problemas.push('Sin contexto estacional o temporal')
     }
 
-    // Sin CTA claro
-    var tieneCTA = copyLower.includes('link en bio') || copyLower.includes('comenta')
-      || copyLower.includes('comparte') || copyLower.includes('escribe')
-      || copyLower.includes('agenda') || copyLower.includes('cotiza')
-      || copyLower.includes('visita') || copyLower.includes('descarga')
-      || copyLower.includes('registrate') || copyLower.includes('inscribete')
-      || copyLower.includes('whatsapp') || copyLower.includes('dm')
-    if (!tieneCTA) {
-      score -= 10
-      problemas.push('Sin CTA claro y medible')
-    }
-
-    // Copy demasiado corto en parrafos (solo una linea larga = wall of text)
+    // Copy sin estructura visual
     var lineas = c.copy.split('\n').filter(function(l) { return l.trim().length > 0 })
     if (palabras > 100 && lineas.length < 3) {
       score -= 5
       problemas.push('Sin estructura visual (necesita parrafos/saltos de linea)')
     }
 
-    // ── BONOS (max +15) ──
+    // ── BONOS (max +20) ──
+    // Bonus: incluye numero/estadistica concreta (+5)
+    var tieneNumeroConcreto = /\d{2,}/.test(c.copy) || (copyLower.includes('%') && /\d/.test(c.copy))
+    if (tieneNumeroConcreto) { score += 5; bonos.push('Incluye dato numerico concreto (+5)') }
+
+    // Bonus: referencia a competidor especifico (+3)
+    if (c.competidor_referencia || c.engagement_referencia) { score += 3; bonos.push('Referencia competidor especifico (+3)') }
+
+    // Bonus: copy extenso y detallado
     if (palabras >= 250) { score += 5; bonos.push('Copy extenso y detallado (+5)') }
+
+    // Bonus: hashtags bien calibrados
     if (hashtagCount >= 5 && hashtagCount <= 10) { score += 3; bonos.push('Hashtags bien calibrados (+3)') }
-    if (lineas.length >= 5) { score += 3; bonos.push('Buena estructura visual (+3)') }
-    if (c.copy.includes('?')) { score += 2; bonos.push('Incluye preguntas que generan engagement (+2)') }
-    if (/\d/.test(c.copy) && !c.copy.match(/^\d/)) { score += 2; bonos.push('Usa datos numericos concretos (+2)') }
+
+    // Bonus: buena estructura
+    if (lineas.length >= 5) { score += 2; bonos.push('Buena estructura visual (+2)') }
+
+    // Bonus: CTA medible (no generico)
+    var ctaMedible = copyLower.includes('comenta con') || copyLower.includes('guarda este')
+      || copyLower.includes('envia un dm') || copyLower.includes('envía un dm')
+      || copyLower.includes('etiqueta a') || copyLower.includes('comparte con')
+    if (ctaMedible && !ctaGenerico) { score += 2; bonos.push('CTA medible y especifico (+2)') }
 
     // Clamp score
     score = Math.max(0, Math.min(score, 95))

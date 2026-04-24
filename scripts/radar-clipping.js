@@ -563,15 +563,28 @@ async function generarResumenOpenAI(posts, cuentas, modo, trends) {
       }
     })
 
-    var prompt = 'Eres un analista de redes sociales. Analiza posts de hoy de: ' + unicas + '.'
-    if (trendTxt) prompt = prompt + ' Tendencias vs periodo anterior: ' + trendTxt
-    prompt = prompt + ' Contexto: ' + getContextoEstacional()
-    prompt = prompt + ' Genera un JSON con esta estructura exacta (sin markdown, solo JSON): {"contexto":"texto corto sobre el mercado hoy","empresas":[{"nombre":"X","badge":"green|yellow|red","texto":"analisis breve"}],"oportunidad":"texto","alerta":"texto"}'
-    prompt = prompt + ' Usa badge green=activa, yellow=moderada, red=inactiva. Max 200 palabras total. Espanol sin acentos ni emojis.'
+    var prompt = 'Eres un analista de inteligencia competitiva SENIOR. NO generas observaciones obvias como "publicaron X posts" o "el engagement fue moderado". '
+    + 'Tu trabajo es encontrar PATRONES ACCIONABLES y GAPS ESPECIFICOS que un director de marketing pueda usar HOY.\n\n'
+    + 'Empresas monitoreadas: ' + unicas + '.\n'
+    if (trendTxt) prompt = prompt + 'Tendencias vs periodo anterior: ' + trendTxt + '\n'
+    prompt = prompt + 'Contexto estacional: ' + getContextoEstacional() + '\n\n'
+    + 'INSTRUCCIONES:\n'
+    + '1. Para CADA empresa, identifica su top post (el de mas engagement) y explica POR QUE funciono (formato, hook, tema, timing).\n'
+    + '2. Detecta el PATRON de cada empresa: que formato prefieren (video/carrusel/imagen), que temas repiten, a que hora publican.\n'
+    + '3. La "oportunidad" debe ser ESPECIFICA: "La empresa X publico sobre [tema] y obtuvo [N] likes. Tu cliente no cubre ese tema. Crear un [formato] sobre [angulo concreto] para capturar esa audiencia."\n'
+    + '4. La "alerta" debe ser ACCIONABLE con numeros: "La empresa Y aumento su frecuencia de [N] a [M] posts. Si no se iguala, se pierde share of voice."\n\n'
+    + 'Genera un JSON con esta estructura exacta (sin markdown, solo JSON):\n'
+    + '{"contexto":"1 oracion sobre que paso HOY relevante en el mercado, con dato concreto",'
+    + '"empresas":[{"nombre":"X","badge":"green|yellow|red","texto":"Top post: [tema] con [N] likes. Patron: [formato] + [temas]. Gap detectado: [que hace que el cliente no].","top_post_tema":"tema del mejor post","top_post_engagement":N,"formato_dominante":"video|carrusel|imagen|articulo","frecuencia_posts":N}],'
+    + '"oportunidad":"ESPECIFICA con nombre de competidor, tema concreto, formato sugerido y engagement de referencia",'
+    + '"alerta":"ACCIONABLE con dato numerico y consecuencia si no se actua",'
+    + '"contenido_sugerido":"Basado en el top post de [competidor] sobre [tema] ([N] likes), crear un [formato] que [angulo diferenciador del cliente]"}'
+    + '\nUsa badge green=muy activa(5+ posts), yellow=moderada(2-4), red=inactiva(0-1). Espanol sin acentos ni emojis.'
 
     var r = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST', headers: { 'Authorization': 'Bearer ' + OPENAI_KEY, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ model: 'gpt-4o-mini', temperature: 0.7, max_tokens: 800,
+      body: JSON.stringify({ model: 'gpt-4o-mini', temperature: 0.6, max_tokens: 1200,
+        response_format: { type: 'json_object' },
         messages: [{ role: 'system', content: prompt }, { role: 'user', content: data }] }) })
     if (!r.ok) throw new Error('HTTP ' + r.status)
     var d = await r.json()
@@ -597,20 +610,40 @@ async function generarResumenClaude(posts, cuentas, modo, trends) {
     })
 
     var periodoLabel = modo === 'semanal' ? 'esta semana' : 'este mes'
-    var prompt = 'Eres un analista senior de marketing digital especializado en el mercado chileno.'
-    prompt = prompt + ' Empresas monitoreadas: ' + unicas + '.'
-    prompt = prompt + ' Industria: HR tech, control de asistencia, gestion de personas en Chile.'
-    prompt = prompt + ' Periodo: ' + periodoLabel + '.'
-    if (trendTxt) prompt = prompt + ' Comparacion vs periodo anterior: ' + trendTxt
-    prompt = prompt + ' Contexto estacional Chile: ' + getContextoEstacional()
-    prompt = prompt + '\n\nGenera un JSON con esta estructura exacta (sin markdown, sin backticks, solo JSON puro):'
-    prompt = prompt + ' {"contexto":"parrafo sobre el contexto de mercado esta semana/mes, mencionar fechas relevantes y como afectan al sector HR tech",'
-    prompt = prompt + '"empresas":[{"nombre":"X","badge":"green|yellow|red","texto":"analisis con numeros especificos del periodo y comparacion vs anterior"}],'
-    prompt = prompt + '"oportunidad":"oportunidad concreta basada en datos y contexto",'
-    prompt = prompt + '"alerta":"alerta o riesgo detectado",'
-    prompt = prompt + '"contenido_sugerido":[{"titulo":"titulo del post","red":"Instagram|LinkedIn","descripcion":"que publicar y por que, con copy sugerido"}]}'
-    prompt = prompt + ' Incluir 2-3 ideas de contenido en contenido_sugerido. Usa badge green=muy activa, yellow=actividad moderada, red=inactiva/sin posts.'
-    prompt = prompt + ' Max 400 palabras total. Espanol profesional sin acentos ni emojis.'
+    var prompt = 'Eres un DIRECTOR DE INTELIGENCIA COMPETITIVA. NO generas resúmenes genéricos. '
+    + 'Tu trabajo es analizar los datos REALES de cada competidor y extraer insights que un CMO pueda convertir en decisiones esta semana.\n\n'
+    + 'Empresas monitoreadas: ' + unicas + '.\n'
+    + 'Periodo: ' + periodoLabel + '.\n'
+    if (trendTxt) prompt = prompt + 'Cambios vs periodo anterior: ' + trendTxt + '\n'
+    prompt = prompt + 'Contexto estacional Chile: ' + getContextoEstacional() + '\n\n'
+    + 'ANALISIS OBLIGATORIO POR CADA EMPRESA:\n'
+    + '1. TOP POST: Cual fue su post con mas engagement? De que tema trataba? Que formato uso? Por que crees que funciono?\n'
+    + '2. PATRON DE CONTENIDO: Que tipo de contenido publica mas? (educativo, promocional, marca humana, casos de exito). Cual le genera mas engagement?\n'
+    + '3. FRECUENCIA Y TIMING: Cuantos posts publico? Aumento o bajo vs periodo anterior? Que dias de la semana publica mas?\n'
+    + '4. GAP vs CLIENTE: Que hace este competidor que el cliente NO esta haciendo? (tema, formato, frecuencia)\n\n'
+    + 'REGLAS ESTRICTAS:\n'
+    + '- NUNCA escribas "el engagement fue moderado" o "publican contenido variado" — eso no sirve de nada\n'
+    + '- SIEMPRE cita el tema/contenido especifico del top post y su engagement exacto\n'
+    + '- SIEMPRE incluye un gap concreto por empresa (que hacen ellos que el cliente no)\n'
+    + '- La oportunidad debe nombrar al competidor, el tema, el formato y el engagement de referencia\n'
+    + '- La alerta debe incluir un dato numerico y la consecuencia concreta de no actuar\n'
+    + '- El contenido_sugerido debe referenciar un post real de un competidor especifico\n\n'
+    + 'Genera un JSON con esta estructura exacta (sin markdown, sin backticks, solo JSON puro):\n'
+    + '{"contexto":"1 parrafo corto con el hallazgo mas importante del periodo — NO un resumen generico, sino EL insight clave que cambia la estrategia",'
+    + '"empresas":[{"nombre":"X","badge":"green|yellow|red",'
+    + '"texto":"Top post: [descripcion del contenido] con [N] likes/[M] comentarios. Patron: publica [frecuencia] posts de [formato dominante] enfocados en [tema]. Gap: [que hace que el cliente no].",'
+    + '"top_post_tema":"tema especifico del mejor post",'
+    + '"top_post_likes":N,"top_post_comments":M,'
+    + '"formato_dominante":"video|carrusel|imagen|articulo",'
+    + '"tema_dominante":"educativo|promocional|marca_humana|caso_exito|tendencia",'
+    + '"frecuencia":N,"frecuencia_anterior":N_o_null,'
+    + '"gap":"descripcion concreta de lo que hacen y el cliente no"}],'
+    + '"oportunidad":"[Competidor] publico un [formato] sobre [tema concreto] y obtuvo [N] engagement. El cliente deberia crear un [formato] sobre [angulo del cliente] porque [razon de diferenciacion].",'
+    + '"alerta":"[Competidor] [accion concreta con dato numerico]. Si el cliente no [accion], [consecuencia medible].",'
+    + '"contenido_sugerido":[{"titulo":"titulo especifico basado en gap detectado","red":"Instagram|LinkedIn","formato":"carrusel|reel|imagen|articulo",'
+    + '"descripcion":"Basado en el post de [competidor] sobre [tema] ([N] likes). Crear [formato] con angulo [X] porque [justificacion con dato]. Copy sugerido: [primera linea del copy].","competidor_referencia":"nombre","engagement_referencia":N}]}'
+    + '\nIncluir 2-3 ideas de contenido. Badge: green=muy activa(5+ posts), yellow=moderada(2-4), red=inactiva(0-1).'
+    + '\nMax 600 palabras total. Espanol profesional sin emojis.'
 
     var r = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -621,7 +654,7 @@ async function generarResumenClaude(posts, cuentas, modo, trends) {
       },
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
-        max_tokens: 1200,
+        max_tokens: 2000,
         messages: [{
           role: 'user',
           content: 'Aqui estan los posts del periodo:\n\n' + data + '\n\nGenera el JSON de analisis.'

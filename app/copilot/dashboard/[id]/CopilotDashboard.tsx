@@ -16,43 +16,254 @@ function engagementBadge(likes: number, comments: number) {
   return { label: 'Bajo', color: 'bg-white/5 text-[#94a3b8] border-white/10' }
 }
 
-function generateCompanyInsight(nombre: string, data: { ig: number, li: number, likes: number, comments: number }, companyPosts: any[]) {
+var TEMAS_CONFIG = [
+  { kw: ['oferta', 'descuento', 'promo', 'precio', 'gratis', 'cupon'], label: 'promocional' },
+  { kw: ['equipo', 'team', 'cultura', 'oficina', 'trabajo', 'detras', 'behind'], label: 'cultura empresarial' },
+  { kw: ['tip', 'consejo', 'aprende', 'sab\u00edas', 'dato', 'guia', 'paso', 'como', 'error'], label: 'educativo' },
+  { kw: ['nuevo', 'lanzamiento', 'nueva', 'novedad', 'presenta', 'llega'], label: 'lanzamientos' },
+  { kw: ['cliente', 'testimonio', 'caso', 'resultado', 'logro', 'exito'], label: 'casos de \u00e9xito' },
+  { kw: ['evento', 'webinar', 'charla', 'conferencia', 'summit'], label: 'eventos' },
+  { kw: ['tendencia', 'trend', 'innovacion', 'futuro', 'ia', 'inteligencia artificial'], label: 'tendencias' },
+]
+
+function detectarTema(texto: string) {
+  var textoLower = texto.toLowerCase()
+  var mejor = { label: 'general', score: 0 }
+  TEMAS_CONFIG.forEach(function(tema) {
+    var score = 0
+    tema.kw.forEach(function(k) { if (textoLower.includes(k)) score++ })
+    if (score > mejor.score) { mejor = { label: tema.label, score: score } }
+  })
+  return mejor.label
+}
+
+function detectarFormato(tipo: string) {
+  var t = (tipo || '').toLowerCase()
+  if (t.includes('video') || t.includes('reel')) return 'video/reel'
+  if (t.includes('sidecar') || t.includes('carousel') || t.includes('carrusel')) return 'carrusel'
+  return 'imagen'
+}
+
+function generateCompanyAnalysis(nombre: string, data: { ig: number, li: number, likes: number, comments: number }, companyPosts: any[]) {
   var totalPosts = data.ig + data.li
-  if (totalPosts === 0) return nombre + ': sin actividad detectada en este periodo.'
-  var avgLikes = Math.round(data.likes / totalPosts)
-  var avgComments = Math.round(data.comments / totalPosts)
+  if (totalPosts === 0) return { resumen: nombre + ': sin actividad en este per\u00edodo. Esto puede indicar pausa estrat\u00e9gica o problemas operativos.', topPost: null, tema: '', formato: '', gap: '' }
 
-  // Find most common content theme from post text
-  var textos = companyPosts.map(function(p: any) { return (p.texto || '').toLowerCase() })
-  var keywords: Record<string, number> = {}
-  var temas = [
-    { kw: ['oferta', 'descuento', 'promo', 'precio'], label: 'promocional' },
-    { kw: ['equipo', 'team', 'cultura', 'oficina', 'trabajo'], label: 'cultura empresarial' },
-    { kw: ['tip', 'consejo', 'aprende', 'sab\u00edas', 'dato'], label: 'educativo' },
-    { kw: ['nuevo', 'lanzamiento', 'nueva', 'novedad'], label: 'lanzamientos' },
-    { kw: ['cliente', 'testimonio', 'caso', 'resultado'], label: 'casos de \u00e9xito' },
-    { kw: ['evento', 'webinar', 'charla', 'conferencia'], label: 'eventos' },
-  ]
-  temas.forEach(function(tema) {
-    var count = 0
-    textos.forEach(function(t) {
-      tema.kw.forEach(function(k) { if (t.includes(k)) count++ })
+  var avgEng = Math.round((data.likes + data.comments) / totalPosts)
+
+  // Find top post
+  var sorted = companyPosts.slice().sort(function(a: any, b: any) {
+    return ((b.likes || 0) + (b.comments || 0)) - ((a.likes || 0) + (a.comments || 0))
+  })
+  var topPost = sorted[0] || null
+  var topEng = topPost ? ((topPost.likes || 0) + (topPost.comments || 0)) : 0
+  var topTema = topPost ? detectarTema(topPost.texto || '') : ''
+  var topTexto = topPost ? (topPost.texto || '').substring(0, 80) : ''
+
+  // Detect dominant format
+  var formatos: Record<string, number> = {}
+  companyPosts.forEach(function(p: any) {
+    var f = detectarFormato(p.tipo_post || p.type || '')
+    formatos[f] = (formatos[f] || 0) + 1
+  })
+  var formatoDominante = ''
+  var maxFormato = 0
+  Object.keys(formatos).forEach(function(f) {
+    if (formatos[f] > maxFormato) { maxFormato = formatos[f]; formatoDominante = f }
+  })
+
+  // Detect dominant theme
+  var temasCount: Record<string, number> = {}
+  companyPosts.forEach(function(p: any) {
+    var t = detectarTema(p.texto || '')
+    temasCount[t] = (temasCount[t] || 0) + 1
+  })
+  var temaDominante = ''
+  var maxTema = 0
+  Object.keys(temasCount).forEach(function(t) {
+    if (temasCount[t] > maxTema && t !== 'general') { maxTema = temasCount[t]; temaDominante = t }
+  })
+
+  // Detect posting days pattern
+  var dias: Record<string, number> = {}
+  companyPosts.forEach(function(p: any) {
+    var fecha = p.fecha_post || p.fecha_scrape || ''
+    if (fecha) {
+      var d = new Date(fecha)
+      var diasNombres = ['dom', 'lun', 'mar', 'mi\u00e9', 'jue', 'vie', 's\u00e1b']
+      var dia = diasNombres[d.getDay()] || ''
+      if (dia) dias[dia] = (dias[dia] || 0) + 1
+    }
+  })
+  var diasActivos = Object.keys(dias).sort(function(a, b) { return dias[b] - dias[a] }).slice(0, 3).join(', ')
+
+  var resumen = nombre + ': ' + totalPosts + ' posts'
+  if (topPost) {
+    resumen += '. Top post: "' + topTexto + '..." (' + topEng + ' eng, ' + topTema + ')'
+  }
+  resumen += '. Formato dominante: ' + (formatoDominante || 'variado') + '.'
+  if (temaDominante) resumen += ' Enfoque: ' + temaDominante + '.'
+  if (diasActivos) resumen += ' Publica m\u00e1s: ' + diasActivos + '.'
+  resumen += ' Promedio: ' + avgEng + ' eng/post.'
+
+  return {
+    resumen: resumen,
+    topPost: topPost,
+    topPostEng: topEng,
+    topTema: topTema,
+    topTexto: topTexto,
+    tema: temaDominante,
+    formato: formatoDominante,
+    frecuencia: totalPosts,
+    avgEng: avgEng,
+    diasActivos: diasActivos,
+    gap: '',
+  }
+}
+
+function generateExecutiveSummary(posts: any[], empresas: Record<string, any>, postsByCompany: Record<string, any[]>, copies: any[], auditorias: any[], mesReporte: number, anio: number) {
+  var MESES = ['', 'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre']
+  var nombreMes = MESES[mesReporte] || ''
+  var totalPosts = posts.length
+  var totalEng = posts.reduce(function(s: number, p: any) { return s + (p.likes || 0) + (p.comments || 0) }, 0)
+
+  if (totalPosts === 0) return 'Sin datos de competencia para ' + nombreMes + '. Los datos se acumulan con cada informe.'
+
+  // Find most active competitor
+  var maxPosts = 0; var masActivo = ''
+  var maxEng = 0; var masEngagement = ''
+  Object.keys(empresas).forEach(function(n) {
+    var t = empresas[n].ig + empresas[n].li
+    var e = empresas[n].likes + empresas[n].comments
+    if (t > maxPosts) { maxPosts = t; masActivo = n }
+    if (e > maxEng) { maxEng = e; masEngagement = n }
+  })
+
+  // Find top post overall
+  var topGlobal = posts.slice().sort(function(a: any, b: any) {
+    return ((b.likes || 0) + (b.comments || 0)) - ((a.likes || 0) + (a.comments || 0))
+  })[0]
+  var topTemaGlobal = topGlobal ? detectarTema(topGlobal.texto || '') : ''
+  var topEngGlobal = topGlobal ? ((topGlobal.likes || 0) + (topGlobal.comments || 0)) : 0
+
+  // Detect which themes are NOT covered (gaps)
+  var temasDetectados = new Set() as Set<string>
+  posts.forEach(function(p: any) { temasDetectados.add(detectarTema(p.texto || '')) })
+  var temasNoUsados = ['educativo', 'casos de \u00e9xito', 'tendencias', 'cultura empresarial'].filter(function(t) { return !temasDetectados.has(t) })
+
+  // Average engagement
+  var avgEng = Math.round(totalEng / totalPosts)
+
+  // Build summary
+  var parts = []
+  parts.push('En ' + nombreMes + ' ' + anio + ', la competencia public\u00f3 ' + totalPosts + ' posts con ' + totalEng.toLocaleString() + ' interacciones totales (promedio ' + avgEng + ' eng/post).')
+
+  if (masActivo) {
+    parts.push(masActivo + ' lider\u00f3 en volumen con ' + maxPosts + ' posts')
+    if (masEngagement && masEngagement !== masActivo) {
+      parts.push(', pero ' + masEngagement + ' domin\u00f3 en engagement (' + maxEng.toLocaleString() + ' interacciones).')
+    } else {
+      parts.push(' y tambi\u00e9n en engagement.')
+    }
+  }
+
+  if (topGlobal) {
+    parts.push(' El post estrella fue de ' + (topGlobal.nombre_empresa || topGlobal.handle) + ' sobre ' + topTemaGlobal + ' con ' + topEngGlobal + ' eng.')
+  }
+
+  if (temasNoUsados.length > 0) {
+    parts.push(' Gap detectado: ning\u00fan competidor cubre ' + temasNoUsados.join(' ni ') + ' \u2014 oportunidad para diferenciarse.')
+  }
+
+  return parts.join('')
+}
+
+function generateStrategicActions(posts: any[], empresas: Record<string, any>, postsByCompany: Record<string, any[]>, copies: any[], auditorias: any[]) {
+  var acciones = [] as { texto: string, prioridad: string }[]
+
+  if (posts.length === 0) {
+    return [{ texto: 'Esperar acumulaci\u00f3n de datos de competencia para generar acciones.', prioridad: 'media' }]
+  }
+
+  // Find top post and its characteristics
+  var topPost = posts.slice().sort(function(a: any, b: any) {
+    return ((b.likes || 0) + (b.comments || 0)) - ((a.likes || 0) + (a.comments || 0))
+  })[0]
+  var topTema = topPost ? detectarTema(topPost.texto || '') : ''
+  var topEng = topPost ? ((topPost.likes || 0) + (topPost.comments || 0)) : 0
+  var topEmpresa = topPost ? (topPost.nombre_empresa || topPost.handle) : ''
+  var topFormato = topPost ? detectarFormato(topPost.tipo_post || topPost.type || '') : ''
+
+  // Action 1: Replicate top performing content
+  if (topPost) {
+    acciones.push({
+      texto: 'Crear ' + topFormato + ' sobre ' + topTema + ' \u2014 ' + topEmpresa + ' obtuvo ' + topEng + ' eng con este formato. Tomar el mismo tema pero con el angulo diferenciador del cliente.',
+      prioridad: 'alta',
     })
-    if (count > 0) keywords[tema.label] = count
-  })
-  var topTema = ''
-  var maxCount = 0
-  Object.keys(keywords).forEach(function(k) {
-    if (keywords[k] > maxCount) { maxCount = keywords[k]; topTema = k }
-  })
+  }
 
-  var red = data.ig > 0 ? 'IG' : ''
-  var parts = [nombre + ': ' + totalPosts + ' posts' + (red ? ' ' + red : '')]
-  parts.push('promedio ' + avgLikes + ' likes')
-  if (avgComments > 0) parts.push(avgComments + ' comentarios')
-  if (topTema) parts.push('Enfoque: contenido ' + topTema + '.')
-  else parts.push('Contenido variado.')
-  return parts.join(', ')
+  // Action 2: Frequency analysis
+  var avgFreq = posts.length / Math.max(Object.keys(empresas).length, 1)
+  var maxFreq = 0; var maxFreqEmpresa = ''
+  Object.keys(empresas).forEach(function(n) {
+    var t = empresas[n].ig + empresas[n].li
+    if (t > maxFreq) { maxFreq = t; maxFreqEmpresa = n }
+  })
+  if (maxFreqEmpresa) {
+    acciones.push({
+      texto: 'Igualar frecuencia de ' + maxFreqEmpresa + ' (' + maxFreq + ' posts en el per\u00edodo, promedio competencia: ' + Math.round(avgFreq) + '). Si el cliente publica menos, pierde share of voice.',
+      prioridad: 'alta',
+    })
+  }
+
+  // Action 3: Detect format gaps
+  var formatosCompetencia = new Set() as Set<string>
+  posts.forEach(function(p: any) { formatosCompetencia.add(detectarFormato(p.tipo_post || p.type || '')) })
+  var formatosSugeridos = ['video/reel', 'carrusel', 'imagen'].filter(function(f) { return !formatosCompetencia.has(f) })
+  if (formatosSugeridos.length > 0) {
+    acciones.push({
+      texto: 'Probar formato ' + formatosSugeridos[0] + ' \u2014 ning\u00fan competidor lo est\u00e1 usando. Oportunidad de capturar atenci\u00f3n con formato diferenciado.',
+      prioridad: 'media',
+    })
+  }
+
+  // Action 4: Detect theme gaps
+  var temasCompetencia = new Set() as Set<string>
+  posts.forEach(function(p: any) { temasCompetencia.add(detectarTema(p.texto || '')) })
+  var temasNoUsados = ['educativo', 'casos de \u00e9xito', 'tendencias', 'cultura empresarial'].filter(function(t) { return !temasCompetencia.has(t) })
+  if (temasNoUsados.length > 0) {
+    acciones.push({
+      texto: 'Cubrir "' + temasNoUsados[0] + '" \u2014 ning\u00fan competidor lo aborda. Primera marca en publicar captura la audiencia interesada.',
+      prioridad: 'media',
+    })
+  }
+
+  // Action 5: Publish pending copies
+  var totalCopies = copies.reduce(function(s: number, c: any) { return s + (Array.isArray(c.datos) ? c.datos.length : 0) }, 0)
+  if (totalCopies > 0) {
+    acciones.push({
+      texto: 'Publicar los ' + totalCopies + ' copies generados \u2014 ya est\u00e1n basados en inteligencia competitiva y listos para usar.',
+      prioridad: 'alta',
+    })
+  }
+
+  // Action 6: Audit improvements
+  var latestAud = auditorias.length > 0 ? auditorias[0] : null
+  if (latestAud && latestAud.criterios) {
+    var peorCriterio = { nombre: '', score: 11 }
+    ;(latestAud.criterios || []).forEach(function(raw: any, i: number) {
+      var val = typeof raw === 'object' ? (raw.score || 0) : (raw || 0)
+      var nombre = typeof raw === 'object' && raw.nombre ? raw.nombre : ('Criterio ' + (i + 1))
+      if (val < peorCriterio.score) { peorCriterio = { nombre: nombre, score: val } }
+    })
+    if (peorCriterio.score <= 6) {
+      acciones.push({
+        texto: 'Priorizar mejora en "' + peorCriterio.nombre + '" (score ' + peorCriterio.score + '/10) \u2014 \u00e1rea m\u00e1s d\u00e9bil seg\u00fan la auditor\u00eda.',
+        prioridad: peorCriterio.score <= 4 ? 'alta' : 'media',
+      })
+    }
+  }
+
+  return acciones
 }
 
 function criterioRecommendation(score: number) {
@@ -317,7 +528,8 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
                   var total = e.ig + e.li
                   var avgLikes = total > 0 ? Math.round(e.likes / total) : 0
                   var inactive = total === 0
-                  var insight = generateCompanyInsight(nombre, e, postsByCompany[nombre] || [])
+                  var analysis = generateCompanyAnalysis(nombre, e, postsByCompany[nombre] || [])
+                  var insight = analysis.resumen
                   return <div key={nombre} className={'px-6 py-4 ' + (inactive ? 'bg-red-900/10' : i % 2 === 0 ? '' : 'bg-[#12102a]')}>
                     <div className="flex items-center justify-between mb-1">
                       <span className={'font-semibold text-sm ' + (inactive ? 'text-red-400' : 'text-white')}>{nombre}</span>
@@ -904,25 +1116,18 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
           var totalPostsComp = posts.length
           var totalLikesComp = posts.reduce(function(s: number, p: any) { return s + (p.likes || 0) }, 0)
           var totalCommentsComp = posts.reduce(function(s: number, p: any) { return s + (p.comments || 0) }, 0)
-          var topCompetidor = ''
-          var maxPostsEmp = 0
-          Object.keys(empresas).forEach(function(n) {
-            var t = empresas[n].ig + empresas[n].li
-            if (t > maxPostsEmp) { maxPostsEmp = t; topCompetidor = n }
-          })
-
-          // Top competitor by engagement
-          var topEngCompetidor = ''
-          var maxEng = 0
-          Object.keys(empresas).forEach(function(n) {
-            var eng = empresas[n].likes + empresas[n].comments
-            if (eng > maxEng) { maxEng = eng; topEngCompetidor = n }
-          })
+          var totalEngComp = totalLikesComp + totalCommentsComp
+          var avgEngComp = totalPostsComp > 0 ? Math.round(totalEngComp / totalPostsComp) : 0
 
           /* Contenido stats */
           var copiesTotal = copies.reduce(function(s: number, c: any) { return s + (Array.isArray(c.datos) ? c.datos.length : 0) }, 0)
           var grillaPosts = grillas.reduce(function(s: number, c: any) { return s + (Array.isArray(c.datos) ? c.datos.length : 0) }, 0)
           var scoreSum = 0; var scoreCount = 0
+          copies.forEach(function(c: any) {
+            if (Array.isArray(c.datos)) c.datos.forEach(function(d: any) {
+              if (d.score) { scoreSum += d.score; scoreCount++ }
+            })
+          })
           grillas.forEach(function(g: any) {
             if (Array.isArray(g.datos)) g.datos.forEach(function(d: any) {
               if (d.score) { scoreSum += d.score; scoreCount++ }
@@ -930,7 +1135,7 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
           })
           var avgScore = scoreCount > 0 ? Math.round(scoreSum / scoreCount) : 0
 
-          /* Auditoria data — try selected month first, fallback to latest available */
+          /* Auditoria data */
           var audMes = auditorias.filter(function(a: any) { return a.mes === mesReporte && a.anio === anio })
           var aud = audMes.length > 0 ? audMes[0] : (auditorias.length > 0 ? auditorias[0] : null)
           var audIsLatestFallback = audMes.length === 0 && aud !== null
@@ -940,8 +1145,8 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
             'Uso de hashtags', 'Horarios de publicaci\u00f3n', 'Variedad de formatos', 'Interacci\u00f3n con audiencia',
           ]
 
-          var fortalezas = [] as string[]
-          var mejoras = [] as string[]
+          var fortalezas = [] as { nombre: string, val: number }[]
+          var mejoras = [] as { nombre: string, val: number }[]
           if (aud && aud.criterios) {
             var pares = (aud.criterios as any[]).map(function(raw: any, i: number) {
               var val = typeof raw === 'object' && raw !== null ? (raw.score || 0) : (raw || 0)
@@ -949,31 +1154,29 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
               return { nombre: nombre, val: val }
             })
             pares.sort(function(a: any, b: any) { return b.val - a.val })
-            fortalezas = pares.slice(0, 3).map(function(p: any) { return p.nombre + ' (' + p.val + '/10)' })
-            mejoras = pares.slice(-3).reverse().map(function(p: any) { return p.nombre + ' (' + p.val + '/10)' })
+            fortalezas = pares.slice(0, 3)
+            mejoras = pares.slice(-3).reverse()
           }
 
-          /* Summary paragraph */
-          var summaryParts = [] as string[]
-          summaryParts.push('En ' + nombreMes + ' ' + anio + ', se detectaron ' + totalPostsComp + ' posts de la competencia con ' + totalLikesComp.toLocaleString() + ' likes totales.')
-          if (topCompetidor) summaryParts.push(topCompetidor + ' fue el competidor mas activo con ' + maxPostsEmp + ' publicaciones.')
-          if (topEngCompetidor && topEngCompetidor !== topCompetidor) summaryParts.push(topEngCompetidor + ' destaco en engagement con ' + maxEng.toLocaleString() + ' interacciones.')
-          if (copiesTotal > 0 || grillaPosts > 0) summaryParts.push('Se generaron ' + copiesTotal + ' copies y ' + grillaPosts + ' posts en grilla para tu marca.')
-          if (aud) {
-            var audLabel = audIsLatestFallback ? ' (ultima disponible, ' + MESES_NOMBRES[aud.mes] + ')' : ''
-            summaryParts.push('La auditoria' + audLabel + ' arrojo un score global de ' + (aud.score_global || 0) + '/100.')
-          }
-          var summaryText = summaryParts.join(' ')
+          /* Executive summary */
+          var summaryText = generateExecutiveSummary(posts, empresas, postsByCompany, copies, auditorias, mesReporte, anio)
 
-          /* Acciones */
-          var acciones = [] as string[]
-          if (totalPostsComp > 0 && topCompetidor) acciones.push('Analizar la estrategia de ' + topCompetidor + ' que lidero con ' + maxPostsEmp + ' posts — identificar formatos y frecuencia')
-          if (topEngCompetidor && topEngCompetidor !== topCompetidor) acciones.push('Estudiar el contenido de ' + topEngCompetidor + ' (' + maxEng.toLocaleString() + ' interacciones) — replicar elementos de alto engagement')
-          if (copiesTotal > 0) acciones.push('Publicar los ' + copiesTotal + ' copies sugeridos para mantener la frecuencia')
-          if (aud && mejoras.length > 0) acciones.push('Priorizar mejora en ' + mejoras[0].split(' (')[0].toLowerCase() + ' — area con menor puntaje en la auditoria')
-          if (grillaPosts > 0) acciones.push('Ejecutar la grilla de ' + grillaPosts + ' posts planificados segun calendario')
-          if (aud && (aud.score_global || 0) < 60) acciones.push('Solicitar revision de estrategia — score global bajo 60 requiere ajustes')
-          if (acciones.length === 0) acciones.push('Esperar a que se acumulen datos de competencia e inteligencia de contenido')
+          /* Company analyses */
+          var companyAnalyses = Object.keys(empresas).map(function(nombre) {
+            return generateCompanyAnalysis(nombre, empresas[nombre], postsByCompany[nombre] || [])
+          })
+
+          /* Strategic actions */
+          var accionesData = generateStrategicActions(posts, empresas, postsByCompany, copies, auditorias)
+
+          /* Copies performance */
+          var allCopies = [] as any[]
+          copies.forEach(function(batch: any) {
+            if (Array.isArray(batch.datos)) {
+              batch.datos.forEach(function(c: any) { allCopies.push(c) })
+            }
+          })
+          var copiesSorted = allCopies.slice().sort(function(a: any, b: any) { return (b.score || 0) - (a.score || 0) })
 
           return <>
             <style dangerouslySetInnerHTML={{ __html: '@media print { .no-print { display: none !important; } .print-break { page-break-inside: avoid; } }' }} />
@@ -1010,122 +1213,188 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
               </div>
 
               <div className="p-6 space-y-6">
-                {/* Summary */}
-                <div className="bg-indigo-900/10 rounded-lg p-4">
-                  <p className="text-sm text-[#c4b5fd] leading-relaxed">{summaryText}</p>
+                {/* 1. EXECUTIVE SUMMARY */}
+                <div>
+                  <h3 className="text-sm font-bold text-indigo-700 uppercase tracking-wider mb-3">Resumen ejecutivo</h3>
+                  <div className="bg-indigo-900/10 rounded-lg p-4 border-l-4 border-indigo-500">
+                    <p className="text-sm text-[#c4b5fd] leading-relaxed">{summaryText}</p>
+                  </div>
                 </div>
 
-                {/* Section 1: Competencia */}
+                {/* 2. COMPETENCIA ANALYSIS — per company */}
                 <div>
-                  <h3 className="text-sm font-bold text-indigo-700 uppercase tracking-wider mb-3">Competencia</h3>
-                  <div className="grid grid-cols-4 gap-4">
+                  <h3 className="text-sm font-bold text-indigo-700 uppercase tracking-wider mb-3">An\u00e1lisis por competidor</h3>
+                  <div className="grid grid-cols-4 gap-4 mb-4">
                     <div className="bg-indigo-900/20 rounded-lg p-4 text-center">
                       <div className="text-2xl font-bold text-indigo-600">{totalPostsComp}</div>
-                      <div className="text-xs text-[#94a3b8] mt-1">Posts detectados</div>
+                      <div className="text-xs text-[#94a3b8] mt-1">Posts totales</div>
                     </div>
                     <div className="bg-indigo-900/20 rounded-lg p-4 text-center">
-                      <div className="text-2xl font-bold text-purple-600">{totalLikesComp.toLocaleString()}</div>
-                      <div className="text-xs text-[#94a3b8] mt-1">Likes totales</div>
+                      <div className="text-2xl font-bold text-purple-600">{totalEngComp.toLocaleString()}</div>
+                      <div className="text-xs text-[#94a3b8] mt-1">Engagement total</div>
                     </div>
                     <div className="bg-indigo-900/20 rounded-lg p-4 text-center">
-                      <div className="text-sm font-bold text-indigo-600">{topCompetidor || '-'}</div>
-                      <div className="text-xs text-[#94a3b8] mt-1">M\u00e1s activo ({maxPostsEmp} posts)</div>
+                      <div className="text-2xl font-bold text-pink-600">{avgEngComp}</div>
+                      <div className="text-xs text-[#94a3b8] mt-1">Eng promedio/post</div>
                     </div>
                     <div className="bg-indigo-900/20 rounded-lg p-4 text-center">
-                      <div className="text-sm font-bold text-indigo-600">{topEngCompetidor || '-'}</div>
-                      <div className="text-xs text-[#94a3b8] mt-1">Mayor engagement</div>
+                      <div className="text-2xl font-bold text-white">{Object.keys(empresas).length}</div>
+                      <div className="text-xs text-[#94a3b8] mt-1">Empresas</div>
                     </div>
                   </div>
-                  <p className="text-xs text-[#64748b] mt-2 italic">vs mes anterior: datos comparativos disponibles pr\u00f3ximamente</p>
-                </div>
 
-                {/* Section 2: Contenido */}
-                <div>
-                  <h3 className="text-sm font-bold text-purple-700 uppercase tracking-wider mb-3">Tu contenido</h3>
-                  <div className="grid grid-cols-3 gap-4">
-                    <div className="bg-purple-900/20 rounded-lg p-4 text-center">
-                      <div className="text-2xl font-bold text-purple-600">{copiesTotal}</div>
-                      <div className="text-xs text-[#94a3b8] mt-1">Copies generados</div>
-                    </div>
-                    <div className="bg-purple-900/20 rounded-lg p-4 text-center">
-                      <div className="text-2xl font-bold text-purple-600">{grillaPosts}</div>
-                      <div className="text-xs text-[#94a3b8] mt-1">Posts en grilla</div>
-                    </div>
-                    <div className="bg-purple-900/20 rounded-lg p-4 text-center">
-                      <div className="text-2xl font-bold text-purple-600">{avgScore || '-'}</div>
-                      <div className="text-xs text-[#94a3b8] mt-1">Score promedio QA</div>
-                    </div>
-                  </div>
-                  <p className="text-xs text-[#64748b] mt-2 italic">vs mes anterior: tendencia de producci\u00f3n disponible pr\u00f3ximamente</p>
-                </div>
-
-                {/* Section 3: Auditoria */}
-                <div>
-                  <h3 className="text-sm font-bold text-teal-700 uppercase tracking-wider mb-3">
-                    Auditor{'í'}a
-                    {audIsLatestFallback && <span className="text-xs font-normal text-[#64748b] ml-2">(datos de {MESES_NOMBRES[aud.mes]} — sin auditor{'í'}a para {nombreMes})</span>}
-                  </h3>
-                  {aud ? (
-                    <>
-                      <div className="grid grid-cols-3 gap-4 mb-3">
-                        <div className="bg-teal-900/20 rounded-lg p-4 text-center">
-                          {(function() {
-                            var scoreVal = aud.score_global || 0
-                            var cc = scoreVal >= 75 ? 'text-green-600' : scoreVal >= 50 ? 'text-yellow-600' : 'text-red-600'
-                            return <div className={'text-2xl font-bold ' + cc}>{scoreVal}/100</div>
-                          })()}
-                          <div className="text-xs text-[#94a3b8] mt-1">Score global</div>
-                        </div>
-                        <div className="bg-teal-900/20 rounded-lg p-4">
-                          <div className="text-xs font-semibold text-green-600 mb-1">Fortalezas</div>
-                          {fortalezas.map(function(f, fi) { return <div key={fi} className="text-xs text-[#a5b4fc]">{f}</div> })}
-                        </div>
-                        <div className="bg-teal-900/20 rounded-lg p-4">
-                          <div className="text-xs font-semibold text-red-600 mb-1">\u00c1reas a mejorar</div>
-                          {mejoras.map(function(m, mi) { return <div key={mi} className="text-xs text-[#a5b4fc]">{m}</div> })}
-                        </div>
+                  <div className="space-y-3">
+                    {companyAnalyses.map(function(ca, ci) {
+                      var isInactive = ca.frecuencia === 0
+                      return <div key={ci} className={'rounded-lg p-4 border-l-4 ' + (isInactive ? 'bg-red-900/10 border-red-500' : 'bg-[#12102a] border-indigo-500')}>
+                        <p className="text-sm text-[#c4b5fd] leading-relaxed">{ca.resumen}</p>
+                        {ca.topPost && (
+                          <div className="mt-2 flex items-center gap-3 text-xs">
+                            <span className="text-pink-400 font-semibold">Top: {ca.topPostEng} eng</span>
+                            <span className="text-[#64748b]">Formato: {ca.formato || 'variado'}</span>
+                            <span className="text-[#64748b]">Tema: {ca.tema || 'general'}</span>
+                            {ca.diasActivos && <span className="text-[#64748b]">D\u00edas: {ca.diasActivos}</span>}
+                          </div>
+                        )}
                       </div>
-                      <p className="text-xs text-[#64748b] italic">vs mes anterior: evoluci\u00f3n de score disponible pr\u00f3ximamente</p>
-                    </>
-                  ) : (
-                    <p className="text-sm text-[#64748b]">Sin auditor{'í'}a disponible a{'ú'}n</p>
-                  )}
+                    })}
+                  </div>
                 </div>
 
-                {/* Section 4: Engagement highlights */}
-                {postsSortedByEngagement.length > 0 && (
+                {/* 3. CONTENT PERFORMANCE */}
+                {allCopies.length > 0 && (
                   <div>
-                    <h3 className="text-sm font-bold text-pink-700 uppercase tracking-wider mb-3">Top 3 posts por engagement</h3>
+                    <h3 className="text-sm font-bold text-purple-700 uppercase tracking-wider mb-3">Rendimiento de contenido generado</h3>
+                    <div className="grid grid-cols-3 gap-4 mb-4">
+                      <div className="bg-purple-900/20 rounded-lg p-4 text-center">
+                        <div className="text-2xl font-bold text-purple-600">{copiesTotal}</div>
+                        <div className="text-xs text-[#94a3b8] mt-1">Copies generados</div>
+                      </div>
+                      <div className="bg-purple-900/20 rounded-lg p-4 text-center">
+                        <div className="text-2xl font-bold text-purple-600">{grillaPosts}</div>
+                        <div className="text-xs text-[#94a3b8] mt-1">Posts en grilla</div>
+                      </div>
+                      <div className="bg-purple-900/20 rounded-lg p-4 text-center">
+                        <div className={'text-2xl font-bold ' + (avgScore >= 75 ? 'text-green-600' : avgScore >= 60 ? 'text-yellow-600' : 'text-red-600')}>{avgScore || '-'}</div>
+                        <div className="text-xs text-[#94a3b8] mt-1">Score promedio QA</div>
+                      </div>
+                    </div>
+
+                    {/* Top copies with analysis */}
                     <div className="space-y-2">
-                      {postsSortedByEngagement.slice(0, 3).map(function(p: any, pi: number) {
-                        return <div key={pi} className="bg-pink-900/10 rounded-lg p-3 flex items-center gap-3">
-                          <span className="text-white font-bold text-sm bg-pink-600 w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0">{pi + 1}</span>
-                          <div className="flex-1 min-w-0">
-                            <span className="text-xs font-semibold text-white">{p.nombre_empresa || p.handle}</span>
-                            <p className="text-xs text-[#a5b4fc] truncate">{(p.texto || '').substring(0, 100)}</p>
+                      {copiesSorted.slice(0, 5).map(function(c: any, ci: number) {
+                        var sColor = (c.score || 0) >= 80 ? 'text-green-600' : (c.score || 0) >= 65 ? 'text-yellow-600' : 'text-red-600'
+                        return <div key={ci} className="bg-[#12102a] rounded-lg p-3 border-l-4 border-purple-500">
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className={'text-xs font-bold ' + sColor}>Score {c.score || '-'}</span>
+                            <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-pink-900/30 text-pink-400">{c.plataforma || ''} {c.tipo || ''}</span>
+                            <span className="text-xs text-[#64748b]">{c.angulo || ''}</span>
                           </div>
-                          <div className="text-right flex-shrink-0">
-                            <div className="text-xs font-bold text-pink-400">{(p.likes || 0).toLocaleString()} likes</div>
-                            <div className="text-xs text-[#94a3b8]">{(p.comments || 0).toLocaleString()} comments</div>
-                          </div>
+                          <p className="text-xs font-semibold text-white">{c.titulo || ''}</p>
+                          {c.justificacion && <p className="text-xs text-indigo-400 mt-1 italic">{(c.justificacion || '').substring(0, 150)}{(c.justificacion || '').length > 150 ? '...' : ''}</p>}
+                          {c.problemas && c.problemas.length > 0 && (
+                            <p className="text-[10px] text-red-400 mt-1">Issues: {c.problemas.slice(0, 2).join('; ')}</p>
+                          )}
                         </div>
                       })}
                     </div>
                   </div>
                 )}
 
-                {/* Section 5: Acciones */}
+                {/* 4. STRATEGIC ACTIONS */}
                 <div>
-                  <h3 className="text-sm font-bold text-emerald-700 uppercase tracking-wider mb-3">Pr\u00f3ximas acciones</h3>
-                  <ul className="space-y-2">
-                    {acciones.map(function(a, ai) {
-                      return <li key={ai} className="flex items-start gap-2 text-sm text-[#c4b5fd]">
-                        <span className="text-emerald-500 font-bold mt-0.5">{'>'}</span>
-                        {a}
-                      </li>
+                  <h3 className="text-sm font-bold text-emerald-700 uppercase tracking-wider mb-3">Acciones estrat\u00e9gicas</h3>
+                  <div className="space-y-2">
+                    {accionesData.map(function(a, ai) {
+                      var prioColor = a.prioridad === 'alta' ? 'border-red-500 bg-red-900/10' : 'border-yellow-500 bg-yellow-900/10'
+                      var prioLabel = a.prioridad === 'alta' ? 'URGENTE' : 'RECOMENDADO'
+                      var prioLabelColor = a.prioridad === 'alta' ? 'text-red-400 bg-red-900/30' : 'text-yellow-400 bg-yellow-900/30'
+                      return <div key={ai} className={'rounded-lg p-3 border-l-4 ' + prioColor}>
+                        <div className="flex items-start gap-2">
+                          <span className={'text-[10px] font-bold px-2 py-0.5 rounded flex-shrink-0 mt-0.5 ' + prioLabelColor}>{prioLabel}</span>
+                          <p className="text-sm text-[#c4b5fd]">{a.texto}</p>
+                        </div>
+                      </div>
                     })}
-                  </ul>
+                  </div>
                 </div>
+
+                {/* 5. AUDIT SUMMARY */}
+                {aud && (
+                  <div>
+                    <h3 className="text-sm font-bold text-teal-700 uppercase tracking-wider mb-3">
+                      Auditor{'\u00ed'}a
+                      {audIsLatestFallback && <span className="text-xs font-normal text-[#64748b] ml-2">(datos de {MESES_NOMBRES[aud.mes]})</span>}
+                    </h3>
+                    <div className="grid grid-cols-3 gap-4">
+                      <div className="bg-teal-900/20 rounded-lg p-4 text-center">
+                        {(function() {
+                          var scoreVal = aud.score_global || 0
+                          var cc = scoreVal >= 75 ? 'text-green-600' : scoreVal >= 50 ? 'text-yellow-600' : 'text-red-600'
+                          return <div className={'text-3xl font-bold ' + cc}>{scoreVal}<span className="text-sm text-[#94a3b8]">/100</span></div>
+                        })()}
+                        <div className="text-xs text-[#94a3b8] mt-1">Score global</div>
+                      </div>
+                      <div className="bg-teal-900/20 rounded-lg p-4">
+                        <div className="text-xs font-semibold text-green-600 mb-2">Fortalezas</div>
+                        {fortalezas.map(function(f, fi) {
+                          return <div key={fi} className="flex items-center justify-between text-xs mb-1">
+                            <span className="text-[#a5b4fc]">{f.nombre}</span>
+                            <span className="text-green-600 font-bold">{f.val}/10</span>
+                          </div>
+                        })}
+                      </div>
+                      <div className="bg-teal-900/20 rounded-lg p-4">
+                        <div className="text-xs font-semibold text-red-600 mb-2">\u00c1reas a mejorar</div>
+                        {mejoras.map(function(m, mi) {
+                          return <div key={mi} className="flex items-center justify-between text-xs mb-1">
+                            <span className="text-[#a5b4fc]">{m.nombre}</span>
+                            <span className="text-red-600 font-bold">{m.val}/10</span>
+                          </div>
+                        })}
+                        {mejoras.length > 0 && (
+                          <p className="text-[10px] text-[#64748b] mt-2 italic">Recomendaci\u00f3n: priorizar "{mejoras[0].nombre}" con acciones espec\u00edficas esta semana.</p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* 6. TOP POSTS WITH ANALYSIS */}
+                {postsSortedByEngagement.length > 0 && (
+                  <div>
+                    <h3 className="text-sm font-bold text-pink-700 uppercase tracking-wider mb-3">Top 5 posts — por qu\u00e9 funcionaron</h3>
+                    <div className="space-y-2">
+                      {postsSortedByEngagement.slice(0, 5).map(function(p: any, pi: number) {
+                        var tema = detectarTema(p.texto || '')
+                        var formato = detectarFormato(p.tipo_post || p.type || '')
+                        var totalEng = (p.likes || 0) + (p.comments || 0)
+                        return <div key={pi} className="bg-pink-900/10 rounded-lg p-3">
+                          <div className="flex items-start gap-3">
+                            <span className="text-white font-bold text-sm bg-pink-600 w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">{pi + 1}</span>
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-2 mb-1 flex-wrap">
+                                <span className="text-xs font-semibold text-white">{p.nombre_empresa || p.handle}</span>
+                                <span className="text-[10px] px-2 py-0.5 rounded bg-purple-900/30 text-purple-400">{tema}</span>
+                                <span className="text-[10px] px-2 py-0.5 rounded bg-indigo-900/30 text-indigo-400">{formato}</span>
+                              </div>
+                              <p className="text-xs text-[#a5b4fc] mb-1">{(p.texto || '').substring(0, 120)}{(p.texto || '').length > 120 ? '...' : ''}</p>
+                              <p className="text-[10px] text-[#64748b] italic">
+                                Este post funcion\u00f3 porque combina formato {formato} con tema {tema}
+                                {totalEng > avgEngComp ? ' — super\u00f3 el promedio de engagement (' + totalEng + ' vs ' + avgEngComp + ' promedio)' : ''}
+                                . Oportunidad: replicar este \u00e1ngulo para el cliente.
+                              </p>
+                            </div>
+                            <div className="text-right flex-shrink-0">
+                              <div className="text-sm font-bold text-pink-400">{totalEng.toLocaleString()}</div>
+                              <div className="text-[10px] text-[#94a3b8]">engagement</div>
+                            </div>
+                          </div>
+                        </div>
+                      })}
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Footer */}
