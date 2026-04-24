@@ -1,5 +1,5 @@
 // radar-validar-cuentas.js
-// Valida que los handles de IG, LI y FB de cada suscriptor existen
+// Valida que los handles de IG y LI de cada suscriptor existen
 // Se corre antes del pipeline principal para evitar gastar créditos Apify en cuentas rotas
 // Usa: fetch directo a páginas públicas (sin Apify, $0 costo)
 // Actualiza: clipping_suscripciones.cuentas con campo "validada" true/false
@@ -73,29 +73,6 @@ async function validarLinkedIn(handle) {
   }
 }
 
-async function validarFacebook(handle) {
-  try {
-    var url = 'https://www.facebook.com/' + handle + '/'
-    var r = await fetch(url, {
-      method: 'GET',
-      headers: { 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36' },
-      redirect: 'follow',
-      timeout: 10000,
-    })
-    if (r.status === 200) {
-      var body = await r.text()
-      if (body.includes('page_not_found') || body.includes('This page isn')) {
-        return { valida: false, motivo: 'Página no encontrada en Facebook' }
-      }
-      return { valida: true, motivo: null }
-    }
-    if (r.status === 404) return { valida: false, motivo: 'Página no existe en Facebook (404)' }
-    return { valida: true, motivo: null }
-  } catch (e) {
-    return { valida: false, motivo: 'Error de conexión: ' + e.message }
-  }
-}
-
 // ═══ VALIDAR CUENTA INDIVIDUAL ═══
 
 async function validarCuenta(cuenta) {
@@ -107,13 +84,12 @@ async function validarCuenta(cuenta) {
   // Limpiar handle: quitar URLs completas, dejar solo el handle
   handle = handle.replace(/https?:\/\/(www\.)?instagram\.com\//i, '')
     .replace(/https?:\/\/(www\.)?linkedin\.com\/company\//i, '')
-    .replace(/https?:\/\/(www\.)?facebook\.com\//i, '')
     .replace(/\/$/, '')
     .replace(/@/, '')
 
   if (red === 'instagram') return await validarInstagram(handle)
   if (red === 'linkedin') return await validarLinkedIn(handle)
-  if (red === 'facebook') return await validarFacebook(handle)
+  if (red === 'facebook') return { valida: true, motivo: null } // FB not supported, skip validation
   if (red === 'prensa') return { valida: true, motivo: null } // prensa no se valida
 
   return { valida: false, motivo: 'Red no reconocida: ' + red }

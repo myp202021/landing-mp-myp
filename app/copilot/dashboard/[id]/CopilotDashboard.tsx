@@ -78,16 +78,15 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
   )
 
   var cuentas = (sub.cuentas || []).filter(function(c: any) { return c.red !== 'prensa' })
-  var empresas = {} as Record<string, { ig: number, li: number, fb: number, likes: number, comments: number }>
+  var empresas = {} as Record<string, { ig: number, li: number, likes: number, comments: number }>
   cuentas.forEach(function(c: any) {
-    if (c.nombre && !empresas[c.nombre]) empresas[c.nombre] = { ig: 0, li: 0, fb: 0, likes: 0, comments: 0 }
+    if (c.nombre && !empresas[c.nombre]) empresas[c.nombre] = { ig: 0, li: 0, likes: 0, comments: 0 }
   })
   posts.forEach(function(p: any) {
     var nombre = p.nombre_empresa || p.handle
-    if (!empresas[nombre]) empresas[nombre] = { ig: 0, li: 0, fb: 0, likes: 0, comments: 0 }
+    if (!empresas[nombre]) empresas[nombre] = { ig: 0, li: 0, likes: 0, comments: 0 }
     if (p.red === 'Instagram') empresas[nombre].ig++
     else if (p.red === 'LinkedIn') empresas[nombre].li++
-    else if (p.red === 'Facebook') empresas[nombre].fb++
     empresas[nombre].likes += (p.likes || 0)
     empresas[nombre].comments += (p.comments || 0)
   })
@@ -202,7 +201,6 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
                     <th className="px-6 py-3 text-left font-semibold text-[#c4b5fd]">Empresa</th>
                     <th className="px-4 py-3 text-center font-semibold text-[#c4b5fd]">IG</th>
                     <th className="px-4 py-3 text-center font-semibold text-[#c4b5fd]">LI</th>
-                    <th className="px-4 py-3 text-center font-semibold text-[#c4b5fd]">FB</th>
                     <th className="px-4 py-3 text-center font-semibold text-[#c4b5fd]">Total</th>
                     <th className="px-4 py-3 text-center font-semibold text-[#c4b5fd]">Likes</th>
                     <th className="px-4 py-3 text-center font-semibold text-[#c4b5fd]">Eng.</th>
@@ -211,14 +209,13 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
                 <tbody>
                   {Object.keys(empresas).map(function(nombre, i) {
                     var e = empresas[nombre]
-                    var total = e.ig + e.li + e.fb
+                    var total = e.ig + e.li
                     var avg = total > 0 ? Math.round(e.likes / total) : 0
                     var inactive = total === 0
                     return <tr key={nombre} className={'border-b border-white/[0.04] ' + (inactive ? 'bg-red-900/20' : i % 2 === 0 ? '' : 'bg-[#12102a]')}>
                       <td className={'px-6 py-3 font-semibold ' + (inactive ? 'text-red-400' : 'text-white')}>{nombre}</td>
                       <td className="px-4 py-3 text-center text-white">{e.ig > 0 ? <strong>{e.ig}</strong> : <span className="text-[#475569]">0</span>}</td>
                       <td className="px-4 py-3 text-center text-white">{e.li > 0 ? <strong>{e.li}</strong> : <span className="text-[#475569]">0</span>}</td>
-                      <td className="px-4 py-3 text-center text-white">{e.fb > 0 ? <strong>{e.fb}</strong> : <span className="text-[#475569]">0</span>}</td>
                       <td className="px-4 py-3 text-center font-bold text-white">{total}</td>
                       <td className="px-4 py-3 text-center text-white">{e.likes.toLocaleString()}</td>
                       <td className="px-4 py-3 text-center text-white">{avg.toLocaleString()}</td>
@@ -234,10 +231,10 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
               </div>
               <div className="divide-y divide-white/[0.04]">
                 {posts.slice(0, 20).map(function(p: any, i: number) {
-                  var redColor = p.red === 'Instagram' ? '#E4405F' : p.red === 'LinkedIn' ? '#0A66C2' : p.red === 'Facebook' ? '#1877F2' : '#d97706'
+                  var redColor = p.red === 'Instagram' ? '#E4405F' : p.red === 'LinkedIn' ? '#0A66C2' : '#d97706'
                   return <div key={i} className="px-6 py-4 hover:bg-white/[0.04]">
                     <div className="flex items-start gap-3">
-                      <div style={{ background: redColor }} className="text-white text-[10px] font-bold px-2 py-1 rounded mt-0.5 flex-shrink-0">{p.red === 'Instagram' ? 'IG' : p.red === 'LinkedIn' ? 'LI' : p.red === 'Facebook' ? 'FB' : 'PR'}</div>
+                      <div style={{ background: redColor }} className="text-white text-[10px] font-bold px-2 py-1 rounded mt-0.5 flex-shrink-0">{p.red === 'Instagram' ? 'IG' : p.red === 'LinkedIn' ? 'LI' : 'PR'}</div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1">
                           <span className="font-semibold text-sm text-white">{p.nombre_empresa || p.handle}</span>
@@ -347,7 +344,7 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
                     </div>
                     <div className="grid grid-cols-1 gap-3">
                       {(batch.datos || []).map(function(c: any, ci: number) {
-                        var platColor = (c.plataforma || '').includes('Instagram') ? 'bg-pink-900/30 text-pink-400' : (c.plataforma || '').includes('LinkedIn') ? 'bg-blue-900/30 text-blue-400' : 'bg-blue-900/20 text-blue-400'
+                        var platColor = (c.plataforma || '').includes('Instagram') ? 'bg-pink-900/30 text-pink-400' : 'bg-blue-900/30 text-blue-400'
                         return <div key={ci} className="border border-white/[0.04] rounded-lg p-4 hover:bg-white/[0.04]">
                           <div className="flex items-center gap-2 mb-2">
                             <span className={'text-[10px] font-bold px-2 py-0.5 rounded ' + platColor}>{c.plataforma || 'IG'} {c.tipo || ''}</span>
@@ -421,11 +418,10 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
                   </div>
 
                   {/* Score by network */}
-                  <div className="grid grid-cols-3 gap-4 mb-6">
+                  <div className="grid grid-cols-2 gap-4 mb-6">
                     {[
                       { label: 'Instagram', key: 'score_ig', color: 'bg-pink-500' },
                       { label: 'LinkedIn', key: 'score_li', color: 'bg-blue-600' },
-                      { label: 'Facebook', key: 'score_fb', color: 'bg-blue-500' },
                     ].map(function(red) {
                       var val = aud[red.key] || 0
                       return <div key={red.key} className="bg-[#12102a] rounded-xl p-4">
@@ -708,15 +704,14 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
           var topCompetidor = ''
           var maxPostsEmp = 0
           Object.keys(empresas).forEach(function(n) {
-            var t = empresas[n].ig + empresas[n].li + empresas[n].fb
+            var t = empresas[n].ig + empresas[n].li
             if (t > maxPostsEmp) { maxPostsEmp = t; topCompetidor = n }
           })
           var redesActivas = [] as string[]
-          var igTotal = 0; var liTotal = 0; var fbTotal = 0
-          Object.keys(empresas).forEach(function(n) { igTotal += empresas[n].ig; liTotal += empresas[n].li; fbTotal += empresas[n].fb })
-          if (igTotal > liTotal && igTotal > fbTotal) redesActivas.push('Instagram')
-          else if (liTotal > igTotal && liTotal > fbTotal) redesActivas.push('LinkedIn')
-          else redesActivas.push('Facebook')
+          var igTotal = 0; var liTotal = 0
+          Object.keys(empresas).forEach(function(n) { igTotal += empresas[n].ig; liTotal += empresas[n].li })
+          if (igTotal >= liTotal) redesActivas.push('Instagram')
+          else redesActivas.push('LinkedIn')
 
           /* Contenido stats */
           var copiesTotal = copies.reduce(function(s: number, c: any) { return s + (Array.isArray(c.datos) ? c.datos.length : 0) }, 0)

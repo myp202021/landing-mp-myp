@@ -13,8 +13,7 @@ var PLAN_LIMITS: Record<string, number> = { starter: 5, pro: 15, business: 30 }
 
 var PLACEHOLDERS: Record<string, string> = {
   instagram: '@competidor o instagram.com/competidor',
-  linkedin: 'linkedin.com/company/nombre-empresa',
-  facebook: 'facebook.com/pagina'
+  linkedin: 'linkedin.com/company/nombre-empresa'
 }
 
 export default function ConfigClient(props: { suscripcionId: string }) {
@@ -30,7 +29,6 @@ export default function ConfigClient(props: { suscripcionId: string }) {
   var [web, setWeb] = useState('')
   var [igPropio, setIgPropio] = useState('')
   var [liPropio, setLiPropio] = useState('')
-  var [fbPropio, setFbPropio] = useState('')
   var [kwStr, setKwStr] = useState('')
 
   useEffect(function() { loadData() }, [])
@@ -54,7 +52,6 @@ export default function ConfigClient(props: { suscripcionId: string }) {
       setWeb(perfil.web || '')
       setIgPropio(perfil.instagram || '')
       setLiPropio(perfil.linkedin || '')
-      setFbPropio(perfil.facebook || '')
     } catch (e) { setError('Error cargando datos') }
     setLoading(false)
   }
@@ -89,9 +86,6 @@ export default function ConfigClient(props: { suscripcionId: string }) {
       } else if (c.red === 'linkedin') {
         var m = h.match(/linkedin\.com\/company\/([^/?]+)/)
         if (m) h = m[1]
-      } else if (c.red === 'facebook') {
-        var mf = h.match(/facebook\.com\/([^/?]+)/)
-        if (mf) h = mf[1]
       }
       return Object.assign({}, c, { handle: h })
     })
@@ -111,7 +105,6 @@ export default function ConfigClient(props: { suscripcionId: string }) {
             web: web,
             instagram: igPropio,
             linkedin: liPropio,
-            facebook: fbPropio,
           },
           updated_at: new Date().toISOString(),
         }),
@@ -199,10 +192,6 @@ export default function ConfigClient(props: { suscripcionId: string }) {
               <label className="block text-sm font-semibold text-[#c4b5fd] mb-1">LinkedIn</label>
               <input type="text" value={liPropio} onChange={function(e: any) { setLiPropio(e.target.value) }} placeholder="linkedin.com/company/tuempresa" className="w-full border border-white/10 rounded-lg px-4 py-2.5 text-sm bg-[#12102a] text-white focus:ring-2 focus:ring-indigo-500" />
             </div>
-            <div>
-              <label className="block text-sm font-semibold text-[#c4b5fd] mb-1">Facebook</label>
-              <input type="text" value={fbPropio} onChange={function(e: any) { setFbPropio(e.target.value) }} placeholder="facebook.com/tuempresa" className="w-full border border-white/10 rounded-lg px-4 py-2.5 text-sm bg-[#12102a] text-white focus:ring-2 focus:ring-indigo-500" />
-            </div>
           </div>
         </div>
 
@@ -219,8 +208,7 @@ export default function ConfigClient(props: { suscripcionId: string }) {
           <div style={{background:'#12102a',padding:'12px 16px',borderRadius:'10px',marginBottom:'16px',fontSize:'12px',color:'#94a3b8',lineHeight:'1.6'}}>
             <strong style={{color:'#a5b4fc'}}>Formato correcto:</strong><br/>
             Instagram: el nombre de usuario sin @ (ej: buk_chile)<br/>
-            LinkedIn: el slug de la URL de empresa (ej: de linkedin.com/company/<strong style={{color:'#fff'}}>bukhr</strong>/ usa &quot;bukhr&quot;)<br/>
-            Facebook: el nombre de la pagina (ej: bukRRHH)
+            LinkedIn: el slug de la URL de empresa (ej: de linkedin.com/company/<strong style={{color:'#fff'}}>bukhr</strong>/ usa &quot;bukhr&quot;)
           </div>
 
           {cuentas.map(function(c: any, i: number) {
