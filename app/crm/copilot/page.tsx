@@ -47,7 +47,7 @@ export default function CopilotAdminPage() {
   }
 
   async function deleteSub(id: string) {
-    await supabase.from('copilot_posts').delete().eq('suscripcion_id', id)
+    await supabase.from('radar_posts').delete().eq('suscripcion_id', id)
     await supabase.from('clipping_suscripciones').delete().eq('id', id)
     loadData()
   }

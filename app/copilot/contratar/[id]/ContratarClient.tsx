@@ -34,7 +34,7 @@ export default function ContratarClient(props: { suscripcionId: string }) {
   var PLANES = showTest ? [PLAN_TEST].concat(PLANES_BASE) : PLANES_BASE
 
   useEffect(function() {
-    fetch(SUPABASE_URL + '/rest/v1/copilot_suscripciones?id=eq.' + props.suscripcionId + '&select=*', { headers: hdrs() })
+    fetch(SUPABASE_URL + '/rest/v1/clipping_suscripciones?id=eq.' + props.suscripcionId + '&select=*', { headers: hdrs() })
       .then(function(r) { return r.json() })
       .then(function(data) {
         if (data && data.length > 0) {
