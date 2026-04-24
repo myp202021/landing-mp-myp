@@ -198,11 +198,21 @@ async function main() {
           return { companyUrls: ['https://www.linkedin.com/company/' + handle + '/'], maxPosts: liLimit }
         },
         parsePost: function(p) {
-          // apimaestro usa snake_case: posted_at, post_url, reactions_count
+          // apimaestro usa snake_case y posted_at es objeto: {date, timestamp, relative}
+          var dateStr = null
+          if (p.posted_at) {
+            if (typeof p.posted_at === 'object') {
+              if (p.posted_at.date) dateStr = p.posted_at.date
+              else if (p.posted_at.timestamp) dateStr = new Date(p.posted_at.timestamp).toISOString()
+            } else {
+              dateStr = p.posted_at
+            }
+          }
+          if (!dateStr) dateStr = p.publishedAt || p.date || null
           return {
             texto: (p.text || p.postText || p.content || '').substring(0, 500),
             url: p.post_url || p.postUrl || p.url || '',
-            timestamp: p.posted_at || p.publishedAt || p.postedAt || p.date || null,
+            timestamp: dateStr,
             likes: p.reactions_count || p.reactionsCount || p.likesCount || 0,
             comments: p.comments_count || p.commentsCount || 0,
           }
