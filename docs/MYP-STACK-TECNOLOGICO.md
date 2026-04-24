@@ -103,7 +103,15 @@ SaaS alertas inmobiliarias para corredores.
 - CSV → PDFs → emails agrupados a gestionclientes@
 - "Manda las facturas" → proceso completo
 
-### 13. Backup Automático
+### 13. Generador de Imágenes RRSS
+Imágenes dark theme para Instagram y LinkedIn.
+- HTML con diseño M&P → Puppeteer → PNG retina
+- 5-6 imágenes por semana con temáticas actualizadas
+- Formato aprobado: 1080x1350 IG, 1200x1200 LinkedIn
+- Carpeta: Desktop/Imagenes M&P/
+- **Comparable con:** Canva Pro, Adobe Express
+
+### 14. Backup Automático
 - Supabase → JSON → GitHub Artifacts (90 días)
 - Cron 5:00 AM Chile
 
@@ -127,7 +135,7 @@ SaaS alertas inmobiliarias para corredores.
 
 ## Números
 
-- **36 agentes** de IA/automatización activos
+- **40 agentes** de IA/automatización activos
 - **59+ artículos** de blog generados con IA
 - **68 nodos** en el chatbot
 - **14 competidores** monitoreados para Hualpén

@@ -87,11 +87,17 @@
 | 34 | Informe PPT | `build-informe-ppt.js` | PPT automática tipo ejecutivo con gráficos | Manual |
 | 35 | Connect Meta Ads | `connect-meta-ads-manual.mjs` | Sincroniza data Meta Ads para reportes | Manual |
 
+## Imágenes RRSS
+
+| # | Agente | Script | Qué hace | Trigger |
+|---|--------|--------|----------|---------|
+| 36 | Generador imágenes | HTML → Puppeteer → PNG | 5-6 imágenes dark theme para IG/LinkedIn por semana | "genera las imágenes de esta semana" |
+
 ## Facturación
 
 | # | Agente | Script | Qué hace | Trigger |
 |---|--------|--------|----------|---------|
-| 36 | Enviar facturas | `enviar-facturas.js` | CSV → PDFs → emails agrupados | Manual |
+| 37 | Enviar facturas | `enviar-facturas.js` | CSV → PDFs → emails agrupados | Manual |
 
 ## Infraestructura
 
@@ -113,4 +119,4 @@
 
 ---
 
-**Total: 39 agentes activos** en el ecosistema mulleryperez.cl
+**Total: 40 agentes activos** en el ecosistema mulleryperez.cl
