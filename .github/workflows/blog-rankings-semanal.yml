@@ -1,0 +1,24 @@
+name: "Blog Rankings Semanal (Miércoles 8:00 AM Chile)"
+
+on:
+  # schedule:
+  #   - cron: '0 11 * * 3'
+  workflow_dispatch:
+
+jobs:
+  rankings:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm install node-fetch@2 @supabase/supabase-js
+      - name: "Generar artículo de rankings"
+        run: node scripts/blog-rankings-semanal.js
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          ANTHROPIC_API_KEY_GRILLAS: ${{ secrets.ANTHROPIC_API_KEY_GRILLAS }}
