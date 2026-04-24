@@ -427,11 +427,12 @@ async function calcularTrends(suscripcionId, currentPosts, cuentas, modo) {
 function extraerEmpresas(cuentas) {
   var empresas = {}
   cuentas.forEach(function(c) {
-    if (c.red === 'prensa' || !c.nombre) return
+    var redLower = (c.red || '').toLowerCase()
+    if (redLower === 'prensa' || !c.nombre) return
     if (!empresas[c.nombre]) empresas[c.nombre] = { ig: null, li: null, fb: null }
-    if (c.red === 'instagram') empresas[c.nombre].ig = c.handle.toLowerCase()
-    else if (c.red === 'linkedin') empresas[c.nombre].li = c.handle.toLowerCase()
-    else if (c.red === 'facebook') empresas[c.nombre].fb = c.handle.toLowerCase()
+    if (redLower === 'instagram') empresas[c.nombre].ig = c.handle.toLowerCase()
+    else if (redLower === 'linkedin') empresas[c.nombre].li = c.handle.toLowerCase()
+    else if (redLower === 'facebook') empresas[c.nombre].fb = c.handle.toLowerCase()
   })
   return empresas
 }
