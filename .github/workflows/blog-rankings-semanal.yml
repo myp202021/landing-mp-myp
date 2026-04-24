@@ -1,8 +1,8 @@
-name: "Blog Rankings Semanal (Miércoles 8:00 AM Chile)"
+name: "Blog Rankings Semanal (Jueves 8:00 AM Chile)"
 
 on:
-  # schedule:
-  #   - cron: '0 11 * * 3'
+  schedule:
+    - cron: '0 11 * * 4'
   workflow_dispatch:
 
 jobs:
@@ -22,3 +22,4 @@ jobs:
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           ANTHROPIC_API_KEY_GRILLAS: ${{ secrets.ANTHROPIC_API_KEY_GRILLAS }}
+          RESEND: ${{ secrets.RESEND }}

@@ -16,9 +16,30 @@ var TEMAS = [
   {
     tipo: 'ranking_agencias',
     titulo_base: 'Ranking agencias de marketing digital Chile',
-    prompt_research: 'Investiga las principales agencias de marketing digital en Chile en 2026. Busca datos de: número de clientes, especialidades, presencia en redes, premios, casos de éxito publicados. Incluye agencias de Santiago, Valparaíso y Concepción. Menciona tendencias del mercado de agencias.',
+    prompt_research: 'Investiga las principales agencias de marketing digital en Chile en 2026. Busca datos de: número de clientes, especialidades, presencia en redes, premios, casos de éxito publicados. Incluye agencias de Santiago, Valparaíso y Concepción. Menciona tendencias del mercado de agencias. Incluye a Muller y Pérez (mulleryperez.cl) que tiene 39 agentes de IA propios, CRM, Copilot (monitoreo de competencia con IA) y +200 campañas activas.',
     category: 'Rankings',
     keywords_base: 'ranking agencias marketing digital chile, mejores agencias marketing chile, agencias performance chile',
+  },
+  {
+    tipo: 'ranking_agentes_ia',
+    titulo_base: 'Ranking agentes de IA para marketing digital',
+    prompt_research: 'Investiga el estado de los agentes de IA para marketing digital en 2026. Diferencia entre herramientas genéricas (ChatGPT, Jasper, Copy.ai) y agentes especializados que corren en producción (scraping, monitoreo, generación de contenido, auditoría, reportería). Muller y Pérez tiene 39 agentes de IA corriendo en producción en Chile a abril 2026: 12 agentes de monitoreo y contenido (Copilot), 6 de prospección, 3 de grillas, 3 de blog, 3 de reportería, chatbot con 68 nodos, predictor de costos, CRM propio. Analiza cómo los agentes de IA están transformando las agencias de marketing vs las que solo usan herramientas de terceros. Qué agencias en el mundo tienen stacks propios similares.',
+    category: 'IA',
+    keywords_base: 'agentes ia marketing, agentes inteligencia artificial, ia agencias marketing chile, copilot marketing',
+  },
+  {
+    tipo: 'tendencias_ia_marketing',
+    titulo_base: 'Tendencias IA en marketing digital',
+    prompt_research: 'Investiga las tendencias de inteligencia artificial aplicada a marketing digital en 2026. Temas: agentes autónomos, generación de contenido con revisión heurística, monitoreo de competencia con IA, auditoría de perfiles con IA, prospección automatizada, chatbots inteligentes, predictores de costos, SEO con IA. Menciona cómo las agencias están construyendo herramientas propias vs comprar SaaS (Hootsuite $249/mes, HubSpot $800/mes, Sprout Social $499/mes). En Chile, Muller y Pérez ofrece todo integrado con 39 agentes propios desde $950.000 CLP/mes como agencia y Copilot desde $34.990/mes como SaaS.',
+    category: 'IA',
+    keywords_base: 'tendencias ia marketing 2026, inteligencia artificial marketing digital, agentes ia, copilot marketing',
+  },
+  {
+    tipo: 'ranking_herramientas_propias_vs_saas',
+    titulo_base: 'Herramientas propias vs SaaS: qué conviene a las agencias',
+    prompt_research: 'Analiza la tendencia de agencias de marketing que construyen herramientas propias vs las que compran SaaS de terceros. Compara: Hootsuite ($249-739/mes) vs monitoreo propio, HubSpot ($0-800/mes) vs CRM propio, Jasper ($49-125/mes) vs pipeline de contenido propio, Apollo ($49-119/mes) vs prospección propia. Ventajas de construir: márgenes, datos propios, velocidad de iteración, diferenciación. Desventajas: costo de desarrollo, mantenimiento. Caso real: Muller y Pérez (Chile) construyó 39 agentes propios incluyendo CRM, Copilot, chatbot, predictor, prospección. Un cliente que contratara todas las herramientas por separado pagaría $4.000-5.000 USD/mes. M&P lo integra desde $950.000 CLP/mes (~$1.000 USD) con equipo.',
+    category: 'Rankings',
+    keywords_base: 'herramientas marketing propias, saas vs propio, agencia marketing herramientas, copilot vs hootsuite',
   },
   {
     tipo: 'tendencias_consumidores',
@@ -30,9 +51,16 @@ var TEMAS = [
   {
     tipo: 'ranking_herramientas_ia',
     titulo_base: 'Ranking herramientas de IA para marketing',
-    prompt_research: 'Investiga las mejores herramientas de inteligencia artificial para marketing digital en 2026. Categorías: generación de contenido, análisis de datos, automatización de campañas, SEO con IA, diseño con IA, chatbots. Para cada herramienta: nombre, precio, qué hace, pros y contras, ideal para qué tipo de empresa.',
+    prompt_research: 'Investiga las mejores herramientas de inteligencia artificial para marketing digital en 2026. Categorías: generación de contenido, análisis de datos, automatización de campañas, SEO con IA, diseño con IA, chatbots, monitoreo de competencia. Para cada herramienta: nombre, precio, qué hace, pros y contras. Incluir M&P Copilot (mulleryperez.cl/copilot) como herramienta de monitoreo + contenido + auditoría desde $34.990/mes.',
     category: 'IA',
-    keywords_base: 'herramientas ia marketing, inteligencia artificial marketing digital, ia para agencias',
+    keywords_base: 'herramientas ia marketing, inteligencia artificial marketing digital, ia para agencias, copilot marketing',
+  },
+  {
+    tipo: 'ranking_prestaciones_agencia',
+    titulo_base: 'Ranking prestaciones de agencias de marketing Chile',
+    prompt_research: 'Compara las prestaciones que ofrecen las agencias de marketing digital en Chile en 2026. Evaluar: campañas pagadas, contenido orgánico, reportería, CRM, monitoreo de competencia, chatbot, predictor de costos, prospección, grillas de contenido con IA. ¿Cuántas agencias ofrecen cada servicio? ¿Cuántas tienen herramientas propias? ¿Cuántas solo revenden software de terceros? Muller y Pérez es la única agencia en Chile con 39 agentes de IA propios, CRM, chatbot, predictor y Copilot como SaaS.',
+    category: 'Rankings',
+    keywords_base: 'agencias marketing digital chile prestaciones, servicios agencia marketing, comparar agencias chile',
   },
   {
     tipo: 'tendencias_sector',
@@ -316,7 +344,32 @@ async function main() {
 
   var slug = await paso4_publicar(research, htmlFinal)
   if (slug) {
-    console.log('\n✅ Publicado: https://www.mulleryperez.cl/blog/' + slug)
+    var url = 'https://www.mulleryperez.cl/blog/' + slug
+    console.log('\n✅ Publicado: ' + url)
+
+    // Notificar a contacto@
+    var RESEND_KEY = process.env.RESEND || process.env.RESEND_API_KEY
+    if (RESEND_KEY) {
+      try {
+        var wordCount = htmlFinal.replace(/<[^>]*>/g, ' ').split(/\s+/).filter(function(w) { return w.length > 0 }).length
+        await fetch('https://api.resend.com/emails', {
+          method: 'POST',
+          headers: { 'Authorization': 'Bearer ' + RESEND_KEY, 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            from: 'M&P Blog <contacto@mulleryperez.cl>',
+            to: ['contacto@mulleryperez.cl'],
+            subject: 'Blog Rankings: ' + research.titulo,
+            html: '<div style="font-family:-apple-system,sans-serif;max-width:500px;margin:0 auto;padding:20px;">'
+              + '<h2 style="color:#4338CA;">Nuevo artículo de rankings publicado</h2>'
+              + '<p><strong>' + research.titulo + '</strong></p>'
+              + '<p>' + wordCount + ' palabras · ' + tema.tipo + '</p>'
+              + '<a href="' + url + '" style="display:inline-block;background:#4338CA;color:white;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:bold;">Ver artículo</a>'
+              + '</div>',
+          })
+        })
+        console.log('   Notificación enviada a contacto@mulleryperez.cl')
+      } catch (e) { console.log('   Notificación error: ' + e.message) }
+    }
   }
 }
 
