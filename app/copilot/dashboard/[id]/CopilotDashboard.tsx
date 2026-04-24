@@ -751,8 +751,9 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
           // Network scores — only show networks with data (skip 0s)
           var networkScores = [] as { label: string, key: string, color: string, val: number }[]
           if (aud) {
-            if ((aud.score_ig || 0) > 0) networkScores.push({ label: 'Instagram', key: 'score_ig', color: 'bg-pink-500', val: aud.score_ig || 0 })
-            if ((aud.score_li || 0) > 0) networkScores.push({ label: 'LinkedIn', key: 'score_li', color: 'bg-blue-600', val: aud.score_li || 0 })
+            var sr = aud.scores_red || {}
+            if ((sr.Instagram || aud.score_ig || 0) > 0) networkScores.push({ label: 'Instagram', key: 'score_ig', color: 'bg-pink-500', val: sr.Instagram || aud.score_ig || 0 })
+            if ((sr.LinkedIn || aud.score_li || 0) > 0) networkScores.push({ label: 'LinkedIn', key: 'score_li', color: 'bg-blue-600', val: sr.LinkedIn || aud.score_li || 0 })
           }
 
           return <>
@@ -775,9 +776,9 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
                     </div>
                     {/* Score circle */}
                     {(function() {
-                      var cc = overallCircleColor(aud.score_global || 0)
+                      var cc = overallCircleColor(aud.score_general || aud.score_global || 0)
                       return <div className={'flex flex-col items-center justify-center w-24 h-24 rounded-full border-4 ' + cc.ring + ' ' + cc.bg}>
-                        <div className={'text-3xl font-black ' + cc.text}>{aud.score_global || 0}</div>
+                        <div className={'text-3xl font-black ' + cc.text}>{aud.score_general || aud.score_global || 0}</div>
                         <div className="text-[10px] text-[#94a3b8]">/100</div>
                       </div>
                     })()}
@@ -874,11 +875,20 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
                       )}
 
                       <div className="space-y-0 text-sm">
-                        {/* Gancho — always show if available */}
+                        {/* Gancho — handles both string and object format */}
                         {s.gancho && (
                           <div className="py-3 border-b border-white/[0.06]">
                             <span className="text-[10px] font-semibold text-purple-600 uppercase tracking-wider">Gancho</span>
-                            <p className="text-[#c4b5fd] mt-1">{s.gancho}</p>
+                            {typeof s.gancho === 'object' ? (
+                              <div className="mt-1">
+                                <p className="text-white font-semibold">{s.gancho.frase || s.gancho.texto || ''}</p>
+                                {s.gancho.timing && <p className="text-[10px] text-[#64748b] mt-1">{s.gancho.timing}</p>}
+                                {s.gancho.texto_pantalla && <p className="text-xs text-[#a5b4fc] mt-1">Pantalla: {s.gancho.texto_pantalla}</p>}
+                                {s.gancho.visual && <p className="text-xs text-[#94a3b8] mt-1 italic">{s.gancho.visual}</p>}
+                              </div>
+                            ) : (
+                              <p className="text-[#c4b5fd] mt-1">{s.gancho}</p>
+                            )}
                           </div>
                         )}
 
@@ -889,9 +899,12 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
                               <span className="text-[10px] font-semibold text-indigo-600 uppercase tracking-wider">Escena {ei + 1}</span>
                               {escena.timing && <span className="text-[10px] text-[#64748b] font-semibold">{escena.timing}</span>}
                             </div>
-                            {escena.texto && <p className="text-[#a5b4fc] mt-1 whitespace-pre-line">{escena.texto}</p>}
-                            {escena.text && !escena.texto && <p className="text-[#a5b4fc] mt-1 whitespace-pre-line">{escena.text}</p>}
-                            {escena.visual && <p className="text-xs text-[#94a3b8] mt-1 italic">Visual: {escena.visual}</p>}
+                            {escena.voiceover && <p className="text-[#c4b5fd] mt-1"><span className="text-[10px] text-[#64748b]">Voz: </span>{escena.voiceover}</p>}
+                            {escena.texto_pantalla && <p className="text-[#a5b4fc] mt-1"><span className="text-[10px] text-[#64748b]">Pantalla: </span>{escena.texto_pantalla}</p>}
+                            {escena.texto && !escena.voiceover && <p className="text-[#a5b4fc] mt-1">{escena.texto}</p>}
+                            {escena.text && !escena.texto && !escena.voiceover && <p className="text-[#a5b4fc] mt-1">{escena.text}</p>}
+                            {escena.accion && <p className="text-xs text-green-400 mt-1">Acción: {escena.accion}</p>}
+                            {(escena.visual || escena.camara) && <p className="text-xs text-[#94a3b8] mt-1 italic">{escena.visual || escena.camara}</p>}
                           </div>
                         })}
 
@@ -903,11 +916,20 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
                           </div>
                         )}
 
-                        {/* Cierre / CTA */}
+                        {/* Cierre / CTA — handles both string and object format */}
                         {s.cierre && (
                           <div className="py-3 border-b border-white/[0.06]">
                             <span className="text-[10px] font-semibold text-pink-600 uppercase tracking-wider">Cierre / CTA</span>
-                            <p className="text-[#c4b5fd] mt-1">{s.cierre}</p>
+                            {typeof s.cierre === 'object' ? (
+                              <div className="mt-1">
+                                <p className="text-white font-semibold">{s.cierre.frase_cta || s.cierre.frase || s.cierre.texto || ''}</p>
+                                {s.cierre.timing && <p className="text-[10px] text-[#64748b] mt-1">{s.cierre.timing}</p>}
+                                {s.cierre.accion_medible && <p className="text-xs text-green-400 mt-1">Acción: {s.cierre.accion_medible}</p>}
+                                {s.cierre.texto_pantalla && <p className="text-xs text-[#a5b4fc] mt-1">Pantalla: {s.cierre.texto_pantalla}</p>}
+                              </div>
+                            ) : (
+                              <p className="text-[#c4b5fd] mt-1">{s.cierre}</p>
+                            )}
                           </div>
                         )}
 
@@ -1329,7 +1351,7 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
                     <div className="grid grid-cols-3 gap-4">
                       <div className="bg-teal-900/20 rounded-lg p-4 text-center">
                         {(function() {
-                          var scoreVal = aud.score_global || 0
+                          var scoreVal = aud.score_general || aud.score_global || 0
                           var cc = scoreVal >= 75 ? 'text-green-600' : scoreVal >= 50 ? 'text-yellow-600' : 'text-red-600'
                           return <div className={'text-3xl font-bold ' + cc}>{scoreVal}<span className="text-sm text-[#94a3b8]">/100</span></div>
                         })()}
