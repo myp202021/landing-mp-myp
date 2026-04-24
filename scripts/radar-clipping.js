@@ -241,6 +241,9 @@ async function main() {
           if (raw.length > 0) {
             var sampleKeys = Object.keys(raw[0]).slice(0, 8).join(', ')
             console.log('   Sample keys: ' + sampleKeys)
+            var s0 = raw[0]
+            console.log('   Sample posted_at: ' + JSON.stringify(s0.posted_at || s0.postedAt || s0.publishedAt || s0.date || 'NONE').substring(0, 100))
+            console.log('   Sample text: ' + (s0.text || s0.content || '').substring(0, 80))
           }
           if (raw.length === 0) { console.log('   0 items — probando siguiente actor'); continue }
 
