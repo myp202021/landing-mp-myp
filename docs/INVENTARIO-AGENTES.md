@@ -79,25 +79,38 @@
 | 31 | Mutante message | `api/chatbot/message` | Procesa mensaje del usuario | On send |
 | 32 | Mutante lead | `api/chatbot/lead` | Captura lead del chatbot | On form submit |
 
+## Reportería (3 agentes)
+
+| # | Agente | Script | Qué hace | Trigger |
+|---|--------|--------|----------|---------|
+| 33 | Reportes mensuales | `generar-reportes.js` | Email con métricas Reportei por cliente | Manual |
+| 34 | Informe PPT | `build-informe-ppt.js` | PPT automática tipo ejecutivo con gráficos | Manual |
+| 35 | Connect Meta Ads | `connect-meta-ads-manual.mjs` | Sincroniza data Meta Ads para reportes | Manual |
+
 ## Facturación
 
 | # | Agente | Script | Qué hace | Trigger |
 |---|--------|--------|----------|---------|
-| 33 | Enviar facturas | `enviar-facturas.js` | CSV → PDFs → emails agrupados | Manual |
+| 36 | Enviar facturas | `enviar-facturas.js` | CSV → PDFs → emails agrupados | Manual |
 
 ## Infraestructura
 
 | # | Agente | Script/Workflow | Qué hace | Trigger |
 |---|--------|----------------|----------|---------|
-| 34 | Backup Supabase | `backup-supabase.yml` | JSON backup a Artifacts 90 días | Diario 5 AM |
-| 35 | Reportes mensuales | `generar-reportes.js` | PPT/email con métricas Reportei | Manual |
+| 37 | Backup Supabase | `backup-supabase.yml` | JSON backup a Artifacts 90 días | Diario 5 AM |
 
 ## Radar Propiedades (repo separado: propiedades-bravo-muller)
 
 | # | Agente | Script | Qué hace | Trigger |
 |---|--------|--------|----------|---------|
-| 36 | Scraper PI | `radar-propiedades.js` | Scrapea Portal Inmobiliario via Scrapfly | 4 crons |
+| 38 | Scraper PI | `radar-propiedades.js` | Scrapea Portal Inmobiliario via Scrapfly | 4 crons |
+
+## Indicadores
+
+| # | Agente | Script | Qué hace | Trigger |
+|---|--------|--------|----------|---------|
+| 39 | Indicadores marketing | `indicadores-marketing.js` | USD/UF + CPC/CPA calibrado por industria | Sábados |
 
 ---
 
-**Total: 36 agentes activos** en el ecosistema mulleryperez.cl
+**Total: 39 agentes activos** en el ecosistema mulleryperez.cl
