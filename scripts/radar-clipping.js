@@ -782,6 +782,7 @@ function generarEmailHTML(posts, cuentas, fecha, modo, resumenIA, empresas, tren
     var liN = empPosts.filter(function(p) { return p.red === 'LinkedIn' }).length
     var totalN = empPosts.length
     var totalL = empPosts.reduce(function(s, p) { return s + p.likes }, 0)
+    var totalC = empPosts.reduce(function(s, p) { return s + (p.comments || 0) }, 0)
     var isInactive = totalN === 0
     var rowBg = idx % 2 === 0 ? '#1a1745' : '#12102a'
     var nameColor = isInactive ? '#EF4444' : '#ffffff'
