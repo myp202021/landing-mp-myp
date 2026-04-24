@@ -769,10 +769,9 @@ function generarEmailHTML(posts, cuentas, fecha, modo, resumenIA, empresas, tren
   // Table header
   h += '<tr>'
   h += '<td bgcolor="#1e1b4b" style="padding:10px 12px;font-weight:700;color:#ffffff;text-align:left;">Empresa</td>'
-  h += '<td bgcolor="#1e1b4b" style="padding:10px 6px;font-weight:700;color:#ffffff;text-align:center;width:36px;">IG</td>'
-  h += '<td bgcolor="#1e1b4b" style="padding:10px 6px;font-weight:700;color:#ffffff;text-align:center;width:36px;">LI</td>'
-  h += '<td bgcolor="#1e1b4b" style="padding:10px 6px;font-weight:700;color:#ffffff;text-align:center;width:44px;">Total</td>'
+  h += '<td bgcolor="#1e1b4b" style="padding:10px 6px;font-weight:700;color:#ffffff;text-align:center;width:50px;">Posts</td>'
   h += '<td bgcolor="#1e1b4b" style="padding:10px 6px;font-weight:700;color:#ffffff;text-align:center;">Likes</td>'
+  h += '<td bgcolor="#1e1b4b" style="padding:10px 6px;font-weight:700;color:#ffffff;text-align:center;">Eng.</td>'
   h += '</tr>'
   var idx = 0
   Object.keys(empresas).forEach(function(nombre) {
@@ -790,11 +789,11 @@ function generarEmailHTML(posts, cuentas, fecha, modo, resumenIA, empresas, tren
     var zv = function(n, color) { return n === 0 ? '<span style="color:' + dimColor + ';">0</span>' : '<span style="color:' + color + ';font-weight:700;">' + n + '</span>' }
 
     h += '<tr>'
+    var avgEng = totalN > 0 ? Math.round((totalL + totalC) / totalN) : 0
     h += '<td bgcolor="' + rowBg + '" style="padding:10px 12px;font-weight:700;color:' + nameColor + ';border-bottom:1px solid #2d2a5e;">' + nombre + '</td>'
-    h += '<td bgcolor="' + rowBg + '" style="padding:10px 6px;text-align:center;border-bottom:1px solid #2d2a5e;">' + zv(igN, '#E4405F') + '</td>'
-    h += '<td bgcolor="' + rowBg + '" style="padding:10px 6px;text-align:center;border-bottom:1px solid #2d2a5e;">' + zv(liN, '#0A66C2') + '</td>'
     h += '<td bgcolor="' + rowBg + '" style="padding:10px 6px;text-align:center;font-weight:800;color:' + (isInactive ? '#EF4444' : '#ffffff') + ';border-bottom:1px solid #2d2a5e;">' + totalN + '</td>'
     h += '<td bgcolor="' + rowBg + '" style="padding:10px 6px;text-align:center;color:' + (isInactive ? dimColor : '#c4b5fd') + ';border-bottom:1px solid #2d2a5e;">' + (isInactive ? '-' : totalL.toLocaleString()) + '</td>'
+    h += '<td bgcolor="' + rowBg + '" style="padding:10px 6px;text-align:center;color:' + (isInactive ? dimColor : '#a5b4fc') + ';border-bottom:1px solid #2d2a5e;">' + (isInactive ? '-' : avgEng) + '</td>'
     h += '</tr>'
     idx++
   })
