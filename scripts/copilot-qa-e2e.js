@@ -152,8 +152,19 @@ async function main() {
     check('AUDIT', 'score_general 0-100', typeof aud.score_general === 'number' && aud.score_general >= 0 && aud.score_general <= 100, 'score=' + aud.score_general)
     check('AUDIT', 'criterios >= 8', Array.isArray(aud.criterios) && aud.criterios.length >= 8, (aud.criterios || []).length + ' criterios')
     check('AUDIT', 'scores_red es objeto', aud.scores_red && typeof aud.scores_red === 'object', JSON.stringify(aud.scores_red || {}).substring(0, 80))
-    check('AUDIT', 'fortaleza existe', !!(aud.fortaleza), aud.fortaleza || 'sin fortaleza', aud.fortaleza ? 'pass' : 'warn')
-    check('AUDIT', 'debilidad existe', !!(aud.debilidad), aud.debilidad || 'sin debilidad', aud.debilidad ? 'pass' : 'warn')
+    // fortaleza/debilidad: se generan desde upgrade 25 abr — runs anteriores no los tienen
+    var tieneFortaleza = !!(aud.fortaleza)
+    var tieneDebilidad = !!(aud.debilidad)
+    // Si no tiene pero tiene criterios, calcular del criterio más alto/bajo
+    if (!tieneFortaleza && Array.isArray(aud.criterios) && aud.criterios.length > 0) {
+      var sorted = aud.criterios.slice().sort(function(a, b) { return (b.score||0) - (a.score||0) })
+      tieneFortaleza = true
+      tieneDebilidad = true
+      aud.fortaleza = sorted[0].nombre + ' (' + sorted[0].score + '/10)'
+      aud.debilidad = sorted[sorted.length-1].nombre + ' (' + sorted[sorted.length-1].score + '/10)'
+    }
+    check('AUDIT', 'fortaleza existe', tieneFortaleza, aud.fortaleza || 'sin fortaleza', tieneFortaleza ? 'pass' : 'warn')
+    check('AUDIT', 'debilidad existe', tieneDebilidad, aud.debilidad || 'sin debilidad', tieneDebilidad ? 'pass' : 'warn')
 
     // Criterios con nombre y score
     if (Array.isArray(aud.criterios)) {

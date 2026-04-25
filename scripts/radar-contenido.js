@@ -745,8 +745,17 @@ async function generarContenidoSugerido(posts, empresas, modo, perfil, supabase,
         }
       })
 
-      await supabase.from('copilot_ideas').insert(ideas)
-      console.log('   ' + ideas.length + ' ideas guardadas en copilot_ideas (' + (ideas.length - revisados.length) + ' de gap analysis)')
+      // Dedup: no insertar ideas con titulo que ya existe para este suscriptor
+      var existRes = await supabase.from('copilot_ideas').select('titulo').eq('suscripcion_id', suscripcionId)
+      var existentes = (existRes.data || []).map(function(i) { return i.titulo })
+      var ideasNuevas = ideas.filter(function(i) { return existentes.indexOf(i.titulo) === -1 })
+
+      if (ideasNuevas.length > 0) {
+        await supabase.from('copilot_ideas').insert(ideasNuevas)
+        console.log('   ' + ideasNuevas.length + ' ideas NUEVAS guardadas (' + (ideas.length - ideasNuevas.length) + ' duplicadas filtradas)')
+      } else {
+        console.log('   0 ideas nuevas (todas duplicadas)')
+      }
     } catch (e) { console.log('   Ideas skip: ' + e.message) }
   }
 
