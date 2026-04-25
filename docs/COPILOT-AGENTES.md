@@ -194,6 +194,27 @@
 | radar-clipping-mensual.yml | Día 1, 9:00 AM Chile | --mensual | cron COMENTADO |
 | copilot-qa.yml | manual | QA técnico | dispatch OK |
 
+## Datos de Industria Inyectados (radar-industria.js)
+
+Cada agente recibe datos reales de la industria del cliente (del predictor M&P):
+
+| Dato | Fuente | Uso |
+|------|--------|-----|
+| CPC Google/Meta (CLP) | cpc-calibrado-chile.ts | Copies mencionan costos reales |
+| CVR % | industries.ts | Brief calcula CPL esperado |
+| ROAS promedio | reference-benchmarks.ts | Contexto de retorno para contenido |
+| CPL promedio (CLP) | industry-insights.ts | Benchmark en auditoría |
+| Mejor plataforma | industry-insights.ts | Brief prioriza red correcta |
+| Ciclo de venta | industry-insights.ts | Guiones adaptan urgencia del CTA |
+| Estacionalidad | estacionalidad-chile.ts | Calendario del brief |
+| KPIs industria | industry-insights.ts | Copies referencian métricas del rubro |
+| Engagement benchmark IG/LI | benchmarks-2024-verificados.ts | Auditoría compara vs industria |
+| Tips específicos | industry-insights.ts | Contenido sigue mejores prácticas |
+
+**12 industrias:** tecnología, RRHH, e-commerce, inmobiliaria, salud, educación, servicios profesionales, automotriz, alimentos, finanzas, transporte, general
+
+**Auto-detección:** `detectarIndustria(perfil)` analiza rubro+descripción+productos del cliente.
+
 ## Plan de Upgrades Pendientes
 
 | # | Upgrade | Estado |
