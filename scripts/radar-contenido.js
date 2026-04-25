@@ -20,7 +20,7 @@ var PALABRAS_PROHIBIDAS = [
 // ═══════════════════════════════════════════════
 // PASO 1: OpenAI analiza y genera briefs
 // ═══════════════════════════════════════════════
-async function paso1_analizar(posts, empresas, modo, perfil, copiesPrevios) {
+async function paso1_analizar(posts, empresas, modo, perfil, copiesPrevios, briefEstrategico) {
   console.log('   CONTENIDO PASO 1: OpenAI analiza...')
 
   // Ordenar posts por engagement real (likes + comments)
@@ -106,9 +106,50 @@ async function paso1_analizar(posts, empresas, modo, perfil, copiesPrevios) {
     previosCtx += '\n'
   }
 
+  // Brief estratégico (si existe, enriquece el prompt)
+  var briefCtx = ''
+  if (briefEstrategico) {
+    briefCtx = '\n══════════════════════════════════\n'
+    briefCtx += 'BRIEF ESTRATEGICO DEL CLIENTE (OBLIGATORIO seguir estas directrices):\n'
+    briefCtx += '══════════════════════════════════\n'
+    if (briefEstrategico.propuesta_valor_unica) briefCtx += '- Propuesta de valor UNICA: ' + briefEstrategico.propuesta_valor_unica + '\n'
+    if (briefEstrategico.territorios_contenido) {
+      briefCtx += '- Territorios de contenido autorizados:\n'
+      var terrs = briefEstrategico.territorios_contenido
+      if (Array.isArray(terrs)) {
+        terrs.forEach(function(t) {
+          if (typeof t === 'object') briefCtx += '  * ' + (t.territorio || t.nombre || '') + ': ' + (t.justificacion || '') + '\n'
+          else briefCtx += '  * ' + t + '\n'
+        })
+      }
+    }
+    if (briefEstrategico.tono_comunicacion) {
+      var tono = briefEstrategico.tono_comunicacion
+      if (typeof tono === 'object') {
+        briefCtx += '- Tono: ' + (tono.estilo || '') + '\n'
+        if (tono.palabras_usar) briefCtx += '- Palabras a usar: ' + (Array.isArray(tono.palabras_usar) ? tono.palabras_usar.join(', ') : tono.palabras_usar) + '\n'
+        if (tono.palabras_evitar) briefCtx += '- Palabras a EVITAR: ' + (Array.isArray(tono.palabras_evitar) ? tono.palabras_evitar.join(', ') : tono.palabras_evitar) + '\n'
+      } else {
+        briefCtx += '- Tono: ' + tono + '\n'
+      }
+    }
+    if (briefEstrategico.reglas_contenido && Array.isArray(briefEstrategico.reglas_contenido)) {
+      briefCtx += '- Reglas de contenido:\n'
+      briefEstrategico.reglas_contenido.forEach(function(r) { briefCtx += '  * ' + r + '\n' })
+    }
+    if (briefEstrategico.competidores_analizados && Array.isArray(briefEstrategico.competidores_analizados)) {
+      briefCtx += '- Oportunidades vs competencia:\n'
+      briefEstrategico.competidores_analizados.forEach(function(c) {
+        if (c.oportunidad_para_cliente) briefCtx += '  * vs ' + (c.nombre || '') + ': ' + c.oportunidad_para_cliente + '\n'
+      })
+    }
+    briefCtx += '\n'
+  }
+
   var prompt = 'Eres un DIRECTOR CREATIVO senior con 15 anos de experiencia en marketing digital en Chile. '
     + 'NO eres un asistente generico. Eres un estratega que analiza datos REALES de la competencia para crear contenido que SUPERE lo que ellos publican.\n\n'
     + clienteInfo + '\n'
+    + briefCtx
     + estacionalidad + '\n'
     + '══════════════════════════════════\n'
     + 'TOP 10 POSTS DE LA COMPETENCIA POR ENGAGEMENT (estos son los que MAS funcionaron):\n'
@@ -525,7 +566,8 @@ async function paso3_revisar(copies) {
 // ═══════════════════════════════════════════════
 // FUNCION PRINCIPAL (llamada desde radar-clipping.js)
 // ═══════════════════════════════════════════════
-async function generarContenidoSugerido(posts, empresas, modo, perfil, supabase, suscripcionId) {
+async function generarContenidoSugerido(posts, empresas, modo, perfil, supabase, suscripcionId, briefEstrategico) {
+  briefEstrategico = briefEstrategico || null
   console.log('\n   === PIPELINE CONTENIDO SUGERIDO ===')
 
   if (!OPENAI_KEY || !ANTHROPIC_KEY) {
@@ -560,7 +602,7 @@ async function generarContenidoSugerido(posts, empresas, modo, perfil, supabase,
   }
 
   // Paso 1: OpenAI analiza
-  var briefs = await paso1_analizar(posts, empresas, modo, perfil || {}, copiesPrevios)
+  var briefs = await paso1_analizar(posts, empresas, modo, perfil || {}, copiesPrevios, briefEstrategico)
   if (briefs.length === 0) {
     console.log('   Sin briefs, abortando pipeline')
     return []

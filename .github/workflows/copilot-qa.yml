@@ -1,0 +1,24 @@
+name: "Copilot — QA Técnico"
+
+on:
+  workflow_dispatch:
+    inputs:
+      suscriptor_id:
+        description: 'ID de suscriptor para verificar'
+        required: true
+
+jobs:
+  qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm install node-fetch@2 @supabase/supabase-js
+      - name: "QA Técnico"
+        run: node scripts/copilot-qa-tecnico.js --id=${{ inputs.suscriptor_id }}
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}

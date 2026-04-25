@@ -14,6 +14,7 @@ var grillaModule = require('./radar-grilla-mensual.js')
 var perfilModule = require('./radar-perfil.js')
 var guionesModule = require('./radar-guiones.js')
 var auditoriaModule = require('./radar-auditoria.js')
+var briefModule = require('./radar-brief.js')
 
 var APIFY_TOKEN = process.env.APIFY_TOKEN
 var RESEND_KEY = process.env.RESEND
@@ -358,10 +359,21 @@ async function main() {
       }
     }
 
+    // Generar/actualizar brief estratégico (semanal/mensual)
+    if ((MODO === 'semanal' || MODO === 'mensual') && misPosts.length >= 2) {
+      try {
+        var brief = await briefModule.generarBrief(sub, misPosts, supabase)
+        if (brief) {
+          sub.brief_estrategico = brief
+          console.log('   Brief estratégico generado/actualizado')
+        }
+      } catch (e) { console.log('   Brief error (no bloqueante): ' + e.message) }
+    }
+
     // Pipeline contenido sugerido (semanal/mensual, pro y business)
     var contenidoSugerido = []
     if ((MODO === 'semanal' || MODO === 'mensual') && misPosts.length >= 2 && (sub.plan === 'pro' || sub.plan === 'business' || sub.plan === 'test')) {
-      contenidoSugerido = await contenidoModule.generarContenidoSugerido(misPosts, empresas, MODO, sub.perfil_empresa || {}, supabase, sub.id)
+      contenidoSugerido = await contenidoModule.generarContenidoSugerido(misPosts, empresas, MODO, sub.perfil_empresa || {}, supabase, sub.id, sub.brief_estrategico)
     }
 
     // Grilla mensual (todos los planes, cantidad de posts varía)
