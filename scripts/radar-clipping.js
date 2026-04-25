@@ -395,11 +395,11 @@ async function main() {
     var resumenIA = ''
     if (misPosts.length > 0) {
       if (MODO === 'diario' && OPENAI_KEY) {
-        resumenIA = await generarResumenOpenAI(misPosts, cuentas, MODO, trends)
+        resumenIA = await generarResumenOpenAI(misPosts, cuentas, MODO, trends, sub.perfil_empresa)
       } else if ((MODO === 'semanal' || MODO === 'mensual') && ANTHROPIC_KEY) {
-        resumenIA = await generarResumenClaude(misPosts, cuentas, MODO, trends)
+        resumenIA = await generarResumenClaude(misPosts, cuentas, MODO, trends, sub.perfil_empresa)
       } else if (OPENAI_KEY) {
-        resumenIA = await generarResumenOpenAI(misPosts, cuentas, MODO, trends)
+        resumenIA = await generarResumenOpenAI(misPosts, cuentas, MODO, trends, sub.perfil_empresa)
       }
     }
 
@@ -630,7 +630,7 @@ function getContextoEstacional() {
 }
 
 // === IA - OPENAI (diario) ===
-async function generarResumenOpenAI(posts, cuentas, modo, trends) {
+async function generarResumenOpenAI(posts, cuentas, modo, trends, perfil) {
   try {
     var empresas = cuentas.filter(function(c) { return c.nombre && c.red !== 'prensa' }).map(function(c) { return c.nombre })
     var unicas = Array.from(new Set(empresas)).join(', ')
@@ -646,11 +646,16 @@ async function generarResumenOpenAI(posts, cuentas, modo, trends) {
       }
     })
 
+    // Datos de industria
+    var indCtx = ''
+    try { var indMod = require('./radar-industria.js'); indCtx = indMod.generarContextoIndustria(perfil || {}) } catch(e) {}
+
     var prompt = 'Eres un analista de inteligencia competitiva SENIOR. NO generas observaciones obvias como "publicaron X posts" o "el engagement fue moderado". '
     + 'Tu trabajo es encontrar PATRONES ACCIONABLES y GAPS ESPECIFICOS que un director de marketing pueda usar HOY.\n\n'
     + 'Empresas monitoreadas: ' + unicas + '.\n'
     if (trendTxt) prompt = prompt + 'Tendencias vs periodo anterior: ' + trendTxt + '\n'
-    prompt = prompt + 'Contexto estacional: ' + getContextoEstacional() + '\n\n'
+    prompt = prompt + 'Contexto estacional: ' + getContextoEstacional() + '\n'
+    + indCtx + '\n'
     + 'INSTRUCCIONES:\n'
     + '1. Para CADA empresa, identifica su top post (el de mas engagement) y explica POR QUE funciono (formato, hook, tema, timing).\n'
     + '2. Detecta el PATRON de cada empresa: que formato prefieren (video/carrusel/imagen), que temas repiten, a que hora publican.\n'
@@ -676,7 +681,7 @@ async function generarResumenOpenAI(posts, cuentas, modo, trends) {
 }
 
 // === IA - CLAUDE (semanal/mensual) ===
-async function generarResumenClaude(posts, cuentas, modo, trends) {
+async function generarResumenClaude(posts, cuentas, modo, trends, perfil) {
   try {
     var empresas = cuentas.filter(function(c) { return c.nombre && c.red !== 'prensa' }).map(function(c) { return c.nombre })
     var unicas = Array.from(new Set(empresas)).join(', ')
@@ -692,13 +697,18 @@ async function generarResumenClaude(posts, cuentas, modo, trends) {
       }
     })
 
+    // Datos de industria
+    var indCtx = ''
+    try { var indMod = require('./radar-industria.js'); indCtx = indMod.generarContextoIndustria(perfil || {}) } catch(e) {}
+
     var periodoLabel = modo === 'semanal' ? 'esta semana' : 'este mes'
     var prompt = 'Eres un DIRECTOR DE INTELIGENCIA COMPETITIVA. NO generas resúmenes genéricos. '
     + 'Tu trabajo es analizar los datos REALES de cada competidor y extraer insights que un CMO pueda convertir en decisiones esta semana.\n\n'
     + 'Empresas monitoreadas: ' + unicas + '.\n'
     + 'Periodo: ' + periodoLabel + '.\n'
     if (trendTxt) prompt = prompt + 'Cambios vs periodo anterior: ' + trendTxt + '\n'
-    prompt = prompt + 'Contexto estacional Chile: ' + getContextoEstacional() + '\n\n'
+    prompt = prompt + 'Contexto estacional Chile: ' + getContextoEstacional() + '\n'
+    + indCtx + '\n'
     + 'ANALISIS OBLIGATORIO POR CADA EMPRESA:\n'
     + '1. TOP POST: Cual fue su post con mas engagement? De que tema trataba? Que formato uso? Por que crees que funciono?\n'
     + '2. PATRON DE CONTENIDO: Que tipo de contenido publica mas? (educativo, promocional, marca humana, casos de exito). Cual le genera mas engagement?\n'

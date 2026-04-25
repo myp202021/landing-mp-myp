@@ -309,6 +309,13 @@ async function generarBrief(nombre, rubro, tono, difs, plats, insights, mes, ani
     aprendizajeCtx = memoriaModule.generarContextoAprendizaje(memoria)
   }
 
+  // Datos de industria
+  var industriaCtx = ''
+  try {
+    var industriaModule = require('./radar-industria.js')
+    industriaCtx = industriaModule.generarContextoIndustria(extra)
+  } catch (e) {}
+
   var empresaExtra = ''
   if (extra.descripcion) empresaExtra += 'Descripcion: ' + extra.descripcion + '\n'
   if (extra.propuesta_valor) empresaExtra += 'Propuesta de valor: ' + extra.propuesta_valor + '\n'
@@ -388,6 +395,7 @@ async function generarBrief(nombre, rubro, tono, difs, plats, insights, mes, ani
     + 'Temas de competencia: ' + insights.temasCompetencia.substring(0, 500) + '\n\n'
     + '=== ESTACIONALIDAD ' + MESES[mes].toUpperCase() + ' ===\n' + est + '\n\n'
     + (aprendizajeCtx ? aprendizajeCtx + '\n' : '')
+    + (industriaCtx ? industriaCtx + '\n' : '')
     + '=== TAREA ===\n'
     + 'Genera ' + cantidadPosts + ' posts. Para CADA post define:\n'
     + '- semana: 1-4\n- dia: numero del mes\n- dia_semana: Lunes-Viernes\n'

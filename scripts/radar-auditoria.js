@@ -199,6 +199,19 @@ async function generarAuditoria(posts, contenido, cuentas, supabase, suscripcion
   cuentas = cuentas || []
   briefEstrategico = briefEstrategico || null
 
+  // Datos de industria para benchmarking
+  var industria = null
+  try {
+    var industriaModule = require('./radar-industria.js')
+    // Necesitamos el perfil para detectar industria — lo extraemos de las cuentas
+    var perfilProxy = {}
+    if (cuentas && cuentas.length > 0) {
+      var nombres = cuentas.filter(function(c) { return c.nombre }).map(function(c) { return c.nombre })
+      perfilProxy.rubro = nombres.join(' ')
+    }
+    industria = industriaModule.detectarIndustria(perfilProxy)
+  } catch (e) {}
+
   // Calcular 8 criterios base
   var criterios = [
     calcFrecuencia(posts),
@@ -210,6 +223,22 @@ async function generarAuditoria(posts, contenido, cuentas, supabase, suscripcion
     calcVariedad(posts),
     calcInteraccion(posts),
   ]
+
+  // ═══ CRITERIO ADICIONAL: BENCHMARK VS INDUSTRIA ═══
+  if (industria && posts.length > 0) {
+    var avgEngPosts = posts.reduce(function(s, p) { return s + (p.likes || 0) + (p.comments || 0) }, 0) / posts.length
+    var benchmarkEng = industria.engagement_benchmark ? industria.engagement_benchmark.ig_avg : 50
+    var ratio = benchmarkEng > 0 ? avgEngPosts / benchmarkEng : 1
+    var benchScore = 5
+    if (ratio >= 2.0) benchScore = 10
+    else if (ratio >= 1.5) benchScore = 9
+    else if (ratio >= 1.0) benchScore = 8
+    else if (ratio >= 0.7) benchScore = 6
+    else if (ratio >= 0.4) benchScore = 4
+    else benchScore = 3
+    criterios.push({ nombre: 'Engagement vs benchmark industria (' + industria.nombre + ')', score: benchScore })
+    console.log('   Benchmark industria: avg eng ' + Math.round(avgEngPosts) + ' vs benchmark ' + benchmarkEng + ' (ratio ' + ratio.toFixed(1) + ', score ' + benchScore + ')')
+  }
 
   // ═══ CRITERIOS ADICIONALES BASADOS EN BRIEF (si existe) ═══
   if (briefEstrategico) {

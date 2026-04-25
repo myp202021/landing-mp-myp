@@ -199,6 +199,14 @@ async function generarBrief(suscriptor, posts, supabase, memoria) {
     }
   }
 
+  // ═══ 3c. Datos de industria del predictor M&P ═══
+  var industriaCtx = ''
+  try {
+    var industriaModule = require('./radar-industria.js')
+    industriaCtx = industriaModule.generarContextoIndustria(perfil)
+    console.log('   Datos de industria inyectados: ' + (industriaModule.detectarIndustria(perfil)).nombre)
+  } catch (e) { console.log('   Industria skip: ' + e.message) }
+
   // ═══ 4. OpenAI genera brief JSON ═══
   var prompt = 'Eres un DIRECTOR DE ESTRATEGIA DE CONTENIDOS con 15 anos de experiencia en marketing digital en Chile y Latinoamerica.\n'
     + 'Tu tarea es generar un BRIEF ESTRATEGICO COMPLETO basado en datos reales de la competencia.\n\n'
@@ -224,6 +232,7 @@ async function generarBrief(suscriptor, posts, supabase, memoria) {
     + 'Mes actual: ' + mesNombre + ' ' + anio + '\n'
     + 'Fechas proximas relevantes: ' + fechasProximas.join(', ') + '\n\n'
     + memoriaRecsCtx
+    + industriaCtx + '\n'
     + '══════════════════════════════════\n'
     + 'INSTRUCCIONES:\n'
     + '══════════════════════════════════\n'
