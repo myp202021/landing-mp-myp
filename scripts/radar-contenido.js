@@ -20,7 +20,7 @@ var PALABRAS_PROHIBIDAS = [
 // ═══════════════════════════════════════════════
 // PASO 1: OpenAI analiza y genera briefs
 // ═══════════════════════════════════════════════
-async function paso1_analizar(posts, empresas, modo, perfil, copiesPrevios, briefEstrategico) {
+async function paso1_analizar(posts, empresas, modo, perfil, copiesPrevios, briefEstrategico, memoria) {
   console.log('   CONTENIDO PASO 1: OpenAI analiza...')
 
   // Ordenar posts por engagement real (likes + comments)
@@ -106,6 +106,14 @@ async function paso1_analizar(posts, empresas, modo, perfil, copiesPrevios, brie
     previosCtx += '\n'
   }
 
+  // Contexto de aprendizaje (memoria inter-run)
+  var memoriaCtx = ''
+  if (memoria) {
+    var memoriaModule = require('./radar-memoria.js')
+    memoriaCtx = memoriaModule.generarContextoAprendizaje(memoria)
+    if (memoriaCtx) console.log('   Memoria de aprendizaje inyectada: ' + memoriaCtx.split('\n').length + ' lineas')
+  }
+
   // Brief estratégico (si existe, enriquece el prompt)
   var briefCtx = ''
   if (briefEstrategico) {
@@ -150,6 +158,7 @@ async function paso1_analizar(posts, empresas, modo, perfil, copiesPrevios, brie
     + 'NO eres un asistente generico. Eres un estratega que analiza datos REALES de la competencia para crear contenido que SUPERE lo que ellos publican.\n\n'
     + clienteInfo + '\n'
     + briefCtx
+    + (memoriaCtx ? memoriaCtx + '\n' : '')
     + estacionalidad + '\n'
     + '══════════════════════════════════\n'
     + 'TOP 10 POSTS DE LA COMPETENCIA POR ENGAGEMENT (estos son los que MAS funcionaron):\n'
@@ -566,8 +575,9 @@ async function paso3_revisar(copies) {
 // ═══════════════════════════════════════════════
 // FUNCION PRINCIPAL (llamada desde radar-clipping.js)
 // ═══════════════════════════════════════════════
-async function generarContenidoSugerido(posts, empresas, modo, perfil, supabase, suscripcionId, briefEstrategico) {
+async function generarContenidoSugerido(posts, empresas, modo, perfil, supabase, suscripcionId, briefEstrategico, memoria) {
   briefEstrategico = briefEstrategico || null
+  memoria = memoria || null
   console.log('\n   === PIPELINE CONTENIDO SUGERIDO ===')
 
   if (!OPENAI_KEY || !ANTHROPIC_KEY) {
@@ -602,7 +612,7 @@ async function generarContenidoSugerido(posts, empresas, modo, perfil, supabase,
   }
 
   // Paso 1: OpenAI analiza
-  var briefs = await paso1_analizar(posts, empresas, modo, perfil || {}, copiesPrevios, briefEstrategico)
+  var briefs = await paso1_analizar(posts, empresas, modo, perfil || {}, copiesPrevios, briefEstrategico, memoria)
   if (briefs.length === 0) {
     console.log('   Sin briefs, abortando pipeline')
     return []

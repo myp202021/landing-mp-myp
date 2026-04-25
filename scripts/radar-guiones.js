@@ -10,7 +10,7 @@ var OPENAI_KEY = process.env.OPENAI_API_KEY
 // ═══════════════════════════════════════════════
 // GENERAR GUIONES DE VIDEO
 // ═══════════════════════════════════════════════
-async function generarGuiones(posts, empresas, perfil, copiesGenerados, supabase, suscripcionId, briefEstrategico) {
+async function generarGuiones(posts, empresas, perfil, copiesGenerados, supabase, suscripcionId, briefEstrategico, memoria) {
   console.log('\n   === PIPELINE GUIONES DE VIDEO ===')
 
   if (!OPENAI_KEY) {
@@ -76,6 +76,27 @@ async function generarGuiones(posts, empresas, perfil, copiesGenerados, supabase
     videoCtx += 'IMPORTANTE: Usa estos reels como referencia directa. Cada guion debe explicar que post especifico lo inspira.\n'
   }
 
+  // Guiones previos (dedup)
+  memoria = memoria || null
+  var guionesPrevCtx = ''
+  if (memoria && memoria.guionesPrevios && memoria.guionesPrevios.titulosPrevios.length > 0) {
+    guionesPrevCtx = '\n══════════════════════════════════\n'
+    guionesPrevCtx += 'GUIONES YA GENERADOS (NO repetir estos temas/titulos):\n'
+    guionesPrevCtx += '══════════════════════════════════\n'
+    memoria.guionesPrevios.titulosPrevios.slice(0, 10).forEach(function(t) {
+      guionesPrevCtx += '- "' + t + '"\n'
+    })
+    guionesPrevCtx += 'IMPORTANTE: Cada guion debe ser DIFERENTE a los anteriores.\n\n'
+    console.log('   Guiones previos para dedup: ' + memoria.guionesPrevios.titulosPrevios.length)
+  }
+
+  // Contexto de aprendizaje
+  var aprendizajeCtx = ''
+  if (memoria) {
+    var memoriaModule = require('./radar-memoria.js')
+    aprendizajeCtx = memoriaModule.generarContextoAprendizaje(memoria)
+  }
+
   // Construir contexto del brief estratégico
   briefEstrategico = briefEstrategico || null
   var briefCtx = ''
@@ -126,7 +147,9 @@ async function generarGuiones(posts, empresas, perfil, copiesGenerados, supabase
     + '══════════════════════════════════\n'
     + top10 + '\n'
     + videoCtx
-    + copiesCtx + '\n\n'
+    + copiesCtx
+    + guionesPrevCtx
+    + (aprendizajeCtx ? aprendizajeCtx + '\n' : '') + '\n'
     + '══════════════════════════════════\n'
     + 'TAREA: Genera 2 guiones de video LISTOS PARA PRODUCCION para ' + nombreEmpresa + '.\n'
     + '══════════════════════════════════\n\n'

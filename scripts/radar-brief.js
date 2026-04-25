@@ -71,7 +71,7 @@ function detectarPatrones(posts) {
 // ═══════════════════════════════════════════════
 // Generar brief estrategico completo
 // ═══════════════════════════════════════════════
-async function generarBrief(suscriptor, posts, supabase) {
+async function generarBrief(suscriptor, posts, supabase, memoria) {
   var perfil = suscriptor.perfil_empresa || {}
   var email = suscriptor.email || ''
   var nombre = perfil.nombre || suscriptor.nombre || email.split('@')[0]
@@ -178,6 +178,27 @@ async function generarBrief(suscriptor, posts, supabase) {
     })
   })
 
+  // ═══ 3b. Recomendaciones de la memoria (aprendizaje inter-run) ═══
+  memoria = memoria || null
+  var memoriaRecsCtx = ''
+  if (memoria) {
+    var memoriaModule = require('./radar-memoria.js')
+    var recs = memoriaModule.generarRecomendacionesBrief(memoria)
+    if (recs.length > 0) {
+      memoriaRecsCtx = '\n══════════════════════════════════\n'
+      memoriaRecsCtx += 'APRENDIZAJE DE RUNS ANTERIORES (incorporar obligatoriamente):\n'
+      memoriaRecsCtx += '══════════════════════════════════\n'
+      recs.forEach(function(r) { memoriaRecsCtx += '- ' + r + '\n' })
+      memoriaRecsCtx += '\n'
+      console.log('   ' + recs.length + ' recomendaciones de memoria inyectadas en el brief')
+    }
+    // Inyectar contexto completo de aprendizaje
+    var aprendizajeCtx = memoriaModule.generarContextoAprendizaje(memoria)
+    if (aprendizajeCtx) {
+      memoriaRecsCtx += aprendizajeCtx + '\n'
+    }
+  }
+
   // ═══ 4. OpenAI genera brief JSON ═══
   var prompt = 'Eres un DIRECTOR DE ESTRATEGIA DE CONTENIDOS con 15 anos de experiencia en marketing digital en Chile y Latinoamerica.\n'
     + 'Tu tarea es generar un BRIEF ESTRATEGICO COMPLETO basado en datos reales de la competencia.\n\n'
@@ -202,6 +223,7 @@ async function generarBrief(suscriptor, posts, supabase) {
     + '══════════════════════════════════\n'
     + 'Mes actual: ' + mesNombre + ' ' + anio + '\n'
     + 'Fechas proximas relevantes: ' + fechasProximas.join(', ') + '\n\n'
+    + memoriaRecsCtx
     + '══════════════════════════════════\n'
     + 'INSTRUCCIONES:\n'
     + '══════════════════════════════════\n'

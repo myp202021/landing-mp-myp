@@ -31,7 +31,7 @@ var ESTACIONALIDAD = {
 // ═══════════════════════════════════════════════
 // GENERAR GRILLA COMPLETA
 // ═══════════════════════════════════════════════
-async function generarGrillaMensual(posts, empresas, suscriptor, mesSiguiente, anio, supabase, cantidadPosts, briefEstrategico, copiesPrevios) {
+async function generarGrillaMensual(posts, empresas, suscriptor, mesSiguiente, anio, supabase, cantidadPosts, briefEstrategico, copiesPrevios, memoria) {
   cantidadPosts = cantidadPosts || 16
   console.log('\n   === GRILLA MENSUAL: ' + MESES[mesSiguiente] + ' ' + anio + ' ===')
 
@@ -69,7 +69,7 @@ async function generarGrillaMensual(posts, empresas, suscriptor, mesSiguiente, a
   var brief = await generarBrief(nombreEmpresa, rubro, tono, diferenciadores, plataformas, insights, mesSiguiente, anio, {
     web: webCliente, instagram: igCliente, linkedin: liCliente, facebook: fbCliente,
     propuesta_valor: propuestaValor, descripcion: descripcionCliente
-  }, cantidadPosts, briefEstrategico, copiesPrevios)
+  }, cantidadPosts, briefEstrategico, copiesPrevios, memoria)
   if (!brief || !brief.posts || brief.posts.length === 0) {
     console.log('   Brief vacio, abortando grilla')
     return null
@@ -233,12 +233,20 @@ function extraerInsights(posts) {
 // ═══════════════════════════════════════════════
 // PASO 1: OpenAI genera brief
 // ═══════════════════════════════════════════════
-async function generarBrief(nombre, rubro, tono, difs, plats, insights, mes, anio, extra, cantidadPosts, briefEstrategico, copiesPrevios) {
+async function generarBrief(nombre, rubro, tono, difs, plats, insights, mes, anio, extra, cantidadPosts, briefEstrategico, copiesPrevios, memoria) {
   cantidadPosts = cantidadPosts || 16
   var est = ESTACIONALIDAD[mes] || ''
   extra = extra || {}
   briefEstrategico = briefEstrategico || null
   copiesPrevios = copiesPrevios || []
+  memoria = memoria || null
+
+  // Contexto de aprendizaje
+  var aprendizajeCtx = ''
+  if (memoria) {
+    var memoriaModule = require('./radar-memoria.js')
+    aprendizajeCtx = memoriaModule.generarContextoAprendizaje(memoria)
+  }
 
   var empresaExtra = ''
   if (extra.descripcion) empresaExtra += 'Descripcion: ' + extra.descripcion + '\n'
@@ -318,6 +326,7 @@ async function generarBrief(nombre, rubro, tono, difs, plats, insights, mes, ani
     + 'Formato ganador del mes: ' + insights.formatoGanador + '\n'
     + 'Temas de competencia: ' + insights.temasCompetencia.substring(0, 500) + '\n\n'
     + '=== ESTACIONALIDAD ' + MESES[mes].toUpperCase() + ' ===\n' + est + '\n\n'
+    + (aprendizajeCtx ? aprendizajeCtx + '\n' : '')
     + '=== TAREA ===\n'
     + 'Genera ' + cantidadPosts + ' posts. Para CADA post define:\n'
     + '- semana: 1-4\n- dia: numero del mes\n- dia_semana: Lunes-Viernes\n'

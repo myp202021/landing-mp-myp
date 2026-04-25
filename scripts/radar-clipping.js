@@ -15,6 +15,7 @@ var perfilModule = require('./radar-perfil.js')
 var guionesModule = require('./radar-guiones.js')
 var auditoriaModule = require('./radar-auditoria.js')
 var briefModule = require('./radar-brief.js')
+var memoriaModule = require('./radar-memoria.js')
 
 var APIFY_TOKEN = process.env.APIFY_TOKEN
 var RESEND_KEY = process.env.RESEND
@@ -345,6 +346,14 @@ async function main() {
       }
     }
 
+    // === SISTEMA DE MEMORIA: cargar aprendizaje historico ===
+    var memoria = null
+    if ((MODO === 'semanal' || MODO === 'mensual') && misPosts.length >= 2) {
+      try {
+        memoria = await memoriaModule.cargarMemoria(supabase, sub.id)
+      } catch (e) { console.log('   Memoria error (no bloqueante): ' + e.message) }
+    }
+
     // Verificar/generar perfil empresa antes de contenido (semanal/mensual)
     if ((MODO === 'semanal' || MODO === 'mensual') && misPosts.length >= 2) {
       var perfilActual = sub.perfil_empresa || {}
@@ -362,7 +371,7 @@ async function main() {
     // Generar/actualizar brief estratégico (semanal/mensual)
     if ((MODO === 'semanal' || MODO === 'mensual') && misPosts.length >= 2) {
       try {
-        var brief = await briefModule.generarBrief(sub, misPosts, supabase)
+        var brief = await briefModule.generarBrief(sub, misPosts, supabase, memoria)
         if (brief) {
           sub.brief_estrategico = brief
           if (!sub.perfil_empresa) sub.perfil_empresa = {}
@@ -375,7 +384,7 @@ async function main() {
     // Pipeline contenido sugerido (semanal/mensual, pro y business)
     var contenidoSugerido = []
     if ((MODO === 'semanal' || MODO === 'mensual') && misPosts.length >= 2 && (sub.plan === 'pro' || sub.plan === 'business' || sub.plan === 'test')) {
-      contenidoSugerido = await contenidoModule.generarContenidoSugerido(misPosts, empresas, MODO, sub.perfil_empresa || {}, supabase, sub.id, sub.brief_estrategico)
+      contenidoSugerido = await contenidoModule.generarContenidoSugerido(misPosts, empresas, MODO, sub.perfil_empresa || {}, supabase, sub.id, sub.brief_estrategico, memoria)
     }
 
     // Grilla mensual (todos los planes, cantidad de posts varía)
@@ -387,14 +396,14 @@ async function main() {
       var mesSig = new Date().getMonth() + 2
       var anioSig = new Date().getFullYear()
       if (mesSig > 12) { mesSig = 1; anioSig++ }
-      grillaMensual = await grillaModule.generarGrillaMensual(misPosts, empresas, sub, mesSig, anioSig, supabase, cantidadPosts, sub.brief_estrategico || null, contenidoSugerido)
+      grillaMensual = await grillaModule.generarGrillaMensual(misPosts, empresas, sub, mesSig, anioSig, supabase, cantidadPosts, sub.brief_estrategico || null, contenidoSugerido, memoria)
     }
 
     // Guiones de reels (semanal/mensual, solo business)
     // INTERCONEXION: recibe brief estratégico para seguir territorios y tono
     var guionesData = null
     if ((MODO === 'semanal' || MODO === 'mensual') && (sub.plan === 'business' || sub.plan === 'test') && misPosts.length >= 2) {
-      guionesData = await guionesModule.generarGuiones(misPosts, empresas, sub.perfil_empresa || {}, contenidoSugerido, supabase, sub.id, sub.brief_estrategico || null)
+      guionesData = await guionesModule.generarGuiones(misPosts, empresas, sub.perfil_empresa || {}, contenidoSugerido, supabase, sub.id, sub.brief_estrategico || null, memoria)
     }
 
     // Auditoría mensual (mensual, todos los planes)

@@ -1188,8 +1188,8 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
 
         {/* TAB: IDEAS */}
         {tab === 'ideas' && (function() {
-          var categorias = ['educativo', 'entretenimiento', 'producto', 'testimonial', 'tendencia', 'behind-the-scenes']
-          var estados = ['nueva', 'en_progreso', 'publicada', 'descartada']
+          var categorias = ['educativo', 'entretenimiento', 'producto', 'testimonial', 'tendencia', 'behind-the-scenes', 'caso_exito', 'marca_humana', 'datos_mercado', 'promocional', 'general']
+          var estados = ['nueva', 'aprobada', 'en_progreso', 'publicada', 'descartada']
 
           var ideasFiltradas = ideas.filter(function(idea: any) {
             if (ideaFiltroCategoria !== 'todas' && idea.categoria !== ideaFiltroCategoria) return false
@@ -1197,13 +1197,14 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
             return true
           })
 
-          var conteoEstados = { nueva: 0, en_progreso: 0, publicada: 0, descartada: 0 } as Record<string, number>
+          var conteoEstados = { nueva: 0, aprobada: 0, en_progreso: 0, publicada: 0, descartada: 0 } as Record<string, number>
           ideas.forEach(function(idea: any) {
             if (conteoEstados[idea.estado] !== undefined) conteoEstados[idea.estado]++
           })
 
           function estadoColor(e: string) {
             if (e === 'nueva') return 'bg-blue-900/30 text-blue-400'
+            if (e === 'aprobada') return 'bg-cyan-900/30 text-cyan-400'
             if (e === 'en_progreso') return 'bg-yellow-900/30 text-yellow-400'
             if (e === 'publicada') return 'bg-green-900/30 text-green-400'
             return 'bg-white/5 text-[#94a3b8]'
@@ -1226,9 +1227,25 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
 
           function estadoLabel(e: string) {
             if (e === 'nueva') return 'Nueva'
+            if (e === 'aprobada') return 'Aprobada'
             if (e === 'en_progreso') return 'En progreso'
             if (e === 'publicada') return 'Publicada'
             return 'Descartada'
+          }
+
+          async function actualizarEstadoIdea(ideaId: string, nuevoEstado: string) {
+            try {
+              await fetch(SUPABASE_URL + '/rest/v1/copilot_ideas?id=eq.' + ideaId, {
+                method: 'PATCH',
+                headers: hdrs(),
+                body: JSON.stringify({ estado: nuevoEstado }),
+              })
+              // Update local state
+              setIdeas(ideas.map(function(idea: any) {
+                if (idea.id === ideaId) return Object.assign({}, idea, { estado: nuevoEstado })
+                return idea
+              }))
+            } catch (e) { console.error('Error actualizando idea:', e) }
           }
 
           async function guardarIdea() {
@@ -1336,7 +1353,21 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
                         {idea.descripcion && <p className="text-sm text-[#a5b4fc] mb-1 whitespace-pre-line">{idea.descripcion}</p>}
                         {hasCompetitorRef && <p className="text-xs text-indigo-400 italic mt-1">Referencia: {idea.referencia_competencia || idea.competitor_ref}</p>}
                       </div>
-                      <span className="text-[10px] text-[#64748b] flex-shrink-0">{(idea.created_at || '').substring(0, 10)}</span>
+                      <div className="flex flex-col items-end gap-1 flex-shrink-0">
+                        <span className="text-[10px] text-[#64748b]">{(idea.created_at || '').substring(0, 10)}</span>
+                        {idea.id && idea.estado !== 'publicada' && (
+                          <div className="flex gap-1">
+                            {idea.estado !== 'aprobada' && <button onClick={function() { actualizarEstadoIdea(idea.id, 'aprobada') }}
+                              className="text-[10px] bg-cyan-900/30 text-cyan-400 border border-cyan-700/30 px-2 py-0.5 rounded hover:bg-cyan-800/50 transition" title="Aprobar — se priorizar{'\u00e1'} en pr{'\u00f3'}ximos copies">{'\u2714'} Aprobar</button>}
+                            {idea.estado !== 'en_progreso' && idea.estado !== 'descartada' && <button onClick={function() { actualizarEstadoIdea(idea.id, 'en_progreso') }}
+                              className="text-[10px] bg-yellow-900/30 text-yellow-400 border border-yellow-700/30 px-2 py-0.5 rounded hover:bg-yellow-800/50 transition">{'\u23F3'} En curso</button>}
+                            {idea.estado !== 'descartada' && <button onClick={function() { actualizarEstadoIdea(idea.id, 'descartada') }}
+                              className="text-[10px] bg-white/5 text-[#94a3b8] border border-white/10 px-2 py-0.5 rounded hover:bg-red-900/30 hover:text-red-400 transition">{'\u2716'}</button>}
+                            {(idea.estado === 'aprobada' || idea.estado === 'en_progreso') && <button onClick={function() { actualizarEstadoIdea(idea.id, 'publicada') }}
+                              className="text-[10px] bg-green-900/30 text-green-400 border border-green-700/30 px-2 py-0.5 rounded hover:bg-green-800/50 transition">{'\u2705'} Publicada</button>}
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
                 })}
