@@ -1,28 +1,51 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
-// WordPress/LinkedIn legacy query params that cause redirect loops in next.config.js
+// WordPress/LinkedIn legacy query params that cause redirect loops
 const STRIP_PARAMS = ['page_id', 'trk', 'p', 'm', 'cat', 's', 'preview', 'attachment_id', 'layout_sidebar']
 
 export function middleware(request: NextRequest) {
-  const { searchParams } = request.nextUrl
+  const { pathname, searchParams } = request.nextUrl
 
-  // Check if URL has any legacy query params to strip
+  // ═══ COPILOT AUTH: proteger /copilot/dashboard/* ═══
+  if (pathname.startsWith('/copilot/dashboard/')) {
+    const session = request.cookies.get('copilot_session')
+    if (!session || !session.value) {
+      // No tiene sesión → redirect a login
+      const loginUrl = new URL('/copilot/login', request.url)
+      return NextResponse.redirect(loginUrl)
+    }
+
+    // Verificar que el session token corresponde al dashboard que intenta acceder
+    const parts = session.value.split(':')
+    const sessionSubId = parts[0]
+    // Extraer el ID del dashboard de la URL
+    const dashId = pathname.replace('/copilot/dashboard/', '').split('/')[0]
+
+    if (dashId && sessionSubId && dashId !== sessionSubId) {
+      // Intenta acceder al dashboard de otro suscriptor → redirect a su propio dashboard
+      const ownDash = new URL('/copilot/dashboard/' + sessionSubId, request.url)
+      return NextResponse.redirect(ownDash)
+    }
+  }
+
+  // ═══ COPILOT AUTH: proteger /copilot/configurar/* ═══
+  if (pathname.startsWith('/copilot/configurar/')) {
+    const session = request.cookies.get('copilot_session')
+    if (!session || !session.value) {
+      return NextResponse.redirect(new URL('/copilot/login', request.url))
+    }
+  }
+
+  // ═══ LEGACY PARAMS: strip WordPress/LinkedIn junk ═══
   const hasLegacyParam = STRIP_PARAMS.some(param => searchParams.has(param))
-
   if (hasLegacyParam) {
     const url = request.nextUrl.clone()
-
-    // Remove all legacy params
     STRIP_PARAMS.forEach(param => url.searchParams.delete(param))
-
-    // If path is root and had blog-related params, redirect to /blog
     const hadBlogParam = searchParams.has('m') || searchParams.has('cat')
     if (hadBlogParam && url.pathname === '/') {
       url.pathname = '/blog'
     }
-
-    // 301 permanent redirect to clean URL
     return NextResponse.redirect(url, 301)
   }
 
@@ -31,8 +54,6 @@ export function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    // Only run on paths that might have legacy query params
-    // Skip static files and API routes
     '/((?!_next/static|_next/image|favicon.ico|api/).*)',
   ],
 }

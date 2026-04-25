@@ -20,7 +20,7 @@ jobs:
           echo "📦 Backing up Supabase tables — $DATE"
 
           # Backup each critical table
-          for TABLE in clientes leads cotizaciones grillas_contenido grilla_comentarios briefings_cliente usuarios blog_posts reportes_competencia indicadores_semanales clipping_suscripciones radar_posts clipping_prensa; do
+          for TABLE in clientes leads cotizaciones grillas_contenido grilla_comentarios briefings_cliente usuarios blog_posts reportes_competencia indicadores_semanales clipping_suscripciones radar_posts clipping_prensa radar_contenido copilot_auditorias copilot_guiones copilot_ideas copilot_access_log; do
             echo "  → $TABLE"
             curl -s "${SUPABASE_URL}/rest/v1/${TABLE}?select=*" \
               -H "apikey: ${SUPABASE_SERVICE_KEY}" \

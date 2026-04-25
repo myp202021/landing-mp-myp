@@ -987,7 +987,12 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
             {/* COPIES SEMANALES — consistent format for all months */}
             {copiesMes.length > 0 && (
               <div className="space-y-4 mb-8">
-                <h2 className="text-sm font-bold text-white">Copies sugeridos — {MESES_NOMBRES[mesFiltro]}</h2>
+                <div className="flex items-center justify-between">
+                  <h2 className="text-sm font-bold text-white">Copies sugeridos — {MESES_NOMBRES[mesFiltro]}</h2>
+                  <span className="text-xs bg-purple-900/30 text-purple-400 px-3 py-1 rounded-full border border-purple-700/30">
+                    {copiesMes.reduce(function(s: number, b: any) { return s + (Array.isArray(b.datos) ? b.datos.length : 0) }, 0)} copies acumulados
+                  </span>
+                </div>
                 {copiesMes.map(function(batch: any, bi: number) {
                   return <div key={bi} className="bg-[#1a1745] rounded-xl border border-white/[0.06] p-5">
                     <div className="flex justify-between items-center mb-3">
