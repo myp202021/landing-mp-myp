@@ -278,6 +278,234 @@ async function checkPaginas(suscripcionId) {
 }
 
 // ═══════════════════════════════════════════════
+// CHECK 5: Email HTML Quality
+// ═══════════════════════════════════════════════
+async function checkEmailHTML(supabase, suscripcionId) {
+  console.log('\n   === CHECK 5: Email HTML Quality ===')
+
+  // Generar email HTML de test usando el mismo modulo
+  try {
+    var subRes = await supabase.from('clipping_suscripciones').select('*').eq('id', suscripcionId).single()
+    if (!subRes.data) { registrar('EMAIL', 'suscripcion carga', false, 'no encontrada'); return }
+    var sub = subRes.data
+
+    // Cargar datos necesarios para generar email
+    var postsRes = await supabase.from('radar_posts').select('*')
+      .eq('suscripcion_id', suscripcionId)
+      .order('id', { ascending: false }).limit(50)
+    var posts = postsRes.data || []
+
+    var contenidoRes = await supabase.from('radar_contenido').select('*')
+      .eq('suscripcion_id', suscripcionId)
+      .order('id', { ascending: false }).limit(5)
+    var contenido = contenidoRes.data || []
+
+    var audRes = await supabase.from('copilot_auditorias').select('*')
+      .eq('suscripcion_id', suscripcionId)
+      .order('id', { ascending: false }).limit(1)
+    var auditoria = audRes.data && audRes.data.length > 0 ? audRes.data[0] : null
+
+    var guionesRes = await supabase.from('copilot_guiones').select('*')
+      .eq('suscripcion_id', suscripcionId)
+      .order('id', { ascending: false }).limit(1)
+    var guiones = guionesRes.data && guionesRes.data.length > 0 ? guionesRes.data[0].datos : null
+
+    // Check datos disponibles para email
+    registrar('EMAIL', 'posts para email', posts.length > 0, posts.length + ' posts')
+    registrar('EMAIL', 'contenido para email', contenido.length > 0, contenido.length + ' entries')
+
+    // Verificar que el contenido no tiene [object Object]
+    var objectObjectCount = 0
+    contenido.forEach(function(c) {
+      if (Array.isArray(c.datos)) {
+        c.datos.forEach(function(d) {
+          var json = JSON.stringify(d)
+          if (json.includes('[object Object]')) objectObjectCount++
+        })
+      }
+    })
+    registrar('EMAIL', 'sin [object Object] en contenido', objectObjectCount === 0,
+      objectObjectCount === 0 ? 'OK' : objectObjectCount + ' items con [object Object]')
+
+    // Verificar copies tienen campos minimos
+    var copiesSinCopy = 0
+    var copiesSinTitulo = 0
+    var copiesSinScore = 0
+    contenido.forEach(function(c) {
+      if (c.tipo === 'copy' && Array.isArray(c.datos)) {
+        c.datos.forEach(function(d) {
+          if (!d.copy || d.copy.length < 10) copiesSinCopy++
+          if (!d.titulo || d.titulo.length < 3) copiesSinTitulo++
+          if (!d.score && d.score !== 0) copiesSinScore++
+        })
+      }
+    })
+    registrar('EMAIL', 'copies con texto completo', copiesSinCopy === 0,
+      copiesSinCopy === 0 ? 'OK' : copiesSinCopy + ' copies sin copy valido')
+    registrar('EMAIL', 'copies con titulo', copiesSinTitulo === 0,
+      copiesSinTitulo === 0 ? 'OK' : copiesSinTitulo + ' copies sin titulo')
+
+    // Verificar auditoria tiene score correcto
+    if (auditoria) {
+      registrar('EMAIL', 'auditoria score_general existe', typeof auditoria.score_general === 'number',
+        'score=' + auditoria.score_general)
+      registrar('EMAIL', 'auditoria scores_red existe', auditoria.scores_red && typeof auditoria.scores_red === 'object',
+        auditoria.scores_red ? JSON.stringify(auditoria.scores_red).substring(0, 80) : 'null')
+      registrar('EMAIL', 'auditoria criterios formato', Array.isArray(auditoria.criterios) && auditoria.criterios.length >= 8,
+        (auditoria.criterios || []).length + ' criterios')
+
+      // Verificar que criterios tienen nombre y score (no [object Object])
+      if (Array.isArray(auditoria.criterios)) {
+        var criteriosOk = auditoria.criterios.every(function(c) {
+          return typeof c === 'object' && c !== null && typeof c.nombre === 'string' && typeof c.score === 'number'
+        })
+        registrar('EMAIL', 'auditoria criterios nombre+score', criteriosOk,
+          criteriosOk ? 'todos OK' : 'algunos criterios malformados')
+      }
+    } else {
+      registrar('EMAIL', 'auditoria disponible', false, 'sin auditoria (mensual pendiente)')
+    }
+
+    // Verificar guiones tienen estructura correcta
+    if (guiones && Array.isArray(guiones)) {
+      guiones.forEach(function(g, i) {
+        var gancho = g.gancho
+        var ganchoOk = gancho && (typeof gancho === 'string' || (typeof gancho === 'object' && gancho.frase))
+        registrar('EMAIL', 'guion ' + (i+1) + ' gancho', ganchoOk,
+          typeof gancho === 'object' ? 'objeto con frase' : typeof gancho)
+
+        var cierre = g.cierre
+        var cierreOk = cierre && (typeof cierre === 'string' || (typeof cierre === 'object' && cierre.frase_cta))
+        registrar('EMAIL', 'guion ' + (i+1) + ' cierre', cierreOk,
+          typeof cierre === 'object' ? 'objeto con frase_cta' : typeof cierre)
+
+        var escenas = g.escenas
+        var escenasOk = Array.isArray(escenas) && escenas.length >= 2
+        registrar('EMAIL', 'guion ' + (i+1) + ' escenas', escenasOk,
+          (escenas || []).length + ' escenas')
+      })
+    }
+
+    // Verificar brief existe en perfil_empresa
+    var brief = sub.perfil_empresa && sub.perfil_empresa.brief
+    registrar('EMAIL', 'brief estrategico existe', !!brief,
+      brief ? (brief.territorios_contenido || []).length + ' territorios' : 'sin brief')
+    if (brief) {
+      registrar('EMAIL', 'brief tiene resumen_negocio', !!(brief.resumen_negocio),
+        brief.resumen_negocio ? (brief.resumen_negocio.length + ' chars') : 'vacio')
+      registrar('EMAIL', 'brief tiene competidores', Array.isArray(brief.competidores_analizados) && brief.competidores_analizados.length > 0,
+        (brief.competidores_analizados || []).length + ' competidores')
+      registrar('EMAIL', 'brief tiene reglas', Array.isArray(brief.reglas_contenido) && brief.reglas_contenido.length > 0,
+        (brief.reglas_contenido || []).length + ' reglas')
+    }
+
+  } catch (e) {
+    registrar('EMAIL', 'email QA ejecucion', false, 'Error: ' + e.message)
+  }
+}
+
+// ═══════════════════════════════════════════════
+// CHECK 6: Dashboard renders correctly
+// ═══════════════════════════════════════════════
+async function checkDashboard(suscripcionId) {
+  console.log('\n   === CHECK 6: Dashboard Rendering ===')
+
+  var dashUrl = BASE_URL + '/copilot/dashboard/' + suscripcionId
+  try {
+    var res = await fetch(dashUrl, {
+      headers: { 'User-Agent': 'CopilotQA/1.0' },
+      redirect: 'follow',
+      timeout: 20000,
+    })
+    registrar('DASHBOARD', 'HTTP status', res.status >= 200 && res.status < 400, 'HTTP ' + res.status)
+
+    var html = await res.text()
+    var htmlLen = html.length
+
+    // Basic rendering checks
+    registrar('DASHBOARD', 'HTML no vacio', htmlLen > 1000, htmlLen + ' chars')
+
+    // Check no [object Object] in rendered HTML
+    var objectObjectMatches = (html.match(/\[object Object\]/g) || []).length
+    registrar('DASHBOARD', 'sin [object Object]', objectObjectMatches === 0,
+      objectObjectMatches === 0 ? 'limpio' : objectObjectMatches + ' ocurrencias de [object Object]')
+
+    // Check no undefined/null rendered as text
+    var undefinedMatches = (html.match(/>undefined</g) || []).length
+    var nullMatches = (html.match(/>null</g) || []).length
+    registrar('DASHBOARD', 'sin undefined/null renderizado', undefinedMatches === 0 && nullMatches === 0,
+      'undefined=' + undefinedMatches + ', null=' + nullMatches)
+
+    // Check tabs exist in HTML
+    var tabsPresent = ['Competencia', 'Brief', 'Contenido', 'Auditor'].filter(function(t) {
+      return html.includes(t)
+    })
+    registrar('DASHBOARD', 'tabs presentes', tabsPresent.length >= 4,
+      tabsPresent.join(', ') + ' (' + tabsPresent.length + '/4 min)')
+
+    // Check no error messages
+    var errorPatterns = ['Error:', 'error boundary', 'Something went wrong', 'Suscripci\u00f3n no encontrada']
+    var errorsFound = errorPatterns.filter(function(p) { return html.includes(p) })
+    registrar('DASHBOARD', 'sin errores visibles', errorsFound.length === 0,
+      errorsFound.length === 0 ? 'limpio' : 'errores: ' + errorsFound.join(', '))
+
+    // Check dark theme present (bg colors)
+    var hasDarkTheme = html.includes('#0F0D2E') || html.includes('0F0D2E') || html.includes('bg-[#0F0D2E]')
+    registrar('DASHBOARD', 'dark theme aplicado', hasDarkTheme, hasDarkTheme ? 'OK' : 'sin dark theme detectado')
+
+    // Check M&P branding
+    var hasBranding = html.includes('M&amp;P') || html.includes('M&P') || html.includes('Muller')
+    registrar('DASHBOARD', 'branding M&P presente', hasBranding, hasBranding ? 'OK' : 'sin branding')
+
+  } catch (e) {
+    registrar('DASHBOARD', 'dashboard carga', false, 'Error: ' + e.message)
+  }
+}
+
+// ═══════════════════════════════════════════════
+// CHECK 7: Memoria / Learning system
+// ═══════════════════════════════════════════════
+async function checkMemoria(supabase, suscripcionId) {
+  console.log('\n   === CHECK 7: Sistema de Memoria ===')
+
+  try {
+    var memoriaModule = require('./radar-memoria.js')
+    var memoria = await memoriaModule.cargarMemoria(supabase, suscripcionId)
+
+    registrar('MEMORIA', 'carga sin error', !!memoria, memoria ? 'OK' : 'null')
+
+    if (memoria) {
+      registrar('MEMORIA', 'copiesAprendizaje', !!memoria.copiesAprendizaje,
+        'totalCopies=' + (memoria.copiesAprendizaje.totalCopiesHistoricos || 0) + ', scoreAvg=' + (memoria.copiesAprendizaje.scorePromedio || 0))
+
+      registrar('MEMORIA', 'ideasContext', !!memoria.ideasContext,
+        'total=' + (memoria.ideasContext.totalIdeas || 0) + ', aprobadas=' + (memoria.ideasContext.aprobadas || []).length)
+
+      registrar('MEMORIA', 'auditoriaAprendizaje', !!memoria.auditoriaAprendizaje,
+        'ultimoScore=' + (memoria.auditoriaAprendizaje.ultimoScore || 0) + ', tendencia=' + (memoria.auditoriaAprendizaje.tendenciaScore || 'n/a'))
+
+      registrar('MEMORIA', 'competenciaPatrones', !!memoria.competenciaPatrones,
+        (memoria.competenciaPatrones.competidores || []).length + ' competidores tracked')
+
+      registrar('MEMORIA', 'guionesPrevios', !!memoria.guionesPrevios,
+        (memoria.guionesPrevios.totalGuiones || 0) + ' guiones')
+
+      // Test context generation
+      var ctx = memoriaModule.generarContextoAprendizaje(memoria)
+      registrar('MEMORIA', 'contexto generado', ctx && ctx.length > 0,
+        ctx ? ctx.split('\n').length + ' lineas' : 'vacio')
+
+      // Test recommendations
+      var recs = memoriaModule.generarRecomendacionesBrief(memoria)
+      registrar('MEMORIA', 'recomendaciones brief', Array.isArray(recs),
+        recs.length + ' recomendaciones')
+    }
+  } catch (e) {
+    registrar('MEMORIA', 'memoria ejecucion', false, 'Error: ' + e.message)
+  }
+}
+
+// ═══════════════════════════════════════════════
 // FUNCION PRINCIPAL
 // ═══════════════════════════════════════════════
 async function runQA(suscripcionId, supabaseOverride) {
@@ -308,6 +536,9 @@ async function runQA(suscripcionId, supabaseOverride) {
   await checkDatosSuscripcion(supabase, suscripcionId)
   await checkIntegridad(supabase, suscripcionId)
   await checkPaginas(suscripcionId)
+  await checkEmailHTML(supabase, suscripcionId)
+  await checkDashboard(suscripcionId)
+  await checkMemoria(supabase, suscripcionId)
 
   // Resumen
   console.log('\n   ══════════════════════════════════')
