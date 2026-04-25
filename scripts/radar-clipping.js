@@ -379,6 +379,7 @@ async function main() {
     }
 
     // Grilla mensual (todos los planes, cantidad de posts varía)
+    // INTERCONEXION: recibe brief estratégico + copies previos para no repetir
     var grillaMensual = null
     if (MODO === 'mensual' && misPosts.length >= 2) {
       var POSTS_POR_PLAN = { starter: 4, pro: 8, business: 16, test: 16 }
@@ -386,20 +387,22 @@ async function main() {
       var mesSig = new Date().getMonth() + 2
       var anioSig = new Date().getFullYear()
       if (mesSig > 12) { mesSig = 1; anioSig++ }
-      grillaMensual = await grillaModule.generarGrillaMensual(misPosts, empresas, sub, mesSig, anioSig, supabase, cantidadPosts)
+      grillaMensual = await grillaModule.generarGrillaMensual(misPosts, empresas, sub, mesSig, anioSig, supabase, cantidadPosts, sub.brief_estrategico || null, contenidoSugerido)
     }
 
     // Guiones de reels (semanal/mensual, solo business)
+    // INTERCONEXION: recibe brief estratégico para seguir territorios y tono
     var guionesData = null
     if ((MODO === 'semanal' || MODO === 'mensual') && (sub.plan === 'business' || sub.plan === 'test') && misPosts.length >= 2) {
-      guionesData = await guionesModule.generarGuiones(misPosts, empresas, sub.perfil_empresa || {}, contenidoSugerido, supabase, sub.id)
+      guionesData = await guionesModule.generarGuiones(misPosts, empresas, sub.perfil_empresa || {}, contenidoSugerido, supabase, sub.id, sub.brief_estrategico || null)
     }
 
     // Auditoría mensual (mensual, todos los planes)
+    // INTERCONEXION: recibe brief para auditar cobertura de territorios y alineación
     var auditoriaData = null
     if (MODO === 'mensual') {
       var contenidoMes = contenidoSugerido || []
-      auditoriaData = await auditoriaModule.generarAuditoria(misPosts, contenidoMes, cuentas, supabase, sub.id)
+      auditoriaData = await auditoriaModule.generarAuditoria(misPosts, contenidoMes, cuentas, supabase, sub.id, sub.brief_estrategico || null)
     }
 
     var html = generarEmailHTML(misPosts, cuentas, hoy, MODO, resumenIA, empresas, trends, sub.id, contenidoSugerido, sub.estado, sub.plan, sub.trial_ends, grillaMensual, guionesData, auditoriaData)
@@ -971,7 +974,7 @@ function generarEmailHTML(posts, cuentas, fecha, modo, resumenIA, empresas, tren
 
   // === 9. AUDITORIA (mensual, all plans) ===
   if (auditoriaData && modo === 'mensual') {
-    var scoreVal = auditoriaData.score || 0
+    var scoreVal = auditoriaData.score_general || auditoriaData.score || 0
     var scoreColor = scoreVal >= 75 ? '#10B981' : scoreVal >= 50 ? '#F59E0B' : '#EF4444'
     h += '<tr><td bgcolor="#0F0D2E" style="padding:4px 0 0 0;"></td></tr>'
     h += '<tr><td bgcolor="#1a1745" style="padding:20px 28px;border-left:4px solid #6366F1;">'
@@ -982,21 +985,34 @@ function generarEmailHTML(posts, cuentas, fecha, modo, resumenIA, empresas, tren
     h += '<table cellpadding="0" cellspacing="0" border="0" width="100%"><tr>'
     h += '<td width="80" style="text-align:center;vertical-align:middle;"><p style="margin:0;font-size:40px;font-weight:800;color:' + scoreColor + ';">' + scoreVal + '</p><p style="margin:2px 0 0;font-size:9px;color:#64748b;">PUNTAJE</p></td>'
     h += '<td style="vertical-align:middle;padding-left:16px;">'
+    // scores_red es un objeto {Instagram: 70, LinkedIn: 80}
+    var scoresRedData = auditoriaData.scores_red || {}
     var auditRedes = [
-      { n: 'IG', v: auditoriaData.instagram || 0, c: '#E4405F' },
-      { n: 'LI', v: auditoriaData.linkedin || 0, c: '#0A66C2' }
+      { n: 'IG', v: scoresRedData.Instagram || scoresRedData.instagram || 0, c: '#E4405F' },
+      { n: 'LI', v: scoresRedData.LinkedIn || scoresRedData.linkedin || 0, c: '#0A66C2' }
     ]
     for (var ri = 0; ri < auditRedes.length; ri++) {
       var ar = auditRedes[ri]
-      h += '<span style="color:' + ar.c + ';font-size:12px;font-weight:700;">' + ar.n + ' ' + ar.v + '</span>'
-      if (ri < auditRedes.length - 1) h += '<span style="color:#2d2a5e;"> &nbsp;|&nbsp; </span>'
+      if (ar.v > 0) {
+        h += '<span style="color:' + ar.c + ';font-size:12px;font-weight:700;">' + ar.n + ' ' + ar.v + '</span>'
+        if (ri < auditRedes.length - 1) h += '<span style="color:#2d2a5e;"> &nbsp;|&nbsp; </span>'
+      }
     }
     h += '</td></tr></table>'
-    if (auditoriaData.fortaleza) {
-      h += '<p style="margin:12px 0 4px;font-size:12px;color:#c4b5fd;line-height:1.5;"><span style="color:#10B981;font-weight:700;">Fortaleza:</span> ' + truncar(auditoriaData.fortaleza, 120) + '</p>'
-    }
-    if (auditoriaData.debilidad) {
-      h += '<p style="margin:0;font-size:12px;color:#c4b5fd;line-height:1.5;"><span style="color:#EF4444;font-weight:700;">\u00c1rea de mejora:</span> ' + truncar(auditoriaData.debilidad, 120) + '</p>'
+    // Criterios resumen (top 3 y bottom 3)
+    if (auditoriaData.criterios && Array.isArray(auditoriaData.criterios) && auditoriaData.criterios.length > 0) {
+      var critOrdenados = auditoriaData.criterios.slice().sort(function(a, b) { return (b.score || 0) - (a.score || 0) })
+      var topCrit = critOrdenados[0]
+      var bottomCrit = critOrdenados[critOrdenados.length - 1]
+      h += '<p style="margin:12px 0 4px;font-size:12px;color:#c4b5fd;line-height:1.5;"><span style="color:#10B981;font-weight:700;">Fortaleza:</span> ' + truncar(topCrit.nombre + ' (' + topCrit.score + '/10)', 120) + '</p>'
+      h += '<p style="margin:0;font-size:12px;color:#c4b5fd;line-height:1.5;"><span style="color:#EF4444;font-weight:700;">\u00c1rea de mejora:</span> ' + truncar(bottomCrit.nombre + ' (' + bottomCrit.score + '/10)', 120) + '</p>'
+    } else {
+      if (auditoriaData.fortaleza) {
+        h += '<p style="margin:12px 0 4px;font-size:12px;color:#c4b5fd;line-height:1.5;"><span style="color:#10B981;font-weight:700;">Fortaleza:</span> ' + truncar(auditoriaData.fortaleza, 120) + '</p>'
+      }
+      if (auditoriaData.debilidad) {
+        h += '<p style="margin:0;font-size:12px;color:#c4b5fd;line-height:1.5;"><span style="color:#EF4444;font-weight:700;">\u00c1rea de mejora:</span> ' + truncar(auditoriaData.debilidad, 120) + '</p>'
+      }
     }
     h += '</td></tr>'
   }

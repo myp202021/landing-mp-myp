@@ -458,6 +458,7 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
         <div className="flex gap-1 mb-6 bg-[#12102a] rounded-xl p-1 overflow-x-auto">
           {[
             { key: 'competencia', label: 'Competencia', icon: '\uD83D\uDD0D', color: 'text-indigo-700' },
+            { key: 'brief', label: 'Brief', icon: '\uD83C\uDFAF', color: 'text-cyan-700' },
             { key: 'contenido', label: 'Contenido', icon: '\u270D\uFE0F', color: 'text-purple-700' },
             { key: 'auditoria', label: 'Auditor\u00EDa', icon: '\uD83D\uDCCA', color: 'text-teal-700' },
             { key: 'guiones', label: 'Guiones', icon: '\uD83C\uDFAC', color: 'text-pink-700' },
@@ -469,6 +470,232 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
             </button>
           })}
         </div>
+
+        {/* TAB: BRIEF ESTRATÉGICO */}
+        {tab === 'brief' && (function() {
+          var brief = sub && sub.perfil_empresa && sub.perfil_empresa.brief ? sub.perfil_empresa.brief : null
+          if (!brief) return <div className="bg-[#1a1745] rounded-xl p-8 border border-white/[0.06] text-center">
+            <p className="text-4xl mb-4">{'\uD83C\uDFAF'}</p>
+            <p className="text-[#c4b5fd] font-semibold text-lg mb-2">Brief estrat{'\u00e9'}gico pendiente</p>
+            <p className="text-[#64748b] text-sm">El brief se genera autom{'\u00e1'}ticamente en el pr{'\u00f3'}ximo informe semanal o mensual. Es la base que alimenta todos los agentes: copies, guiones, grilla y auditor{'\u00ed'}a.</p>
+          </div>
+
+          return <>
+            {/* Header */}
+            <div className="bg-gradient-to-r from-cyan-700 to-teal-700 rounded-xl p-5 mb-4">
+              <div className="flex justify-between items-center">
+                <div>
+                  <p className="text-xs text-cyan-200 tracking-widest mb-1">BRIEF ESTRAT{'\u00c9'}GICO</p>
+                  <h3 className="text-lg font-bold text-white">{sub.perfil_empresa?.nombre || sub.nombre || sub.email}</h3>
+                  {brief.fecha_generacion && <p className="text-xs text-cyan-200 mt-1">Generado: {brief.fecha_generacion}</p>}
+                </div>
+                <div className="bg-white/10 rounded-lg px-3 py-2 text-center">
+                  <p className="text-2xl font-bold text-white">{(brief.territorios_contenido || []).length}</p>
+                  <p className="text-[10px] text-cyan-200">Territorios</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Resumen del negocio */}
+            {brief.resumen_negocio && (
+              <div className="bg-[#1a1745] rounded-xl p-5 border border-white/[0.06] mb-4">
+                <h4 className="text-sm font-bold text-cyan-400 uppercase tracking-wider mb-3">Resumen del negocio</h4>
+                <p className="text-sm text-[#c4b5fd] leading-relaxed">{brief.resumen_negocio}</p>
+              </div>
+            )}
+
+            {/* Propuesta de valor */}
+            {brief.propuesta_valor_unica && (
+              <div className="bg-[#1a1745] rounded-xl p-5 border-l-4 border-cyan-500 mb-4">
+                <h4 className="text-sm font-bold text-cyan-400 uppercase tracking-wider mb-2">Propuesta de valor {'\u00fa'}nica</h4>
+                <p className="text-base text-white font-semibold leading-relaxed">{brief.propuesta_valor_unica}</p>
+              </div>
+            )}
+
+            {/* Público objetivo */}
+            {brief.publico_objetivo && (
+              <div className="bg-[#1a1745] rounded-xl p-5 border border-white/[0.06] mb-4">
+                <h4 className="text-sm font-bold text-cyan-400 uppercase tracking-wider mb-3">P{'\u00fa'}blico objetivo</h4>
+                {brief.publico_objetivo.descripcion && <p className="text-sm text-[#c4b5fd] mb-3">{brief.publico_objetivo.descripcion}</p>}
+                <div className="grid grid-cols-2 gap-4">
+                  {brief.publico_objetivo.pain_points && Array.isArray(brief.publico_objetivo.pain_points) && (
+                    <div>
+                      <p className="text-xs font-bold text-red-400 mb-2">Dolores</p>
+                      {brief.publico_objetivo.pain_points.map(function(p: string, i: number) {
+                        return <p key={i} className="text-xs text-[#94a3b8] mb-1">{'\u2022'} {p}</p>
+                      })}
+                    </div>
+                  )}
+                  {brief.publico_objetivo.motivaciones && Array.isArray(brief.publico_objetivo.motivaciones) && (
+                    <div>
+                      <p className="text-xs font-bold text-green-400 mb-2">Motivaciones</p>
+                      {brief.publico_objetivo.motivaciones.map(function(m: string, i: number) {
+                        return <p key={i} className="text-xs text-[#94a3b8] mb-1">{'\u2022'} {m}</p>
+                      })}
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Territorios de contenido */}
+            {brief.territorios_contenido && Array.isArray(brief.territorios_contenido) && brief.territorios_contenido.length > 0 && (
+              <div className="bg-[#1a1745] rounded-xl p-5 border border-white/[0.06] mb-4">
+                <h4 className="text-sm font-bold text-cyan-400 uppercase tracking-wider mb-3">Territorios de contenido</h4>
+                <div className="space-y-3">
+                  {brief.territorios_contenido.map(function(t: any, i: number) {
+                    var nombre = typeof t === 'object' ? (t.territorio || t.nombre || 'Territorio ' + (i+1)) : t
+                    var justificacion = typeof t === 'object' ? (t.justificacion || '') : ''
+                    var formatos = typeof t === 'object' && Array.isArray(t.formatos_recomendados) ? t.formatos_recomendados : []
+                    var frecuencia = typeof t === 'object' ? (t.frecuencia_sugerida || '') : ''
+                    var ejemplo = typeof t === 'object' ? (t.ejemplo_angulo || '') : ''
+                    return <div key={i} className="bg-[#12102a] rounded-lg p-4 border border-white/[0.04]">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="bg-cyan-600 text-white text-xs font-bold px-2 py-0.5 rounded">{i + 1}</span>
+                        <span className="text-white font-semibold text-sm">{nombre}</span>
+                        {frecuencia && <span className="text-[10px] text-[#64748b] ml-auto">{frecuencia}</span>}
+                      </div>
+                      {justificacion && <p className="text-xs text-[#94a3b8] mb-2">{justificacion}</p>}
+                      {formatos.length > 0 && <div className="flex gap-1 flex-wrap mb-1">{formatos.map(function(f: string, fi: number) {
+                        return <span key={fi} className="text-[10px] bg-white/5 text-[#a5b4fc] px-2 py-0.5 rounded">{f}</span>
+                      })}</div>}
+                      {ejemplo && <p className="text-[11px] text-cyan-300 mt-1 italic">{'\u201c'}{ejemplo}{'\u201d'}</p>}
+                    </div>
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* Tono de comunicación */}
+            {brief.tono_comunicacion && (function() {
+              var tc = typeof brief.tono_comunicacion === 'object' ? brief.tono_comunicacion : { estilo: brief.tono_comunicacion }
+              return <div className="bg-[#1a1745] rounded-xl p-5 border border-white/[0.06] mb-4">
+                <h4 className="text-sm font-bold text-cyan-400 uppercase tracking-wider mb-3">Tono de comunicaci{'\u00f3'}n</h4>
+                {tc.estilo && <p className="text-sm text-white font-semibold mb-3">{tc.estilo}</p>}
+                {tc.referencia && <p className="text-xs text-[#94a3b8] mb-3 italic">{tc.referencia}</p>}
+                <div className="grid grid-cols-2 gap-4">
+                  {tc.palabras_usar && (
+                    <div>
+                      <p className="text-xs font-bold text-green-400 mb-2">Usar</p>
+                      <div className="flex flex-wrap gap-1">
+                        {(Array.isArray(tc.palabras_usar) ? tc.palabras_usar : [tc.palabras_usar]).map(function(w: string, i: number) {
+                          return <span key={i} className="text-[10px] bg-green-900/30 text-green-400 border border-green-700/30 px-2 py-0.5 rounded">{w}</span>
+                        })}
+                      </div>
+                    </div>
+                  )}
+                  {tc.palabras_evitar && (
+                    <div>
+                      <p className="text-xs font-bold text-red-400 mb-2">Evitar</p>
+                      <div className="flex flex-wrap gap-1">
+                        {(Array.isArray(tc.palabras_evitar) ? tc.palabras_evitar : [tc.palabras_evitar]).map(function(w: string, i: number) {
+                          return <span key={i} className="text-[10px] bg-red-900/30 text-red-400 border border-red-700/30 px-2 py-0.5 rounded">{w}</span>
+                        })}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            })()}
+
+            {/* Competidores analizados */}
+            {brief.competidores_analizados && Array.isArray(brief.competidores_analizados) && brief.competidores_analizados.length > 0 && (
+              <div className="bg-[#1a1745] rounded-xl p-5 border border-white/[0.06] mb-4">
+                <h4 className="text-sm font-bold text-cyan-400 uppercase tracking-wider mb-3">Competidores analizados</h4>
+                <div className="space-y-3">
+                  {brief.competidores_analizados.map(function(c: any, i: number) {
+                    return <div key={i} className="bg-[#12102a] rounded-lg p-4 border border-white/[0.04]">
+                      <p className="text-white font-semibold text-sm mb-2">{c.nombre}</p>
+                      <div className="grid grid-cols-3 gap-3">
+                        <div>
+                          <p className="text-[10px] font-bold text-green-400 mb-1">Fortalezas</p>
+                          {(c.fortalezas || []).map(function(f: string, fi: number) {
+                            return <p key={fi} className="text-[11px] text-[#94a3b8]">{'\u2022'} {f}</p>
+                          })}
+                        </div>
+                        <div>
+                          <p className="text-[10px] font-bold text-red-400 mb-1">Debilidades</p>
+                          {(c.debilidades || []).map(function(d: string, di: number) {
+                            return <p key={di} className="text-[11px] text-[#94a3b8]">{'\u2022'} {d}</p>
+                          })}
+                        </div>
+                        <div>
+                          <p className="text-[10px] font-bold text-amber-400 mb-1">Oportunidad</p>
+                          <p className="text-[11px] text-amber-200">{c.oportunidad_para_cliente || '-'}</p>
+                        </div>
+                      </div>
+                    </div>
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* Reglas de contenido */}
+            {brief.reglas_contenido && Array.isArray(brief.reglas_contenido) && brief.reglas_contenido.length > 0 && (
+              <div className="bg-[#1a1745] rounded-xl p-5 border border-white/[0.06] mb-4">
+                <h4 className="text-sm font-bold text-cyan-400 uppercase tracking-wider mb-3">Reglas de contenido</h4>
+                <div className="space-y-2">
+                  {brief.reglas_contenido.map(function(r: string, i: number) {
+                    return <div key={i} className="flex items-start gap-2">
+                      <span className="text-cyan-500 text-xs mt-0.5">{'\u2714'}</span>
+                      <p className="text-sm text-[#c4b5fd]">{r}</p>
+                    </div>
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* Calendario estacional */}
+            {brief.calendario_estacional && (
+              <div className="bg-[#1a1745] rounded-xl p-5 border border-white/[0.06] mb-4">
+                <h4 className="text-sm font-bold text-cyan-400 uppercase tracking-wider mb-3">Calendario estacional</h4>
+                {brief.calendario_estacional.fechas_relevantes && Array.isArray(brief.calendario_estacional.fechas_relevantes) && (
+                  <div className="mb-3">
+                    <p className="text-xs font-bold text-[#94a3b8] mb-2">Fechas relevantes</p>
+                    <div className="flex flex-wrap gap-2">
+                      {brief.calendario_estacional.fechas_relevantes.map(function(f: string, i: number) {
+                        return <span key={i} className="text-xs bg-indigo-900/30 text-indigo-300 px-2 py-1 rounded border border-indigo-700/30">{f}</span>
+                      })}
+                    </div>
+                  </div>
+                )}
+                {brief.calendario_estacional.oportunidades && Array.isArray(brief.calendario_estacional.oportunidades) && (
+                  <div>
+                    <p className="text-xs font-bold text-[#94a3b8] mb-2">Oportunidades</p>
+                    {brief.calendario_estacional.oportunidades.map(function(o: string, i: number) {
+                      return <p key={i} className="text-xs text-amber-300 mb-1">{'\u2B50'} {o}</p>
+                    })}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Interconnection diagram */}
+            <div className="bg-[#12102a] rounded-xl p-5 border border-cyan-500/20">
+              <h4 className="text-sm font-bold text-cyan-400 uppercase tracking-wider mb-3">Flujo de agentes interconectados</h4>
+              <div className="flex items-center justify-between text-center text-[10px] overflow-x-auto gap-1">
+                {[
+                  { label: 'Brief', icon: '\uD83C\uDFAF', active: true },
+                  { label: '\u2192', icon: '', active: false },
+                  { label: 'Copies', icon: '\u270D\uFE0F', active: true },
+                  { label: '\u2192', icon: '', active: false },
+                  { label: 'Guiones', icon: '\uD83C\uDFAC', active: true },
+                  { label: '\u2192', icon: '', active: false },
+                  { label: 'Grilla', icon: '\uD83D\uDCC5', active: true },
+                  { label: '\u2192', icon: '', active: false },
+                  { label: 'Auditor\u00EDa', icon: '\uD83D\uDCCA', active: true },
+                ].map(function(step, i) {
+                  if (!step.active) return <span key={i} className="text-[#64748b] text-lg">{step.label}</span>
+                  return <div key={i} className="bg-cyan-900/30 border border-cyan-700/30 rounded-lg px-3 py-2 min-w-[60px]">
+                    <p className="text-lg">{step.icon}</p>
+                    <p className="text-cyan-300 font-semibold">{step.label}</p>
+                  </div>
+                })}
+              </div>
+              <p className="text-[11px] text-[#64748b] mt-3 text-center">El brief alimenta todos los agentes. Cada agente recibe el contexto del anterior.</p>
+            </div>
+          </>
+        })()}
 
         {/* TAB: COMPETENCIA */}
         {tab === 'competencia' && (

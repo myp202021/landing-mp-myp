@@ -31,7 +31,7 @@ var ESTACIONALIDAD = {
 // ═══════════════════════════════════════════════
 // GENERAR GRILLA COMPLETA
 // ═══════════════════════════════════════════════
-async function generarGrillaMensual(posts, empresas, suscriptor, mesSiguiente, anio, supabase, cantidadPosts) {
+async function generarGrillaMensual(posts, empresas, suscriptor, mesSiguiente, anio, supabase, cantidadPosts, briefEstrategico, copiesPrevios) {
   cantidadPosts = cantidadPosts || 16
   console.log('\n   === GRILLA MENSUAL: ' + MESES[mesSiguiente] + ' ' + anio + ' ===')
 
@@ -54,7 +54,12 @@ async function generarGrillaMensual(posts, empresas, suscriptor, mesSiguiente, a
   var propuestaValor = perfil.propuesta_valor || ''
   var descripcionCliente = perfil.descripcion || ''
 
+  briefEstrategico = briefEstrategico || null
+  copiesPrevios = copiesPrevios || []
+
   console.log('   Empresa: ' + nombreEmpresa + ' | Rubro: ' + rubro + ' | Web: ' + (webCliente || 'n/a') + ' | Plataformas: ' + plataformas.join(', '))
+  if (briefEstrategico) console.log('   Brief estratégico conectado: ' + (briefEstrategico.territorios_contenido || []).length + ' territorios, ' + (briefEstrategico.reglas_contenido || []).length + ' reglas')
+  if (copiesPrevios.length > 0) console.log('   Copies previos conectados: ' + copiesPrevios.length + ' (evitando overlap)')
 
   // Extraer insights de los posts de competencia
   var insights = extraerInsights(posts)
@@ -64,7 +69,7 @@ async function generarGrillaMensual(posts, empresas, suscriptor, mesSiguiente, a
   var brief = await generarBrief(nombreEmpresa, rubro, tono, diferenciadores, plataformas, insights, mesSiguiente, anio, {
     web: webCliente, instagram: igCliente, linkedin: liCliente, facebook: fbCliente,
     propuesta_valor: propuestaValor, descripcion: descripcionCliente
-  }, cantidadPosts)
+  }, cantidadPosts, briefEstrategico, copiesPrevios)
   if (!brief || !brief.posts || brief.posts.length === 0) {
     console.log('   Brief vacio, abortando grilla')
     return null
@@ -77,7 +82,7 @@ async function generarGrillaMensual(posts, empresas, suscriptor, mesSiguiente, a
   for (var i = 0; i < brief.posts.length; i++) {
     var plan = brief.posts[i]
     console.log('   Post ' + (i+1) + '/' + brief.posts.length + ': ' + plan.plataforma + ' ' + plan.tipo_post + ' - ' + (plan.gancho || '').substring(0, 50))
-    var copy = await generarCopy(plan, nombreEmpresa, rubro, tono, insights, plataformas)
+    var copy = await generarCopy(plan, nombreEmpresa, rubro, tono, insights, plataformas, briefEstrategico)
     grilla.push({
       semana: plan.semana || Math.ceil((i+1) / 4),
       dia: plan.dia || '',
@@ -228,10 +233,12 @@ function extraerInsights(posts) {
 // ═══════════════════════════════════════════════
 // PASO 1: OpenAI genera brief
 // ═══════════════════════════════════════════════
-async function generarBrief(nombre, rubro, tono, difs, plats, insights, mes, anio, extra, cantidadPosts) {
+async function generarBrief(nombre, rubro, tono, difs, plats, insights, mes, anio, extra, cantidadPosts, briefEstrategico, copiesPrevios) {
   cantidadPosts = cantidadPosts || 16
   var est = ESTACIONALIDAD[mes] || ''
   extra = extra || {}
+  briefEstrategico = briefEstrategico || null
+  copiesPrevios = copiesPrevios || []
 
   var empresaExtra = ''
   if (extra.descripcion) empresaExtra += 'Descripcion: ' + extra.descripcion + '\n'
@@ -241,13 +248,70 @@ async function generarBrief(nombre, rubro, tono, difs, plats, insights, mes, ani
   if (extra.linkedin) empresaExtra += 'LinkedIn: ' + extra.linkedin + '\n'
   if (extra.facebook) empresaExtra += 'Facebook: ' + extra.facebook + '\n'
 
+  // ═══ BRIEF ESTRATEGICO (si existe, es la directriz principal) ═══
+  var briefCtx = ''
+  if (briefEstrategico) {
+    briefCtx = '\n=== BRIEF ESTRATEGICO (DIRECTRIZ PRINCIPAL — la grilla DEBE seguir esto) ===\n'
+    if (briefEstrategico.propuesta_valor_unica) briefCtx += 'Propuesta de valor: ' + briefEstrategico.propuesta_valor_unica + '\n'
+    if (briefEstrategico.territorios_contenido && Array.isArray(briefEstrategico.territorios_contenido)) {
+      briefCtx += 'TERRITORIOS DE CONTENIDO (los posts DEBEN distribuirse entre estos):\n'
+      briefEstrategico.territorios_contenido.forEach(function(t) {
+        if (typeof t === 'object') {
+          briefCtx += '  - ' + (t.territorio || t.nombre || '') + ': ' + (t.justificacion || '') + ' (frecuencia: ' + (t.frecuencia_sugerida || 'variable') + ', formatos: ' + ((t.formatos_recomendados || []).join(', ') || 'cualquiera') + ')\n'
+        } else {
+          briefCtx += '  - ' + t + '\n'
+        }
+      })
+    }
+    if (briefEstrategico.tono_comunicacion) {
+      var tc = briefEstrategico.tono_comunicacion
+      if (typeof tc === 'object') {
+        briefCtx += 'TONO: ' + (tc.estilo || '') + '\n'
+        if (tc.palabras_usar) briefCtx += '  Palabras a usar: ' + (Array.isArray(tc.palabras_usar) ? tc.palabras_usar.join(', ') : tc.palabras_usar) + '\n'
+        if (tc.palabras_evitar) briefCtx += '  Palabras a EVITAR: ' + (Array.isArray(tc.palabras_evitar) ? tc.palabras_evitar.join(', ') : tc.palabras_evitar) + '\n'
+      }
+    }
+    if (briefEstrategico.reglas_contenido && Array.isArray(briefEstrategico.reglas_contenido)) {
+      briefCtx += 'REGLAS DE CONTENIDO (obligatorias):\n'
+      briefEstrategico.reglas_contenido.forEach(function(r) { briefCtx += '  - ' + r + '\n' })
+    }
+    if (briefEstrategico.competidores_analizados && Array.isArray(briefEstrategico.competidores_analizados)) {
+      briefCtx += 'OPORTUNIDADES VS COMPETENCIA (usar en los posts):\n'
+      briefEstrategico.competidores_analizados.forEach(function(c) {
+        if (c.oportunidad_para_cliente) briefCtx += '  - vs ' + (c.nombre || '') + ': ' + c.oportunidad_para_cliente + '\n'
+      })
+    }
+    if (briefEstrategico.calendario_estacional) {
+      var cal = briefEstrategico.calendario_estacional
+      if (cal.fechas_relevantes && Array.isArray(cal.fechas_relevantes)) {
+        briefCtx += 'FECHAS RELEVANTES (del brief): ' + cal.fechas_relevantes.join(', ') + '\n'
+      }
+      if (cal.oportunidades && Array.isArray(cal.oportunidades)) {
+        briefCtx += 'OPORTUNIDADES ESTACIONALES: ' + cal.oportunidades.join(', ') + '\n'
+      }
+    }
+    briefCtx += '\n'
+  }
+
+  // ═══ COPIES YA GENERADOS (evitar overlap) ═══
+  var copiesCtx = ''
+  if (copiesPrevios.length > 0) {
+    copiesCtx = '\n=== COPIES YA GENERADOS ESTA SEMANA (NO repetir estos temas/angulos) ===\n'
+    copiesPrevios.forEach(function(c) {
+      copiesCtx += '- [' + (c.plataforma || '') + ' ' + (c.tipo || '') + '] ' + (c.titulo || '') + ' (angulo: ' + (c.angulo || '') + ')\n'
+    })
+    copiesCtx += 'IMPORTANTE: La grilla debe complementar estos copies, NO repetirlos.\n\n'
+  }
+
   var prompt = 'Eres director de estrategia de contenido para redes sociales en Chile. '
     + 'Genera un plan de ' + cantidadPosts + ' posts para ' + MESES[mes] + ' ' + anio + '.\n\n'
     + '=== EMPRESA ===\n' + nombre + ' | Rubro: ' + rubro + '\n'
     + 'Tono: ' + tono + '\n'
     + (difs.length > 0 ? 'Diferenciadores: ' + difs.join(', ') + '\n' : '')
     + empresaExtra
-    + 'Plataformas: ' + plats.join(', ') + '\n\n'
+    + 'Plataformas: ' + plats.join(', ') + '\n'
+    + briefCtx
+    + copiesCtx + '\n'
     + '=== CONTEXTO COMPETITIVO (datos reales de Radar) ===\n'
     + 'Posts de competencia analizados: ' + insights.totalPosts + '\n'
     + 'Empresa mas activa: ' + insights.empresaMasActiva + '\n'
@@ -296,9 +360,26 @@ async function generarBrief(nombre, rubro, tono, difs, plats, insights, mes, ani
 // ═══════════════════════════════════════════════
 // PASO 2: Claude genera copy individual
 // ═══════════════════════════════════════════════
-async function generarCopy(plan, nombre, rubro, tono, insights, plats) {
+async function generarCopy(plan, nombre, rubro, tono, insights, plats, briefEstrategico) {
+  // Inyectar reglas del brief estratégico en el copy
+  var briefRules = ''
+  if (briefEstrategico) {
+    if (briefEstrategico.tono_comunicacion && typeof briefEstrategico.tono_comunicacion === 'object') {
+      var tc = briefEstrategico.tono_comunicacion
+      if (tc.palabras_evitar) briefRules += 'NUNCA uses: ' + (Array.isArray(tc.palabras_evitar) ? tc.palabras_evitar.join(', ') : tc.palabras_evitar) + '\n'
+      if (tc.palabras_usar) briefRules += 'Usa este vocabulario: ' + (Array.isArray(tc.palabras_usar) ? tc.palabras_usar.join(', ') : tc.palabras_usar) + '\n'
+    }
+    if (briefEstrategico.reglas_contenido && Array.isArray(briefEstrategico.reglas_contenido)) {
+      briefRules += 'REGLAS: ' + briefEstrategico.reglas_contenido.join(' | ') + '\n'
+    }
+    if (briefEstrategico.propuesta_valor_unica) {
+      briefRules += 'Propuesta de valor a comunicar: ' + briefEstrategico.propuesta_valor_unica + '\n'
+    }
+  }
+
   var prompt = 'Eres copywriter senior para redes sociales B2B en Chile. '
-    + 'Empresa: ' + nombre + ' (' + rubro + '). Tono: ' + tono + '.\n\n'
+    + 'Empresa: ' + nombre + ' (' + rubro + '). Tono: ' + tono + '.\n'
+    + (briefRules ? '\nDIRECTRICES DEL BRIEF ESTRATEGICO:\n' + briefRules + '\n' : '')
     + 'BRIEF DEL POST:\n'
     + '- Plataforma: ' + plan.plataforma + '\n'
     + '- Tipo: ' + plan.tipo_post + '\n'

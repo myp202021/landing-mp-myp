@@ -10,7 +10,7 @@ var OPENAI_KEY = process.env.OPENAI_API_KEY
 // ═══════════════════════════════════════════════
 // GENERAR GUIONES DE VIDEO
 // ═══════════════════════════════════════════════
-async function generarGuiones(posts, empresas, perfil, copiesGenerados, supabase, suscripcionId) {
+async function generarGuiones(posts, empresas, perfil, copiesGenerados, supabase, suscripcionId, briefEstrategico) {
   console.log('\n   === PIPELINE GUIONES DE VIDEO ===')
 
   if (!OPENAI_KEY) {
@@ -76,6 +76,38 @@ async function generarGuiones(posts, empresas, perfil, copiesGenerados, supabase
     videoCtx += 'IMPORTANTE: Usa estos reels como referencia directa. Cada guion debe explicar que post especifico lo inspira.\n'
   }
 
+  // Construir contexto del brief estratégico
+  briefEstrategico = briefEstrategico || null
+  var briefCtx = ''
+  if (briefEstrategico) {
+    briefCtx = '\n══════════════════════════════════\n'
+    briefCtx += 'BRIEF ESTRATEGICO (los guiones DEBEN seguir estas directrices):\n'
+    briefCtx += '══════════════════════════════════\n'
+    if (briefEstrategico.propuesta_valor_unica) briefCtx += '- Propuesta de valor: ' + briefEstrategico.propuesta_valor_unica + '\n'
+    if (briefEstrategico.territorios_contenido && Array.isArray(briefEstrategico.territorios_contenido)) {
+      briefCtx += '- Territorios autorizados (los guiones deben encajar en alguno):\n'
+      briefEstrategico.territorios_contenido.forEach(function(t) {
+        if (typeof t === 'object') briefCtx += '  * ' + (t.territorio || t.nombre || '') + ': ' + (t.justificacion || '') + '\n'
+        else briefCtx += '  * ' + t + '\n'
+      })
+    }
+    if (briefEstrategico.tono_comunicacion && typeof briefEstrategico.tono_comunicacion === 'object') {
+      var tc = briefEstrategico.tono_comunicacion
+      briefCtx += '- Tono (obligatorio): ' + (tc.estilo || '') + '\n'
+      if (tc.palabras_evitar) briefCtx += '- NUNCA decir en video: ' + (Array.isArray(tc.palabras_evitar) ? tc.palabras_evitar.join(', ') : tc.palabras_evitar) + '\n'
+    }
+    if (briefEstrategico.reglas_contenido && Array.isArray(briefEstrategico.reglas_contenido)) {
+      briefCtx += '- Reglas: ' + briefEstrategico.reglas_contenido.join(' | ') + '\n'
+    }
+    if (briefEstrategico.competidores_analizados && Array.isArray(briefEstrategico.competidores_analizados)) {
+      briefCtx += '- Oportunidades vs competencia:\n'
+      briefEstrategico.competidores_analizados.forEach(function(c) {
+        if (c.oportunidad_para_cliente) briefCtx += '  * vs ' + (c.nombre || '') + ': ' + c.oportunidad_para_cliente + '\n'
+      })
+    }
+    console.log('   Brief estratégico conectado a guiones: ' + (briefEstrategico.territorios_contenido || []).length + ' territorios')
+  }
+
   var prompt = 'Eres un DIRECTOR DE PRODUCCION DE VIDEO que entrega guiones listos para filmar. '
     + 'NO generas ideas vagas. Cada guion es un documento COMPLETO que un camarografo y editor pueden ejecutar sin preguntar nada mas.\n\n'
     + 'REGLA FUNDAMENTAL: Cada guion DEBE referenciar un post ESPECIFICO de la competencia y explicar por que ese formato funciono y como lo adaptas para ' + nombreEmpresa + '.\n\n'
@@ -88,6 +120,7 @@ async function generarGuiones(posts, empresas, perfil, copiesGenerados, supabase
     + (propuestaValor ? '- Propuesta de valor: ' + propuestaValor + '\n' : '')
     + (diferenciadores ? '- Diferenciadores clave: ' + diferenciadores + '\n' : '')
     + '- Mes actual: ' + mesActual + ' ' + ahora.getFullYear() + '\n'
+    + briefCtx
     + '\n══════════════════════════════════\n'
     + 'TOP 10 POSTS DE COMPETENCIA POR ENGAGEMENT:\n'
     + '══════════════════════════════════\n'

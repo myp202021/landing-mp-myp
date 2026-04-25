@@ -190,14 +190,15 @@ function calcScoresPorRed(posts) {
 // ═══════════════════════════════════════════════
 // FUNCION PRINCIPAL
 // ═══════════════════════════════════════════════
-async function generarAuditoria(posts, contenido, cuentas, supabase, suscripcionId) {
+async function generarAuditoria(posts, contenido, cuentas, supabase, suscripcionId, briefEstrategico) {
   console.log('\n   === AUDITORIA MENSUAL ===')
 
   posts = posts || []
   contenido = contenido || []
   cuentas = cuentas || []
+  briefEstrategico = briefEstrategico || null
 
-  // Calcular 8 criterios
+  // Calcular 8 criterios base
   var criterios = [
     calcFrecuencia(posts),
     calcEngagement(posts),
@@ -208,6 +209,53 @@ async function generarAuditoria(posts, contenido, cuentas, supabase, suscripcion
     calcVariedad(posts),
     calcInteraccion(posts),
   ]
+
+  // ═══ CRITERIOS ADICIONALES BASADOS EN BRIEF (si existe) ═══
+  if (briefEstrategico) {
+    console.log('   Brief estratégico conectado a auditoría')
+
+    // Criterio 9: Cobertura de territorios
+    if (briefEstrategico.territorios_contenido && Array.isArray(briefEstrategico.territorios_contenido)) {
+      var territorios = briefEstrategico.territorios_contenido
+      var territoriosCubiertos = 0
+      var totalTerritorios = territorios.length
+      territorios.forEach(function(t) {
+        var nombreTerr = (typeof t === 'object' ? (t.territorio || t.nombre || '') : t).toLowerCase()
+        // Verificar si algún copy cubre este territorio
+        var cubierto = false
+        if (contenido && contenido.length > 0) {
+          contenido.forEach(function(c) {
+            var datos = c.datos || []
+            if (Array.isArray(datos)) {
+              datos.forEach(function(d) {
+                var textoCompleto = ((d.titulo || '') + ' ' + (d.copy || '') + ' ' + (d.angulo || '')).toLowerCase()
+                if (textoCompleto.includes(nombreTerr) || nombreTerr.split(' ').some(function(w) { return w.length > 4 && textoCompleto.includes(w) })) {
+                  cubierto = true
+                }
+              })
+            }
+          })
+        }
+        if (cubierto) territoriosCubiertos++
+      })
+      var cobertura = totalTerritorios > 0 ? Math.round((territoriosCubiertos / totalTerritorios) * 10) : 7
+      criterios.push({ nombre: 'Cobertura de territorios (brief)', score: cobertura })
+      console.log('   Territorios cubiertos: ' + territoriosCubiertos + '/' + totalTerritorios + ' (score: ' + cobertura + ')')
+    }
+
+    // Criterio 10: Alineación con reglas del brief
+    if (briefEstrategico.reglas_contenido && Array.isArray(briefEstrategico.reglas_contenido)) {
+      // Si hay copies con score > 75, las reglas se están siguiendo
+      var avgCopyScore = 0
+      var copiesCount = 0
+      if (contenido && contenido.length > 0) {
+        contenido.forEach(function(c) { if (c.score_promedio > 0) { avgCopyScore += c.score_promedio; copiesCount++ } })
+      }
+      avgCopyScore = copiesCount > 0 ? avgCopyScore / copiesCount : 0
+      var reglaScore = avgCopyScore >= 85 ? 9 : avgCopyScore >= 75 ? 7 : avgCopyScore >= 60 ? 5 : 4
+      criterios.push({ nombre: 'Alineación con brief estratégico', score: reglaScore })
+    }
+  }
 
   // Score general (promedio ponderado igual, escala 0-100)
   var sumaScores = criterios.reduce(function(s, c) { return s + c.score }, 0)
@@ -225,6 +273,11 @@ async function generarAuditoria(posts, contenido, cuentas, supabase, suscripcion
   var redesStr = Object.keys(scoresRed).map(function(r) { return r + '=' + scoresRed[r] }).join(', ')
   console.log('   Scores por red: ' + (redesStr || 'sin datos'))
 
+  // Generar fortaleza y debilidad basados en criterios
+  var criteriosOrdenados = criterios.slice().sort(function(a, b) { return b.score - a.score })
+  var fortaleza = criteriosOrdenados[0] ? criteriosOrdenados[0].nombre + ' (' + criteriosOrdenados[0].score + '/10)' : null
+  var debilidad = criteriosOrdenados[criteriosOrdenados.length - 1] ? criteriosOrdenados[criteriosOrdenados.length - 1].nombre + ' (' + criteriosOrdenados[criteriosOrdenados.length - 1].score + '/10)' : null
+
   // Guardar en Supabase
   if (supabase && suscripcionId) {
     try {
@@ -236,6 +289,8 @@ async function generarAuditoria(posts, contenido, cuentas, supabase, suscripcion
         score_general: scoreGeneral100,
         scores_red: scoresRed,
         criterios: criterios,
+        fortaleza: fortaleza,
+        debilidad: debilidad,
       })
       console.log('   Auditoria guardada en copilot_auditorias')
     } catch (e) {
@@ -249,6 +304,8 @@ async function generarAuditoria(posts, contenido, cuentas, supabase, suscripcion
     score_general: scoreGeneral100,
     scores_red: scoresRed,
     criterios: criterios,
+    fortaleza: fortaleza,
+    debilidad: debilidad,
   }
 }
 
