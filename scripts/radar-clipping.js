@@ -365,6 +365,8 @@ async function main() {
         var brief = await briefModule.generarBrief(sub, misPosts, supabase)
         if (brief) {
           sub.brief_estrategico = brief
+          if (!sub.perfil_empresa) sub.perfil_empresa = {}
+          sub.perfil_empresa.brief = brief
           console.log('   Brief estratégico generado/actualizado')
         }
       } catch (e) { console.log('   Brief error (no bloqueante): ' + e.message) }

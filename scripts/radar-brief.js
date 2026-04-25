@@ -298,16 +298,18 @@ async function generarBrief(suscriptor, posts, supabase) {
       + (brief.competidores_analizados.length || 0) + ' competidores, '
       + (brief.reglas_contenido ? brief.reglas_contenido.length : 0) + ' reglas')
 
-    // ═══ 5. Guardar en Supabase ═══
+    // ═══ 5. Guardar en Supabase (dentro de perfil_empresa como sub-campo) ═══
     if (supabase && suscriptor.id) {
       try {
+        var perfilActual = suscriptor.perfil_empresa || {}
+        perfilActual.brief = brief
         var upd = await supabase.from('clipping_suscripciones')
-          .update({ brief_estrategico: brief })
+          .update({ perfil_empresa: perfilActual, updated_at: new Date().toISOString() })
           .eq('id', suscriptor.id)
         if (upd.error) {
           console.error('   BRIEF ERROR guardando: ' + upd.error.message)
         } else {
-          console.log('   Brief guardado en clipping_suscripciones.brief_estrategico')
+          console.log('   Brief guardado en perfil_empresa.brief')
         }
       } catch (e) {
         console.error('   BRIEF ERROR guardando: ' + e.message)
