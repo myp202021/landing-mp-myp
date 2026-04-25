@@ -1,22 +1,29 @@
 # Copilot — Sistema de Agentes IA Interconectados
 
-> Actualizado: 25 abril 2026
+> Actualizado: 25 abril 2026 — v7 con upgrades 2-7
+
+## Estado
+
+- **QA E2E**: 83 checks, 78 pass, 5 warn (datos del run anterior), 0 fail
+- **Último run semanal exitoso**: 25 abril 2026 (GitHub Actions)
+- **Crons**: comentados (testing phase)
+- **LinkedIn**: deshabilitado (ningún actor funcional)
 
 ## Arquitectura General
 
 ```
                     ┌─────────────────┐
-                    │  MEMORIA        │ ← Lee historico de TODAS las tablas
-                    │  radar-memoria  │   (copies, ideas, auditoria, competencia, guiones)
+                    │  MEMORIA        │ ← Lee histórico de TODAS las tablas
+                    │  radar-memoria  │   (copies, ideas, auditoría, competencia, guiones)
                     └────────┬────────┘
                              │ contexto de aprendizaje
                              ▼
 ┌──────────────┐    ┌─────────────────┐
-│ Competencia  │───▶│  BRIEF          │ ← Recomendaciones de auditoria previa
-│ (scraping)   │    │  radar-brief    │   + patrones competencia 60 dias
+│ Competencia  │───▶│  BRIEF          │ ← Recomendaciones de auditoría previa
+│ (scraping)   │    │  radar-brief    │   + patrones competencia 60 días
 │              │    │                 │   + ideas aprobadas/descartadas
 └──────────────┘    └────────┬────────┘
-                             │ brief estrategico
+                             │ brief estratégico (editable por cliente)
                     ┌────────┴────────────────────────────┐
                     │                │                     │
                     ▼                ▼                     ▼
@@ -26,183 +33,178 @@
            │              │ │              │    │              │
            │ + memoria    │ │ + brief      │    │ + brief      │
            │ + brief      │ │ + memoria    │    │ + copies     │
-           │ + previos    │ │ + previos    │    │ + memoria    │
+           │ + previos    │ │ + dedup prev │    │ + memoria    │
            └──────┬───────┘ └──────────────┘    └──────────────┘
                   │
-                  │ copies generados + gap analysis
                   ▼
-           ┌──────────────┐
-           │  IDEAS       │ ← Se generan automaticamente
-           │              │   Cliente puede: aprobar/descartar/en_progreso
-           │              │   Ideas aprobadas → prioridad en proximo run
+           ┌──────────────┐     ┌──────────────┐
+           │  IDEAS       │────▶│ NOTIFICACIÓN │ → email M&P
+           │  (auto-gen)  │     │ al aprobar   │
+           │ + gap anal.  │     └──────────────┘
            └──────────────┘
                   │
                   ▼
            ┌──────────────┐
-           │  AUDITORIA   │ ← Score 0-100, 8-10 criterios
-           │  (mensual)   │   Incluye cobertura de territorios (brief)
-           │              │   Incluye alineacion con brief
-           │              │   Genera fortaleza/debilidad
-           │              │   → Retroalimenta proximo brief
+           │  AUDITORÍA   │ ← semanal (light) + mensual (completa)
+           │              │   10 criterios (8 base + 2 brief-aware)
+           │              │   → fortaleza/debilidad auto
+           │              │   → retroalimenta próximo brief
            └──────┬───────┘
                   │
                   ▼
-           ┌──────────────┐
-           │  EMAIL +     │ ← Recibe TODO: posts, IA, copies, grilla,
-           │  DASHBOARD   │   guiones, auditoria, ideas
-           │  + PDF/Excel │
-           └──────────────┘
+    ┌──────────────────────────────┐
+    │  EMAIL + PDF + Excel         │
+    │  Brief section + copies      │
+    │  preview + auditoría barras  │
+    └──────────────────────────────┘
 ```
 
----
+## Flujo de Ejecución (por suscriptor)
 
-## Agentes en Detalle
+```
+ 1. Scraping IG       → radar_posts
+ 2. Trends            ← radar_posts (período anterior)
+ 3. MEMORIA           ← TODO (60 días: copies, ideas, auditorías, competencia, guiones)
+ 4. Perfil auto       → perfil_empresa (si incompleto)
+ 5. Brief             ← memoria + posts → perfil_empresa.brief
+ 6. Contenido         ← brief + memoria + previos → radar_contenido + copilot_ideas
+ 7. Grilla (mensual)  ← brief + copies + memoria → radar_contenido (tipo=grilla)
+ 8. Guiones           ← brief + copies + dedup previos + memoria → copilot_guiones
+ 9. Auditoría         ← brief + contenido + posts → copilot_auditorias
+10. PDF ejecutivo     ← KPIs + brief + IA + copies + auditoría barras
+11. Excel             ← copies + guiones (+ grilla si mensual)
+12. Email             ← brief section + IA + empresas + copies preview + auditoría + CTA
+```
 
-### 1. MEMORIA (`radar-memoria.js`)
-**Rol:** Sistema de aprendizaje inter-run. Lee datos historicos y genera contexto.
-**Input:** Supabase (todas las tablas)
-**Output:** Objeto `memoria` con 5 secciones
-**Costo:** $0 (solo queries a Supabase)
+## 12 Agentes
 
-**Secciones:**
-- `copiesAprendizaje`: mejor/peor angulo, mejor plataforma, score promedio, problemas recurrentes, factores de exito
-- `ideasContext`: ideas aprobadas (priorizar), descartadas (evitar), en progreso (no duplicar)
-- `auditoriaAprendizaje`: ultimo score, tendencia, criterios debiles/fuertes
-- `competenciaPatrones`: perfil por competidor (60 dias), tendencias, formato/tema ganador global
-- `guionesPrevios`: titulos previos (dedup)
+| # | Agente | Archivo | Input | Output | API | Costo |
+|---|--------|---------|-------|--------|-----|-------|
+| 1 | Memoria | `radar-memoria.js` | Supabase 6 tablas | Objeto memoria 5 secciones | - | $0 |
+| 2 | Perfil | `radar-perfil.js` | Nombre+cuentas | perfil_empresa | OpenAI | ~$0.01 |
+| 3 | Brief | `radar-brief.js` | Perfil+posts+memoria | perfil_empresa.brief | OpenAI 4o | ~$0.02 |
+| 4 | Contenido | `radar-contenido.js` | Brief+memoria+previos+posts | radar_contenido+ideas | OpenAI+Claude | ~$0.03 |
+| 5 | Grilla | `radar-grilla-mensual.js` | Brief+copies+memoria+posts | radar_contenido (grilla) | OpenAI+Claude | ~$0.10 |
+| 6 | Guiones | `radar-guiones.js` | Brief+copies+dedup+memoria | copilot_guiones | OpenAI | ~$0.01 |
+| 7 | Auditoría | `radar-auditoria.js` | Brief+contenido+posts | copilot_auditorias | - | $0 |
+| 8 | Ideas | (en contenido) | Gap analysis de copies | copilot_ideas | - | $0 |
+| 9 | QA técnico | `copilot-qa-tecnico.js` | Supabase+web | 57 checks | - | $0 |
+| 10 | QA E2E | `copilot-qa-e2e.js` | Supabase+web+memoria | 83 checks | - | $0 |
+| 11 | Validador | `radar-validar-cuentas.js` | Handles | Validación+notificación | Apify | ~$0.02 |
+| 12 | Orquestador | `radar-clipping.js` v7 | Todo | Email+PDF+Excel | Apify+APIs | variable |
 
-**Funciones exportadas:**
-- `cargarMemoria(supabase, suscripcionId)` → objeto memoria
-- `generarContextoAprendizaje(memoria)` → texto para inyectar en prompts
-- `generarRecomendacionesBrief(memoria)` → array de recomendaciones
+## Feedback Loops (10)
 
----
+```
+ 1. Ideas aprobadas     → Brief → Copies (se priorizan)
+ 2. Ideas descartadas   → Brief → Copies (se evitan)
+ 3. Auditoría débil     → Brief agrega reglas compensatorias
+ 4. Competencia crece   → Brief agrega contraataque
+ 5. Problemas QA        → Memoria → todos los agentes evitan
+ 6. Formato ganador     → Grilla prioriza
+ 7. Copies previos      → Contenido + Grilla NO repiten
+ 8. Guiones previos     → Guiones NO repiten títulos
+ 9. Cliente edita brief → Próximo run usa brief editado
+10. Cliente aprueba idea → Email a M&P + prioridad en copies
+```
 
-### 2. BRIEF ESTRATEGICO (`radar-brief.js`)
-**Rol:** Director de estrategia. Genera el documento que alimenta todos los agentes.
-**Input:** Perfil empresa + posts competencia + memoria (auditoria + ideas + patrones)
-**Output:** JSON con 8 campos, guardado en `clipping_suscripciones.perfil_empresa.brief`
-**API:** OpenAI gpt-4o
-**Costo:** ~$0.02/run
+## Dashboard (7 tabs)
 
-**Campos del brief:**
-1. `resumen_negocio` — posicion en mercado
-2. `publico_objetivo` — descripcion + pain_points + motivaciones
-3. `propuesta_valor_unica` — frase diferenciadora
-4. `competidores_analizados` — fortalezas/debilidades/oportunidades por competidor
-5. `territorios_contenido` — pilares tematicos con justificacion y formatos
-6. `tono_comunicacion` — estilo + palabras a usar/evitar
-7. `calendario_estacional` — fechas relevantes + oportunidades
-8. `reglas_contenido` — reglas accionables
+| Tab | Funcionalidad |
+|-----|---------------|
+| Competencia | Posts por empresa, engagement, top 5, insights IA |
+| **Brief** | Visualizar + **editar** (PVU, territorios, reglas, tono) |
+| Contenido | Copies + grilla, scores, copy button, export Excel |
+| Auditoría | Score 0-100, criterios barras, scores por red, selector mes |
+| Guiones | Reel+Story con gancho/escenas/cierre/dirección visual |
+| **Ideas** | Banco de ideas + **aprobar/descartar/en_progreso** → notifica M&P |
+| Reporte | Ejecutivo imprimible: resumen + empresas + fortalezas/mejoras + top posts |
 
-**Retroalimentacion:**
-- Lee auditoria previa → si hay criterios debiles, agrega reglas compensatorias
-- Lee ideas aprobadas → las incorpora como directriz
-- Lee ideas descartadas → las excluye
-- Lee patrones de competencia → adapta territorios
+## Email (secciones en orden)
 
----
+1. Header (M&P Copilot + fecha + ventana)
+2. KPIs (posts, redes, likes, empresas)
+3. **Brief resumen** (propuesta valor + territorios + reglas)
+4. Análisis IA (contexto + empresas badge + oportunidad + alerta)
+5. Tabla empresas (posts, likes, engagement promedio)
+6. Top 5 posts (red, texto, likes)
+7. **Copies preview** (plataforma + tipo + score + título + **2 líneas preview** + ref competidor)
+8. Grilla preview (mensual)
+9. Guiones preview (duración + gancho)
+10. **Auditoría** (score + scores por red + criterios fortaleza/debilidad)
+11. CTA (contratar o ver dashboard)
+12. Footer (plan incluye, horario)
 
-### 3. CONTENIDO / COPIES (`radar-contenido.js`)
-**Rol:** Pipeline de 3 pasos para generar copies de calidad.
-**Input:** Posts competencia + brief + memoria + copies previos
-**Output:** 3 copies en `radar_contenido` + ideas en `copilot_ideas`
-**APIs:** OpenAI gpt-4o-mini (analisis + QA), Claude Sonnet (copies)
-**Costo:** ~$0.03/run
+## PDF Ejecutivo (dark A4, 2 páginas)
 
-**Pipeline:**
-1. **Paso 1 — Analisis (OpenAI):** Top 10 posts por engagement → 3 briefs con justificacion competitiva
-2. **Paso 2 — Creacion (Claude):** Copy completo por brief, min 150-250 palabras, referencia competidor
-3. **Paso 3 — QA (heuristico):** Score 0-95, 15+ penalizaciones, 6 bonos, auto-fix si <65
+**Página 1:**
+- Header M&P Copilot + nombre cliente + fecha
+- KPIs: posts, likes, comments, empresas, score auditoría
+- Brief: propuesta valor + badges territorios
+- Análisis competitivo: tabla empresas + badges + insights
+- Oportunidad + alerta
 
-**Aprendizaje:**
-- Lee copies previos (ultimos 3 batches) → NO repetir temas/angulos
-- Lee memoria → mejores angulos, problemas recurrentes, factores de exito
-- Lee ideas aprobadas → priorizar esos temas
-- Lee ideas descartadas → evitar esos temas
-- Genera ideas como efecto secundario (gap analysis)
+**Página 2:**
+- Copies: preview completo + referencia competidor + score
+- Auditoría: score grande + barras por criterio con colores
 
----
+## QA E2E (83 checks, 11 categorías)
 
-### 4. GRILLA MENSUAL (`radar-grilla-mensual.js`)
-**Rol:** Plan de contenido completo para el mes siguiente.
-**Input:** Posts competencia + brief + copies ya generados + memoria
-**Output:** 4-16 posts en `radar_contenido` (tipo=grilla)
-**APIs:** OpenAI gpt-4o (plan), Claude Sonnet (copies), OpenAI gpt-4o-mini (QA)
-**Costo:** ~$0.05-0.15/run (depende de cantidad posts)
-
----
-
-### 5. GUIONES (`radar-guiones.js`)
-**Rol:** Guiones de video listos para produccion.
-**Input:** Posts competencia + brief + copies generados + memoria
-**Output:** 2 guiones en `copilot_guiones`
-**API:** OpenAI gpt-4o-mini
-**Costo:** ~$0.01/run
-
-**Aprendizaje:**
-- Lee titulos de guiones previos → NO repetir
-- Lee patrones de competencia → adaptar formatos
-- Sigue territorios del brief
-
----
-
-### 6. AUDITORIA (`radar-auditoria.js`)
-**Rol:** Evaluacion mensual del desempeno.
-**Input:** Posts + contenido + cuentas + brief
-**Output:** Score 0-100 + criterios en `copilot_auditorias`
-**Costo:** $0 (pura logica)
-
-**Criterios base (8):** Frecuencia, Engagement, Consistencia, Calidad copies, Hashtags, Horarios, Variedad, Interaccion
-
-**Criterios brief-aware (+2 si brief existe):**
-9. Cobertura de territorios
-10. Alineacion con brief
-
----
-
-### 7. IDEAS (`copilot_ideas`)
-**Estados (gestionables desde dashboard):**
-- `nueva` → `aprobada` (se prioriza) / `descartada` (se evita) / `en_progreso` (no duplicar) → `publicada`
-
----
+| Categoría | Checks | Qué verifica |
+|-----------|--------|--------------|
+| SUB | 2 | Suscripción carga, perfil existe |
+| BRIEF | 11 | Existe, campos llenos, interconexión →grilla/copies/guiones |
+| POSTS | 6 | Datos válidos, multi-competidor, texto presente |
+| COPIES | 18 | Largo, título, plataforma, score, hashtags, no [object Object], ref competidor |
+| GRILLA | 3 | Existe, >=4 posts, score >60 |
+| GUIONES | 12 | Títulos, gancho objeto, escenas >=2, cierre CTA, ref competencia |
+| AUDIT | 6 | Score numérico, criterios >=8 con nombre+score, scores_red, fortaleza |
+| IDEAS | 3 | Existen, títulos, gap analysis |
+| MEMORIA | 4 | Carga, copies aprendizaje, competencia, contexto |
+| DASH | 6 | HTTP 200, no [object Object], no undefined, dark theme, branding |
+| LINKS | 5 | /copilot, /login, /dashboard, /configurar, /contratar |
 
 ## Tablas Supabase
 
-| Tabla | Uso |
-|-------|-----|
-| `clipping_suscripciones` | Config + perfil_empresa.brief |
-| `radar_posts` | Posts competencia (historico) |
-| `radar_contenido` | Copies (tipo=copy) + grillas (tipo=grilla) |
-| `copilot_ideas` | Ideas con estado |
-| `copilot_auditorias` | Auditorias mensuales |
-| `copilot_guiones` | Guiones de video |
+| Tabla | Campos clave |
+|-------|-------------|
+| clipping_suscripciones | id, email, plan, estado, cuentas[], perfil_empresa.brief, emails_destino |
+| radar_posts | suscripcion_id, red, handle, texto, likes, comments, tipo_post, fecha_post |
+| radar_contenido | suscripcion_id, tipo (copy/grilla), datos[], score_promedio, mes, anio |
+| copilot_ideas | suscripcion_id, titulo, descripcion, categoria, prioridad, estado |
+| copilot_auditorias | suscripcion_id, score_general, scores_red{}, criterios[], fortaleza, debilidad |
+| copilot_guiones | suscripcion_id, datos[] (titulo, gancho{}, escenas[], cierre{}, direccion_visual{}) |
 
----
+## API Routes
 
-## Flujo de Ejecucion
+| Ruta | Método | Uso |
+|------|--------|-----|
+| /api/copilot/trial | POST | Crear suscripción trial |
+| /api/copilot/activar | POST | Activar plan |
+| /api/copilot/checkout | POST | Flow.cl (pendiente) |
+| /api/copilot/export-grilla | GET | Descargar Excel grilla |
+| /api/copilot/notify-idea | POST | Notificar M&P al aprobar/descartar idea |
 
-```
-1. Scraping      → radar_posts
-2. Trends        ← radar_posts (periodo anterior)
-3. MEMORIA       ← TODO (copies, ideas, auditoria, competencia, guiones)
-4. Perfil        → clipping_suscripciones.perfil_empresa
-5. Brief         ← memoria + posts → perfil_empresa.brief
-6. Contenido     ← brief + memoria + previos → radar_contenido + copilot_ideas
-7. Grilla        ← brief + copies + memoria → radar_contenido
-8. Guiones       ← brief + copies + memoria → copilot_guiones
-9. Auditoria     ← brief + contenido + posts → copilot_auditorias
-10. Email + PDF  ← TODO
-```
+## Workflows GitHub Actions
 
-## Loops de Retroalimentacion
+| Workflow | Schedule | Modo | Status |
+|----------|----------|------|--------|
+| radar-clipping-diario.yml | L-V 7:30 AM Chile | --diario | cron COMENTADO |
+| radar-clipping-semanal.yml | Lunes 9:00 AM Chile | --semanal | cron COMENTADO, dispatch OK |
+| radar-clipping-mensual.yml | Día 1, 9:00 AM Chile | --mensual | cron COMENTADO |
+| copilot-qa.yml | manual | QA técnico | dispatch OK |
 
-```
-Ideas aprobadas    → Brief → Copies (se priorizan)
-Ideas descartadas  → Brief → Copies (se evitan)
-Auditoria debil    → Brief → Copies (se compensan)
-Copies score bajo  → QA auto-fix → Copies mejorados
-Competencia crece  → Brief → Copies (contraataque)
-Formato ganador    → Brief → Grilla (se prioriza)
-Problemas recurrentes → Memoria → Todos los agentes (se evitan)
-```
+## Plan de Upgrades Pendientes
+
+| # | Upgrade | Estado |
+|---|---------|--------|
+| 1 | LinkedIn scraping | BLOQUEADO — evaluar Proxycurl/API |
+| 2 | Auditoría semanal | ✅ HECHO |
+| 3 | QA grilla estricto | ✅ HECHO |
+| 4 | Email preview copy | ✅ HECHO |
+| 5 | Brief editable | ✅ HECHO |
+| 6 | Notificación ideas | ✅ HECHO |
+| 7 | PDF ejecutivo | ✅ HECHO |
+| 8 | Flow.cl pagos | PENDIENTE (al final) |
+| 9 | Crons activados | PENDIENTE (cuando QA 100% + cliente confirme) |
+| 10 | Multi-país | FUTURO |
