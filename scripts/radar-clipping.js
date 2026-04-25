@@ -463,16 +463,16 @@ async function main() {
       guionesData = await guionesModule.generarGuiones(misPosts, empresas, sub.perfil_empresa || {}, contenidoSugerido, supabase, sub.id, sub.brief_estrategico || null, memoria)
     }
 
-    // Auditoría mensual (mensual, todos los planes)
+    // Auditoría (mensual completa + semanal light)
     // INTERCONEXION: recibe brief para auditar cobertura de territorios y alineación
     var auditoriaData = null
-    if (MODO === 'mensual') {
-      var contenidoMes = contenidoSugerido || []
-      auditoriaData = await auditoriaModule.generarAuditoria(misPosts, contenidoMes, cuentas, supabase, sub.id, sub.brief_estrategico || null)
+    if (MODO === 'mensual' || MODO === 'semanal') {
+      var contenidoAud = contenidoSugerido || []
+      auditoriaData = await auditoriaModule.generarAuditoria(misPosts, contenidoAud, cuentas, supabase, sub.id, sub.brief_estrategico || null, MODO)
     }
 
     var html = generarEmailHTML(misPosts, cuentas, hoy, MODO, resumenIA, empresas, trends, sub.id, contenidoSugerido, sub.estado, sub.plan, sub.trial_ends, grillaMensual, guionesData, null, auditoriaData, sub.brief_estrategico)
-    var pdf = generarPDF(html, hoy, MODO)
+    var pdf = generarPDFEjecutivo(misPosts, empresas, hoy, MODO, resumenIA, contenidoSugerido, auditoriaData, guionesData, sub, grillaMensual)
 
     // Generar Excel adjuntos según modo y plan
     var attachments = []
@@ -1000,10 +1000,22 @@ function generarEmailHTML(posts, cuentas, fecha, modo, resumenIA, empresas, tren
       h += '<table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom:6px;"><tr>'
       h += '<td bgcolor="#12102a" style="padding:8px 12px;border-bottom:1px solid #2d2a5e;">'
       h += '<span style="color:' + cColor + ';font-size:10px;font-weight:700;">' + cPlat + '</span> '
-      h += '<span style="color:#c4b5fd;font-size:12px;">' + truncar(cTitle, 60) + '</span>'
+      if (cs.tipo) h += '<span style="color:#64748b;font-size:10px;">' + cs.tipo + '</span> '
       if (cs.score) {
-        var scColor = cs.score >= 80 ? '#10B981' : cs.score >= 50 ? '#F59E0B' : '#EF4444'
-        h += ' <span style="color:' + scColor + ';font-size:10px;font-weight:700;">' + cs.score + '</span>'
+        var scColor = cs.score >= 80 ? '#10B981' : cs.score >= 65 ? '#F59E0B' : '#EF4444'
+        h += '<span style="color:' + scColor + ';font-size:10px;font-weight:700;">' + cs.score + '</span>'
+      }
+      h += '<br/><span style="color:#ffffff;font-size:12px;font-weight:600;">' + truncar(cTitle, 70) + '</span>'
+      // Preview: primeras 2 líneas del copy
+      if (cs.copy) {
+        var previewLines = cs.copy.split('\n').filter(function(l) { return l.trim().length > 0 }).slice(0, 2).join(' ')
+        h += '<br/><span style="color:#94a3b8;font-size:11px;line-height:1.4;">' + truncar(previewLines, 140) + '</span>'
+      }
+      // Referencia competitiva
+      if (cs.competidor_referencia) {
+        h += '<br/><span style="color:#818cf8;font-size:10px;font-style:italic;">vs ' + cs.competidor_referencia
+        if (cs.engagement_referencia) h += ' (eng: ' + cs.engagement_referencia + ')'
+        h += '</span>'
       }
       h += '</td></tr></table>'
     }
@@ -1065,8 +1077,8 @@ function generarEmailHTML(posts, cuentas, fecha, modo, resumenIA, empresas, tren
     h += '</td></tr>'
   }
 
-  // === 9. AUDITORIA (mensual, all plans) ===
-  if (auditoriaData && modo === 'mensual') {
+  // === 9. AUDITORIA (semanal+mensual, all plans) ===
+  if (auditoriaData && (modo === 'semanal' || modo === 'mensual')) {
     var scoreVal = auditoriaData.score_general || auditoriaData.score || 0
     var scoreColor = scoreVal >= 75 ? '#10B981' : scoreVal >= 50 ? '#F59E0B' : '#EF4444'
     h += '<tr><td bgcolor="#0F0D2E" style="padding:4px 0 0 0;"></td></tr>'
@@ -1144,15 +1156,171 @@ function generarEmailHTML(posts, cuentas, fecha, modo, resumenIA, empresas, tren
 }
 
 
-// === PDF ===
-function generarPDF(html, fecha, modo) {
+// === PDF EJECUTIVO PREMIUM ===
+function generarPDFEjecutivo(posts, empresas, fecha, modo, resumenIA, copies, auditoria, guiones, sub, grilla) {
+  copies = copies || []
+  auditoria = auditoria || null
+  guiones = guiones || null
+  grilla = grilla || null
+  var perfil = sub.perfil_empresa || {}
+  var brief = perfil.brief || null
+  var nombre = perfil.nombre || sub.nombre || sub.email
+  var fechaLegible = new Date(fecha + 'T12:00:00').toLocaleDateString('es-CL', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
+  var modoLabel = modo === 'mensual' ? 'Reporte Mensual' : modo === 'semanal' ? 'Reporte Semanal' : 'Reporte Diario'
+  var totalLikes = posts.reduce(function(s, p) { return s + (p.likes || 0) }, 0)
+  var totalComments = posts.reduce(function(s, p) { return s + (p.comments || 0) }, 0)
+  var nEmpresas = Object.keys(empresas).length
+  var ia = parseIAResponse(resumenIA)
+
+  var truncar = function(txt, max) {
+    if (!txt) return ''
+    if (typeof txt !== 'string') txt = String(txt)
+    return txt.replace(/<[^>]*>/g, '').replace(/\n/g, ' ').substring(0, max) + (txt.length > max ? '...' : '')
+  }
+
+  var h = '<!DOCTYPE html><html><head><meta charset="utf-8"><style>'
+  h += 'body{margin:0;padding:0;background:#0F0D2E;color:#c4b5fd;font-family:-apple-system,Helvetica,Arial,sans-serif;font-size:11px;line-height:1.5;}'
+  h += '.page{width:210mm;min-height:297mm;padding:20mm 18mm;box-sizing:border-box;page-break-after:always;}'
+  h += '.page:last-child{page-break-after:auto;}'
+  h += 'h1{color:#fff;font-size:22px;margin:0 0 4px;}'
+  h += 'h2{color:#a5b4fc;font-size:14px;margin:20px 0 8px;padding-bottom:4px;border-bottom:2px solid #4F46E5;}'
+  h += 'h3{color:#fff;font-size:12px;margin:12px 0 4px;}'
+  h += '.kpi{display:inline-block;background:#1a1745;border-radius:8px;padding:10px 16px;margin:0 8px 8px 0;text-align:center;min-width:80px;}'
+  h += '.kpi-val{font-size:22px;font-weight:800;color:#a5b4fc;}'
+  h += '.kpi-label{font-size:9px;color:#64748b;margin-top:2px;}'
+  h += '.card{background:#1a1745;border-radius:8px;padding:12px 14px;margin-bottom:8px;}'
+  h += '.badge{display:inline-block;font-size:9px;font-weight:700;padding:2px 8px;border-radius:3px;}'
+  h += '.green{background:#052e16;color:#10B981;}'
+  h += '.yellow{background:#422006;color:#F59E0B;}'
+  h += '.red{background:#450a0a;color:#EF4444;}'
+  h += '.cyan{background:#083344;color:#06B6D4;}'
+  h += '.purple{background:#2e1065;color:#8B5CF6;}'
+  h += '.bar{height:6px;border-radius:3px;margin-top:3px;}'
+  h += '.bar-fill{height:6px;border-radius:3px;}'
+  h += 'table{width:100%;border-collapse:collapse;font-size:10px;}'
+  h += 'th{background:#1e1b4b;color:#fff;padding:6px 8px;text-align:left;font-weight:700;}'
+  h += 'td{padding:6px 8px;border-bottom:1px solid #2d2a5e;}'
+  h += 'tr:nth-child(even) td{background:#12102a;}'
+  h += '.footer{text-align:center;font-size:9px;color:#64748b;margin-top:20px;padding-top:12px;border-top:1px solid #2d2a5e;}'
+  h += '@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact;}}'
+  h += '</style></head><body>'
+
+  // === PAGE 1: Resumen Ejecutivo ===
+  h += '<div class="page">'
+  h += '<p style="font-size:10px;color:#64748b;letter-spacing:2px;margin:0;">M&P COPILOT</p>'
+  h += '<h1>' + modoLabel + '</h1>'
+  h += '<p style="color:#94a3b8;margin:0 0 16px;">' + nombre + ' &middot; ' + fechaLegible + '</p>'
+
+  // KPIs
+  h += '<div>'
+  h += '<div class="kpi"><div class="kpi-val">' + posts.length + '</div><div class="kpi-label">Posts</div></div>'
+  h += '<div class="kpi"><div class="kpi-val">' + totalLikes.toLocaleString() + '</div><div class="kpi-label">Likes</div></div>'
+  h += '<div class="kpi"><div class="kpi-val">' + totalComments.toLocaleString() + '</div><div class="kpi-label">Comments</div></div>'
+  h += '<div class="kpi"><div class="kpi-val">' + nEmpresas + '</div><div class="kpi-label">Empresas</div></div>'
+  if (auditoria) h += '<div class="kpi"><div class="kpi-val" style="color:' + (auditoria.score_general >= 75 ? '#10B981' : auditoria.score_general >= 50 ? '#F59E0B' : '#EF4444') + ';">' + (auditoria.score_general || 0) + '</div><div class="kpi-label">Score</div></div>'
+  h += '</div>'
+
+  // Brief resumen
+  if (brief) {
+    h += '<h2>Brief Estrat\u00e9gico</h2>'
+    if (brief.propuesta_valor_unica) h += '<div class="card"><p style="color:#fff;font-weight:700;font-size:12px;margin:0;">' + truncar(brief.propuesta_valor_unica, 200) + '</p></div>'
+    if (brief.territorios_contenido && Array.isArray(brief.territorios_contenido)) {
+      h += '<p style="margin:8px 0 4px;font-size:10px;color:#64748b;">TERRITORIOS:</p>'
+      brief.territorios_contenido.forEach(function(t) {
+        var nom = typeof t === 'object' ? (t.territorio || t.nombre || '') : t
+        h += '<span class="badge cyan" style="margin:0 4px 4px 0;">' + truncar(nom, 30) + '</span>'
+      })
+    }
+  }
+
+  // IA Analysis
+  if (ia) {
+    h += '<h2>An\u00e1lisis Competitivo</h2>'
+    if (ia.contexto) h += '<div class="card" style="border-left:3px solid #7C3AED;"><p style="margin:0;">' + truncar(ia.contexto, 400) + '</p></div>'
+    if (ia.empresas && ia.empresas.length > 0) {
+      h += '<table><tr><th>Empresa</th><th>Estado</th><th>Insight</th></tr>'
+      ia.empresas.forEach(function(e) {
+        var bClass = e.badge === 'green' ? 'green' : e.badge === 'yellow' ? 'yellow' : 'red'
+        h += '<tr><td style="color:#fff;font-weight:700;">' + (e.nombre || '') + '</td>'
+        h += '<td><span class="badge ' + bClass + '">' + (e.badge || '') + '</span></td>'
+        h += '<td>' + truncar(e.texto, 150) + '</td></tr>'
+      })
+      h += '</table>'
+    }
+    if (ia.oportunidad) h += '<div class="card" style="border-left:3px solid #F59E0B;"><p style="margin:0;"><span class="badge yellow">Oportunidad</span> ' + truncar(ia.oportunidad, 200) + '</p></div>'
+    if (ia.alerta) h += '<div class="card" style="border-left:3px solid #EF4444;"><p style="margin:0;"><span class="badge red">Alerta</span> ' + truncar(ia.alerta, 200) + '</p></div>'
+  }
+
+  // Company table
+  h += '<h2>Empresas Monitoreadas</h2>'
+  h += '<table><tr><th>Empresa</th><th>Posts</th><th>Likes</th><th>Eng Prom</th></tr>'
+  Object.keys(empresas).forEach(function(nom) {
+    var emp = empresas[nom]
+    var empHandles = [emp.ig, emp.li].filter(Boolean)
+    var empPosts = posts.filter(function(p) { return p.red !== 'Prensa' && empHandles.includes(p.handle) })
+    var totalN = empPosts.length
+    var totalL = empPosts.reduce(function(s, p) { return s + (p.likes || 0) }, 0)
+    var totalC = empPosts.reduce(function(s, p) { return s + (p.comments || 0) }, 0)
+    var avgE = totalN > 0 ? Math.round((totalL + totalC) / totalN) : 0
+    h += '<tr><td style="color:#fff;font-weight:700;">' + nom + '</td><td>' + totalN + '</td><td>' + totalL.toLocaleString() + '</td><td>' + avgE + '</td></tr>'
+  })
+  h += '</table>'
+
+  h += '<div class="footer">Copilot by Muller y P\u00e9rez &middot; mulleryperez.cl &middot; Generado autom\u00e1ticamente</div>'
+  h += '</div>'
+
+  // === PAGE 2: Contenido (si hay copies) ===
+  if (copies.length > 0) {
+    h += '<div class="page">'
+    h += '<p style="font-size:10px;color:#64748b;letter-spacing:2px;margin:0;">M&P COPILOT</p>'
+    h += '<h1>Contenido Sugerido</h1>'
+    h += '<p style="color:#94a3b8;margin:0 0 16px;">' + copies.length + ' copies generados &middot; Score promedio: ' + Math.round(copies.reduce(function(s, c) { return s + (c.score || 0) }, 0) / copies.length) + '</p>'
+
+    copies.forEach(function(c, i) {
+      var platColor = (c.plataforma || '').includes('Instagram') ? '#E4405F' : (c.plataforma || '').includes('LinkedIn') ? '#0A66C2' : '#94a3b8'
+      var scoreColor = (c.score || 0) >= 80 ? '#10B981' : (c.score || 0) >= 65 ? '#F59E0B' : '#EF4444'
+      h += '<div class="card" style="border-left:3px solid ' + platColor + ';">'
+      h += '<p style="margin:0 0 4px;"><span class="badge" style="background:' + platColor + ';color:#fff;">' + (c.plataforma || '') + ' ' + (c.tipo || '') + '</span>'
+      h += ' <span style="color:' + scoreColor + ';font-weight:700;">' + (c.score || 0) + '</span></p>'
+      h += '<h3 style="margin:4px 0;">' + (c.titulo || 'Copy ' + (i+1)) + '</h3>'
+      if (c.competidor_referencia) h += '<p style="font-size:9px;color:#818cf8;font-style:italic;">vs ' + c.competidor_referencia + (c.engagement_referencia ? ' (eng: ' + c.engagement_referencia + ')' : '') + '</p>'
+      h += '<p style="white-space:pre-line;font-size:10px;line-height:1.5;">' + truncar(c.copy, 500) + '</p>'
+      h += '</div>'
+    })
+
+    // Auditoría
+    if (auditoria) {
+      h += '<h2>Auditor\u00eda de Perfil</h2>'
+      h += '<div class="card"><div style="display:flex;align-items:center;gap:16px;">'
+      h += '<div style="font-size:36px;font-weight:800;color:' + (auditoria.score_general >= 75 ? '#10B981' : '#F59E0B') + ';">' + (auditoria.score_general || 0) + '</div>'
+      h += '<div style="flex:1;">'
+      if (Array.isArray(auditoria.criterios)) {
+        auditoria.criterios.forEach(function(c) {
+          var val = typeof c === 'object' ? c.score : c
+          var nom = typeof c === 'object' ? c.nombre : 'Criterio'
+          var color = val >= 8 ? '#10B981' : val >= 5 ? '#F59E0B' : '#EF4444'
+          h += '<div style="margin-bottom:3px;"><span style="font-size:9px;color:#94a3b8;display:inline-block;width:140px;">' + nom + '</span>'
+          h += '<div class="bar" style="display:inline-block;width:80px;background:#2d2a5e;vertical-align:middle;"><div class="bar-fill" style="width:' + (val * 10) + '%;background:' + color + ';"></div></div>'
+          h += '<span style="font-size:9px;color:' + color + ';font-weight:700;margin-left:4px;">' + val + '</span></div>'
+        })
+      }
+      h += '</div></div></div>'
+    }
+
+    h += '<div class="footer">Copilot by Muller y P\u00e9rez &middot; mulleryperez.cl</div>'
+    h += '</div>'
+  }
+
+  h += '</body></html>'
+
+  // Generar PDF con wkhtmltopdf
   var tmpH = '/tmp/radar-' + fecha + '-' + modo + '.html'
   var tmpP = '/tmp/radar-' + fecha + '-' + modo + '.pdf'
-  fs.writeFileSync(tmpH, '<!DOCTYPE html><html><head><meta charset="utf-8"><style>body{margin:0;padding:20px;background:#eef0f4;font-family:-apple-system,Helvetica,Arial,sans-serif;}</style></head><body>' + html + '</body></html>')
+  fs.writeFileSync(tmpH, h)
   try {
-    childProcess.execSync('wkhtmltopdf --quiet --enable-local-file-access --page-size A4 --margin-top 10 --margin-bottom 10 --margin-left 10 --margin-right 10 "' + tmpH + '" "' + tmpP + '"', { timeout: 30000 })
+    childProcess.execSync('wkhtmltopdf --quiet --enable-local-file-access --page-size A4 --margin-top 10 --margin-bottom 10 --margin-left 10 --margin-right 10 --print-media-type "' + tmpH + '" "' + tmpP + '"', { timeout: 30000 })
     var buf = fs.readFileSync(tmpP)
-    console.log('   PDF: ' + (buf.length / 1024).toFixed(0) + ' KB')
+    console.log('   PDF ejecutivo: ' + (buf.length / 1024).toFixed(0) + ' KB')
     return buf.toString('base64')
   } catch (e) { console.error('   PDF: ' + e.message); return null }
 }

@@ -301,6 +301,8 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
   var [ideaFiltroCategoria, setIdeaFiltroCategoria] = useState('todas')
   var [ideaFiltroEstado, setIdeaFiltroEstado] = useState('todos')
   var [copiedIndex, setCopiedIndex] = useState(null as string | null)
+  var [briefEditMode, setBriefEditMode] = useState(false)
+  var [briefSaving, setBriefSaving] = useState(false)
 
   useEffect(function() { loadData() }, [periodo])
 
@@ -480,6 +482,22 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
             <p className="text-[#64748b] text-sm">El brief se genera autom{'\u00e1'}ticamente en el pr{'\u00f3'}ximo informe semanal o mensual. Es la base que alimenta todos los agentes: copies, guiones, grilla y auditor{'\u00ed'}a.</p>
           </div>
 
+          async function guardarBrief(updatedBrief: any) {
+            setBriefSaving(true)
+            try {
+              var perfilActual = sub.perfil_empresa || {}
+              perfilActual.brief = updatedBrief
+              await fetch(SUPABASE_URL + '/rest/v1/clipping_suscripciones?id=eq.' + props.suscripcionId, {
+                method: 'PATCH',
+                headers: hdrs(),
+                body: JSON.stringify({ perfil_empresa: perfilActual }),
+              })
+              setSub(Object.assign({}, sub, { perfil_empresa: perfilActual }))
+              setBriefEditMode(false)
+            } catch (e) { alert('Error guardando brief') }
+            setBriefSaving(false)
+          }
+
           return <>
             {/* Header */}
             <div className="bg-gradient-to-r from-cyan-700 to-teal-700 rounded-xl p-5 mb-4">
@@ -489,12 +507,87 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
                   <h3 className="text-lg font-bold text-white">{sub.perfil_empresa?.nombre || sub.nombre || sub.email}</h3>
                   {brief.fecha_generacion && <p className="text-xs text-cyan-200 mt-1">Generado: {brief.fecha_generacion}</p>}
                 </div>
-                <div className="bg-white/10 rounded-lg px-3 py-2 text-center">
-                  <p className="text-2xl font-bold text-white">{(brief.territorios_contenido || []).length}</p>
-                  <p className="text-[10px] text-cyan-200">Territorios</p>
+                <div className="flex items-center gap-3">
+                  <button onClick={function() { setBriefEditMode(!briefEditMode) }}
+                    className={'text-xs font-bold px-3 py-1.5 rounded-lg transition ' + (briefEditMode ? 'bg-white/20 text-white' : 'bg-white/10 text-cyan-200 hover:bg-white/20')}>
+                    {briefEditMode ? 'Cancelar' : 'Editar brief'}
+                  </button>
+                  <div className="bg-white/10 rounded-lg px-3 py-2 text-center">
+                    <p className="text-2xl font-bold text-white">{(brief.territorios_contenido || []).length}</p>
+                    <p className="text-[10px] text-cyan-200">Territorios</p>
+                  </div>
                 </div>
               </div>
             </div>
+
+            {/* Edit mode */}
+            {briefEditMode && (function() {
+              var editBrief = JSON.parse(JSON.stringify(brief))
+
+              return <div className="bg-[#1a1745] rounded-xl p-5 border border-cyan-500/30 mb-4 space-y-4">
+                <h4 className="text-sm font-bold text-cyan-400">Editar Brief</h4>
+
+                <div>
+                  <label className="text-xs text-[#94a3b8] block mb-1">Propuesta de valor {'\u00fa'}nica</label>
+                  <textarea defaultValue={editBrief.propuesta_valor_unica || ''} id="brief-pvunica"
+                    className="w-full bg-[#12102a] text-white text-sm rounded-lg p-3 border border-white/10" rows={2} />
+                </div>
+
+                <div>
+                  <label className="text-xs text-[#94a3b8] block mb-1">Territorios de contenido (uno por l{'\u00ed'}nea: nombre | justificaci{'\u00f3'}n)</label>
+                  <textarea defaultValue={(editBrief.territorios_contenido || []).map(function(t: any) {
+                    return typeof t === 'object' ? (t.territorio || t.nombre || '') + ' | ' + (t.justificacion || '') : t
+                  }).join('\n')} id="brief-territorios"
+                    className="w-full bg-[#12102a] text-white text-sm rounded-lg p-3 border border-white/10" rows={5} />
+                </div>
+
+                <div>
+                  <label className="text-xs text-[#94a3b8] block mb-1">Reglas de contenido (una por l{'\u00ed'}nea)</label>
+                  <textarea defaultValue={(editBrief.reglas_contenido || []).join('\n')} id="brief-reglas"
+                    className="w-full bg-[#12102a] text-white text-sm rounded-lg p-3 border border-white/10" rows={4} />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-xs text-[#94a3b8] block mb-1">Tono / estilo</label>
+                    <input type="text" defaultValue={(editBrief.tono_comunicacion && typeof editBrief.tono_comunicacion === 'object') ? editBrief.tono_comunicacion.estilo || '' : editBrief.tono_comunicacion || ''} id="brief-tono"
+                      className="w-full bg-[#12102a] text-white text-sm rounded-lg p-3 border border-white/10" />
+                  </div>
+                  <div>
+                    <label className="text-xs text-[#94a3b8] block mb-1">Palabras a evitar (separadas por coma)</label>
+                    <input type="text" defaultValue={(editBrief.tono_comunicacion && editBrief.tono_comunicacion.palabras_evitar) ? (Array.isArray(editBrief.tono_comunicacion.palabras_evitar) ? editBrief.tono_comunicacion.palabras_evitar.join(', ') : editBrief.tono_comunicacion.palabras_evitar) : ''} id="brief-evitar"
+                      className="w-full bg-[#12102a] text-white text-sm rounded-lg p-3 border border-white/10" />
+                  </div>
+                </div>
+
+                <button disabled={briefSaving} onClick={function() {
+                  var pvunica = (document.getElementById('brief-pvunica') as HTMLTextAreaElement).value
+                  var terrText = (document.getElementById('brief-territorios') as HTMLTextAreaElement).value
+                  var reglasText = (document.getElementById('brief-reglas') as HTMLTextAreaElement).value
+                  var tonoVal = (document.getElementById('brief-tono') as HTMLInputElement).value
+                  var evitarVal = (document.getElementById('brief-evitar') as HTMLInputElement).value
+
+                  var updated = JSON.parse(JSON.stringify(brief))
+                  updated.propuesta_valor_unica = pvunica
+                  updated.territorios_contenido = terrText.split('\n').filter(function(l: string) { return l.trim() }).map(function(l: string) {
+                    var parts = l.split('|')
+                    return { territorio: (parts[0] || '').trim(), justificacion: (parts[1] || '').trim(), formatos_recomendados: [], frecuencia_sugerida: '' }
+                  })
+                  updated.reglas_contenido = reglasText.split('\n').filter(function(l: string) { return l.trim() })
+                  if (!updated.tono_comunicacion || typeof updated.tono_comunicacion !== 'object') updated.tono_comunicacion = {}
+                  updated.tono_comunicacion.estilo = tonoVal
+                  updated.tono_comunicacion.palabras_evitar = evitarVal.split(',').map(function(w: string) { return w.trim() }).filter(Boolean)
+                  updated.editado_por_cliente = true
+                  updated.fecha_edicion = new Date().toISOString().split('T')[0]
+
+                  guardarBrief(updated)
+                }}
+                  className="bg-cyan-600 text-white text-sm font-bold px-5 py-2 rounded-lg hover:bg-cyan-700 transition disabled:opacity-50">
+                  {briefSaving ? 'Guardando...' : 'Guardar cambios'}
+                </button>
+                <p className="text-[10px] text-[#64748b]">Los cambios se aplicar{'\u00e1'}n en el pr{'\u00f3'}ximo informe. Los agentes usar{'\u00e1'}n tu brief editado como directriz.</p>
+              </div>
+            })()}
 
             {/* Resumen del negocio */}
             {brief.resumen_negocio && (
@@ -1241,10 +1334,26 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
                 body: JSON.stringify({ estado: nuevoEstado }),
               })
               // Update local state
+              var ideaActualizada = ideas.find(function(i: any) { return i.id === ideaId })
               setIdeas(ideas.map(function(idea: any) {
                 if (idea.id === ideaId) return Object.assign({}, idea, { estado: nuevoEstado })
                 return idea
               }))
+              // Notificar a M&P cuando se aprueba o descarta
+              if ((nuevoEstado === 'aprobada' || nuevoEstado === 'descartada') && ideaActualizada) {
+                fetch('/api/copilot/notify-idea', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    idea_id: ideaId,
+                    suscripcion_id: props.suscripcionId,
+                    estado: nuevoEstado,
+                    titulo: ideaActualizada.titulo,
+                    descripcion: ideaActualizada.descripcion,
+                    categoria: ideaActualizada.categoria,
+                  }),
+                }).catch(function() {}) // fire and forget
+              }
             } catch (e) { console.error('Error actualizando idea:', e) }
           }
 

@@ -103,33 +103,94 @@ async function generarGrillaMensual(posts, empresas, suscriptor, mesSiguiente, a
     if (i < brief.posts.length - 1) await new Promise(function(r) { setTimeout(r, 1000) })
   }
 
-  // ═══ PASO 3: QA heuristico ═══
-  console.log('   GRILLA PASO 3: QA heuristico...')
+  // ═══ PASO 3: QA heuristico (mismo estándar que copies) ═══
+  console.log('   GRILLA PASO 3: QA estricto...')
   var aprobados = 0
   var corregidos = 0
+
+  var PALABRAS_PROHIBIDAS = [
+    'en el vertiginoso', 'no es solo', 'en la era digital', 'sin lugar a dudas',
+    'es importante destacar', 'cabe mencionar', 'en este sentido', 'paradigma',
+    'sinergia', 'holistic', 'en un mundo cada vez', 'potenciar al maximo',
+    'es fundamental', 'en definitiva', 'a modo de conclusion',
+    'revolucionando', 'transformando el panorama', 'de vanguardia',
+  ]
+  var FRASES_GENERICAS = [
+    'te invitamos a', 'no te pierdas', 'descubre como', 'conoce mas',
+    'haz clic aqui', 'siguenos', 'te esperamos', 'somos lideres',
+    'los mejores del mercado', 'calidad premium', 'no te lo pierdas',
+    'contactanos hoy', 'estamos para ti', 'tu mejor opcion',
+    'comprometidos con', 'pasion por', 'excelencia en',
+  ]
+  var CTA_GENERICOS = ['contactanos', 'mas informacion', 'visita nuestro sitio', 'siguenos', 'te esperamos', 'haz clic', 'dale like']
+
   for (var j = 0; j < grilla.length; j++) {
     var g = grilla[j]
-    var score = 100
+    var score = 85 // mismo base que copies
     var problemas = []
+    var lower = (g.copy || '').toLowerCase()
+    var palabras = g.palabras || (g.copy || '').split(/\s+/).length
 
-    // Largo minimo
-    if (g.plataforma === 'LinkedIn' && g.palabras < 120) { score -= 20; problemas.push('corto LI') }
-    if (g.plataforma !== 'LinkedIn' && g.palabras < 80) { score -= 15; problemas.push('corto') }
+    // ── PENALIZACIONES ──
+
+    // Largo minimo por plataforma
+    if (g.plataforma === 'LinkedIn' && palabras < 150) { score -= 15; problemas.push('LinkedIn requiere min 150 palabras (' + palabras + ')') }
+    else if (palabras < 80) { score -= 20; problemas.push('Copy muy corto: ' + palabras + ' palabras') }
+    else if (palabras < 100) { score -= 10; problemas.push('Copy corto: ' + palabras + ' palabras') }
 
     // ChatGPT speak
-    var lower = g.copy.toLowerCase()
-    var prohibited = ['en el vertiginoso', 'no es solo', 'en la era digital', 'sin lugar a dudas', 'es importante destacar', 'cabe mencionar', 'paradigma', 'sinergia', 'revolucionando']
-    for (var k = 0; k < prohibited.length; k++) {
-      if (lower.includes(prohibited[k])) { score -= 10; problemas.push('"' + prohibited[k] + '"') }
+    for (var k = 0; k < PALABRAS_PROHIBIDAS.length; k++) {
+      if (lower.includes(PALABRAS_PROHIBIDAS[k])) { score -= 10; problemas.push('ChatGPT speak: "' + PALABRAS_PROHIBIDAS[k] + '"') }
+    }
+
+    // Frases genéricas (-8 cada, max -24)
+    var genericasN = 0
+    for (var fg = 0; fg < FRASES_GENERICAS.length; fg++) {
+      if (lower.includes(FRASES_GENERICAS[fg]) && genericasN < 3) { score -= 8; genericasN++; problemas.push('Frase genérica: "' + FRASES_GENERICAS[fg] + '"') }
+    }
+
+    // CTA genérico (-10)
+    var ctaGenerico = false
+    for (var cg = 0; cg < CTA_GENERICOS.length; cg++) {
+      if (lower.includes(CTA_GENERICOS[cg])) { ctaGenerico = true }
+    }
+    if (ctaGenerico) { score -= 10; problemas.push('CTA genérico') }
+
+    // Hook genérico sin dato
+    var primeraLinea = (g.copy || '').split('\n')[0] || ''
+    var pl = primeraLinea.toLowerCase()
+    if ((pl.includes('sabias que') || pl.includes('te has preguntado') || pl.includes('en un mundo')) && !/\d/.test(primeraLinea)) {
+      score -= 8; problemas.push('Hook genérico sin dato')
     }
 
     // Sin hashtags
-    if (!g.copy.includes('#') && !g.hashtags) { score -= 5; problemas.push('sin hashtags') }
+    var hashCount = ((g.copy || '').match(/#\w+/g) || []).length + ((g.hashtags || '').match(/#\w+/g) || []).length
+    if (hashCount === 0) { score -= 8; problemas.push('Sin hashtags') }
+    else if (hashCount < 3) { score -= 4; problemas.push('Pocos hashtags: ' + hashCount) }
 
     // Sin titulo grafico
-    if (!g.titulo_grafico) { score -= 5; problemas.push('sin titulo grafico') }
+    if (!g.titulo_grafico) { score -= 5; problemas.push('Sin titulo grafico') }
 
+    // Sin CTA
+    var tieneCTA = lower.includes('comenta') || lower.includes('comparte') || lower.includes('guarda')
+      || lower.includes('escribe') || lower.includes('agenda') || lower.includes('cotiza')
+      || lower.includes('descarga') || lower.includes('whatsapp') || lower.includes('dm')
+      || lower.includes('envia') || lower.includes('envía')
+    if (!tieneCTA && !ctaGenerico) { score -= 8; problemas.push('Sin CTA detectado') }
+
+    // ── BONOS ──
+    if (/\d{2,}/.test(g.copy || '') || lower.includes('%')) { score += 4; }
+    if (palabras >= 200) { score += 4; }
+    if (hashCount >= 5 && hashCount <= 10) { score += 3; }
+    var lineas = (g.copy || '').split('\n').filter(function(l) { return l.trim().length > 0 })
+    if (lineas.length >= 4) { score += 2; }
+    var ctaMedible = lower.includes('comenta con') || lower.includes('guarda este') || lower.includes('etiqueta a')
+    if (ctaMedible && !ctaGenerico) { score += 2; }
+
+    // Clamp
+    score = Math.max(0, Math.min(score, 95))
     g.score = score
+    g.problemas = problemas
 
     if (score < 70 && OPENAI_KEY) {
       corregidos++

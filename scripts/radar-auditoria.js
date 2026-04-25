@@ -190,8 +190,9 @@ function calcScoresPorRed(posts) {
 // ═══════════════════════════════════════════════
 // FUNCION PRINCIPAL
 // ═══════════════════════════════════════════════
-async function generarAuditoria(posts, contenido, cuentas, supabase, suscripcionId, briefEstrategico) {
-  console.log('\n   === AUDITORIA MENSUAL ===')
+async function generarAuditoria(posts, contenido, cuentas, supabase, suscripcionId, briefEstrategico, modo) {
+  modo = modo || 'mensual'
+  console.log('\n   === AUDITORIA ' + modo.toUpperCase() + ' ===')
 
   posts = posts || []
   contenido = contenido || []
@@ -278,23 +279,40 @@ async function generarAuditoria(posts, contenido, cuentas, supabase, suscripcion
   var fortaleza = criteriosOrdenados[0] ? criteriosOrdenados[0].nombre + ' (' + criteriosOrdenados[0].score + '/10)' : null
   var debilidad = criteriosOrdenados[criteriosOrdenados.length - 1] ? criteriosOrdenados[criteriosOrdenados.length - 1].nombre + ' (' + criteriosOrdenados[criteriosOrdenados.length - 1].score + '/10)' : null
 
-  // Guardar en Supabase
+  // Guardar en Supabase (mensual siempre, semanal solo si no hay del mes)
   if (supabase && suscripcionId) {
-    try {
-      var ahora = new Date()
-      await supabase.from('copilot_auditorias').insert({
-        suscripcion_id: suscripcionId,
-        mes: ahora.getMonth() + 1,
-        anio: ahora.getFullYear(),
-        score_general: scoreGeneral100,
-        scores_red: scoresRed,
-        criterios: criterios,
-        fortaleza: fortaleza,
-        debilidad: debilidad,
-      })
-      console.log('   Auditoria guardada en copilot_auditorias')
-    } catch (e) {
-      console.log('   Error guardando auditoria: ' + e.message)
+    var ahora = new Date()
+    var guardar = modo === 'mensual'
+
+    if (modo === 'semanal') {
+      // En semanal: guardar solo si no hay auditoria del mes actual
+      try {
+        var existeRes = await supabase.from('copilot_auditorias')
+          .select('id', { count: 'exact', head: true })
+          .eq('suscripcion_id', suscripcionId)
+          .eq('mes', ahora.getMonth() + 1)
+          .eq('anio', ahora.getFullYear())
+        guardar = (existeRes.count || 0) === 0
+        if (!guardar) console.log('   Auditoria semanal: ya existe del mes, solo se usa en email')
+      } catch (e) { guardar = false }
+    }
+
+    if (guardar) {
+      try {
+        await supabase.from('copilot_auditorias').insert({
+          suscripcion_id: suscripcionId,
+          mes: ahora.getMonth() + 1,
+          anio: ahora.getFullYear(),
+          score_general: scoreGeneral100,
+          scores_red: scoresRed,
+          criterios: criterios,
+          fortaleza: fortaleza,
+          debilidad: debilidad,
+        })
+        console.log('   Auditoria guardada en copilot_auditorias')
+      } catch (e) {
+        console.log('   Error guardando auditoria: ' + e.message)
+      }
     }
   }
 
