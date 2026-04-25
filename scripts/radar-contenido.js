@@ -335,6 +335,9 @@ async function paso2_crear(briefs, posts, perfil) {
         objetivo: brief.objetivo,
         titulo: brief.titulo,
         justificacion: brief.justificacion,
+        competidor_referencia: brief.competidor_referencia || null,
+        post_referencia_texto: brief.post_referencia_texto || null,
+        engagement_referencia: brief.engagement_referencia || null,
         copy: copy,
         palabras: copy.split(/\s+/).length,
       })

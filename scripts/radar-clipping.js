@@ -1,9 +1,66 @@
-// radar-clipping.js v6
-// 3 canales: Instagram + LinkedIn + Prensa
-// Persiste posts en radar_posts, calcula trends vs periodo anterior
-// IA: Claude para semanal/mensual, OpenAI para diario
-// Pipeline contenido: OpenAI analiza → Claude crea → OpenAI QA
+// radar-clipping.js v7 — Orquestador con sistema de memoria y aprendizaje
+// Pipeline: Scraping → Memoria → Brief → Contenido → Grilla → Guiones → Auditoría → Email
+// Cada agente recibe brief + memoria + datos de agentes previos
 // Modo: --diario | --semanal | --mensual | --dry-run
+//
+// ═══════════════════════════════════════════════════════════════════
+// PLAN DE UPGRADES (en orden de impacto, pendientes)
+// ═══════════════════════════════════════════════════════════════════
+//
+// UPGRADE 1: LinkedIn scraping [BLOQUEADO — no hay actor funcional]
+//   - harvestapi devuelve 0, apimaestro devuelve posts falsos de Google
+//   - Alternativas: LinkedIn API oficial (requiere app review), Proxycurl ($), Phantombuster ($)
+//   - Impacto: CRITICO para clientes B2B (Genera HR, consultoras, etc.)
+//   - Accion: evaluar Proxycurl ($0.01/perfil) o LinkedIn API con app de M&P
+//
+// UPGRADE 2: Auditoría en modo semanal (no solo mensual)
+//   - Actualmente solo corre en --mensual
+//   - En semanal, no hay feedback loop auditoría→brief
+//   - Fix: agregar flag para correr auditoria light (sin criterios que necesitan 30 días)
+//   - Impacto: feedback loop más rápido
+//
+// UPGRADE 3: QA de grilla más estricto
+//   - Score grilla parte en 100 vs copies que parte en 85
+//   - Grilla no tiene penalties por CTA genérico ni hook sin dato
+//   - Fix: unificar scoring de grilla con el scoring de copies (paso3_revisar)
+//   - Impacto: grilla de calidad real, no inflada
+//
+// UPGRADE 4: Email con preview de copy completo (no solo título)
+//   - Actualmente solo muestra título + plataforma + score
+//   - El cliente tiene que abrir el Excel para leer el copy
+//   - Fix: mostrar primeras 2-3 líneas del copy en el email
+//   - Impacto: el cliente ve valor inmediato sin abrir adjunto
+//
+// UPGRADE 5: Dashboard — edición inline de copies/brief
+//   - El cliente puede ver pero no editar
+//   - Fix: formulario de edición de brief (territorios, tono, reglas)
+//   - Impacto: el cliente personaliza su estrategia
+//
+// UPGRADE 6: Notificación cuando ideas se aprueban
+//   - El pipeline lee ideas aprobadas pero no notifica al equipo M&P
+//   - Fix: email a contacto@mulleryperez.cl cuando un cliente aprueba una idea
+//   - Impacto: M&P sabe qué contenido crear
+//
+// UPGRADE 7: Reporte PDF ejecutivo con diseño premium
+//   - Actual: wkhtmltopdf del HTML del email (básico)
+//   - Fix: template Puppeteer A4 con gráficos, scores visuales, comparativas
+//   - Impacto: valor percibido alto, justifica precio
+//
+// UPGRADE 8: Flow.cl pagos integrados
+//   - Ya existe la ruta /copilot/contratar/{id} pero no cobra
+//   - Fix: integrar Flow.cl con webhook de confirmación
+//   - Impacto: revenue directo
+//
+// UPGRADE 9: Crons activados (producción)
+//   - Todos los crons están comentados
+//   - Activar cuando: QA E2E pase 100%, cliente confirme calidad
+//   - Diario 7:30 AM, Semanal lunes 9 AM, Mensual día 1 9 AM
+//
+// UPGRADE 10: Multi-idioma / Multi-país
+//   - Actualmente solo Chile (fechas, estacionalidad, hashtags)
+//   - Fix: config por suscriptor con país/idioma
+//   - Impacto: expansión LATAM
+// ═══════════════════════════════════════════════════════════════════
 
 var fetch = require('node-fetch')
 var supabaseLib = require('@supabase/supabase-js')
@@ -414,7 +471,7 @@ async function main() {
       auditoriaData = await auditoriaModule.generarAuditoria(misPosts, contenidoMes, cuentas, supabase, sub.id, sub.brief_estrategico || null)
     }
 
-    var html = generarEmailHTML(misPosts, cuentas, hoy, MODO, resumenIA, empresas, trends, sub.id, contenidoSugerido, sub.estado, sub.plan, sub.trial_ends, grillaMensual, guionesData, auditoriaData)
+    var html = generarEmailHTML(misPosts, cuentas, hoy, MODO, resumenIA, empresas, trends, sub.id, contenidoSugerido, sub.estado, sub.plan, sub.trial_ends, grillaMensual, guionesData, null, auditoriaData, sub.brief_estrategico)
     var pdf = generarPDF(html, hoy, MODO)
 
     // Generar Excel adjuntos según modo y plan
@@ -728,12 +785,13 @@ function renderTrend(pct, totalN, hasPrev) {
 }
 
 // === EMAIL HTML v6 — Dark theme, Gmail-safe, compact ===
-function generarEmailHTML(posts, cuentas, fecha, modo, resumenIA, empresas, trends, subId, contenidoSugerido, estado, plan, trialEnds, grillaMensual, guionesData, ideasData, auditoriaData) {
+function generarEmailHTML(posts, cuentas, fecha, modo, resumenIA, empresas, trends, subId, contenidoSugerido, estado, plan, trialEnds, grillaMensual, guionesData, ideasData, auditoriaData, briefData) {
   contenidoSugerido = contenidoSugerido || []
   grillaMensual = grillaMensual || null
   guionesData = guionesData || null
   ideasData = ideasData || null
   auditoriaData = auditoriaData || null
+  briefData = briefData || null
   estado = estado || 'trial'
   plan = plan || 'starter'
   var fechaLegible = new Date(fecha + 'T12:00:00').toLocaleDateString('es-CL', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
@@ -783,6 +841,32 @@ function generarEmailHTML(posts, cuentas, fecha, modo, resumenIA, empresas, tren
   h += '<td width="25%" style="text-align:center;padding:8px 4px;"><p style="margin:0;font-size:24px;font-weight:800;color:#a5b4fc;">' + nEmpresas + '</p><p style="margin:4px 0 0;font-size:10px;color:#94a3b8;">Empresas</p></td>'
   h += '</tr></table>'
   h += '</td></tr>'
+
+  // === 2b. BRIEF RESUMEN (semanal/mensual) ===
+  if (briefData && (modo === 'semanal' || modo === 'mensual')) {
+    h += '<tr><td bgcolor="#0F0D2E" style="padding:4px 0 0 0;"></td></tr>'
+    h += '<tr><td bgcolor="#1a1745" style="padding:20px 28px;border-left:4px solid #06B6D4;">'
+    h += '<table cellpadding="0" cellspacing="0" border="0" style="margin-bottom:12px;"><tr>'
+    h += '<td bgcolor="#06B6D4" style="padding:4px 10px;border-radius:4px;"><p style="margin:0;font-size:11px;font-weight:700;color:#ffffff;">Brief estrat\u00e9gico</p></td>'
+    h += '</tr></table>'
+    if (briefData.propuesta_valor_unica) {
+      h += '<p style="margin:0 0 8px;font-size:13px;color:#ffffff;font-weight:700;line-height:1.4;">' + truncar(briefData.propuesta_valor_unica, 200) + '</p>'
+    }
+    if (briefData.territorios_contenido && Array.isArray(briefData.territorios_contenido)) {
+      h += '<p style="margin:0 0 4px;font-size:10px;color:#64748b;font-weight:700;text-transform:uppercase;">Territorios</p>'
+      briefData.territorios_contenido.forEach(function(t) {
+        var nombre = typeof t === 'object' ? (t.territorio || t.nombre || '') : t
+        h += '<span style="display:inline-block;background:#0e7490;color:#cffafe;font-size:10px;font-weight:600;padding:3px 8px;border-radius:3px;margin:0 4px 4px 0;">' + truncar(nombre, 30) + '</span>'
+      })
+    }
+    if (briefData.reglas_contenido && Array.isArray(briefData.reglas_contenido) && briefData.reglas_contenido.length > 0) {
+      h += '<p style="margin:8px 0 4px;font-size:10px;color:#64748b;font-weight:700;text-transform:uppercase;">Reglas</p>'
+      briefData.reglas_contenido.slice(0, 3).forEach(function(r) {
+        h += '<p style="margin:0 0 2px;font-size:11px;color:#94a3b8;">&#10003; ' + truncar(r, 80) + '</p>'
+      })
+    }
+    h += '</td></tr>'
+  }
 
   // === 3. AI ANALYSIS ===
   if (ia || resumenIA) {
@@ -899,7 +983,7 @@ function generarEmailHTML(posts, cuentas, fecha, modo, resumenIA, empresas, tren
 
   // === 6. COPIES PREVIEW (semanal/mensual, Pro+Business) ===
   var hasCopies = (contenidoSugerido.length > 0 || (ia && ia.contenido_sugerido && ia.contenido_sugerido.length > 0)) && (modo === 'semanal' || modo === 'mensual')
-  if (hasCopies && (plan === 'pro' || plan === 'business')) {
+  if (hasCopies && (plan === 'pro' || plan === 'business' || plan === 'test')) {
     var copiesList = contenidoSugerido.length > 0 ? contenidoSugerido : ia.contenido_sugerido
     var maxCopies = Math.min(copiesList.length, 5)
     h += '<tr><td bgcolor="#0F0D2E" style="padding:4px 0 0 0;"></td></tr>'
@@ -931,7 +1015,7 @@ function generarEmailHTML(posts, cuentas, fecha, modo, resumenIA, empresas, tren
   }
 
   // === 7. GRILLA PREVIEW (mensual only, Pro+Business) ===
-  if (grillaMensual && grillaMensual.posts && grillaMensual.posts.length > 0 && modo === 'mensual' && (plan === 'pro' || plan === 'business')) {
+  if (grillaMensual && grillaMensual.posts && grillaMensual.posts.length > 0 && modo === 'mensual' && (plan === 'pro' || plan === 'business' || plan === 'test')) {
     var grillaPosts = grillaMensual.posts
     var maxGrilla = Math.min(grillaPosts.length, 3)
     h += '<tr><td bgcolor="#0F0D2E" style="padding:4px 0 0 0;"></td></tr>'
@@ -958,7 +1042,7 @@ function generarEmailHTML(posts, cuentas, fecha, modo, resumenIA, empresas, tren
   }
 
   // === 8. GUIONES PREVIEW (semanal/mensual, Business only) ===
-  if (guionesData && guionesData.length > 0 && (modo === 'semanal' || modo === 'mensual') && plan === 'business') {
+  if (guionesData && guionesData.length > 0 && (modo === 'semanal' || modo === 'mensual') && (plan === 'business' || plan === 'test')) {
     var maxGuiones = Math.min(guionesData.length, 3)
     h += '<tr><td bgcolor="#0F0D2E" style="padding:4px 0 0 0;"></td></tr>'
     h += '<tr><td bgcolor="#1a1745" style="padding:20px 28px;border-left:4px solid #E4405F;">'
@@ -1048,7 +1132,7 @@ function generarEmailHTML(posts, cuentas, fecha, modo, resumenIA, empresas, tren
   h += '<p style="margin:0 0 4px;font-size:12px;color:#94a3b8;">Copilot by <span style="color:#ffffff;font-weight:700;">Muller y P\u00e9rez</span></p>'
   var scheduleText = modo === 'diario' ? 'Informe diario 7:30 AM' : modo === 'semanal' ? 'Resumen semanal, lunes 9 AM' : 'Resumen mensual, 1ro de cada mes'
   h += '<p style="margin:0 0 4px;font-size:10px;color:#64748b;">' + scheduleText + '</p>'
-  var planIncluye = plan === 'business' ? 'Informes + copies + grilla + guiones + auditor\u00eda + reporte'
+  var planIncluye = (plan === 'business' || plan === 'test') ? 'Informes + copies + grilla + guiones + auditor\u00eda + reporte'
     : plan === 'pro' ? 'Informes + copies + grilla mensual'
     : 'Informes + copies semanales'
   h += '<p style="margin:0;font-size:10px;color:#64748b;">' + planIncluye + '</p>'
