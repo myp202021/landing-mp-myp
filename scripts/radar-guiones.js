@@ -193,8 +193,15 @@ async function generarGuiones(posts, empresas, perfil, copiesGenerados, supabase
     + '- referencia_competencia OBLIGATORIA: citar post real de la competencia con engagement\n'
     + '- Tono: ' + tono + '\n'
     + '- Contexto estacional ' + mesActual + ': incorporar si aplica al rubro\n'
-    + '- PROHIBIDO: "no es solo", "en la era digital", "descubre como", "te invitamos", "sabias que" sin dato\n\n'
-    + 'Responde SOLO JSON valido: { "guiones": [...] }'
+    + '- PROHIBIDO: "no es solo", "en la era digital", "descubre como", "te invitamos", "sabias que" sin dato\n'
+    + '- El CTA NUNCA puede ser "visita nuestro sitio", "siguenos", "mas informacion". DEBE ser una ACCION MEDIBLE:\n'
+    + '  Buenos CTAs: "Guarda este video para revisarlo el lunes", "Envia este reel a un colega de RRHH", "Comenta con 🔥 si tu empresa ya usa esto", "Etiqueta a alguien que necesita esto"\n'
+    + '  NUNCA: "Solicita una demo", "Visita nuestro sitio", "Link en bio"\n\n'
+    + 'RAZONAMIENTO OBLIGATORIO: en el campo "razonamiento", explica:\n'
+    + '1. Por que elegiste ESTE post de competencia como referencia y no otro\n'
+    + '2. Que patron del post original estas replicando (formato, ritmo, tema)\n'
+    + '3. Como lo diferencias para ' + nombreEmpresa + '\n\n'
+    + 'Responde SOLO JSON valido: { "razonamiento": "...", "guiones": [...] }'
 
   try {
     var res = await fetch('https://api.openai.com/v1/chat/completions', {

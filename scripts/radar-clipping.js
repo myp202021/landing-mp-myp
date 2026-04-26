@@ -1248,6 +1248,14 @@ function generarEmailHTML(posts, cuentas, fecha, modo, resumenIA, empresas, tren
         h += '<p style="margin:0;font-size:12px;color:#c4b5fd;line-height:1.5;"><span style="color:#EF4444;font-weight:700;">\u00c1rea de mejora:</span> ' + truncar(auditoriaData.debilidad, 120) + '</p>'
       }
     }
+    // Recomendaciones accionables
+    if (auditoriaData.recomendaciones && auditoriaData.recomendaciones.length > 0) {
+      h += '<p style="margin:12px 0 4px;font-size:10px;color:#64748b;font-weight:700;text-transform:uppercase;">Recomendaciones</p>'
+      auditoriaData.recomendaciones.slice(0, 3).forEach(function(rec) {
+        var recColor = rec.includes('URGENTE') || rec.includes('CRITICO') ? '#EF4444' : rec.includes('EXCELENTE') ? '#10B981' : '#F59E0B'
+        h += '<p style="margin:0 0 2px;font-size:11px;color:' + recColor + ';">&#9679; ' + truncar(rec, 100) + '</p>'
+      })
+    }
     h += '</td></tr>'
   }
 

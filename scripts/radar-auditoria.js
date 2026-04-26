@@ -386,6 +386,32 @@ async function generarAuditoria(posts, contenido, cuentas, supabase, suscripcion
     }
   }
 
+  // ═══ GENERAR RECOMENDACIONES ACCIONABLES ═══
+  var recomendaciones = []
+  criterios.forEach(function(c) {
+    if (c.score <= 5) {
+      if (c.nombre.includes('Frecuencia')) recomendaciones.push('URGENTE: Aumentar frecuencia de publicacion a minimo 3 posts/semana')
+      else if (c.nombre.includes('Engagement')) recomendaciones.push('URGENTE: Cambiar a formatos mas interactivos (polls, preguntas, carruseles educativos)')
+      else if (c.nombre.includes('Variedad')) recomendaciones.push('Diversificar formatos: mezclar reels, carruseles, imagenes y articulos')
+      else if (c.nombre.includes('hashtags')) recomendaciones.push('Incluir 5-8 hashtags relevantes en cada post')
+      else if (c.nombre.includes('Interaccion')) recomendaciones.push('Responder TODOS los comentarios y usar CTAs que fomenten dialogo')
+      else if (c.nombre.includes('Consistencia')) recomendaciones.push('Establecer dias fijos de publicacion y mantenerlos')
+      else if (c.nombre.includes('ratio')) recomendaciones.push('El engagement del cliente esta por debajo de la competencia — repensar estrategia de contenido')
+    }
+  })
+
+  // Recomendación basada en datos del cliente vs competencia
+  if (postsCliente.length > 0 && posts.length > 0) {
+    var avgCliente = Math.round(postsCliente.reduce(function(s,p){return s+(p.likes||0)+(p.comments||0)},0) / postsCliente.length)
+    var avgComp = Math.round(posts.reduce(function(s,p){return s+(p.likes||0)+(p.comments||0)},0) / posts.length)
+    if (avgCliente < avgComp * 0.5) {
+      recomendaciones.push('CRITICO: El engagement del cliente (' + avgCliente + ') es menos de la mitad que la competencia (' + avgComp + '). Revisar calidad visual, hooks y CTAs.')
+    } else if (avgCliente > avgComp * 1.5) {
+      recomendaciones.push('EXCELENTE: El engagement del cliente (' + avgCliente + ') supera a la competencia (' + avgComp + '). Mantener esta linea y documentar que funciona.')
+    }
+  }
+
+  console.log('   Recomendaciones: ' + recomendaciones.length)
   console.log('   === AUDITORIA COMPLETADA ===\n')
 
   return {
@@ -394,6 +420,11 @@ async function generarAuditoria(posts, contenido, cuentas, supabase, suscripcion
     criterios: criterios,
     fortaleza: fortaleza,
     debilidad: debilidad,
+    recomendaciones: recomendaciones,
+    datos_cliente: postsCliente.length > 0 ? {
+      posts: postsCliente.length,
+      avg_engagement: Math.round(postsCliente.reduce(function(s,p){return s+(p.likes||0)+(p.comments||0)},0) / postsCliente.length),
+    } : null,
   }
 }
 

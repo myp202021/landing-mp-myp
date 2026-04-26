@@ -204,9 +204,21 @@ async function paso1_analizar(posts, empresas, modo, perfil, copiesPrevios, brie
     + '- competidor_referencia: nombre del competidor cuyo post inspira este brief\n'
     + '- post_referencia_texto: extracto del post de referencia (primeras 100 palabras)\n'
     + '- engagement_referencia: engagement del post de referencia\n\n'
-    + 'Responde SOLO en JSON valido: {"analisis_competencia": "resumen de 3-5 oraciones de que funciona y que no en la competencia esta semana", "briefs": [{plataforma, tipo, angulo, objetivo, titulo, justificacion, instrucciones_copy, competidor_referencia, post_referencia_texto, engagement_referencia}, ...]}\n'
-    + 'NO inventes datos ni porcentajes. USA SOLO lo que esta en los posts de arriba.\n'
-    + 'NO generes briefs genericos que sirvan para cualquier empresa. Cada brief debe ser ESPECIFICO para ' + (perfil.nombre || 'el cliente') + ' en el rubro de ' + (perfil.rubro || 'su industria') + '.'
+    + 'Responde SOLO en JSON valido con esta estructura:\n'
+    + '{\n'
+    + '  "razonamiento": "Tu analisis interno: que patron detectaste, por que elegiste estos angulos y no otros, que dato te llamo la atencion, que descartaste y por que. Minimo 5 oraciones.",\n'
+    + '  "analisis_competencia": "Resumen ejecutivo de 3-5 oraciones sobre que funciona y que no en la competencia.",\n'
+    + '  "decision_estrategica": "Explica por que cada brief es diferente y como se complementan los 3. Que haria un director de marketing con estos 3 contenidos.",\n'
+    + '  "briefs": [{plataforma, tipo, angulo, objetivo, titulo, justificacion, instrucciones_copy, competidor_referencia, post_referencia_texto, engagement_referencia}]\n'
+    + '}\n\n'
+    + 'REGLAS DE RAZONAMIENTO:\n'
+    + '- Si el motor de decisiones indica un angulo a priorizar, JUSTIFICA por que lo usas (o por que decides no usarlo)\n'
+    + '- Si hay datos del cliente real (engagement, formato ganador), USA esos datos para decidir formatos\n'
+    + '- Los 3 briefs deben COMPLEMENTARSE: si uno es educativo, otro debe ser comercial o caso de exito\n'
+    + '- Nunca 2 briefs del mismo formato ni del mismo angulo\n'
+    + '- Cada justificacion debe citar un POST REAL ESPECIFICO con su engagement\n'
+    + '- NO inventes datos ni porcentajes. USA SOLO lo que esta en los posts de arriba\n'
+    + '- NO generes briefs genericos. Cada uno debe ser ESPECIFICO para ' + (perfil.nombre || 'el cliente') + ' en ' + (perfil.rubro || 'su industria')
 
   try {
     var res = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -307,8 +319,11 @@ async function paso2_crear(briefs, posts, perfil) {
       + '8. NO uses estas frases NUNCA: "en el vertiginoso", "no es solo", "es fundamental", "paradigma", "sinergia", "te invitamos", "sin lugar a dudas", "cabe mencionar", "de vanguardia", "revolucionando", "en la era digital"\n'
       + '9. NO inventes estadisticas. Si citas un dato, debe ser plausible para la industria\n'
       + '10. Escribe como community manager senior, no como chatbot\n'
-      + '11. OBLIGATORIO: incluye una referencia temporal (mes actual, temporada, "esta semana", "este Q2", o una fecha relevante). Ejemplo: "En abril 2026..." o "Este primer semestre..."\n\n'
-      + 'Responde SOLO el copy listo para publicar. Nada mas.'
+      + '11. OBLIGATORIO: incluye una referencia temporal (mes actual, temporada, "esta semana", "este Q2"). Ejemplo: "En abril 2026..." o "Este primer semestre..."\n'
+      + '12. Antes de escribir, PIENSA: ¿este copy le serviria REALMENTE a ' + (perfil.nombre || 'la empresa') + '? ¿lo publicaria un CM senior? ¿tiene un angulo que lo diferencia de lo que ya existe en la industria?\n\n'
+      + 'FORMATO DE RESPUESTA:\n'
+      + 'Escribe el copy completo listo para publicar.\n'
+      + 'Al final, agrega una linea separada con: [AUTO-EVAL: X/10 — razon de 1 oracion de por que este copy es bueno o que le falta]'
 
     try {
       var res = await fetch('https://api.anthropic.com/v1/messages', {
@@ -329,7 +344,16 @@ async function paso2_crear(briefs, posts, perfil) {
         throw new Error('Claude paso2: HTTP ' + res.status + ' ' + errText.substring(0, 200))
       }
       var data = await res.json()
-      var copy = data.content[0].text || ''
+      var copyRaw = data.content[0].text || ''
+      // Extraer auto-evaluación si existe
+      var autoEval = null
+      var copyClean = copyRaw
+      var evalMatch = copyRaw.match(/\[AUTO-EVAL:\s*([\d.]+)\/10\s*[—–-]\s*(.+)\]/i)
+      if (evalMatch) {
+        autoEval = { score: parseFloat(evalMatch[1]), razon: evalMatch[2].trim() }
+        copyClean = copyRaw.replace(/\[AUTO-EVAL:[^\]]+\]/i, '').trim()
+        console.log('   Auto-eval: ' + autoEval.score + '/10 — ' + autoEval.razon.substring(0, 60))
+      }
       copies.push({
         plataforma: brief.plataforma,
         tipo: brief.tipo,
@@ -340,8 +364,9 @@ async function paso2_crear(briefs, posts, perfil) {
         competidor_referencia: brief.competidor_referencia || null,
         post_referencia_texto: brief.post_referencia_texto || null,
         engagement_referencia: brief.engagement_referencia || null,
-        copy: copy,
-        palabras: copy.split(/\s+/).length,
+        copy: copyClean,
+        palabras: copyClean.split(/\s+/).length,
+        auto_eval: autoEval,
       })
       console.log('   Copy ' + (i+1) + ' OK: ' + copy.split(/\s+/).length + ' palabras')
     } catch (e) {

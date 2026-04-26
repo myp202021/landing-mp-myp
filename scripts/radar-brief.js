@@ -288,7 +288,13 @@ async function generarBrief(suscriptor, posts, supabase, memoria) {
     + '5. Las reglas_contenido deben ser accionables y especificas al rubro\n'
     + '6. El tono debe basarse en lo que FUNCIONA en la competencia (posts con mas engagement)\n'
     + '7. El calendario estacional debe ser relevante para el rubro de ' + (perfil.rubro || 'la empresa') + '\n'
-    + '\nResponde SOLO con el JSON valido. Nada mas.'
+    + '\nAdicional al JSON, incluye al inicio un campo "razonamiento_estrategico" (string) donde expliques:\n'
+    + '1. Que patron CLAVE detectaste en la competencia que define tu estrategia\n'
+    + '2. Por que elegiste ESOS territorios y no otros (basado en datos, no intuicion)\n'
+    + '3. Que OPORTUNIDAD concreta tiene ' + nombre + ' que la competencia no esta aprovechando\n'
+    + '4. Si hay datos de aprendizaje (runs previos, auditoria), como los incorporaste\n'
+    + '5. Que RIESGO ves si el cliente no actua en las proximas 2 semanas\n\n'
+    + 'Responde SOLO con el JSON valido. Nada mas.'
 
   console.log('   OpenAI generando brief estrategico...')
   try {
