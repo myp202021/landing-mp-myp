@@ -181,9 +181,9 @@ async function cargarMemoria(supabase, suscripcionId) {
 
     // ═══ 3. AUDITORIA HISTORICA ═══
     var auditRes = await supabase.from('copilot_auditorias')
-      .select('score_general, criterios, mes, anio, fortaleza, debilidad')
+      .select('score_general, criterios, mes, anio, created_at')
       .eq('suscripcion_id', suscripcionId)
-      .order('id', { ascending: false })
+      .order('created_at', { ascending: false })
       .limit(6) // ultimos 6 meses
 
     if (auditRes.data && auditRes.data.length > 0) {

@@ -335,8 +335,6 @@ async function generarAuditoria(posts, contenido, cuentas, supabase, suscripcion
           score_general: scoreGeneral100,
           scores_red: scoresRed,
           criterios: criterios,
-          fortaleza: fortaleza,
-          debilidad: debilidad,
         })
         console.log('   Auditoria guardada en copilot_auditorias')
       } catch (e) {

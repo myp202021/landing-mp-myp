@@ -303,9 +303,10 @@ async function paso2_crear(briefs, posts, perfil) {
       + '5. Si es Carrusel: contenido de cada slide (minimo 5 slides), cada slide con titulo y texto\n'
       + '6. Si es Reel: guion con texto en pantalla por escena\n'
       + '7. Incluye 5-8 hashtags relevantes al final\n'
-      + '8. NO uses: "en el vertiginoso", "no es solo", "es fundamental", "paradigma", "sinergia", "te invitamos"\n'
+      + '8. NO uses estas frases NUNCA: "en el vertiginoso", "no es solo", "es fundamental", "paradigma", "sinergia", "te invitamos", "sin lugar a dudas", "cabe mencionar", "de vanguardia", "revolucionando", "en la era digital"\n'
       + '9. NO inventes estadisticas. Si citas un dato, debe ser plausible para la industria\n'
-      + '10. Escribe como community manager senior, no como chatbot\n\n'
+      + '10. Escribe como community manager senior, no como chatbot\n'
+      + '11. OBLIGATORIO: incluye una referencia temporal (mes actual, temporada, "esta semana", "este Q2", o una fecha relevante). Ejemplo: "En abril 2026..." o "Este primer semestre..."\n\n'
       + 'Responde SOLO el copy listo para publicar. Nada mas.'
 
     try {
