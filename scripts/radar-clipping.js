@@ -73,6 +73,7 @@ var guionesModule = require('./radar-guiones.js')
 var auditoriaModule = require('./radar-auditoria.js')
 var briefModule = require('./radar-brief.js')
 var memoriaModule = require('./radar-memoria.js')
+var decisionModule = require('./radar-decisiones.js')
 
 var APIFY_TOKEN = process.env.APIFY_TOKEN
 var RESEND_KEY = process.env.RESEND
@@ -473,23 +474,81 @@ async function main() {
       }
     }
 
-    // Generar/actualizar brief estratégico (semanal/mensual)
-    if ((MODO === 'semanal' || MODO === 'mensual') && misPosts.length >= 2) {
-      try {
-        var brief = await briefModule.generarBrief(sub, misPosts, supabase, memoria)
-        if (brief) {
-          sub.brief_estrategico = brief
-          if (!sub.perfil_empresa) sub.perfil_empresa = {}
-          sub.perfil_empresa.brief = brief
-          console.log('   Brief estratégico generado/actualizado')
-        }
-      } catch (e) { console.log('   Brief error (no bloqueante): ' + e.message) }
+    // ═══ MOTOR DE DECISIONES ═══
+    var ctx = null
+    var decBrief = null
+    var decCopies = null
+    var decGuiones = null
+    if ((MODO === 'semanal' || MODO === 'mensual') && memoria) {
+      ctx = decisionModule.evaluarContexto(memoria, misPosts, postsCliente, sub)
+      decBrief = decisionModule.decidirBrief(ctx)
+      decCopies = decisionModule.decidirCopies(ctx)
+      decGuiones = decisionModule.decidirGuiones(ctx, memoria)
+
+      console.log('\n   ═══ DECISIONES INTELIGENTES ═══')
+      console.log('   Brief: ' + (decBrief.regenerar ? 'REGENERAR' : 'MANTENER') + ' — ' + decBrief.razones.join('; '))
+      if (decCopies.generar) {
+        console.log('   Copies: GENERAR')
+        if (decCopies.anguloPrioridad) console.log('     Priorizar: ' + decCopies.anguloPrioridad)
+        if (decCopies.anguloEvitar) console.log('     Evitar: ' + decCopies.anguloEvitar)
+        if (decCopies.formatoPrioridad) console.log('     Formato: ' + decCopies.formatoPrioridad)
+        if (decCopies.tonoAjuste) console.log('     Tono: ' + decCopies.tonoAjuste)
+      } else {
+        console.log('   Copies: NO GENERAR — ' + decCopies.razones.join('; '))
+      }
+      console.log('   Guiones: ' + (decGuiones.generar ? 'GENERAR' : 'SALTAR') + (decGuiones.razones.length > 0 ? ' — ' + decGuiones.razones.join('; ') : ''))
+      console.log('   ═══════════════════════════════\n')
     }
 
-    // Pipeline contenido sugerido (semanal/mensual, pro y business)
+    // Generar/actualizar brief estratégico (solo si el motor decide)
+    if ((MODO === 'semanal' || MODO === 'mensual') && misPosts.length >= 2) {
+      var debeRegenerar = !decBrief || decBrief.regenerar
+      if (debeRegenerar) {
+        try {
+          var brief = await briefModule.generarBrief(sub, misPosts, supabase, memoria)
+          if (brief) {
+            // Quality gate: verificar que el brief es bueno antes de usarlo
+            var qgBrief = decisionModule.qualityGateBrief(brief)
+            if (qgBrief.pass) {
+              sub.brief_estrategico = brief
+              if (!sub.perfil_empresa) sub.perfil_empresa = {}
+              sub.perfil_empresa.brief = brief
+              console.log('   ✓ Brief generado y aprobado por quality gate')
+            } else {
+              console.log('   ⚠ Brief generado pero con issues: ' + qgBrief.issues.join(', '))
+              // Usar igual pero loguear warning
+              sub.brief_estrategico = brief
+              if (!sub.perfil_empresa) sub.perfil_empresa = {}
+              sub.perfil_empresa.brief = brief
+            }
+          }
+        } catch (e) { console.log('   Brief error (no bloqueante): ' + e.message) }
+      } else {
+        sub.brief_estrategico = (sub.perfil_empresa || {}).brief || null
+        console.log('   Brief mantenido (no regenerado): ' + (decBrief.razones.join('; ')))
+      }
+    }
+
+    // Pipeline contenido sugerido (solo si el motor decide)
     var contenidoSugerido = []
     if ((MODO === 'semanal' || MODO === 'mensual') && misPosts.length >= 2 && (sub.plan === 'pro' || sub.plan === 'business' || sub.plan === 'test')) {
-      contenidoSugerido = await contenidoModule.generarContenidoSugerido(misPosts, empresas, MODO, sub.perfil_empresa || {}, supabase, sub.id, sub.brief_estrategico, memoria)
+      if (!decCopies || decCopies.generar) {
+        // Generar instrucciones estratégicas basadas en decisiones
+        var instrEstrategicas = (ctx && decCopies) ? decisionModule.generarInstruccionesParaCopies(ctx, decCopies) : ''
+        contenidoSugerido = await contenidoModule.generarContenidoSugerido(misPosts, empresas, MODO, sub.perfil_empresa || {}, supabase, sub.id, sub.brief_estrategico, memoria, instrEstrategicas)
+
+        // Quality gate copies
+        if (contenidoSugerido.length > 0) {
+          var qgCopies = decisionModule.qualityGateCopies(contenidoSugerido)
+          if (!qgCopies.pass) {
+            console.log('   ⚠ Copies quality gate issues: ' + qgCopies.issues.join(', '))
+          } else {
+            console.log('   ✓ Copies aprobados por quality gate')
+          }
+        }
+      } else {
+        console.log('   Copies saltados: ' + decCopies.razones.join('; '))
+      }
     }
 
     // Grilla mensual (todos los planes, cantidad de posts varía)
@@ -504,11 +563,22 @@ async function main() {
       grillaMensual = await grillaModule.generarGrillaMensual(misPosts, empresas, sub, mesSig, anioSig, supabase, cantidadPosts, sub.brief_estrategico || null, contenidoSugerido, memoria)
     }
 
-    // Guiones de reels (semanal/mensual, solo business)
-    // INTERCONEXION: recibe brief estratégico para seguir territorios y tono
+    // Guiones de reels (semanal/mensual, solo business — si el motor decide)
     var guionesData = null
     if ((MODO === 'semanal' || MODO === 'mensual') && (sub.plan === 'business' || sub.plan === 'test') && misPosts.length >= 2) {
-      guionesData = await guionesModule.generarGuiones(misPosts, empresas, sub.perfil_empresa || {}, contenidoSugerido, supabase, sub.id, sub.brief_estrategico || null, memoria)
+      if (!decGuiones || decGuiones.generar) {
+        guionesData = await guionesModule.generarGuiones(misPosts, empresas, sub.perfil_empresa || {}, contenidoSugerido, supabase, sub.id, sub.brief_estrategico || null, memoria)
+
+        // Quality gate guiones
+        if (guionesData && guionesData.length > 0) {
+          var qgGuiones = decisionModule.qualityGateGuiones(guionesData)
+          if (!qgGuiones.pass) {
+            console.log('   ⚠ Guiones quality gate issues: ' + qgGuiones.issues.join(', '))
+          } else {
+            console.log('   ✓ Guiones aprobados por quality gate')
+          }
+        }
+      }
     }
 
     // Auditoría (mensual completa + semanal light)
