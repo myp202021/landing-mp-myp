@@ -190,7 +190,7 @@ function calcScoresPorRed(posts) {
 // ═══════════════════════════════════════════════
 // FUNCION PRINCIPAL
 // ═══════════════════════════════════════════════
-async function generarAuditoria(posts, contenido, cuentas, supabase, suscripcionId, briefEstrategico, modo) {
+async function generarAuditoria(posts, contenido, cuentas, supabase, suscripcionId, briefEstrategico, modo, postsCliente) {
   modo = modo || 'mensual'
   console.log('\n   === AUDITORIA ' + modo.toUpperCase() + ' ===')
 
@@ -198,6 +198,16 @@ async function generarAuditoria(posts, contenido, cuentas, supabase, suscripcion
   contenido = contenido || []
   cuentas = cuentas || []
   briefEstrategico = briefEstrategico || null
+  postsCliente = postsCliente || []
+
+  // Si tenemos posts propios del cliente, usarlos para métricas reales
+  if (postsCliente.length > 0) {
+    console.log('   Posts propios del cliente: ' + postsCliente.length)
+    var engCliente = postsCliente.reduce(function(s, p) { return s + (p.likes || 0) + (p.comments || 0) }, 0)
+    var avgEngCliente = Math.round(engCliente / postsCliente.length)
+    var engCompetencia = posts.length > 0 ? Math.round(posts.reduce(function(s, p) { return s + (p.likes || 0) + (p.comments || 0) }, 0) / posts.length) : 0
+    console.log('   Engagement cliente: avg ' + avgEngCliente + ' vs competencia: avg ' + engCompetencia)
+  }
 
   // Datos de industria para benchmarking
   var industria = null
@@ -223,6 +233,39 @@ async function generarAuditoria(posts, contenido, cuentas, supabase, suscripcion
     calcVariedad(posts),
     calcInteraccion(posts),
   ]
+
+  // ═══ CRITERIOS REALES DEL CLIENTE (si tiene cuenta propia scrapeada) ═══
+  if (postsCliente.length > 0) {
+    // Frecuencia REAL del cliente (posts propios, no de competencia)
+    var frecReal = postsCliente.length
+    var scoreFrecReal = 4
+    if (frecReal >= 12) scoreFrecReal = 10
+    else if (frecReal >= 8) scoreFrecReal = 8
+    else if (frecReal >= 4) scoreFrecReal = 6
+    criterios.push({ nombre: 'Frecuencia real del cliente', score: scoreFrecReal })
+
+    // Engagement REAL del cliente
+    var avgEngReal = Math.round(postsCliente.reduce(function(s, p) { return s + (p.likes || 0) + (p.comments || 0) }, 0) / postsCliente.length)
+    var scoreEngReal = 4
+    if (avgEngReal >= 100) scoreEngReal = 10
+    else if (avgEngReal >= 50) scoreEngReal = 8
+    else if (avgEngReal >= 20) scoreEngReal = 6
+    criterios.push({ nombre: 'Engagement real del cliente (avg ' + avgEngReal + ')', score: scoreEngReal })
+
+    // Engagement cliente vs competencia
+    var avgEngComp = posts.length > 0 ? Math.round(posts.reduce(function(s, p) { return s + (p.likes || 0) + (p.comments || 0) }, 0) / posts.length) : 0
+    var ratio = avgEngComp > 0 ? avgEngReal / avgEngComp : 1
+    var scoreVsComp = 5
+    if (ratio >= 1.5) scoreVsComp = 10
+    else if (ratio >= 1.0) scoreVsComp = 8
+    else if (ratio >= 0.5) scoreVsComp = 5
+    else scoreVsComp = 3
+    criterios.push({ nombre: 'Cliente vs competencia (ratio ' + ratio.toFixed(1) + 'x)', score: scoreVsComp })
+
+    console.log('   Frecuencia real: ' + frecReal + ' posts (score ' + scoreFrecReal + ')')
+    console.log('   Engagement real: avg ' + avgEngReal + ' (score ' + scoreEngReal + ')')
+    console.log('   vs Competencia: ratio ' + ratio.toFixed(1) + 'x (score ' + scoreVsComp + ')')
+  }
 
   // ═══ CRITERIO ADICIONAL: BENCHMARK VS INDUSTRIA ═══
   if (industria && posts.length > 0) {

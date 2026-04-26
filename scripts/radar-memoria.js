@@ -227,13 +227,13 @@ async function cargarMemoria(supabase, suscripcionId) {
       console.log('   Auditoria: ultimo score=' + memoria.auditoriaAprendizaje.ultimoScore + ', tendencia=' + memoria.auditoriaAprendizaje.tendenciaScore + ', debiles=' + memoria.auditoriaAprendizaje.criteriosDebiles.length)
     }
 
-    // ═══ 4. COMPETENCIA — PATRONES HISTORICOS ═══
+    // ═══ 4. COMPETENCIA + CLIENTE — PATRONES HISTORICOS ═══
     // Cargar posts de los ultimos 60 dias para analizar patrones
     var hace60dias = new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
     var hace30dias = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
 
     var postsRes = await supabase.from('radar_posts')
-      .select('nombre_empresa, red, likes, comments, tipo_post, texto, fecha_scrape')
+      .select('nombre_empresa, red, likes, comments, tipo_post, texto, fecha_scrape, es_propio')
       .eq('suscripcion_id', suscripcionId)
       .gte('fecha_scrape', hace60dias)
       .order('fecha_scrape', { ascending: false })
@@ -241,6 +241,52 @@ async function cargarMemoria(supabase, suscripcionId) {
 
     if (postsRes.data && postsRes.data.length > 0) {
       var allPosts = postsRes.data
+
+      // Separar posts propios del cliente vs competencia
+      var postsPropios = allPosts.filter(function(p) { return p.es_propio })
+      var postsCompetencia = allPosts.filter(function(p) { return !p.es_propio })
+
+      // ═══ 4a. DATOS REALES DEL CLIENTE ═══
+      if (postsPropios.length > 0) {
+        memoria.clienteReal = {
+          totalPosts: postsPropios.length,
+          avgEngagement: Math.round(postsPropios.reduce(function(s, p) { return s + (p.likes || 0) + (p.comments || 0) }, 0) / postsPropios.length),
+          mejorPost: postsPropios.slice().sort(function(a, b) { return ((b.likes||0)+(b.comments||0)) - ((a.likes||0)+(a.comments||0)) })[0],
+          formatoGanador: null,
+          temaGanador: null,
+        }
+        // Formato que más engagement le da AL CLIENTE
+        var fmtCliente = {}
+        postsPropios.forEach(function(p) {
+          var fmt = detectarFormato(p.tipo_post || '')
+          var eng = (p.likes || 0) + (p.comments || 0)
+          if (!fmtCliente[fmt]) fmtCliente[fmt] = { total: 0, count: 0 }
+          fmtCliente[fmt].total += eng
+          fmtCliente[fmt].count++
+        })
+        var fmtOrd = Object.keys(fmtCliente).sort(function(a, b) { return (fmtCliente[b].total/fmtCliente[b].count) - (fmtCliente[a].total/fmtCliente[a].count) })
+        if (fmtOrd.length > 0) {
+          memoria.clienteReal.formatoGanador = { formato: fmtOrd[0], avgEng: Math.round(fmtCliente[fmtOrd[0]].total / fmtCliente[fmtOrd[0]].count) }
+        }
+        // Tema que más engagement le da AL CLIENTE
+        var temaCliente = {}
+        postsPropios.forEach(function(p) {
+          var tema = detectarTemaBasico(p.texto || '')
+          var eng = (p.likes || 0) + (p.comments || 0)
+          if (!temaCliente[tema]) temaCliente[tema] = { total: 0, count: 0 }
+          temaCliente[tema].total += eng
+          temaCliente[tema].count++
+        })
+        var temaOrd = Object.keys(temaCliente).sort(function(a, b) { return (temaCliente[b].total/temaCliente[b].count) - (temaCliente[a].total/temaCliente[a].count) })
+        if (temaOrd.length > 0) {
+          memoria.clienteReal.temaGanador = { tema: temaOrd[0], avgEng: Math.round(temaCliente[temaOrd[0]].total / temaCliente[temaOrd[0]].count) }
+        }
+        console.log('   Cliente real: ' + postsPropios.length + ' posts, avg eng ' + memoria.clienteReal.avgEngagement
+          + ', formato ganador: ' + (memoria.clienteReal.formatoGanador ? memoria.clienteReal.formatoGanador.formato : 'N/A')
+          + ', tema ganador: ' + (memoria.clienteReal.temaGanador ? memoria.clienteReal.temaGanador.tema : 'N/A'))
+      }
+
+      // ═══ 4b. COMPETENCIA ═══
       var porCompetidor = {}
 
       allPosts.forEach(function(p) {
@@ -447,7 +493,22 @@ function generarContextoAprendizaje(memoria) {
     }
   }
 
-  // 4. Competencia
+  // 4. Datos reales del cliente
+  if (memoria.clienteReal) {
+    var cr = memoria.clienteReal
+    ctx += '\n═══ DATOS REALES DEL CLIENTE (scraping de su propia cuenta IG) ═══\n'
+    ctx += '- Posts del cliente en los ultimos 60 dias: ' + cr.totalPosts + '\n'
+    ctx += '- Engagement promedio REAL: ' + cr.avgEngagement + '\n'
+    if (cr.formatoGanador) ctx += '- Formato que MAS engagement le genera al cliente: ' + cr.formatoGanador.formato + ' (avg ' + cr.formatoGanador.avgEng + ')\n'
+    if (cr.temaGanador) ctx += '- Tema que MAS engagement le genera al cliente: ' + cr.temaGanador.tema + ' (avg ' + cr.temaGanador.avgEng + ')\n'
+    if (cr.mejorPost) {
+      var mp = cr.mejorPost
+      ctx += '- Mejor post del cliente: "' + (mp.texto || '').substring(0, 100) + '" (' + ((mp.likes||0)+(mp.comments||0)) + ' engagement)\n'
+    }
+    ctx += 'IMPORTANTE: priorizar formatos y temas que AL CLIENTE le funcionan, no solo lo que funciona a la competencia.\n'
+  }
+
+  // 5. Competencia
   var cp = memoria.competenciaPatrones
   if (cp.competidores.length > 0) {
     ctx += '\n═══ PATRONES DE COMPETENCIA (60 dias) ═══\n'

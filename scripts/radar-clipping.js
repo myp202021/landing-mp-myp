@@ -382,10 +382,58 @@ async function main() {
       return handles.includes(p.handle)
     })
     var destinos = (sub.emails_destino && sub.emails_destino.length > 0) ? sub.emails_destino : [sub.email]
-    console.log('\n' + sub.email + ': ' + misPosts.length + ' posts')
 
-    // Persist posts to radar_posts
+    // === SCRAPE CUENTA PROPIA DEL CLIENTE ===
+    var cuentaPropia = null
+    var postsCliente = []
+    var perfilEmpresa = sub.perfil_empresa || {}
+    // Buscar handle del cliente en: perfil_empresa.instagram o cuenta marcada como propia
+    var handleCliente = (perfilEmpresa.instagram || '').replace(/@/g, '').replace(/https?:\/\/(www\.)?instagram\.com\//g, '').replace(/\//g, '').toLowerCase().trim()
+    // También buscar en cuentas si alguna tiene es_propia=true
+    cuentas.forEach(function(c) {
+      if (c.es_propia && (c.red || '').toLowerCase() === 'instagram') {
+        handleCliente = c.handle.toLowerCase()
+      }
+    })
+
+    if (handleCliente && !handles.includes(handleCliente)) {
+      console.log('   Cuenta propia IG: @' + handleCliente)
+      try {
+        var clienteUrl = 'https://www.instagram.com/' + handleCliente + '/'
+        var clienteLimit = MODO === 'diario' ? 5 : 15
+        var cr = await fetch('https://api.apify.com/v2/acts/apify~instagram-scraper/run-sync-get-dataset-items?token=' + APIFY_TOKEN + '&timeout=120',
+          { method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ directUrls: [clienteUrl], resultsType: 'posts', resultsLimit: clienteLimit, addParentData: true }) })
+        if (cr.ok) {
+          var clienteRaw = await cr.json()
+          postsCliente = clienteRaw.filter(function(p) { return p.timestamp && new Date(p.timestamp) > desde })
+            .map(function(p) {
+              return {
+                red: 'Instagram', handle: handleCliente,
+                nombre: perfilEmpresa.nombre || handleCliente,
+                texto: (p.caption || '').substring(0, 500),
+                url: p.url || 'https://www.instagram.com/p/' + (p.shortCode || '') + '/',
+                timestamp: p.timestamp,
+                likes: p.likesCount || 0, comments: p.commentsCount || 0,
+                type: p.type || 'Image',
+                es_propio: true,
+              }
+            })
+          console.log('   Posts propios del cliente: ' + postsCliente.length + ' (engagement avg: ' +
+            (postsCliente.length > 0 ? Math.round(postsCliente.reduce(function(s, p) { return s + p.likes + p.comments }, 0) / postsCliente.length) : 0) + ')')
+        } else {
+          console.log('   Cuenta propia: HTTP ' + cr.status)
+        }
+      } catch (e) { console.log('   Cuenta propia error: ' + e.message) }
+    }
+
+    console.log('\n' + sub.email + ': ' + misPosts.length + ' posts competencia' + (postsCliente.length > 0 ? ' + ' + postsCliente.length + ' propios' : ''))
+
+    // Persist posts to radar_posts (competencia + propios)
     await persistirPosts(sub.id, misPosts, MODO)
+    if (postsCliente.length > 0) {
+      await persistirPosts(sub.id, postsCliente, MODO)
+    }
 
     // Query previous period for trends
     var trends = await calcularTrends(sub.id, misPosts, cuentas, MODO)
@@ -464,11 +512,11 @@ async function main() {
     }
 
     // Auditoría (mensual completa + semanal light)
-    // INTERCONEXION: recibe brief para auditar cobertura de territorios y alineación
+    // INTERCONEXION: recibe brief + posts propios del cliente para métricas reales
     var auditoriaData = null
     if (MODO === 'mensual' || MODO === 'semanal') {
       var contenidoAud = contenidoSugerido || []
-      auditoriaData = await auditoriaModule.generarAuditoria(misPosts, contenidoAud, cuentas, supabase, sub.id, sub.brief_estrategico || null, MODO)
+      auditoriaData = await auditoriaModule.generarAuditoria(misPosts, contenidoAud, cuentas, supabase, sub.id, sub.brief_estrategico || null, MODO, postsCliente)
     }
 
     var html = generarEmailHTML(misPosts, cuentas, hoy, MODO, resumenIA, empresas, trends, sub.id, contenidoSugerido, sub.estado, sub.plan, sub.trial_ends, grillaMensual, guionesData, null, auditoriaData, sub.brief_estrategico)
@@ -512,7 +560,8 @@ async function persistirPosts(suscripcionId, posts, modo) {
       keywords_match: p.keywords || [],
       fecha_post: p.timestamp ? new Date(p.timestamp).toISOString() : null,
       fecha_scrape: fechaScrape,
-      modo: modo
+      modo: modo,
+      es_propio: p.es_propio || false
     }
   })
   // Insert in batches of 50
