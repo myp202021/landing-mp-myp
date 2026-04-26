@@ -76,13 +76,6 @@ async function generarGuiones(posts, empresas, perfil, copiesGenerados, supabase
     videoCtx += 'IMPORTANTE: Usa estos reels como referencia directa. Cada guion debe explicar que post especifico lo inspira.\n'
   }
 
-  // Datos de industria
-  var industriaCtx = ''
-  try {
-    var industriaModule = require('./radar-industria.js')
-    industriaCtx = industriaModule.generarContextoIndustria(perfil)
-  } catch (e) {}
-
   // Guiones previos (dedup)
   memoria = memoria || null
   var guionesPrevCtx = ''
@@ -156,8 +149,7 @@ async function generarGuiones(posts, empresas, perfil, copiesGenerados, supabase
     + videoCtx
     + copiesCtx
     + guionesPrevCtx
-    + (aprendizajeCtx ? aprendizajeCtx + '\n' : '')
-    + (industriaCtx ? industriaCtx + '\n' : '') + '\n'
+    + (aprendizajeCtx ? aprendizajeCtx + '\n' : '') + '\n'
     + '══════════════════════════════════\n'
     + 'TAREA: Genera 2 guiones de video LISTOS PARA PRODUCCION para ' + nombreEmpresa + '.\n'
     + '══════════════════════════════════\n\n'

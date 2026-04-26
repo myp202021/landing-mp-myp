@@ -106,13 +106,6 @@ async function paso1_analizar(posts, empresas, modo, perfil, copiesPrevios, brie
     previosCtx += '\n'
   }
 
-  // Datos de industria del predictor M&P
-  var industriaCtx = ''
-  try {
-    var industriaModule = require('./radar-industria.js')
-    industriaCtx = industriaModule.generarContextoIndustria(perfil)
-  } catch (e) {}
-
   // Contexto de aprendizaje (memoria inter-run)
   var memoriaCtx = ''
   if (memoria) {
@@ -166,7 +159,6 @@ async function paso1_analizar(posts, empresas, modo, perfil, copiesPrevios, brie
     + clienteInfo + '\n'
     + briefCtx
     + (memoriaCtx ? memoriaCtx + '\n' : '')
-    + (industriaCtx ? industriaCtx + '\n' : '')
     + estacionalidad + '\n'
     + '══════════════════════════════════\n'
     + 'TOP 10 POSTS DE LA COMPETENCIA POR ENGAGEMENT (estos son los que MAS funcionaron):\n'
