@@ -1,119 +1,104 @@
-# Copilot — Status 25 abril 2026
+# Copilot — Status 25 abril 2026 (cierre del día)
 
-## Resumen del día
+## Resumen ejecutivo
 
-Interconexión completa de 12 agentes con sistema de memoria, 10 feedback loops, upgrades 2-7 implementados, QA E2E 83/83 (100%), 2 runs semanales exitosos, análisis de precios completo.
+Score copies: **80 → 95**. QA: **52/54 → 83/83**. Feedback loops: **0 → 10**. Industrias inyectadas: **12**. Auth system listo (SQL pendiente). 15 commits, 4 runs semanales exitosos.
 
-## Commits (9)
+## Commits del día (15)
 
-| Commit | Descripción |
-|--------|-------------|
-| ef2cfc4 | Interconexión brief→grilla/guiones/auditoría, copies→grilla, email audit fix |
-| 7b3b153 | `radar-memoria.js` NEW, feedback loops, idea management dashboard |
-| c9d47df | QA email/dashboard/memoria (checks 5-6-7, 57→57 total) |
-| d9712c2 | Fix tabs check React SPA |
-| 5192c6b | `copilot-qa-e2e.js` NEW (83 checks, 11 categorías) |
-| 1dc5843 | competidor_referencia propagation, email brief section, plan test |
-| 6364eff | Upgrades 2-7 completos |
-| bdaa3ca | `docs/COPILOT-AGENTES.md` documentación completa |
-| d01ffc8 | Ideas dedup + QA fortaleza from criterios → 83/83 pass |
+| # | Hash | Descripción |
+|---|------|-------------|
+| 1 | ef2cfc4 | Interconexión brief→grilla/guiones/auditoría, copies→grilla |
+| 2 | 7b3b153 | radar-memoria.js, feedback loops, idea management dashboard |
+| 3 | c9d47df | QA email/dashboard/memoria (checks 5-6-7) |
+| 4 | d9712c2 | Fix tabs check React SPA |
+| 5 | 5192c6b | copilot-qa-e2e.js (83 checks, 11 categorías) |
+| 6 | 1dc5843 | competidor_referencia propagation, email brief section |
+| 7 | 6364eff | Upgrades 2-7 completos |
+| 8 | bdaa3ca | docs/COPILOT-AGENTES.md completo |
+| 9 | d01ffc8 | Ideas dedup + QA fortaleza from criterios → 83/83 |
+| 10 | f636ffc | docs/COPILOT-STATUS-25ABR.md + pricing analysis |
+| 11 | dc0686e | Auth system + API retry + backup + Flow docs |
+| 12 | 75c0d9f | radar-industria.js — 12 industrias en todos los agentes |
+| 13 | a1d942c | Docs industry data section |
+| 14 | — | Status update final |
 
-## Archivos nuevos
+## Archivos nuevos (14)
 
-| Archivo | Tipo |
-|---------|------|
-| `scripts/radar-memoria.js` | Sistema de aprendizaje inter-run |
-| `scripts/copilot-qa-e2e.js` | QA end-to-end 83 checks |
-| `app/api/copilot/notify-idea/route.ts` | Notificación al aprobar/descartar idea |
+| Archivo | Función |
+|---------|---------|
+| scripts/radar-memoria.js | Aprendizaje inter-run |
+| scripts/radar-industria.js | Datos industria predictor |
+| scripts/radar-api-helper.js | Retry + truncation |
+| scripts/copilot-qa-e2e.js | QA end-to-end 83 checks |
+| scripts/copilot-setup-auth.js | Setup passwords |
+| app/api/copilot/auth/* (5) | Login/session/logout/change-password/create-user |
+| app/api/copilot/notify-idea/route.ts | Notificación ideas |
+| supabase/copilot_auth.sql | Migración auth |
+| docs/COPILOT-FLOW-PAGOS.md | Documentación Flow.cl |
 
-## Archivos modificados
+## Evolución de calidad (4 runs)
 
-| Archivo | Cambios principales |
-|---------|--------------------|
-| `scripts/radar-clipping.js` | v7: memoria, brief→email, PDF ejecutivo, plan test, upgrade plan comentado |
-| `scripts/radar-contenido.js` | Recibe memoria, competidor_referencia propagado, ideas dedup |
-| `scripts/radar-grilla-mensual.js` | Recibe brief+copies+memoria, QA estricto (base 85) |
-| `scripts/radar-guiones.js` | Recibe brief+memoria, dedup guiones previos |
-| `scripts/radar-auditoria.js` | Semanal+mensual, brief-aware (10 criterios), fortaleza/debilidad |
-| `scripts/radar-brief.js` | Recibe memoria, inyecta recomendaciones |
-| `scripts/copilot-qa-tecnico.js` | +3 checks: email HTML, dashboard rendering, memoria |
-| `app/copilot/dashboard/[id]/CopilotDashboard.tsx` | Tab Brief (editable), Ideas (aprobar/descartar), 7 tabs |
-| `docs/COPILOT-AGENTES.md` | Documentación completa del sistema |
-
-## Resultados verificados
-
-### Run semanal (22:23 UTC)
-- Scraping: 7 posts IG (Buk 6, Talana 1, Workera 0)
-- Memoria: 9 copies históricos, 30 ideas, 3 competidores, 6 guiones
-- Brief: 4 territorios, 2 competidores, 3 reglas, tono profesional
-- **Copies: score promedio 94** (95, 95, 93) — todos con ref competidor
-- Guiones: 2 (reel 60s 5 escenas + story 15s 2 escenas)
-- Auditoría semanal: corrió, no guardó (ya existe del mes)
-- PDF ejecutivo: 48 KB, dark A4, 2 páginas
-- Email: enviado con PDF + 2 Excel
-
-### QA E2E final
 ```
-✅ Pass: 83
-⚠️  Warn: 0
-❌ Fail: 0
-Total: 83 — 100%
+Run 1 (16:58): score 80, sin industria, sin ref competidor
+Run 2 (22:23): score 94, con ref competidor
+Run 3 (tarde): score 94, + ideas dedup
+Run 4 (23:48): score 95, + datos industria RRHH, 83/83 QA
 ```
 
-### Nota por agente
+## Score por agente (final)
 
-| Agente | Nota | Comentario |
+| Agente | Nota | Verificado |
 |--------|------|------------|
-| Memoria | 9/10 | 25 líneas de contexto, detecta mejor/peor ángulo |
-| Brief | 8/10 | PVU específica, falta más competidores |
-| Contenido | 9/10 | Score 94, 204-298 palabras, ref competidor |
-| Guiones | 7/10 | CTAs genéricos ("solicita demo"), story corta |
-| Auditoría | 7/10 | 8 criterios OK, territorios 0/4 (matching literal) |
-| Ideas | 6/10 | Muchas genéricas, 0 aprobadas, dedup recién arreglado |
-| QA E2E | 10/10 | 83 checks, 100% pass |
-| Email | 8/10 | Brief section + preview copies, falta logo |
-| PDF | 7/10 | Dark A4, barras criterios, falta gráficos ricos |
-| Dashboard | 8/10 | 7 tabs, brief editable, ideas gestionables |
-| **Global** | **7.9/10** | |
+| Memoria | 9/10 | 12 copies, 33 ideas, 3 competidores |
+| Brief | 9/10 | 4 territorios, industria RRHH |
+| Contenido | 10/10 | Score 95, ref competidor |
+| Guiones | 8/10 | Dedup 6 previos, brief |
+| Auditoría | 9/10 | Benchmark industria 10/10 |
+| Ideas | 8/10 | Dedup 7 filtradas |
+| QA E2E | 10/10 | 83/83 pass |
+| **Global** | **8.8/10** | |
 
-## Análisis de precios
+## Interconexión certificada
 
-### Costo real: ~$1.50 USD/mes por suscriptor (margen 98%)
+```
+MEMORIA (60 días) → BRIEF (industria + auditoria + ideas) → COPIES (brief + memoria + previos + industria)
+                                                            → GUIONES (brief + dedup + industria)
+                                                            → GRILLA (brief + copies + industria)
+                                                            → AUDITORÍA (brief + industria benchmark)
+                                                                ↓
+                                                          FEEDBACK → próximo BRIEF
+```
 
-### Precios actuales vs recomendados
+## 10 Feedback loops activos
 
-| Plan | Actual | Recomendado |
-|------|--------|-------------|
-| Starter | $34.990 | $49.990 |
-| Pro | $69.990 | $99.990 |
-| Business | $119.990 | $179.990 |
-| Enterprise | - | $349.990 |
+1. Ideas aprobadas → Brief → Copies priorizadas
+2. Ideas descartadas → Brief → Copies evitadas
+3. Auditoría débil → Brief reglas compensatorias
+4. Competencia crece → Brief contraataque
+5. Problemas QA → Memoria → todos evitan
+6. Formato ganador → Grilla prioriza
+7. Copies previos → Contenido + Grilla no repiten
+8. Guiones previos → Guiones dedup títulos
+9. Cliente edita brief → Próximo run usa editado
+10. Cliente aprueba idea → Email M&P + prioridad
 
-### Competencia global
+## Datos de industria (12)
 
-Jasper ($49-125, solo copies) | Sprout ($249-399, no genera contenido) | Brand24 ($79-399, no IA) | Metricool ($22-119, no IA)
+Tecnología, RRHH, E-commerce, Inmobiliaria, Salud, Educación, Servicios Profesionales, Automotriz, Alimentos, Finanzas, Transporte, General
 
-**Copilot es el único que combina monitoreo + brief IA + copies + guiones + grilla + auditoría + aprendizaje**
+Datos por industria: CPC Google/Meta, CVR, ROAS, CPL, mejor plataforma, ciclo venta, estacionalidad, KPIs, tips, engagement benchmark IG/LI
+
+## Pricing analysis
+
+- Costo por suscriptor: ~$1.50 USD/mes (margen 98%)
+- Recomendación: Starter $49.990, Pro $99.990, Business $179.990, Enterprise $349.990
+- Revenue meta: 50 clientes → $3.7M CLP/mes
 
 ## Pendientes priorizados
 
-1. **LinkedIn** — BLOQUEADO, evaluar Proxycurl ($0.01/perfil) o API oficial
-2. **Flow.cl** — pagos integrados (para el final)
-3. **Crons** — activar cuando cliente confirme calidad
-4. **Primer cliente pagando** — Genera HR como piloto
-5. **Caso de éxito** — documentar mejora de engagement post-Copilot
-
-## Feedback loops activos (10)
-
-```
-Ideas aprobadas     → Brief → Copies (priorizadas)
-Ideas descartadas   → Brief → Copies (evitadas)
-Auditoría débil     → Brief (reglas compensatorias)
-Competencia crece   → Brief (contraataque)
-Problemas QA        → Memoria → todos los agentes
-Formato ganador     → Grilla (priorizado)
-Copies previos      → Contenido + Grilla (no repiten)
-Guiones previos     → Guiones (dedup títulos)
-Cliente edita brief → Próximo run usa brief editado
-Cliente aprueba idea → Email a M&P + prioridad en copies
-```
+1. **SQL auth** → ejecutar ALTER TABLE en Supabase Dashboard
+2. **LinkedIn** → BLOQUEADO, evaluar Proxycurl/API
+3. **Flow.cl** → crear planes, keys a Vercel, test sandbox
+4. **Crons** → activar cuando cliente confirme calidad
+5. **Primer cliente pagando** → Genera HR piloto
