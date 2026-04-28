@@ -1,0 +1,37 @@
+name: "Generar PDF desde HTML"
+
+on:
+  workflow_dispatch:
+    inputs:
+      html_path:
+        description: 'Ruta del archivo HTML en el repo (ej: docs/informe.html)'
+        required: true
+        default: 'tmp/Transbank_Benchmark_2026.html'
+      output_name:
+        description: 'Nombre del PDF de salida'
+        required: true
+        default: 'Transbank_Benchmark_2026.pdf'
+
+jobs:
+  pdf:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update && sudo apt-get install -y wkhtmltopdf
+      - name: "Generar PDF"
+        run: |
+          wkhtmltopdf --enable-local-file-access \
+            --page-size A4 \
+            --margin-top 8 --margin-bottom 8 --margin-left 8 --margin-right 8 \
+            --print-media-type \
+            --no-stop-slow-scripts \
+            "${{ inputs.html_path }}" \
+            "${{ inputs.output_name }}"
+          ls -lh "${{ inputs.output_name }}"
+      - name: "Upload PDF"
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.output_name }}
+          path: ${{ inputs.output_name }}
+          retention-days: 30
