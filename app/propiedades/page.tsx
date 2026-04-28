@@ -22,7 +22,8 @@ export default function PropiedadesPage() {
   var nuevas = listings.filter(function(l: any) { return l.is_new })
   var hoy = listings.filter(function(l: any) { return l.published_tag === 'PUBLICADO HOY' })
   var semana = listings.filter(function(l: any) { return l.published_tag === 'PUBLICADO ESTA SEMANA' })
-  var mostrar = filtro === 'nuevas' ? nuevas : filtro === 'hoy' ? hoy : filtro === 'semana' ? semana : listings
+  var directos = listings.filter(function(l: any) { return l.vendedor_tipo === 'particular' && l.vendedor_nombre })
+  var mostrar = filtro === 'nuevas' ? nuevas : filtro === 'hoy' ? hoy : filtro === 'semana' ? semana : filtro === 'directos' ? directos : listings
 
   if (loading) return <div style={{ fontFamily: 'Arial', textAlign: 'center', padding: 60, color: '#666' }}>Cargando propiedades...</div>
 
@@ -37,7 +38,7 @@ export default function PropiedadesPage() {
           </p>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 10, marginBottom: 16 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 10, marginBottom: 16 }}>
           <button onClick={function() { setFiltro('nuevas') }} style={{ background: filtro === 'nuevas' ? '#065F46' : '#D1FAE5', color: filtro === 'nuevas' ? '#fff' : '#065F46', padding: 12, borderRadius: 8, textAlign: 'center', border: 'none', cursor: 'pointer' }}>
             <div style={{ fontSize: 26, fontWeight: 900 }}>{nuevas.length}</div>
             <div style={{ fontSize: 9, textTransform: 'uppercase' as any }}>Nuevas</div>
@@ -49,6 +50,10 @@ export default function PropiedadesPage() {
           <button onClick={function() { setFiltro('semana') }} style={{ background: filtro === 'semana' ? '#5B21B6' : '#EDE9FE', color: filtro === 'semana' ? '#fff' : '#5B21B6', padding: 12, borderRadius: 8, textAlign: 'center', border: 'none', cursor: 'pointer' }}>
             <div style={{ fontSize: 26, fontWeight: 900 }}>{semana.length}</div>
             <div style={{ fontSize: 9, textTransform: 'uppercase' as any }}>Esta semana</div>
+          </button>
+          <button onClick={function() { setFiltro('directos') }} style={{ background: filtro === 'directos' ? '#92400E' : '#FEF3C7', color: filtro === 'directos' ? '#fff' : '#92400E', padding: 12, borderRadius: 8, textAlign: 'center', border: 'none', cursor: 'pointer' }}>
+            <div style={{ fontSize: 26, fontWeight: 900 }}>{directos.length}</div>
+            <div style={{ fontSize: 9, textTransform: 'uppercase' as any }}>{'\u2B50'} Directos</div>
           </button>
           <button onClick={function() { setFiltro('todas') }} style={{ background: filtro === 'todas' ? '#1E40AF' : '#DBEAFE', color: filtro === 'todas' ? '#fff' : '#1E40AF', padding: 12, borderRadius: 8, textAlign: 'center', border: 'none', cursor: 'pointer' }}>
             <div style={{ fontSize: 26, fontWeight: 900 }}>{listings.length}</div>
@@ -69,13 +74,15 @@ export default function PropiedadesPage() {
                   <th style={{ padding: '6px 8px', textAlign: 'center' as any }}>B</th>
                   <th style={{ padding: '6px 8px', textAlign: 'center' as any }}>m²</th>
                   <th style={{ padding: '6px 8px', textAlign: 'center' as any }}>Pub.</th>
+                  <th style={{ padding: '6px 8px', textAlign: 'left' as any }}>Contacto</th>
                   <th style={{ padding: '6px 8px', textAlign: 'left' as any }}>Detectada</th>
                   <th style={{ padding: '6px 8px', textAlign: 'center' as any }}>Ver</th>
                 </tr>
               </thead>
               <tbody>
                 {mostrar.map(function(l: any, i: number) {
-                  return <tr key={l.id} style={{ borderBottom: '1px solid #f0f0f0' }}>
+                  var esDirecto = l.vendedor_tipo === 'particular'
+                  return <tr key={l.id} style={{ borderBottom: '1px solid #f0f0f0', background: esDirecto && l.vendedor_nombre ? '#FFFBEB' : 'transparent' }}>
                     <td style={{ padding: '4px 8px', color: '#999', fontSize: 10 }}>{i + 1}</td>
                     <td style={{ padding: '4px 8px', fontWeight: 600 }}>{l.comuna}</td>
                     <td style={{ padding: '4px 8px', color: '#666', fontSize: 10 }}>{l.barrio || '-'}</td>
@@ -88,6 +95,13 @@ export default function PropiedadesPage() {
                     <td style={{ padding: '4px 8px', textAlign: 'center' as any }}>
                       {l.published_tag === 'PUBLICADO HOY' && <span style={{ background: '#D1FAE5', color: '#065F46', padding: '2px 5px', borderRadius: 4, fontSize: 8, fontWeight: 700 }}>HOY</span>}
                       {l.published_tag === 'PUBLICADO ESTA SEMANA' && <span style={{ background: '#FEF3C7', color: '#92400E', padding: '2px 5px', borderRadius: 4, fontSize: 8, fontWeight: 700 }}>SEMANA</span>}
+                    </td>
+                    <td style={{ padding: '4px 8px', fontSize: 10 }}>
+                      {l.vendedor_nombre ? (
+                        <span style={{ color: esDirecto ? '#92400E' : '#666', fontWeight: esDirecto ? 700 : 400 }}>
+                          {esDirecto ? '\u2B50 ' : ''}{l.vendedor_nombre}
+                        </span>
+                      ) : <span style={{ color: '#ccc' }}>-</span>}
                     </td>
                     <td style={{ padding: '4px 8px', fontSize: 10, color: '#999' }}>{(l.first_seen || '').substring(0, 10)}</td>
                     <td style={{ padding: '4px 8px', textAlign: 'center' as any }}>
