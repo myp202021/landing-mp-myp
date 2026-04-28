@@ -724,21 +724,22 @@ async function generarContenidoSugerido(posts, empresas, modo, perfil, supabase,
         }
       })
 
-      // Generar ideas basadas en gaps y datos reales
+      // Generar ideas ACCIONABLES basadas en gaps reales
       var ideas = []
+      var perfNombre = (perfil.nombre || 'el cliente')
 
-      // Ideas desde los copies generados (con contexto enriquecido)
-      revisados.forEach(function(c) {
-        ideas.push({
-          suscripcion_id: suscripcionId,
-          titulo: c.titulo || 'Idea de contenido',
-          descripcion: 'Basado en competencia: ' + (c.justificacion || '')
-            + (c.competidor_referencia ? ' | Referencia: ' + c.competidor_referencia + ' (eng: ' + (c.engagement_referencia || 'N/A') + ')' : '')
-            + ' | Angulo: ' + (c.angulo || 'sin definir'),
-          categoria: (c.angulo || 'general'),
-          prioridad: (c.score || 0) >= 80 ? 'alta' : (c.score || 0) >= 65 ? 'media' : 'baja',
-          estado: 'nueva',
-        })
+      // Ideas desde copies — solo si tienen ref competidor (valor real)
+      aprobados.forEach(function(c) {
+        if (c.competidor_referencia && c.engagement_referencia) {
+          ideas.push({
+            suscripcion_id: suscripcionId,
+            titulo: 'Publicar: ' + (c.titulo || '').substring(0, 50) + ' [' + c.plataforma + ']',
+            descripcion: 'Copy listo (score ' + c.score + '). Basado en post de ' + c.competidor_referencia + ' que obtuvo ' + c.engagement_referencia + ' engagement. Angulo: ' + c.angulo + '. ' + (c.palabras || 0) + ' palabras.',
+            categoria: (c.angulo || 'general'),
+            prioridad: 'alta',
+            estado: 'nueva',
+          })
+        }
       })
 
       // Ideas desde gaps detectados en la competencia
@@ -766,14 +767,21 @@ async function generarContenidoSugerido(posts, empresas, modo, perfil, supabase,
         })
       })
 
-      // Detectar temas que FALTAN (gaps reales)
-      var temasEsperados = ['educativo', 'caso_exito', 'marca_humana', 'datos_mercado', 'tendencia', 'promocional']
+      // Detectar temas que FALTAN — con acción concreta
+      var temasEsperados = ['educativo', 'caso_exito', 'marca_humana', 'datos_mercado', 'tendencia']
+      var accionPorTema = {
+        educativo: 'Crear carrusel con tips practicos del rubro',
+        caso_exito: 'Publicar caso de cliente con numeros reales (antes/despues)',
+        marca_humana: 'Mostrar al equipo detras del producto (behind the scenes)',
+        datos_mercado: 'Post con estadistica clave de la industria + opinion experta',
+        tendencia: 'Contenido sobre tendencia del rubro + posicion de ' + perfNombre,
+      }
       temasEsperados.forEach(function(tema) {
         if (!temasCompetencia[tema]) {
           ideas.push({
             suscripcion_id: suscripcionId,
-            titulo: 'OPORTUNIDAD: ningun competidor cubre "' + tema.replace(/_/g, ' ') + '"',
-            descripcion: 'En el top 5 de posts por engagement, ningun competidor publica contenido de tipo "' + tema.replace(/_/g, ' ')
+            titulo: (accionPorTema[tema] || 'Cubrir "' + tema.replace(/_/g, ' ') + '"'),
+            descripcion: 'Ningun competidor en el top 5 publica "' + tema.replace(/_/g, ' ')
               + '". Esto representa una oportunidad de diferenciacion: ser el primero en abordar este angulo puede capturar atencion sin competencia directa.',
             categoria: tema,
             prioridad: 'alta',
