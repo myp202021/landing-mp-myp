@@ -826,7 +826,7 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
 
             {diasOrdenados.length > 1 && (
               <div className="bg-[#1a1745] rounded-xl p-6 border border-white/[0.06] mb-8">
-                <h2 className="text-sm font-bold text-white mb-4">Posts detectados por d\u00eda</h2>
+                <h2 className="text-sm font-bold text-white mb-4">Posts detectados por d{'í'}a</h2>
                 <div className="flex items-end gap-1" style={{ height: '120px' }}>
                   {diasOrdenados.map(function(d) {
                     var h = Math.max(4, (porDia[d] / maxPostsDia) * 100)
@@ -997,7 +997,10 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
                       <span className="text-xs text-[#64748b]">Score promedio: {batch.score_promedio || '-'}</span>
                     </div>
                     <div className="grid grid-cols-1 gap-3">
-                      {(batch.datos || []).map(function(c: any, ci: number) {
+                      {(batch.datos || []).filter(function(c: any) {
+                        // No mostrar copies con error o score muy bajo
+                        return c.copy && c.copy.length > 20 && !c.copy.includes('(Error') && !c.error
+                      }).map(function(c: any, ci: number) {
                         var copyKey = 'copy-' + bi + '-' + ci
                         var fullText = c.copy || ''
                         var hashtags = c.hashtags || ''
