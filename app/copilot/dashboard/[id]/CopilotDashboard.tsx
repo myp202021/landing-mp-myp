@@ -978,74 +978,55 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
               </div>
             </div>
 
-            {/* GRILLA MENSUAL */}
+            {/* GRILLA MENSUAL — formato cards (igual que copies) */}
             {grillasMes.length > 0 && (
-              <div className="bg-[#1a1745] rounded-xl border border-white/[0.06] overflow-hidden mb-8">
-                <div className="px-6 py-4 border-b border-white/[0.04] flex justify-between items-center">
-                  <h2 className="text-sm font-bold text-white">Grilla {MESES_NOMBRES[mesGlobal]} — {grillasMes[0].datos.length} posts</h2>
+              <div className="space-y-4 mb-8">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-sm font-bold text-white">Grilla {MESES_NOMBRES[mesGlobal]}</h2>
                   <div className="flex items-center gap-3">
-                    <span className="text-xs text-[#64748b]">Score promedio: {grillasMes[0].score_promedio || '-'}</span>
+                    <span className="text-xs bg-purple-900/30 text-purple-400 px-3 py-1 rounded-full border border-purple-700/30">{grillasMesCount} posts</span>
                     <a href={'/api/copilot/export-grilla?id=' + props.suscripcionId + '&mes=' + mesGlobal} className="bg-green-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg hover:bg-green-700 transition">Descargar Excel</a>
                   </div>
                 </div>
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="bg-[#1e1b4b] border-b border-white/[0.06]">
-                      <th className="px-4 py-3 text-left font-semibold text-[#c4b5fd] w-16">#</th>
-                      <th className="px-4 py-3 text-left font-semibold text-[#c4b5fd] w-24">Fecha</th>
-                      <th className="px-4 py-3 text-left font-semibold text-[#c4b5fd] w-24">Plataforma</th>
-                      <th className="px-4 py-3 text-left font-semibold text-[#c4b5fd] w-20">Tipo</th>
-                      <th className="px-4 py-3 text-left font-semibold text-[#c4b5fd]">Copy</th>
-                      <th className="px-4 py-3 text-center font-semibold text-[#c4b5fd] w-16">Score</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {(grillasMes[0].datos || []).map(function(g: any, i: number) {
-                      var scoreColor = (g.score || 0) >= 80 ? 'text-green-600' : (g.score || 0) >= 70 ? 'text-yellow-600' : 'text-red-600'
-                      return <tr key={i} className={'border-b border-white/[0.04] ' + (i % 2 === 0 ? '' : 'bg-[#12102a]')}>
-                        <td className="px-4 py-3 text-[#94a3b8] font-semibold">{i + 1}</td>
-                        <td className="px-4 py-3 text-[#c4b5fd] text-xs">{g.fecha_sugerida || g.dia_semana || 'D\u00eda ' + (g.dia || i+1)}</td>
-                        <td className="px-4 py-3">
-                          <span className={'text-white text-[10px] font-bold px-2 py-1 rounded ' + ((g.plataforma || '').includes('Instagram') ? 'bg-pink-500' : 'bg-blue-500')}>
-                            {(g.plataforma || 'IG').substring(0, 2).toUpperCase()}
-                          </span>
-                        </td>
-                        <td className="px-4 py-3 text-xs text-[#a5b4fc]">{g.tipo_post || g.tipo || '-'}</td>
-                        <td className="px-4 py-3">
-                          <p className="font-semibold text-white text-xs mb-1">{g.titulo || g.titulo_grafico || g.gancho || ''}</p>
-                          <p className="text-xs text-[#94a3b8] whitespace-pre-line">{g.copy || ''}</p>
-                          {g.hashtags && (
-                            <p className="text-xs text-indigo-400 mt-1">{Array.isArray(g.hashtags) ? g.hashtags.join(' ') : g.hashtags}</p>
-                          )}
-                        </td>
-                        <td className={'px-4 py-3 text-center font-bold ' + scoreColor}>{g.score || '-'}</td>
-                      </tr>
-                    })}
-                  </tbody>
-                </table>
+                <div className="grid grid-cols-1 gap-3">
+                  {grillasMes.map(function(batch: any) {
+                    return (batch.datos || []).map(function(g: any, gi: number) {
+                      var platColor = (g.plataforma || '').includes('Instagram') ? 'bg-pink-900/30 text-pink-400' : 'bg-blue-900/30 text-blue-400'
+                      return <div key={'g-' + gi} className="border border-white/[0.04] rounded-lg p-4 hover:bg-white/[0.04]">
+                        <div className="flex items-center gap-2 mb-2 flex-wrap">
+                          <span className={'text-[10px] font-bold px-2 py-0.5 rounded ' + platColor}>{g.plataforma || 'IG'} {g.tipo_post || g.tipo || ''}</span>
+                          <span className="text-[10px] bg-green-900/20 text-green-400 px-2 py-0.5 rounded">Grilla</span>
+                          <span className="text-xs text-[#64748b]">{g.fecha_sugerida || g.dia_semana || ''}</span>
+                          {g.score && <span className={'text-xs font-bold ' + ((g.score||0) >= 80 ? 'text-green-600' : 'text-yellow-600')}>Score: {g.score}</span>}
+                        </div>
+                        <h4 className="text-sm font-semibold text-white mb-1">{g.titulo || g.titulo_grafico || ''}</h4>
+                        <p className="text-xs text-[#94a3b8] whitespace-pre-line mb-2">{(g.copy || '').substring(0, 200)}{(g.copy || '').length > 200 ? '...' : ''}</p>
+                        {g.hashtags && <p className="text-xs text-indigo-400">{Array.isArray(g.hashtags) ? g.hashtags.join(' ') : g.hashtags}</p>}
+                      </div>
+                    })
+                  })}
+                </div>
               </div>
             )}
 
-            {/* COPIES SEMANALES — consistent format for all months */}
-            {copiesMes.length > 0 && (
-              <div className="space-y-4 mb-8">
+            {/* COPIES — lista unificada */}
+            {copiesMes.length > 0 && (function() {
+              // Aplanar todos los copies del mes en una lista, filtrar errores
+              var allCopiesMes = [] as any[]
+              copiesMes.forEach(function(batch: any) {
+                (batch.datos || []).forEach(function(c: any) {
+                  if (c.copy && c.copy.length > 20 && !c.copy.includes('(Error') && !c.error) {
+                    allCopiesMes.push(Object.assign({}, c, { batch_fecha: (batch.created_at || '').substring(0, 10), batch_score: batch.score_promedio }))
+                  }
+                })
+              })
+              return <div className="space-y-4 mb-8">
                 <div className="flex items-center justify-between">
-                  <h2 className="text-sm font-bold text-white">Copies sugeridos — {MESES_NOMBRES[mesGlobal]}</h2>
-                  <span className="text-xs bg-purple-900/30 text-purple-400 px-3 py-1 rounded-full border border-purple-700/30">
-                    {copiesMes.reduce(function(s: number, b: any) { return s + (Array.isArray(b.datos) ? b.datos.length : 0) }, 0)} copies acumulados
-                  </span>
+                  <h2 className="text-sm font-bold text-white">Copies — {MESES_NOMBRES[mesGlobal]}</h2>
+                  <span className="text-xs bg-purple-900/30 text-purple-400 px-3 py-1 rounded-full border border-purple-700/30">{allCopiesMes.length} copies</span>
                 </div>
-                {copiesMes.map(function(batch: any, bi: number) {
-                  return <div key={bi} className="bg-[#1a1745] rounded-xl border border-white/[0.06] p-5">
-                    <div className="flex justify-between items-center mb-3">
-                      <span className="text-xs font-semibold text-[#94a3b8]">Semana {batch.semana || bi + 1} | {(batch.created_at || '').substring(0, 10)}</span>
-                      <span className="text-xs text-[#64748b]">Score promedio: {batch.score_promedio || '-'}</span>
-                    </div>
-                    <div className="grid grid-cols-1 gap-3">
-                      {(batch.datos || []).filter(function(c: any) {
-                        // No mostrar copies con error o score muy bajo
-                        return c.copy && c.copy.length > 20 && !c.copy.includes('(Error') && !c.error
-                      }).map(function(c: any, ci: number) {
+                <div className="grid grid-cols-1 gap-3">
+                  {allCopiesMes.map(function(c: any, ci: number) {
                         var copyKey = 'copy-' + bi + '-' + ci
                         var fullText = c.copy || ''
                         var hashtags = c.hashtags || ''
@@ -1070,9 +1051,8 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
                       })}
                     </div>
                   </div>
-                })}
-              </div>
-            )}
+              })()}
+
 
             {grillasMes.length === 0 && copiesMes.length === 0 && (
               <div className="bg-[#1a1745] rounded-xl border border-white/[0.06] px-6 py-12 text-center">
