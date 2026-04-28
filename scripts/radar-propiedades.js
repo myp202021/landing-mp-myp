@@ -341,8 +341,8 @@ async function extraerContactos(listings) {
 
   if (urls.length === 0) return
 
-  // Limitar a máximo 20 listings por run (para no gastar mucho en Apify)
-  const batch = urls.slice(0, 20)
+  // Limitar a 10 listings por run (20 toma más de 5 min con proxy residencial)
+  const batch = urls.slice(0, 10)
   console.log(`   Visitando ${batch.length} listings para extraer contactos...`)
 
   try {
@@ -412,9 +412,9 @@ async function extraerContactos(listings) {
     const runId = runData.data?.id
     if (!runId) { console.log('   ⚠️ Sin run ID para contactos'); return }
 
-    // Esperar a que termine (máximo 5 minutos)
+    // Esperar a que termine (máximo 8 minutos)
     let status = 'RUNNING'
-    for (let i = 0; i < 30; i++) {
+    for (let i = 0; i < 48; i++) {
       await new Promise(r => setTimeout(r, 10000))
       const check = await fetch(`https://api.apify.com/v2/actor-runs/${runId}?token=${APIFY_TOKEN}`)
       const checkData = await check.json()
