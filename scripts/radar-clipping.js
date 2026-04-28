@@ -75,6 +75,7 @@ var briefModule = require('./radar-brief.js')
 var memoriaModule = require('./radar-memoria.js')
 var decisionModule = require('./radar-decisiones.js')
 var benchmarkModule = require('./radar-benchmark.js')
+var campanaModule = require('./radar-campana.js')
 
 var APIFY_TOKEN = process.env.APIFY_TOKEN
 var RESEND_KEY = process.env.RESEND
@@ -597,6 +598,17 @@ async function main() {
         benchmarkData = await benchmarkModule.generarBenchmark(misPosts, empresas, sub.perfil_empresa || {}, supabase, sub.id, sub.brief_estrategico || null, memoria, postsCliente)
         console.log('   ✓ Benchmark competitivo generado')
       } catch (e) { console.log('   Benchmark error (no bloqueante): ' + e.message) }
+    }
+
+    // Plan de campaña mensual (solo mensual + business, usa Claude Sonnet)
+    var planCampana = null
+    if (MODO === 'mensual' && ANTHROPIC_KEY && (sub.plan === 'business' || sub.plan === 'test') && misPosts.length >= 5) {
+      try {
+        var industriaData = null
+        try { var indMod = require('./radar-industria.js'); industriaData = indMod.detectarIndustria(sub.perfil_empresa || {}) } catch (e) {}
+        planCampana = await campanaModule.generarPlanCampana(misPosts, empresas, sub.perfil_empresa || {}, sub.brief_estrategico || null, memoria, postsCliente, industriaData || {}, supabase, sub.id)
+        console.log('   ✓ Plan de campaña generado')
+      } catch (e) { console.log('   Campaña error (no bloqueante): ' + e.message) }
     }
 
     var html = generarEmailHTML(misPosts, cuentas, hoy, MODO, resumenIA, empresas, trends, sub.id, contenidoSugerido, sub.estado, sub.plan, sub.trial_ends, grillaMensual, guionesData, null, auditoriaData, sub.brief_estrategico)
