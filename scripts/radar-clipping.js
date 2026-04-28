@@ -78,6 +78,8 @@ var benchmarkModule = require('./radar-benchmark.js')
 var campanaModule = require('./radar-campana.js')
 var adsCreativeModule = require('./radar-ads-creative.js')
 var memoriaPersistenteModule = require('./radar-memoria-persistente.js')
+var metaAdLibraryModule = require('./radar-meta-adlibrary.js')
+var arbolDecisionModule = require('./radar-arbol-decision.js')
 
 var APIFY_TOKEN = process.env.APIFY_TOKEN
 var RESEND_KEY = process.env.RESEND

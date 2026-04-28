@@ -807,4 +807,123 @@ async function generarContenidoSugerido(posts, empresas, modo, perfil, supabase,
   return revisados
 }
 
-module.exports = { generarContenidoSugerido: generarContenidoSugerido }
+// ═══════════════════════════════════════════════
+// MODO ADS: Genera copies específicos para anuncios Google + Meta
+// Se llama por separado o como complemento del contenido orgánico
+// ═══════════════════════════════════════════════
+async function generarCopiesAds(posts, perfil, brief, industria, memoria) {
+  console.log('   CONTENIDO MODO ADS: Generando copies de anuncios...')
+
+  if (!ANTHROPIC_KEY) {
+    console.log('   Sin ANTHROPIC_API_KEY_GRILLAS, saltando modo ads')
+    return null
+  }
+
+  perfil = perfil || {}
+  brief = brief || {}
+  industria = industria || {}
+
+  var nombreEmpresa = perfil.nombre || 'la empresa'
+  var rubro = perfil.rubro || 'general'
+
+  // Top posts competencia para inspiración
+  var topPosts = (posts || []).slice().sort(function(a, b) {
+    return ((b.likes || 0) + (b.comments || 0)) - ((a.likes || 0) + (a.comments || 0))
+  }).slice(0, 5).map(function(p, i) {
+    return (i + 1) + '. ' + (p.nombre || p.handle) + ': "' + (p.texto || '').substring(0, 120) + '" (eng: ' + ((p.likes || 0) + (p.comments || 0)) + ')'
+  }).join('\n')
+
+  var briefCtx = ''
+  if (brief.propuesta_valor_unica) briefCtx += 'PVU: ' + brief.propuesta_valor_unica + '\n'
+  if (brief.diferenciadores) briefCtx += 'Diferenciadores: ' + (Array.isArray(brief.diferenciadores) ? brief.diferenciadores.join(', ') : brief.diferenciadores) + '\n'
+  if (brief.tono_comunicacion) {
+    var tono = brief.tono_comunicacion
+    briefCtx += 'Tono: ' + (typeof tono === 'object' ? tono.estilo || '' : tono) + '\n'
+  }
+
+  var indCtx = ''
+  if (industria.cpl_avg) indCtx += 'CPL industria: $' + industria.cpl_avg + '\n'
+  if (industria.mejor_plataforma) indCtx += 'Mejor plataforma: ' + industria.mejor_plataforma + '\n'
+
+  var memCtx = ''
+  if (memoria && memoria.copiesAprendizaje && memoria.copiesAprendizaje.mejorAngulo) {
+    memCtx += 'Mejor ángulo histórico: ' + memoria.copiesAprendizaje.mejorAngulo.angulo + '\n'
+  }
+
+  var prompt = 'Eres un COPYWRITER DE PERFORMANCE con experiencia en Google Ads y Meta Ads en Chile. '
+    + 'Generas copies que CONVIERTEN — cada carácter cuenta.\n\n'
+    + 'CLIENTE: ' + nombreEmpresa + ' (' + rubro + ')\n'
+    + briefCtx + indCtx + memCtx + '\n'
+    + 'TOP POSTS COMPETENCIA:\n' + (topPosts || 'Sin datos') + '\n\n'
+    + 'Genera copies de anuncios en JSON:\n'
+    + '{\n'
+    + '  "google_search": {\n'
+    + '    "headlines_30": ["5 headlines de máximo 30 caracteres cada uno"],\n'
+    + '    "headlines_90": ["2 headlines largos de máximo 90 caracteres"],\n'
+    + '    "descriptions_90": ["3 descriptions de máximo 90 caracteres"],\n'
+    + '    "keywords_sugeridas": ["5-8 keywords de búsqueda relevantes"]\n'
+    + '  },\n'
+    + '  "meta_leads": [\n'
+    + '    {\n'
+    + '      "angulo": "dolor|beneficio|social_proof|urgencia",\n'
+    + '      "primary_text_125": "Texto principal máximo 125 chars",\n'
+    + '      "headline_40": "Headline máximo 40 chars",\n'
+    + '      "description_30": "Descripción máximo 30 chars",\n'
+    + '      "cta": "Más información|Cotizar|Contactar"\n'
+    + '    }\n'
+    + '  ],\n'
+    + '  "ab_test_sugerido": "Qué testear primero basado en competencia"\n'
+    + '}\n\n'
+    + 'REGLAS: Headlines Google ≤30 chars. Descriptions ≤90. Primary text Meta ≤125. Headline Meta ≤40. '
+    + 'Mínimo 4 variaciones Meta (diferentes ángulos). Español chileno natural. SOLO JSON.'
+
+  try {
+    var res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'x-api-key': ANTHROPIC_KEY,
+        'anthropic-version': '2023-06-01',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 2500,
+        messages: [{ role: 'user', content: prompt }],
+      }),
+    })
+
+    if (!res.ok) throw new Error('Claude ads: HTTP ' + res.status)
+    var data = await res.json()
+    var raw = data.content[0].text || ''
+    raw = raw.replace(/```json\s*/g, '').replace(/```\s*/g, '').trim()
+    var ads = JSON.parse(raw)
+
+    // Validar límites
+    var ok = true
+    if (ads.google_search) {
+      (ads.google_search.headlines_30 || []).forEach(function(h) {
+        if (h.length > 30) { console.log('   ⚠️ Google headline excede 30: "' + h + '" (' + h.length + ')'); ok = false }
+      })
+    }
+    if (ads.meta_leads) {
+      ads.meta_leads.forEach(function(v) {
+        if (v.primary_text_125 && v.primary_text_125.length > 125) { console.log('   ⚠️ Meta text excede 125: ' + v.primary_text_125.length); ok = false }
+        if (v.headline_40 && v.headline_40.length > 40) { console.log('   ⚠️ Meta headline excede 40: ' + v.headline_40.length); ok = false }
+      })
+    }
+
+    var gH = (ads.google_search || {}).headlines_30 || []
+    var mV = (ads.meta_leads || []).length
+    console.log('   Modo ADS OK: ' + gH.length + ' headlines Google, ' + mV + ' variaciones Meta' + (ok ? '' : ' (con warnings)'))
+
+    return ads
+  } catch (e) {
+    console.error('   Modo ADS error: ' + e.message)
+    return null
+  }
+}
+
+module.exports = {
+  generarContenidoSugerido: generarContenidoSugerido,
+  generarCopiesAds: generarCopiesAds,
+}
