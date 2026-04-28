@@ -604,7 +604,29 @@ async function main() {
       } catch (e) { console.log('   Benchmark error (no bloqueante): ' + e.message) }
     }
 
-    // Plan de campaña mensual (solo mensual + business, usa Claude Sonnet)
+    // Cargar aprendizajes persistentes (alimenta a todos los agentes que siguen)
+    var aprendizajesPersistentes = []
+    if ((MODO === 'semanal' || MODO === 'mensual')) {
+      try {
+        aprendizajesPersistentes = await memoriaPersistenteModule.cargarAprendizajes(supabase, sub.id)
+      } catch (e) { console.log('   Aprendizajes persistentes error: ' + e.message) }
+    }
+
+    // Árbol de decisión digital (mensual, pro+business, se alimenta del predictor)
+    var arbolDecision = null
+    if (MODO === 'mensual' && ANTHROPIC_KEY && (sub.plan === 'pro' || sub.plan === 'business' || sub.plan === 'test')) {
+      try {
+        arbolDecision = await arbolDecisionModule.generarArbolDecision(
+          sub.perfil_empresa || {}, sub.brief_estrategico || null,
+          null, // industria se detecta internamente
+          null, // competencia paid se carga internamente si hay token
+          memoria, aprendizajesPersistentes, supabase, sub.id
+        )
+        console.log('   ✓ Árbol de decisión generado')
+      } catch (e) { console.log('   Árbol decisión error (no bloqueante): ' + e.message) }
+    }
+
+    // Plan de campaña mensual (alimentado por el árbol de decisión)
     var planCampana = null
     if (MODO === 'mensual' && ANTHROPIC_KEY && (sub.plan === 'business' || sub.plan === 'test') && misPosts.length >= 5) {
       try {
@@ -615,7 +637,7 @@ async function main() {
       } catch (e) { console.log('   Campaña error (no bloqueante): ' + e.message) }
     }
 
-    // Ads Creative Generator (semanal/mensual, todos los planes pro+)
+    // Ads Creative Generator (semanal/mensual, alimentado por árbol + campaña)
     var adsCreativos = null
     if ((MODO === 'semanal' || MODO === 'mensual') && ANTHROPIC_KEY && (sub.plan === 'pro' || sub.plan === 'business' || sub.plan === 'test') && misPosts.length >= 3) {
       try {
@@ -624,6 +646,28 @@ async function main() {
         adsCreativos = await adsCreativeModule.generarAdsCreativos(misPosts, empresas, sub.perfil_empresa || {}, sub.brief_estrategico || null, memoria, industriaData2 || {}, contenidoSugerido ? contenidoSugerido.copies || [] : [], planCampana || {}, supabase, sub.id)
         console.log('   ✓ Ads creativos generados')
       } catch (e) { console.log('   Ads creative error (no bloqueante): ' + e.message) }
+    }
+
+    // Guardar aprendizajes de TODOS los agentes que corrieron
+    if ((MODO === 'semanal' || MODO === 'mensual')) {
+      try {
+        var totalAprendidos = 0
+        if (contenidoSugerido && contenidoSugerido.length > 0) {
+          totalAprendidos += await memoriaPersistenteModule.extraerYGuardarAprendizajes(supabase, sub.id, 'contenido', contenidoSugerido)
+        }
+        if (auditoriaData) {
+          totalAprendidos += await memoriaPersistenteModule.extraerYGuardarAprendizajes(supabase, sub.id, 'auditoria', auditoriaData)
+        }
+        if (benchmarkData) {
+          totalAprendidos += await memoriaPersistenteModule.extraerYGuardarAprendizajes(supabase, sub.id, 'benchmark', benchmarkData)
+        }
+        if (adsCreativos) {
+          totalAprendidos += await memoriaPersistenteModule.extraerYGuardarAprendizajes(supabase, sub.id, 'ads_creative', adsCreativos)
+        }
+        if (totalAprendidos > 0) {
+          console.log('   ✓ ' + totalAprendidos + ' aprendizajes guardados para próximo run')
+        }
+      } catch (e) { console.log('   Aprendizajes save error: ' + e.message) }
     }
 
     var html = generarEmailHTML(misPosts, cuentas, hoy, MODO, resumenIA, empresas, trends, sub.id, contenidoSugerido, sub.estado, sub.plan, sub.trial_ends, grillaMensual, guionesData, null, auditoriaData, sub.brief_estrategico)
