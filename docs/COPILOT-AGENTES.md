@@ -1,11 +1,12 @@
 # Copilot — Sistema de Agentes IA Interconectados
 
-> Actualizado: 25 abril 2026 — v7 con upgrades 2-7
+> Actualizado: 28 abril 2026 — v8 con benchmark + campaña + 14 agentes
 
 ## Estado
 
-- **QA E2E**: 83 checks, 78 pass, 5 warn (datos del run anterior), 0 fail
-- **Último run semanal exitoso**: 25 abril 2026 (GitHub Actions)
+- **QA E2E**: 83/83 pass, 0 warn, 0 fail
+- **Copies score**: 93 promedio, citan competidores por nombre
+- **Agentes**: 14 (incluyendo Benchmark y Campaña con Claude Sonnet)
 - **Crons**: comentados (testing phase)
 - **LinkedIn**: deshabilitado (ningún actor funcional)
 
@@ -215,17 +216,50 @@ Cada agente recibe datos reales de la industria del cliente (del predictor M&P):
 
 **Auto-detección:** `detectarIndustria(perfil)` analiza rubro+descripción+productos del cliente.
 
-## Plan de Upgrades Pendientes
+## Agentes NUEVOS (28 abril)
+
+### Benchmark Competitivo (`radar-benchmark.js`)
+- Usa **Claude Sonnet** para máxima calidad
+- Métricas por competidor: posts, engagement, formato, tema, tendencia vs mes anterior
+- Análisis IA: resumen ejecutivo, posicionamiento, fortalezas/debilidades/oportunidades
+- Gaps de contenido: temas y formatos que competencia usa y cliente no
+- Alertas de riesgo: competidor creciendo, engagement cayendo
+- Se guarda en `copilot_benchmarks` (upsert mensual)
+- Corre solo en modo mensual
+
+### Plan de Campaña (`radar-campana.js`)
+- Usa **Claude Sonnet** para máxima calidad
+- Árbol de decisión: canales con justificación basada en datos reales
+- Calendario semanal: día por día con canal, formato, tema
+- Presupuesto estimado con justificación
+- Métricas esperadas basadas en benchmarks industria
+- Se guarda en `copilot_campanas`
+- Corre en modo mensual (plan business/test)
+
+### Motor de Decisiones (`radar-decisiones.js`)
+- Evalúa contexto antes de cada agente
+- Decide si regenerar brief o mantener (edad, edición cliente, auditoría)
+- Prioriza ángulos basado en score histórico
+- Quality gates entre agentes (brief, copies, guiones)
+
+### Scraping Cuenta Propia (`en radar-clipping.js`)
+- Lee `perfil_empresa.instagram` del cliente
+- Scrapea en el mismo request Apify ($0 extra)
+- Marca posts como `es_propio: true`
+- Auditoría usa datos REALES del cliente
+
+## Plan de Upgrades
 
 | # | Upgrade | Estado |
 |---|---------|--------|
-| 1 | LinkedIn scraping | BLOQUEADO — evaluar Proxycurl/API |
-| 2 | Auditoría semanal | ✅ HECHO |
-| 3 | QA grilla estricto | ✅ HECHO |
-| 4 | Email preview copy | ✅ HECHO |
-| 5 | Brief editable | ✅ HECHO |
-| 6 | Notificación ideas | ✅ HECHO |
-| 7 | PDF ejecutivo | ✅ HECHO |
-| 8 | Flow.cl pagos | PENDIENTE (al final) |
-| 9 | Crons activados | PENDIENTE (cuando QA 100% + cliente confirme) |
-| 10 | Multi-país | FUTURO |
+| 1 | LinkedIn scraping | BLOQUEADO |
+| 2-7 | Auditoría semanal, QA grilla, email preview, brief editable, notificaciones, PDF | ✅ HECHO |
+| 8 | Benchmark competitivo mensual | ✅ HECHO (Claude Sonnet) |
+| 9 | Plan de campaña con árbol decisión | ✅ HECHO (Claude Sonnet) |
+| 10 | Motor de decisiones | ✅ HECHO |
+| 11 | Scraping cuenta cliente | ✅ HECHO |
+| 12 | Copies citan competidores por nombre | ✅ HECHO |
+| 13 | Auth con password | ✅ HECHO (SQL aplicado) |
+| 14 | Flow.cl pagos | PENDIENTE |
+| 15 | Crons activados | PENDIENTE |
+| 16 | Multi-país | FUTURO |
