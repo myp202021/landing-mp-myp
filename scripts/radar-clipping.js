@@ -87,6 +87,29 @@ var OPENAI_KEY = process.env.OPENAI_API_KEY
 var ANTHROPIC_KEY = process.env.ANTHROPIC_API_KEY_GRILLAS
 var supabase = supabaseLib.createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY)
 
+// ═══ RETRY INTELIGENTE ═══
+// Reintenta agentes que fallan 1 vez con backoff, notifica si falla 2 veces
+var agenteFallos = [] // acumula fallos para notificación al final
+async function ejecutarConRetry(nombreAgente, fn, maxRetries) {
+  maxRetries = maxRetries || 1
+  for (var intento = 0; intento <= maxRetries; intento++) {
+    try {
+      var resultado = await fn()
+      return resultado
+    } catch (e) {
+      if (intento < maxRetries) {
+        console.log('   ⚠️ ' + nombreAgente + ' falló (intento ' + (intento + 1) + '/' + (maxRetries + 1) + '): ' + e.message)
+        console.log('   Reintentando en 3s...')
+        await new Promise(function(r) { setTimeout(r, 3000) })
+      } else {
+        console.log('   ❌ ' + nombreAgente + ' falló después de ' + (maxRetries + 1) + ' intentos: ' + e.message)
+        agenteFallos.push({ agente: nombreAgente, error: e.message, timestamp: new Date().toISOString() })
+        return null
+      }
+    }
+  }
+}
+
 var MODO = process.argv.includes('--semanal') ? 'semanal'
          : process.argv.includes('--mensual') ? 'mensual' : 'diario'
 var DRY_RUN = process.argv.includes('--dry-run')
@@ -598,10 +621,10 @@ async function main() {
     // Benchmark competitivo mensual (solo mensual, usa Claude Sonnet para calidad máxima)
     var benchmarkData = null
     if (MODO === 'mensual' && ANTHROPIC_KEY && misPosts.length >= 5) {
-      try {
-        benchmarkData = await benchmarkModule.generarBenchmark(misPosts, empresas, sub.perfil_empresa || {}, supabase, sub.id, sub.brief_estrategico || null, memoria, postsCliente)
-        console.log('   ✓ Benchmark competitivo generado')
-      } catch (e) { console.log('   Benchmark error (no bloqueante): ' + e.message) }
+      benchmarkData = await ejecutarConRetry('Benchmark', function() {
+        return benchmarkModule.generarBenchmark(misPosts, empresas, sub.perfil_empresa || {}, supabase, sub.id, sub.brief_estrategico || null, memoria, postsCliente)
+      })
+      if (benchmarkData) console.log('   ✓ Benchmark competitivo generado')
     }
 
     // Cargar aprendizajes persistentes (alimenta a todos los agentes que siguen)
@@ -615,37 +638,35 @@ async function main() {
     // Árbol de decisión digital (mensual, pro+business, se alimenta del predictor)
     var arbolDecision = null
     if (MODO === 'mensual' && ANTHROPIC_KEY && (sub.plan === 'pro' || sub.plan === 'business' || sub.plan === 'test')) {
-      try {
-        arbolDecision = await arbolDecisionModule.generarArbolDecision(
+      arbolDecision = await ejecutarConRetry('Árbol de decisión', function() {
+        return arbolDecisionModule.generarArbolDecision(
           sub.perfil_empresa || {}, sub.brief_estrategico || null,
-          null, // industria se detecta internamente
-          null, // competencia paid se carga internamente si hay token
-          memoria, aprendizajesPersistentes, supabase, sub.id
+          null, null, memoria, aprendizajesPersistentes, supabase, sub.id
         )
-        console.log('   ✓ Árbol de decisión generado')
-      } catch (e) { console.log('   Árbol decisión error (no bloqueante): ' + e.message) }
+      })
+      if (arbolDecision) console.log('   ✓ Árbol de decisión generado')
     }
 
     // Plan de campaña mensual (alimentado por el árbol de decisión)
     var planCampana = null
     if (MODO === 'mensual' && ANTHROPIC_KEY && (sub.plan === 'business' || sub.plan === 'test') && misPosts.length >= 5) {
-      try {
+      planCampana = await ejecutarConRetry('Plan de campaña', function() {
         var industriaData = null
         try { var indMod = require('./radar-industria.js'); industriaData = indMod.detectarIndustria(sub.perfil_empresa || {}) } catch (e) {}
-        planCampana = await campanaModule.generarPlanCampana(misPosts, empresas, sub.perfil_empresa || {}, sub.brief_estrategico || null, memoria, postsCliente, industriaData || {}, supabase, sub.id)
-        console.log('   ✓ Plan de campaña generado')
-      } catch (e) { console.log('   Campaña error (no bloqueante): ' + e.message) }
+        return campanaModule.generarPlanCampana(misPosts, empresas, sub.perfil_empresa || {}, sub.brief_estrategico || null, memoria, postsCliente, industriaData || {}, supabase, sub.id)
+      })
+      if (planCampana) console.log('   ✓ Plan de campaña generado')
     }
 
     // Ads Creative Generator (semanal/mensual, alimentado por árbol + campaña)
     var adsCreativos = null
     if ((MODO === 'semanal' || MODO === 'mensual') && ANTHROPIC_KEY && (sub.plan === 'pro' || sub.plan === 'business' || sub.plan === 'test') && misPosts.length >= 3) {
-      try {
+      adsCreativos = await ejecutarConRetry('Ads Creative', function() {
         var industriaData2 = null
         try { var indMod2 = require('./radar-industria.js'); industriaData2 = indMod2.detectarIndustria(sub.perfil_empresa || {}) } catch (e) {}
-        adsCreativos = await adsCreativeModule.generarAdsCreativos(misPosts, empresas, sub.perfil_empresa || {}, sub.brief_estrategico || null, memoria, industriaData2 || {}, contenidoSugerido ? contenidoSugerido.copies || [] : [], planCampana || {}, supabase, sub.id)
-        console.log('   ✓ Ads creativos generados')
-      } catch (e) { console.log('   Ads creative error (no bloqueante): ' + e.message) }
+        return adsCreativeModule.generarAdsCreativos(misPosts, empresas, sub.perfil_empresa || {}, sub.brief_estrategico || null, memoria, industriaData2 || {}, contenidoSugerido ? contenidoSugerido.copies || [] : [], planCampana || {}, supabase, sub.id)
+      })
+      if (adsCreativos) console.log('   ✓ Ads creativos generados')
     }
 
     // Guardar aprendizajes de TODOS los agentes que corrieron
@@ -1690,4 +1711,33 @@ async function enviarEmailV2(destinos, html, fecha, nPosts, modo, attachments, n
   } catch (e) { console.error('   Resend: ' + e.message) }
 }
 
-main().catch(function(e) { console.error(e); process.exit(1) })
+// Notificar fallos de agentes a M&P al final del pipeline
+async function notificarFallos() {
+  if (agenteFallos.length === 0) return
+  if (!RESEND_KEY) { console.log('   Sin RESEND_KEY, no se notifican fallos'); return }
+
+  var listaFallos = agenteFallos.map(function(f) {
+    return '<li><strong>' + f.agente + '</strong>: ' + f.error + ' (' + f.timestamp + ')</li>'
+  }).join('\n')
+
+  var html = '<h2>⚠️ Copilot — Agentes con fallos</h2>'
+    + '<p>Los siguientes agentes fallaron después de reintentar:</p>'
+    + '<ul>' + listaFallos + '</ul>'
+    + '<p>Modo: ' + MODO + ' | Fecha: ' + new Date().toISOString() + '</p>'
+
+  try {
+    await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + RESEND_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        from: 'Copilot <contacto@mulleryperez.cl>',
+        to: ['contacto@mulleryperez.cl'],
+        subject: '⚠️ Copilot fallos: ' + agenteFallos.map(function(f) { return f.agente }).join(', '),
+        html: html,
+      }),
+    })
+    console.log('   ⚠️ Email de fallos enviado a contacto@mulleryperez.cl')
+  } catch (e) { console.log('   Error enviando notificación de fallos: ' + e.message) }
+}
+
+main().then(function() { return notificarFallos() }).catch(function(e) { console.error(e); process.exit(1) })
