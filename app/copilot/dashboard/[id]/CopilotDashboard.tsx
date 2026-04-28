@@ -840,34 +840,79 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
               </div>
             )}
 
-            {/* Company table with insights */}
+            {/* CUADRO COMPARATIVO */}
             <div className="bg-[#1a1745] rounded-xl border border-white/[0.06] overflow-hidden mb-8">
               <div className="px-6 py-4 border-b border-white/[0.04]">
-                <h2 className="text-sm font-bold text-white">Actividad por empresa</h2>
+                <h2 className="text-sm font-bold text-white">Cuadro comparativo</h2>
               </div>
-              <div className="divide-y divide-white/[0.04]">
-                {Object.keys(empresas).map(function(nombre, i) {
-                  var e = empresas[nombre]
-                  var total = e.ig + e.li
-                  var avgLikes = total > 0 ? Math.round(e.likes / total) : 0
-                  var inactive = total === 0
-                  var analysis = generateCompanyAnalysis(nombre, e, postsByCompany[nombre] || [])
-                  var insight = analysis.resumen
-                  return <div key={nombre} className={'px-6 py-4 ' + (inactive ? 'bg-red-900/10' : i % 2 === 0 ? '' : 'bg-[#12102a]')}>
-                    <div className="flex items-center justify-between mb-1">
-                      <span className={'font-semibold text-sm ' + (inactive ? 'text-red-400' : 'text-white')}>{nombre}</span>
-                      <div className="flex items-center gap-4 text-xs">
-                        {e.ig > 0 && <span className="text-pink-400 font-semibold">{e.ig} IG</span>}
-                        <span className="text-white font-bold">{total} posts</span>
-                        <span className="text-[#a5b4fc]">{e.likes.toLocaleString()} likes</span>
-                        <span className="text-[#a5b4fc]">{e.comments.toLocaleString()} comments</span>
-                        <span className="text-[#94a3b8]">Prom: {avgLikes} likes/post</span>
-                      </div>
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="text-[10px] text-[#94a3b8] uppercase tracking-wider">
+                      <th className="px-4 py-3 text-left font-semibold">Empresa</th>
+                      <th className="px-3 py-3 text-center font-semibold">Posts</th>
+                      <th className="px-3 py-3 text-center font-semibold">Likes</th>
+                      <th className="px-3 py-3 text-center font-semibold">Comments</th>
+                      <th className="px-3 py-3 text-center font-semibold">Eng/post</th>
+                      <th className="px-3 py-3 text-left font-semibold">Formato top</th>
+                      <th className="px-3 py-3 text-left font-semibold">Tema top</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-white/[0.04]">
+                    {Object.keys(empresas).map(function(nombre, i) {
+                      var e = empresas[nombre]
+                      var total = e.ig + e.li
+                      var avgEng = total > 0 ? Math.round((e.likes + e.comments) / total) : 0
+                      var compPosts = postsByCompany[nombre] || []
+                      var analysis = generateCompanyAnalysis(nombre, e, compPosts)
+                      var inactive = total === 0
+                      return <tr key={nombre} className={inactive ? 'bg-red-900/10' : i % 2 === 0 ? '' : 'bg-[#12102a]'}>
+                        <td className="px-4 py-3">
+                          <span className={'font-semibold ' + (inactive ? 'text-red-400' : 'text-white')}>{nombre}</span>
+                          {inactive && <span className="text-[10px] text-red-400 ml-2">inactivo</span>}
+                        </td>
+                        <td className="px-3 py-3 text-center font-bold text-white">{total}</td>
+                        <td className="px-3 py-3 text-center text-pink-400">{e.likes.toLocaleString()}</td>
+                        <td className="px-3 py-3 text-center text-indigo-400">{e.comments.toLocaleString()}</td>
+                        <td className="px-3 py-3 text-center">
+                          <span className={'font-bold ' + (avgEng >= 100 ? 'text-green-400' : avgEng >= 40 ? 'text-yellow-400' : 'text-red-400')}>{avgEng}</span>
+                        </td>
+                        <td className="px-3 py-3 text-xs text-[#a5b4fc]">{analysis.formato || '-'}</td>
+                        <td className="px-3 py-3 text-xs text-[#a5b4fc]">{analysis.tema || '-'}</td>
+                      </tr>
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* INSIGHT POR EMPRESA — expandido */}
+            <div className="space-y-4 mb-8">
+              <h2 className="text-sm font-bold text-white">An{'á'}lisis por empresa</h2>
+              {Object.keys(empresas).map(function(nombre, i) {
+                var e = empresas[nombre]
+                var total = e.ig + e.li
+                if (total === 0) return null
+                var analysis = generateCompanyAnalysis(nombre, e, postsByCompany[nombre] || [])
+                var avgEng = total > 0 ? Math.round((e.likes + e.comments) / total) : 0
+                return <div key={nombre} className="bg-[#12102a] rounded-xl p-5 border border-white/[0.06]">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-white font-semibold">{nombre}</h3>
+                    <div className="flex gap-3 text-xs">
+                      <span className="bg-pink-900/30 text-pink-400 px-2 py-1 rounded">{total} posts</span>
+                      <span className={'px-2 py-1 rounded font-bold ' + (avgEng >= 100 ? 'bg-green-900/30 text-green-400' : 'bg-yellow-900/30 text-yellow-400')}>{avgEng} eng/post</span>
                     </div>
-                    <p className="text-xs text-[#64748b] italic">{insight}</p>
                   </div>
-                })}
-              </div>
+                  <p className="text-xs text-[#94a3b8] leading-relaxed mb-3">{analysis.resumen}</p>
+                  {analysis.topPost && (
+                    <div className="bg-[#1a1745] rounded-lg p-3 border-l-2 border-pink-500">
+                      <p className="text-[10px] text-pink-400 font-semibold mb-1">Top post ({((analysis.topPost.likes||0)+(analysis.topPost.comments||0))} engagement)</p>
+                      <p className="text-xs text-[#a5b4fc]">{(analysis.topPost.texto || '').substring(0, 200)}</p>
+                    </div>
+                  )}
+                  {analysis.gap && <p className="text-[11px] text-amber-400 mt-2">{'💡'} Oportunidad: {analysis.gap}</p>}
+                </div>
+              })}
             </div>
 
             {/* Top posts by engagement */}

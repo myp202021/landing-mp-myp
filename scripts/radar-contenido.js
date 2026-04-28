@@ -287,43 +287,45 @@ async function paso2_crear(briefs, posts, perfil) {
       refInfo += '\nTu copy debe SUPERAR ese post tomando el mismo tema pero con el angulo unico de ' + (perfil.nombre || 'la empresa') + '.\n'
     }
 
-    var prompt = 'Eres un copywriter senior que escribe contenido que COMPITE Y SUPERA a la competencia. '
-      + 'No escribes copies genericos. Cada copy esta basado en un INSIGHT REAL de la competencia y tiene un angulo diferenciador concreto.\n\n'
+    // Construir datos del competidor para que el copy lo mencione
+    var compData = ''
+    if (brief.competidor_referencia) {
+      var compPosts = posts.filter(function(p) { return (p.nombre || p.handle || '').toLowerCase().includes(brief.competidor_referencia.toLowerCase()) })
+      var compTopPost = compPosts.sort(function(a, b) { return ((b.likes||0)+(b.comments||0)) - ((a.likes||0)+(a.comments||0)) })[0]
+      compData = '\nDATOS REALES DEL COMPETIDOR (DEBES mencionar esto en el copy):\n'
+      compData += '- Competidor: ' + brief.competidor_referencia + '\n'
+      compData += '- Posts recientes: ' + compPosts.length + '\n'
+      if (compTopPost) {
+        compData += '- Su mejor post: "' + (compTopPost.texto || '').substring(0, 150) + '"\n'
+        compData += '- Engagement de ese post: ' + ((compTopPost.likes||0) + (compTopPost.comments||0)) + ' (likes: ' + (compTopPost.likes||0) + ', comments: ' + (compTopPost.comments||0) + ')\n'
+      }
+      compData += '- OBLIGATORIO: el copy debe mencionar este competidor por nombre o hacer referencia clara a lo que publican. Ejemplo: "Mientras empresas como ' + brief.competidor_referencia + ' apuestan por [tema], nosotros en ' + (perfil.nombre || 'la empresa') + ' vamos mas alla con [diferenciador]"\n'
+    }
+
+    var prompt = 'Eres un copywriter senior de ' + (perfil.nombre || 'la empresa') + '. NO escribes copies genericos que cualquiera haria con ChatGPT. '
+      + 'Tu ventaja: tienes DATOS REALES de la competencia y los usas para crear contenido que los supere.\n\n'
       + clienteCtx + '\n'
-      + refInfo + '\n'
+      + refInfo
+      + compData + '\n'
       + 'BRIEF:\n'
       + '- Plataforma: ' + brief.plataforma + '\n'
-      + '- Tipo de post: ' + brief.tipo + '\n'
-      + '- Angulo: ' + brief.angulo + '\n'
-      + '- Objetivo: ' + brief.objetivo + '\n'
+      + '- Tipo: ' + brief.tipo + ' | Angulo: ' + brief.angulo + ' | Objetivo: ' + brief.objetivo + '\n'
       + '- Titulo: ' + brief.titulo + '\n'
-      + '- Justificacion estrategica: ' + brief.justificacion + '\n'
-      + '- Instrucciones detalladas: ' + brief.instrucciones_copy + '\n\n'
-      + 'CONTEXTO COMPETITIVO (posts reales de la competencia esta semana):\n' + contextPosts + '\n\n'
-      + 'REGLAS DE CALIDAD (si las rompes, el copy sera rechazado):\n'
-      + '1. HOOK (primera linea): NUNCA empieces con una pregunta generica sin dato. Buenos hooks:\n'
-      + '   - "3 de cada 5 empresas en Chile [dato relevante]" — empieza con un numero\n'
-      + '   - "[Competidor] publico sobre [tema] y obtuvo [N] likes. Nosotros lo hacemos diferente:" — confronta\n'
-      + '   - "[Dato de industria] cambio esta semana. Esto es lo que significa para tu [rubro]:" — news-jacking\n'
-      + '   NUNCA: "Sabias que...?" sin dato, "En un mundo donde...", "Te has preguntado...?"\n'
-      + '2. CUERPO: Incluye AL MENOS 1 dato concreto (porcentaje real, numero de la industria, referencia a tendencia verificable)\n'
-      + '3. CTA: DEBE ser una accion MEDIBLE y especifica. Buenos CTAs:\n'
-      + '   - "Comenta con el emoji [X] si tu empresa ya implemento esto"\n'
-      + '   - "Guarda este post y revisalo el lunes cuando planifiques tu semana"\n'
-      + '   - "Envianos un DM con la palabra [X] para recibir [recurso concreto]"\n'
-      + '   NUNCA: "Contactanos", "Mas informacion en el link", "Visita nuestro sitio", "Siguenos"\n'
-      + '4. MINIMO ' + minPalabras + ' palabras (no negociable)\n'
-      + '5. Si es Carrusel: contenido de cada slide (minimo 5 slides), cada slide con titulo y texto\n'
-      + '6. Si es Reel: guion con texto en pantalla por escena\n'
-      + '7. Incluye 5-8 hashtags relevantes al final\n'
-      + '8. NO uses estas frases NUNCA: "en el vertiginoso", "no es solo", "es fundamental", "paradigma", "sinergia", "te invitamos", "sin lugar a dudas", "cabe mencionar", "de vanguardia", "revolucionando", "en la era digital"\n'
-      + '9. NO inventes estadisticas. Si citas un dato, debe ser plausible para la industria\n'
-      + '10. Escribe como community manager senior, no como chatbot\n'
-      + '11. OBLIGATORIO: incluye una referencia temporal (mes actual, temporada, "esta semana", "este Q2"). Ejemplo: "En abril 2026..." o "Este primer semestre..."\n'
-      + '12. Antes de escribir, PIENSA: ¿este copy le serviria REALMENTE a ' + (perfil.nombre || 'la empresa') + '? ¿lo publicaria un CM senior? ¿tiene un angulo que lo diferencia de lo que ya existe en la industria?\n\n'
-      + 'FORMATO DE RESPUESTA:\n'
-      + 'Escribe el copy completo listo para publicar.\n'
-      + 'Al final, agrega una linea separada con: [AUTO-EVAL: X/10 — razon de 1 oracion de por que este copy es bueno o que le falta]'
+      + '- Justificacion: ' + brief.justificacion + '\n'
+      + '- Instrucciones: ' + brief.instrucciones_copy + '\n\n'
+      + 'CONTEXTO COMPETITIVO (posts reales esta semana):\n' + contextPosts + '\n\n'
+      + 'REGLAS NO NEGOCIABLES:\n'
+      + '1. HOOK: empieza con DATO CONCRETO. "El 73% de empresas de RRHH en Chile..." o "Mientras ' + (brief.competidor_referencia || 'la competencia') + ' apuesta por X, nosotros..."\n'
+      + '2. COMPETENCIA: MENCIONA al competidor o la tendencia competitiva EN EL TEXTO. No basta con saberlo internamente — el lector debe sentir que este contenido viene de alguien que CONOCE el mercado.\n'
+      + '3. DATO REAL: al menos 1 numero concreto del mercado o la industria (engagement, %, cantidad).\n'
+      + '4. CTA MEDIBLE: "Comenta con [emoji]", "Guarda para el lunes", "Envia a un colega". NUNCA "Contactanos" o "Siguenos".\n'
+      + '5. MINIMO ' + minPalabras + ' palabras.\n'
+      + '6. TEMPORAL: menciona mes actual o temporada ("este abril", "Q2 2026", "esta semana").\n'
+      + '7. Si es Carrusel: contenido por slide (min 5). Si es Reel: escenas con texto en pantalla.\n'
+      + '8. Hashtags: 5-8 al final.\n'
+      + '9. PROHIBIDO: "no es solo", "es fundamental", "en la era digital", "paradigma", "sinergia", "te invitamos", "de vanguardia".\n'
+      + '10. Escribe como CM senior con 10 anos de experiencia, NO como chatbot.\n\n'
+      + 'Responde SOLO el copy listo para publicar.'
 
     try {
       var res = await fetch('https://api.anthropic.com/v1/messages', {
