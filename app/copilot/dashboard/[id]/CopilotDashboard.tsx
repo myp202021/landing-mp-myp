@@ -562,7 +562,94 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
             setBriefSaving(false)
           }
 
+          // Data entry handler
+          async function guardarDataEntry(campo: string, valor: any) {
+            var perfilActual = sub.perfil_empresa || {}
+            perfilActual[campo] = valor
+            await fetch(SUPABASE_URL + '/rest/v1/clipping_suscripciones?id=eq.' + props.suscripcionId, {
+              method: 'PATCH', headers: hdrs(), body: JSON.stringify({ perfil_empresa: perfilActual }),
+            })
+            setSub(Object.assign({}, sub, { perfil_empresa: perfilActual }))
+          }
+
+          var perfil = sub.perfil_empresa || {}
+
           return <>
+            {/* DATA ENTRY — Datos del negocio */}
+            <div className="bg-[#1a1745] rounded-xl border border-white/[0.06] p-5 mb-4">
+              <h3 className="text-sm font-bold text-indigo-400 mb-3">Datos de tu negocio (alimentan el predictor y el {'\u00e1'}rbol de decisi{'ó'}n)</h3>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                <div>
+                  <label className="text-[10px] text-[#64748b] block mb-1">Presupuesto mensual pauta</label>
+                  <input type="number" defaultValue={perfil.presupuesto_mensual || ''} placeholder="ej: 500000"
+                    onBlur={function(e) { if (e.target.value) guardarDataEntry('presupuesto_mensual', parseInt(e.target.value)) }}
+                    className="w-full bg-[#0f0d2e] text-white text-sm px-3 py-2 rounded border border-white/10 focus:border-indigo-500 outline-none" />
+                </div>
+                <div>
+                  <label className="text-[10px] text-[#64748b] block mb-1">Ticket promedio (CLP)</label>
+                  <input type="number" defaultValue={perfil.ticket_promedio || ''} placeholder="ej: 500000"
+                    onBlur={function(e) { if (e.target.value) guardarDataEntry('ticket_promedio', parseInt(e.target.value)) }}
+                    className="w-full bg-[#0f0d2e] text-white text-sm px-3 py-2 rounded border border-white/10 focus:border-indigo-500 outline-none" />
+                </div>
+                <div>
+                  <label className="text-[10px] text-[#64748b] block mb-1">Tasa cierre (%)</label>
+                  <input type="number" defaultValue={perfil.tasa_cierre || ''} placeholder="ej: 5" step="0.5"
+                    onBlur={function(e) { if (e.target.value) guardarDataEntry('tasa_cierre', parseFloat(e.target.value)) }}
+                    className="w-full bg-[#0f0d2e] text-white text-sm px-3 py-2 rounded border border-white/10 focus:border-indigo-500 outline-none" />
+                </div>
+                <div>
+                  <label className="text-[10px] text-[#64748b] block mb-1">Tipo cliente</label>
+                  <select defaultValue={perfil.tipo_cliente || 'B2C'}
+                    onChange={function(e) { guardarDataEntry('tipo_cliente', e.target.value) }}
+                    className="w-full bg-[#0f0d2e] text-white text-sm px-3 py-2 rounded border border-white/10 focus:border-indigo-500 outline-none">
+                    <option value="B2C">B2C</option>
+                    <option value="B2B">B2B</option>
+                    <option value="B2B2C">B2B2C</option>
+                  </select>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-3">
+                <div>
+                  <label className="text-[10px] text-[#64748b] block mb-1">Ciclo de venta</label>
+                  <select defaultValue={perfil.ciclo_venta || 'UNO_A_TRES_MESES'}
+                    onChange={function(e) { guardarDataEntry('ciclo_venta', e.target.value) }}
+                    className="w-full bg-[#0f0d2e] text-white text-sm px-3 py-2 rounded border border-white/10 focus:border-indigo-500 outline-none">
+                    <option value="INSTANTANEO">Instant{'á'}neo</option>
+                    <option value="MENOS_1_MES">Menos de 1 mes</option>
+                    <option value="UNO_A_TRES_MESES">1 a 3 meses</option>
+                    <option value="MAS_3_MESES">M{'á'}s de 3 meses</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="text-[10px] text-[#64748b] block mb-1">Foco geogr{'á'}fico</label>
+                  <select defaultValue={perfil.geo || 'NACIONAL'}
+                    onChange={function(e) { guardarDataEntry('geo', e.target.value) }}
+                    className="w-full bg-[#0f0d2e] text-white text-sm px-3 py-2 rounded border border-white/10 focus:border-indigo-500 outline-none">
+                    <option value="SANTIAGO">Santiago</option>
+                    <option value="REGIONES">Regiones</option>
+                    <option value="NACIONAL">Nacional</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="text-[10px] text-[#64748b] block mb-1">Competencia (1-10)</label>
+                  <input type="number" min="1" max="10" defaultValue={perfil.competencia_percibida || 5}
+                    onBlur={function(e) { guardarDataEntry('competencia_percibida', parseInt(e.target.value)) }}
+                    className="w-full bg-[#0f0d2e] text-white text-sm px-3 py-2 rounded border border-white/10 focus:border-indigo-500 outline-none" />
+                </div>
+                <div>
+                  <label className="text-[10px] text-[#64748b] block mb-1">Madurez digital</label>
+                  <select defaultValue={perfil.madurez_digital || 'INTERMEDIO'}
+                    onChange={function(e) { guardarDataEntry('madurez_digital', e.target.value) }}
+                    className="w-full bg-[#0f0d2e] text-white text-sm px-3 py-2 rounded border border-white/10 focus:border-indigo-500 outline-none">
+                    <option value="PRINCIPIANTE">Principiante</option>
+                    <option value="INTERMEDIO">Intermedio</option>
+                    <option value="AVANZADO">Avanzado</option>
+                  </select>
+                </div>
+              </div>
+              <p className="text-[10px] text-[#475569] mt-2">Estos datos se guardan autom{'á'}ticamente y alimentan el predictor, el {'á'}rbol de decisi{'ó'}n y el brief estrat{'é'}gico.</p>
+            </div>
+
             {/* Header */}
             <div className="bg-gradient-to-r from-cyan-700 to-teal-700 rounded-xl p-5 mb-4">
               <div className="flex justify-between items-center">
