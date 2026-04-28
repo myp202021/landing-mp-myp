@@ -76,6 +76,53 @@ function esOfertaLaboral(texto) {
 }
 
 
+// ─── Filtro de relevancia: descartar posts que NO son de interés competitivo ──
+// Posts de competidores sobre ferias/eventos genéricos (no transporte) son ruido.
+// Si el post menciona keywords de transporte/buses → relevante.
+// Si el post es claramente sobre una feria genérica sin relación → se descarta.
+const KEYWORDS_TRANSPORTE = [
+  'bus', 'buses', 'transporte', 'flota', 'ruta', 'rutas', 'pasajero', 'pasajeros',
+  'conductor', 'chofer', 'terminal', 'recorrido', 'servicio especial',
+  'traslado', 'acercamiento', 'minería', 'minero', 'faena', 'operación', 'operaciones',
+  'mantención', 'mantenimiento', 'taller', 'diésel', 'diesel', 'motor',
+  'seguridad vial', 'accidente', 'siniestro', 'licitación', 'licitacion',
+  'contrato de transporte', 'servicio de transporte', 'dtpm', 'red metropolitana',
+  'subsidio', 'tarifa', 'boleto', 'bip', 'validador',
+  'eléctrico', 'electrico', 'electromovilidad', 'cero emisiones', 'euro vi',
+  'carrocería', 'carroceria', 'chasis', 'eje', 'neumático', 'neumatico',
+  'gps', 'telemetría', 'telemetria', 'monitoreo',
+  'hualpén', 'hualpen',
+]
+
+const KEYWORDS_FERIA_GENERICA = [
+  'feria', 'expo', 'exposición', 'exposicion', 'stand', 'booth',
+  'congreso', 'convención', 'convencion', 'cumbre', 'summit',
+]
+
+/**
+ * Determina si un post de un competidor es relevante para el reporte.
+ * - Posts con texto vacío → relevante (puede ser solo imagen/video de servicio)
+ * - Posts que mencionan transporte/buses → siempre relevante
+ * - Posts sobre ferias/expos SIN mención de transporte → irrelevante (ruido)
+ * - Posts sin keywords de feria → relevante (actividad general del competidor)
+ */
+function esPostRelevante(texto) {
+  if (!texto || typeof texto !== 'string') return true // sin texto = no podemos filtrar
+  const lower = texto.toLowerCase()
+
+  // Si menciona transporte/buses → siempre relevante
+  const mencionaTransporte = KEYWORDS_TRANSPORTE.some(kw => lower.includes(kw))
+  if (mencionaTransporte) return true
+
+  // Si menciona feria/expo pero NO transporte → ruido
+  const mencionaFeria = KEYWORDS_FERIA_GENERICA.some(kw => lower.includes(kw))
+  if (mencionaFeria) return false
+
+  // Todo lo demás es relevante (ofertas laborales, saludos, etc.)
+  return true
+}
+
+
 // ─── Main ────────────────────────────────────────────────────────────────────
 async function main() {
   const hoy = new Date().toISOString().split('T')[0]
@@ -83,6 +130,16 @@ async function main() {
   const hace24h = new Date(Date.now() - 48 * 60 * 60 * 1000)
 
   console.log(`📅 Generando reporte para ${hoy}...`)
+
+  // ── Cargar URLs ya reportadas ayer para deduplicar ─────────────────────
+  const ayer = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+  const { data: reportesAyer } = await supabase
+    .from('reportes_competencia')
+    .select('post_url')
+    .eq('fecha_reporte', ayer)
+    .not('post_url', 'is', null)
+  const urlsYaReportadas = new Set((reportesAyer || []).map(r => r.post_url).filter(Boolean))
+  console.log(`🔁 URLs ya reportadas ayer (${ayer}): ${urlsYaReportadas.size}`)
 
   await supabase.from('reportes_competencia').delete().eq('fecha_reporte', hoy)
 
@@ -111,9 +168,33 @@ async function main() {
       console.log(`   IG timestamps recientes: ${ts.join(' | ')}`)
     }
     const recientesIG = all.filter(p => p.timestamp && new Date(p.timestamp) > hace24h)
+    console.log(`   IG en ventana 48h: ${recientesIG.length}`)
+
+    // Dedup: excluir posts cuya URL ya apareció en el reporte de ayer
+    const sinDuplicados = recientesIG.filter(p => {
+      const url = p.url || `https://www.instagram.com/p/${p.shortCode}/`
+      if (urlsYaReportadas.has(url)) {
+        console.log(`   🔁 Dedup: omitiendo ${url} (ya reportado ayer)`)
+        return false
+      }
+      return true
+    })
+    console.log(`   IG tras dedup vs ayer: ${sinDuplicados.length} (eliminados ${recientesIG.length - sinDuplicados.length})`)
+
+    // Filtro de relevancia: descartar posts de ferias/expos genéricas
+    const relevantes = sinDuplicados.filter(p => {
+      const relevante = esPostRelevante(p.caption)
+      if (!relevante) {
+        const handle = p.ownerUsername || '?'
+        console.log(`   🚫 Irrelevante (feria genérica): @${handle} — "${(p.caption || '').substring(0, 80)}..."`)
+      }
+      return relevante
+    })
+    console.log(`   IG tras filtro relevancia: ${relevantes.length} (eliminados ${sinDuplicados.length - relevantes.length} por feria/expo genérica)`)
+
     // Deduplicar: último post por owner
     const igPorOwner = new Map()
-    for (const p of recientesIG) {
+    for (const p of relevantes) {
       const k = (p.ownerUsername || '').toLowerCase()
       if (!k) continue
       const existing = igPorOwner.get(k)
@@ -229,10 +310,10 @@ async function main() {
   console.log(`🏁 Instagram: ${competidoresConPost.size} con actividad, ${sinActividad.length} sin actividad.`)
 
   // ── LinkedIn ───────────────────────────────────────────────────────────────
-  const postsLinkedin = await scrapeLinkedin(hace24h)
+  const postsLinkedin = await scrapeLinkedin(hace24h, urlsYaReportadas)
 
   // ── Facebook ───────────────────────────────────────────────────────────────
-  const postsFacebook = await scrapeFacebook(hace24h)
+  const postsFacebook = await scrapeFacebook(hace24h, urlsYaReportadas)
 
   // ── Email con PDF ──────────────────────────────────────────────────────────
   await enviarEmail({ hoy, postsIG, competidoresConPost, sinActividad, postsLinkedin, postsFacebook, storiesIG })
@@ -255,7 +336,7 @@ function generarPDF(html) {
 }
 
 // ─── Scraping LinkedIn ───────────────────────────────────────────────────────
-async function scrapeLinkedin(hace24h) {
+async function scrapeLinkedin(hace24h, urlsYaReportadas = new Set()) {
   const conLI = COMPETIDORES.filter(c => c.linkedin)
   if (conLI.length === 0) return []
   console.log(`💼 Scrapeando ${conLI.length} perfiles de LinkedIn...`)
@@ -314,9 +395,28 @@ async function scrapeLinkedin(hace24h) {
     })
     console.log(`✅ LinkedIn: ${recientes.length} posts en últimas 48h (de ${all.length} total)`)
 
+    // Dedup vs ayer
+    const sinDupLI = recientes.filter(p => {
+      const url = p.linkedinUrl || p.postUrl || p.url || p.postLink || ''
+      if (url && urlsYaReportadas.has(url)) {
+        console.log(`   🔁 LI Dedup: omitiendo ${url} (ya reportado ayer)`)
+        return false
+      }
+      return true
+    })
+
+    // Filtro de relevancia (ferias genéricas)
+    const relevantesLI = sinDupLI.filter(p => {
+      const texto = (typeof p.content === 'string' ? p.content : '') ||
+                    (typeof p.text === 'string' ? p.text : '') ||
+                    (typeof p.commentary === 'string' ? p.commentary : '') || ''
+      return esPostRelevante(texto)
+    })
+    console.log(`   LinkedIn tras dedup+relevancia: ${relevantesLI.length} (de ${recientes.length})`)
+
     // Deduplicar por competidor: dejar solo el post más reciente de cada empresa
     const porCompetidor = new Map()
-    for (const p of recientes) {
+    for (const p of relevantesLI) {
       const nombre = p.author?.name || p.author?.universalName || 'unknown'
       const fechaActual = p.postedAt?.date ? new Date(p.postedAt.date).getTime() : 0
       const existing = porCompetidor.get(nombre)
@@ -337,7 +437,7 @@ async function scrapeLinkedin(hace24h) {
 }
 
 // ─── Scraping Facebook ───────────────────────────────────────────────────────
-async function scrapeFacebook(hace24h) {
+async function scrapeFacebook(hace24h, urlsYaReportadas = new Set()) {
   const conFB = COMPETIDORES.filter(c => c.facebook)
   if (conFB.length === 0) return []
   console.log(`📘 Scrapeando ${conFB.length} perfiles de Facebook...`)
@@ -364,9 +464,27 @@ async function scrapeFacebook(hace24h) {
       return !isNaN(d.getTime()) && d > hace24h
     })
     console.log(`✅ Facebook: ${recientes.length} posts en últimas 48h (de ${all.length} total)`)
+
+    // Dedup vs ayer
+    const sinDupFB = recientes.filter(p => {
+      const url = p.url || ''
+      if (url && urlsYaReportadas.has(url)) {
+        console.log(`   🔁 FB Dedup: omitiendo ${url} (ya reportado ayer)`)
+        return false
+      }
+      return true
+    })
+
+    // Filtro de relevancia (ferias genéricas)
+    const relevantesFB = sinDupFB.filter(p => {
+      const texto = p.text || p.message || ''
+      return esPostRelevante(texto)
+    })
+    console.log(`   Facebook tras dedup+relevancia: ${relevantesFB.length} (de ${recientes.length})`)
+
     // Deduplicar: último post por página
     const fbPorPage = new Map()
-    for (const p of recientes) {
+    for (const p of relevantesFB) {
       const k = (p.pageName || p.url || '').toLowerCase()
       if (!k) continue
       const t = p.time || p.timestamp || p.publishedAt
