@@ -285,6 +285,7 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
   var [auditorias, setAuditorias] = useState([] as any[])
   var [guiones, setGuiones] = useState([] as any[])
   var [ideas, setIdeas] = useState([] as any[])
+  var [benchmarks, setBenchmarks] = useState([] as any[])
   var [loading, setLoading] = useState(true)
   var [error, setError] = useState('')
   var [periodo, setPeriodo] = useState('7d')
@@ -347,6 +348,10 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
       var r6 = await fetch(SUPABASE_URL + '/rest/v1/copilot_ideas?suscripcion_id=eq.' + props.suscripcionId + '&select=*&order=created_at.desc', { headers: hdrs() })
       var iData = await r6.json()
       setIdeas(Array.isArray(iData) ? iData : [])
+
+      var r7 = await fetch(SUPABASE_URL + '/rest/v1/copilot_benchmarks?suscripcion_id=eq.' + props.suscripcionId + '&select=*&order=created_at.desc', { headers: hdrs() })
+      var bData = await r7.json()
+      setBenchmarks(Array.isArray(bData) ? bData : [])
     } catch (e) { setError('Error cargando datos') }
     setLoading(false)
   }
@@ -445,6 +450,7 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
             { key: 'contenido', label: 'Contenido', icon: '\u270D\uFE0F', color: 'text-purple-700' },
             { key: 'auditoria', label: 'Auditor\u00EDa', icon: '\uD83D\uDCCA', color: 'text-teal-700' },
             { key: 'guiones', label: 'Guiones', icon: '\uD83C\uDFAC', color: 'text-pink-700' },
+            { key: 'benchmark', label: 'Benchmark', icon: '\uD83C\uDFC6', color: 'text-orange-700' },
             { key: 'ideas', label: 'Ideas', icon: '\uD83D\uDCA1', color: 'text-amber-700' },
             { key: 'reporte', label: 'Reporte', icon: '\uD83D\uDCCB', color: 'text-emerald-700' },
           ].map(function(t) {
@@ -1298,6 +1304,182 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
                 <div className="text-4xl mb-3">{'\uD83C\uDFAC'}</div>
                 <p className="text-[#64748b] mb-2">Los guiones se generan cada lunes junto con los copies semanales</p>
                 <p className="text-xs text-[#475569]">Selecciona un mes con contenido generado.</p>
+              </div>
+            )}
+          </>
+        })()}
+
+        {/* TAB: BENCHMARK COMPETITIVO */}
+        {tab === 'benchmark' && (function() {
+          var bmMes = benchmarks.filter(function(b: any) { return b.mes === mesGlobal && b.anio === anioGlobal })
+          var bm = bmMes.length > 0 ? bmMes[0] : (benchmarks.length > 0 ? benchmarks[0] : null)
+          var datos = bm && bm.datos ? bm.datos : null
+          var analisis = datos && datos.analisis_ia ? datos.analisis_ia : null
+
+          if (!bm) return <div className="bg-[#1a1745] rounded-xl p-8 border border-white/[0.06] text-center">
+            <p className="text-4xl mb-4">{'\uD83C\uDFC6'}</p>
+            <p className="text-[#c4b5fd] font-semibold text-lg mb-2">Benchmark competitivo</p>
+            <p className="text-[#64748b] text-sm">El benchmark se genera autom{'á'}ticamente el 1ro de cada mes. Incluye an{'á'}lisis estrat{'é'}gico por competidor, gaps de contenido, y plan de campa{'ñ'}a sugerido — generado con Claude para m{'á'}xima calidad.</p>
+          </div>
+
+          return <>
+            <div className="bg-gradient-to-r from-orange-700 to-amber-700 rounded-xl p-5 mb-4">
+              <div className="flex justify-between items-center">
+                <div>
+                  <p className="text-xs text-orange-200 tracking-widest mb-1">BENCHMARK COMPETITIVO</p>
+                  <h3 className="text-lg font-bold text-white">{MESES_NOMBRES[bm.mes]} {bm.anio}</h3>
+                  <p className="text-xs text-orange-200 mt-1">Generado: {(bm.created_at || '').substring(0, 10)}</p>
+                </div>
+                {datos && datos.metricas_competidores && <div className="bg-white/10 rounded-lg px-3 py-2 text-center">
+                  <p className="text-2xl font-bold text-white">{Object.keys(datos.metricas_competidores).length}</p>
+                  <p className="text-[10px] text-orange-200">Competidores</p>
+                </div>}
+              </div>
+            </div>
+
+            {/* Resumen ejecutivo */}
+            {analisis && analisis.resumen_ejecutivo && (
+              <div className="bg-[#1a1745] rounded-xl p-5 border-l-4 border-orange-500 mb-4">
+                <h4 className="text-sm font-bold text-orange-400 uppercase tracking-wider mb-2">Resumen ejecutivo</h4>
+                <p className="text-sm text-[#c4b5fd] leading-relaxed whitespace-pre-line">{analisis.resumen_ejecutivo}</p>
+              </div>
+            )}
+
+            {/* Métricas por competidor */}
+            {datos && datos.metricas_competidores && (
+              <div className="bg-[#1a1745] rounded-xl border border-white/[0.06] overflow-hidden mb-4">
+                <div className="px-5 py-3 border-b border-white/[0.04]">
+                  <h4 className="text-sm font-bold text-white">M{'é'}tricas por competidor</h4>
+                </div>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-xs">
+                    <thead>
+                      <tr className="text-[9px] text-[#94a3b8] uppercase">
+                        <th className="px-3 py-2 text-left">Empresa</th>
+                        <th className="px-3 py-2 text-center">Posts</th>
+                        <th className="px-3 py-2 text-center">Eng avg</th>
+                        <th className="px-3 py-2 text-center">Tendencia</th>
+                        <th className="px-3 py-2 text-left">Formato</th>
+                        <th className="px-3 py-2 text-left">Tema</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-white/[0.04]">
+                      {Object.keys(datos.metricas_competidores).map(function(nombre: string, i: number) {
+                        var m = datos.metricas_competidores[nombre]
+                        var tendColor = (m.tendencia_engagement || '').includes('+') ? 'text-green-400' : (m.tendencia_engagement || '').includes('-') ? 'text-red-400' : 'text-[#94a3b8]'
+                        return <tr key={nombre} className={i % 2 === 0 ? '' : 'bg-[#12102a]'}>
+                          <td className="px-3 py-2 font-semibold text-white">{nombre}</td>
+                          <td className="px-3 py-2 text-center text-white font-bold">{m.total_posts || 0}</td>
+                          <td className="px-3 py-2 text-center">
+                            <span className={(m.avg_engagement || 0) >= 100 ? 'text-green-400 font-bold' : (m.avg_engagement || 0) >= 40 ? 'text-yellow-400' : 'text-red-400'}>{m.avg_engagement || 0}</span>
+                          </td>
+                          <td className={'px-3 py-2 text-center font-semibold ' + tendColor}>{m.tendencia_engagement || '='}</td>
+                          <td className="px-3 py-2 text-[#a5b4fc]">{m.formato_dominante || '-'}</td>
+                          <td className="px-3 py-2 text-[#a5b4fc]">{m.tema_dominante || '-'}</td>
+                        </tr>
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+
+            {/* Análisis por competidor */}
+            {analisis && analisis.analisis_competidores && Array.isArray(analisis.analisis_competidores) && (
+              <div className="space-y-3 mb-4">
+                <h4 className="text-sm font-bold text-white">An{'á'}lisis estrat{'é'}gico</h4>
+                {analisis.analisis_competidores.map(function(comp: any, i: number) {
+                  return <div key={i} className="bg-[#12102a] rounded-xl p-4 border border-white/[0.04]">
+                    <h5 className="text-white font-semibold mb-2">{comp.nombre || 'Competidor'}</h5>
+                    {comp.posicionamiento && <p className="text-xs text-[#94a3b8] mb-2">{comp.posicionamiento}</p>}
+                    <div className="grid grid-cols-3 gap-3 text-[11px]">
+                      {comp.fortalezas && <div>
+                        <p className="text-green-400 font-semibold text-[10px] mb-1">Fortalezas</p>
+                        {(Array.isArray(comp.fortalezas) ? comp.fortalezas : [comp.fortalezas]).map(function(f: string, fi: number) {
+                          return <p key={fi} className="text-[#94a3b8]">{'\u2022'} {f}</p>
+                        })}
+                      </div>}
+                      {comp.debilidades && <div>
+                        <p className="text-red-400 font-semibold text-[10px] mb-1">Debilidades</p>
+                        {(Array.isArray(comp.debilidades) ? comp.debilidades : [comp.debilidades]).map(function(d: string, di: number) {
+                          return <p key={di} className="text-[#94a3b8]">{'\u2022'} {d}</p>
+                        })}
+                      </div>}
+                      {comp.oportunidades && <div>
+                        <p className="text-amber-400 font-semibold text-[10px] mb-1">Oportunidad</p>
+                        {(Array.isArray(comp.oportunidades) ? comp.oportunidades : [comp.oportunidades]).map(function(o: string, oi: number) {
+                          return <p key={oi} className="text-amber-200">{'\u2022'} {o}</p>
+                        })}
+                      </div>}
+                    </div>
+                  </div>
+                })}
+              </div>
+            )}
+
+            {/* Plan de campaña */}
+            {analisis && analisis.plan_campana && (
+              <div className="bg-[#1a1745] rounded-xl p-5 border border-orange-500/20 mb-4">
+                <h4 className="text-sm font-bold text-orange-400 uppercase tracking-wider mb-3">Plan de campa{'ñ'}a sugerido</h4>
+                {analisis.plan_campana.canales && Array.isArray(analisis.plan_campana.canales) && (
+                  <div className="space-y-2 mb-3">
+                    {analisis.plan_campana.canales.map(function(canal: any, ci: number) {
+                      return <div key={ci} className="bg-[#12102a] rounded-lg p-3 flex items-center gap-3">
+                        <div className="flex-1">
+                          <p className="text-white font-semibold text-xs">{canal.canal || canal.nombre || 'Canal'}</p>
+                          <p className="text-[10px] text-[#94a3b8]">{canal.formatos || canal.formato || ''} · {canal.frecuencia || ''}</p>
+                        </div>
+                        {canal.presupuesto_pct && <span className="text-orange-400 font-bold text-sm">{canal.presupuesto_pct}%</span>}
+                      </div>
+                    })}
+                  </div>
+                )}
+                {analisis.plan_campana.plan_mensual && Array.isArray(analisis.plan_campana.plan_mensual) && (
+                  <div>
+                    <p className="text-xs text-[#64748b] font-semibold mb-2">Plan por semana</p>
+                    {analisis.plan_campana.plan_mensual.map(function(sem: any, si: number) {
+                      return <div key={si} className="flex items-start gap-2 mb-1">
+                        <span className="text-[10px] bg-orange-900/30 text-orange-400 px-2 py-0.5 rounded">S{si + 1}</span>
+                        <p className="text-xs text-[#a5b4fc]">{typeof sem === 'string' ? sem : (sem.enfoque || sem.descripcion || JSON.stringify(sem))}</p>
+                      </div>
+                    })}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Alertas de riesgo */}
+            {analisis && analisis.alertas_riesgo && Array.isArray(analisis.alertas_riesgo) && analisis.alertas_riesgo.length > 0 && (
+              <div className="bg-red-900/10 rounded-xl p-4 border border-red-700/20 mb-4">
+                <h4 className="text-sm font-bold text-red-400 mb-2">{'\u26A0'} Alertas de riesgo</h4>
+                {analisis.alertas_riesgo.map(function(alerta: any, ai: number) {
+                  return <p key={ai} className="text-xs text-red-300 mb-1">{'\u2022'} {typeof alerta === 'string' ? alerta : (alerta.descripcion || alerta.alerta || JSON.stringify(alerta))}</p>
+                })}
+              </div>
+            )}
+
+            {/* Gaps de contenido */}
+            {datos && datos.gaps_contenido && (
+              <div className="bg-[#1a1745] rounded-xl p-4 border border-white/[0.06]">
+                <h4 className="text-sm font-bold text-white mb-2">Gaps de contenido detectados</h4>
+                <div className="grid grid-cols-2 gap-3">
+                  {datos.gaps_contenido.temas_no_cubiertos && datos.gaps_contenido.temas_no_cubiertos.length > 0 && (
+                    <div>
+                      <p className="text-[10px] text-amber-400 font-semibold mb-1">Temas que la competencia cubre y t{'ú'} no</p>
+                      {datos.gaps_contenido.temas_no_cubiertos.map(function(t: string, ti: number) {
+                        return <p key={ti} className="text-xs text-[#94a3b8]">{'\u2022'} {t}</p>
+                      })}
+                    </div>
+                  )}
+                  {datos.gaps_contenido.formatos_no_usados && datos.gaps_contenido.formatos_no_usados.length > 0 && (
+                    <div>
+                      <p className="text-[10px] text-cyan-400 font-semibold mb-1">Formatos no usados</p>
+                      {datos.gaps_contenido.formatos_no_usados.map(function(f: string, fi: number) {
+                        return <p key={fi} className="text-xs text-[#94a3b8]">{'\u2022'} {f}</p>
+                      })}
+                    </div>
+                  )}
+                </div>
               </div>
             )}
           </>

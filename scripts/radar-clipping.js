@@ -74,6 +74,7 @@ var auditoriaModule = require('./radar-auditoria.js')
 var briefModule = require('./radar-brief.js')
 var memoriaModule = require('./radar-memoria.js')
 var decisionModule = require('./radar-decisiones.js')
+var benchmarkModule = require('./radar-benchmark.js')
 
 var APIFY_TOKEN = process.env.APIFY_TOKEN
 var RESEND_KEY = process.env.RESEND
@@ -587,6 +588,15 @@ async function main() {
     if (MODO === 'mensual' || MODO === 'semanal') {
       var contenidoAud = contenidoSugerido || []
       auditoriaData = await auditoriaModule.generarAuditoria(misPosts, contenidoAud, cuentas, supabase, sub.id, sub.brief_estrategico || null, MODO, postsCliente)
+    }
+
+    // Benchmark competitivo mensual (solo mensual, usa Claude Sonnet para calidad máxima)
+    var benchmarkData = null
+    if (MODO === 'mensual' && ANTHROPIC_KEY && misPosts.length >= 5) {
+      try {
+        benchmarkData = await benchmarkModule.generarBenchmark(misPosts, empresas, sub.perfil_empresa || {}, supabase, sub.id, sub.brief_estrategico || null, memoria, postsCliente)
+        console.log('   ✓ Benchmark competitivo generado')
+      } catch (e) { console.log('   Benchmark error (no bloqueante): ' + e.message) }
     }
 
     var html = generarEmailHTML(misPosts, cuentas, hoy, MODO, resumenIA, empresas, trends, sub.id, contenidoSugerido, sub.estado, sub.plan, sub.trial_ends, grillaMensual, guionesData, null, auditoriaData, sub.brief_estrategico)
