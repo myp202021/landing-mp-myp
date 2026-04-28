@@ -233,7 +233,7 @@ async function cargarMemoria(supabase, suscripcionId) {
     var hace30dias = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
 
     var postsRes = await supabase.from('radar_posts')
-      .select('nombre_empresa, red, likes, comments, tipo_post, texto, fecha_scrape, es_propio')
+      .select('nombre_empresa, red, likes, comments, tipo_post, texto, fecha_scrape')
       .eq('suscripcion_id', suscripcionId)
       .gte('fecha_scrape', hace60dias)
       .order('fecha_scrape', { ascending: false })
