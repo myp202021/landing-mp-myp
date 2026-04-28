@@ -511,8 +511,49 @@ async function generateGrilla(clienteId, mes, anio, contextoMes) {
   const prevGrillas = await sbGet('grillas_contenido', `cliente_id=eq.${clienteId}&order=anio.desc,mes.desc&limit=3&select=posts,mes,anio`)
   const prevPosts = prevGrillas.flatMap(g => (Array.isArray(g.posts) ? g.posts : []).filter(p => p.copy && p.copy.length > 30))
 
+  // ── COPILOT: Cargar aprendizajes persistentes ──
+  let aprendizajesCtx = ''
+  try {
+    // Buscar suscripción Copilot vinculada a este cliente (por nombre)
+    const nombreLower = (cliente.nombre || '').toLowerCase()
+    const subsRes = await sbGet('clipping_suscripciones', `select=id,perfil_empresa`)
+    const subMatch = subsRes.find(s => {
+      const perfNombre = ((s.perfil_empresa || {}).nombre || '').toLowerCase()
+      return perfNombre === nombreLower || perfNombre.includes(nombreLower) || nombreLower.includes(perfNombre)
+    })
+
+    if (subMatch) {
+      // Cargar aprendizajes del cliente
+      const aprendizajes = await sbGet('copilot_aprendizajes', `suscripcion_id=eq.${subMatch.id}&activo=eq.true&order=confianza.desc&limit=10`)
+      if (aprendizajes.length > 0) {
+        aprendizajesCtx = '\n═══ APRENDIZAJES COPILOT (de runs anteriores) ═══\n'
+        aprendizajes.forEach((a, i) => {
+          const stars = a.confianza >= 0.8 ? '★★★' : a.confianza >= 0.6 ? '★★' : '★'
+          aprendizajesCtx += `${i + 1}. [${stars}] ${a.aprendizaje}\n`
+        })
+        console.log(`   🧠 ${aprendizajes.length} aprendizajes Copilot cargados`)
+      }
+
+      // Cargar árbol de decisión si existe (para saber qué canales priorizar)
+      const arboles = await sbGet('copilot_arboles', `suscripcion_id=eq.${subMatch.id}&order=created_at.desc&limit=1`)
+      if (arboles.length > 0 && arboles[0].datos) {
+        const arbol = arboles[0].datos
+        const ramas = arbol.ramas || []
+        if (ramas.length > 0) {
+          aprendizajesCtx += '\n═══ ÁRBOL DE DECISIÓN COPILOT ═══\n'
+          ramas.forEach(r => {
+            aprendizajesCtx += `- ${r.nombre || r.plataforma}: ${r.porcentaje || '?'}% del presupuesto\n`
+          })
+          console.log(`   🌳 Árbol de decisión cargado: ${ramas.length} ramas`)
+        }
+      }
+    }
+  } catch (e) {
+    // Silencioso — si no hay Copilot vinculado, sigue sin él
+  }
+
   // ── FASE 1: Brief PRO ──
-  const briefPro = await generarBriefPro(cliente, briefing, prevPosts, mes, anio, contextoMes)
+  const briefPro = await generarBriefPro(cliente, briefing, prevPosts, mes, anio, contextoMes + aprendizajesCtx)
 
   // Asignar mes a cada post del plan
   briefPro.forEach(p => { p.mes = mes; p.anio = anio })
@@ -598,6 +639,80 @@ async function generateGrilla(clienteId, mes, anio, contextoMes) {
       })
       console.log(`   📧 Email enviado`)
     } catch (e) { console.log(`   ⚠️ Email: ${e.message}`) }
+  }
+
+  // ── COPILOT: Guardar aprendizajes de esta grilla ──
+  try {
+    const nombreLower = (cliente.nombre || '').toLowerCase()
+    const subsRes2 = await sbGet('clipping_suscripciones', `select=id,perfil_empresa`)
+    const subMatch2 = subsRes2.find(s => {
+      const perfNombre = ((s.perfil_empresa || {}).nombre || '').toLowerCase()
+      return perfNombre === nombreLower || perfNombre.includes(nombreLower) || nombreLower.includes(perfNombre)
+    })
+
+    if (subMatch2) {
+      // Guardar aprendizaje: score promedio y ángulos ganadores
+      const anguloScores = {}
+      finalPosts.forEach(p => {
+        const ang = p.angulo || 'general'
+        if (!anguloScores[ang]) anguloScores[ang] = { total: 0, count: 0 }
+        anguloScores[ang].total += (p._calidad?.score || p._score || 80)
+        anguloScores[ang].count++
+      })
+
+      let mejorAngulo = null
+      let mejorAvg = 0
+      Object.keys(anguloScores).forEach(k => {
+        const avg = anguloScores[k].total / anguloScores[k].count
+        if (avg > mejorAvg && anguloScores[k].count >= 2) { mejorAvg = avg; mejorAngulo = k }
+      })
+
+      if (mejorAngulo) {
+        await sbPost('copilot_aprendizajes', {
+          suscripcion_id: subMatch2.id,
+          agente: 'grilla',
+          tipo: 'patron',
+          aprendizaje: `En grilla ${MESES[mes]} ${anio}, ángulo "${mejorAngulo}" tuvo score promedio ${Math.round(mejorAvg)}/100. Priorizar.`,
+          confianza: 0.5,
+          confirmaciones: 1,
+          contexto: { mes, anio, angulo: mejorAngulo, score: mejorAvg, total_posts: finalPosts.length },
+          activo: true,
+        })
+        console.log(`   🧠 Aprendizaje guardado: ángulo "${mejorAngulo}" score ${Math.round(mejorAvg)}`)
+      }
+
+      // Generar Ads Creative en paralelo (si hay API key)
+      if (ANTHROPIC_KEY) {
+        try {
+          const adsModule = require('./radar-ads-creative.js')
+          const supabaseLib = require('@supabase/supabase-js')
+          const sb = supabaseLib.createClient(SUPABASE_URL, SUPABASE_KEY)
+
+          const perfil = subMatch2.perfil_empresa || {}
+          const adsResult = await adsModule.generarAdsCreativos(
+            [], // sin posts de competencia (no hay scraping)
+            {}, // sin empresas
+            perfil,
+            null, // sin brief
+            null, // sin memoria
+            { nombre: perfil.rubro || cliente.rubro }, // industria básica
+            finalPosts.slice(0, 3).map(p => ({ titulo: p.titulo_grafico || '', copy: (p.copy || '').substring(0, 100) })),
+            {}, // sin plan campaña
+            sb,
+            subMatch2.id
+          )
+          if (adsResult) {
+            const gAds = (adsResult.google_ads || []).length
+            const mAds = (adsResult.meta_ads || []).length
+            console.log(`   🎯 Ads Creative generado: ${gAds} grupos Google, ${mAds} conjuntos Meta`)
+          }
+        } catch (e) {
+          console.log(`   ⚠️ Ads Creative: ${e.message}`)
+        }
+      }
+    }
+  } catch (e) {
+    // Silencioso
   }
 
   return { nombre: cliente.nombre, posts: finalPosts.length, avgWords, avgScore, fixed, manual }
