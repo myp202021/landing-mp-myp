@@ -222,8 +222,34 @@ async function generarGuiones(posts, empresas, perfil, copiesGenerados, supabase
     var content = data.choices[0].message.content
     var parsed = JSON.parse(content)
     var guiones = parsed.guiones || []
+    if (parsed.razonamiento) console.log('   Razonamiento: ' + (parsed.razonamiento || '').substring(0, 120))
 
-    console.log('   Guiones generados: ' + guiones.length)
+    // Post-proceso: validar y corregir CTAs genéricos
+    var CTA_PROHIBIDOS = ['visita', 'siguenos', 'suscribete', 'mas informacion', 'link en bio', 'dale like', 'solicita una demo']
+    guiones.forEach(function(g, i) {
+      if (g.cierre && typeof g.cierre === 'object' && g.cierre.frase_cta) {
+        var ctaLower = g.cierre.frase_cta.toLowerCase()
+        var esGenerico = CTA_PROHIBIDOS.some(function(p) { return ctaLower.includes(p) })
+        if (esGenerico) {
+          console.log('   ⚠ Guion ' + (i+1) + ' CTA genérico detectado: "' + g.cierre.frase_cta + '" → reemplazando')
+          // Reemplazar por CTA medible
+          var ctasMedibles = [
+            'Guarda este video y revisalo cuando planifiques tu semana',
+            'Envia este reel a un colega que necesite esto',
+            'Comenta con el emoji que mejor describe tu situacion',
+            'Etiqueta a alguien de tu equipo que deberia ver esto',
+          ]
+          g.cierre.frase_cta = ctasMedibles[i % ctasMedibles.length]
+          g.cierre.accion_medible = 'guardados / compartidos / comentarios'
+        }
+      }
+      // Asegurar mínimo 2 escenas
+      if (!g.escenas || g.escenas.length < 2) {
+        console.log('   ⚠ Guion ' + (i+1) + ' tiene ' + (g.escenas||[]).length + ' escenas — mínimo 2')
+      }
+    })
+
+    console.log('   Guiones validados: ' + guiones.length)
 
     // Guardar en Supabase
     if (supabase && suscripcionId && guiones.length > 0) {

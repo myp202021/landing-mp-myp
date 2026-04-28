@@ -663,21 +663,28 @@ async function generarContenidoSugerido(posts, empresas, modo, perfil, supabase,
 
   console.log('   === PIPELINE COMPLETADO: ' + revisados.length + ' copies ===\n')
 
-  if (supabase && suscripcionId && revisados.length > 0) {
+  // Filtrar copies con score < 70 o con error — NO guardar basura
+  var aprobados = revisados.filter(function(c) { return (c.score || 0) >= 70 && !c.error && c.copy && c.copy.length > 50 })
+  var rechazados = revisados.length - aprobados.length
+  if (rechazados > 0) console.log('   ' + rechazados + ' copies rechazados (score < 70 o error)')
+
+  if (supabase && suscripcionId && aprobados.length > 0) {
     try {
       var ahora = new Date()
-      var avgScore = revisados.reduce(function(s, c) { return s + (c.score || 0) }, 0) / revisados.length
+      var avgScore = aprobados.reduce(function(s, c) { return s + (c.score || 0) }, 0) / aprobados.length
       await supabase.from('radar_contenido').insert({
         suscripcion_id: suscripcionId,
         tipo: 'copy',
-        datos: revisados,
+        datos: aprobados,
         semana: Math.ceil(ahora.getDate() / 7),
         mes: ahora.getMonth() + 1,
         anio: ahora.getFullYear(),
         score_promedio: Math.round(avgScore),
       })
-      console.log('   Copies guardados en radar_contenido')
+      console.log('   ' + aprobados.length + ' copies aprobados guardados (score avg ' + Math.round(avgScore) + ')')
     } catch (e) { console.error('   Error guardando copies: ' + e.message) }
+  } else if (aprobados.length === 0) {
+    console.log('   ⚠ Ningun copy aprobado — no se guarda nada')
   }
 
   // Extraer ideas basadas en analisis de competencia y gaps
