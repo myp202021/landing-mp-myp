@@ -81,17 +81,31 @@ function esOfertaLaboral(texto) {
 // Si el post menciona keywords de transporte/buses → relevante.
 // Si el post es claramente sobre una feria genérica sin relación → se descarta.
 const KEYWORDS_TRANSPORTE = [
+  // Buses y transporte general
   'bus', 'buses', 'transporte', 'flota', 'ruta', 'rutas', 'pasajero', 'pasajeros',
   'conductor', 'chofer', 'terminal', 'recorrido', 'servicio especial',
+  // Transporte interurbano (específico Hualpén)
+  'interurbano', 'interurbana', 'interprovincial', 'larga distancia',
+  'intercity', 'rodoviario', 'terminal de buses', 'terminal rodoviario',
+  // Servicios especiales y minería
   'traslado', 'acercamiento', 'minería', 'minero', 'faena', 'operación', 'operaciones',
+  // Mantención y técnico
   'mantención', 'mantenimiento', 'taller', 'diésel', 'diesel', 'motor',
+  // Seguridad y regulación
   'seguridad vial', 'accidente', 'siniestro', 'licitación', 'licitacion',
   'contrato de transporte', 'servicio de transporte', 'dtpm', 'red metropolitana',
   'subsidio', 'tarifa', 'boleto', 'bip', 'validador',
+  // Electromovilidad
   'eléctrico', 'electrico', 'electromovilidad', 'cero emisiones', 'euro vi',
+  // Mecánica
   'carrocería', 'carroceria', 'chasis', 'eje', 'neumático', 'neumatico',
+  // Tecnología
   'gps', 'telemetría', 'telemetria', 'monitoreo',
-  'hualpén', 'hualpen',
+  // Menciones directas
+  'hualpén', 'hualpen', 'buses hualpen',
+  // Competidores directos (para detectar menciones cruzadas)
+  'pullman', 'tur bus', 'turbus', 'buses bio bio', 'eme bus',
+  'viggo', 'geminis', 'transdiaram', 'espacio t',
 ]
 
 const KEYWORDS_FERIA_GENERICA = [
