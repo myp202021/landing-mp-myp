@@ -289,9 +289,9 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
   var [error, setError] = useState('')
   var [periodo, setPeriodo] = useState('7d')
   var [tab, setTab] = useState('competencia')
-  var [mesFiltro, setMesFiltro] = useState(new Date().getMonth() + 1)
-  var [mesAuditoriaFiltro, setMesAuditoriaFiltro] = useState(0)
-  var [mesGuionesFiltro, setMesGuionesFiltro] = useState(0)
+  // SELECTOR GLOBAL DE MES — uno solo para TODOS los tabs
+  var [mesGlobal, setMesGlobal] = useState(new Date().getMonth() + 1)
+  var [anioGlobal, setAnioGlobal] = useState(new Date().getFullYear())
   var [ideaForm, setIdeaForm] = useState(false)
   var [ideaTitulo, setIdeaTitulo] = useState('')
   var [ideaDesc, setIdeaDesc] = useState('')
@@ -306,36 +306,17 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
 
   useEffect(function() { loadData() }, [periodo])
 
-  // Initialize mesAuditoriaFiltro to latest month with audit data
+  // Inicializar mesGlobal al mes con más datos disponibles
   useEffect(function() {
-    if (auditorias.length > 0 && mesAuditoriaFiltro === 0) {
-      setMesAuditoriaFiltro(auditorias[0].mes)
+    var mesesConDatos = new Set() as Set<number>
+    contenido.forEach(function(c: any) { if (c.mes) mesesConDatos.add(c.mes) })
+    auditorias.forEach(function(a: any) { if (a.mes) mesesConDatos.add(a.mes) })
+    guiones.forEach(function(g: any) { if (g.mes) mesesConDatos.add(g.mes) })
+    if (mesesConDatos.size > 0) {
+      var meses = Array.from(mesesConDatos).sort(function(a, b) { return b - a })
+      setMesGlobal(meses[0])
     }
-  }, [auditorias])
-
-  // Initialize mesGuionesFiltro to latest month with guiones data
-  useEffect(function() {
-    if (guiones.length > 0 && mesGuionesFiltro === 0) {
-      setMesGuionesFiltro(guiones[0].mes)
-    }
-  }, [guiones])
-
-  // Initialize mesFiltro to month with most content
-  useEffect(function() {
-    if (contenido.length > 0) {
-      var mesesCount = {} as Record<number, number>
-      contenido.forEach(function(c: any) {
-        var m = c.mes
-        if (m) mesesCount[m] = (mesesCount[m] || 0) + (Array.isArray(c.datos) ? c.datos.length : 1)
-      })
-      var bestMes = new Date().getMonth() + 1
-      var bestCount = 0
-      Object.keys(mesesCount).forEach(function(k) {
-        if (mesesCount[Number(k)] > bestCount) { bestCount = mesesCount[Number(k)]; bestMes = Number(k) }
-      })
-      setMesFiltro(bestMes)
-    }
-  }, [contenido])
+  }, [contenido, auditorias, guiones])
 
   async function loadData() {
     setLoading(true)
@@ -433,8 +414,8 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
 
   var grillas = contenido.filter(function(c: any) { return c.tipo === 'grilla' })
   var copies = contenido.filter(function(c: any) { return c.tipo === 'copy' })
-  var grillasMes = grillas.filter(function(c: any) { return c.mes === mesFiltro })
-  var copiesMes = copies.filter(function(c: any) { return c.mes === mesFiltro })
+  var grillasMes = grillas.filter(function(c: any) { return c.mes === mesGlobal })
+  var copiesMes = copies.filter(function(c: any) { return c.mes === mesGlobal })
 
   var totalCopies = copies.reduce(function(s: number, c: any) { return s + (Array.isArray(c.datos) ? c.datos.length : 0) }, 0)
   var totalGrillaPosts = grillas.reduce(function(s: number, c: any) { return s + (Array.isArray(c.datos) ? c.datos.length : 0) }, 0)
@@ -472,6 +453,28 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
             </button>
           })}
         </div>
+
+        {/* SELECTOR GLOBAL DE MES — aplica a TODOS los tabs */}
+        {tab !== 'brief' && (function() {
+          var mesesConDatos = new Set() as Set<number>
+          contenido.forEach(function(c: any) { if (c.mes) mesesConDatos.add(c.mes) })
+          auditorias.forEach(function(a: any) { if (a.mes) mesesConDatos.add(a.mes) })
+          guiones.forEach(function(g: any) { if (g.mes) mesesConDatos.add(g.mes) })
+          // Agregar mes actual si tiene posts
+          if (posts.length > 0) mesesConDatos.add(new Date().getMonth() + 1)
+          var mesesArr = Array.from(mesesConDatos).sort()
+          if (mesesArr.length === 0) mesesArr = [new Date().getMonth() + 1]
+
+          return <div className="flex gap-2 mb-4 flex-wrap items-center">
+            <span className="text-xs text-[#64748b] mr-1">Mes:</span>
+            {mesesArr.map(function(m) {
+              return <button key={m} onClick={function() { setMesGlobal(m) }}
+                className={'px-3 py-1.5 rounded-lg text-xs font-semibold transition ' + (mesGlobal === m ? 'bg-indigo-600 text-white' : 'bg-[#1a1745] text-[#a5b4fc] border border-white/[0.06] hover:border-indigo-400')}>
+                {MESES_NOMBRES[m]}
+              </button>
+            })}
+          </div>
+        })()}
 
         {/* TAB: BRIEF ESTRATÉGICO */}
         {tab === 'brief' && (function() {
@@ -906,33 +909,27 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
         )}
 
         {/* TAB: CONTENIDO */}
-        {tab === 'contenido' && (
-          <>
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex gap-2">
-                {[1,2,3,4,5,6,7,8,9,10,11,12].filter(function(m) {
-                  return contenido.some(function(c: any) { return c.mes === m })
-                }).map(function(m) {
-                  return <button key={m} onClick={function() { setMesFiltro(m) }}
-                    className={'px-3 py-2 rounded-lg text-sm font-semibold transition ' + (mesFiltro === m ? 'bg-purple-600 text-white' : 'bg-[#1a1745] text-[#a5b4fc] border border-white/[0.06] hover:border-purple-300')}>
-                    {MESES_NOMBRES[m].substring(0, 3)}
-                  </button>
-                })}
-              </div>
-            </div>
+        {tab === 'contenido' && (function() {
+          // KPIs del mes seleccionado (no all-time)
+          var copiesMesCount = copiesMes.reduce(function(s: number, c: any) { return s + (Array.isArray(c.datos) ? c.datos.length : 0) }, 0)
+          var grillasMesCount = grillasMes.reduce(function(s: number, c: any) { return s + (Array.isArray(c.datos) ? c.datos.length : 0) }, 0)
+          var scoreMesTotal = 0; var scoreMesN = 0
+          copiesMes.forEach(function(c: any) { if (Array.isArray(c.datos)) c.datos.forEach(function(d: any) { if (d.score) { scoreMesTotal += d.score; scoreMesN++ } }) })
+          var scoreMesAvg = scoreMesN > 0 ? Math.round(scoreMesTotal / scoreMesN) : 0
 
+          return <>
             <div className="grid grid-cols-3 gap-4 mb-8">
               <div className="bg-[#1a1745] rounded-xl p-5 border border-white/[0.06] text-center">
-                <div className="text-3xl font-bold text-purple-600">{totalCopies}</div>
-                <div className="text-xs text-[#94a3b8] mt-1">Copies generados (total)</div>
+                <div className="text-3xl font-bold text-purple-600">{copiesMesCount}</div>
+                <div className="text-xs text-[#94a3b8] mt-1">Copies {MESES_NOMBRES[mesGlobal]}</div>
               </div>
               <div className="bg-[#1a1745] rounded-xl p-5 border border-white/[0.06] text-center">
                 <div className="text-3xl font-bold text-indigo-600">{totalGrillaPosts}</div>
-                <div className="text-xs text-[#94a3b8] mt-1">Posts en grillas (total)</div>
+                <div className="text-xs text-[#94a3b8] mt-1">Posts grilla {MESES_NOMBRES[mesGlobal]}</div>
               </div>
               <div className="bg-[#1a1745] rounded-xl p-5 border border-white/[0.06] text-center">
-                <div className="text-3xl font-bold text-green-600">{grillas.length + copies.length}</div>
-                <div className="text-xs text-[#94a3b8] mt-1">Entregas realizadas</div>
+                <div className="text-3xl font-bold text-green-600">{scoreMesAvg || '-'}</div>
+                <div className="text-xs text-[#94a3b8] mt-1">Score promedio {MESES_NOMBRES[mesGlobal]}</div>
               </div>
             </div>
 
@@ -940,10 +937,10 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
             {grillasMes.length > 0 && (
               <div className="bg-[#1a1745] rounded-xl border border-white/[0.06] overflow-hidden mb-8">
                 <div className="px-6 py-4 border-b border-white/[0.04] flex justify-between items-center">
-                  <h2 className="text-sm font-bold text-white">Grilla {MESES_NOMBRES[mesFiltro]} — {grillasMes[0].datos.length} posts</h2>
+                  <h2 className="text-sm font-bold text-white">Grilla {MESES_NOMBRES[mesGlobal]} — {grillasMes[0].datos.length} posts</h2>
                   <div className="flex items-center gap-3">
                     <span className="text-xs text-[#64748b]">Score promedio: {grillasMes[0].score_promedio || '-'}</span>
-                    <a href={'/api/copilot/export-grilla?id=' + props.suscripcionId + '&mes=' + mesFiltro} className="bg-green-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg hover:bg-green-700 transition">Descargar Excel</a>
+                    <a href={'/api/copilot/export-grilla?id=' + props.suscripcionId + '&mes=' + mesGlobal} className="bg-green-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg hover:bg-green-700 transition">Descargar Excel</a>
                   </div>
                 </div>
                 <table className="w-full text-sm">
@@ -988,7 +985,7 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
             {copiesMes.length > 0 && (
               <div className="space-y-4 mb-8">
                 <div className="flex items-center justify-between">
-                  <h2 className="text-sm font-bold text-white">Copies sugeridos — {MESES_NOMBRES[mesFiltro]}</h2>
+                  <h2 className="text-sm font-bold text-white">Copies sugeridos — {MESES_NOMBRES[mesGlobal]}</h2>
                   <span className="text-xs bg-purple-900/30 text-purple-400 px-3 py-1 rounded-full border border-purple-700/30">
                     {copiesMes.reduce(function(s: number, b: any) { return s + (Array.isArray(b.datos) ? b.datos.length : 0) }, 0)} copies acumulados
                   </span>
@@ -1031,17 +1028,17 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
 
             {grillasMes.length === 0 && copiesMes.length === 0 && (
               <div className="bg-[#1a1745] rounded-xl border border-white/[0.06] px-6 py-12 text-center">
-                <p className="text-[#64748b] mb-2">Sin contenido generado para {MESES_NOMBRES[mesFiltro]}</p>
+                <p className="text-[#64748b] mb-2">Sin contenido generado para {MESES_NOMBRES[mesGlobal]}</p>
                 <p className="text-xs text-[#475569]">Los copies se generan cada lunes. La grilla se genera el 1ro de cada mes.</p>
               </div>
             )}
           </>
-        )}
+        })()}
 
         {/* TAB: AUDITORIA */}
         {tab === 'auditoria' && (function() {
-          var mesAuditoria = mesAuditoriaFiltro || (auditorias.length > 0 ? auditorias[0].mes : (new Date().getMonth() + 1))
-          var anioAuditoria = new Date().getFullYear()
+          var mesAuditoria = mesGlobal
+          var anioAuditoria = anioGlobal
           var audMes = auditorias.filter(function(a: any) { return a.mes === mesAuditoria && a.anio === anioAuditoria })
           var aud = audMes.length > 0 ? audMes[0] : null
           var mesesConAuditoria = auditorias.map(function(a: any) { return a.mes }).filter(function(m: number, i: number, arr: number[]) { return arr.indexOf(m) === i })
@@ -1082,21 +1079,13 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
           }
 
           return <>
-            <div className="flex gap-2 mb-6 flex-wrap">
-              {mesesConAuditoria.length > 0 ? mesesConAuditoria.sort().map(function(m: number) {
-                return <button key={m} onClick={function() { setMesAuditoriaFiltro(m) }}
-                  className={'px-3 py-2 rounded-lg text-sm font-semibold transition ' + (mesAuditoria === m ? 'bg-teal-600 text-white' : 'bg-[#1a1745] text-[#a5b4fc] border border-white/[0.06] hover:border-teal-300')}>
-                  {MESES_NOMBRES[m].substring(0, 3)}
-                </button>
-              }) : <span className="text-xs text-[#64748b]">Sin auditorias disponibles</span>}
-            </div>
-
             {aud ? (
               <>
                 <div className="bg-[#1a1745] rounded-xl border border-white/[0.06] p-6 mb-6">
                   <div className="flex items-center justify-between mb-6">
                     <div>
-                      <h2 className="text-lg font-bold text-white">Auditor\u00eda de {MESES_NOMBRES[mesAuditoria]} {anioAuditoria}</h2>
+                      <h2 className="text-lg font-bold text-white">Auditor{'\u00ed'}a de {sub.perfil_empresa?.nombre || sub.nombre || 'tu perfil'} — {MESES_NOMBRES[mesAuditoria]} {anioAuditoria}</h2>
+                      <p className="text-xs text-[#94a3b8] mt-1">{aud.contexto || ('Basado en datos de competencia')}</p>
                       {aud.proxima_auditoria && <p className="text-xs text-[#64748b] mt-1">Pr\u00f3xima auditor\u00eda: {aud.proxima_auditoria}</p>}
                     </div>
                     {/* Score circle */}
@@ -1134,8 +1123,13 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
                       var cr = parseCriterio(raw, ci)
                       var recText = criterioRecommendation(cr.score)
                       var recColor = criterioRecommendationColor(cr.score)
+                      var fuente = raw && raw.fuente ? raw.fuente : 'competencia'
+                      var descripcion = raw && raw.descripcion ? raw.descripcion : ''
+                      var dato = raw && raw.dato ? raw.dato : ''
+                      var fuenteColor = fuente === 'cliente' ? 'text-cyan-400' : fuente === 'copies_generados' ? 'text-purple-400' : fuente === 'cliente+competencia' ? 'text-amber-400' : 'text-[#64748b]'
+                      var fuenteLabel = fuente === 'cliente' ? 'Tu cuenta' : fuente === 'copies_generados' ? 'Copies Copilot' : fuente === 'cliente+competencia' ? 'Comparaci\u00f3n' : fuente === 'estimado' ? 'Estimado' : 'Competencia'
                       return <div key={ci} className="bg-[#12102a] rounded-lg p-4">
-                        <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center justify-between mb-1">
                           <div className="text-xs text-[#a5b4fc] font-semibold">{cr.nombre}</div>
                           <span className={'text-sm font-bold ' + scoreColor(cr.score)}>{cr.score}/10</span>
                         </div>
@@ -1143,6 +1137,11 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
                           <div className={scoreBg(cr.score) + ' h-2 rounded-full transition-all'} style={{ width: (cr.score * 10) + '%' }} />
                         </div>
                         <p className={'text-[11px] ' + recColor}>{recText}</p>
+                        {descripcion && <p className="text-[10px] text-[#64748b] mt-1">{descripcion}</p>}
+                        <div className="flex items-center gap-2 mt-1">
+                          <span className={'text-[9px] font-semibold ' + fuenteColor}>{fuenteLabel}</span>
+                          {dato && <span className="text-[9px] text-[#475569]">{dato}</span>}
+                        </div>
                       </div>
                     })}
                   </div>
@@ -1160,21 +1159,13 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
 
         {/* TAB: GUIONES */}
         {tab === 'guiones' && (function() {
-          var mesGuionesActivo = mesGuionesFiltro || (guiones.length > 0 ? guiones[0].mes : (new Date().getMonth() + 1))
+          var mesGuionesActivo = mesGlobal
           var guionesMes = guiones.filter(function(g: any) { return g.mes === mesGuionesActivo })
 
+          var guionesMesCount = guionesMes.reduce(function(s: number, g: any) { return s + (Array.isArray(g.datos) ? g.datos.length : 1) }, 0)
+
           return <>
-            <div className="flex gap-2 mb-6 flex-wrap">
-              {[1,2,3,4,5,6,7,8,9,10,11,12].filter(function(m) {
-                return guiones.some(function(g: any) { return g.mes === m })
-              }).map(function(m) {
-                return <button key={m} onClick={function() { setMesGuionesFiltro(m) }}
-                  className={'px-3 py-2 rounded-lg text-sm font-semibold transition ' + (mesGuionesActivo === m ? 'bg-pink-600 text-white' : 'bg-[#1a1745] text-[#a5b4fc] border border-white/[0.06] hover:border-pink-300')}>
-                  {MESES_NOMBRES[m].substring(0, 3)}
-                </button>
-              })}
-              {guiones.length === 0 && <span className="text-xs text-[#64748b]">Sin guiones disponibles</span>}
-            </div>
+            <p className="text-xs text-[#94a3b8] mb-4">{guionesMesCount} guiones en {MESES_NOMBRES[mesGuionesActivo]}</p>
 
             {guionesMes.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -1394,7 +1385,7 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
 
           return <>
             {/* Status summary */}
-            <div className="grid grid-cols-4 gap-4 mb-6">
+            <div className="grid grid-cols-5 gap-3 mb-6">
               {estados.map(function(e) {
                 return <div key={e} className="bg-[#1a1745] rounded-xl p-4 border border-white/[0.06] text-center">
                   <div className="text-2xl font-bold text-white">{conteoEstados[e] || 0}</div>
@@ -1502,37 +1493,44 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
 
         {/* TAB: REPORTE */}
         {tab === 'reporte' && (function() {
-          var mesReporte = mesFiltro
+          var mesReporte = mesGlobal
+          var anioReporte = anioGlobal
           var nombreMes = MESES_NOMBRES[mesReporte]
-          var anio = new Date().getFullYear()
+          var anio = anioReporte
 
-          /* Competencia stats */
-          var totalPostsComp = posts.length
-          var totalLikesComp = posts.reduce(function(s: number, p: any) { return s + (p.likes || 0) }, 0)
-          var totalCommentsComp = posts.reduce(function(s: number, p: any) { return s + (p.comments || 0) }, 0)
+          /* Competencia stats — filtrados por mes */
+          var postsMes = posts.filter(function(p: any) {
+            var fecha = p.fecha_scrape || p.created_at || ''
+            return fecha.substring(5, 7) === String(mesReporte).padStart(2, '0')
+          })
+          var totalPostsComp = postsMes.length
+          var totalLikesComp = postsMes.reduce(function(s: number, p: any) { return s + (p.likes || 0) }, 0)
+          var totalCommentsComp = postsMes.reduce(function(s: number, p: any) { return s + (p.comments || 0) }, 0)
           var totalEngComp = totalLikesComp + totalCommentsComp
           var avgEngComp = totalPostsComp > 0 ? Math.round(totalEngComp / totalPostsComp) : 0
 
-          /* Contenido stats */
-          var copiesTotal = copies.reduce(function(s: number, c: any) { return s + (Array.isArray(c.datos) ? c.datos.length : 0) }, 0)
-          var grillaPosts = grillas.reduce(function(s: number, c: any) { return s + (Array.isArray(c.datos) ? c.datos.length : 0) }, 0)
+          /* Contenido stats — filtrados por mes */
+          var copiesMesR = copies.filter(function(c: any) { return c.mes === mesReporte })
+          var grillasMesR = grillas.filter(function(c: any) { return c.mes === mesReporte })
+          var copiesTotal = copiesMesR.reduce(function(s: number, c: any) { return s + (Array.isArray(c.datos) ? c.datos.length : 0) }, 0)
+          var grillaPosts = grillasMesR.reduce(function(s: number, c: any) { return s + (Array.isArray(c.datos) ? c.datos.length : 0) }, 0)
           var scoreSum = 0; var scoreCount = 0
-          copies.forEach(function(c: any) {
+          copiesMesR.forEach(function(c: any) {
             if (Array.isArray(c.datos)) c.datos.forEach(function(d: any) {
-              if (d.score) { scoreSum += d.score; scoreCount++ }
-            })
-          })
-          grillas.forEach(function(g: any) {
-            if (Array.isArray(g.datos)) g.datos.forEach(function(d: any) {
               if (d.score) { scoreSum += d.score; scoreCount++ }
             })
           })
           var avgScore = scoreCount > 0 ? Math.round(scoreSum / scoreCount) : 0
 
-          /* Auditoria data */
+          /* Auditoria data — del mes, con comparación vs anterior */
           var audMes = auditorias.filter(function(a: any) { return a.mes === mesReporte && a.anio === anio })
-          var aud = audMes.length > 0 ? audMes[0] : (auditorias.length > 0 ? auditorias[0] : null)
-          var audIsLatestFallback = audMes.length === 0 && aud !== null
+          var aud = audMes.length > 0 ? audMes[0] : null
+          var audIsLatestFallback = false
+          // Buscar auditoría del mes anterior para comparación
+          var mesAnterior = mesReporte === 1 ? 12 : mesReporte - 1
+          var anioAnterior = mesReporte === 1 ? anio - 1 : anio
+          var audAnterior = auditorias.find(function(a: any) { return a.mes === mesAnterior && a.anio === anioAnterior })
+          var scoreDelta = (aud && audAnterior) ? (aud.score_general || 0) - (audAnterior.score_general || 0) : null
 
           var criteriosNombres = [
             'Frecuencia de publicaci\u00f3n', 'Engagement rate', 'Consistencia visual', 'Calidad de copies',
@@ -1575,15 +1573,7 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
           return <>
             <style dangerouslySetInnerHTML={{ __html: '@media print { .no-print { display: none !important; } .print-break { page-break-inside: avoid; } }' }} />
 
-            <div className="flex items-center justify-between mb-6 no-print">
-              <div className="flex gap-2 flex-wrap">
-                {[1,2,3,4,5,6,7,8,9,10,11,12].map(function(m) {
-                  return <button key={m} onClick={function() { setMesFiltro(m) }}
-                    className={'px-3 py-2 rounded-lg text-sm font-semibold transition ' + (mesFiltro === m ? 'bg-emerald-600 text-white' : 'bg-[#1a1745] text-[#a5b4fc] border border-white/[0.06] hover:border-emerald-300')}>
-                    {MESES_NOMBRES[m].substring(0, 3)}
-                  </button>
-                })}
-              </div>
+            <div className="flex items-center justify-end mb-4 no-print">
               <button onClick={function() { window.print() }}
                 className="bg-emerald-600 text-white text-sm font-bold px-4 py-2 rounded-lg hover:bg-emerald-700 transition">
                 Descargar PDF

@@ -25,15 +25,14 @@ function stddev(arr) {
 // CRITERIOS DE AUDITORIA (8)
 // ═══════════════════════════════════════════════
 
-function calcFrecuencia(posts, empresas) {
-  // Count posts per company, calculate avg
+function calcFrecuencia(posts) {
   var counts = {}
   for (var i = 0; i < posts.length; i++) {
     var key = posts[i].nombre || posts[i].handle || 'desconocido'
     counts[key] = (counts[key] || 0) + 1
   }
   var vals = Object.values(counts)
-  if (vals.length === 0) return { nombre: 'Frecuencia de publicacion', score: 4 }
+  if (vals.length === 0) return { nombre: 'Frecuencia de publicacion', score: 4, fuente: 'competencia', descripcion: 'Sin datos de frecuencia', dato: '0 posts' }
   var avg = vals.reduce(function(s, v) { return s + v }, 0) / vals.length
 
   var score = 4
@@ -41,11 +40,11 @@ function calcFrecuencia(posts, empresas) {
   else if (avg >= 8) score = 8
   else if (avg >= 4) score = 6
 
-  return { nombre: 'Frecuencia de publicacion', score: score }
+  return { nombre: 'Frecuencia de publicacion', score: score, fuente: 'competencia', descripcion: 'Promedio de posts por empresa monitoreada en el periodo', dato: Math.round(avg) + ' posts/empresa promedio' }
 }
 
 function calcEngagement(posts) {
-  if (posts.length === 0) return { nombre: 'Engagement rate', score: 4 }
+  if (posts.length === 0) return { nombre: 'Engagement rate', score: 4, fuente: 'competencia', descripcion: 'Sin datos', dato: '0' }
 
   var total = posts.reduce(function(s, p) {
     return s + (p.likes || 0) + (p.comments || 0)
@@ -57,13 +56,12 @@ function calcEngagement(posts) {
   else if (avg >= 50) score = 8
   else if (avg >= 20) score = 6
 
-  return { nombre: 'Engagement rate', score: score }
+  return { nombre: 'Engagement rate', score: score, fuente: 'competencia', descripcion: 'Promedio de likes+comments por post de la competencia', dato: 'avg ' + Math.round(avg) + ' eng/post' }
 }
 
 function calcConsistencia(posts) {
-  if (posts.length === 0) return { nombre: 'Consistencia visual', score: 4 }
+  if (posts.length === 0) return { nombre: 'Consistencia de publicacion', score: 4, fuente: 'competencia', descripcion: 'Sin datos', dato: '' }
 
-  // Group posts by week number
   var weeks = {}
   for (var i = 0; i < posts.length; i++) {
     var fecha = posts[i].fecha || posts[i].postedAt || posts[i].created_at
@@ -73,7 +71,7 @@ function calcConsistencia(posts) {
   }
 
   var vals = Object.values(weeks)
-  if (vals.length < 2) return { nombre: 'Consistencia visual', score: 6 }
+  if (vals.length < 2) return { nombre: 'Consistencia de publicacion', score: 6, fuente: 'competencia', descripcion: 'Pocas semanas de datos', dato: vals.length + ' semanas' }
 
   var sd = stddev(vals)
   var score = 4
@@ -81,51 +79,44 @@ function calcConsistencia(posts) {
   else if (sd < 2) score = 8
   else if (sd < 3) score = 6
 
-  return { nombre: 'Consistencia visual', score: score }
+  return { nombre: 'Consistencia de publicacion', score: score, fuente: 'competencia', descripcion: 'Que tan regular es la frecuencia de publicacion semana a semana (desv. estandar)', dato: 'desv. ' + sd.toFixed(1) + ' posts/semana' }
 }
 
 function calcCalidadCopies(contenido) {
-  if (!contenido || contenido.length === 0) return { nombre: 'Calidad de copies', score: 7 }
+  if (!contenido || contenido.length === 0) return { nombre: 'Calidad de copies generados', score: 7, fuente: 'copies_generados', descripcion: 'Sin copies para evaluar', dato: '' }
 
   var scores = contenido.map(function(c) { return c.score_promedio || 0 }).filter(function(s) { return s > 0 })
-  if (scores.length === 0) return { nombre: 'Calidad de copies', score: 7 }
+  if (scores.length === 0) return { nombre: 'Calidad de copies generados', score: 7, fuente: 'copies_generados', descripcion: 'Sin scores', dato: '' }
 
   var avg = scores.reduce(function(s, v) { return s + v }, 0) / scores.length
-
   var score = 4
   if (avg >= 85) score = 10
   else if (avg >= 75) score = 8
   else if (avg >= 65) score = 6
 
-  return { nombre: 'Calidad de copies', score: score }
+  return { nombre: 'Calidad de copies generados', score: score, fuente: 'copies_generados', descripcion: 'Score promedio del QA automatico sobre copies generados por Copilot', dato: 'avg ' + Math.round(avg) + '/95' }
 }
 
 function calcHashtags(contenido) {
-  if (!contenido || contenido.length === 0) return { nombre: 'Uso de hashtags', score: 8 }
+  if (!contenido || contenido.length === 0) return { nombre: 'Uso de hashtags', score: 8, fuente: 'copies_generados', descripcion: 'Sin copies', dato: '' }
 
-  // Check if generated copies have hashtags
-  var conHashtags = 0
-  var total = 0
+  var conHashtags = 0; var total = 0
   for (var i = 0; i < contenido.length; i++) {
     var datos = contenido[i].datos || []
     if (!Array.isArray(datos)) continue
-    for (var j = 0; j < datos.length; j++) {
-      total++
-      if (datos[j].copy && datos[j].copy.includes('#')) conHashtags++
-    }
+    for (var j = 0; j < datos.length; j++) { total++; if (datos[j].copy && datos[j].copy.includes('#')) conHashtags++ }
   }
-
-  if (total === 0) return { nombre: 'Uso de hashtags', score: 8 }
-  return { nombre: 'Uso de hashtags', score: (conHashtags / total) >= 0.5 ? 8 : 6 }
+  if (total === 0) return { nombre: 'Uso de hashtags', score: 8, fuente: 'copies_generados', descripcion: 'Sin copies', dato: '' }
+  var pct = Math.round((conHashtags / total) * 100)
+  return { nombre: 'Uso de hashtags', score: pct >= 50 ? 8 : 6, fuente: 'copies_generados', descripcion: 'Porcentaje de copies que incluyen hashtags', dato: conHashtags + '/' + total + ' (' + pct + '%)' }
 }
 
 function calcHorarios() {
-  // We don't track exact times yet
-  return { nombre: 'Horarios de publicacion', score: 7 }
+  return { nombre: 'Horarios de publicacion', score: 7, fuente: 'estimado', descripcion: 'No se trackean horarios exactos aun — score estimado', dato: 'N/A' }
 }
 
 function calcVariedad(posts) {
-  if (posts.length === 0) return { nombre: 'Variedad de formatos', score: 4 }
+  if (posts.length === 0) return { nombre: 'Variedad de formatos', score: 4, fuente: 'competencia', descripcion: 'Sin posts', dato: '' }
 
   var tipos = {}
   for (var i = 0; i < posts.length; i++) {
@@ -133,26 +124,23 @@ function calcVariedad(posts) {
     tipos[tipo] = true
   }
   var count = Object.keys(tipos).length
-
   var score = 4
   if (count >= 4) score = 10
   else if (count >= 3) score = 8
   else if (count >= 2) score = 6
 
-  return { nombre: 'Variedad de formatos', score: score }
+  return { nombre: 'Variedad de formatos', score: score, fuente: 'competencia', descripcion: 'Cantidad de formatos distintos usados (imagen, video, carrusel, etc)', dato: count + ' formatos: ' + Object.keys(tipos).join(', ') }
 }
 
 function calcInteraccion(posts) {
-  if (posts.length === 0) return { nombre: 'Interaccion con audiencia', score: 4 }
+  if (posts.length === 0) return { nombre: 'Interaccion con audiencia', score: 4, fuente: 'competencia', descripcion: 'Sin posts', dato: '' }
 
   var ratios = []
   for (var i = 0; i < posts.length; i++) {
-    var likes = posts[i].likes || 0
-    var comments = posts[i].comments || 0
+    var likes = posts[i].likes || 0; var comments = posts[i].comments || 0
     if (likes > 0) ratios.push(comments / likes)
   }
-
-  if (ratios.length === 0) return { nombre: 'Interaccion con audiencia', score: 4 }
+  if (ratios.length === 0) return { nombre: 'Interaccion con audiencia', score: 4, fuente: 'competencia', descripcion: 'Sin datos', dato: '' }
   var avgRatio = ratios.reduce(function(s, v) { return s + v }, 0) / ratios.length
 
   var score = 4
@@ -160,7 +148,7 @@ function calcInteraccion(posts) {
   else if (avgRatio > 0.03) score = 8
   else if (avgRatio > 0.01) score = 6
 
-  return { nombre: 'Interaccion con audiencia', score: score }
+  return { nombre: 'Interaccion con audiencia', score: score, fuente: 'competencia', descripcion: 'Ratio comments/likes — que tanta conversacion generan los posts', dato: 'ratio ' + (avgRatio * 100).toFixed(1) + '% comments/likes' }
 }
 
 // ═══════════════════════════════════════════════
@@ -242,17 +230,15 @@ async function generarAuditoria(posts, contenido, cuentas, supabase, suscripcion
     if (frecReal >= 12) scoreFrecReal = 10
     else if (frecReal >= 8) scoreFrecReal = 8
     else if (frecReal >= 4) scoreFrecReal = 6
-    criterios.push({ nombre: 'Frecuencia real del cliente', score: scoreFrecReal })
+    criterios.push({ nombre: 'Frecuencia real del cliente', score: scoreFrecReal, fuente: 'cliente', descripcion: 'Posts publicados por TU cuenta en el periodo', dato: frecReal + ' posts propios' })
 
-    // Engagement REAL del cliente
     var avgEngReal = Math.round(postsCliente.reduce(function(s, p) { return s + (p.likes || 0) + (p.comments || 0) }, 0) / postsCliente.length)
     var scoreEngReal = 4
     if (avgEngReal >= 100) scoreEngReal = 10
     else if (avgEngReal >= 50) scoreEngReal = 8
     else if (avgEngReal >= 20) scoreEngReal = 6
-    criterios.push({ nombre: 'Engagement real del cliente (avg ' + avgEngReal + ')', score: scoreEngReal })
+    criterios.push({ nombre: 'Engagement real del cliente', score: scoreEngReal, fuente: 'cliente', descripcion: 'Promedio de likes+comments en TUS posts', dato: 'avg ' + avgEngReal + ' eng/post' })
 
-    // Engagement cliente vs competencia
     var avgEngComp = posts.length > 0 ? Math.round(posts.reduce(function(s, p) { return s + (p.likes || 0) + (p.comments || 0) }, 0) / posts.length) : 0
     var ratio = avgEngComp > 0 ? avgEngReal / avgEngComp : 1
     var scoreVsComp = 5
@@ -260,7 +246,7 @@ async function generarAuditoria(posts, contenido, cuentas, supabase, suscripcion
     else if (ratio >= 1.0) scoreVsComp = 8
     else if (ratio >= 0.5) scoreVsComp = 5
     else scoreVsComp = 3
-    criterios.push({ nombre: 'Cliente vs competencia (ratio ' + ratio.toFixed(1) + 'x)', score: scoreVsComp })
+    criterios.push({ nombre: 'Tu engagement vs competencia', score: scoreVsComp, fuente: 'cliente+competencia', descripcion: 'Ratio entre TU engagement y el de la competencia', dato: 'ratio ' + ratio.toFixed(1) + 'x (tu: ' + avgEngReal + ' vs comp: ' + avgEngComp + ')' })
 
     console.log('   Frecuencia real: ' + frecReal + ' posts (score ' + scoreFrecReal + ')')
     console.log('   Engagement real: avg ' + avgEngReal + ' (score ' + scoreEngReal + ')')
@@ -414,6 +400,13 @@ async function generarAuditoria(posts, contenido, cuentas, supabase, suscripcion
   console.log('   Recomendaciones: ' + recomendaciones.length)
   console.log('   === AUDITORIA COMPLETADA ===\n')
 
+  // Contexto explicativo
+  var contexto = 'Basado en ' + posts.length + ' posts de competencia'
+  if (postsCliente.length > 0) contexto += ' + ' + postsCliente.length + ' posts de tu cuenta'
+  if (contenido.length > 0) contexto += ' + ' + contenido.length + ' batches de copies generados'
+  var fuentesUsadas = criterios.map(function(c) { return c.fuente }).filter(function(f, i, arr) { return arr.indexOf(f) === i })
+  contexto += '. Fuentes: ' + fuentesUsadas.join(', ') + '.'
+
   return {
     score_general: scoreGeneral100,
     scores_red: scoresRed,
@@ -421,6 +414,7 @@ async function generarAuditoria(posts, contenido, cuentas, supabase, suscripcion
     fortaleza: fortaleza,
     debilidad: debilidad,
     recomendaciones: recomendaciones,
+    contexto: contexto,
     datos_cliente: postsCliente.length > 0 ? {
       posts: postsCliente.length,
       avg_engagement: Math.round(postsCliente.reduce(function(s,p){return s+(p.likes||0)+(p.comments||0)},0) / postsCliente.length),

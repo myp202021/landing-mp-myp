@@ -335,10 +335,32 @@ async function generarBrief(suscriptor, posts, supabase, memoria) {
       + (brief.competidores_analizados.length || 0) + ' competidores, '
       + (brief.reglas_contenido ? brief.reglas_contenido.length : 0) + ' reglas')
 
-    // ═══ 5. Guardar en Supabase (dentro de perfil_empresa como sub-campo) ═══
+    // ═══ 5. Guardar en Supabase con versionado ═══
     if (supabase && suscriptor.id) {
       try {
         var perfilActual = suscriptor.perfil_empresa || {}
+
+        // Versionado: si ya hay un brief, guardarlo en historial antes de sobreescribir
+        if (perfilActual.brief && perfilActual.brief.fecha_generacion) {
+          // Solo versionar si NO fue editado por el cliente (respeto)
+          if (!perfilActual.brief.editado_por_cliente) {
+            if (!Array.isArray(perfilActual.brief_historial)) perfilActual.brief_historial = []
+            // Guardar max 6 versiones anteriores
+            perfilActual.brief_historial.unshift({
+              fecha: perfilActual.brief.fecha_generacion,
+              territorios: (perfilActual.brief.territorios_contenido || []).length,
+              competidores: (perfilActual.brief.competidores_analizados || []).length,
+              propuesta_valor: (perfilActual.brief.propuesta_valor_unica || '').substring(0, 100),
+            })
+            if (perfilActual.brief_historial.length > 6) perfilActual.brief_historial = perfilActual.brief_historial.slice(0, 6)
+            console.log('   Brief anterior versionado (' + perfilActual.brief_historial.length + ' versiones en historial)')
+          } else {
+            console.log('   Brief anterior editado por cliente — NO se sobreescribe, se conserva')
+            // No reemplazar un brief editado por el cliente
+            return perfilActual.brief
+          }
+        }
+
         perfilActual.brief = brief
         var upd = await supabase.from('clipping_suscripciones')
           .update({ perfil_empresa: perfilActual, updated_at: new Date().toISOString() })
