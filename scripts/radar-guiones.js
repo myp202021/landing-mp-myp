@@ -201,6 +201,17 @@ async function generarGuiones(posts, empresas, perfil, copiesGenerados, supabase
     + '1. Por que elegiste ESTE post de competencia como referencia y no otro\n'
     + '2. Que patron del post original estas replicando (formato, ritmo, tema)\n'
     + '3. Como lo diferencias para ' + nombreEmpresa + '\n\n'
+    + 'CADA guion tambien DEBE incluir:\n'
+    + '- formato_recomendado: "reel_vertical" | "reel_horizontal" | "carousel_video" | "story_sequence" | "live_snippet"\n'
+    + '- storyboard: array de 3-6 frames visuales simplificados, cada uno con:\n'
+    + '  * frame: numero (1, 2, 3...)\n'
+    + '  * descripcion_visual: descripcion corta de lo que se ve (1 oración)\n'
+    + '  * texto_overlay: texto que aparece en pantalla en este frame\n'
+    + '  * duracion: "3s", "5s", etc.\n'
+    + '  * nota_produccion: tip para el editor/camarografo (ej: "usar filtro warm", "transición rápida")\n'
+    + '- equipamiento: lo mínimo necesario para grabar (ej: "celular + trípode + luz natural")\n'
+    + '- nivel_produccion: "bajo" (celular) | "medio" (camara + micro) | "alto" (equipo completo)\n'
+    + '- tiempo_estimado_grabacion: "15 min" | "30 min" | "1 hora"\n\n'
     + 'Responde SOLO JSON valido: { "razonamiento": "...", "guiones": [...] }'
 
   try {
