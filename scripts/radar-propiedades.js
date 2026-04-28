@@ -327,6 +327,142 @@ async function saveAndDetectNew(listings) {
   return { newListings, updated, total: listings.length }
 }
 
+// ── Extraer contactos de vendedores ──────────────────────
+
+async function extraerContactos(listings) {
+  // Visitar cada listing en PI y extraer datos del vendedor
+  // PI muestra: nombre agencia/vendedor, teléfono (a veces oculto), ubicación
+  // Usamos Apify puppeteer para renderizar la página y extraer
+
+  const urls = listings.map(l => ({
+    url: l.link,
+    userData: { id: l.id, title: l.title }
+  }))
+
+  if (urls.length === 0) return
+
+  // Limitar a máximo 20 listings por run (para no gastar mucho en Apify)
+  const batch = urls.slice(0, 20)
+  console.log(`   Visitando ${batch.length} listings para extraer contactos...`)
+
+  try {
+    const runRes = await fetch(`https://api.apify.com/v2/acts/apify~puppeteer-scraper/runs?token=${APIFY_TOKEN}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        startUrls: batch,
+        keepUrlFragment: false,
+        maxRequestsPerCrawl: batch.length,
+        maxConcurrency: 3,
+        proxyConfiguration: { useApifyProxy: true, apifyProxyGroups: ['RESIDENTIAL'] },
+        pageFunction: `async function pageFunction(context) {
+          const { page, request } = context;
+          await page.waitForTimeout(3000);
+
+          // Intentar hacer clic en "Ver teléfono" si existe
+          try {
+            const verTelBtn = await page.$('button[data-testid="seller-phone-button"], button:has-text("Ver teléfono"), .seller-phone button');
+            if (verTelBtn) {
+              await verTelBtn.click();
+              await page.waitForTimeout(2000);
+            }
+          } catch(e) {}
+
+          // Extraer datos del vendedor
+          const html = await page.content();
+
+          // Nombre del vendedor/agencia
+          let vendedor = '';
+          const vendedorMatch = html.match(/seller-info.*?<h3[^>]*>(.*?)<\\/h3>/s) || html.match(/official-store-info.*?<p[^>]*class="[^"]*title[^"]*"[^>]*>(.*?)<\\/p>/s);
+          if (vendedorMatch) vendedor = vendedorMatch[1].replace(/<[^>]*>/g, '').trim();
+
+          // Teléfono
+          let telefono = '';
+          const telMatch = html.match(/tel:(\\+?[\\d\\s-]+)/) || html.match(/seller-phone.*?([+\\d][\\d\\s-]{7,})/s) || html.match(/(\\+56[\\d\\s-]{8,})/);
+          if (telMatch) telefono = telMatch[1].replace(/\\s+/g, ' ').trim();
+
+          // Tipo (particular, inmobiliaria, corredora)
+          let tipo = 'particular';
+          if (html.includes('official-store') || html.includes('real_estate') || html.includes('inmobiliaria')) tipo = 'inmobiliaria';
+          if (html.includes('corredora') || html.includes('Corredora')) tipo = 'corredora';
+
+          return {
+            id: request.userData.id,
+            title: request.userData.title,
+            vendedor: vendedor,
+            telefono: telefono,
+            tipo: tipo,
+            url: request.url,
+          };
+        }`,
+        preNavigationHooks: `[
+          async ({ page }) => {
+            await page.setExtraHTTPHeaders({ 'Accept-Language': 'es-CL,es;q=0.9' });
+          }
+        ]`,
+      }),
+    })
+
+    if (!runRes.ok) {
+      console.log(`   ⚠️ Apify contactos HTTP ${runRes.status}`)
+      return
+    }
+
+    const runData = await runRes.json()
+    const runId = runData.data?.id
+    if (!runId) { console.log('   ⚠️ Sin run ID para contactos'); return }
+
+    // Esperar a que termine (máximo 5 minutos)
+    let status = 'RUNNING'
+    for (let i = 0; i < 30; i++) {
+      await new Promise(r => setTimeout(r, 10000))
+      const check = await fetch(`https://api.apify.com/v2/actor-runs/${runId}?token=${APIFY_TOKEN}`)
+      const checkData = await check.json()
+      status = checkData.data?.status
+      if (status === 'SUCCEEDED' || status === 'FAILED' || status === 'ABORTED') break
+    }
+
+    if (status !== 'SUCCEEDED') {
+      console.log(`   ⚠️ Apify contactos status: ${status}`)
+      return
+    }
+
+    // Descargar resultados
+    const datasetId = runData.data?.defaultDatasetId
+    const itemsRes = await fetch(`https://api.apify.com/v2/datasets/${datasetId}/items?token=${APIFY_TOKEN}`)
+    const contactos = await itemsRes.json()
+
+    console.log(`   Contactos extraídos: ${contactos.length}`)
+
+    // Guardar en Supabase
+    let guardados = 0
+    for (const c of contactos) {
+      if (c.id && (c.vendedor || c.telefono)) {
+        const { error } = await supabase.from('pi_listings').update({
+          vendedor_nombre: c.vendedor || null,
+          vendedor_telefono: c.telefono || null,
+          vendedor_tipo: c.tipo || 'particular',
+        }).eq('id', c.id)
+        if (!error) guardados++
+      }
+    }
+    console.log(`   Contactos guardados en BD: ${guardados}`)
+
+    // Agregar contactos a los listings para el email
+    for (const l of listings) {
+      const c = contactos.find(x => x.id === l.id)
+      if (c) {
+        l.vendedor_nombre = c.vendedor
+        l.vendedor_telefono = c.telefono
+        l.vendedor_tipo = c.tipo
+      }
+    }
+
+  } catch (e) {
+    console.log(`   ⚠️ Error extrayendo contactos: ${e.message}`)
+  }
+}
+
 // ── Send email ──────────────────────────────────────────
 
 async function sendEmail(newListings, totalScraped, pubHoy, pubSemana) {
@@ -351,9 +487,10 @@ async function sendEmail(newListings, totalScraped, pubHoy, pubSemana) {
         <td style="padding:8px 10px;border-bottom:1px solid #f0f0f0;font-size:13px;font-weight:800;color:#1B2A4A;">${l.price_uf.toLocaleString()} UF</td>
         <td style="padding:8px 10px;border-bottom:1px solid #f0f0f0;font-size:11px;">${l.beds || '—'} dorm · ${l.baths || '—'} baños · ${l.m2 || '—'} m²</td>
         <td style="padding:8px 10px;border-bottom:1px solid #f0f0f0;">${tag}</td>
+        <td style="padding:8px 10px;border-bottom:1px solid #f0f0f0;font-size:11px;">${l.vendedor_nombre ? '<strong>' + l.vendedor_nombre + '</strong>' : '—'}${l.vendedor_telefono ? '<br><a href="tel:' + l.vendedor_telefono + '" style="color:#2563EB;">' + l.vendedor_telefono + '</a>' : ''}${l.vendedor_tipo && l.vendedor_tipo !== 'particular' ? '<br><span style="color:#6b7280;font-size:9px;">' + l.vendedor_tipo + '</span>' : ''}</td>
         <td style="padding:8px 10px;border-bottom:1px solid #f0f0f0;"><a href="${l.link}" style="color:#2563EB;font-size:11px;text-decoration:none;">Ver →</a></td>
       </tr>`}).join('')
-    : '<tr><td colspan="6" style="padding:20px;text-align:center;color:#999;">No hay propiedades nuevas hoy.</td></tr>'
+    : '<tr><td colspan="7" style="padding:20px;text-align:center;color:#999;">No hay propiedades nuevas hoy.</td></tr>'
 
   const html = `<!DOCTYPE html><html><head><meta charset="utf-8"></head>
   <body style="margin:0;padding:0;background:#f0f2f5;font-family:Arial,sans-serif;">
@@ -402,6 +539,7 @@ async function sendEmail(newListings, totalScraped, pubHoy, pubSemana) {
         <th style="padding:6px 10px;color:white;font-size:9px;text-align:left;">Precio</th>
         <th style="padding:6px 10px;color:white;font-size:9px;text-align:left;">Detalle</th>
         <th style="padding:6px 10px;color:white;font-size:9px;text-align:left;">Pub.</th>
+        <th style="padding:6px 10px;color:white;font-size:9px;text-align:left;">Contacto</th>
         <th style="padding:6px 10px;color:white;font-size:9px;text-align:left;">Link</th>
       </tr>
       ${listingsHtml}
@@ -498,6 +636,12 @@ async function main() {
   const { newListings, updated, total } = await saveAndDetectNew(allListings)
   console.log(`   Nuevas: ${newListings.length}`)
   console.log(`   Actualizadas: ${updated}`)
+
+  // Extraer contactos de vendedores de listings nuevos
+  if (newListings.length > 0) {
+    console.log(`\n   📞 Extrayendo contactos de ${newListings.length} listings nuevos...`)
+    await extraerContactos(newListings)
+  }
 
   // Send email
   await sendEmail(newListings, total, pubHoy, pubSemana)
