@@ -385,6 +385,37 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
     })
   }
 
+  var [feedbackSending, setFeedbackSending] = useState('')
+  var [feedbackSent, setFeedbackSent] = useState('')
+
+  async function enviarFeedback(tipo: string, feedback: string, accion: string, itemId?: string) {
+    setFeedbackSending(itemId || tipo)
+    try {
+      await fetch('/api/copilot/feedback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          suscripcion_id: props.suscripcionId,
+          tipo: tipo,
+          feedback: feedback,
+          accion: accion,
+          item_id: itemId,
+        }),
+      })
+      setFeedbackSent(itemId || tipo)
+      setTimeout(function() { setFeedbackSent('') }, 3000)
+      // Recargar aprendizajes
+      try {
+        var r = await fetch(SUPABASE_URL + '/rest/v1/copilot_aprendizajes?suscripcion_id=eq.' + props.suscripcionId + '&activo=eq.true&select=*&order=confianza.desc&limit=20', { headers: hdrs() })
+        var data = await r.json()
+        setAprendizajes(Array.isArray(data) ? data : [])
+      } catch (e) {}
+    } catch (e) {
+      console.error('Feedback error:', e)
+    }
+    setFeedbackSending('')
+  }
+
   if (error) return (
     <div className="min-h-screen bg-[#0F0D2E] flex items-center justify-center">
       <div className="text-center"><p className="text-xl font-bold text-white mb-2">M&P Copilot</p><p className="text-[#94a3b8]">{error}</p></div>
@@ -1077,6 +1108,19 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
                             <p className="text-xs text-indigo-400 mt-2 pt-2 border-t border-white/[0.04]">{hashtagStr}</p>
                           )}
                           {c.justificacion && <p className="text-xs text-indigo-600 mt-2">{c.justificacion}</p>}
+                          <div className="flex gap-2 mt-2 pt-2 border-t border-white/[0.04]">
+                            <button onClick={function() { enviarFeedback('contenido', 'Copy aprobado: ' + (c.titulo || '').substring(0, 50), 'aprobar', copyKey) }}
+                              className={'text-[10px] px-2 py-1 rounded transition ' + (feedbackSent === copyKey ? 'bg-green-500/20 text-green-400' : 'bg-green-900/20 text-green-500 hover:bg-green-900/40')}>
+                              {feedbackSent === copyKey ? 'Guardado' : 'Aprobar'}
+                            </button>
+                            <button onClick={function() {
+                              var razon = prompt('Por qu\u00e9 rechazas este copy?')
+                              if (razon) enviarFeedback('contenido', 'Copy rechazado "' + (c.titulo || '') + '": ' + razon, 'rechazar', copyKey)
+                            }}
+                              className="text-[10px] px-2 py-1 rounded bg-red-900/20 text-red-400 hover:bg-red-900/40 transition">
+                              Rechazar
+                            </button>
+                          </div>
                         </div>
                       })}
                     </div>
