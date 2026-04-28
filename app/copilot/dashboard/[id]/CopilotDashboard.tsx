@@ -286,6 +286,9 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
   var [guiones, setGuiones] = useState([] as any[])
   var [ideas, setIdeas] = useState([] as any[])
   var [benchmarks, setBenchmarks] = useState([] as any[])
+  var [adsCreativos, setAdsCreativos] = useState([] as any[])
+  var [arboles, setArboles] = useState([] as any[])
+  var [aprendizajes, setAprendizajes] = useState([] as any[])
   var [loading, setLoading] = useState(true)
   var [error, setError] = useState('')
   var [periodo, setPeriodo] = useState('7d')
@@ -352,6 +355,25 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
       var r7 = await fetch(SUPABASE_URL + '/rest/v1/copilot_benchmarks?suscripcion_id=eq.' + props.suscripcionId + '&select=*&order=created_at.desc', { headers: hdrs() })
       var bData = await r7.json()
       setBenchmarks(Array.isArray(bData) ? bData : [])
+
+      // Nuevas tablas Copilot
+      try {
+        var r8 = await fetch(SUPABASE_URL + '/rest/v1/copilot_ads_creativos?suscripcion_id=eq.' + props.suscripcionId + '&select=*&order=created_at.desc', { headers: hdrs() })
+        var adsData = await r8.json()
+        setAdsCreativos(Array.isArray(adsData) ? adsData : [])
+      } catch (e) { /* tabla puede no existir */ }
+
+      try {
+        var r9 = await fetch(SUPABASE_URL + '/rest/v1/copilot_arboles?suscripcion_id=eq.' + props.suscripcionId + '&select=*&order=created_at.desc', { headers: hdrs() })
+        var arbolesData = await r9.json()
+        setArboles(Array.isArray(arbolesData) ? arbolesData : [])
+      } catch (e) { /* tabla puede no existir */ }
+
+      try {
+        var r10 = await fetch(SUPABASE_URL + '/rest/v1/copilot_aprendizajes?suscripcion_id=eq.' + props.suscripcionId + '&activo=eq.true&select=*&order=confianza.desc&limit=20', { headers: hdrs() })
+        var apData = await r10.json()
+        setAprendizajes(Array.isArray(apData) ? apData : [])
+      } catch (e) { /* tabla puede no existir */ }
     } catch (e) { setError('Error cargando datos') }
     setLoading(false)
   }
@@ -451,6 +473,8 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
             { key: 'auditoria', label: 'Auditor\u00EDa', icon: '\uD83D\uDCCA', color: 'text-teal-700' },
             { key: 'guiones', label: 'Guiones', icon: '\uD83C\uDFAC', color: 'text-pink-700' },
             { key: 'benchmark', label: 'Benchmark', icon: '\uD83C\uDFC6', color: 'text-orange-700' },
+            { key: 'ads', label: 'Ads', icon: '\uD83C\uDFAF', color: 'text-rose-700' },
+            { key: 'arbol', label: '\u00C1rbol', icon: '\uD83C\uDF33', color: 'text-lime-700' },
             { key: 'ideas', label: 'Ideas', icon: '\uD83D\uDCA1', color: 'text-amber-700' },
             { key: 'reporte', label: 'Reporte', icon: '\uD83D\uDCCB', color: 'text-emerald-700' },
           ].map(function(t) {
@@ -1480,6 +1504,167 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
                     </div>
                   )}
                 </div>
+              </div>
+            )}
+          </>
+        })()}
+
+        {/* TAB: ADS CREATIVOS */}
+        {tab === 'ads' && (function() {
+          var adsMes = adsCreativos.filter(function(a: any) { return a.mes === mesGlobal && a.anio === anioGlobal })
+          var ads = adsMes.length > 0 ? adsMes[0] : (adsCreativos.length > 0 ? adsCreativos[0] : null)
+          var datos = ads && ads.datos ? ads.datos : null
+
+          return <>
+            <h2 className="text-lg font-bold text-white mb-4">Ads creativos sugeridos</h2>
+            {datos ? (
+              <div className="space-y-4">
+                {datos.google_ads && datos.google_ads.length > 0 && (
+                  <div>
+                    <h3 className="text-sm font-bold text-indigo-400 mb-2">Google Ads</h3>
+                    {datos.google_ads.map(function(grupo: any, gi: number) {
+                      return <div key={gi} className="bg-[#1a1745] rounded-xl border border-white/[0.06] p-4 mb-3">
+                        <div className="text-sm font-bold text-white mb-2">{grupo.nombre_grupo || grupo.nombre || 'Grupo ' + (gi + 1)}</div>
+                        {grupo.keywords_sugeridas && <p className="text-xs text-[#64748b] mb-2">Keywords: {grupo.keywords_sugeridas.join(', ')}</p>}
+                        <div className="space-y-1">
+                          {(grupo.headlines || []).map(function(h: string, hi: number) {
+                            return <div key={hi} className="flex items-center gap-2">
+                              <span className="text-xs text-[#475569] w-6">H{hi + 1}</span>
+                              <span className="text-sm text-white bg-[#0f0d2e] px-2 py-1 rounded flex-1">{h}</span>
+                              <span className="text-xs text-[#475569]">{h.length}/30</span>
+                            </div>
+                          })}
+                          {(grupo.descriptions || []).map(function(d: string, di: number) {
+                            return <div key={di} className="flex items-center gap-2 mt-1">
+                              <span className="text-xs text-[#475569] w-6">D{di + 1}</span>
+                              <span className="text-sm text-[#94a3b8] bg-[#0f0d2e] px-2 py-1 rounded flex-1">{d}</span>
+                              <span className="text-xs text-[#475569]">{d.length}/90</span>
+                            </div>
+                          })}
+                        </div>
+                        {grupo.razon && <p className="text-xs text-[#64748b] mt-2 italic">{grupo.razon}</p>}
+                      </div>
+                    })}
+                  </div>
+                )}
+                {datos.meta_ads && datos.meta_ads.length > 0 && (
+                  <div>
+                    <h3 className="text-sm font-bold text-pink-400 mb-2">Meta Ads</h3>
+                    {datos.meta_ads.map(function(conjunto: any, ci: number) {
+                      return <div key={ci} className="bg-[#1a1745] rounded-xl border border-white/[0.06] p-4 mb-3">
+                        <div className="text-sm font-bold text-white mb-2">{conjunto.nombre_conjunto || 'Conjunto ' + (ci + 1)}</div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                          {(conjunto.variaciones || []).map(function(v: any, vi: number) {
+                            return <div key={vi} className="bg-[#0f0d2e] rounded-lg p-3">
+                              <span className="text-xs font-bold text-purple-400 uppercase">{v.angulo || 'copy'}</span>
+                              <p className="text-sm text-white mt-1">{v.primary_text || v.primary_text_125 || ''}</p>
+                              <p className="text-xs text-indigo-300 font-bold mt-1">{v.headline || v.headline_40 || ''}</p>
+                              <div className="flex items-center gap-2 mt-2">
+                                <span className="text-xs bg-indigo-500/20 text-indigo-300 px-2 py-0.5 rounded">{v.cta || 'CTA'}</span>
+                                <span className="text-xs text-[#475569]">{v.formato_sugerido || ''}</span>
+                              </div>
+                            </div>
+                          })}
+                        </div>
+                        {conjunto.razon && <p className="text-xs text-[#64748b] mt-2 italic">{conjunto.razon}</p>}
+                      </div>
+                    })}
+                  </div>
+                )}
+                {datos.recomendaciones_ab_test && (
+                  <div className="bg-[#1a1745] rounded-xl border border-white/[0.06] p-4">
+                    <h3 className="text-sm font-bold text-amber-400 mb-2">A/B Test sugerido</h3>
+                    {datos.recomendaciones_ab_test.map(function(r: string, ri: number) {
+                      return <p key={ri} className="text-sm text-[#94a3b8]">{r}</p>
+                    })}
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="bg-[#1a1745] rounded-xl border border-white/[0.06] px-6 py-12 text-center">
+                <div className="text-4xl mb-3">{'\uD83C\uDFAF'}</div>
+                <p className="text-[#64748b] mb-2">Los ads creativos se generan junto con la grilla mensual</p>
+                <p className="text-xs text-[#475569]">Incluye headlines Google (30 chars), copies Meta con variaciones por {'á'}ngulo.</p>
+              </div>
+            )}
+          </>
+        })()}
+
+        {/* TAB: ÁRBOL DE DECISIÓN */}
+        {tab === 'arbol' && (function() {
+          var arbolMes = arboles.filter(function(a: any) { return a.mes === mesGlobal && a.anio === anioGlobal })
+          var arbol = arbolMes.length > 0 ? arbolMes[0] : (arboles.length > 0 ? arboles[0] : null)
+          var datos = arbol && arbol.datos ? arbol.datos : null
+
+          return <>
+            <h2 className="text-lg font-bold text-white mb-4">{'\u00C1'}rbol de decisi{'ó'}n digital</h2>
+            {datos ? (
+              <div className="space-y-4">
+                {datos.resumen && (
+                  <div className="bg-gradient-to-r from-indigo-500/10 to-purple-500/10 border border-indigo-500/20 rounded-xl p-4">
+                    <p className="text-sm text-[#c4b5fd]">{datos.resumen}</p>
+                  </div>
+                )}
+                <div className="bg-gradient-to-r from-[#2563EB] to-[#9333EA] rounded-xl p-4 text-center">
+                  <p className="text-white font-bold text-lg">Presupuesto total: ${(datos.presupuesto_total || 0).toLocaleString()}</p>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {(datos.ramas || []).map(function(rama: any, ri: number) {
+                    return <div key={ri} className="bg-[#1a1745] rounded-xl border border-white/[0.06] p-4">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-sm font-bold text-white">{rama.nombre || rama.plataforma}</span>
+                        <span className="text-xs bg-indigo-500/20 text-indigo-300 px-2 py-1 rounded font-bold">{rama.porcentaje || '?'}%</span>
+                      </div>
+                      <p className="text-lg font-bold text-indigo-400">${(rama.presupuesto || 0).toLocaleString()}</p>
+                      <p className="text-xs text-[#64748b] mt-1">{rama.segmentacion || rama.objetivo || ''}</p>
+                      {rama.kpis_esperados && (
+                        <div className="grid grid-cols-3 gap-2 mt-3">
+                          {rama.kpis_esperados.leads !== undefined && <div className="text-center"><div className="text-sm font-bold text-green-400">{rama.kpis_esperados.leads}</div><div className="text-xs text-[#475569]">leads</div></div>}
+                          {rama.kpis_esperados.cpl !== undefined && <div className="text-center"><div className="text-sm font-bold text-amber-400">${rama.kpis_esperados.cpl.toLocaleString()}</div><div className="text-xs text-[#475569]">CPL</div></div>}
+                          {rama.kpis_esperados.cpc !== undefined && <div className="text-center"><div className="text-sm font-bold text-cyan-400">${rama.kpis_esperados.cpc.toLocaleString()}</div><div className="text-xs text-[#475569]">CPC</div></div>}
+                        </div>
+                      )}
+                      {rama.criterio_poda && <p className="text-xs text-red-400/70 mt-2">Poda: {rama.criterio_poda}</p>}
+                    </div>
+                  })}
+                </div>
+                {datos.escenarios && (
+                  <div>
+                    <h3 className="text-sm font-bold text-white mb-2">Escenarios</h3>
+                    <div className="grid grid-cols-3 gap-3">
+                      {['pesimista', 'realista', 'optimista'].map(function(esc) {
+                        var e = datos.escenarios[esc] || {}
+                        var colors: any = { pesimista: 'text-red-400', realista: 'text-indigo-400', optimista: 'text-green-400' }
+                        return <div key={esc} className="bg-[#1a1745] rounded-xl border border-white/[0.06] p-3 text-center">
+                          <div className={'text-xs font-bold uppercase ' + colors[esc]}>{esc}</div>
+                          <div className="text-lg font-bold text-white mt-1">{e.leads_totales || e.conversiones || '?'}</div>
+                          <div className="text-xs text-[#475569]">{e.roas ? 'ROAS ' + e.roas + 'x' : ''}</div>
+                        </div>
+                      })}
+                    </div>
+                  </div>
+                )}
+                {aprendizajes.length > 0 && (
+                  <div>
+                    <h3 className="text-sm font-bold text-white mb-2">Lo que Copilot aprendi{'ó'}</h3>
+                    <div className="space-y-1">
+                      {aprendizajes.slice(0, 8).map(function(a: any, ai: number) {
+                        var stars = a.confianza >= 0.8 ? '\u2605\u2605\u2605' : a.confianza >= 0.6 ? '\u2605\u2605' : '\u2605'
+                        return <div key={ai} className="bg-[#0f0d2e] rounded-lg px-3 py-2 flex items-start gap-2">
+                          <span className="text-amber-400 text-xs mt-0.5">{stars}</span>
+                          <span className="text-xs text-[#94a3b8] flex-1">{a.aprendizaje}</span>
+                          <span className="text-xs text-[#475569]">{a.agente}</span>
+                        </div>
+                      })}
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="bg-[#1a1745] rounded-xl border border-white/[0.06] px-6 py-12 text-center">
+                <div className="text-4xl mb-3">{'\uD83C\uDF33'}</div>
+                <p className="text-[#64748b] mb-2">El {'á'}rbol de decisi{'ó'}n se genera mensualmente</p>
+                <p className="text-xs text-[#475569]">Distribuye tu presupuesto en ramas medibles con KPIs reales del predictor M&P.</p>
               </div>
             )}
           </>
