@@ -76,6 +76,7 @@ var memoriaModule = require('./radar-memoria.js')
 var decisionModule = require('./radar-decisiones.js')
 var benchmarkModule = require('./radar-benchmark.js')
 var campanaModule = require('./radar-campana.js')
+var adsCreativeModule = require('./radar-ads-creative.js')
 
 var APIFY_TOKEN = process.env.APIFY_TOKEN
 var RESEND_KEY = process.env.RESEND
@@ -609,6 +610,17 @@ async function main() {
         planCampana = await campanaModule.generarPlanCampana(misPosts, empresas, sub.perfil_empresa || {}, sub.brief_estrategico || null, memoria, postsCliente, industriaData || {}, supabase, sub.id)
         console.log('   ✓ Plan de campaña generado')
       } catch (e) { console.log('   Campaña error (no bloqueante): ' + e.message) }
+    }
+
+    // Ads Creative Generator (semanal/mensual, todos los planes pro+)
+    var adsCreativos = null
+    if ((MODO === 'semanal' || MODO === 'mensual') && ANTHROPIC_KEY && (sub.plan === 'pro' || sub.plan === 'business' || sub.plan === 'test') && misPosts.length >= 3) {
+      try {
+        var industriaData2 = null
+        try { var indMod2 = require('./radar-industria.js'); industriaData2 = indMod2.detectarIndustria(sub.perfil_empresa || {}) } catch (e) {}
+        adsCreativos = await adsCreativeModule.generarAdsCreativos(misPosts, empresas, sub.perfil_empresa || {}, sub.brief_estrategico || null, memoria, industriaData2 || {}, contenidoSugerido ? contenidoSugerido.copies || [] : [], planCampana || {}, supabase, sub.id)
+        console.log('   ✓ Ads creativos generados')
+      } catch (e) { console.log('   Ads creative error (no bloqueante): ' + e.message) }
     }
 
     var html = generarEmailHTML(misPosts, cuentas, hoy, MODO, resumenIA, empresas, trends, sub.id, contenidoSugerido, sub.estado, sub.plan, sub.trial_ends, grillaMensual, guionesData, null, auditoriaData, sub.brief_estrategico)
