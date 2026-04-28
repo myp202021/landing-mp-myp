@@ -1,0 +1,48 @@
+name: "Copilot — Test agentes sin scraping"
+
+on:
+  workflow_dispatch:
+    inputs:
+      modo:
+        description: 'Modo: semanal o mensual'
+        required: true
+        default: 'mensual'
+      id:
+        description: 'ID suscripción (vacío = todos los test)'
+        required: false
+        default: ''
+      dry_run:
+        description: 'Dry run (no envía emails)'
+        required: false
+        default: 'true'
+
+jobs:
+  agentes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm install node-fetch@2 @supabase/supabase-js
+
+      - name: "Correr agentes Copilot (sin scraping)"
+        run: |
+          MODO="${{ github.event.inputs.modo }}"
+          ID="${{ github.event.inputs.id }}"
+          DRY="${{ github.event.inputs.dry_run }}"
+
+          CMD="node scripts/radar-clipping.js --${MODO}"
+          if [ "$DRY" = "true" ]; then CMD="$CMD --dry-run"; fi
+          if [ -n "$ID" ]; then CMD="$CMD --id=$ID"; fi
+
+          echo "Ejecutando: $CMD"
+          $CMD
+        env:
+          APIFY_TOKEN: "SKIP"
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          ANTHROPIC_API_KEY_GRILLAS: ${{ secrets.ANTHROPIC_API_KEY_GRILLAS }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          RESEND: ${{ secrets.RESEND }}
