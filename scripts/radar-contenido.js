@@ -370,7 +370,7 @@ async function paso2_crear(briefs, posts, perfil) {
         palabras: copyClean.split(/\s+/).length,
         auto_eval: autoEval,
       })
-      console.log('   Copy ' + (i+1) + ' OK: ' + copy.split(/\s+/).length + ' palabras')
+      console.log('   Copy ' + (i+1) + ' OK: ' + copyClean.split(/\s+/).length + ' palabras')
     } catch (e) {
       console.error('   Copy ' + (i+1) + ' ERROR: ' + e.message)
       copies.push({
