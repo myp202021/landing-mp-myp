@@ -2,47 +2,120 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Benchmark Competitivo — Medios de Pago Chile 2026</title>
+<title>Benchmark — Medios de Pago Chile 2026</title>
 <style>
-  @page { size: A4; margin: 8mm 10mm; }
+  @page { size: A4; margin: 15mm 12mm; }
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif; background: #0A0A0F; color: #d1d5db; font-size: 8.5px; line-height: 1.35; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-  .page { width: 210mm; min-height: 297mm; padding: 8mm 12mm; page-break-after: always; position: relative; }
+  body { font-family: -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif; background: #0A0A0F; color: #d1d5db; font-size: 8.5px; line-height: 1.4; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .page { width: 210mm; padding: 0; page-break-after: always; }
   .page:last-child { page-break-after: auto; }
   h1 { color: #fff; font-size: 16px; }
-  h2 { color: #a5b4fc; font-size: 10px; margin: 8px 0 3px; padding-bottom: 2px; border-bottom: 1.5px solid #4F46E5; text-transform: uppercase; letter-spacing: 0.4px; }
-  .hdr { background: linear-gradient(135deg, #4F46E5, #7C3AED); padding: 12px 16px; border-radius: 6px; margin-bottom: 8px; }
+  h2 { color: #a5b4fc; font-size: 10px; margin: 10px 0 4px; padding-bottom: 2px; border-bottom: 1.5px solid #4F46E5; text-transform: uppercase; letter-spacing: 0.4px; }
+  .hdr { background: linear-gradient(135deg, #4F46E5, #7C3AED); padding: 14px 18px; border-radius: 6px; margin-bottom: 10px; }
   .hdr p { color: rgba(255,255,255,0.6); font-size: 7px; letter-spacing: 1.5px; }
-  .hdr .sub { color: rgba(255,255,255,0.8); font-size: 8px; margin-top: 2px; }
-  .c { background: #1a1745; border-radius: 4px; padding: 6px 8px; margin-bottom: 4px; }
-  table { width: 100%; border-collapse: collapse; font-size: 8px; margin: 3px 0; }
-  th { background: #1e1b4b; color: #fff; padding: 3px 4px; text-align: left; font-weight: 700; font-size: 7px; text-transform: uppercase; letter-spacing: 0.2px; }
-  td { padding: 3px 4px; border-bottom: 1px solid #2d2a5e; vertical-align: top; }
+  .hdr .sub { color: rgba(255,255,255,0.8); font-size: 8px; margin-top: 3px; }
+  .c { background: #1a1745; border-radius: 4px; padding: 7px 9px; margin-bottom: 5px; }
+  table { width: 100%; border-collapse: collapse; font-size: 8px; margin: 4px 0; }
+  th { background: #1e1b4b; color: #fff; padding: 4px 5px; text-align: left; font-weight: 700; font-size: 7px; text-transform: uppercase; }
+  td { padding: 4px 5px; border-bottom: 1px solid #2d2a5e; vertical-align: top; }
   tr:nth-child(even) td { background: #12102a; }
   .g { color: #10B981; } .y { color: #F59E0B; } .r { color: #EF4444; } .w { color: #fff; font-weight: 700; }
   .b { display: inline-block; font-size: 6.5px; font-weight: 700; padding: 1px 4px; border-radius: 2px; }
   .bg { background: #052e16; color: #10B981; } .by { background: #422006; color: #F59E0B; } .br { background: #450a0a; color: #EF4444; } .bb { background: #172554; color: #60A5FA; }
-  .co { background: #12102a; border-left: 2px solid #7C3AED; padding: 5px 7px; border-radius: 0 3px 3px 0; margin: 4px 0; }
-  .ft { text-align: center; font-size: 6.5px; color: #64748b; margin-top: 4px; padding-top: 3px; border-top: 1px solid #2d2a5e; }
-  .src { font-size: 6px; color: #64748b; margin-top: 1px; }
-  ol, ul { padding-left: 10px; } li { margin-bottom: 1px; }
-  .kpi { display: inline-block; background: #1a1745; border-radius: 4px; padding: 5px 8px; margin: 0 2px 2px 0; text-align: center; min-width: 55px; }
-  .kv { font-size: 14px; font-weight: 800; color: #a5b4fc; }
-  .kl { font-size: 6px; color: #64748b; }
+  .co { background: #12102a; border-left: 2px solid #7C3AED; padding: 6px 8px; border-radius: 0 3px 3px 0; margin: 5px 0; }
+  .ft { text-align: center; font-size: 6.5px; color: #64748b; margin-top: 6px; padding-top: 4px; border-top: 1px solid #2d2a5e; }
+  .src { font-size: 6px; color: #64748b; margin-top: 2px; }
+  ol, ul { padding-left: 12px; } li { margin-bottom: 2px; }
+  .kpi { display: inline-block; background: #1a1745; border-radius: 4px; padding: 6px 10px; margin: 0 3px 3px 0; text-align: center; min-width: 60px; }
+  .kv { font-size: 15px; font-weight: 800; color: #a5b4fc; }
+  .kl { font-size: 6.5px; color: #64748b; }
 </style>
 </head>
 <body>
 
-<!-- PÁG 1: Mercado + Precios Reales -->
+<!-- PÁG 1: RESPUESTA + PLAN DE ACCIÓN (lo que más importa primero) -->
+<div class="page">
+  <div class="hdr">
+    <p>MULLER Y PÉREZ — INTELLIGENCE</p>
+    <h1>Plan de Acción Digital — Captación de Comercios</h1>
+    <div class="sub">Recomendaciones para Transbank basadas en benchmark competitivo real · Abril 2026</div>
+  </div>
+
+  <h2>Respuesta: ¿0.6% CVR display es bajo?</h2>
+  <div class="co">
+    <p class="w">No. Está en el rango superior (0.3-0.8%) para display en servicios financieros.</p>
+    <p style="margin-top:3px;">La métrica correcta no es CVR display aislado sino atribución multi-touch: ¿cuántos leads de Search vinieron de un primer toque en display? Remarketing sobre audiencia display convierte 2-3%. El CPA final es competitivo si se complementa con Search.</p>
+  </div>
+
+  <h2>5 acciones concretas</h2>
+
+  <div class="c">
+    <p class="w">1. Landing de afiliación con calculadora de ahorro</p>
+    <p>"¿Cuánto ahorras con Transbank?" — comercio ingresa volumen mensual, calculadora muestra ahorro vs MP/GetNet/SumUp. Transbank cobra 0,82% débito vs 2,19% de MP = ahorro de $13.700 por cada $1M en ventas. Eso ES la campaña.</p>
+    <p class="y">Inversión: landing $500K + Google Ads $3M/mes · CPL objetivo &lt;$15K</p>
+  </div>
+
+  <div class="c">
+    <p class="w">2. Google Search en keywords transaccionales</p>
+    <p>"terminal de pago", "máquina para tarjetas", "cobrar con tarjeta chile", "alternativa a [competidor]". CPC est. $1.500-3.500 CLP. CVR 3-6% con landing optimizada. Transbank tiene 96% de reconocimiento — cada peso en Search rinde más que la competencia por trust.</p>
+    <p class="y">Inversión: $3-5M/mes · 85-330 leads/mes · CPL $10-58K</p>
+  </div>
+
+  <div class="c">
+    <p class="w">3. Remarketing display + YouTube sobre audiencia Search</p>
+    <p>No display frío — remarketing sobre quienes ya visitaron landing o buscaron en Google. CVR remarketing: 2-3%. YouTube pre-roll 15s: caso de éxito de comercio + ahorro en comisiones. Ciclo de decisión 14-60 días — remarketing durante ese periodo.</p>
+    <p class="y">Inversión: $1-2M/mes display rmkt + $1M/mes YouTube</p>
+  </div>
+
+  <div class="c">
+    <p class="w">4. Meta Ads segmentados por rubro de comercio</p>
+    <p>Segmentar por: restaurantes (pagos sin contacto), retail (multi-terminal), e-commerce (WebPay). Meta CVR para fintech: 8.78% — mejor canal de conversión. Creatividades: video 15s caso de éxito por rubro.</p>
+    <p class="y">Inversión: $2-3M/mes · CPL &lt;$8K · 250-375 leads/mes</p>
+  </div>
+
+  <div class="c">
+    <p class="w">5. Programa "Cámbiate a Transbank"</p>
+    <p>Targeting directo a comercios con GetNet, MP o SumUp. Oferta: 3 meses sin arriendo + setup gratis. Landing comparativa con tabla de comisiones verificables. Keywords: "cambiar terminal", "alternativa getnet".</p>
+    <p class="y">Inversión: $1-2M/mes · Leads de alta intención</p>
+  </div>
+
+  <h2>Presupuesto total sugerido</h2>
+  <table>
+    <thead><tr><th>Canal</th><th>Inversión/mes</th><th>Objetivo</th><th>KPI</th><th>Meta 3 meses</th></tr></thead>
+    <tbody>
+      <tr><td class="w">Google Search</td><td>$3-5M</td><td>Captación directa</td><td>CPL &lt;$15K</td><td>250-1.000 leads</td></tr>
+      <tr><td class="w">Meta Ads</td><td>$2-3M</td><td>Leads por rubro</td><td>CPL &lt;$8K</td><td>750-1.125 leads</td></tr>
+      <tr><td class="w">Display rmkt</td><td>$1-2M</td><td>Nurturing</td><td>CVR rmkt &gt;2%</td><td>Soporte Search</td></tr>
+      <tr><td class="w">YouTube</td><td>$1-2M</td><td>Consideración</td><td>VTR &gt;25%</td><td>Brand lift 10%+</td></tr>
+      <tr><td class="w">Landing+CRO</td><td>$500K (1 vez)</td><td>Conversión</td><td>CVR &gt;5%</td><td>Base para todo</td></tr>
+      <tr style="background:#1e1b4b;"><td class="w" style="font-size:9px;">TOTAL</td><td class="w" style="font-size:9px;">$7.5-12.5M/mes</td><td colspan="3" style="color:#a5b4fc;font-size:8px;">~$8-13K USD/mes en pauta · Fee M&P aparte</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Próximos pasos</h2>
+  <div class="co">
+    <ol>
+      <li><strong>Reunión con Andrés</strong> — presentar análisis y validar objetivos de captación</li>
+      <li><strong>Auditoría landing actual</strong> — evaluar transbank.cl/afiliación vs competencia</li>
+      <li><strong>Setup tracking</strong> — GTM + conversiones + atribución multi-touch</li>
+      <li><strong>Piloto 1 mes</strong> — Google Search + Meta Ads con $5M total → medir CPL real</li>
+      <li><strong>Escalar</strong> — según CPL del piloto, escalar a $10-12M/mes</li>
+    </ol>
+  </div>
+
+  <div class="ft">Muller y Pérez · mulleryperez.cl · Confidencial — Andrés Tocornal · Abril 2026 · Pág 1/3</div>
+</div>
+
+<!-- PÁG 2: BENCHMARK COMISIONES + DIGITAL -->
 <div class="page">
   <div class="hdr">
     <p>MULLER Y PÉREZ — INTELLIGENCE</p>
     <h1>Benchmark Competitivo — Medios de Pago Chile</h1>
-    <div class="sub">Transbank vs competencia directa · Comisiones, presencia digital, oportunidades · Abril 2026</div>
+    <div class="sub">Comisiones reales verificadas + presencia digital · Abril 2026</div>
   </div>
 
-  <h2>Participación de mercado 2026</h2>
-  <div style="margin-bottom:4px;">
+  <h2>Participación de mercado</h2>
+  <div style="margin-bottom:5px;">
     <div class="kpi"><div class="kv">~50%</div><div class="kl">Transbank</div></div>
     <div class="kpi"><div class="kv">~25%</div><div class="kl">GetNet</div></div>
     <div class="kpi"><div class="kv">~11%</div><div class="kl">Mercado Pago</div></div>
@@ -50,223 +123,123 @@
     <div class="kpi"><div class="kv">~4%</div><div class="kl">Klap/Itaú</div></div>
     <div class="kpi"><div class="kv">Nuevo</div><div class="kl">Banchile</div></div>
   </div>
-  <p class="src">Fuente: FNE dic 2025, Emol "9 actores que desafían a Transbank" dic 2025, EbankingNews mar 2026</p>
+  <p class="src">Fuente: FNE dic 2025, Emol dic 2025, EbankingNews mar 2026</p>
 
-  <h2>Comparativa de comisiones reales (verificadas)</h2>
+  <h2>Comisiones reales verificadas</h2>
   <table>
-    <thead>
-      <tr><th>Procesador</th><th>Débito</th><th>Crédito</th><th>POS costo</th><th>Liquidación</th><th>Diferenciador</th></tr>
-    </thead>
+    <thead><tr><th>Procesador</th><th>Débito</th><th>Crédito</th><th>POS costo</th><th>Liquidación</th><th>Diferenciador</th></tr></thead>
     <tbody>
-      <tr>
-        <td class="w">Transbank</td><td>~0,82%</td><td>~1,9%</td><td>0,64 UF/mes o Pack $9.990</td><td>24-48h hábiles</td><td>96% reconocimiento, 350K comercios</td>
-      </tr>
-      <tr>
-        <td class="w">GetNet <span class="b bb">Santander</span></td><td>mPOS 2,79%+IVA<br/>Smart desde 0,58%+IVA</td><td>mPOS 2,79%+IVA<br/>Smart desde 2,10%+IVA</td><td>mPOS $24.990 compra<br/>Smart 0,55 UF/mes</td><td>24h (Santander)</td><td>200K comercios, GetServicios (Bip, cuentas)</td>
-      </tr>
-      <tr>
-        <td class="w">Mercado Pago <span class="b bg">MeLi</span></td><td>Smart 2,19%<br/>Mini 2,95%</td><td>Smart 2,69%<br/>Mini 2,95%</td><td>Sin arriendo<br/>Smart $89.900 compra</td><td class="g" style="font-weight:700;">Inmediato</td><td>Ecosistema MeLi, liquidación instantánea</td>
-      </tr>
-      <tr>
-        <td class="w">Compraquí <span class="b bb">BcoEstado</span></td><td>Clásica 2,3%+IVA<br/>Súper 1,49%+IVA</td><td>Clásica 2,3%+IVA<br/>Súper 2,50%+IVA</td><td>Clásica $14.990<br/>Súper $59.990</td><td>24h</td><td>68% conocimiento, micropyme, boleta integrada</td>
-      </tr>
-      <tr>
-        <td class="w">Banchile Pagos <span class="b bb">BdChile</span></td><td colspan="2">Variable MDR (no publica tarifas)</td><td class="g" style="font-weight:700;">POS GRATIS</td><td>Diario</td><td>POS más moderno (PAX A930), meta 150K comercios</td>
-      </tr>
-      <tr>
-        <td class="w">Klap <span class="b bb">Itaú $40MM</span></td><td>0,57%+IVA+$97</td><td>1,29%+IVA+$97</td><td>0,39-0,50 UF/mes<br/>(gratis si >$200K/mes)</td><td>Día hábil sig.</td><td>Apple Pay, Google Pay, tarjetas alimentación</td>
-      </tr>
-      <tr>
-        <td class="w">Flow.cl</td><td colspan="2">2,89%+IVA parejo (online)</td><td>N/A (pasarela)</td><td>3 días hábiles</td><td>50K clientes, plugins e-commerce</td>
-      </tr>
-      <tr>
-        <td class="w">SumUp</td><td>Sin plan 2,9%+IVA<br/>Pro 1,29%</td><td>Sin plan 2,9%+IVA<br/>Pro 1,29%</td><td>Sin arriendo<br/>Plan Pro $17.900/mes</td><td class="g" style="font-weight:700;">1 hora</td><td>Boleta electrónica gratis, liquidación 1h</td>
-      </tr>
+      <tr><td class="w">Transbank</td><td>~0,82%</td><td>~1,9%</td><td>0,64 UF/mes o Pack $9.990</td><td>24-48h</td><td>96% reconocimiento, 350K comercios</td></tr>
+      <tr><td class="w">GetNet</td><td>mPOS 2,79%<br/>Smart 0,58%+</td><td>mPOS 2,79%<br/>Smart 2,10%+</td><td>mPOS $24.990<br/>Smart 0,55 UF/mes</td><td>24h</td><td>200K comercios, GetServicios</td></tr>
+      <tr><td class="w">Mercado Pago</td><td>2,19-2,95%</td><td>2,69-2,95%</td><td>Sin arriendo<br/>Smart $89.900</td><td class="g">Inmediato</td><td>Ecosistema MeLi, liquidación inst.</td></tr>
+      <tr><td class="w">Compraquí</td><td>Clás 2,3%<br/>Súp 1,49%</td><td>Clás 2,3%<br/>Súp 2,50%</td><td>Clás $14.990<br/>Súp $59.990</td><td>24h</td><td>68% conocimiento, micropyme</td></tr>
+      <tr><td class="w">Banchile</td><td colspan="2">Variable MDR (no publica)</td><td class="g">POS GRATIS</td><td>Diario</td><td>POS moderno PAX A930, meta 150K</td></tr>
+      <tr><td class="w">Klap</td><td>0,57%+$97</td><td>1,29%+$97</td><td>0,39-0,50 UF/mes</td><td>Día hábil sig.</td><td>Apple Pay, Google Pay, alimentación</td></tr>
+      <tr><td class="w">SumUp</td><td>2,9% o Pro 1,29%</td><td>2,9% o Pro 1,29%</td><td>Sin arriendo<br/>Plan $17.900/mes</td><td class="g">1 hora</td><td>Boleta gratis, liquidación 1h</td></tr>
     </tbody>
   </table>
-  <p class="src">Fuentes: transbank.cl/tarifas, getnet.cl/tarifario, mercadopago.cl/ayuda, banchilepagos.cl/tarifas, klap.cl/tarifas, flow.cl/tarifas, compraqui.cl, sumup.com/es-cl, vendercontarjeta.cl (verificado abril 2026)</p>
-
-  <div class="co">
-    <p class="w">Hallazgo: Transbank tiene las comisiones más bajas del mercado (0,82% débito) pero liquidación más lenta (24-48h). Mercado Pago y SumUp ganan con liquidación instantánea. Banchile Pagos regala el POS como gancho agresivo. Klap tiene las comisiones más competitivas para alto volumen.</p>
-  </div>
+  <p class="src">Fuentes: transbank.cl, getnet.cl, mercadopago.cl, banchilepagos.cl, klap.cl, flow.cl, compraqui.cl, sumup.com, vendercontarjeta.cl</p>
 
   <h2>Presencia digital comparativa</h2>
   <table>
-    <thead><tr><th>Empresa</th><th>Google Ads</th><th>Meta Ads</th><th>LinkedIn</th><th>YouTube</th><th>SEO/Blog</th><th>Nivel</th></tr></thead>
+    <thead><tr><th>Empresa</th><th>Google Ads</th><th>Meta Ads</th><th>LinkedIn</th><th>YouTube</th><th>SEO</th><th>Nivel</th></tr></thead>
     <tbody>
-      <tr><td class="w">Transbank</td><td><span class="b bg">Sí</span></td><td><span class="b by">Bajo</span></td><td><span class="b bg">Activo</span></td><td><span class="b by">Mod.</span></td><td><span class="b by">Mod.</span></td><td><span class="b by">MEDIO</span></td></tr>
+      <tr><td class="w">Transbank</td><td><span class="b bg">Sí</span></td><td><span class="b by">Bajo</span></td><td><span class="b bg">Activo</span></td><td><span class="b by">Mod</span></td><td><span class="b by">Mod</span></td><td><span class="b by">MEDIO</span></td></tr>
       <tr><td class="w">Mercado Pago</td><td><span class="b bg">Masivo</span></td><td><span class="b bg">Masivo</span></td><td><span class="b bg">Activo</span></td><td><span class="b bg">Fuerte</span></td><td><span class="b bg">Fuerte</span></td><td><span class="b bg">MUY ALTO</span></td></tr>
-      <tr><td class="w">GetNet</td><td><span class="b bg">Fuerte</span></td><td><span class="b bg">Fuerte</span></td><td><span class="b by">Mod.</span></td><td><span class="b by">Mod.</span></td><td><span class="b br">Bajo</span></td><td><span class="b bg">ALTO</span></td></tr>
-      <tr><td class="w">Banchile Pagos</td><td><span class="b bg">Lanzam.</span></td><td><span class="b bg">Lanzam.</span></td><td><span class="b bg">Activo</span></td><td><span class="b by">Mod.</span></td><td><span class="b br">Bajo</span></td><td><span class="b by">MEDIO+</span></td></tr>
-      <tr><td class="w">Compraquí</td><td><span class="b by">Via banco</span></td><td><span class="b by">Via banco</span></td><td><span class="b br">Bajo</span></td><td><span class="b br">Mín.</span></td><td><span class="b by">Via banco</span></td><td><span class="b by">MEDIO</span></td></tr>
-      <tr><td class="w">Klap</td><td><span class="b br">Bajo</span></td><td><span class="b br">Bajo</span></td><td><span class="b bg">B2B</span></td><td><span class="b br">Mín.</span></td><td><span class="b br">Bajo</span></td><td><span class="b by">MEDIO</span></td></tr>
-      <tr><td class="w">SumUp</td><td><span class="b bg">Fuerte</span></td><td><span class="b bg">Fuerte</span></td><td><span class="b br">Bajo</span></td><td><span class="b by">Mod.</span></td><td><span class="b bg">Fuerte</span></td><td><span class="b bg">ALTO</span></td></tr>
+      <tr><td class="w">GetNet</td><td><span class="b bg">Fuerte</span></td><td><span class="b bg">Fuerte</span></td><td><span class="b by">Mod</span></td><td><span class="b by">Mod</span></td><td><span class="b br">Bajo</span></td><td><span class="b bg">ALTO</span></td></tr>
+      <tr><td class="w">Banchile</td><td><span class="b bg">Lanzam</span></td><td><span class="b bg">Lanzam</span></td><td><span class="b bg">Activo</span></td><td><span class="b by">Mod</span></td><td><span class="b br">Bajo</span></td><td><span class="b by">MEDIO+</span></td></tr>
+      <tr><td class="w">SumUp</td><td><span class="b bg">Fuerte</span></td><td><span class="b bg">Fuerte</span></td><td><span class="b br">Bajo</span></td><td><span class="b by">Mod</span></td><td><span class="b bg">Fuerte</span></td><td><span class="b bg">ALTO</span></td></tr>
     </tbody>
   </table>
   <p class="src">Fuente: Google Ads Transparency Center, Meta Ad Library, revisión directa RRSS abril 2026</p>
 
-  <h2>Conversiones por canal — servicios financieros Chile</h2>
+  <h2>Conversiones por canal — fintech Chile</h2>
   <table>
-    <thead><tr><th>Canal</th><th>CPC (CLP)</th><th>CTR</th><th>CVR</th><th>CPL est.</th><th>Fuente datos</th></tr></thead>
+    <thead><tr><th>Canal</th><th>CPC (CLP)</th><th>CTR</th><th>CVR</th><th>CPL est.</th><th>Fuente</th></tr></thead>
     <tbody>
-      <tr><td class="w">Google Search</td><td>$479</td><td>1.9%</td><td class="g">4.74%</td><td>$10K</td><td>Ubersuggest Chile (29 kw, vol 23.520)</td></tr>
-      <tr><td class="w">Meta Ads</td><td>$455</td><td>0.88%</td><td class="g">8.78%</td><td>$5.2K</td><td>WordStream Financial Services 2024</td></tr>
-      <tr><td class="w">Google Display</td><td>$80-200</td><td>0.3-0.5%</td><td class="y">0.3-0.8%</td><td>$25-66K</td><td>WordStream Display + Google Ads ref.</td></tr>
-      <tr><td class="w">YouTube</td><td>$30-80 CPV</td><td>1.5-3.0%</td><td class="y">0.5-1.2%</td><td>$6-16K</td><td>Google Ads Video Benchmarks 2024</td></tr>
-      <tr><td class="w">Kw "terminal pago"</td><td>$1.500-3.500</td><td>2-4%</td><td class="g">3-6%</td><td>$25-117K</td><td>Estimado alta intención comercial</td></tr>
+      <tr><td class="w">Google Search</td><td>$479</td><td>1.9%</td><td class="g">4.74%</td><td>$10K</td><td>Ubersuggest Chile 29 kw</td></tr>
+      <tr><td class="w">Meta Ads</td><td>$455</td><td>0.88%</td><td class="g">8.78%</td><td>$5.2K</td><td>WordStream Financial 2024</td></tr>
+      <tr><td class="w">Google Display</td><td>$80-200</td><td>0.3-0.5%</td><td class="y">0.3-0.8%</td><td>$25-66K</td><td>WordStream Display</td></tr>
+      <tr><td class="w">YouTube</td><td>$30-80</td><td>1.5-3%</td><td class="y">0.5-1.2%</td><td>$6-16K</td><td>Google Video Benchmarks</td></tr>
     </tbody>
   </table>
 
   <div class="co">
-    <p><span class="b bg">0.6% CVR display = rango superior</span> para servicios financieros (benchmark 0.3-0.8%). El canal funciona como awareness. La conversión real ocurre en Search + remarketing.</p>
-  </div>
-
-  <div class="ft">Muller y Pérez · mulleryperez.cl · Confidencial — Andrés Tocornal · Abril 2026 · Pág 1/3</div>
-</div>
-
-<!-- PÁG 2: Análisis estratégico competidor por competidor -->
-<div class="page">
-  <div class="hdr">
-    <p>MULLER Y PÉREZ — INTELLIGENCE</p>
-    <h1>Análisis Estratégico por Competidor</h1>
-    <div class="sub">Posicionamiento digital, estrategia de captación, vulnerabilidades</div>
-  </div>
-
-  <div class="c">
-    <p class="w" style="font-size:9px;margin-bottom:2px;">Mercado Pago — El que más invierte en digital</p>
-    <p><strong>Estrategia:</strong> Captación masiva con ecosistema cerrado (MeLi + billetera + POS + QR). Videos en Meta/YouTube con casos de éxito. Landing con registro en 3 pasos. Liquidación instantánea como gancho principal.</p>
-    <p><strong>Fortaleza:</strong> Presupuesto ilimitado (MeLi), brand awareness 75%, liquidación instantánea.</p>
-    <p><strong>Vulnerabilidad:</strong> Comisiones altas (2,19-2,95%), percepción de "para pymes chicas". No compite en enterprise. Soporte limitado.</p>
-    <p class="g"><strong>Oportunidad para Transbank:</strong> Captar comercios medianos que necesitan comisiones bajas + soporte robusto. Transbank cobra 0,82% débito vs 2,19% de MP — ahorro de 62% para el comercio.</p>
-  </div>
-
-  <div class="c">
-    <p class="w" style="font-size:9px;margin-bottom:2px;">GetNet — Fuerza bancaria de Santander</p>
-    <p><strong>Estrategia:</strong> "Cobra sin vueltas" en Meta + Google. Fuerza comercial de sucursales Santander. Smart POS con servicios adicionales (Bip, pago cuentas). Plan Comercios Santander con beneficios cruzados.</p>
-    <p><strong>Fortaleza:</strong> 200K comercios, liquidación 24h, servicios integrados en el POS (recarga, cuentas).</p>
-    <p><strong>Vulnerabilidad:</strong> Atado a Santander (clientes otros bancos ven fricción). mPOS caro (2,79%). Smart POS requiere arriendo.</p>
-    <p class="g"><strong>Oportunidad para Transbank:</strong> Ofrecer servicios similares (GetServicios) pero sin restricción bancaria. Transbank es multi-banco — ventaja para comercios con cuentas en BCI, Itaú, BancoEstado.</p>
-  </div>
-
-  <div class="c">
-    <p class="w" style="font-size:9px;margin-bottom:2px;">Banchile Pagos — El nuevo agresivo</p>
-    <p><strong>Estrategia:</strong> POS GRATIS + liquidación diaria + hardware moderno (PAX A930). Meta: 150K comercios en 3 años. Inversión de lanzamiento fuerte en prensa + digital. Ya tiene 6.800 comercios en semanas.</p>
-    <p><strong>Fortaleza:</strong> POS gratis elimina barrera de entrada. Banco de Chile es el banco más grande de Chile. Hardware mejor del mercado.</p>
-    <p><strong>Vulnerabilidad:</strong> No publica tarifas (opacidad). Nuevo = sin track record de soporte. Aún no tiene base instalada significativa.</p>
-    <p class="r"><strong>Riesgo para Transbank:</strong> Banchile va a ser el competidor más peligroso en 2026-2027. POS gratis + BdChile = combinación letal. Transbank DEBE responder con: POS gratis para nuevos + liquidación más rápida.</p>
-  </div>
-
-  <div class="c">
-    <p class="w" style="font-size:9px;margin-bottom:2px;">Klap/Itaú — Enterprise silencioso</p>
-    <p><strong>Estrategia:</strong> B2B enfocado en comercios medianos-grandes. Comprado por Itaú por $40MM (dic 2025). Apple Pay + Google Pay. POS gratis si vende >$200K/mes en servicios.</p>
-    <p><strong>Fortaleza:</strong> Comisiones más bajas del mercado (0,57% débito). Primero con Apple/Google Pay. 90M transacciones/mes.</p>
-    <p><strong>Vulnerabilidad:</strong> Bajo reconocimiento (no invierte en digital). Sin presencia consumer. Dependiente de Itaú ahora.</p>
-    <p class="y"><strong>Oportunidad para Transbank:</strong> Klap compite en precio. Transbank puede competir en servicio + marca + omnicanalidad (presencial + WebPay + API). Para enterprise, Transbank tiene 30 años de relaciones.</p>
-  </div>
-
-  <div class="c">
-    <p class="w" style="font-size:9px;margin-bottom:2px;">SumUp — Digital-first disruptor</p>
-    <p><strong>Estrategia:</strong> 100% digital. Google Ads + Meta Ads fuertes. Blog SEO potente. Liquidación en 1 hora. Boleta electrónica gratis. Plan Pro a $17.900/mes con comisión 1,29% parejo.</p>
-    <p><strong>Fortaleza:</strong> UX superior, onboarding 100% digital, liquidación 1h. Sin contrato.</p>
-    <p><strong>Vulnerabilidad:</strong> Sin presencia enterprise. Sin soporte presencial. Comisiones altas sin plan (2,9%).</p>
-    <p class="g"><strong>Oportunidad para Transbank:</strong> SumUp está capturando micropymes con UX digital. Transbank debe modernizar su experiencia de onboarding online — hoy es lenta y burocrática.</p>
+    <p class="w">Transbank tiene las comisiones más bajas (0,82% débito) pero la liquidación más lenta (24-48h). Mercado Pago y SumUp ganan con liquidación instantánea. Banchile regala POS como gancho agresivo.</p>
   </div>
 
   <div class="ft">Muller y Pérez · mulleryperez.cl · Confidencial — Pág 2/3</div>
 </div>
 
-<!-- PÁG 3: Plan de acción -->
+<!-- PÁG 3: ANÁLISIS POR COMPETIDOR -->
 <div class="page">
   <div class="hdr">
     <p>MULLER Y PÉREZ — INTELLIGENCE</p>
-    <h1>Plan de Acción Digital — Transbank</h1>
-    <div class="sub">Recomendaciones basadas en análisis competitivo · Abril 2026</div>
-  </div>
-
-  <h2>Respuesta a Andrés: ¿0.6% CVR display es bajo?</h2>
-  <div class="co">
-    <p class="w">No. Está en el rango superior (0.3-0.8%) para display en servicios financieros.</p>
-    <p style="margin-top:2px;">Display es canal de awareness. La métrica correcta no es CVR de display aislado sino: ¿cuántos leads de Search/Meta vinieron de un primer toque en display? (atribución multi-touch). Si el remarketing sobre audiencia display convierte 2-3%, el CPA final es competitivo.</p>
-  </div>
-
-  <h2>5 acciones concretas para captación de comercios</h2>
-
-  <div class="c">
-    <p class="w">1. Landing de afiliación con calculadora de ahorro</p>
-    <p>"¿Cuánto ahorras con Transbank?" — comercio ingresa volumen mensual → calculadora muestra ahorro vs Mercado Pago/GetNet/SumUp. Transbank cobra 0,82% débito vs 2,19% de MP = ahorro de $13.700 por cada $1M en ventas. Eso es la campaña.</p>
-    <p class="y">Inversión est.: landing $500K + Google Ads $3M/mes → CPL objetivo: <$15K</p>
+    <h1>Análisis Estratégico por Competidor</h1>
+    <div class="sub">Posicionamiento, vulnerabilidades, oportunidades para Transbank</div>
   </div>
 
   <div class="c">
-    <p class="w">2. Google Search en keywords transaccionales</p>
-    <p>"terminal de pago", "máquina para tarjetas", "cobrar con tarjeta chile", "alternativa a [competidor]". CPC estimado $1.500-3.500 CLP. CVR estimado 3-6% con landing optimizada. Transbank tiene ventaja de marca — 96% de reconocimiento. Cada peso en Search rinde más que la competencia por trust.</p>
-    <p class="y">Inversión est.: $3-5M/mes → 85-330 leads/mes → CPL $10-58K</p>
+    <p class="w" style="font-size:9px;margin-bottom:3px;">Mercado Pago — El que más invierte en digital</p>
+    <p><strong>Estrategia:</strong> Ecosistema cerrado MeLi + billetera + POS + QR. Videos en Meta/YouTube. Liquidación instantánea como gancho.</p>
+    <p><strong>Fortaleza:</strong> Presupuesto ilimitado, 75% awareness, liquidación instantánea.</p>
+    <p><strong>Vulnerabilidad:</strong> Comisiones altas (2,19-2,95%), percepción "para pymes chicas", soporte limitado.</p>
+    <p class="g"><strong>Oportunidad:</strong> Captar comercios medianos. TB 0,82% vs MP 2,19% = ahorro 62%.</p>
   </div>
 
   <div class="c">
-    <p class="w">3. Remarketing display + YouTube sobre audiencia Search</p>
-    <p>No display frío — remarketing sobre quienes ya visitaron la landing o buscaron en Google. CVR remarketing: 2-3% (vs 0.6% display frío). YouTube pre-roll de 15s: caso de éxito de comercio + ahorro en comisiones. El ciclo de decisión es 14-60 días — remarketing durante ese periodo completo.</p>
-    <p class="y">Inversión est.: $1-2M/mes display rmkt + $1M/mes YouTube → complementario</p>
+    <p class="w" style="font-size:9px;margin-bottom:3px;">GetNet — Fuerza bancaria Santander</p>
+    <p><strong>Estrategia:</strong> "Cobra sin vueltas". Fuerza comercial sucursales. Smart POS con Bip y pago cuentas.</p>
+    <p><strong>Fortaleza:</strong> 200K comercios, 24h liquidación, servicios integrados.</p>
+    <p><strong>Vulnerabilidad:</strong> Atado a Santander. mPOS caro (2,79%). Requiere arriendo.</p>
+    <p class="g"><strong>Oportunidad:</strong> TB es multi-banco — ventaja para comercios con cuentas en BCI, Itaú, BcoEstado.</p>
   </div>
 
   <div class="c">
-    <p class="w">4. Meta Ads con segmentación por rubro de comercio</p>
-    <p>No ads genéricos — segmentar por: restaurantes (mostrar pagos sin contacto), retail (mostrar multi-terminal), e-commerce (mostrar WebPay). Meta CVR para fintech: 8.78% — el canal con mejor conversión. Creatividades: video 15s caso de éxito por rubro.</p>
-    <p class="y">Inversión est.: $2-3M/mes → CPL objetivo <$8K → 250-375 leads/mes</p>
+    <p class="w" style="font-size:9px;margin-bottom:3px;">Banchile Pagos — El nuevo agresivo</p>
+    <p><strong>Estrategia:</strong> POS GRATIS + liquidación diaria + PAX A930. Meta: 150K comercios en 3 años. 6.800 en semanas.</p>
+    <p><strong>Fortaleza:</strong> POS gratis elimina barrera. Banco de Chile es el más grande.</p>
+    <p><strong>Vulnerabilidad:</strong> No publica tarifas. Nuevo = sin track record soporte.</p>
+    <p class="r"><strong>Riesgo:</strong> Competidor más peligroso 2026-2027. TB DEBE responder con POS gratis + liquidación más rápida.</p>
   </div>
 
   <div class="c">
-    <p class="w">5. Programa de migración "Cámbiate a Transbank"</p>
-    <p>Targeting directo a comercios con GetNet, MP o SumUp. Oferta: 3 meses sin comisión de arriendo + setup gratis + soporte dedicado. Landing comparativa con tabla de comisiones (datos verificables). Google Ads en keywords "cambiar terminal de pago", "alternativa getnet", "alternativa mercadopago".</p>
-    <p class="y">Inversión est.: $1-2M/mes → leads de alta intención (ya usan competencia)</p>
+    <p class="w" style="font-size:9px;margin-bottom:3px;">Klap/Itaú — Enterprise silencioso</p>
+    <p><strong>Estrategia:</strong> B2B medianos-grandes. Comprado $40MM. Apple/Google Pay. POS gratis si >$200K/mes.</p>
+    <p><strong>Fortaleza:</strong> Comisiones más bajas (0,57% débito). 90M transacciones/mes.</p>
+    <p><strong>Vulnerabilidad:</strong> Bajo reconocimiento. Sin presencia consumer.</p>
+    <p class="y"><strong>Oportunidad:</strong> Klap compite en precio, TB en servicio + marca + omnicanalidad.</p>
   </div>
 
-  <h2>Presupuesto total sugerido</h2>
-  <table>
-    <thead><tr><th>Canal</th><th>Inversión/mes</th><th>Objetivo</th><th>KPI principal</th><th>Meta 3 meses</th></tr></thead>
-    <tbody>
-      <tr><td class="w">Google Search</td><td>$3-5M</td><td>Captación directa</td><td>CPL &lt;$15K</td><td>250-1.000 leads</td></tr>
-      <tr><td class="w">Meta Ads</td><td>$2-3M</td><td>Leads por rubro</td><td>CPL &lt;$8K</td><td>750-1.125 leads</td></tr>
-      <tr><td class="w">Display remarketing</td><td>$1-2M</td><td>Nurturing</td><td>CVR rmkt &gt;2%</td><td>Soporte a Search</td></tr>
-      <tr><td class="w">YouTube</td><td>$1-2M</td><td>Consideración</td><td>VTR &gt;25%</td><td>Brand lift 10%+</td></tr>
-      <tr><td class="w">Landing + CRO</td><td>$500K (1 vez)</td><td>Conversión</td><td>CVR landing &gt;5%</td><td>Base para todo</td></tr>
-      <tr style="background:#1e1b4b;"><td class="w" style="font-size:9px;">TOTAL</td><td class="w" style="font-size:9px;">$7.5-12.5M/mes</td><td colspan="3" style="color:#a5b4fc;font-size:8px;">~$8-13K USD/mes en pauta · Fee agencia aparte</td></tr>
-    </tbody>
-  </table>
-
-  <h2>Próximos pasos</h2>
-  <div class="co">
-    <ol>
-      <li><strong>Reunión con Andrés</strong> — presentar este análisis y validar objetivos de captación</li>
-      <li><strong>Auditoría de landing actual</strong> — evaluar transbank.cl/afiliación vs competencia</li>
-      <li><strong>Setup tracking</strong> — Google Tag Manager + conversiones + atribución multi-touch</li>
-      <li><strong>Piloto 1 mes</strong> — Google Search + Meta Ads con $5M total → medir CPL real</li>
-      <li><strong>Escalar</strong> — según CPL del piloto, escalar a $10-12M/mes con remarketing + YouTube</li>
-    </ol>
+  <div class="c">
+    <p class="w" style="font-size:9px;margin-bottom:3px;">SumUp — Disruptor digital-first</p>
+    <p><strong>Estrategia:</strong> 100% digital. Google+Meta fuertes. Blog SEO potente. Liquidación 1h. Boleta gratis.</p>
+    <p><strong>Fortaleza:</strong> UX superior, onboarding digital, liquidación 1h, sin contrato.</p>
+    <p><strong>Vulnerabilidad:</strong> Sin enterprise. Sin soporte presencial. 2,9% sin plan.</p>
+    <p class="g"><strong>Oportunidad:</strong> TB debe modernizar onboarding online — hoy es lento y burocrático.</p>
   </div>
 
-  <h2>Fuentes utilizadas</h2>
-  <div style="font-size:6px;color:#64748b;line-height:1.5;columns:2;">
-    <p>• FNE — Participación mercado adquirentes (dic 2025)</p>
-    <p>• Emol — "9 actores que desafían a Transbank" (dic 2025)</p>
-    <p>• EbankingNews — Evolución procesadores Chile (mar 2026)</p>
-    <p>• La Tercera — Banchile Pagos primeras cifras (nov 2025)</p>
-    <p>• BioBioChile — Itaú compra Klap $40MM (dic 2025)</p>
-    <p>• Chócale — GetNet Smart POS, Banchile lanzamiento</p>
-    <p>• transbank.cl/tarifas — Simulador comisiones verificado</p>
-    <p>• getnet.cl/tarifario — Tarifas POS y comisiones</p>
-    <p>• mercadopago.cl/ayuda — Comisiones Point y QR</p>
-    <p>• klap.cl/tarifas — Comisiones POS y arriendo</p>
-    <p>• flow.cl/tarifas — Tarifa única online</p>
-    <p>• compraqui.cl — Costos Clásica y Súper</p>
-    <p>• banchilepagos.cl/tarifas — Estructura MDR</p>
-    <p>• sumup.com/es-cl — Planes y comisiones</p>
-    <p>• vendercontarjeta.cl — Comparativas verificadas</p>
-    <p>• Ubersuggest Chile — CPC fintech (333 keywords)</p>
-    <p>• WordStream — Financial Services Benchmarks 2024</p>
-    <p>• Google Ads Transparency Center (abr 2026)</p>
+  <h2>Fuentes</h2>
+  <div style="font-size:6.5px;color:#64748b;line-height:1.6;columns:2;">
+    <p>• FNE — Participación mercado (dic 2025)</p>
+    <p>• Emol — "9 actores vs Transbank" (dic 2025)</p>
+    <p>• EbankingNews — Procesadores Chile (mar 2026)</p>
+    <p>• La Tercera — Banchile Pagos (nov 2025)</p>
+    <p>• BioBioChile — Itaú compra Klap (dic 2025)</p>
+    <p>• Chócale — GetNet, Banchile lanzamiento</p>
+    <p>• transbank.cl/tarifas — Verificado abr 2026</p>
+    <p>• getnet.cl/tarifario — Verificado abr 2026</p>
+    <p>• mercadopago.cl/ayuda — Verificado abr 2026</p>
+    <p>• klap.cl/tarifas — Verificado abr 2026</p>
+    <p>• compraqui.cl — Verificado abr 2026</p>
+    <p>• banchilepagos.cl/tarifas — Verificado abr 2026</p>
+    <p>• sumup.com/es-cl — Verificado abr 2026</p>
+    <p>• vendercontarjeta.cl — Comparativas</p>
+    <p>• Ubersuggest Chile — CPC 333 keywords</p>
+    <p>• WordStream — Financial Services 2024</p>
+    <p>• Google Ads Transparency (abr 2026)</p>
     <p>• Meta Ad Library (abr 2026)</p>
-    <p>• M&P Intelligence — Benchmarks calibrados Chile</p>
+    <p>• M&P Intelligence — Benchmarks Chile</p>
   </div>
 
   <div class="ft">Muller y Pérez · mulleryperez.cl · Confidencial — Andrés Tocornal · Abril 2026 · Pág 3/3</div>
