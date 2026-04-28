@@ -103,6 +103,36 @@ async function generarBrief(suscriptor, posts, supabase, memoria) {
   if (perfil.instagram) perfilInfo += 'Instagram: ' + perfil.instagram + '\n'
   if (perfil.linkedin) perfilInfo += 'LinkedIn: ' + perfil.linkedin + '\n'
 
+  // Data entry del dashboard (si el cliente lo configuró)
+  if (perfil.presupuesto_mensual) perfilInfo += 'Presupuesto mensual pauta: $' + perfil.presupuesto_mensual.toLocaleString() + ' CLP\n'
+  if (perfil.ticket_promedio) perfilInfo += 'Ticket promedio: $' + perfil.ticket_promedio.toLocaleString() + ' CLP\n'
+  if (perfil.tasa_cierre) perfilInfo += 'Tasa de cierre comercial: ' + perfil.tasa_cierre + '%\n'
+  if (perfil.ciclo_venta) perfilInfo += 'Ciclo de venta: ' + perfil.ciclo_venta + '\n'
+  if (perfil.competencia_percibida) perfilInfo += 'Nivel competencia: ' + perfil.competencia_percibida + '/10\n'
+  if (perfil.geo) perfilInfo += 'Foco geográfico: ' + perfil.geo + '\n'
+  if (perfil.tipo_cliente) perfilInfo += 'Tipo: ' + perfil.tipo_cliente + '\n'
+
+  // Aprendizajes persistentes del cliente (feedback + patrones de runs anteriores)
+  var aprendizajesCtx = ''
+  if (supabase && suscriptor.id) {
+    try {
+      var apRes = await supabase.from('copilot_aprendizajes')
+        .select('aprendizaje, confianza, agente, tipo')
+        .eq('suscripcion_id', suscriptor.id)
+        .eq('activo', true)
+        .order('confianza', { ascending: false })
+        .limit(10)
+      if (apRes.data && apRes.data.length > 0) {
+        aprendizajesCtx = '\n\nAPRENDIZAJES DE RUNS ANTERIORES Y FEEDBACK DEL CLIENTE:\n'
+        apRes.data.forEach(function(a) {
+          var pref = a.tipo === 'preferencia_cliente' ? '[CLIENTE DIJO] ' : a.tipo === 'alerta' ? '[EVITAR] ' : ''
+          aprendizajesCtx += '- ' + pref + a.aprendizaje + '\n'
+        })
+        console.log('   Brief: ' + apRes.data.length + ' aprendizajes inyectados')
+      }
+    } catch (e) { /* tabla puede no existir */ }
+  }
+
   // ═══ 2. Analizar top 20 posts por engagement ═══
   var postsOrdenados = posts.slice().sort(function(a, b) {
     var engA = (parseInt(a.likes) || 0) + (parseInt(a.comments) || 0)
@@ -213,7 +243,8 @@ async function generarBrief(suscriptor, posts, supabase, memoria) {
     + '══════════════════════════════════\n'
     + 'PERFIL DEL CLIENTE:\n'
     + '══════════════════════════════════\n'
-    + (perfilInfo || 'Sin perfil detallado. Inferir del nombre: ' + nombre) + '\n\n'
+    + (perfilInfo || 'Sin perfil detallado. Inferir del nombre: ' + nombre) + '\n'
+    + aprendizajesCtx + '\n'
     + '══════════════════════════════════\n'
     + 'ANALISIS DE COMPETIDORES (datos reales):\n'
     + '══════════════════════════════════\n'

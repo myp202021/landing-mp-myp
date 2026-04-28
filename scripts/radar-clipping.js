@@ -510,6 +510,8 @@ async function main() {
     var decGuiones = null
     if ((MODO === 'semanal' || MODO === 'mensual') && memoria) {
       ctx = decisionModule.evaluarContexto(memoria, misPosts, postsCliente, sub)
+      // Feedback loop: enriquecer contexto con aprendizajes persistentes
+      ctx = await decisionModule.enriquecerConAprendizajes(ctx, supabase, sub.id)
       decBrief = decisionModule.decidirBrief(ctx)
       decCopies = decisionModule.decidirCopies(ctx)
       decGuiones = decisionModule.decidirGuiones(ctx, memoria)

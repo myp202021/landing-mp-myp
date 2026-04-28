@@ -314,11 +314,127 @@ function detectarTemaSimple(texto) {
   return 'general'
 }
 
+// ═══════════════════════════════════════════════
+// FEEDBACK LOOP: Enriquecer contexto con aprendizajes persistentes
+// ═══════════════════════════════════════════════
+async function enriquecerConAprendizajes(ctx, supabase, suscripcionId) {
+  if (!supabase || !suscripcionId) return ctx
+
+  try {
+    var res = await supabase.from('copilot_aprendizajes')
+      .select('aprendizaje, confianza, agente, tipo')
+      .eq('suscripcion_id', suscripcionId)
+      .eq('activo', true)
+      .order('confianza', { ascending: false })
+      .limit(15)
+
+    if (!res.data || res.data.length === 0) return ctx
+
+    // Extraer señales de los aprendizajes para decisiones
+    var feedbackCliente = res.data.filter(function(a) { return a.tipo === 'preferencia_cliente' })
+    var alertas = res.data.filter(function(a) { return a.tipo === 'alerta' })
+    var patrones = res.data.filter(function(a) { return a.tipo === 'patron' })
+
+    // Si el cliente rechazó un ángulo, marcarlo como peor
+    feedbackCliente.forEach(function(f) {
+      if (f.aprendizaje.toLowerCase().includes('rechaz')) {
+        // Extraer el ángulo rechazado
+        var angulos = ['educativo', 'comercial', 'caso_exito', 'inspiracional', 'diferenciacion', 'objecion', 'estacional']
+        angulos.forEach(function(ang) {
+          if (f.aprendizaje.toLowerCase().includes(ang)) {
+            ctx.copiesPeorAngulo = ang
+            ctx.clienteRechazoAngulo = ang
+          }
+        })
+      }
+    })
+
+    // Si hay patrones confirmados con alta confianza, priorizarlos
+    var patronesAltos = patrones.filter(function(p) { return p.confianza >= 0.7 })
+    if (patronesAltos.length > 0) {
+      patronesAltos.forEach(function(p) {
+        var angulos = ['educativo', 'comercial', 'caso_exito', 'inspiracional', 'diferenciacion', 'objecion']
+        angulos.forEach(function(ang) {
+          if (p.aprendizaje.toLowerCase().includes(ang) && p.aprendizaje.toLowerCase().includes('priorizar')) {
+            ctx.copiesMejorAngulo = ang
+            ctx.anguloConfirmado = ang
+          }
+        })
+      })
+    }
+
+    // Si hay alertas de criterios débiles, marcar
+    if (alertas.length > 0) {
+      ctx.alertasActivas = alertas.map(function(a) { return a.aprendizaje }).slice(0, 3)
+    }
+
+    ctx.tieneAprendizajes = true
+    ctx.totalAprendizajes = res.data.length
+    ctx.aprendizajesAltos = patronesAltos.length
+
+    console.log('   Decisiones enriquecidas: ' + res.data.length + ' aprendizajes (' + feedbackCliente.length + ' feedback, ' + alertas.length + ' alertas, ' + patronesAltos.length + ' patrones altos)')
+  } catch (e) {
+    // Silencioso — tabla puede no existir
+  }
+
+  return ctx
+}
+
+// ═══════════════════════════════════════════════
+// DECIDIR ADS CREATIVE
+// ═══════════════════════════════════════════════
+function decidirAdsCreative(ctx) {
+  var decision = { generar: true, razones: [] }
+
+  // Generar si hay brief y perfil
+  if (!ctx.tienePerfil) {
+    decision.generar = false
+    decision.razones.push('Sin perfil de empresa')
+  }
+
+  // No generar si no hay key de Claude
+  if (!process.env.ANTHROPIC_API_KEY_GRILLAS) {
+    decision.generar = false
+    decision.razones.push('Sin API key de Claude')
+  }
+
+  // Si el cliente rechazó un ángulo, evitarlo en ads
+  if (ctx.clienteRechazoAngulo) {
+    decision.anguloEvitar = ctx.clienteRechazoAngulo
+    decision.razones.push('Evitar ángulo "' + ctx.clienteRechazoAngulo + '" (rechazado por cliente)')
+  }
+
+  // Si hay ángulo confirmado, priorizarlo
+  if (ctx.anguloConfirmado) {
+    decision.anguloPrioridad = ctx.anguloConfirmado
+    decision.razones.push('Priorizar ángulo "' + ctx.anguloConfirmado + '" (confirmado por datos)')
+  }
+
+  return decision
+}
+
+// ═══════════════════════════════════════════════
+// DECIDIR ÁRBOL DE DECISIÓN
+// ═══════════════════════════════════════════════
+function decidirArbol(ctx) {
+  var decision = { generar: true, razones: [] }
+
+  if (!ctx.tienePerfil) {
+    decision.generar = false
+    decision.razones.push('Sin perfil de empresa')
+  }
+
+  return decision
+}
+
 module.exports = {
   evaluarContexto: evaluarContexto,
+  enriquecerConAprendizajes: enriquecerConAprendizajes,
   decidirBrief: decidirBrief,
   decidirCopies: decidirCopies,
   decidirGuiones: decidirGuiones,
+  decidirAdsCreative: decidirAdsCreative,
+  decidirArbol: decidirArbol,
   qualityGateBrief: qualityGateBrief,
   qualityGateCopies: qualityGateCopies,
   qualityGateGuiones: qualityGateGuiones,
