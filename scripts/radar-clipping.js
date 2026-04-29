@@ -644,7 +644,7 @@ async function main() {
       arbolDecision = await ejecutarConRetry('Árbol de decisión', function() {
         return arbolDecisionModule.generarArbolDecision(
           sub.perfil_empresa || {}, sub.brief_estrategico || null,
-          null, null, memoria, aprendizajesPersistentes, supabase, sub.id
+          null, memoria, aprendizajesPersistentes, supabase, sub.id
         )
       })
       if (arbolDecision) console.log('   ✓ Árbol de decisión generado')
