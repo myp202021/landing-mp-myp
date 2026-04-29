@@ -91,23 +91,7 @@ async function cargarArbolesAnteriores(supabaseParam, suscripcionId) {
   }
 }
 
-async function _OLD(supabaseParam, suscripcionId) {
-  // deprecated
-  var res = await (supabaseParam).from('copilot_arboles')
-      .select('mes, anio, datos, predictor_input, predictor_output, created_at')
-      .eq('suscripcion_id', suscripcionId)
-      .order('created_at', { ascending: false })
-      .limit(6) // últimos 6 meses
-
-    if (res.error || !res.data || res.data.length === 0) return []
-
-    console.log('   Árboles anteriores cargados: ' + res.data.length)
-    return res.data
-  } catch (e) {
-    console.log('   Árboles anteriores error: ' + e.message)
-    return []
-  }
-}
+// (función legacy eliminada)
 
 // ═══════════════════════════════════════════════
 // 3. APRENDER DE COTIZACIONES PASADAS DE M&P
