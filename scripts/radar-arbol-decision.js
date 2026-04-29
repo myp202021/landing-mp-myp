@@ -17,9 +17,19 @@
 var fetch = require('node-fetch')
 var fs = require('fs')
 var path = require('path')
+var supabaseLib = require('@supabase/supabase-js')
 
 var ANTHROPIC_KEY = process.env.ANTHROPIC_API_KEY_GRILLAS
 var PREDICTOR_URL = process.env.PREDICTOR_URL || 'https://www.mulleryperez.cl/api/predictions/motor-2025'
+
+// Cliente Supabase propio para evitar problemas de scope
+var _sb = null
+function getSb() {
+  if (!_sb && process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_KEY) {
+    _sb = supabaseLib.createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY)
+  }
+  return _sb
+}
 
 // ═══════════════════════════════════════════════
 // 1. CONSULTAR PREDICTOR M&P
@@ -57,9 +67,11 @@ async function consultarPredictor(industria, presupuesto, tasaCierre, ticketProm
 // ═══════════════════════════════════════════════
 // 2. CARGAR ÁRBOLES ANTERIORES DEL MISMO CLIENTE
 // ═══════════════════════════════════════════════
-async function cargarArbolesAnteriores(supabase, suscripcionId) {
+async function cargarArbolesAnteriores(supabaseParam, suscripcionId) {
+  var db = supabaseParam || getSb()
+  if (!db) return []
   try {
-    var res = await supabase.from('copilot_arboles')
+    var res = await db.from('copilot_arboles')
       .select('mes, anio, datos, predictor_input, predictor_output, created_at')
       .eq('suscripcion_id', suscripcionId)
       .order('created_at', { ascending: false })
@@ -417,13 +429,14 @@ async function generarArbolDecision(perfil, brief, industria, memoria, aprendiza
     }
 
     // Guardar en Supabase
-    if (supabase && suscripcionId) {
+    var db = supabase || getSb()
+    if (db && suscripcionId) {
       try {
         var ahora = new Date()
         var mesTarget = ahora.getMonth() + 2 > 12 ? 1 : ahora.getMonth() + 2
         var anioTarget = ahora.getMonth() + 2 > 12 ? ahora.getFullYear() + 1 : ahora.getFullYear()
 
-        var existeRes = await supabase.from('copilot_arboles')
+        var existeRes = await db.from('copilot_arboles')
           .select('id')
           .eq('suscripcion_id', suscripcionId)
           .eq('mes', mesTarget)
@@ -440,9 +453,9 @@ async function generarArbolDecision(perfil, brief, industria, memoria, aprendiza
         }
 
         if (existeRes.data && existeRes.data.length > 0) {
-          await supabase.from('copilot_arboles').update(payload).eq('id', existeRes.data[0].id)
+          await db.from('copilot_arboles').update(payload).eq('id', existeRes.data[0].id)
         } else {
-          await supabase.from('copilot_arboles').insert(payload)
+          await db.from('copilot_arboles').insert(payload)
         }
 
         // Guardar aprendizajes del árbol
