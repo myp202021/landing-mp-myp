@@ -1195,7 +1195,56 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
               </div>
             </div>
 
-            {/* GRILLA MENSUAL — formato cards (igual que copies) */}
+            {/* VISTA CALENDARIO */}
+            {grillasMes.length > 0 && (function() {
+              var grillaPosts = [] as any[]
+              grillasMes.forEach(function(g: any) {
+                if (Array.isArray(g.datos)) g.datos.forEach(function(p: any) { grillaPosts.push(p) })
+              })
+              if (grillaPosts.length === 0) return null
+
+              // Organizar por día del mes
+              var porDia: any = {}
+              grillaPosts.forEach(function(p: any) {
+                var dia = p.dia || p.dia_mes || 0
+                if (dia > 0) {
+                  if (!porDia[dia]) porDia[dia] = []
+                  porDia[dia].push(p)
+                }
+              })
+
+              var diasEnMes = new Date(anioGlobal, mesGlobal, 0).getDate()
+              var primerDia = new Date(anioGlobal, mesGlobal - 1, 1).getDay() // 0=dom
+              var diasSemana = ['Dom', 'Lun', 'Mar', 'Mi\u00e9', 'Jue', 'Vie', 'S\u00e1b']
+              var celdas = []
+              for (var i = 0; i < primerDia; i++) celdas.push(null)
+              for (var d = 1; d <= diasEnMes; d++) celdas.push(d)
+
+              return <div className="bg-[#1a1745] rounded-xl border border-white/[0.06] p-4 mb-8">
+                <h2 className="text-sm font-bold text-white mb-3">Calendario {MESES_NOMBRES[mesGlobal]} {anioGlobal}</h2>
+                <div className="grid grid-cols-7 gap-1">
+                  {diasSemana.map(function(ds) {
+                    return <div key={ds} className="text-[10px] text-[#64748b] text-center font-bold py-1">{ds}</div>
+                  })}
+                  {celdas.map(function(dia, idx) {
+                    if (dia === null) return <div key={'empty-' + idx} />
+                    var postsDelDia = porDia[dia] || []
+                    var tienePost = postsDelDia.length > 0
+                    return <div key={dia} className={'rounded-lg p-1.5 min-h-[52px] ' + (tienePost ? 'bg-indigo-900/30 border border-indigo-500/20' : 'bg-[#12102a] border border-white/[0.03]')}>
+                      <div className="text-[10px] text-[#64748b] mb-0.5">{dia}</div>
+                      {postsDelDia.map(function(p: any, pi: number) {
+                        var color = (p.plataforma || '').includes('LinkedIn') ? 'bg-blue-500' : 'bg-pink-500'
+                        return <div key={pi} className={'text-[8px] text-white px-1 py-0.5 rounded truncate mb-0.5 ' + color} title={p.gancho || p.titulo || p.titulo_grafico || ''}>
+                          {(p.gancho || p.titulo || p.titulo_grafico || '').substring(0, 20)}
+                        </div>
+                      })}
+                    </div>
+                  })}
+                </div>
+              </div>
+            })()}
+
+            {/* GRILLA MENSUAL — formato cards */}
             {grillasMes.length > 0 && (
               <div className="space-y-4 mb-8">
                 <div className="flex items-center justify-between">
