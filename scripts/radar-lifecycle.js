@@ -52,21 +52,25 @@ async function main() {
         emailDia5(sub, dataCliente5))
     }
 
-    // DIA 6: Fin trial manana
+    // DIA 6: Fin trial manana (con data real — muestra lo que pierde)
     if (sub.estado === 'trial' && diasDesdeCreacion === 6) {
       console.log('  Dia 6 (fin trial): ' + sub.email)
-      await enviarEmail(sub.email, 'Manana se desactiva tu Copilot | Elige tu plan',
-        emailFinTrial(sub))
+      var dataCliente6 = await cargarDataCliente(sub.id)
+      await enviarEmail(sub.email, dataCliente6.totalPosts > 0
+        ? 'Copilot analizo ' + dataCliente6.totalPosts + ' posts de tu competencia | Manana se desactiva'
+        : 'Manana se desactiva tu Copilot | Elige tu plan',
+        emailFinTrial(sub, dataCliente6))
     }
 
-    // TRIAL VENCIDO: desactivar
+    // TRIAL VENCIDO: desactivar (con data real — muestra lo que pierde)
     if (sub.estado === 'trial' && sub.trial_ends && new Date(sub.trial_ends) < hoy) {
       console.log('  Trial vencido: ' + sub.email + ' -> cancelado')
+      var dataClienteVencido = await cargarDataCliente(sub.id)
       await supabase.from('clipping_suscripciones')
         .update({ estado: 'cancelado', updated_at: hoy.toISOString() })
         .eq('id', sub.id)
       await enviarEmail(sub.email, 'Tu Copilot se desactivo | Reactivalo cuando quieras',
-        emailDesactivado(sub))
+        emailDesactivado(sub, dataClienteVencido))
     }
 
     // PAGO FALLIDO
@@ -238,16 +242,23 @@ function emailDia5(sub, data) {
   return html
 }
 
-// ═══ DIA 6: FIN TRIAL ═══
-function emailFinTrial(sub) {
+// ═══ DIA 6: FIN TRIAL (con data real) ═══
+function emailFinTrial(sub, data) {
+  data = data || {}
   var nombre = (sub.perfil_empresa || {}).nombre || sub.nombre || sub.email.split('@')[0]
   return header('Ma\u00f1ana se desactiva tu Copilot', 'Elige tu plan para seguir')
     + '<div style="background:white;padding:28px 32px;">'
     + '<p style="font-size:15px;line-height:1.7;color:#374151;">Hola ' + nombre + ',</p>'
-    + '<p style="font-size:15px;line-height:1.7;color:#374151;">Ma\u00f1ana se desactiva tu prueba gratuita. Si quieres seguir recibiendo inteligencia competitiva, contenido profesional y plan de acci\u00f3n mensual, elige tu plan:</p>'
+    + (data.totalPosts > 0
+      ? '<p style="font-size:15px;line-height:1.7;color:#374151;">En 7 d\u00edas, Copilot analiz\u00f3 <strong>' + data.totalPosts + ' posts</strong> de ' + data.empresas.length + ' competidores'
+        + (data.auditoriaScore > 0 ? ', te dio un score de <strong>' + data.auditoriaScore + '/100</strong>' : '')
+        + (data.reporteAcciones > 0 ? ', y gener\u00f3 <strong>' + data.reporteAcciones + ' acciones</strong> priorizadas' : '')
+        + '. Ma\u00f1ana todo eso se desactiva.</p>'
+      : '<p style="font-size:15px;line-height:1.7;color:#374151;">Ma\u00f1ana se desactiva tu prueba gratuita.</p>')
+    + '<p style="font-size:15px;line-height:1.7;color:#374151;">Elige tu plan para seguir recibiendo inteligencia competitiva, contenido profesional y plan de acci\u00f3n:</p>'
     + '<div style="background:#f5f3ff;padding:16px 20px;border-radius:10px;margin:16px 0;">'
-    + '<p style="margin:0 0 8px;font-size:14px;color:#4c1d95;"><strong>Starter $34.990/mes</strong> \u2014 Competencia + contenido b\u00e1sico + auditor\u00eda</p>'
-    + '<p style="margin:0 0 8px;font-size:14px;color:#4c1d95;"><strong>Pro $69.990/mes</strong> \u2014 Todo Starter + copies semanales + guiones + ads + reporte</p>'
+    + '<p style="margin:0 0 8px;font-size:14px;color:#4c1d95;"><strong>Starter $34.990/mes</strong> \u2014 Competencia + contenido + auditor\u00eda vs industria</p>'
+    + '<p style="margin:0 0 8px;font-size:14px;color:#4c1d95;"><strong>Pro $69.990/mes</strong> \u2014 Todo Starter + copies semanales + guiones + ads + reporte con acciones</p>'
     + '<p style="margin:0;font-size:14px;color:#4c1d95;"><strong>Business $119.990/mes</strong> \u2014 Todo Pro + benchmark estrat\u00e9gico + \u00e1rbol de inversi\u00f3n + reuni\u00f3n</p>'
     + '</div>'
     + boton('Elegir plan', 'https://www.mulleryperez.cl/copilot/contratar/' + sub.id)
@@ -256,17 +267,33 @@ function emailFinTrial(sub) {
     + footer()
 }
 
-// ═══ DESACTIVADO ═══
-function emailDesactivado(sub) {
+// ═══ DESACTIVADO (con data real — muestra lo que pierde) ═══
+function emailDesactivado(sub, data) {
+  data = data || {}
   var nombre = (sub.perfil_empresa || {}).nombre || sub.nombre || sub.email.split('@')[0]
-  return header('Tu Copilot se desactiv\u00f3', 'Reactivalo cuando quieras')
+  var html = header('Tu Copilot se desactiv\u00f3', 'Reactivalo cuando quieras')
     + '<div style="background:white;padding:28px 32px;">'
     + '<p style="font-size:15px;line-height:1.7;color:#374151;">Hola ' + nombre + ',</p>'
-    + '<p style="font-size:15px;line-height:1.7;color:#374151;">Tu prueba termin\u00f3 y no elegiste plan. Tu competencia sigue publicando pero Copilot dej\u00f3 de avisarte.</p>'
-    + '<p style="font-size:15px;line-height:1.7;color:#374151;">Cuando quieras reactivar, todo vuelve a funcionar con tus cuentas y aprendizajes guardados:</p>'
-    + boton('Reactivar Copilot', 'https://www.mulleryperez.cl/copilot/contratar/' + sub.id)
+
+  if (data.totalPosts > 0) {
+    html += '<p style="font-size:15px;line-height:1.7;color:#374151;">Tu prueba termin\u00f3. Mientras tanto, tu competencia sigue publicando:</p>'
+    html += '<div style="background:#FEF2F2;padding:16px 20px;border-radius:10px;margin:16px 0;border:1px solid #FECACA;">'
+    data.empresas.slice(0, 3).forEach(function(e) {
+      html += '<p style="margin:0 0 6px;font-size:14px;color:#991B1B;"><strong>' + e.nombre + '</strong> public\u00f3 ' + e.posts + ' posts (' + e.avgEng + ' eng/post) y t\u00fa ya no lo sabes</p>'
+    })
+    html += '</div>'
+    if (data.aprendizajes > 0) {
+      html += '<p style="font-size:14px;color:#374151;">Copilot acumul\u00f3 <strong>' + data.aprendizajes + ' aprendizajes</strong> sobre tu mercado. Est\u00e1n guardados y esperando.</p>'
+    }
+  } else {
+    html += '<p style="font-size:15px;line-height:1.7;color:#374151;">Tu prueba termin\u00f3 y no elegiste plan. Tu competencia sigue publicando pero Copilot dej\u00f3 de avisarte.</p>'
+  }
+
+  html += '<p style="font-size:15px;line-height:1.7;color:#374151;">Cuando quieras reactivar, todo vuelve a funcionar con tus cuentas y aprendizajes guardados:</p>'
+    + boton('Reactivar Copilot desde $34.990/mes', 'https://www.mulleryperez.cl/copilot/contratar/' + sub.id)
     + '</div>'
     + footer()
+  return html
 }
 
 // ═══ PAGO FALLIDO ═══
