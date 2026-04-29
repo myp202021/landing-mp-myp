@@ -80,6 +80,7 @@ var adsCreativeModule = require('./radar-ads-creative.js')
 var memoriaPersistenteModule = require('./radar-memoria-persistente.js')
 var metaAdLibraryModule = require('./radar-meta-adlibrary.js')
 var arbolDecisionModule = require('./radar-arbol-decision.js')
+var reporteModule = require('./radar-reporte.js')
 
 var APIFY_TOKEN = process.env.APIFY_TOKEN
 var RESEND_KEY = process.env.RESEND
@@ -691,6 +692,21 @@ async function main() {
           console.log('   ✓ ' + totalAprendidos + ' aprendizajes guardados para próximo run')
         }
       } catch (e) { console.log('   Aprendizajes save error: ' + e.message) }
+    }
+
+    // Agente Reporte — el cerebro que resume TODO (semanal/mensual)
+    var reporteData = null
+    if ((MODO === 'semanal' || MODO === 'mensual') && ANTHROPIC_KEY) {
+      reporteData = await ejecutarConRetry('Reporte inteligente', function() {
+        return reporteModule.generarReporte({
+          posts: misPosts, postsCliente: postsCliente, perfil: sub.perfil_empresa || {},
+          brief: sub.brief_estrategico, contenido: contenidoSugerido ? [{ datos: contenidoSugerido, score_promedio: 0 }] : [],
+          auditoria: auditoriaData, benchmark: benchmarkData, arbol: arbolDecision,
+          adsCreativos: adsCreativos, guiones: guionesData ? [{ datos: guionesData }] : [],
+          ideas: [], aprendizajes: aprendizajesPersistentes,
+        }, supabase, sub.id)
+      })
+      if (reporteData) console.log('   ✓ Reporte inteligente generado')
     }
 
     var html = generarEmailHTML(misPosts, cuentas, hoy, MODO, resumenIA, empresas, trends, sub.id, contenidoSugerido, sub.estado, sub.plan, sub.trial_ends, grillaMensual, guionesData, null, auditoriaData, sub.brief_estrategico)

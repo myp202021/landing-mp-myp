@@ -319,6 +319,7 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
   var [benchmarks, setBenchmarks] = useState([] as any[])
   var [adsCreativos, setAdsCreativos] = useState([] as any[])
   var [arboles, setArboles] = useState([] as any[])
+  var [reportes, setReportes] = useState([] as any[])
   var [aprendizajes, setAprendizajes] = useState([] as any[])
   var [loading, setLoading] = useState(true)
   var [error, setError] = useState('')
@@ -398,7 +399,13 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
         var r9 = await fetch(SUPABASE_URL + '/rest/v1/copilot_arboles?suscripcion_id=eq.' + props.suscripcionId + '&select=*&order=created_at.desc', { headers: hdrs() })
         var arbolesData = await r9.json()
         setArboles(Array.isArray(arbolesData) ? arbolesData : [])
-      } catch (e) { /* tabla puede no existir */ }
+      } catch (e) {}
+
+      try {
+        var r11 = await fetch(SUPABASE_URL + '/rest/v1/copilot_reportes?suscripcion_id=eq.' + props.suscripcionId + '&select=*&order=created_at.desc', { headers: hdrs() })
+        var repData = await r11.json()
+        setReportes(Array.isArray(repData) ? repData : [])
+      } catch (e) {}
 
       try {
         var r10 = await fetch(SUPABASE_URL + '/rest/v1/copilot_aprendizajes?suscripcion_id=eq.' + props.suscripcionId + '&activo=eq.true&select=*&order=confianza.desc&limit=20', { headers: hdrs() })
@@ -2471,9 +2478,65 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
               </div>
 
               <div className="p-6 space-y-6">
-                {/* 1. EXECUTIVE SUMMARY */}
+                {/* REPORTE IA — si existe */}
+                {(function() {
+                  var rep = reportes.length > 0 ? reportes[0] : null
+                  var rd = rep && rep.datos ? rep.datos : null
+                  if (!rd) return null
+                  return <div className="space-y-4 mb-6 border-b border-white/[0.06] pb-6">
+                    <div className="bg-gradient-to-r from-emerald-500/10 to-teal-500/10 border border-emerald-500/20 rounded-xl p-5">
+                      <h3 className="text-sm font-bold text-emerald-400 mb-2">{'\uD83E\uDDE0'} Reporte IA — {rd.titulo || 'Resumen inteligente'}</h3>
+                      <p className="text-sm text-[#c4b5fd] leading-relaxed">{rd.resumen_ejecutivo}</p>
+                    </div>
+
+                    {rd.acciones_inteligentes && rd.acciones_inteligentes.length > 0 && (
+                      <div>
+                        <h4 className="text-xs font-bold text-white mb-2">Acciones inteligentes</h4>
+                        <div className="space-y-2">
+                          {rd.acciones_inteligentes.map(function(a: any, ai: number) {
+                            var areaColors: any = { competencia: 'border-pink-500/30', contenido: 'border-purple-500/30', paid: 'border-blue-500/30', organico: 'border-green-500/30', comercial: 'border-amber-500/30' }
+                            return <div key={ai} className={'bg-[#12102a] rounded-lg p-3 border-l-2 ' + (areaColors[a.area] || 'border-indigo-500/30')}>
+                              <div className="flex items-center gap-2 mb-1">
+                                <span className="text-[10px] font-bold text-indigo-400">#{a.prioridad || ai + 1}</span>
+                                <span className="text-[10px] bg-indigo-900/30 text-indigo-300 px-2 py-0.5 rounded">{a.area || 'general'}</span>
+                                <span className="text-[10px] text-[#475569]">{a.plazo || ''}</span>
+                              </div>
+                              <p className="text-xs text-white font-semibold">{a.accion}</p>
+                              <p className="text-[10px] text-[#94a3b8] mt-1">{a.por_que}</p>
+                              {a.impacto_esperado && <p className="text-[10px] text-green-400 mt-1">{'\u2192'} {a.impacto_esperado}</p>}
+                            </div>
+                          })}
+                        </div>
+                      </div>
+                    )}
+
+                    {rd.hallazgos_clave && rd.hallazgos_clave.length > 0 && (
+                      <div>
+                        <h4 className="text-xs font-bold text-white mb-2">Hallazgos clave</h4>
+                        <div className="space-y-1">
+                          {rd.hallazgos_clave.map(function(h: any, hi: number) {
+                            var icon = h.tipo === 'positivo' ? '\u2705' : h.tipo === 'negativo' ? '\u274C' : '\u26A0\uFE0F'
+                            return <div key={hi} className="flex items-start gap-2 text-xs">
+                              <span>{icon}</span>
+                              <span className="text-[#94a3b8]">{h.hallazgo} <span className="text-[#475569]">({h.fuente})</span></span>
+                            </div>
+                          })}
+                        </div>
+                      </div>
+                    )}
+
+                    {rd.prediccion_mes_siguiente && (
+                      <div className="bg-amber-900/10 border border-amber-500/20 rounded-lg p-3">
+                        <p className="text-[10px] font-bold text-amber-400 mb-1">Predicci{'ó'}n pr{'ó'}ximo mes</p>
+                        <p className="text-xs text-amber-200">{rd.prediccion_mes_siguiente}</p>
+                      </div>
+                    )}
+                  </div>
+                })()}
+
+                {/* 1. EXECUTIVE SUMMARY — resumen básico */}
                 <div>
-                  <h3 className="text-sm font-bold text-indigo-700 uppercase tracking-wider mb-3">Resumen ejecutivo</h3>
+                  <h3 className="text-sm font-bold text-indigo-700 uppercase tracking-wider mb-3">Resumen competencia</h3>
                   <div className="bg-indigo-900/10 rounded-lg p-4 border-l-4 border-indigo-500">
                     <p className="text-sm text-[#c4b5fd] leading-relaxed">{summaryText}</p>
                   </div>
