@@ -325,7 +325,7 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
   var [periodo, setPeriodo] = useState('7d')
   var [tab, setTab] = useState('competencia')
   // SELECTOR GLOBAL DE MES — uno solo para TODOS los tabs
-  var [mesGlobal, setMesGlobal] = useState(Math.max(5, new Date().getMonth() + 1)) // mínimo mayo 2026
+  var [mesGlobal, setMesGlobal] = useState(new Date().getMonth() + 1) // mes actual
   var [anioGlobal, setAnioGlobal] = useState(new Date().getFullYear())
   var [ideaForm, setIdeaForm] = useState(false)
   var [ideaTitulo, setIdeaTitulo] = useState('')
@@ -501,10 +501,8 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
   var diasOrdenados = Object.keys(porDia).sort()
   var maxPostsDia = Math.max(1, Math.max.apply(null, Object.values(porDia).concat([1])))
 
-  // Filtrar contenido: solo mayo 2026 en adelante (abril tiene formato diferente, se descarta)
-  var contenidoFiltrado = contenido.filter(function(c: any) { return (c.anio > 2026) || (c.anio === 2026 && c.mes >= 5) })
-  var grillas = contenidoFiltrado.filter(function(c: any) { return c.tipo === 'grilla' })
-  var copies = contenidoFiltrado.filter(function(c: any) { return c.tipo === 'copy' })
+  var grillas = contenido.filter(function(c: any) { return c.tipo === 'grilla' })
+  var copies = contenido.filter(function(c: any) { return c.tipo === 'copy' })
   var grillasMes = grillas.filter(function(c: any) { return c.mes === mesGlobal })
   var copiesMes = copies.filter(function(c: any) { return c.mes === mesGlobal })
 
@@ -1895,8 +1893,10 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
         {/* TAB: ÁRBOL DE DECISIÓN */}
         {/* TAB: ÁRBOL DE DECISIÓN + PREDICTOR */}
         {tab === 'arbol' && (function() {
+          // Buscar árbol del mes o el más reciente disponible
           var arbolMes = arboles.filter(function(a: any) { return a.mes === mesGlobal && a.anio === anioGlobal })
           var arbol = arbolMes.length > 0 ? arbolMes[0] : (arboles.length > 0 ? arboles[0] : null)
+          // Si hay árbol de otro mes, igual mostrarlo
           var datos = arbol && arbol.datos ? arbol.datos : null
           var perfil = sub && sub.perfil_empresa ? sub.perfil_empresa : {}
           var rubro = perfil.rubro || ''
