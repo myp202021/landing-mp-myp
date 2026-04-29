@@ -33,14 +33,14 @@ var IMG_REPORTS = '/copilot/mockup-reporte.png'
 var IMG_ENGAGEMENT = '/copilot/mockup-auditoria.png'
 var IMG_BENCHMARK = '/copilot/mockup-dashboard.png'
 
-/* ─── FEATURE CARDS DATA ─── */
+/* ─── FEATURE CARDS DATA — enfocado en tomadores de decisión ─── */
 var featureCards = [
-  { title: 'Monitoreo de competencia', desc: 'Observa qué publican tus competidores en Instagram, LinkedIn, Facebook y prensa. Cada día, sin que muevas un dedo.', img: '/copilot/mockup-email-diario.png', icon: '🔍' },
-  { title: 'Copies listos para publicar', desc: 'Tres agentes de IA trabajan en cadena: briefing, redacción y control de calidad. Recibes el copy final listo.', img: '/copilot/mockup-copies.png', icon: '✍️' },
-  { title: 'Grilla mensual con calendario', desc: 'Hasta 16 posts por mes con copy, hashtags y sugerencia de diseño. Todo organizado por semana.', img: '/copilot/mockup-grilla.png', icon: '📅' },
-  { title: 'Guiones de reels y stories', desc: 'Scripts listos para grabar: gancho, desarrollo y cierre. Con timing y sugerencias visuales.', img: '/copilot/mockup-auditoria.png', icon: '🎬' },
-  { title: 'WhatsApp + Email', desc: 'Te llega todo donde ya estás. Notificaciones diarias, semanales y mensuales según tu plan.', img: '/copilot/mockup-email-diario.png', icon: '📲' },
-  { title: 'Reporte ejecutivo', desc: 'Un PDF de 1 página con lo esencial: qué hizo la competencia, qué publicaste, qué viene. Para tu jefe.', img: '/copilot/mockup-reporte.png', icon: '📊' },
+  { title: 'Sabe qu\u00e9 hace tu competencia', desc: 'Cada semana analiza qu\u00e9 publica tu competencia en Instagram, qu\u00e9 les funciona y qu\u00e9 no. Te dice en qu\u00e9 eres mejor y d\u00f3nde est\u00e1s quedando atr\u00e1s.', img: '/copilot/mockup-email-diario.png', icon: '\uD83D\uDD0D' },
+  { title: 'Genera tu contenido del mes', desc: 'Copies, grillas y guiones de video listos para publicar. Basados en lo que funciona en tu industria, no en plantillas gen\u00e9ricas. Con calendario y hashtags.', img: '/copilot/mockup-copies.png', icon: '\u270D\uFE0F' },
+  { title: 'Te dice qu\u00e9 hacer cada mes', desc: 'Acciones concretas: "publica 2 reels sobre X", "tu competidor Y subi\u00f3 30%, haz esto". No m\u00e9tricas vac\u00edas, decisiones claras.', img: '/copilot/mockup-grilla.png', icon: '\uD83C\uDFAF' },
+  { title: 'Compara tus n\u00fameros con la industria', desc: 'Auditor\u00eda mensual que compara tu engagement, frecuencia y formatos contra el promedio de tu industria en Chile. Sabes si vas bien o mal.', img: '/copilot/mockup-auditoria.png', icon: '\uD83D\uDCCA' },
+  { title: 'Mejora cada mes, autom\u00e1ticamente', desc: 'Copilot recuerda qu\u00e9 funcion\u00f3 y qu\u00e9 no. El contenido de junio es mejor que el de mayo porque aprendi\u00f3 de tus datos. Como un equipo que no olvida.', img: '/copilot/mockup-email-diario.png', icon: '\uD83E\uDDE0' },
+  { title: 'Tu departamento de marketing', desc: 'Brief estrat\u00e9gico, copies, grilla, guiones, auditor\u00eda, benchmark y reporte ejecutivo. Todo por una fracci\u00f3n de lo que cuesta un equipo.', img: '/copilot/mockup-reporte.png', icon: '\uD83D\uDE80' },
 ]
 
 /* ─── PLANS DATA ─── */
@@ -203,13 +203,13 @@ export default function CopilotClient() {
           {/* Left */}
           <div style={{ flex: 1 }}>
             <div className="reveal" style={{ display: 'inline-block', background: 'linear-gradient(135deg, #EEF2FF, #F3E8FF)', borderRadius: 100, padding: '8px 20px', marginBottom: 24, fontSize: 14, fontWeight: 600, color: '#4338CA' }}>
-              Potenciado con IA · OpenAI + Claude
+              Inteligencia de mercado + contenido + estrategia
             </div>
-            <h1 className="reveal" style={{ fontSize: 52, fontWeight: 800, lineHeight: 1.1, margin: '0 0 20px', color: '#111827' }}>
-              Tu <span className="gradient-text">copiloto</span> de marketing digital
+            <h1 className="reveal" style={{ fontSize: 48, fontWeight: 800, lineHeight: 1.1, margin: '0 0 20px', color: '#111827' }}>
+              Sabe qu{'\u00e9'} hace tu competencia.<br/>Te dice qu{'\u00e9'} hacer <span className="gradient-text">diferente</span>.
             </h1>
-            <p className="reveal" style={{ fontSize: 19, lineHeight: 1.65, color: '#6B7280', margin: '0 0 32px', maxWidth: 520 }}>
-              Monitorea a tu competencia, genera contenido con IA, recibe grillas mensuales y reportes ejecutivos. Todo automático, cada semana en tu email y WhatsApp.
+            <p className="reveal" style={{ fontSize: 19, lineHeight: 1.65, color: '#6B7280', margin: '0 0 32px', maxWidth: 560 }}>
+              Copilot analiza tu mercado cada semana, genera el contenido del mes, y te dice exactamente qu{'\u00e9'} hacer para crecer. Cada mes entiende mejor tu negocio y mejora las sugerencias. Tu departamento de marketing digital por una fracci{'\u00f3'}n del costo.
             </p>
             <div className="reveal" style={{ display: 'flex', gap: 16, flexWrap: 'wrap', marginBottom: 20 }}>
               <button className="btn-primary" onClick={function() { scrollTo('trial') }}>

@@ -3,8 +3,8 @@ import CopilotClient from './CopilotClient'
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'M&P Copilot — Tu copiloto de marketing digital en Redes Sociales | Muller y Perez',
-  description: 'Tu copiloto de marketing digital. Monitorea competencia en IG, FB, LinkedIn. Genera copies con IA, grillas mensuales, reportes ejecutivos. Desde $34.990/mes. Prueba gratis 7 dias.',
+  title: 'M&P Copilot — Inteligencia de mercado + contenido + estrategia con IA | Muller y Perez',
+  description: 'Copilot analiza tu competencia, genera contenido profesional y te dice que hacer cada mes. Aprende de tu negocio y mejora automaticamente. Desde $34.990/mes. Prueba gratis 7 dias.',
   keywords: [
     'copiloto marketing digital chile',
     'monitoreo competencia redes sociales chile',
@@ -18,8 +18,8 @@ export const metadata: Metadata = {
   ],
   alternates: { canonical: 'https://www.mulleryperez.cl/copilot' },
   openGraph: {
-    title: 'M&P Copilot — Tu copiloto de marketing digital en Redes Sociales',
-    description: 'Tu copiloto de marketing digital. Monitorea competencia, genera copies IA, grillas mensuales y reportes ejecutivos. Desde $34.990/mes.',
+    title: 'M&P Copilot — Inteligencia de mercado + contenido + estrategia con IA',
+    description: 'Analiza tu competencia, genera contenido profesional y te dice que hacer cada mes. Aprende de tu negocio. Desde $34.990/mes.',
     url: 'https://www.mulleryperez.cl/copilot',
     siteName: 'Muller y Perez',
     type: 'website',
