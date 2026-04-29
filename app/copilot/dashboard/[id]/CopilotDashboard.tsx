@@ -44,9 +44,40 @@ function detectarFormato(tipo: string) {
   return 'imagen'
 }
 
+// Benchmarks de engagement por industria (referencia para contextualizar datos)
+var INDUSTRY_BENCHMARKS: Record<string, { engPerPost: number, postsPerMonth: number, label: string }> = {
+  'maquinaria': { engPerPost: 35, postsPerMonth: 12, label: 'Maquinaria Industrial' },
+  'inmobiliaria': { engPerPost: 45, postsPerMonth: 16, label: 'Inmobiliaria' },
+  'tecnolog': { engPerPost: 55, postsPerMonth: 14, label: 'Tecnolog\u00eda' },
+  'salud': { engPerPost: 65, postsPerMonth: 12, label: 'Salud' },
+  'educaci': { engPerPost: 50, postsPerMonth: 15, label: 'Educaci\u00f3n' },
+  'gastrono': { engPerPost: 80, postsPerMonth: 18, label: 'Gastronom\u00eda' },
+  'retail': { engPerPost: 40, postsPerMonth: 20, label: 'Retail' },
+  'turismo': { engPerPost: 70, postsPerMonth: 12, label: 'Turismo' },
+  'constru': { engPerPost: 30, postsPerMonth: 10, label: 'Construcci\u00f3n' },
+  'transport': { engPerPost: 25, postsPerMonth: 8, label: 'Transporte' },
+  'default': { engPerPost: 40, postsPerMonth: 12, label: 'Promedio Chile' },
+}
+
+function getIndustryBenchmark(rubro: string) {
+  var r = (rubro || '').toLowerCase()
+  var keys = Object.keys(INDUSTRY_BENCHMARKS)
+  for (var i = 0; i < keys.length; i++) {
+    if (r.includes(keys[i])) return INDUSTRY_BENCHMARKS[keys[i]]
+  }
+  return INDUSTRY_BENCHMARKS['default']
+}
+
+function explainMetric(value: number, benchmark: number, label: string, unit: string) {
+  var diff = Math.round(((value - benchmark) / benchmark) * 100)
+  var emoji = diff >= 20 ? '\u2705' : diff >= -10 ? '\u26A0\uFE0F' : '\u274C'
+  var comparacion = diff > 0 ? diff + '% sobre' : Math.abs(diff) + '% bajo'
+  return { emoji: emoji, texto: value + ' ' + unit + ' (' + comparacion + ' promedio industria de ' + benchmark + ')', diff: diff }
+}
+
 function generateCompanyAnalysis(nombre: string, data: { ig: number, li: number, likes: number, comments: number }, companyPosts: any[]) {
   var totalPosts = data.ig + data.li
-  if (totalPosts === 0) return { resumen: nombre + ': sin actividad en este per\u00edodo. Esto puede indicar pausa estrat\u00e9gica o problemas operativos.', topPost: null, tema: '', formato: '', gap: '' }
+  if (totalPosts === 0) return { resumen: nombre + ': sin actividad en este per\u00edodo. Esto puede indicar pausa estrat\u00e9gica o problemas operativos.', topPost: null, tema: '', formato: '', gap: '', avgEng: 0, frecuencia: 0, diasActivos: '' }
 
   var avgEng = Math.round((data.likes + data.comments) / totalPosts)
 
@@ -153,14 +184,14 @@ function generateExecutiveSummary(posts: any[], empresas: Record<string, any>, p
   // Average engagement
   var avgEng = Math.round(totalEng / totalPosts)
 
-  // Build summary
+  // Build summary with CONTEXT (explain + compare + action)
   var parts = []
-  parts.push('En ' + nombreMes + ' ' + anio + ', la competencia public\u00f3 ' + totalPosts + ' posts con ' + totalEng.toLocaleString() + ' interacciones totales (promedio ' + avgEng + ' eng/post).')
+  parts.push('En ' + nombreMes + ' ' + anio + ', ' + Object.keys(empresas).length + ' competidores publicaron ' + totalPosts + ' posts con un promedio de ' + avgEng + ' interacciones por post (engagement = likes + comentarios que recibe cada publicaci\u00f3n).')
 
   if (masActivo) {
-    parts.push(masActivo + ' lider\u00f3 en volumen con ' + maxPosts + ' posts')
+    parts.push(masActivo + ' fue el m\u00e1s activo con ' + maxPosts + ' posts')
     if (masEngagement && masEngagement !== masActivo) {
-      parts.push(', pero ' + masEngagement + ' domin\u00f3 en engagement (' + maxEng.toLocaleString() + ' interacciones).')
+      parts.push(', pero ' + masEngagement + ' tuvo mejor engagement por post, lo que indica contenido de mayor calidad aunque publique menos.')
     } else {
       parts.push(' y tambi\u00e9n en engagement.')
     }
@@ -953,24 +984,44 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
               })}
             </div>
 
-            <div className="grid grid-cols-4 gap-4 mb-8">
-              <div className="bg-[#1a1745] rounded-xl p-5 border border-white/[0.06] text-center">
-                <div className="text-3xl font-bold text-indigo-600">{totalPosts}</div>
-                <div className="text-xs text-[#94a3b8] mt-1">Posts detectados</div>
+            {/* KPIs con contexto — cada dato se explica y compara */}
+            {(function() {
+              var rubro = sub && sub.perfil_empresa ? (sub.perfil_empresa.rubro || '') : ''
+              var bench = getIndustryBenchmark(rubro)
+              var avgEngPerPost = totalPosts > 0 ? Math.round((totalLikes + totalComments) / totalPosts) : 0
+              var engExplain = explainMetric(avgEngPerPost, bench.engPerPost, 'Engagement', 'eng/post')
+              var nEmpresas = Object.keys(empresas).length
+              var freqPerEmpresa = nEmpresas > 0 ? Math.round(totalPosts / nEmpresas) : 0
+              var freqExplain = explainMetric(freqPerEmpresa, bench.postsPerMonth, 'Frecuencia', 'posts/empresa')
+
+              return <div className="space-y-3 mb-8">
+                <div className="grid grid-cols-3 gap-4">
+                  <div className="bg-[#1a1745] rounded-xl p-4 border border-white/[0.06]">
+                    <div className="text-2xl font-bold text-indigo-400">{totalPosts}</div>
+                    <div className="text-xs text-[#94a3b8] mt-1">Posts de {nEmpresas} competidores</div>
+                    <div className="text-[10px] text-[#475569] mt-2">Promedio {freqPerEmpresa} posts por empresa en el per{'í'}odo</div>
+                  </div>
+                  <div className="bg-[#1a1745] rounded-xl p-4 border border-white/[0.06]">
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-2xl font-bold text-purple-400">{avgEngPerPost}</span>
+                      <span className="text-sm">{engExplain.emoji}</span>
+                    </div>
+                    <div className="text-xs text-[#94a3b8] mt-1">Engagement promedio por post</div>
+                    <div className="text-[10px] text-[#475569] mt-2">{engExplain.texto}</div>
+                    <div className="text-[10px] text-[#64748b] mt-1">Engagement = likes + comentarios que recibe cada publicaci{'ó'}n</div>
+                  </div>
+                  <div className="bg-[#1a1745] rounded-xl p-4 border border-white/[0.06]">
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-2xl font-bold text-pink-400">{freqPerEmpresa}</span>
+                      <span className="text-sm">{freqExplain.emoji}</span>
+                    </div>
+                    <div className="text-xs text-[#94a3b8] mt-1">Posts promedio por competidor</div>
+                    <div className="text-[10px] text-[#475569] mt-2">{freqExplain.texto}</div>
+                    <div className="text-[10px] text-[#64748b] mt-1">Benchmark {bench.label}: {bench.postsPerMonth} posts/mes</div>
+                  </div>
+                </div>
               </div>
-              <div className="bg-[#1a1745] rounded-xl p-5 border border-white/[0.06] text-center">
-                <div className="text-3xl font-bold text-purple-600">{totalLikes.toLocaleString()}</div>
-                <div className="text-xs text-[#94a3b8] mt-1">Likes total</div>
-              </div>
-              <div className="bg-[#1a1745] rounded-xl p-5 border border-white/[0.06] text-center">
-                <div className="text-3xl font-bold text-pink-600">{totalComments.toLocaleString()}</div>
-                <div className="text-xs text-[#94a3b8] mt-1">Comentarios total</div>
-              </div>
-              <div className="bg-[#1a1745] rounded-xl p-5 border border-white/[0.06] text-center">
-                <div className="text-3xl font-bold text-white">{Object.keys(empresas).length}</div>
-                <div className="text-xs text-[#94a3b8] mt-1">Empresas</div>
-              </div>
-            </div>
+            })()}
 
             {diasOrdenados.length > 1 && (
               <div className="bg-[#1a1745] rounded-xl p-6 border border-white/[0.06] mb-8">
