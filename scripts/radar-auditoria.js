@@ -131,6 +131,12 @@ async function generarAuditoria(posts, contenido, cuentas, supabase, suscripcion
     return generarAuditoriaBasica(posts, postsCliente, contenido, bench, avgEngPerPost, avgCopyScore, formatos, engPorEmpresa, supabase, suscripcionId, modo)
   }
 
+  // Separar métricas por red
+  var igPosts = posts.filter(function(p) { return (p.red || 'Instagram') === 'Instagram' })
+  var liPosts = posts.filter(function(p) { return p.red === 'LinkedIn' })
+  var avgEngIG = igPosts.length > 0 ? Math.round(igPosts.reduce(function(s, p) { return s + (p.likes||0) + (p.comments||0) }, 0) / igPosts.length) : 0
+  var avgEngLI = liPosts.length > 0 ? Math.round(liPosts.reduce(function(s, p) { return s + (p.likes||0) + (p.comments||0) }, 0) / liPosts.length) : 0
+
   var empresasResumen = Object.keys(engPorEmpresa).map(function(n) {
     var e = engPorEmpresa[n]
     return n + ': ' + e.posts + ' posts, avg ' + Math.round(e.eng / e.posts) + ' eng/post'
@@ -144,7 +150,9 @@ async function generarAuditoria(posts, contenido, cuentas, supabase, suscripcion
     + 'BENCHMARK INDUSTRIA: ' + bench.engPerPost + ' eng/post, ' + bench.postsPerMonth + ' posts/mes, mejor formato: ' + bench.bestFormat + '\n\n'
     + 'COMPETENCIA (' + empresasCount + ' empresas, ' + posts.length + ' posts):\n'
     + empresasResumen + '\n'
-    + 'Engagement promedio: ' + avgEngPerPost + ' eng/post (benchmark: ' + bench.engPerPost + ')\n'
+    + 'Engagement promedio general: ' + avgEngPerPost + ' eng/post (benchmark: ' + bench.engPerPost + ')\n'
+    + (igPosts.length > 0 ? 'Instagram: ' + igPosts.length + ' posts, avg ' + avgEngIG + ' eng/post\n' : '')
+    + (liPosts.length > 0 ? 'LinkedIn: ' + liPosts.length + ' posts, avg ' + avgEngLI + ' eng/post (benchmark LI: ~25-50 reactions)\n' : '')
     + 'Ratio comentarios/likes: ' + (commentRatio * 100).toFixed(1) + '% (benchmark: ' + (bench.commentRatio * 100).toFixed(1) + '%)\n'
     + 'Formatos: ' + formatosStr + '\n\n'
     + (postsCliente.length > 0 ? 'CLIENTE PROPIO: ' + postsCliente.length + ' posts, avg ' + clienteAvg + ' eng/post (vs competencia: ' + avgEngPerPost + ')\n\n' : '')
