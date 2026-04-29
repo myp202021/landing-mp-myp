@@ -35,8 +35,13 @@ async function sbSelect(table, query) {
 
 async function sbInsert(table, row) {
   if (!SB_URL || !SB_HEADERS) return null
-  var res = await fetch(SB_URL + '/rest/v1/' + table, { method: 'POST', headers: SB_HEADERS, body: JSON.stringify(row) })
+  var body = safeJSON(row)
+  var res = await fetch(SB_URL + '/rest/v1/' + table, { method: 'POST', headers: SB_HEADERS, body: JSON.stringify(body) })
   return await res.json()
+}
+
+function safeJSON(obj) {
+  try { return JSON.parse(JSON.stringify(obj)) } catch (e) { return {} }
 }
 
 async function sbUpdate(table, id, data) {
@@ -449,7 +454,7 @@ async function generarArbolDecision(perfil, brief, industria, memoria, aprendiza
           anio: anioTarget,
           datos: arbol,
           predictor_input: { industria: industriaPredictor, presupuesto: presupuesto, tasa_cierre: tasaCierre, ticket: ticketPromedio },
-          predictor_output: prediccion ? { escenarios: prediccion.escenarios, mix: prediccion.mix_campanas, performance: prediccion.performance } : null,
+          predictor_output: prediccion ? safeJSON({ escenarios: prediccion.escenarios || {}, mix: prediccion.mix_campanas || [] }) : null,
         }
 
         if (existeRes.length > 0) {
