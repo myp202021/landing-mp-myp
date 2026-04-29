@@ -23,18 +23,29 @@ async function generarReporte(contexto, supabase, suscripcionId) {
   // Construir resumen de TODOS los agentes
   var agentesCtx = ''
 
-  // 1. Competencia
+  // 1. Competencia — separada por red
   if (c.posts && c.posts.length > 0) {
     var empresas = {}
+    var igTotal = 0, liTotal = 0, igEng = 0, liEng = 0
     c.posts.forEach(function(p) {
       var n = p.nombre || p.handle || '?'
-      if (!empresas[n]) empresas[n] = { posts: 0, eng: 0 }
-      empresas[n].posts++
-      empresas[n].eng += (p.likes || 0) + (p.comments || 0)
+      var red = ((p.red || 'Instagram') + '').toLowerCase()
+      if (!empresas[n]) empresas[n] = { ig: 0, li: 0, igEng: 0, liEng: 0 }
+      var eng = (p.likes || 0) + (p.comments || 0)
+      if (red === 'linkedin') { empresas[n].li++; empresas[n].liEng += eng; liTotal++; liEng += eng }
+      else { empresas[n].ig++; empresas[n].igEng += eng; igTotal++; igEng += eng }
     })
-    agentesCtx += 'COMPETENCIA: ' + c.posts.length + ' posts de ' + Object.keys(empresas).length + ' empresas.\n'
+    agentesCtx += 'COMPETENCIA: ' + c.posts.length + ' posts (' + igTotal + ' IG + ' + liTotal + ' LI) de ' + Object.keys(empresas).length + ' empresas.\n'
+    if (igTotal > 0) agentesCtx += '  Instagram: ' + igTotal + ' posts, avg ' + Math.round(igEng / igTotal) + ' eng/post\n'
+    if (liTotal > 0) agentesCtx += '  LinkedIn: ' + liTotal + ' posts, avg ' + Math.round(liEng / liTotal) + ' eng/post\n'
     Object.keys(empresas).forEach(function(n) {
-      agentesCtx += '  - ' + n + ': ' + empresas[n].posts + ' posts, avg ' + Math.round(empresas[n].eng / empresas[n].posts) + ' eng/post\n'
+      var e = empresas[n]
+      var total = e.ig + e.li
+      var avgEng = total > 0 ? Math.round((e.igEng + e.liEng) / total) : 0
+      var redes = []
+      if (e.ig > 0) redes.push('IG:' + e.ig)
+      if (e.li > 0) redes.push('LI:' + e.li)
+      agentesCtx += '  - ' + n + ': ' + redes.join('+') + ' posts, avg ' + avgEng + ' eng/post\n'
     })
   }
 

@@ -1018,12 +1018,19 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
               var freqPerEmpresa = nEmpresas > 0 ? Math.round(totalPosts / nEmpresas) : 0
               var freqExplain = explainMetric(freqPerEmpresa, bench.postsPerMonth, 'Frecuencia', 'posts/empresa')
 
+              var igCount = posts.filter(function(p: any) { return (p.red || 'Instagram') === 'Instagram' }).length
+              var liCount = posts.filter(function(p: any) { return p.red === 'LinkedIn' }).length
+
               return <div className="space-y-3 mb-8">
                 <div className="grid grid-cols-3 gap-4">
                   <div className="bg-[#1a1745] rounded-xl p-4 border border-white/[0.06]">
                     <div className="text-2xl font-bold text-indigo-400">{totalPosts}</div>
                     <div className="text-xs text-[#94a3b8] mt-1">Posts de {nEmpresas} competidores</div>
-                    <div className="text-[10px] text-[#475569] mt-2">Promedio {freqPerEmpresa} posts por empresa en el per{'í'}odo</div>
+                    <div className="text-[10px] text-[#475569] mt-2">
+                      {igCount > 0 && <span className="text-pink-400">{igCount} IG</span>}
+                      {igCount > 0 && liCount > 0 && <span className="text-[#475569]"> + </span>}
+                      {liCount > 0 && <span className="text-blue-400">{liCount} LI</span>}
+                    </div>
                   </div>
                   <div className="bg-[#1a1745] rounded-xl p-4 border border-white/[0.06]">
                     <div className="flex items-baseline gap-2">

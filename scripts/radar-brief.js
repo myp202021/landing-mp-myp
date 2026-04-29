@@ -65,7 +65,16 @@ function detectarPatrones(posts) {
     if (texto.includes('nosotros') || texto.includes('tu') || texto.includes('juntos') || texto.includes('equipo')) tonos.cercano++
   })
 
-  return { temas: temas, formatos: formatos, tonos: tonos }
+  // Separar métricas por red
+  var porRed = { instagram: { posts: 0, eng: 0 }, linkedin: { posts: 0, eng: 0 } }
+  posts.forEach(function(p) {
+    var red = ((p.red || 'Instagram') + '').toLowerCase()
+    var eng = (parseInt(p.likes) || 0) + (parseInt(p.comments) || 0)
+    if (red === 'linkedin') { porRed.linkedin.posts++; porRed.linkedin.eng += eng }
+    else { porRed.instagram.posts++; porRed.instagram.eng += eng }
+  })
+
+  return { temas: temas, formatos: formatos, tonos: tonos, porRed: porRed }
 }
 
 // ═══════════════════════════════════════════════
@@ -190,6 +199,16 @@ async function generarBrief(suscriptor, posts, supabase, memoria) {
   Object.keys(patrones.tonos).forEach(function(tono) {
     patronesStr += '- ' + tono + ': ' + patrones.tonos[tono] + ' posts\n'
   })
+  // Desglose por red
+  if (patrones.porRed) {
+    var pr = patrones.porRed
+    patronesStr += '\nPRESENCIA POR RED:\n'
+    if (pr.instagram.posts > 0) patronesStr += '- Instagram: ' + pr.instagram.posts + ' posts, avg ' + Math.round(pr.instagram.eng / pr.instagram.posts) + ' eng/post\n'
+    if (pr.linkedin.posts > 0) patronesStr += '- LinkedIn: ' + pr.linkedin.posts + ' posts, avg ' + Math.round(pr.linkedin.eng / pr.linkedin.posts) + ' eng/post\n'
+    if (pr.instagram.posts > 0 && pr.linkedin.posts > 0) {
+      patronesStr += '- IMPORTANTE: los competidores usan AMBAS redes. Los territorios deben contemplar contenido para Instagram (visual, cercano) Y LinkedIn (profesional, B2B, datos).\n'
+    }
+  }
 
   // Contexto estacional
   var ahora = new Date()

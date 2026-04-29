@@ -487,6 +487,13 @@ function construirPrompt(perfil, metricasCompetidores, metricasCliente, tendenci
       return t + ': ' + m.temas[t].count + ' posts (avg eng: ' + Math.round(m.temas[t].totalEng / m.temas[t].count) + ')'
     })
     if (temaList.length > 0) p += '  Temas: ' + temaList.join(', ') + '\n'
+    // Desglose por red
+    if (m.redes) {
+      var redesList = Object.keys(m.redes).map(function(r) {
+        return r + ': ' + m.redes[r].count + ' posts (avg eng: ' + Math.round(m.redes[r].totalEng / m.redes[r].count) + ')'
+      })
+      if (redesList.length > 1) p += '  Redes: ' + redesList.join(' | ') + '\n'
+    }
   })
   p += '\n'
 
