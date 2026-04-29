@@ -1073,12 +1073,11 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
                   <thead>
                     <tr className="text-[10px] text-[#94a3b8] uppercase tracking-wider">
                       <th className="px-4 py-3 text-left font-semibold">Empresa</th>
-                      <th className="px-3 py-3 text-center font-semibold">Posts</th>
-                      <th className="px-3 py-3 text-center font-semibold">Likes</th>
-                      <th className="px-3 py-3 text-center font-semibold">Comments</th>
-                      <th className="px-3 py-3 text-center font-semibold" title="Engagement por post = (likes + comentarios) / cantidad de posts. Mide cu&aacute;nto interact&uacute;a la audiencia con cada publicaci&oacute;n.">Eng/post <span className="text-[8px] text-[#475569] font-normal">(likes+comments/posts)</span></th>
-                      <th className="px-3 py-3 text-left font-semibold">Formato top</th>
-                      <th className="px-3 py-3 text-left font-semibold">Tema top</th>
+                      <th className="px-2 py-3 text-center font-semibold"><span className="bg-pink-600 text-white px-1.5 py-0.5 rounded text-[8px]">IG</span></th>
+                      <th className="px-2 py-3 text-center font-semibold"><span className="bg-blue-600 text-white px-1.5 py-0.5 rounded text-[8px]">LI</span></th>
+                      <th className="px-3 py-3 text-center font-semibold">Eng/post</th>
+                      <th className="px-3 py-3 text-left font-semibold">Formato</th>
+                      <th className="px-3 py-3 text-left font-semibold">Tema</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-white/[0.04]">
@@ -1088,17 +1087,16 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
                       var avgEng = total > 0 ? Math.round((e.likes + e.comments) / total) : 0
                       var compPosts = postsByCompany[nombre] || []
                       var analysis = generateCompanyAnalysis(nombre, e, compPosts)
-                      var inactive = total === 0
-                      return <tr key={nombre} className={inactive ? 'bg-red-900/10' : i % 2 === 0 ? '' : 'bg-[#12102a]'}>
+                      var sinDatos = total === 0
+                      return <tr key={nombre} className={sinDatos ? 'opacity-40' : i % 2 === 0 ? '' : 'bg-[#12102a]'}>
                         <td className="px-4 py-3">
-                          <span className={'font-semibold ' + (inactive ? 'text-red-400' : 'text-white')}>{nombre}</span>
-                          {inactive && <span className="text-[10px] text-red-400 ml-2">inactivo</span>}
+                          <span className="font-semibold text-white">{nombre}</span>
+                          {sinDatos && <span className="text-[10px] text-[#475569] ml-2">sin posts recientes</span>}
                         </td>
-                        <td className="px-3 py-3 text-center font-bold text-white">{total}</td>
-                        <td className="px-3 py-3 text-center text-pink-400">{e.likes.toLocaleString()}</td>
-                        <td className="px-3 py-3 text-center text-indigo-400">{e.comments.toLocaleString()}</td>
+                        <td className="px-2 py-3 text-center text-pink-400 font-bold">{e.ig || '-'}</td>
+                        <td className="px-2 py-3 text-center text-blue-400 font-bold">{e.li || '-'}</td>
                         <td className="px-3 py-3 text-center">
-                          <span className={'font-bold ' + (avgEng >= 100 ? 'text-green-400' : avgEng >= 40 ? 'text-yellow-400' : 'text-red-400')}>{avgEng}</span>
+                          <span className={'font-bold ' + (avgEng >= 100 ? 'text-green-400' : avgEng >= 40 ? 'text-yellow-400' : avgEng > 0 ? 'text-red-400' : 'text-[#475569]')}>{avgEng || '-'}</span>
                         </td>
                         <td className="px-3 py-3 text-xs text-[#a5b4fc]">{analysis.formato || '-'}</td>
                         <td className="px-3 py-3 text-xs text-[#a5b4fc]">{analysis.tema || '-'}</td>
