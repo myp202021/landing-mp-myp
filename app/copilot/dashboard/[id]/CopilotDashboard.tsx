@@ -325,7 +325,7 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
   var [periodo, setPeriodo] = useState('7d')
   var [tab, setTab] = useState('competencia')
   // SELECTOR GLOBAL DE MES — uno solo para TODOS los tabs
-  var [mesGlobal, setMesGlobal] = useState(new Date().getMonth() + 1)
+  var [mesGlobal, setMesGlobal] = useState(Math.max(5, new Date().getMonth() + 1)) // mínimo mayo 2026
   var [anioGlobal, setAnioGlobal] = useState(new Date().getFullYear())
   var [ideaForm, setIdeaForm] = useState(false)
   var [ideaTitulo, setIdeaTitulo] = useState('')
@@ -501,8 +501,10 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
   var diasOrdenados = Object.keys(porDia).sort()
   var maxPostsDia = Math.max(1, Math.max.apply(null, Object.values(porDia).concat([1])))
 
-  var grillas = contenido.filter(function(c: any) { return c.tipo === 'grilla' })
-  var copies = contenido.filter(function(c: any) { return c.tipo === 'copy' })
+  // Filtrar contenido: solo mayo 2026 en adelante (abril tiene formato diferente, se descarta)
+  var contenidoFiltrado = contenido.filter(function(c: any) { return (c.anio > 2026) || (c.anio === 2026 && c.mes >= 5) })
+  var grillas = contenidoFiltrado.filter(function(c: any) { return c.tipo === 'grilla' })
+  var copies = contenidoFiltrado.filter(function(c: any) { return c.tipo === 'copy' })
   var grillasMes = grillas.filter(function(c: any) { return c.mes === mesGlobal })
   var copiesMes = copies.filter(function(c: any) { return c.mes === mesGlobal })
 
@@ -2303,24 +2305,32 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
                 {/* 2. COMPETENCIA ANALYSIS — per company */}
                 <div>
                   <h3 className="text-sm font-bold text-indigo-700 uppercase tracking-wider mb-3">An\u00e1lisis por competidor</h3>
-                  <div className="grid grid-cols-4 gap-4 mb-4">
-                    <div className="bg-indigo-900/20 rounded-lg p-4 text-center">
-                      <div className="text-2xl font-bold text-indigo-600">{totalPostsComp}</div>
-                      <div className="text-xs text-[#94a3b8] mt-1">Posts totales</div>
+                  {(function() {
+                    var rubro = sub && sub.perfil_empresa ? (sub.perfil_empresa.rubro || '') : ''
+                    var bench = getIndustryBenchmark(rubro)
+                    var engExpl = explainMetric(avgEngComp, bench.engPerPost, 'eng', 'eng/post')
+                    return <div className="grid grid-cols-3 gap-4 mb-4">
+                      <div className="bg-indigo-900/20 rounded-lg p-4">
+                        <div className="text-2xl font-bold text-indigo-400">{totalPostsComp}</div>
+                        <div className="text-xs text-[#94a3b8] mt-1">Posts de {Object.keys(empresas).length} competidores</div>
+                        <div className="text-[10px] text-[#475569] mt-1">Promedio {Object.keys(empresas).length > 0 ? Math.round(totalPostsComp / Object.keys(empresas).length) : 0} posts por empresa</div>
+                      </div>
+                      <div className="bg-indigo-900/20 rounded-lg p-4">
+                        <div className="flex items-baseline gap-2">
+                          <span className="text-2xl font-bold text-purple-400">{avgEngComp}</span>
+                          <span className="text-sm">{engExpl.emoji}</span>
+                        </div>
+                        <div className="text-xs text-[#94a3b8] mt-1">Engagement promedio por post</div>
+                        <div className="text-[10px] text-[#475569] mt-1">{engExpl.texto}</div>
+                        <div className="text-[10px] text-[#64748b] mt-1">Engagement = likes + comentarios por publicaci{'ó'}n. Mide qu{'é'} tanto interact{'ú'}a la audiencia con el contenido.</div>
+                      </div>
+                      <div className="bg-indigo-900/20 rounded-lg p-4">
+                        <div className="text-2xl font-bold text-pink-400">{bench.engPerPost}</div>
+                        <div className="text-xs text-[#94a3b8] mt-1">Benchmark {bench.label}</div>
+                        <div className="text-[10px] text-[#475569] mt-1">Promedio de la industria en Chile. Si tu competencia est{'á'} {engExpl.diff > 0 ? 'sobre' : 'bajo'} este n{'ú'}mero, el mercado es {engExpl.diff > 0 ? 'activo' : 'poco competitivo'} en redes.</div>
+                      </div>
                     </div>
-                    <div className="bg-indigo-900/20 rounded-lg p-4 text-center">
-                      <div className="text-2xl font-bold text-purple-600">{totalEngComp.toLocaleString()}</div>
-                      <div className="text-xs text-[#94a3b8] mt-1">Engagement total</div>
-                    </div>
-                    <div className="bg-indigo-900/20 rounded-lg p-4 text-center">
-                      <div className="text-2xl font-bold text-pink-600">{avgEngComp}</div>
-                      <div className="text-xs text-[#94a3b8] mt-1">Eng promedio/post</div>
-                    </div>
-                    <div className="bg-indigo-900/20 rounded-lg p-4 text-center">
-                      <div className="text-2xl font-bold text-white">{Object.keys(empresas).length}</div>
-                      <div className="text-xs text-[#94a3b8] mt-1">Empresas</div>
-                    </div>
-                  </div>
+                  })()}
 
                   <div className="space-y-3">
                     {companyAnalyses.map(function(ca, ci) {
