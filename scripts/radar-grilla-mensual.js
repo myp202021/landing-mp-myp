@@ -40,7 +40,6 @@ async function generarGrillaMensual(posts, empresas, suscriptor, mesSiguiente, a
     return null
   }
 
-  // Extraer perfil del suscriptor
   var perfil = suscriptor.perfil_empresa || {}
   var nombreEmpresa = perfil.nombre || suscriptor.nombre || 'Mi empresa'
   var rubro = perfil.rubro || inferirRubro(suscriptor.cuentas || [])
@@ -53,28 +52,112 @@ async function generarGrillaMensual(posts, empresas, suscriptor, mesSiguiente, a
   var fbCliente = perfil.facebook || ''
   var propuestaValor = perfil.propuesta_valor || ''
   var descripcionCliente = perfil.descripcion || ''
+  var tieneIG = plataformas.indexOf('Instagram') !== -1
+  var tieneLI = plataformas.indexOf('LinkedIn') !== -1
 
   briefEstrategico = briefEstrategico || null
   copiesPrevios = copiesPrevios || []
 
-  console.log('   Empresa: ' + nombreEmpresa + ' | Rubro: ' + rubro + ' | Web: ' + (webCliente || 'n/a') + ' | Plataformas: ' + plataformas.join(', '))
-  if (briefEstrategico) console.log('   Brief estratégico conectado: ' + (briefEstrategico.territorios_contenido || []).length + ' territorios, ' + (briefEstrategico.reglas_contenido || []).length + ' reglas')
-  if (copiesPrevios.length > 0) console.log('   Copies previos conectados: ' + copiesPrevios.length + ' (evitando overlap)')
+  console.log('   Empresa: ' + nombreEmpresa + ' | Rubro: ' + rubro + ' | Plataformas: ' + plataformas.join(', '))
 
-  // Extraer insights de los posts de competencia
   var insights = extraerInsights(posts)
 
-  // ═══ PASO 1: OpenAI genera brief ═══
-  console.log('   GRILLA PASO 1: OpenAI genera brief...')
+  // ═══ PRE-ASIGNACIÓN DE SLOTS (código, no IA) ═══
+  // La IA no decide estructura — el código la fuerza
+  console.log('   PRE-ASIGNACIÓN de ' + cantidadPosts + ' slots...')
+
+  var diasLaborales = []
+  var primerDia = new Date(anio, mesSiguiente - 1, 1)
+  var diasEnMes = new Date(anio, mesSiguiente, 0).getDate()
+  var diasSemana = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado']
+  for (var d = 1; d <= diasEnMes; d++) {
+    var dow = new Date(anio, mesSiguiente - 1, d).getDay()
+    if (dow >= 1 && dow <= 5) diasLaborales.push({ dia: d, dia_semana: diasSemana[dow], semana: Math.ceil(d / 7) })
+  }
+
+  // Distribuir slots entre días laborales
+  var step = Math.max(1, Math.floor(diasLaborales.length / cantidadPosts))
+  var slotsAsignados = []
+  for (var i = 0; i < cantidadPosts && i * step < diasLaborales.length; i++) {
+    slotsAsignados.push(diasLaborales[Math.min(i * step, diasLaborales.length - 1)])
+  }
+  // Si faltan slots, agregar al final
+  while (slotsAsignados.length < cantidadPosts && diasLaborales.length > 0) {
+    slotsAsignados.push(diasLaborales[slotsAsignados.length % diasLaborales.length])
+  }
+
+  // Distribuir plataformas: 60% IG, 40% LI (si tiene ambas)
+  var platDistrib = []
+  if (tieneIG && tieneLI) {
+    var nIG = Math.ceil(cantidadPosts * 0.6)
+    var nLI = cantidadPosts - nIG
+    for (var pi = 0; pi < cantidadPosts; pi++) {
+      // Alternar: IG, IG, LI, IG, IG, LI...
+      platDistrib.push(pi % 3 === 2 ? 'LinkedIn' : 'Instagram')
+    }
+  } else if (tieneIG) {
+    for (var pi2 = 0; pi2 < cantidadPosts; pi2++) platDistrib.push('Instagram')
+  } else if (tieneLI) {
+    for (var pi3 = 0; pi3 < cantidadPosts; pi3++) platDistrib.push('LinkedIn')
+  } else {
+    for (var pi4 = 0; pi4 < cantidadPosts; pi4++) platDistrib.push('Instagram')
+  }
+
+  // Distribuir ángulos: rotar obligatoriamente
+  var angulosRotacion = ['educativo', 'comercial', 'caso_exito', 'diferenciacion', 'tendencia', 'objecion']
+  var angulosAsignados = []
+  for (var ai = 0; ai < cantidadPosts; ai++) {
+    angulosAsignados.push(angulosRotacion[ai % angulosRotacion.length])
+  }
+  // Máximo 2 estacionales (reemplazan los últimos 2)
+  var est = ESTACIONALIDAD[mesSiguiente] || ''
+  if (est) {
+    angulosAsignados[cantidadPosts - 2] = 'estacional'
+    angulosAsignados[cantidadPosts - 1] = 'estacional'
+  }
+
+  // Distribuir formatos: variar
+  var formatosRotacion = ['Post', 'Carrusel', 'Reel', 'Post', 'Video', 'Carrusel']
+  var formatosLI = ['Articulo', 'Carrusel', 'Post', 'Articulo', 'Post', 'Carrusel']
+
+  // Armar slots finales
+  var slotsPre = []
+  for (var si = 0; si < cantidadPosts; si++) {
+    var plat = platDistrib[si]
+    var formato = plat === 'LinkedIn' ? formatosLI[si % formatosLI.length] : formatosRotacion[si % formatosRotacion.length]
+    slotsPre.push({
+      dia: slotsAsignados[si].dia,
+      dia_semana: slotsAsignados[si].dia_semana,
+      semana: slotsAsignados[si].semana,
+      plataforma: plat,
+      tipo_post: formato,
+      angulo: angulosAsignados[si],
+    })
+  }
+
+  console.log('   Slots: ' + slotsPre.filter(function(s) { return s.plataforma === 'Instagram' }).length + ' IG + ' + slotsPre.filter(function(s) { return s.plataforma === 'LinkedIn' }).length + ' LI')
+  console.log('   Ángulos: ' + angulosAsignados.filter(function(a,i,arr) { return arr.indexOf(a) === i }).join(', '))
+
+  // ═══ PASO 1: OpenAI genera SOLO ganchos y argumentos para cada slot ═══
+  console.log('   GRILLA PASO 1: OpenAI genera ganchos para ' + slotsPre.length + ' slots...')
   var brief = await generarBrief(nombreEmpresa, rubro, tono, diferenciadores, plataformas, insights, mesSiguiente, anio, {
     web: webCliente, instagram: igCliente, linkedin: liCliente, facebook: fbCliente,
     propuesta_valor: propuestaValor, descripcion: descripcionCliente
-  }, cantidadPosts, briefEstrategico, copiesPrevios, memoria)
+  }, cantidadPosts, briefEstrategico, copiesPrevios, memoria, slotsPre)
   if (!brief || !brief.posts || brief.posts.length === 0) {
     console.log('   Brief vacio, abortando grilla')
     return null
   }
-  console.log('   Brief OK: ' + brief.posts.length + ' posts planificados')
+  // Merge pre-asignación con ganchos del modelo
+  for (var mi = 0; mi < Math.min(brief.posts.length, slotsPre.length); mi++) {
+    brief.posts[mi].dia = slotsPre[mi].dia
+    brief.posts[mi].dia_semana = slotsPre[mi].dia_semana
+    brief.posts[mi].semana = slotsPre[mi].semana
+    brief.posts[mi].plataforma = slotsPre[mi].plataforma
+    brief.posts[mi].tipo_post = slotsPre[mi].tipo_post
+    brief.posts[mi].angulo = slotsPre[mi].angulo
+  }
+  console.log('   Brief OK: ' + brief.posts.length + ' posts con slots pre-asignados')
 
   // ═══ PASO 2: Claude genera copies ═══
   console.log('   GRILLA PASO 2: Claude genera copies...')
@@ -294,7 +377,7 @@ function extraerInsights(posts) {
 // ═══════════════════════════════════════════════
 // PASO 1: OpenAI genera brief
 // ═══════════════════════════════════════════════
-async function generarBrief(nombre, rubro, tono, difs, plats, insights, mes, anio, extra, cantidadPosts, briefEstrategico, copiesPrevios, memoria) {
+async function generarBrief(nombre, rubro, tono, difs, plats, insights, mes, anio, extra, cantidadPosts, briefEstrategico, copiesPrevios, memoria, slotsPre) {
   cantidadPosts = cantidadPosts || 16
   var est = ESTACIONALIDAD[mes] || ''
   extra = extra || {}
@@ -373,47 +456,46 @@ async function generarBrief(nombre, rubro, tono, difs, plats, insights, mes, ani
     copiesCtx += 'IMPORTANTE: La grilla debe complementar estos copies, NO repetirlos.\n\n'
   }
 
-  var prompt = 'Eres director de estrategia de contenido para redes sociales en Chile. '
-    + 'Genera un plan de ' + cantidadPosts + ' posts para ' + MESES[mes] + ' ' + anio + '.\n\n'
+  // Construir la tabla de slots pre-asignados para el prompt
+  var slotsCtx = ''
+  if (slotsPre && slotsPre.length > 0) {
+    slotsCtx = '=== SLOTS PRE-ASIGNADOS (NO cambiar plataforma, formato ni ángulo) ===\n'
+    slotsPre.forEach(function(s, si) {
+      slotsCtx += (si + 1) + '. ' + s.dia_semana + ' ' + s.dia + ' | ' + s.plataforma + ' | ' + s.tipo_post + ' | ' + s.angulo + '\n'
+    })
+    slotsCtx += '\nPara CADA slot, genera SOLO: gancho, argumento, cta, tipo_contenido, objetivo.\n'
+    slotsCtx += 'NO cambies la plataforma, formato ni ángulo — ya están decididos.\n\n'
+  }
+
+  var prompt = 'Eres director de estrategia de contenido para redes sociales en Chile.\n'
+    + 'La ESTRUCTURA de la grilla ya está decidida (plataformas, formatos, ángulos). Tú solo generas el CONTENIDO de cada post.\n\n'
     + '=== EMPRESA ===\n' + nombre + ' | Rubro: ' + rubro + '\n'
     + 'Tono: ' + tono + '\n'
     + (difs.length > 0 ? 'Diferenciadores: ' + difs.join(', ') + '\n' : '')
     + empresaExtra
-    + 'Plataformas: ' + plats.join(', ') + '\n'
     + briefCtx
     + copiesCtx + '\n'
-    + '=== CONTEXTO COMPETITIVO (datos reales de Radar) ===\n'
-    + 'Posts de competencia analizados: ' + insights.totalPosts + '\n'
-    + 'Empresa mas activa: ' + insights.empresaMasActiva + '\n'
-    + 'Formato ganador del mes: ' + insights.formatoGanador + '\n'
-    + 'Temas de competencia: ' + insights.temasCompetencia.substring(0, 500) + '\n\n'
-    + '=== ESTACIONALIDAD ' + MESES[mes].toUpperCase() + ' ===\n' + est + '\n\n'
+    + '=== COMPETENCIA ===\n'
+    + 'Posts analizados: ' + insights.totalPosts + ' | Empresa más activa: ' + insights.empresaMasActiva + '\n'
+    + 'Formato ganador: ' + insights.formatoGanador + '\n'
+    + 'Temas competencia: ' + insights.temasCompetencia.substring(0, 300) + '\n\n'
+    + '=== ESTACIONALIDAD ' + MESES[mes].toUpperCase() + ' (MÁXIMO 2 posts sobre esto) ===\n' + est + '\n\n'
     + (aprendizajeCtx ? aprendizajeCtx + '\n' : '')
+    + slotsCtx
     + '=== TAREA ===\n'
-    + 'Genera ' + cantidadPosts + ' posts. Para CADA post define:\n'
-    + '- semana: 1-4\n- dia: numero del mes\n- dia_semana: Lunes-Viernes\n'
-    + '- plataforma: ' + plats.join(' o ') + ' (alternar)\n'
-    + '- tipo_post: Post|Carrusel|Reel|Video|Articulo\n'
-    + '- angulo: educativo|comercial|caso_exito|estacional|diferenciacion|objecion (rotar, nunca 2 seguidos iguales)\n'
-    + '- tipo_contenido: tutorial|testimonio|behind the scenes|tip|comparativa|dato|historia|pregunta\n'
-    + '- objetivo: awareness|engagement|conversion|posicionamiento\n'
-    + '- gancho: primera frase ESPECIFICA (dato real, escenario, pregunta provocadora)\n'
+    + 'Para CADA uno de los ' + cantidadPosts + ' slots, genera:\n'
+    + '- gancho: primera frase ESPECÍFICA al rubro (NO genérica, NO "¿Sabías que...")\n'
     + '- argumento: desarrollo central en 1-2 frases\n'
-    + '- cta: cierre con llamado a accion\n\n'
-    + 'REGLAS OBLIGATORIAS DE DIVERSIFICACION:\n\n'
-    + '1. PLATAFORMAS: distribuir equitativamente entre ' + plats.join(' y ') + '.\n'
-    + (plats.length >= 2 ? '   - ' + plats[0] + ': ' + Math.ceil(cantidadPosts * 0.6) + ' posts\n   - ' + plats[1] + ': ' + Math.floor(cantidadPosts * 0.4) + ' posts\n' : '')
-    + '   - LinkedIn: formato artículo/carrusel (profesional). Instagram: reel/post/carrusel (visual)\n\n'
-    + '2. TEMAS: mínimo 6 temas DIFERENTES. NUNCA 2 posts seguidos del mismo tema.\n'
-    + '   - MÁXIMO 2 posts estacionales (' + MESES[mes] + '). El resto deben ser del rubro del cliente.\n'
-    + '   - Mezclar: educativo (3-4), comercial (2-3), caso éxito (2), diferenciación (2), tendencia (2), behind the scenes (1-2)\n\n'
-    + '3. GANCHOS: CADA gancho debe ser DIFERENTE en estructura.\n'
-    + '   - PROHIBIDO empezar con: "¿Sabías que", "¿Te imaginas", "¿Cuántas veces", "En la era digital", "Hoy más que nunca"\n'
-    + '   - PROHIBIDO repetir estructura de gancho (si uno empieza con pregunta, el siguiente NO)\n'
-    + '   - Variar: dato concreto → afirmación contraintuitiva → escenario → problema → resultado\n\n'
-    + '4. FORMATOS: mínimo 3 tipos diferentes (Post, Carrusel, Reel, Video, Artículo)\n'
-    + '   - Usar formato ganador de competencia (' + insights.formatoGanador + ') en al menos 3 posts\n\n'
-    + '5. NO inventes datos, porcentajes ni cifras. Si necesitas un dato, usa "según estudios del sector" NO un número falso.\n\n'
+    + '- cta: llamado a acción específico y medible\n'
+    + '- tipo_contenido: tutorial|testimonio|behind the scenes|tip|comparativa|dato|historia\n'
+    + '- objetivo: awareness|engagement|conversion|posicionamiento\n\n'
+    + 'REGLAS:\n'
+    + '- Respetar plataforma y formato del slot (IG = visual, LI = profesional)\n'
+    + '- LinkedIn: tono B2B, datos de industria, insights para decisores\n'
+    + '- Instagram: visual, cercano, ganchos cortos que paren el scroll\n'
+    + '- CADA gancho debe tener estructura DIFERENTE (dato → afirmación → escenario → problema → resultado)\n'
+    + '- PROHIBIDO: "¿Sabías que", "¿Te imaginas", "En la era digital", datos inventados\n'
+    + '- MÁXIMO 2 posts estacionales. El resto del RUBRO del cliente.\n\n'
     + 'Responde SOLO en JSON: {"posts": [{semana, dia, dia_semana, plataforma, tipo_post, angulo, tipo_contenido, objetivo, gancho, argumento, cta}, ...]}'
 
   try {
