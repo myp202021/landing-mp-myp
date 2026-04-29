@@ -50,7 +50,7 @@ var plans = [
     price: 34990,
     desc: 'Ideal para comenzar a monitorear',
     features: [
-      '5 cuentas Instagram',
+      '5 cuentas Instagram + LinkedIn',
       'Análisis diario con IA',
       '4 posts en grilla mensual',
       'Email diario',
@@ -529,13 +529,13 @@ export default function CopilotClient() {
                 <label style={{ display: 'block', fontSize: 14, fontWeight: 600, color: '#374151', marginBottom: 6 }}>Competidores a monitorear</label>
               </div>
               <div style={{ marginBottom: 12 }}>
-                <input type="url" className="input-field" placeholder="https://instagram.com/competidor1" value={url1} onChange={function(e) { setUrl1(e.target.value) }} />
+                <input type="url" className="input-field" placeholder="Instagram o LinkedIn del competidor 1" value={url1} onChange={function(e) { setUrl1(e.target.value) }} />
               </div>
               <div style={{ marginBottom: 12 }}>
-                <input type="url" className="input-field" placeholder="https://instagram.com/competidor2" value={url2} onChange={function(e) { setUrl2(e.target.value) }} />
+                <input type="url" className="input-field" placeholder="Instagram o LinkedIn del competidor 2" value={url2} onChange={function(e) { setUrl2(e.target.value) }} />
               </div>
               <div style={{ marginBottom: 28 }}>
-                <input type="url" className="input-field" placeholder="https://instagram.com/competidor3" value={url3} onChange={function(e) { setUrl3(e.target.value) }} />
+                <input type="url" className="input-field" placeholder="Instagram o LinkedIn del competidor 3" value={url3} onChange={function(e) { setUrl3(e.target.value) }} />
               </div>
               <button type="submit" className="btn-primary" style={{ width: '100%', textAlign: 'center', fontSize: 17, padding: '16px 32px' }} disabled={enviando}>
                 {enviando ? 'Activando...' : 'Activar mi Copilot gratis'}

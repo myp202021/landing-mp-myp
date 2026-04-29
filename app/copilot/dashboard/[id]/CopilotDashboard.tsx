@@ -1219,7 +1219,7 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
                   return <div key={i} className="px-6 py-4 hover:bg-white/[0.04]">
                     <div className="flex items-start gap-3">
                       <div className="flex flex-col items-center gap-1 flex-shrink-0 mt-0.5">
-                        <span className="text-white text-xs font-bold bg-pink-600 px-2 py-0.5 rounded">IG</span>
+                        <span className={'text-white text-xs font-bold px-2 py-0.5 rounded ' + ((p.red || 'Instagram') === 'LinkedIn' ? 'bg-blue-600' : 'bg-pink-600')}>{(p.red || 'Instagram') === 'LinkedIn' ? 'LI' : 'IG'}</span>
                         <span className="text-[10px] text-[#64748b] font-bold">#{i + 1}</span>
                       </div>
                       <div className="flex-1 min-w-0">
