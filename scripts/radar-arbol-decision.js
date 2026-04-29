@@ -471,13 +471,19 @@ async function generarArbolDecision(perfil, brief, industria, memoria, aprendiza
           anio: anioTarget,
           datos: arbol,
           predictor_input: { industria: industriaPredictor, presupuesto: presupuesto, tasa_cierre: tasaCierre, ticket: ticketPromedio },
-          predictor_output: null, // simplificado para evitar circular refs
+          predictor_output: null,
         }
+
+        console.log('   Árbol payload check: sub=' + suscripcionId + ' mes=' + mesTarget + ' anio=' + anioTarget + ' ramas=' + (arbol.ramas || []).length)
 
         if (existeRes.length > 0) {
           await sbUpdate('copilot_arboles', existeRes[0].id, payload)
         } else {
-          await sbInsert('copilot_arboles', payload)
+          // No usar safeJSON para el insert — el payload es limpio
+          var res2 = await fetch(SB_URL + '/rest/v1/copilot_arboles', { method: 'POST', headers: SB_HEADERS, body: JSON.stringify(payload) })
+          var result2 = await res2.text()
+          if (!res2.ok) console.log('   Árbol INSERT error ' + res2.status + ': ' + result2.substring(0, 300))
+          else console.log('   Árbol INSERT OK')
         }
 
         // Guardar aprendizajes del árbol

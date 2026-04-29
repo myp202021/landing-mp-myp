@@ -69,7 +69,7 @@ async function generarReporte(contexto, supabase, suscripcionId) {
     var bd = c.benchmark.datos || c.benchmark
     agentesCtx += '\nBENCHMARK: '
     if (bd.analisis_ia) agentesCtx += (typeof bd.analisis_ia === 'string' ? bd.analisis_ia : bd.analisis_ia.resumen_ejecutivo || '').substring(0, 200) + '\n'
-    if (bd.content_gaps) agentesCtx += '  Gaps: ' + (bd.content_gaps || []).slice(0, 3).join(', ') + '\n'
+    if (bd.content_gaps && Array.isArray(bd.content_gaps)) agentesCtx += '  Gaps: ' + bd.content_gaps.slice(0, 3).join(', ') + '\n'
   }
 
   // 6. Árbol
