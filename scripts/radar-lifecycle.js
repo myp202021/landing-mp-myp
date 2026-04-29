@@ -88,12 +88,14 @@ async function main() {
 
 // ═══ DATA REAL DEL CLIENTE ═══
 async function cargarDataCliente(suscripcionId) {
-  var data = { totalPosts: 0, empresas: [], topCompetidor: null, topPosts: 0, topEng: 0, avgEng: 0, contenidoCount: 0, auditoriaScore: 0, arbolRamas: 0, reporteAcciones: 0, aprendizajes: 0 }
+  var data = { totalPosts: 0, postsIG: 0, postsLI: 0, empresas: [], topCompetidor: null, topPosts: 0, topEng: 0, avgEng: 0, contenidoCount: 0, auditoriaScore: 0, arbolRamas: 0, reporteAcciones: 0, aprendizajes: 0 }
   try {
     // Posts
-    var postsRes = await supabase.from('radar_posts').select('nombre_empresa, handle, likes, comments').eq('suscripcion_id', suscripcionId)
+    var postsRes = await supabase.from('radar_posts').select('nombre_empresa, handle, likes, comments, red').eq('suscripcion_id', suscripcionId)
     var posts = postsRes.data || []
     data.totalPosts = posts.length
+    data.postsIG = posts.filter(function(p) { return (p.red || 'Instagram') === 'Instagram' }).length
+    data.postsLI = posts.filter(function(p) { return p.red === 'LinkedIn' }).length
     if (posts.length > 0) {
       var porEmpresa = {}
       posts.forEach(function(p) {
@@ -187,7 +189,8 @@ function emailDia3(sub, data) {
     + '<p style="font-size:15px;line-height:1.7;color:#374151;">Hola ' + nombre + ',</p>'
 
   if (data.totalPosts > 0 && data.empresas.length > 0) {
-    html += '<p style="font-size:15px;line-height:1.7;color:#374151;">Copilot analiz\u00f3 <strong>' + data.totalPosts + ' posts</strong> de ' + data.empresas.length + ' competidores. Esto es lo que encontr\u00f3:</p>'
+    var redesStr = data.postsLI > 0 ? data.postsIG + ' en Instagram + ' + data.postsLI + ' en LinkedIn' : data.totalPosts + ' en Instagram'
+    html += '<p style="font-size:15px;line-height:1.7;color:#374151;">Copilot analiz\u00f3 <strong>' + data.totalPosts + ' posts</strong> (' + redesStr + ') de ' + data.empresas.length + ' competidores:</p>'
     html += '<div style="background:#f5f3ff;padding:16px 20px;border-radius:10px;margin:16px 0;">'
     data.empresas.slice(0, 4).forEach(function(e) {
       var engColor = e.avgEng >= 50 ? '#059669' : e.avgEng >= 20 ? '#D97706' : '#DC2626'
