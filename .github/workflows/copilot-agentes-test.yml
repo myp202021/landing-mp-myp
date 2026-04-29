@@ -1,4 +1,4 @@
-name: "Copilot — Test agentes sin scraping"
+name: "Copilot — Pipeline completo (scraping + agentes)"
 
 on:
   workflow_dispatch:
