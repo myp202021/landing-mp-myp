@@ -216,14 +216,28 @@ async function generarAuditoria(posts, contenido, cuentas, supabase, suscripcion
       }
       if (guardar) {
         try {
-          await supabase.from('copilot_auditorias').insert({
-            suscripcion_id: suscripcionId,
-            mes: ahora.getMonth() + 1,
-            anio: ahora.getFullYear(),
-            score_general: parsed.score_general,
-            datos: parsed,
-          })
-          console.log('   Auditoría guardada')
+          // Buscar si ya existe para este mes — si existe, actualizar
+          var existeCheck = await supabase.from('copilot_auditorias')
+            .select('id')
+            .eq('suscripcion_id', suscripcionId)
+            .eq('mes', ahora.getMonth() + 1)
+            .eq('anio', ahora.getFullYear())
+            .limit(1)
+          if (existeCheck.data && existeCheck.data.length > 0) {
+            await supabase.from('copilot_auditorias')
+              .update({ score_general: parsed.score_general, datos: parsed })
+              .eq('id', existeCheck.data[0].id)
+            console.log('   Auditoría actualizada (existía)')
+          } else {
+            await supabase.from('copilot_auditorias').insert({
+              suscripcion_id: suscripcionId,
+              mes: ahora.getMonth() + 1,
+              anio: ahora.getFullYear(),
+              score_general: parsed.score_general,
+              datos: parsed,
+            })
+            console.log('   Auditoría guardada (nueva)')
+          }
         } catch (e) { console.log('   Auditoría save error: ' + e.message) }
       }
     }
