@@ -186,7 +186,7 @@ async function generarAdsCreativos(posts, empresas, perfil, brief, memoria, indu
     + 'Responde SOLO JSON válido.'
 
   try {
-    var res = await apiHelper.callWithRetry(
+    var res = await apiHelper.fetchWithRetry(
       'https://api.anthropic.com/v1/messages',
       {
         method: 'POST',

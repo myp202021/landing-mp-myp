@@ -17,18 +17,31 @@
 var fetch = require('node-fetch')
 var fs = require('fs')
 var path = require('path')
-var supabaseLib = require('@supabase/supabase-js')
 
 var ANTHROPIC_KEY = process.env.ANTHROPIC_API_KEY_GRILLAS
 var PREDICTOR_URL = process.env.PREDICTOR_URL || 'https://www.mulleryperez.cl/api/predictions/motor-2025'
+var SB_URL = process.env.SUPABASE_URL
+var SB_KEY = process.env.SUPABASE_SERVICE_KEY
 
-// Cliente Supabase propio para evitar problemas de scope
-var _sb = null
-function getSb() {
-  if (!_sb && process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_KEY) {
-    _sb = supabaseLib.createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY)
-  }
-  return _sb
+// Helpers Supabase directos (no depende de instancia externa)
+var SB_HEADERS = SB_KEY ? { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=representation' } : null
+
+async function sbSelect(table, query) {
+  if (!SB_URL || !SB_HEADERS) return []
+  var res = await fetch(SB_URL + '/rest/v1/' + table + '?' + query, { headers: SB_HEADERS })
+  var data = await res.json()
+  return Array.isArray(data) ? data : []
+}
+
+async function sbInsert(table, row) {
+  if (!SB_URL || !SB_HEADERS) return null
+  var res = await fetch(SB_URL + '/rest/v1/' + table, { method: 'POST', headers: SB_HEADERS, body: JSON.stringify(row) })
+  return await res.json()
+}
+
+async function sbUpdate(table, id, data) {
+  if (!SB_URL || !SB_HEADERS) return null
+  await fetch(SB_URL + '/rest/v1/' + table + '?id=eq.' + id, { method: 'PATCH', headers: SB_HEADERS, body: JSON.stringify(data) })
 }
 
 // ═══════════════════════════════════════════════
@@ -68,10 +81,19 @@ async function consultarPredictor(industria, presupuesto, tasaCierre, ticketProm
 // 2. CARGAR ÁRBOLES ANTERIORES DEL MISMO CLIENTE
 // ═══════════════════════════════════════════════
 async function cargarArbolesAnteriores(supabaseParam, suscripcionId) {
-  var db = supabaseParam || getSb()
-  if (!db) return []
   try {
-    var res = await db.from('copilot_arboles')
+    var data = await sbSelect('copilot_arboles', 'suscripcion_id=eq.' + suscripcionId + '&order=created_at.desc&limit=6&select=mes,anio,datos,predictor_input,predictor_output,created_at')
+    if (data.length > 0) console.log('   Árboles anteriores cargados: ' + data.length)
+    return data
+  } catch (e) {
+    console.log('   Árboles anteriores error: ' + e.message)
+    return []
+  }
+}
+
+async function _OLD(supabaseParam, suscripcionId) {
+  // deprecated
+  var res = await (supabaseParam).from('copilot_arboles')
       .select('mes, anio, datos, predictor_input, predictor_output, created_at')
       .eq('suscripcion_id', suscripcionId)
       .order('created_at', { ascending: false })
@@ -428,20 +450,14 @@ async function generarArbolDecision(perfil, brief, industria, memoria, aprendiza
       console.log('   Hipótesis nuevas: ' + arbol.hipotesis_nuevas.length)
     }
 
-    // Guardar en Supabase
-    var db = supabase || getSb()
-    if (db && suscripcionId) {
+    // Guardar en Supabase (usando fetch directo)
+    if (suscripcionId) {
       try {
         var ahora = new Date()
         var mesTarget = ahora.getMonth() + 2 > 12 ? 1 : ahora.getMonth() + 2
         var anioTarget = ahora.getMonth() + 2 > 12 ? ahora.getFullYear() + 1 : ahora.getFullYear()
 
-        var existeRes = await db.from('copilot_arboles')
-          .select('id')
-          .eq('suscripcion_id', suscripcionId)
-          .eq('mes', mesTarget)
-          .eq('anio', anioTarget)
-          .limit(1)
+        var existeRes = await sbSelect('copilot_arboles', 'suscripcion_id=eq.' + suscripcionId + '&mes=eq.' + mesTarget + '&anio=eq.' + anioTarget + '&select=id&limit=1')
 
         var payload = {
           suscripcion_id: suscripcionId,
@@ -452,10 +468,10 @@ async function generarArbolDecision(perfil, brief, industria, memoria, aprendiza
           predictor_output: prediccion ? { escenarios: prediccion.escenarios, mix: prediccion.mix_campanas, performance: prediccion.performance } : null,
         }
 
-        if (existeRes.data && existeRes.data.length > 0) {
-          await db.from('copilot_arboles').update(payload).eq('id', existeRes.data[0].id)
+        if (existeRes.length > 0) {
+          await sbUpdate('copilot_arboles', existeRes[0].id, payload)
         } else {
-          await db.from('copilot_arboles').insert(payload)
+          await sbInsert('copilot_arboles', payload)
         }
 
         // Guardar aprendizajes del árbol

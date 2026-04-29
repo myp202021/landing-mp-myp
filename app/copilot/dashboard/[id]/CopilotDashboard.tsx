@@ -1063,6 +1063,75 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
               })}
             </div>
 
+            {/* ANÁLISIS IA — del Benchmark */}
+            {(function() {
+              var bm = benchmarks.length > 0 ? benchmarks[0] : null
+              var datos = bm && bm.datos ? bm.datos : null
+              var analisis = datos && datos.analisis_ia ? datos.analisis_ia : (datos && datos.resumen_ejecutivo ? datos : null)
+              if (!analisis && !datos) return null
+              return <div className="bg-gradient-to-r from-indigo-500/10 to-purple-500/10 border border-indigo-500/20 rounded-xl p-5 mb-8">
+                <h2 className="text-sm font-bold text-indigo-400 mb-3">{'\uD83E\uDDE0'} An{'á'}lisis IA de la competencia</h2>
+                {(analisis && typeof analisis === 'string') && <p className="text-sm text-[#c4b5fd] leading-relaxed">{analisis}</p>}
+                {(analisis && analisis.resumen_ejecutivo) && <p className="text-sm text-[#c4b5fd] leading-relaxed">{analisis.resumen_ejecutivo}</p>}
+                {(datos && datos.content_gaps && Array.isArray(datos.content_gaps) && datos.content_gaps.length > 0) && (
+                  <div className="mt-3">
+                    <p className="text-xs font-bold text-amber-400 mb-1">Gaps de contenido detectados</p>
+                    <div className="flex flex-wrap gap-2">
+                      {datos.content_gaps.slice(0, 6).map(function(g: string, gi: number) {
+                        return <span key={gi} className="text-xs bg-amber-900/30 text-amber-300 px-2 py-1 rounded">{g}</span>
+                      })}
+                    </div>
+                  </div>
+                )}
+                {(datos && datos.recomendaciones && Array.isArray(datos.recomendaciones)) && (
+                  <div className="mt-3">
+                    <p className="text-xs font-bold text-green-400 mb-1">Recomendaciones</p>
+                    {datos.recomendaciones.slice(0, 3).map(function(r: any, ri: number) {
+                      return <p key={ri} className="text-xs text-green-300 mb-1">{'\u2714'} {typeof r === 'string' ? r : r.texto || r.recomendacion || JSON.stringify(r)}</p>
+                    })}
+                  </div>
+                )}
+              </div>
+            })()}
+
+            {/* CONCEPTOS POR COMPETIDOR — word cloud simplificado */}
+            {posts.length > 0 && (function() {
+              // Extraer palabras clave de los posts por competidor
+              var conceptosPorEmpresa: any = {}
+              var stopwords = ['que', 'para', 'con', 'del', 'los', 'las', 'por', 'una', 'como', 'este', 'esta', 'mas', 'nuestro', 'nuestra', 'nuestros', 'nuestras', 'sus', 'son', 'ser', 'tiene', 'todo', 'cada', 'puede', 'desde', 'entre', 'sobre', 'todos', 'solo', 'tambien', 'siempre', 'cuando', 'donde', 'pero', 'nos', 'les', 'dia', 'hoy']
+              posts.forEach(function(p: any) {
+                var empresa = p.nombre_empresa || p.handle || '?'
+                if (!conceptosPorEmpresa[empresa]) conceptosPorEmpresa[empresa] = {}
+                var palabras = (p.texto || '').toLowerCase().replace(/[^a-záéíóúñü\s]/g, '').split(/\s+/).filter(function(w: string) { return w.length > 4 && stopwords.indexOf(w) === -1 })
+                palabras.forEach(function(w: string) {
+                  conceptosPorEmpresa[empresa][w] = (conceptosPorEmpresa[empresa][w] || 0) + 1
+                })
+              })
+              // Top 8 conceptos por empresa
+              return <div className="bg-[#1a1745] rounded-xl border border-white/[0.06] p-5 mb-8">
+                <h2 className="text-sm font-bold text-white mb-4">Conceptos clave por competidor</h2>
+                <div className="space-y-3">
+                  {Object.keys(conceptosPorEmpresa).map(function(empresa: string) {
+                    var conceptos = Object.keys(conceptosPorEmpresa[empresa])
+                      .map(function(w) { return { word: w, count: conceptosPorEmpresa[empresa][w] } })
+                      .sort(function(a: any, b: any) { return b.count - a.count })
+                      .slice(0, 10)
+                    if (conceptos.length === 0) return null
+                    return <div key={empresa}>
+                      <p className="text-xs font-bold text-indigo-400 mb-1">{empresa}</p>
+                      <div className="flex flex-wrap gap-1">
+                        {conceptos.map(function(c: any, ci: number) {
+                          var size = c.count >= 5 ? 'text-sm font-bold' : c.count >= 3 ? 'text-xs font-semibold' : 'text-[10px]'
+                          var opacity = c.count >= 5 ? 'text-white' : c.count >= 3 ? 'text-[#c4b5fd]' : 'text-[#64748b]'
+                          return <span key={ci} className={size + ' ' + opacity + ' bg-[#12102a] px-2 py-0.5 rounded'}>{c.word} <span className="text-[8px] text-[#475569]">{c.count}</span></span>
+                        })}
+                      </div>
+                    </div>
+                  })}
+                </div>
+              </div>
+            })()}
+
             {/* Top posts by engagement */}
             <div className="bg-[#1a1745] rounded-xl border border-white/[0.06] overflow-hidden">
               <div className="px-6 py-4 border-b border-white/[0.04]">
