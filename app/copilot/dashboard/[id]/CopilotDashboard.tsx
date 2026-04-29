@@ -1059,7 +1059,7 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
                       <th className="px-3 py-3 text-center font-semibold">Posts</th>
                       <th className="px-3 py-3 text-center font-semibold">Likes</th>
                       <th className="px-3 py-3 text-center font-semibold">Comments</th>
-                      <th className="px-3 py-3 text-center font-semibold">Eng/post</th>
+                      <th className="px-3 py-3 text-center font-semibold" title="Engagement por post = (likes + comentarios) / cantidad de posts. Mide cu&aacute;nto interact&uacute;a la audiencia con cada publicaci&oacute;n.">Eng/post <span className="text-[8px] text-[#475569] font-normal">(likes+comments/posts)</span></th>
                       <th className="px-3 py-3 text-left font-semibold">Formato top</th>
                       <th className="px-3 py-3 text-left font-semibold">Tema top</th>
                     </tr>
@@ -1731,8 +1731,8 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
               </div>
             )}
 
-            {/* Métricas por competidor */}
-            {datos && datos.metricas_competidores && (
+            {/* Métricas por competidor — usa datos REALES de radar_posts para consistencia con tab Competencia */}
+            {Object.keys(empresas).length > 0 && (
               <div className="bg-[#1a1745] rounded-xl border border-white/[0.06] overflow-hidden mb-4">
                 <div className="px-5 py-3 border-b border-white/[0.04]">
                   <h4 className="text-sm font-bold text-white">M{'é'}tricas por competidor</h4>
@@ -1750,18 +1750,21 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-white/[0.04]">
-                      {(Array.isArray(datos.metricas_competidores) ? datos.metricas_competidores : Object.keys(datos.metricas_competidores).map(function(k) { return Object.assign({ _nombre: k }, datos.metricas_competidores[k]) })).map(function(m: any, i: number) {
-                        var nombre = m.nombre || m._nombre || m.empresa || ('Competidor ' + (i + 1))
-                        var tendColor = ((m.tendencia_engagement || m.tendencia || '') + '').includes('+') ? 'text-green-400' : ((m.tendencia_engagement || m.tendencia || '') + '').includes('-') ? 'text-red-400' : 'text-[#94a3b8]'
-                        return <tr key={i} className={i % 2 === 0 ? '' : 'bg-[#12102a]'}>
+                      {Object.keys(empresas).map(function(nombre: string, i: number) {
+                        var e = empresas[nombre]
+                        var total = e.ig + e.li
+                        var avgEng = total > 0 ? Math.round((e.likes + e.comments) / total) : 0
+                        var compPosts = postsByCompany[nombre] || []
+                        var analysis = generateCompanyAnalysis(nombre, e, compPosts)
+                        return <tr key={nombre} className={i % 2 === 0 ? '' : 'bg-[#12102a]'}>
                           <td className="px-3 py-2 font-semibold text-white">{nombre}</td>
-                          <td className="px-3 py-2 text-center text-white font-bold">{m.total_posts || 0}</td>
+                          <td className="px-3 py-2 text-center text-white font-bold">{total}</td>
                           <td className="px-3 py-2 text-center">
-                            <span className={(m.avg_engagement || 0) >= 100 ? 'text-green-400 font-bold' : (m.avg_engagement || 0) >= 40 ? 'text-yellow-400' : 'text-red-400'}>{m.avg_engagement || 0}</span>
+                            <span className={avgEng >= 100 ? 'text-green-400 font-bold' : avgEng >= 40 ? 'text-yellow-400' : 'text-red-400'}>{avgEng}</span>
                           </td>
-                          <td className={'px-3 py-2 text-center font-semibold ' + tendColor}>{m.tendencia_engagement || '='}</td>
-                          <td className="px-3 py-2 text-[#a5b4fc]">{m.formato_dominante || '-'}</td>
-                          <td className="px-3 py-2 text-[#a5b4fc]">{m.tema_dominante || '-'}</td>
+                          <td className="px-3 py-2 text-center text-[#94a3b8]">=</td>
+                          <td className="px-3 py-2 text-[#a5b4fc]">{analysis.formato || '-'}</td>
+                          <td className="px-3 py-2 text-[#a5b4fc]">{analysis.tema || '-'}</td>
                         </tr>
                       })}
                     </tbody>
