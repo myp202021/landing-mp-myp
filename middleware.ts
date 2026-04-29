@@ -9,9 +9,13 @@ export function middleware(request: NextRequest) {
 
   // ═══ COPILOT AUTH: proteger /copilot/dashboard/* ═══
   if (pathname.startsWith('/copilot/dashboard/')) {
+    // Bypass con token de preview (para testing y acceso admin)
+    if (searchParams.get('preview') === 'myp2026') {
+      return NextResponse.next()
+    }
+
     const session = request.cookies.get('copilot_session')
     if (!session || !session.value) {
-      // No tiene sesión → redirect a login
       const loginUrl = new URL('/copilot/login', request.url)
       return NextResponse.redirect(loginUrl)
     }
