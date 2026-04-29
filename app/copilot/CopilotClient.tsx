@@ -93,29 +93,29 @@ var plans = [
   },
 ]
 
-/* ─── DEEP DIVE DATA ─── */
+/* ─── DEEP DIVE DATA — c\u00f3mo funciona Copilot ─── */
 var deepDive = [
   {
-    title: 'Informe diario en tu correo',
-    desc: 'Cada mañana recibes un email con todo lo que publicó tu competencia, análisis de IA, y oportunidades detectadas. Sin abrir ninguna red social.',
+    title: '\u00bfQu\u00e9 publica tu competencia? Copilot lo sabe',
+    desc: 'Cada semana analiza las redes de tus competidores: qu\u00e9 publican, qu\u00e9 les funciona, qu\u00e9 no. Te muestra en n\u00fameros claros si vas mejor o peor que el promedio de tu industria. Sin abrir una sola red social.',
     img: '/copilot/mockup-email-diario.png',
     reverse: false,
   },
   {
-    title: 'Copies y grilla listos para publicar',
-    desc: 'Tres agentes de IA generan copies semanales con score de calidad. La grilla mensual llega con 16 posts organizados por fecha, plataforma y tipo.',
+    title: 'Tu contenido del mes, listo para publicar',
+    desc: 'Copies, grilla con calendario, guiones de video con storyboard. Todo basado en lo que funciona en TU industria, no en plantillas gen\u00e9ricas. Con hashtags, sugerencias de dise\u00f1o y bot\u00f3n para copiar directo.',
     img: '/copilot/mockup-grilla.png',
     reverse: true,
   },
   {
-    title: 'Auditoría mensual de tu marca',
-    desc: 'Cada mes, Copilot evalúa tus redes sociales y te entrega un score por canal con recomendaciones concretas para mejorar tu presencia digital.',
+    title: 'Cada mes, Copilot entiende mejor tu negocio',
+    desc: 'No es un generador que repite lo mismo. Copilot recuerda qu\u00e9 funcion\u00f3, qu\u00e9 rechazaste, qu\u00e9 aprob\u00f3 tu equipo. El contenido de junio es mejor que el de mayo porque aprendi\u00f3 de tus datos. Como un equipo que no olvida.',
     img: '/copilot/mockup-auditoria.png',
     reverse: false,
   },
   {
-    title: 'Dashboard completo en tiempo real',
-    desc: 'Competencia, contenido, auditoría, guiones, ideas y reporte ejecutivo. Todo en un solo lugar con datos que se actualizan cada día.',
+    title: 'Acciones concretas, no m\u00e9tricas vac\u00edas',
+    desc: 'Reporte ejecutivo con acciones inteligentes: qu\u00e9 hacer esta semana, con qu\u00e9 prioridad, y por qu\u00e9. Auditor\u00eda que compara tus n\u00fameros con la industria y te dice d\u00f3nde mejorar. Todo explicado para que cualquiera lo entienda.',
     img: '/copilot/mockup-dashboard.png',
     reverse: true,
   },
@@ -332,15 +332,15 @@ export default function CopilotClient() {
               Cómo funciona
             </h2>
             <p style={{ fontSize: 18, color: '#6B7280' }}>
-              Tres pasos. Cinco minutos de setup. Después, Copilot trabaja solo.
+              Conecta tu negocio, Copilot hace el trabajo, t{'\u00fa'} tomas las decisiones.
             </p>
           </div>
 
           <div className="steps-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 32 }}>
             {[
-              { step: '1', title: 'Configura tus competidores', desc: 'Elige las cuentas de Instagram, LinkedIn y Facebook que quieres observar. Solo URLs, nada más.', icon: '⚙️' },
-              { step: '2', title: 'Copilot trabaja por ti', desc: 'Analiza publicaciones, genera copies con 3 agentes IA, arma tu grilla mensual y audita tu perfil.', icon: '🤖' },
-              { step: '3', title: 'Recibe todo listo', desc: 'Email diario con insights, semanal con copies, mensual con grilla completa + Excel + PDF ejecutivo.', icon: '📬' },
+              { step: '1', title: 'Conecta tu negocio', desc: 'Tu empresa, tu industria, tus competidores. Copilot entiende tu mercado desde el primer d\u00eda.', icon: '\u26A1' },
+              { step: '2', title: 'Copilot analiza y crea', desc: 'Cada semana analiza tu competencia, genera contenido profesional, y compara tus n\u00fameros con la industria.', icon: '\uD83E\uDDE0' },
+              { step: '3', title: 'T\u00fa decides y Copilot aprende', desc: 'Recibes acciones concretas. Apruebas o rechazas. Copilot recuerda y el pr\u00f3ximo mes es mejor.', icon: '\uD83D\uDE80' },
             ].map(function(s, i) {
               return (
                 <div key={i} className="reveal" style={{ textAlign: 'center', padding: '40px 24px', background: 'white', borderRadius: 20, border: '1px solid #F3F4F6' }}>
@@ -394,15 +394,15 @@ export default function CopilotClient() {
               Así se ven tus informes
             </h2>
             <p style={{ fontSize: 18, color: '#94a3b8' }}>
-              Recibes todo en tu correo, listo para leer. Sin login, sin apps.
+              Inteligencia competitiva + contenido + estrategia. Todo en tu correo y dashboard.
             </p>
           </div>
 
           <div className="feature-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 28 }}>
             {[
-              { img: '/copilot/mockup-email-diario.png', title: 'Informe diario', desc: 'Cada mañana: qué publicó tu competencia, análisis IA y oportunidades detectadas.', tag: 'Email diario' },
-              { img: '/copilot/mockup-copies.png', title: 'Resumen semanal', desc: 'Copies sugeridos con score QA, guiones de reels y acciones recomendadas. Con Excel adjunto.', tag: 'Email + Excel' },
-              { img: '/copilot/mockup-reporte.png', title: 'Resumen mensual', desc: 'Grilla completa, auditoría de perfil, reporte ejecutivo. Con Excel y PDF adjuntos.', tag: 'Email + Excel + PDF' },
+              { img: '/copilot/mockup-email-diario.png', title: 'Qu\u00e9 hace tu competencia', desc: 'An\u00e1lisis de posts de tus competidores: qu\u00e9 publican, qu\u00e9 les funciona, d\u00f3nde hay oportunidades para ti.', tag: 'Cada semana' },
+              { img: '/copilot/mockup-copies.png', title: 'Tu contenido listo', desc: 'Copies profesionales, guiones de video con storyboard, y copies de anuncios Google + Meta. Listos para publicar.', tag: 'Cada semana' },
+              { img: '/copilot/mockup-reporte.png', title: 'Tu plan de acci\u00f3n', desc: 'Reporte ejecutivo con acciones inteligentes, auditor\u00eda vs industria, \u00e1rbol de decisi\u00f3n y predicci\u00f3n del mes siguiente.', tag: 'Cada mes' },
             ].map(function(item, i) {
               return (
                 <div key={i} className="reveal card-hover" style={{ background: '#0F0D2E', borderRadius: 20, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.08)' }}>
