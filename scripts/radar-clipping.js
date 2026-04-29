@@ -304,7 +304,8 @@ async function main() {
 
           allPosts = allPosts.concat(liPosts)
           liTotal += liPosts.length
-          console.log('   ' + (handleToNombre[handle] || handle) + ': ' + liPosts.length + ' posts (' + (eng ? (rawPosts[0] && rawPosts[0].engagements ? rawPosts[0].engagements.totalReactions : 0) : 0) + ' reactions top)')
+          var topReactions = rawPosts[0] && rawPosts[0].engagements ? rawPosts[0].engagements.totalReactions : 0
+          console.log('   ' + (handleToNombre[handle] || handle) + ': ' + liPosts.length + ' posts (' + topReactions + ' reactions top)')
 
           // Rate limiting
           await new Promise(function(r) { setTimeout(r, 500) })
