@@ -246,9 +246,8 @@ async function main() {
     Array.from(igSet).forEach(function(h) { var n = igPosts.filter(function(p) { return p.handle === h }).length; console.log('   ' + (handleToNombre[h] || h) + ': ' + n) })
   }
 
-  // === LINKEDIN (DESHABILITADO — actor apimaestro devuelve posts falsos) ===
-  // TODO: reactivar cuando se encuentre un actor que funcione de verdad
-  if (false && liSet.size > 0) {
+  // === LINKEDIN (REACTIVADO — harvestapi funciona, $2/1K posts) ===
+  if (liSet.size > 0) {
     console.log('\n--- LINKEDIN: ' + liSet.size + ' empresas ---')
     var liLimit = MODO === 'diario' ? 5 : 15
 

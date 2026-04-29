@@ -157,7 +157,7 @@ function generateExecutiveSummary(posts: any[], empresas: Record<string, any>, p
   var totalPosts = posts.length
   var totalEng = posts.reduce(function(s: number, p: any) { return s + (p.likes || 0) + (p.comments || 0) }, 0)
 
-  if (totalPosts === 0) return 'Sin datos de competencia para ' + nombreMes + '. Los datos se acumulan con cada informe.'
+  if (totalPosts === 0) return 'Copilot est\u00e1 preparando tu primer an\u00e1lisis de competencia. En las pr\u00f3ximas horas tendr\u00e1s datos de engagement, formatos y temas de tus competidores comparados con tu industria.'
 
   // Find most active competitor
   var maxPosts = 0; var masActivo = ''
@@ -533,6 +533,22 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
 
       <div className="max-w-5xl mx-auto px-6 py-6">
 
+        {/* ONBOARDING — si no tiene data entry completado */}
+        {sub && !(sub.perfil_empresa || {}).presupuesto_mensual && (
+          <div className="bg-gradient-to-r from-indigo-500/10 to-purple-500/10 border border-indigo-500/20 rounded-xl p-5 mb-6">
+            <div className="flex items-start gap-4">
+              <div className="text-3xl flex-shrink-0">{'\uD83D\uDC4B'}</div>
+              <div>
+                <h3 className="text-sm font-bold text-white mb-1">Completa los datos de tu negocio para mejores resultados</h3>
+                <p className="text-xs text-[#94a3b8] mb-3">Copilot usa tu presupuesto, ticket promedio y tipo de cliente para generar un {'a'}rbol de inversi{'o'}n con escenarios reales y recomendaciones m{'a'}s precisas.</p>
+                <button onClick={function() { setTab('brief') }} className="text-xs font-bold bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition">
+                  Completar datos {'\u2192'}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* TABS */}
         <div className="flex gap-1 mb-6 bg-[#12102a] rounded-xl p-1 overflow-x-auto">
           {[
@@ -581,7 +597,8 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
           if (!brief) return <div className="bg-[#1a1745] rounded-xl p-8 border border-white/[0.06] text-center">
             <p className="text-4xl mb-4">{'\uD83C\uDFAF'}</p>
             <p className="text-[#c4b5fd] font-semibold text-lg mb-2">Brief estrat{'\u00e9'}gico pendiente</p>
-            <p className="text-[#64748b] text-sm">El brief se genera autom{'\u00e1'}ticamente en el pr{'\u00f3'}ximo informe semanal o mensual. Es la base que alimenta todos los agentes: copies, guiones, grilla y auditor{'\u00ed'}a.</p>
+            <p className="text-[#64748b] text-sm mb-3">Tu brief estrat{'e'}gico se genera autom{'a'}ticamente con el primer an{'a'}lisis. Mientras tanto, completa los datos de tu negocio arriba para que Copilot entienda mejor tu mercado.</p>
+            <p className="text-[#475569] text-xs">El brief incluye: propuesta de valor {'u'}nica, territorios de contenido, an{'a'}lisis de competidores, tono de comunicaci{'o'}n y reglas de contenido. Es la base de TODO lo que genera Copilot.</p>
           </div>
 
           async function guardarBrief(updatedBrief: any) {
@@ -1222,7 +1239,7 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
                     </div>
                   </div>
                 })}
-                {posts.length === 0 && <div className="px-6 py-8 text-center text-[#64748b]">Sin posts en este periodo. Los datos se acumulan con cada informe diario.</div>}
+                {posts.length === 0 && <div className="px-6 py-8 text-center"><p className="text-[#94a3b8] mb-2">Copilot est{'a'} analizando a tus competidores</p><p className="text-[#475569] text-xs">En las pr{'o'}ximas horas ver{'a'}s los posts de cada competidor con likes, comentarios, formato y tema. Cada post es linkeable al original en Instagram.</p></div>}
               </div>
             </div>
           </>
@@ -1410,8 +1427,8 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
 
             {grillasMes.length === 0 && copiesMes.length === 0 && (
               <div className="bg-[#1a1745] rounded-xl border border-white/[0.06] px-6 py-12 text-center">
-                <p className="text-[#64748b] mb-2">Sin contenido generado para {MESES_NOMBRES[mesGlobal]}</p>
-                <p className="text-xs text-[#475569]">Los copies se generan cada lunes. La grilla se genera el 1ro de cada mes.</p>
+                <p className="text-[#94a3b8] mb-2">Tu contenido del mes est{'a'} en camino</p>
+                <p className="text-xs text-[#475569]">Copilot genera copies profesionales, una grilla con calendario y guiones de video. Basados en lo que funciona en tu industria, no en plantillas. Llegan con el pr{'o'}ximo informe semanal.</p>
               </div>
             )}
           </>
@@ -1569,8 +1586,8 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
             ) : (
               <div className="bg-[#1a1745] rounded-xl border border-white/[0.06] px-6 py-12 text-center">
                 <div className="text-4xl mb-3">{'\uD83D\uDCCA'}</div>
-                <p className="text-[#64748b] mb-2">La auditor\u00eda de {MESES_NOMBRES[mesAuditoria]} se genera el d\u00eda 1 de cada mes</p>
-                <p className="text-xs text-[#475569]">Revisa los meses anteriores para ver auditor\u00edas completadas.</p>
+                <p className="text-[#94a3b8] mb-2">Tu auditor{'i'}a mensual se est{'a'} preparando</p>
+                <p className="text-xs text-[#475569]">Cada mes, Copilot eval{'u'}a tu marca contra el benchmark de tu industria en Chile. Incluye score por criterio, comparaci{'o'}n con datos reales, y 3 acciones prioritarias para mejorar. Generada con inteligencia artificial.</p>
               </div>
             )}
           </>
@@ -1688,7 +1705,8 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
             ) : (
               <div className="bg-[#1a1745] rounded-xl border border-white/[0.06] px-6 py-12 text-center">
                 <div className="text-4xl mb-3">{'\uD83C\uDFAC'}</div>
-                <p className="text-[#64748b] mb-2">Los guiones se generan cada lunes junto con los copies semanales</p>
+                <p className="text-[#94a3b8] mb-2">Guiones de video en camino</p>
+                <p className="text-xs text-[#475569] mb-2">Copilot genera guiones de reels y stories listos para grabar: gancho, escenas con timing, texto en pantalla, storyboard visual y sugerencia de m{'u'}sica.</p>
                 <p className="text-xs text-[#475569]">Selecciona un mes con contenido generado.</p>
               </div>
             )}
@@ -1705,7 +1723,8 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
           if (!bm) return <div className="bg-[#1a1745] rounded-xl p-8 border border-white/[0.06] text-center">
             <p className="text-4xl mb-4">{'\uD83C\uDFC6'}</p>
             <p className="text-[#c4b5fd] font-semibold text-lg mb-2">Benchmark competitivo</p>
-            <p className="text-[#64748b] text-sm">El benchmark se genera autom{'á'}ticamente el 1ro de cada mes. Incluye an{'á'}lisis estrat{'é'}gico por competidor, gaps de contenido, y plan de campa{'ñ'}a sugerido — generado con Claude para m{'á'}xima calidad.</p>
+            <p className="text-[#94a3b8] text-sm mb-2">Benchmark competitivo en preparaci{'o'}n</p>
+            <p className="text-[#475569] text-xs">An{'a'}lisis estrat{'e'}gico de cada competidor: posicionamiento, fortalezas, debilidades, oportunidades. Cuadro comparativo por dimensi{'o'}n (tono, concepto, formato). Generado con inteligencia artificial de m{'a'}xima calidad.</p>
           </div>
 
           return <>
@@ -1983,8 +2002,8 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
             ) : (
               <div className="bg-[#1a1745] rounded-xl border border-white/[0.06] px-6 py-12 text-center">
                 <div className="text-4xl mb-3">{'\uD83C\uDFAF'}</div>
-                <p className="text-[#64748b] mb-2">Los ads creativos se generan junto con la grilla mensual</p>
-                <p className="text-xs text-[#475569]">Incluye headlines Google (30 chars), copies Meta con variaciones por {'á'}ngulo.</p>
+                <p className="text-[#94a3b8] mb-2">Copies de anuncios en preparaci{'o'}n</p>
+                <p className="text-xs text-[#475569]">Copilot genera headlines para Google Ads (30 caracteres), copies para Meta Ads con variaciones por {'a'}ngulo (dolor, beneficio, urgencia, social proof), y sugerencias de A/B testing. Todo basado en tu industria.</p>
               </div>
             )}
           </>
