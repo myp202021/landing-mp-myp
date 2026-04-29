@@ -1,425 +1,263 @@
 // radar-auditoria.js
-// Calcula auditoria mensual del perfil del suscriptor
-// Usa datos existentes de radar_posts y radar_contenido
-// Se llama desde radar-clipping.js en modo mensual (todos los planes)
-// Costo: $0 (pura logica, sin APIs)
+// AGENTE IA DE AUDITORÍA — analiza TODOS los datos del ecosistema Copilot
+// Lee: posts competencia, posts cliente, benchmark, contenido, brief, árbol, aprendizajes
+// Compara: vs industria, vs mes anterior, vs competencia
+// Recomienda: acciones concretas por área
+// Cambia cada mes porque se alimenta de data nueva
+// Costo: ~$0.03/run (1 call OpenAI GPT-4o)
 
-// ═══════════════════════════════════════════════
-// HELPERS
-// ═══════════════════════════════════════════════
-function getWeekNumber(date) {
-  var d = new Date(date)
-  var dayOfMonth = d.getDate()
-  return Math.ceil(dayOfMonth / 7)
+var fetch = require('node-fetch')
+
+var OPENAI_KEY = process.env.OPENAI_API_KEY
+
+// Benchmarks de industria para comparación
+var BENCHMARKS = {
+  'maquinaria': { engPerPost: 35, postsPerMonth: 12, commentRatio: 0.03, bestFormat: 'video', label: 'Maquinaria Industrial' },
+  'inmobiliaria': { engPerPost: 45, postsPerMonth: 16, commentRatio: 0.04, bestFormat: 'carrusel', label: 'Inmobiliaria' },
+  'tecnolog': { engPerPost: 55, postsPerMonth: 14, commentRatio: 0.05, bestFormat: 'carrusel', label: 'Tecnología' },
+  'salud': { engPerPost: 65, postsPerMonth: 12, commentRatio: 0.04, bestFormat: 'reel', label: 'Salud' },
+  'educaci': { engPerPost: 50, postsPerMonth: 15, commentRatio: 0.05, bestFormat: 'carrusel', label: 'Educación' },
+  'gastrono': { engPerPost: 80, postsPerMonth: 18, commentRatio: 0.06, bestFormat: 'reel', label: 'Gastronomía' },
+  'retail': { engPerPost: 40, postsPerMonth: 20, commentRatio: 0.03, bestFormat: 'imagen', label: 'Retail' },
+  'turismo': { engPerPost: 70, postsPerMonth: 12, commentRatio: 0.05, bestFormat: 'reel', label: 'Turismo' },
+  'constru': { engPerPost: 30, postsPerMonth: 10, commentRatio: 0.03, bestFormat: 'video', label: 'Construcción' },
+  'transport': { engPerPost: 25, postsPerMonth: 8, commentRatio: 0.02, bestFormat: 'imagen', label: 'Transporte' },
+  'default': { engPerPost: 40, postsPerMonth: 12, commentRatio: 0.04, bestFormat: 'carrusel', label: 'Promedio Chile' },
 }
 
-function stddev(arr) {
-  if (arr.length === 0) return 0
-  var avg = arr.reduce(function(s, v) { return s + v }, 0) / arr.length
-  var sqDiffs = arr.map(function(v) { return Math.pow(v - avg, 2) })
-  var avgSqDiff = sqDiffs.reduce(function(s, v) { return s + v }, 0) / sqDiffs.length
-  return Math.sqrt(avgSqDiff)
-}
-
-// ═══════════════════════════════════════════════
-// CRITERIOS DE AUDITORIA (8)
-// ═══════════════════════════════════════════════
-
-function calcFrecuencia(posts) {
-  var counts = {}
-  for (var i = 0; i < posts.length; i++) {
-    var key = posts[i].nombre || posts[i].handle || 'desconocido'
-    counts[key] = (counts[key] || 0) + 1
+function getBenchmark(rubro) {
+  var r = (rubro || '').toLowerCase()
+  var keys = Object.keys(BENCHMARKS)
+  for (var i = 0; i < keys.length; i++) {
+    if (r.includes(keys[i])) return BENCHMARKS[keys[i]]
   }
-  var vals = Object.values(counts)
-  if (vals.length === 0) return { nombre: 'Frecuencia de publicacion', score: 4, fuente: 'competencia', descripcion: 'Sin datos de frecuencia', dato: '0 posts' }
-  var avg = vals.reduce(function(s, v) { return s + v }, 0) / vals.length
-
-  var score = 4
-  if (avg >= 12) score = 10
-  else if (avg >= 8) score = 8
-  else if (avg >= 4) score = 6
-
-  return { nombre: 'Frecuencia de publicacion', score: score, fuente: 'competencia', descripcion: 'Promedio de posts por empresa monitoreada en el periodo', dato: Math.round(avg) + ' posts/empresa promedio' }
+  return BENCHMARKS['default']
 }
 
-function calcEngagement(posts) {
-  if (posts.length === 0) return { nombre: 'Engagement rate', score: 4, fuente: 'competencia', descripcion: 'Sin datos', dato: '0' }
-
-  var total = posts.reduce(function(s, p) {
-    return s + (p.likes || 0) + (p.comments || 0)
-  }, 0)
-  var avg = total / posts.length
-
-  var score = 4
-  if (avg >= 100) score = 10
-  else if (avg >= 50) score = 8
-  else if (avg >= 20) score = 6
-
-  return { nombre: 'Engagement rate', score: score, fuente: 'competencia', descripcion: 'Promedio de likes+comments por post de la competencia', dato: 'avg ' + Math.round(avg) + ' eng/post' }
-}
-
-function calcConsistencia(posts) {
-  if (posts.length === 0) return { nombre: 'Consistencia de publicacion', score: 4, fuente: 'competencia', descripcion: 'Sin datos', dato: '' }
-
-  var weeks = {}
-  for (var i = 0; i < posts.length; i++) {
-    var fecha = posts[i].fecha || posts[i].postedAt || posts[i].created_at
-    if (!fecha) continue
-    var w = getWeekNumber(fecha)
-    weeks[w] = (weeks[w] || 0) + 1
-  }
-
-  var vals = Object.values(weeks)
-  if (vals.length < 2) return { nombre: 'Consistencia de publicacion', score: 6, fuente: 'competencia', descripcion: 'Pocas semanas de datos', dato: vals.length + ' semanas' }
-
-  var sd = stddev(vals)
-  var score = 4
-  if (sd < 1) score = 10
-  else if (sd < 2) score = 8
-  else if (sd < 3) score = 6
-
-  return { nombre: 'Consistencia de publicacion', score: score, fuente: 'competencia', descripcion: 'Que tan regular es la frecuencia de publicacion semana a semana (desv. estandar)', dato: 'desv. ' + sd.toFixed(1) + ' posts/semana' }
-}
-
-function calcCalidadCopies(contenido) {
-  if (!contenido || contenido.length === 0) return { nombre: 'Calidad de copies generados', score: 7, fuente: 'copies_generados', descripcion: 'Sin copies para evaluar', dato: '' }
-
-  var scores = contenido.map(function(c) { return c.score_promedio || 0 }).filter(function(s) { return s > 0 })
-  if (scores.length === 0) return { nombre: 'Calidad de copies generados', score: 7, fuente: 'copies_generados', descripcion: 'Sin scores', dato: '' }
-
-  var avg = scores.reduce(function(s, v) { return s + v }, 0) / scores.length
-  var score = 4
-  if (avg >= 85) score = 10
-  else if (avg >= 75) score = 8
-  else if (avg >= 65) score = 6
-
-  return { nombre: 'Calidad de copies generados', score: score, fuente: 'copies_generados', descripcion: 'Score promedio del QA automatico sobre copies generados por Copilot', dato: 'avg ' + Math.round(avg) + '/95' }
-}
-
-function calcHashtags(contenido) {
-  if (!contenido || contenido.length === 0) return { nombre: 'Uso de hashtags', score: 8, fuente: 'copies_generados', descripcion: 'Sin copies', dato: '' }
-
-  var conHashtags = 0; var total = 0
-  for (var i = 0; i < contenido.length; i++) {
-    var datos = contenido[i].datos || []
-    if (!Array.isArray(datos)) continue
-    for (var j = 0; j < datos.length; j++) { total++; if (datos[j].copy && datos[j].copy.includes('#')) conHashtags++ }
-  }
-  if (total === 0) return { nombre: 'Uso de hashtags', score: 8, fuente: 'copies_generados', descripcion: 'Sin copies', dato: '' }
-  var pct = Math.round((conHashtags / total) * 100)
-  return { nombre: 'Uso de hashtags', score: pct >= 50 ? 8 : 6, fuente: 'copies_generados', descripcion: 'Porcentaje de copies que incluyen hashtags', dato: conHashtags + '/' + total + ' (' + pct + '%)' }
-}
-
-function calcHorarios() {
-  return { nombre: 'Horarios de publicacion', score: 7, fuente: 'estimado', descripcion: 'No se trackean horarios exactos aun — score estimado', dato: 'N/A' }
-}
-
-function calcVariedad(posts) {
-  if (posts.length === 0) return { nombre: 'Variedad de formatos', score: 4, fuente: 'competencia', descripcion: 'Sin posts', dato: '' }
-
-  var tipos = {}
-  for (var i = 0; i < posts.length; i++) {
-    var tipo = (posts[i].type || posts[i].tipo || 'post').toLowerCase()
-    tipos[tipo] = true
-  }
-  var count = Object.keys(tipos).length
-  var score = 4
-  if (count >= 4) score = 10
-  else if (count >= 3) score = 8
-  else if (count >= 2) score = 6
-
-  return { nombre: 'Variedad de formatos', score: score, fuente: 'competencia', descripcion: 'Cantidad de formatos distintos usados (imagen, video, carrusel, etc)', dato: count + ' formatos: ' + Object.keys(tipos).join(', ') }
-}
-
-function calcInteraccion(posts) {
-  if (posts.length === 0) return { nombre: 'Interaccion con audiencia', score: 4, fuente: 'competencia', descripcion: 'Sin posts', dato: '' }
-
-  var ratios = []
-  for (var i = 0; i < posts.length; i++) {
-    var likes = posts[i].likes || 0; var comments = posts[i].comments || 0
-    if (likes > 0) ratios.push(comments / likes)
-  }
-  if (ratios.length === 0) return { nombre: 'Interaccion con audiencia', score: 4, fuente: 'competencia', descripcion: 'Sin datos', dato: '' }
-  var avgRatio = ratios.reduce(function(s, v) { return s + v }, 0) / ratios.length
-
-  var score = 4
-  if (avgRatio > 0.05) score = 10
-  else if (avgRatio > 0.03) score = 8
-  else if (avgRatio > 0.01) score = 6
-
-  return { nombre: 'Interaccion con audiencia', score: score, fuente: 'competencia', descripcion: 'Ratio comments/likes — que tanta conversacion generan los posts', dato: 'ratio ' + (avgRatio * 100).toFixed(1) + '% comments/likes' }
-}
-
-// ═══════════════════════════════════════════════
-// SCORES POR RED
-// ═══════════════════════════════════════════════
-function calcScoresPorRed(posts) {
-  var redes = {}
-  for (var i = 0; i < posts.length; i++) {
-    var red = posts[i].red || posts[i].plataforma || 'Otro'
-    if (!redes[red]) redes[red] = []
-    redes[red].push(posts[i])
-  }
-
-  var scores = {}
-  var redesKeys = Object.keys(redes)
-  for (var j = 0; j < redesKeys.length; j++) {
-    var redName = redesKeys[j]
-    var redPosts = redes[redName]
-    var freq = calcFrecuencia(redPosts)
-    var eng = calcEngagement(redPosts)
-    scores[redName] = Math.round((freq.score + eng.score) / 2 * 10)
-  }
-
-  return scores
-}
-
-// ═══════════════════════════════════════════════
-// FUNCION PRINCIPAL
-// ═══════════════════════════════════════════════
 async function generarAuditoria(posts, contenido, cuentas, supabase, suscripcionId, briefEstrategico, modo, postsCliente) {
   modo = modo || 'mensual'
-  console.log('\n   === AUDITORIA ' + modo.toUpperCase() + ' ===')
+  console.log('\n   === AUDITORÍA IA ===')
 
   posts = posts || []
   contenido = contenido || []
-  cuentas = cuentas || []
-  briefEstrategico = briefEstrategico || null
   postsCliente = postsCliente || []
+  briefEstrategico = briefEstrategico || null
 
-  // Si tenemos posts propios del cliente, usarlos para métricas reales
-  if (postsCliente.length > 0) {
-    console.log('   Posts propios del cliente: ' + postsCliente.length)
-    var engCliente = postsCliente.reduce(function(s, p) { return s + (p.likes || 0) + (p.comments || 0) }, 0)
-    var avgEngCliente = Math.round(engCliente / postsCliente.length)
-    var engCompetencia = posts.length > 0 ? Math.round(posts.reduce(function(s, p) { return s + (p.likes || 0) + (p.comments || 0) }, 0) / posts.length) : 0
-    console.log('   Engagement cliente: avg ' + avgEngCliente + ' vs competencia: avg ' + engCompetencia)
+  // Extraer rubro del brief o cuentas
+  var rubro = ''
+  if (briefEstrategico && briefEstrategico.rubro) rubro = briefEstrategico.rubro
+  if (!rubro && cuentas && cuentas.length > 0) {
+    rubro = cuentas.filter(function(c) { return c.nombre }).map(function(c) { return c.nombre }).join(' ')
   }
+  var bench = getBenchmark(rubro)
 
-  // Datos de industria para benchmarking
-  var industria = null
-  try {
-    var industriaModule = require('./radar-industria.js')
-    // Necesitamos el perfil para detectar industria — lo extraemos de las cuentas
-    var perfilProxy = {}
-    if (cuentas && cuentas.length > 0) {
-      var nombres = cuentas.filter(function(c) { return c.nombre }).map(function(c) { return c.nombre })
-      perfilProxy.rubro = nombres.join(' ')
-    }
-    industria = industriaModule.detectarIndustria(perfilProxy)
-  } catch (e) {}
+  // ═══ CALCULAR MÉTRICAS REALES ═══
+  var nEmpresas = {}
+  posts.forEach(function(p) { nEmpresas[p.nombre || p.handle || '?'] = true })
+  var empresasCount = Object.keys(nEmpresas).length
 
-  // Calcular 8 criterios base
-  var criterios = [
-    calcFrecuencia(posts),
-    calcEngagement(posts),
-    calcConsistencia(posts),
-    calcCalidadCopies(contenido),
-    calcHashtags(contenido),
-    calcHorarios(),
-    calcVariedad(posts),
-    calcInteraccion(posts),
-  ]
+  var totalEng = posts.reduce(function(s, p) { return s + (p.likes || 0) + (p.comments || 0) }, 0)
+  var avgEngPerPost = posts.length > 0 ? Math.round(totalEng / posts.length) : 0
+  var totalLikes = posts.reduce(function(s, p) { return s + (p.likes || 0) }, 0)
+  var totalComments = posts.reduce(function(s, p) { return s + (p.comments || 0) }, 0)
+  var commentRatio = totalLikes > 0 ? totalComments / totalLikes : 0
 
-  // ═══ CRITERIOS REALES DEL CLIENTE (si tiene cuenta propia scrapeada) ═══
-  if (postsCliente.length > 0) {
-    // Frecuencia REAL del cliente (posts propios, no de competencia)
-    var frecReal = postsCliente.length
-    var scoreFrecReal = 4
-    if (frecReal >= 12) scoreFrecReal = 10
-    else if (frecReal >= 8) scoreFrecReal = 8
-    else if (frecReal >= 4) scoreFrecReal = 6
-    criterios.push({ nombre: 'Frecuencia real del cliente', score: scoreFrecReal, fuente: 'cliente', descripcion: 'Posts publicados por TU cuenta en el periodo', dato: frecReal + ' posts propios' })
-
-    var avgEngReal = Math.round(postsCliente.reduce(function(s, p) { return s + (p.likes || 0) + (p.comments || 0) }, 0) / postsCliente.length)
-    var scoreEngReal = 4
-    if (avgEngReal >= 100) scoreEngReal = 10
-    else if (avgEngReal >= 50) scoreEngReal = 8
-    else if (avgEngReal >= 20) scoreEngReal = 6
-    criterios.push({ nombre: 'Engagement real del cliente', score: scoreEngReal, fuente: 'cliente', descripcion: 'Promedio de likes+comments en TUS posts', dato: 'avg ' + avgEngReal + ' eng/post' })
-
-    var avgEngComp = posts.length > 0 ? Math.round(posts.reduce(function(s, p) { return s + (p.likes || 0) + (p.comments || 0) }, 0) / posts.length) : 0
-    var ratio = avgEngComp > 0 ? avgEngReal / avgEngComp : 1
-    var scoreVsComp = 5
-    if (ratio >= 1.5) scoreVsComp = 10
-    else if (ratio >= 1.0) scoreVsComp = 8
-    else if (ratio >= 0.5) scoreVsComp = 5
-    else scoreVsComp = 3
-    criterios.push({ nombre: 'Tu engagement vs competencia', score: scoreVsComp, fuente: 'cliente+competencia', descripcion: 'Ratio entre TU engagement y el de la competencia', dato: 'ratio ' + ratio.toFixed(1) + 'x (tu: ' + avgEngReal + ' vs comp: ' + avgEngComp + ')' })
-
-    console.log('   Frecuencia real: ' + frecReal + ' posts (score ' + scoreFrecReal + ')')
-    console.log('   Engagement real: avg ' + avgEngReal + ' (score ' + scoreEngReal + ')')
-    console.log('   vs Competencia: ratio ' + ratio.toFixed(1) + 'x (score ' + scoreVsComp + ')')
-  }
-
-  // ═══ CRITERIO ADICIONAL: BENCHMARK VS INDUSTRIA ═══
-  if (industria && posts.length > 0) {
-    var avgEngPosts = posts.reduce(function(s, p) { return s + (p.likes || 0) + (p.comments || 0) }, 0) / posts.length
-    var benchmarkEng = industria.engagement_benchmark ? industria.engagement_benchmark.ig_avg : 50
-    var ratio = benchmarkEng > 0 ? avgEngPosts / benchmarkEng : 1
-    var benchScore = 5
-    if (ratio >= 2.0) benchScore = 10
-    else if (ratio >= 1.5) benchScore = 9
-    else if (ratio >= 1.0) benchScore = 8
-    else if (ratio >= 0.7) benchScore = 6
-    else if (ratio >= 0.4) benchScore = 4
-    else benchScore = 3
-    criterios.push({ nombre: 'Engagement vs benchmark industria (' + industria.nombre + ')', score: benchScore })
-    console.log('   Benchmark industria: avg eng ' + Math.round(avgEngPosts) + ' vs benchmark ' + benchmarkEng + ' (ratio ' + ratio.toFixed(1) + ', score ' + benchScore + ')')
-  }
-
-  // ═══ CRITERIOS ADICIONALES BASADOS EN BRIEF (si existe) ═══
-  if (briefEstrategico) {
-    console.log('   Brief estratégico conectado a auditoría')
-
-    // Criterio 9: Cobertura de territorios
-    if (briefEstrategico.territorios_contenido && Array.isArray(briefEstrategico.territorios_contenido)) {
-      var territorios = briefEstrategico.territorios_contenido
-      var territoriosCubiertos = 0
-      var totalTerritorios = territorios.length
-      territorios.forEach(function(t) {
-        var nombreTerr = (typeof t === 'object' ? (t.territorio || t.nombre || '') : t).toLowerCase()
-        // Verificar si algún copy cubre este territorio
-        var cubierto = false
-        if (contenido && contenido.length > 0) {
-          contenido.forEach(function(c) {
-            var datos = c.datos || []
-            if (Array.isArray(datos)) {
-              datos.forEach(function(d) {
-                var textoCompleto = ((d.titulo || '') + ' ' + (d.copy || '') + ' ' + (d.angulo || '')).toLowerCase()
-                if (textoCompleto.includes(nombreTerr) || nombreTerr.split(' ').some(function(w) { return w.length > 4 && textoCompleto.includes(w) })) {
-                  cubierto = true
-                }
-              })
-            }
-          })
-        }
-        if (cubierto) territoriosCubiertos++
-      })
-      var cobertura = totalTerritorios > 0 ? Math.round((territoriosCubiertos / totalTerritorios) * 10) : 7
-      criterios.push({ nombre: 'Cobertura de territorios (brief)', score: cobertura })
-      console.log('   Territorios cubiertos: ' + territoriosCubiertos + '/' + totalTerritorios + ' (score: ' + cobertura + ')')
-    }
-
-    // Criterio 10: Alineación con reglas del brief
-    if (briefEstrategico.reglas_contenido && Array.isArray(briefEstrategico.reglas_contenido)) {
-      // Si hay copies con score > 75, las reglas se están siguiendo
-      var avgCopyScore = 0
-      var copiesCount = 0
-      if (contenido && contenido.length > 0) {
-        contenido.forEach(function(c) { if (c.score_promedio > 0) { avgCopyScore += c.score_promedio; copiesCount++ } })
-      }
-      avgCopyScore = copiesCount > 0 ? avgCopyScore / copiesCount : 0
-      var reglaScore = avgCopyScore >= 85 ? 9 : avgCopyScore >= 75 ? 7 : avgCopyScore >= 60 ? 5 : 4
-      criterios.push({ nombre: 'Alineación con brief estratégico', score: reglaScore })
-    }
-  }
-
-  // Score general (promedio ponderado igual, escala 0-100)
-  var sumaScores = criterios.reduce(function(s, c) { return s + c.score }, 0)
-  var scoreGeneral = Math.round((sumaScores / criterios.length) * 10) / 10
-  // Escalar a 0-100
-  var scoreGeneral100 = Math.round(scoreGeneral * 10)
-
-  console.log('   Score general: ' + scoreGeneral100 + '/100')
-  for (var i = 0; i < criterios.length; i++) {
-    console.log('   ' + criterios[i].nombre + ': ' + criterios[i].score + '/10')
-  }
-
-  // Scores por red
-  var scoresRed = calcScoresPorRed(posts)
-  var redesStr = Object.keys(scoresRed).map(function(r) { return r + '=' + scoresRed[r] }).join(', ')
-  console.log('   Scores por red: ' + (redesStr || 'sin datos'))
-
-  // Generar fortaleza y debilidad basados en criterios
-  var criteriosOrdenados = criterios.slice().sort(function(a, b) { return b.score - a.score })
-  var fortaleza = criteriosOrdenados[0] ? criteriosOrdenados[0].nombre + ' (' + criteriosOrdenados[0].score + '/10)' : null
-  var debilidad = criteriosOrdenados[criteriosOrdenados.length - 1] ? criteriosOrdenados[criteriosOrdenados.length - 1].nombre + ' (' + criteriosOrdenados[criteriosOrdenados.length - 1].score + '/10)' : null
-
-  // Guardar en Supabase (mensual siempre, semanal solo si no hay del mes)
-  if (supabase && suscripcionId) {
-    var ahora = new Date()
-    var guardar = modo === 'mensual'
-
-    if (modo === 'semanal') {
-      // En semanal: guardar solo si no hay auditoria del mes actual
-      try {
-        var existeRes = await supabase.from('copilot_auditorias')
-          .select('id', { count: 'exact', head: true })
-          .eq('suscripcion_id', suscripcionId)
-          .eq('mes', ahora.getMonth() + 1)
-          .eq('anio', ahora.getFullYear())
-        guardar = (existeRes.count || 0) === 0
-        if (!guardar) console.log('   Auditoria semanal: ya existe del mes, solo se usa en email')
-      } catch (e) { guardar = false }
-    }
-
-    if (guardar) {
-      try {
-        await supabase.from('copilot_auditorias').insert({
-          suscripcion_id: suscripcionId,
-          mes: ahora.getMonth() + 1,
-          anio: ahora.getFullYear(),
-          score_general: scoreGeneral100,
-          scores_red: scoresRed,
-          criterios: criterios,
-        })
-        console.log('   Auditoria guardada en copilot_auditorias')
-      } catch (e) {
-        console.log('   Error guardando auditoria: ' + e.message)
-      }
-    }
-  }
-
-  // ═══ GENERAR RECOMENDACIONES ACCIONABLES ═══
-  var recomendaciones = []
-  criterios.forEach(function(c) {
-    if (c.score <= 5) {
-      if (c.nombre.includes('Frecuencia')) recomendaciones.push('URGENTE: Aumentar frecuencia de publicacion a minimo 3 posts/semana')
-      else if (c.nombre.includes('Engagement')) recomendaciones.push('URGENTE: Cambiar a formatos mas interactivos (polls, preguntas, carruseles educativos)')
-      else if (c.nombre.includes('Variedad')) recomendaciones.push('Diversificar formatos: mezclar reels, carruseles, imagenes y articulos')
-      else if (c.nombre.includes('hashtags')) recomendaciones.push('Incluir 5-8 hashtags relevantes en cada post')
-      else if (c.nombre.includes('Interaccion')) recomendaciones.push('Responder TODOS los comentarios y usar CTAs que fomenten dialogo')
-      else if (c.nombre.includes('Consistencia')) recomendaciones.push('Establecer dias fijos de publicacion y mantenerlos')
-      else if (c.nombre.includes('ratio')) recomendaciones.push('El engagement del cliente esta por debajo de la competencia — repensar estrategia de contenido')
-    }
+  // Formatos
+  var formatos = {}
+  posts.forEach(function(p) {
+    var f = (p.type || p.tipo_post || 'post').toLowerCase()
+    if (f.includes('video') || f.includes('reel')) f = 'reel/video'
+    else if (f.includes('sidecar') || f.includes('carousel')) f = 'carrusel'
+    else f = 'imagen/post'
+    formatos[f] = (formatos[f] || 0) + 1
   })
 
-  // Recomendación basada en datos del cliente vs competencia
-  if (postsCliente.length > 0 && posts.length > 0) {
-    var avgCliente = Math.round(postsCliente.reduce(function(s,p){return s+(p.likes||0)+(p.comments||0)},0) / postsCliente.length)
-    var avgComp = Math.round(posts.reduce(function(s,p){return s+(p.likes||0)+(p.comments||0)},0) / posts.length)
-    if (avgCliente < avgComp * 0.5) {
-      recomendaciones.push('CRITICO: El engagement del cliente (' + avgCliente + ') es menos de la mitad que la competencia (' + avgComp + '). Revisar calidad visual, hooks y CTAs.')
-    } else if (avgCliente > avgComp * 1.5) {
-      recomendaciones.push('EXCELENTE: El engagement del cliente (' + avgCliente + ') supera a la competencia (' + avgComp + '). Mantener esta linea y documentar que funciona.')
+  // Engagement por empresa
+  var engPorEmpresa = {}
+  posts.forEach(function(p) {
+    var n = p.nombre || p.handle || '?'
+    if (!engPorEmpresa[n]) engPorEmpresa[n] = { posts: 0, eng: 0 }
+    engPorEmpresa[n].posts++
+    engPorEmpresa[n].eng += (p.likes || 0) + (p.comments || 0)
+  })
+
+  // Métricas del cliente propio
+  var clienteEng = 0
+  var clienteAvg = 0
+  if (postsCliente.length > 0) {
+    clienteEng = postsCliente.reduce(function(s, p) { return s + (p.likes || 0) + (p.comments || 0) }, 0)
+    clienteAvg = Math.round(clienteEng / postsCliente.length)
+  }
+
+  // Calidad copies generados
+  var copiesScores = []
+  contenido.forEach(function(c) {
+    if (c.score_promedio > 0) copiesScores.push(c.score_promedio)
+  })
+  var avgCopyScore = copiesScores.length > 0 ? Math.round(copiesScores.reduce(function(s, v) { return s + v }, 0) / copiesScores.length) : 0
+
+  // Cargar auditoría anterior para comparar
+  var auditoriaAnterior = null
+  if (supabase && suscripcionId) {
+    try {
+      var prevRes = await supabase.from('copilot_auditorias')
+        .select('score_general, datos')
+        .eq('suscripcion_id', suscripcionId)
+        .order('created_at', { ascending: false })
+        .limit(1)
+      if (prevRes.data && prevRes.data.length > 0) {
+        auditoriaAnterior = prevRes.data[0]
+      }
+    } catch (e) {}
+  }
+
+  // Cargar aprendizajes
+  var aprendizajes = []
+  if (supabase && suscripcionId) {
+    try {
+      var apRes = await supabase.from('copilot_aprendizajes')
+        .select('aprendizaje, confianza, tipo')
+        .eq('suscripcion_id', suscripcionId)
+        .eq('activo', true)
+        .order('confianza', { ascending: false })
+        .limit(5)
+      aprendizajes = apRes.data || []
+    } catch (e) {}
+  }
+
+  // ═══ GENERAR AUDITORÍA CON IA ═══
+  if (!OPENAI_KEY) {
+    console.log('   Sin OPENAI_API_KEY, generando auditoría básica')
+    return generarAuditoriaBasica(posts, postsCliente, contenido, bench, avgEngPerPost, avgCopyScore, formatos, engPorEmpresa, supabase, suscripcionId, modo)
+  }
+
+  var empresasResumen = Object.keys(engPorEmpresa).map(function(n) {
+    var e = engPorEmpresa[n]
+    return n + ': ' + e.posts + ' posts, avg ' + Math.round(e.eng / e.posts) + ' eng/post'
+  }).join('\n')
+
+  var formatosStr = Object.keys(formatos).map(function(f) { return f + ': ' + formatos[f] }).join(', ')
+
+  var prompt = 'Eres un AUDITOR DE MARKETING DIGITAL senior. Generas auditorías accionables, no reportes genéricos.\n\n'
+    + 'DATOS REALES (no inventes nada, usa SOLO estos datos):\n\n'
+    + 'INDUSTRIA: ' + bench.label + '\n'
+    + 'BENCHMARK INDUSTRIA: ' + bench.engPerPost + ' eng/post, ' + bench.postsPerMonth + ' posts/mes, mejor formato: ' + bench.bestFormat + '\n\n'
+    + 'COMPETENCIA (' + empresasCount + ' empresas, ' + posts.length + ' posts):\n'
+    + empresasResumen + '\n'
+    + 'Engagement promedio: ' + avgEngPerPost + ' eng/post (benchmark: ' + bench.engPerPost + ')\n'
+    + 'Ratio comentarios/likes: ' + (commentRatio * 100).toFixed(1) + '% (benchmark: ' + (bench.commentRatio * 100).toFixed(1) + '%)\n'
+    + 'Formatos: ' + formatosStr + '\n\n'
+    + (postsCliente.length > 0 ? 'CLIENTE PROPIO: ' + postsCliente.length + ' posts, avg ' + clienteAvg + ' eng/post (vs competencia: ' + avgEngPerPost + ')\n\n' : '')
+    + (avgCopyScore > 0 ? 'CONTENIDO GENERADO: score promedio ' + avgCopyScore + '/100\n\n' : '')
+    + (briefEstrategico ? 'BRIEF: ' + (briefEstrategico.propuesta_valor_unica || '').substring(0, 200) + '\n' : '')
+    + (auditoriaAnterior ? 'AUDITORÍA ANTERIOR: score ' + auditoriaAnterior.score_general + '/100\n' : '')
+    + (aprendizajes.length > 0 ? 'APRENDIZAJES: ' + aprendizajes.map(function(a) { return a.aprendizaje }).join('; ').substring(0, 300) + '\n' : '')
+    + '\nGENERA UNA AUDITORÍA en JSON con esta estructura:\n'
+    + '{\n'
+    + '  "score_general": 0-100,\n'
+    + '  "resumen_ejecutivo": "3-4 oraciones. Qué está pasando, qué está bien, qué está mal, qué hacer primero.",\n'
+    + '  "criterios": [\n'
+    + '    {\n'
+    + '      "nombre": "Nombre del criterio",\n'
+    + '      "score": 0-10,\n'
+    + '      "dato": "El número real (ej: 42 eng/post)",\n'
+    + '      "benchmark": "El benchmark de la industria (ej: 35 eng/post para Maquinaria)",\n'
+    + '      "comparacion": "X% sobre/bajo el benchmark",\n'
+    + '      "explicacion": "Qué significa este dato en lenguaje simple. Por qué importa.",\n'
+    + '      "accion": "Qué hacer concretamente para mejorar este criterio. 1 acción específica.",\n'
+    + '      "fuente": "competencia|cliente|copies|brief|industria"\n'
+    + '    }\n'
+    + '  ],\n'
+    + '  "top_3_acciones": [\n'
+    + '    { "prioridad": "URGENTE|IMPORTANTE|MEJORA", "accion": "Descripción concreta", "impacto_esperado": "Qué va a mejorar y en cuánto" }\n'
+    + '  ],\n'
+    + '  "vs_mes_anterior": "Subió/bajó/estable + por qué (si hay datos anteriores)",\n'
+    + '  "fortaleza_principal": "Lo mejor que tiene el cliente/competencia",\n'
+    + '  "debilidad_principal": "Lo peor, con acción para resolverlo"\n'
+    + '}\n\n'
+    + 'REGLAS:\n'
+    + '- Mínimo 6 criterios, máximo 10\n'
+    + '- CADA criterio DEBE tener dato real, benchmark, comparación y acción\n'
+    + '- Las acciones deben ser CONCRETAS (no "mejorar contenido" sino "publicar 2 reels/semana con formato X")\n'
+    + '- Si el dato del cliente está sobre el benchmark: explicar por qué y cómo mantenerlo\n'
+    + '- Si está bajo: explicar qué hacer para subirlo con número meta\n'
+    + '- El resumen ejecutivo debe ser útil para alguien que NO sabe de marketing\n'
+    + '- NUNCA inventar datos. Si no hay datos de algo, decir "sin datos" no inventar un número\n\n'
+    + 'Responde SOLO JSON válido.'
+
+  try {
+    var res = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + OPENAI_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'gpt-4o',
+        temperature: 0.4,
+        max_tokens: 3000,
+        response_format: { type: 'json_object' },
+        messages: [{ role: 'user', content: prompt }],
+      }),
+    })
+
+    if (!res.ok) throw new Error('OpenAI auditoria: HTTP ' + res.status)
+    var data = await res.json()
+    var parsed = JSON.parse(data.choices[0].message.content)
+
+    console.log('   Auditoría IA: score ' + parsed.score_general + '/100, ' + (parsed.criterios || []).length + ' criterios, ' + (parsed.top_3_acciones || []).length + ' acciones')
+
+    // Guardar
+    if (supabase && suscripcionId) {
+      var ahora = new Date()
+      var guardar = modo === 'mensual'
+      if (modo === 'semanal') {
+        try {
+          var existeRes = await supabase.from('copilot_auditorias').select('id', { count: 'exact', head: true }).eq('suscripcion_id', suscripcionId).eq('mes', ahora.getMonth() + 1).eq('anio', ahora.getFullYear())
+          guardar = (existeRes.count || 0) === 0
+        } catch (e) { guardar = false }
+      }
+      if (guardar) {
+        try {
+          await supabase.from('copilot_auditorias').insert({
+            suscripcion_id: suscripcionId,
+            mes: ahora.getMonth() + 1,
+            anio: ahora.getFullYear(),
+            score_general: parsed.score_general,
+            datos: parsed,
+          })
+          console.log('   Auditoría guardada')
+        } catch (e) { console.log('   Auditoría save error: ' + e.message) }
+      }
     }
+
+    // Guardar aprendizajes de la auditoría
+    if (supabase && suscripcionId && parsed.debilidad_principal) {
+      try {
+        var memModule = require('./radar-memoria-persistente.js')
+        await memModule.guardarAprendizaje(supabase, suscripcionId, 'auditoria', 'alerta', 'Debilidad: ' + parsed.debilidad_principal, 0.5, { score: parsed.score_general })
+      } catch (e) {}
+    }
+
+    console.log('   === AUDITORÍA IA COMPLETADA ===\n')
+    return parsed
+  } catch (e) {
+    console.error('   Auditoría IA error: ' + e.message)
+    return generarAuditoriaBasica(posts, postsCliente, contenido, bench, avgEngPerPost, avgCopyScore, formatos, engPorEmpresa, supabase, suscripcionId, modo)
+  }
+}
+
+// Fallback sin IA
+function generarAuditoriaBasica(posts, postsCliente, contenido, bench, avgEng, avgCopyScore, formatos, engPorEmpresa, supabase, suscripcionId, modo) {
+  var criterios = [
+    { nombre: 'Engagement vs industria', score: avgEng >= bench.engPerPost ? 8 : avgEng >= bench.engPerPost * 0.7 ? 6 : 4, dato: avgEng + ' eng/post', benchmark: bench.engPerPost + ' eng/post (' + bench.label + ')', comparacion: Math.round(((avgEng - bench.engPerPost) / bench.engPerPost) * 100) + '%', explicacion: 'Engagement = likes + comentarios por post. Mide cuánto interactúa la audiencia.', accion: avgEng < bench.engPerPost ? 'Testear reels y carruseles que tienen 2-3x más engagement.' : 'Mantener esta línea.', fuente: 'competencia' },
+    { nombre: 'Frecuencia publicación', score: posts.length >= bench.postsPerMonth * Object.keys(engPorEmpresa).length ? 8 : 5, dato: posts.length + ' posts totales', benchmark: bench.postsPerMonth + ' posts/mes por empresa', explicacion: 'Cuánto publica la competencia.', accion: 'Igualar frecuencia del competidor más activo.', fuente: 'competencia' },
+    { nombre: 'Variedad de formatos', score: Object.keys(formatos).length >= 3 ? 8 : 5, dato: Object.keys(formatos).join(', '), benchmark: 'Mínimo 3 formatos', explicacion: 'Diversificar formatos mejora alcance.', accion: 'Agregar ' + bench.bestFormat + ' si no se usa.', fuente: 'competencia' },
+  ]
+  if (avgCopyScore > 0) {
+    criterios.push({ nombre: 'Calidad copies generados', score: avgCopyScore >= 85 ? 9 : avgCopyScore >= 70 ? 7 : 5, dato: avgCopyScore + '/100', benchmark: '85/100 excelente', explicacion: 'Score del QA automático.', accion: 'Revisar copies con score < 75.', fuente: 'copies' })
   }
 
-  console.log('   Recomendaciones: ' + recomendaciones.length)
-  console.log('   === AUDITORIA COMPLETADA ===\n')
+  var scoreGeneral = Math.round(criterios.reduce(function(s, c) { return s + c.score }, 0) / criterios.length * 10)
 
-  // Contexto explicativo
-  var contexto = 'Basado en ' + posts.length + ' posts de competencia'
-  if (postsCliente.length > 0) contexto += ' + ' + postsCliente.length + ' posts de tu cuenta'
-  if (contenido.length > 0) contexto += ' + ' + contenido.length + ' batches de copies generados'
-  var fuentesUsadas = criterios.map(function(c) { return c.fuente }).filter(function(f, i, arr) { return arr.indexOf(f) === i })
-  contexto += '. Fuentes: ' + fuentesUsadas.join(', ') + '.'
-
-  return {
-    score_general: scoreGeneral100,
-    scores_red: scoresRed,
-    criterios: criterios,
-    fortaleza: fortaleza,
-    debilidad: debilidad,
-    recomendaciones: recomendaciones,
-    contexto: contexto,
-    datos_cliente: postsCliente.length > 0 ? {
-      posts: postsCliente.length,
-      avg_engagement: Math.round(postsCliente.reduce(function(s,p){return s+(p.likes||0)+(p.comments||0)},0) / postsCliente.length),
-    } : null,
-  }
+  return { score_general: scoreGeneral, criterios: criterios, resumen_ejecutivo: 'Auditoría básica sin IA. ' + posts.length + ' posts analizados.', top_3_acciones: [], fortaleza_principal: '', debilidad_principal: '' }
 }
 
 module.exports = { generarAuditoria: generarAuditoria }

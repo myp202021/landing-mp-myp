@@ -1398,7 +1398,7 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
           var mesAuditoria = mesGlobal
           var anioAuditoria = anioGlobal
           var audMes = auditorias.filter(function(a: any) { return a.mes === mesAuditoria && a.anio === anioAuditoria })
-          var aud = audMes.length > 0 ? audMes[0] : null
+          var aud = audMes.length > 0 ? audMes[0] : (auditorias.length > 0 ? auditorias[0] : null) // fallback: más reciente
           var mesesConAuditoria = auditorias.map(function(a: any) { return a.mes }).filter(function(m: number, i: number, arr: number[]) { return arr.indexOf(m) === i })
 
           var criteriosDefault = [
@@ -1474,34 +1474,71 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
                     </div>
                   )}
 
-                  {/* Criteria breakdown with recommendations */}
+                  {/* Resumen ejecutivo IA */}
+                  {(aud.datos || aud).resumen_ejecutivo && (
+                    <div className="bg-gradient-to-r from-teal-500/10 to-cyan-500/10 border border-teal-500/20 rounded-xl p-4 mb-4">
+                      <p className="text-sm text-[#c4b5fd] leading-relaxed">{(aud.datos || aud).resumen_ejecutivo}</p>
+                    </div>
+                  )}
+
+                  {/* Top 3 acciones prioritarias */}
+                  {((aud.datos || aud).top_3_acciones || []).length > 0 && (
+                    <div className="mb-4">
+                      <h3 className="text-sm font-bold text-white mb-2">Acciones prioritarias</h3>
+                      <div className="space-y-2">
+                        {(aud.datos || aud).top_3_acciones.map(function(a: any, ai: number) {
+                          var prioColor = (a.prioridad || '').includes('URGENTE') ? 'bg-red-900/30 text-red-400 border-red-700/30' : (a.prioridad || '').includes('IMPORTANTE') ? 'bg-amber-900/30 text-amber-400 border-amber-700/30' : 'bg-blue-900/30 text-blue-400 border-blue-700/30'
+                          return <div key={ai} className={'rounded-lg p-3 border ' + prioColor}>
+                            <div className="flex items-center gap-2 mb-1">
+                              <span className="text-[10px] font-bold uppercase">{a.prioridad || 'MEJORA'}</span>
+                            </div>
+                            <p className="text-xs text-white font-semibold">{a.accion}</p>
+                            {a.impacto_esperado && <p className="text-[10px] text-[#94a3b8] mt-1">{a.impacto_esperado}</p>}
+                          </div>
+                        })}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Criterios con dato + benchmark + comparación + acción */}
                   <h3 className="text-sm font-bold text-white mb-3">Detalle por criterio</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    {(aud.criterios || []).map(function(raw: any, ci: number) {
-                      var cr = parseCriterio(raw, ci)
-                      var recText = criterioRecommendation(cr.score)
-                      var recColor = criterioRecommendationColor(cr.score)
-                      var fuente = raw && raw.fuente ? raw.fuente : 'competencia'
-                      var descripcion = raw && raw.descripcion ? raw.descripcion : ''
-                      var dato = raw && raw.dato ? raw.dato : ''
-                      var fuenteColor = fuente === 'cliente' ? 'text-cyan-400' : fuente === 'copies_generados' ? 'text-purple-400' : fuente === 'cliente+competencia' ? 'text-amber-400' : 'text-[#64748b]'
-                      var fuenteLabel = fuente === 'cliente' ? 'Tu cuenta' : fuente === 'copies_generados' ? 'Copies Copilot' : fuente === 'cliente+competencia' ? 'Comparaci\u00f3n' : fuente === 'estimado' ? 'Estimado' : 'Competencia'
+                  <div className="grid grid-cols-1 gap-3">
+                    {((aud.datos || aud).criterios || aud.criterios || []).map(function(raw: any, ci: number) {
+                      var cr = typeof raw === 'object' ? raw : { nombre: 'Criterio ' + (ci + 1), score: raw || 0 }
+                      var score = cr.score || cr.puntaje || 0
                       return <div key={ci} className="bg-[#12102a] rounded-lg p-4">
-                        <div className="flex items-center justify-between mb-1">
-                          <div className="text-xs text-[#a5b4fc] font-semibold">{cr.nombre}</div>
-                          <span className={'text-sm font-bold ' + scoreColor(cr.score)}>{cr.score}/10</span>
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="text-xs text-[#a5b4fc] font-semibold">{cr.nombre || cr.criterio}</div>
+                          <span className={'text-sm font-bold ' + scoreColor(score)}>{score}/10</span>
                         </div>
-                        <div className="w-full bg-white/10 rounded-full h-2 mb-2">
-                          <div className={scoreBg(cr.score) + ' h-2 rounded-full transition-all'} style={{ width: (cr.score * 10) + '%' }} />
+                        <div className="w-full bg-white/10 rounded-full h-2 mb-3">
+                          <div className={scoreBg(score) + ' h-2 rounded-full transition-all'} style={{ width: (score * 10) + '%' }} />
                         </div>
-                        <p className={'text-[11px] ' + recColor}>{recText}</p>
-                        {descripcion && <p className="text-[10px] text-[#64748b] mt-1">{descripcion}</p>}
-                        <div className="flex items-center gap-2 mt-1">
-                          <span className={'text-[9px] font-semibold ' + fuenteColor}>{fuenteLabel}</span>
-                          {dato && <span className="text-[9px] text-[#475569]">{dato}</span>}
+                        <div className="grid grid-cols-3 gap-3 text-[10px] mb-2">
+                          {cr.dato && <div><span className="text-[#64748b] block">Dato real</span><span className="text-white font-semibold">{cr.dato}</span></div>}
+                          {cr.benchmark && <div><span className="text-[#64748b] block">Benchmark industria</span><span className="text-indigo-300 font-semibold">{cr.benchmark}</span></div>}
+                          {cr.comparacion && <div><span className="text-[#64748b] block">Comparaci{'ó'}n</span><span className={score >= 7 ? 'text-green-400' : score >= 5 ? 'text-amber-400' : 'text-red-400'}>{cr.comparacion}</span></div>}
                         </div>
+                        {cr.explicacion && <p className="text-[10px] text-[#94a3b8] mb-1">{cr.explicacion}</p>}
+                        {cr.accion && <p className="text-[10px] text-cyan-400 font-semibold">{'\u2192'} {cr.accion}</p>}
                       </div>
                     })}
+                  </div>
+
+                  {/* Fortaleza y debilidad */}
+                  <div className="grid grid-cols-2 gap-3 mt-4">
+                    {(aud.datos || aud).fortaleza_principal && (
+                      <div className="bg-green-900/10 border border-green-500/20 rounded-lg p-3">
+                        <p className="text-[10px] font-bold text-green-400 mb-1">Fortaleza principal</p>
+                        <p className="text-xs text-green-300">{(aud.datos || aud).fortaleza_principal}</p>
+                      </div>
+                    )}
+                    {(aud.datos || aud).debilidad_principal && (
+                      <div className="bg-red-900/10 border border-red-500/20 rounded-lg p-3">
+                        <p className="text-[10px] font-bold text-red-400 mb-1">Debilidad principal</p>
+                        <p className="text-xs text-red-300">{(aud.datos || aud).debilidad_principal}</p>
+                      </div>
+                    )}
                   </div>
                 </div>
               </>
@@ -1518,7 +1555,8 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
         {/* TAB: GUIONES */}
         {tab === 'guiones' && (function() {
           var mesGuionesActivo = mesGlobal
-          var guionesMes = guiones.filter(function(g: any) { return g.mes === mesGuionesActivo })
+          var guionesMesFilt = guiones.filter(function(g: any) { return g.mes === mesGuionesActivo })
+          var guionesMes = guionesMesFilt.length > 0 ? guionesMesFilt : (guiones.length > 0 ? [guiones[0]] : []) // fallback: más reciente
 
           var guionesMesCount = guionesMes.reduce(function(s: number, g: any) { return s + (Array.isArray(g.datos) ? g.datos.length : 1) }, 0)
 
