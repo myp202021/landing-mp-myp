@@ -81,8 +81,10 @@ var memoriaPersistenteModule = require('./radar-memoria-persistente.js')
 var metaAdLibraryModule = require('./radar-meta-adlibrary.js')
 var arbolDecisionModule = require('./radar-arbol-decision.js')
 var reporteModule = require('./radar-reporte.js')
+var linkedinApiModule = require('./radar-linkedin-api.js')
 
 var APIFY_TOKEN = process.env.APIFY_TOKEN
+var LINKDAPI_KEY = process.env.LINKDAPI_KEY
 var RESEND_KEY = process.env.RESEND
 var OPENAI_KEY = process.env.OPENAI_API_KEY
 var ANTHROPIC_KEY = process.env.ANTHROPIC_API_KEY_GRILLAS
@@ -246,121 +248,86 @@ async function main() {
     Array.from(igSet).forEach(function(h) { var n = igPosts.filter(function(p) { return p.handle === h }).length; console.log('   ' + (handleToNombre[h] || h) + ': ' + n) })
   }
 
-  // === LINKEDIN (REACTIVADO — harvestapi funciona, $2/1K posts) ===
+  // === LINKEDIN (LinkdAPI primario — $0.01/llamada, sin cookies) ===
   if (liSet.size > 0) {
-    console.log('\n--- LINKEDIN: ' + liSet.size + ' empresas ---')
+    console.log('\n--- LINKEDIN: ' + liSet.size + ' empresas (LinkdAPI) ---')
     var liLimit = MODO === 'diario' ? 5 : 15
+    var liTotal = 0
+    var liFailed = []
 
-    // Actores disponibles — se prueban en orden hasta que uno devuelva datos
-    // Verificados en Apify Store abril 2026, todos sin cookies
-    var LI_ACTORS = [
-      {
-        name: 'harvestapi~linkedin-company-posts',
-        rating: '5.0',
-        buildInput: function(handle) {
-          return { urls: ['https://www.linkedin.com/company/' + handle + '/posts/'], maxPosts: liLimit }
-        },
-        parsePost: function(p) {
-          // harvestapi devuelve postedAt como objeto {timestamp, date, postedAgoShort} o string
-          var dateStr = null
-          if (p.postedAt) {
-            if (typeof p.postedAt === 'object' && p.postedAt.date) dateStr = p.postedAt.date
-            else if (typeof p.postedAt === 'object' && p.postedAt.timestamp) dateStr = new Date(p.postedAt.timestamp).toISOString()
-            else if (typeof p.postedAt === 'string') dateStr = p.postedAt
-          }
-          if (!dateStr) dateStr = p.date || p.publishedAt || null
-          // Si postedAtTimestamp es número (ms epoch)
-          if (!dateStr && p.postedAtTimestamp && typeof p.postedAtTimestamp === 'number') dateStr = new Date(p.postedAtTimestamp).toISOString()
-          return {
-            texto: (p.text || p.commentary || p.content || '').substring(0, 500),
-            url: p.url || p.postUrl || '',
-            timestamp: dateStr,
-            likes: p.likesCount || p.numLikes || p.socialCount || 0,
-            comments: p.commentsCount || p.numComments || 0,
-          }
-        }
-      },
-      {
-        name: 'apimaestro~linkedin-company-posts',
-        rating: '5.0 (15 reviews)',
-        buildInput: function(handle) {
-          return { companyUrls: ['https://www.linkedin.com/company/' + handle + '/'], maxPosts: liLimit }
-        },
-        parsePost: function(p) {
-          // apimaestro usa snake_case y posted_at es objeto: {date, timestamp, relative}
-          var dateStr = null
-          if (p.posted_at) {
-            if (typeof p.posted_at === 'object') {
-              if (p.posted_at.date) dateStr = p.posted_at.date
-              else if (p.posted_at.timestamp) dateStr = new Date(p.posted_at.timestamp).toISOString()
-            } else {
-              dateStr = p.posted_at
-            }
-          }
-          if (!dateStr) dateStr = p.publishedAt || p.date || null
-          return {
-            texto: (p.text || p.postText || p.content || '').substring(0, 500),
-            url: p.post_url || p.postUrl || p.url || '',
-            timestamp: dateStr,
-            likes: p.reactions_count || p.reactionsCount || p.likesCount || 0,
-            comments: p.comments_count || p.commentsCount || 0,
-          }
-        }
-      },
-      {
-        name: 'harvestapi~linkedin-post-search',
-        rating: '5.0 (18 reviews)',
-        buildInput: function(handle) {
-          return { searchUrl: 'https://www.linkedin.com/company/' + handle + '/posts/', maxResults: liLimit }
-        },
-        parsePost: function(p) {
-          return {
-            texto: (p.text || p.content || p.commentary || '').substring(0, 500),
-            url: p.postUrl || p.url || '',
-            timestamp: p.postedDate || p.publishedAt || p.date || null,
-            likes: p.reactionCount || p.likesCount || p.totalReactions || 0,
-            comments: p.commentCount || p.commentsCount || 0,
-          }
-        }
-      },
-    ]
-
-    for (var handle of liSet) {
-      var liPosts = []
-      for (var ai = 0; ai < LI_ACTORS.length; ai++) {
-        var actor = LI_ACTORS[ai]
+    if (LINKDAPI_KEY) {
+      for (var handle of liSet) {
         try {
-          console.log('   ' + handle + ' → Actor ' + (ai + 1) + ': ' + actor.name)
-          var input = actor.buildInput(handle)
-          var r = await fetch('https://api.apify.com/v2/acts/' + actor.name + '/run-sync-get-dataset-items?token=' + APIFY_TOKEN + '&timeout=120',
-            { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(input) })
-          if (!r.ok) { console.log('   HTTP ' + r.status + ' — probando siguiente actor'); continue }
-          var raw = await r.json()
-          console.log('   Raw: ' + raw.length + ' items')
-          if (raw.length > 0) {
-            var sampleKeys = Object.keys(raw[0]).slice(0, 8).join(', ')
-            console.log('   Sample keys: ' + sampleKeys)
-            var s0 = raw[0]
-            console.log('   Sample posted_at: ' + JSON.stringify(s0.posted_at || s0.postedAt || s0.publishedAt || s0.date || 'NONE').substring(0, 100))
-            console.log('   Sample text: ' + (s0.text || s0.content || '').substring(0, 80))
-          }
-          if (raw.length === 0) { console.log('   0 items — probando siguiente actor'); continue }
+          // Paso 1: obtener company ID
+          var idRes = await fetch('https://linkdapi.com/api/v1/companies/company/universal-name-to-id?universalName=' + encodeURIComponent(handle), {
+            headers: { 'X-linkdapi-apikey': LINKDAPI_KEY }
+          })
+          var idData = await idRes.json()
 
-          liPosts = raw.map(function(p) {
-            var parsed = actor.parsePost(p)
+          if (!idData.success || !idData.data || !idData.data.id) {
+            console.log('   ' + handle + ': empresa no encontrada en LinkedIn')
+            liFailed.push(handle)
+            continue
+          }
+
+          var companyId = idData.data.id
+
+          // Paso 2: obtener posts
+          var postsRes = await fetch('https://linkdapi.com/api/v1/companies/company/posts?id=' + companyId + '&start=0', {
+            headers: { 'X-linkdapi-apikey': LINKDAPI_KEY }
+          })
+          var postsData = await postsRes.json()
+
+          if (!postsData.success || !postsData.data) {
+            console.log('   ' + handle + ': sin posts o error')
+            liFailed.push(handle)
+            continue
+          }
+
+          var rawPosts = postsData.data.posts || postsData.data || []
+          if (!Array.isArray(rawPosts)) rawPosts = []
+
+          var liPosts = rawPosts.slice(0, liLimit).map(function(p) {
+            var eng = p.engagements || {}
+            var postedAt = p.postedAt || {}
+            var timestamp = postedAt.timestamp ? new Date(postedAt.timestamp).toISOString() : (postedAt.fullDate || null)
             return {
               red: 'LinkedIn', handle: handle, nombre: handleToNombre[handle] || handle,
-              texto: parsed.texto, url: parsed.url,
-              timestamp: parsed.timestamp,
-              likes: parsed.likes, comments: parsed.comments, type: 'Post'
+              texto: (p.text || '').substring(0, 500),
+              url: p.url || '',
+              timestamp: timestamp,
+              likes: eng.totalReactions || 0,
+              comments: eng.commentsCount || 0,
+              type: p.mediaContent ? 'media' : 'article',
             }
           }).filter(function(p) { return p.timestamp && new Date(p.timestamp) > desde })
 
-          console.log('   ' + (handleToNombre[handle] || handle) + ': ' + liPosts.length + ' posts (filtrados por fecha)')
-          if (liPosts.length > 0 || raw.length > 0) break // Este actor funciona, no probar más
-        } catch (e) { console.log('   Actor ' + (ai + 1) + ' error: ' + e.message) }
+          allPosts = allPosts.concat(liPosts)
+          liTotal += liPosts.length
+          console.log('   ' + (handleToNombre[handle] || handle) + ': ' + liPosts.length + ' posts (' + (eng ? (rawPosts[0] && rawPosts[0].engagements ? rawPosts[0].engagements.totalReactions : 0) : 0) + ' reactions top)')
+
+          // Rate limiting
+          await new Promise(function(r) { setTimeout(r, 500) })
+        } catch (e) {
+          console.log('   ' + handle + ' error: ' + e.message)
+          liFailed.push(handle)
+        }
       }
-      allPosts = allPosts.concat(liPosts)
+
+      console.log('   LinkedIn total: ' + liTotal + ' posts de ' + (liSet.size - liFailed.length) + '/' + liSet.size + ' empresas')
+
+      // ALERTA si LinkdAPI no trajo nada
+      if (liTotal === 0 && liSet.size > 0) {
+        console.log('   ⚠️ ALERTA: LinkdAPI devolvió 0 posts para TODAS las empresas LinkedIn')
+        agenteFallos.push({ agente: 'LinkedIn (LinkdAPI)', error: '0 posts de ' + liSet.size + ' empresas — verificar créditos o API', timestamp: new Date().toISOString() })
+      }
+    } else {
+      console.log('   ⚠️ Sin LINKDAPI_KEY — LinkedIn deshabilitado')
+      agenteFallos.push({ agente: 'LinkedIn', error: 'LINKDAPI_KEY no configurada en secrets', timestamp: new Date().toISOString() })
+    }
+
+    if (liFailed.length > 0) {
+      console.log('   Empresas sin LinkedIn: ' + liFailed.join(', '))
     }
   }
 
