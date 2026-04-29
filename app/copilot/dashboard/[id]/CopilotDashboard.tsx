@@ -1302,94 +1302,111 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
               </div>
             })()}
 
-            {/* GRILLA MENSUAL — formato cards */}
-            {grillasMes.length > 0 && (
-              <div className="space-y-4 mb-8">
-                <div className="flex items-center justify-between">
-                  <h2 className="text-sm font-bold text-white">Grilla {MESES_NOMBRES[mesGlobal]}</h2>
-                  <div className="flex items-center gap-3">
-                    <span className="text-xs bg-purple-900/30 text-purple-400 px-3 py-1 rounded-full border border-purple-700/30">{grillasMesCount} posts</span>
-                    <a href={'/api/copilot/export-grilla?id=' + props.suscripcionId + '&mes=' + mesGlobal} className="bg-green-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg hover:bg-green-700 transition">Descargar Excel</a>
-                  </div>
-                </div>
-                <div className="grid grid-cols-1 gap-3">
-                  {grillasMes.map(function(batch: any) {
-                    return (batch.datos || []).map(function(g: any, gi: number) {
-                      var platColor = (g.plataforma || '').includes('Instagram') ? 'bg-pink-900/30 text-pink-400' : 'bg-blue-900/30 text-blue-400'
-                      return <div key={'g-' + gi} className="border border-white/[0.04] rounded-lg p-4 hover:bg-white/[0.04]">
-                        <div className="flex items-center gap-2 mb-2 flex-wrap">
-                          <span className={'text-[10px] font-bold px-2 py-0.5 rounded ' + platColor}>{g.plataforma || 'IG'} {g.tipo_post || g.tipo || ''}</span>
-                          <span className="text-[10px] bg-green-900/20 text-green-400 px-2 py-0.5 rounded">Grilla</span>
-                          <span className="text-xs text-[#64748b]">{g.fecha_sugerida || g.dia_semana || ''}</span>
-                          {g.score && <span className={'text-xs font-bold ' + ((g.score||0) >= 80 ? 'text-green-600' : 'text-yellow-600')}>Score: {g.score}</span>}
-                        </div>
-                        <h4 className="text-sm font-semibold text-white mb-1">{g.titulo || g.titulo_grafico || ''}</h4>
-                        <p className="text-xs text-[#94a3b8] whitespace-pre-line mb-2">{(g.copy || '').substring(0, 200)}{(g.copy || '').length > 200 ? '...' : ''}</p>
-                        {g.hashtags && <p className="text-xs text-indigo-400">{Array.isArray(g.hashtags) ? g.hashtags.join(' ') : g.hashtags}</p>}
-                      </div>
-                    })
-                  })}
-                </div>
-              </div>
-            )}
+            {/* CONTENIDO UNIFICADO — copies y grilla en UN SOLO formato */}
+            {(function() {
+              // Fusionar copies + grilla en una sola lista normalizada
+              var todosLosPosts = [] as any[]
 
-            {/* COPIES — lista unificada */}
-            {copiesMes.length > 0 && (function() {
-              // Aplanar todos los copies del mes en una lista, filtrar errores
-              var allCopiesMes = [] as any[]
+              // Copies del mes
               copiesMes.forEach(function(batch: any) {
                 (batch.datos || []).forEach(function(c: any) {
                   if (c.copy && c.copy.length > 20 && !c.copy.includes('(Error') && !c.error) {
-                    allCopiesMes.push(Object.assign({}, c, { batch_fecha: (batch.created_at || '').substring(0, 10), batch_score: batch.score_promedio }))
+                    todosLosPosts.push({
+                      titulo: c.titulo || c.gancho || '',
+                      copy: c.copy || '',
+                      plataforma: c.plataforma || 'Instagram',
+                      tipo: c.tipo || c.tipo_post || 'Post',
+                      angulo: c.angulo || '',
+                      score: c.score || 0,
+                      dia: c.dia || null,
+                      dia_semana: c.dia_semana || '',
+                      hashtags: c.hashtags || '',
+                      objetivo: c.objetivo || '',
+                      justificacion: c.justificacion || '',
+                      fuente: 'copy',
+                    })
                   }
                 })
               })
+
+              // Grilla del mes
+              grillasMes.forEach(function(batch: any) {
+                (batch.datos || []).forEach(function(g: any) {
+                  todosLosPosts.push({
+                    titulo: g.titulo || g.titulo_grafico || g.gancho || '',
+                    copy: g.copy || '',
+                    plataforma: g.plataforma || 'Instagram',
+                    tipo: g.tipo_post || g.tipo || 'Post',
+                    angulo: g.angulo || '',
+                    score: g.score || 0,
+                    dia: g.dia || null,
+                    dia_semana: g.dia_semana || '',
+                    hashtags: g.hashtags || '',
+                    objetivo: g.objetivo || '',
+                    justificacion: '',
+                    fuente: 'grilla',
+                    nota_diseno: g.nota_diseno || g.instrucciones_diseno || '',
+                  })
+                })
+              })
+
+              // Ordenar: los que tienen día primero, luego por día
+              todosLosPosts.sort(function(a, b) {
+                if (a.dia && b.dia) return a.dia - b.dia
+                if (a.dia) return -1
+                if (b.dia) return 1
+                return 0
+              })
+
+              if (todosLosPosts.length === 0) return null
+
               return <div className="space-y-4 mb-8">
                 <div className="flex items-center justify-between">
-                  <h2 className="text-sm font-bold text-white">Copies — {MESES_NOMBRES[mesGlobal]}</h2>
-                  <span className="text-xs bg-purple-900/30 text-purple-400 px-3 py-1 rounded-full border border-purple-700/30">{allCopiesMes.length} copies</span>
+                  <h2 className="text-sm font-bold text-white">Contenido {MESES_NOMBRES[mesGlobal]}</h2>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs bg-purple-900/30 text-purple-400 px-3 py-1 rounded-full border border-purple-700/30">{todosLosPosts.length} publicaciones</span>
+                    <a href={'/api/copilot/export-grilla?id=' + props.suscripcionId + '&mes=' + mesGlobal} className="bg-green-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg hover:bg-green-700 transition">Excel</a>
+                  </div>
                 </div>
                 <div className="grid grid-cols-1 gap-3">
-                  {allCopiesMes.map(function(c: any, ci: number) {
-                        var copyKey = 'copy-' + ci
-                        var fullText = c.copy || ''
-                        var hashtags = c.hashtags || ''
-                        var hashtagStr = Array.isArray(hashtags) ? hashtags.join(' ') : (typeof hashtags === 'string' ? hashtags : '')
-                        return <div key={ci} className="border border-white/[0.04] rounded-lg p-4 hover:bg-white/[0.04]">
-                          <div className="flex items-center gap-2 mb-2 flex-wrap">
-                            <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-pink-900/30 text-pink-400">{c.plataforma || 'IG'} {c.tipo || ''}</span>
-                            <span className="text-xs text-[#64748b]">{c.angulo || ''}</span>
-                            {c.score && <span className={'text-xs font-bold ' + (c.score >= 80 ? 'text-green-600' : 'text-yellow-600')}>Score: {c.score}</span>}
-                            <button onClick={function() { copyToClipboard(fullText + (hashtagStr ? '\n\n' + hashtagStr : ''), copyKey) }}
-                              className="ml-auto text-[10px] font-bold px-2.5 py-1 rounded bg-white/5 text-[#a5b4fc] hover:bg-white/10 transition border border-white/10">
-                              {copiedIndex === copyKey ? 'Copiado!' : 'Copiar'}
-                            </button>
-                          </div>
-                          <p className="font-semibold text-sm text-white mb-1">{c.titulo || ''}</p>
-                          <p className="text-xs text-[#a5b4fc] whitespace-pre-line">{fullText.substring(0, 500)}{fullText.length > 500 ? '...' : ''}</p>
-                          {hashtagStr && (
-                            <p className="text-xs text-indigo-400 mt-2 pt-2 border-t border-white/[0.04]">{hashtagStr}</p>
-                          )}
-                          {c.justificacion && <p className="text-xs text-indigo-600 mt-2">{c.justificacion}</p>}
-                          <div className="flex gap-2 mt-2 pt-2 border-t border-white/[0.04]">
-                            <button onClick={function() { enviarFeedback('contenido', 'Copy aprobado: ' + (c.titulo || '').substring(0, 50), 'aprobar', copyKey) }}
-                              className={'text-[10px] px-2 py-1 rounded transition ' + (feedbackSent === copyKey ? 'bg-green-500/20 text-green-400' : 'bg-green-900/20 text-green-500 hover:bg-green-900/40')}>
-                              {feedbackSent === copyKey ? 'Guardado' : 'Aprobar'}
-                            </button>
-                            <button onClick={function() {
-                              var razon = prompt('Por qu\u00e9 rechazas este copy?')
-                              if (razon) enviarFeedback('contenido', 'Copy rechazado "' + (c.titulo || '') + '": ' + razon, 'rechazar', copyKey)
-                            }}
-                              className="text-[10px] px-2 py-1 rounded bg-red-900/20 text-red-400 hover:bg-red-900/40 transition">
-                              Rechazar
-                            </button>
-                          </div>
-                        </div>
-                      })}
+                  {todosLosPosts.map(function(p: any, pi: number) {
+                    var copyKey = 'post-' + pi
+                    var platColor = (p.plataforma || '').includes('LinkedIn') ? 'bg-blue-900/30 text-blue-400' : 'bg-pink-900/30 text-pink-400'
+                    var hashtagStr = Array.isArray(p.hashtags) ? p.hashtags.join(' ') : (typeof p.hashtags === 'string' ? p.hashtags : '')
+                    return <div key={pi} className="border border-white/[0.04] rounded-lg p-4 hover:bg-white/[0.04]">
+                      <div className="flex items-center gap-2 mb-2 flex-wrap">
+                        {p.dia && <span className="text-[10px] font-bold bg-indigo-900/30 text-indigo-300 px-2 py-0.5 rounded">{p.dia_semana} {p.dia}</span>}
+                        <span className={'text-[10px] font-bold px-2 py-0.5 rounded ' + platColor}>{p.plataforma} {p.tipo}</span>
+                        <span className="text-[10px] text-[#64748b]">{p.angulo}</span>
+                        {p.score > 0 && <span className={'text-xs font-bold ' + ((p.score) >= 80 ? 'text-green-600' : 'text-yellow-600')}>Score: {p.score}</span>}
+                        <button onClick={function() { copyToClipboard(p.copy + (hashtagStr ? '\n\n' + hashtagStr : ''), copyKey) }}
+                          className="ml-auto text-[10px] font-bold px-2.5 py-1 rounded bg-white/5 text-[#a5b4fc] hover:bg-white/10 transition border border-white/10">
+                          {copiedIndex === copyKey ? 'Copiado!' : 'Copiar'}
+                        </button>
+                      </div>
+                      <h4 className="text-sm font-semibold text-white mb-1">{p.titulo}</h4>
+                      <p className="text-xs text-[#a5b4fc] whitespace-pre-line">{(p.copy).substring(0, 400)}{p.copy.length > 400 ? '...' : ''}</p>
+                      {hashtagStr && <p className="text-xs text-indigo-400 mt-2 pt-2 border-t border-white/[0.04]">{hashtagStr}</p>}
+                      {p.justificacion && <p className="text-[10px] text-[#64748b] mt-1 italic">{p.justificacion}</p>}
+                      {p.nota_diseno && <p className="text-[10px] text-amber-400/70 mt-1">{'\uD83C\uDFA8'} Dise{'ñ'}o: {p.nota_diseno}</p>}
+                      <div className="flex gap-2 mt-2 pt-2 border-t border-white/[0.04]">
+                        <button onClick={function() { enviarFeedback('contenido', 'Aprobado: ' + (p.titulo).substring(0, 50), 'aprobar', copyKey) }}
+                          className={'text-[10px] px-2 py-1 rounded transition ' + (feedbackSent === copyKey ? 'bg-green-500/20 text-green-400' : 'bg-green-900/20 text-green-500 hover:bg-green-900/40')}>
+                          {feedbackSent === copyKey ? 'Guardado' : 'Aprobar'}
+                        </button>
+                        <button onClick={function() {
+                          var razon = prompt('Por qu\u00e9 rechazas este contenido?')
+                          if (razon) enviarFeedback('contenido', 'Rechazado "' + (p.titulo) + '": ' + razon, 'rechazar', copyKey)
+                        }}
+                          className="text-[10px] px-2 py-1 rounded bg-red-900/20 text-red-400 hover:bg-red-900/40 transition">
+                          Rechazar
+                        </button>
+                      </div>
                     </div>
-                  </div>
-              })()}
-
+                  })}
+                </div>
+              </div>
+            })()}
 
             {grillasMes.length === 0 && copiesMes.length === 0 && (
               <div className="bg-[#1a1745] rounded-xl border border-white/[0.06] px-6 py-12 text-center">
