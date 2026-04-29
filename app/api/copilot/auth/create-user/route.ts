@@ -70,7 +70,7 @@ export async function POST(req: NextRequest) {
       suscripcion_id: suscripcion_id,
       accion: sub.password_hash ? 'password_reset' : 'user_created',
       ip: req.headers.get('x-forwarded-for') || 'admin',
-    }).catch(() => {})
+    }); // @ts-ignore
 
     // Enviar email con credenciales si send_email=true
     if (send_email !== false) {

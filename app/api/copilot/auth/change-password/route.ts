@@ -66,7 +66,7 @@ export async function POST(req: NextRequest) {
       suscripcion_id: subId,
       accion: 'password_change',
       ip: req.headers.get('x-forwarded-for') || 'unknown',
-    }).catch(() => {})
+    }); // @ts-ignore
 
     return NextResponse.json({ success: true })
   } catch (e: any) {

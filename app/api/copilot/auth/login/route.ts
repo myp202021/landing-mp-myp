@@ -60,7 +60,7 @@ export async function POST(req: NextRequest) {
         accion: 'login_fallido',
         ip: req.headers.get('x-forwarded-for') || 'unknown',
         user_agent: (req.headers.get('user-agent') || '').substring(0, 200),
-      }).catch(() => {})
+      }); // @ts-ignore
 
       return NextResponse.json({ error: 'Email o contraseña incorrectos' }, { status: 401 })
     }
@@ -79,7 +79,7 @@ export async function POST(req: NextRequest) {
       accion: 'login',
       ip: req.headers.get('x-forwarded-for') || 'unknown',
       user_agent: (req.headers.get('user-agent') || '').substring(0, 200),
-    }).catch(() => {})
+    }); // @ts-ignore
 
     // Crear response con httpOnly cookie
     const res = NextResponse.json({
