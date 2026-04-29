@@ -34,18 +34,22 @@ async function main() {
         emailBienvenida(sub))
     }
 
-    // DIA 3: Primer valor entregado
+    // DIA 3: Primer valor entregado (con data real)
     if (sub.estado === 'trial' && diasDesdeCreacion === 3) {
       console.log('  Dia 3 (valor): ' + sub.email)
-      await enviarEmail(sub.email, 'Tu primer analisis de competencia esta listo',
-        emailDia3(sub))
+      var dataCliente = await cargarDataCliente(sub.id)
+      await enviarEmail(sub.email, dataCliente.topCompetidor
+        ? dataCliente.topCompetidor + ' publico ' + dataCliente.topPosts + ' posts | Tu analisis esta listo'
+        : 'Tu primer analisis de competencia esta listo',
+        emailDia3(sub, dataCliente))
     }
 
-    // DIA 5: Engagement
+    // DIA 5: Engagement (con data real)
     if (sub.estado === 'trial' && diasDesdeCreacion === 5) {
       console.log('  Dia 5 (engagement): ' + sub.email)
+      var dataCliente5 = await cargarDataCliente(sub.id)
       await enviarEmail(sub.email, 'Copilot ya aprendio algo de tu negocio',
-        emailDia5(sub))
+        emailDia5(sub, dataCliente5))
     }
 
     // DIA 6: Fin trial manana
@@ -76,6 +80,49 @@ async function main() {
     }
   }
   console.log('Lifecycle completado')
+}
+
+// ═══ DATA REAL DEL CLIENTE ═══
+async function cargarDataCliente(suscripcionId) {
+  var data = { totalPosts: 0, empresas: [], topCompetidor: null, topPosts: 0, topEng: 0, avgEng: 0, contenidoCount: 0, auditoriaScore: 0, arbolRamas: 0, reporteAcciones: 0, aprendizajes: 0 }
+  try {
+    // Posts
+    var postsRes = await supabase.from('radar_posts').select('nombre_empresa, handle, likes, comments').eq('suscripcion_id', suscripcionId)
+    var posts = postsRes.data || []
+    data.totalPosts = posts.length
+    if (posts.length > 0) {
+      var porEmpresa = {}
+      posts.forEach(function(p) {
+        var n = p.nombre_empresa || p.handle || '?'
+        if (!porEmpresa[n]) porEmpresa[n] = { posts: 0, eng: 0 }
+        porEmpresa[n].posts++
+        porEmpresa[n].eng += (p.likes || 0) + (p.comments || 0)
+      })
+      data.empresas = Object.keys(porEmpresa).map(function(n) {
+        return { nombre: n, posts: porEmpresa[n].posts, avgEng: Math.round(porEmpresa[n].eng / porEmpresa[n].posts) }
+      }).sort(function(a, b) { return b.posts - a.posts })
+      data.topCompetidor = data.empresas[0].nombre
+      data.topPosts = data.empresas[0].posts
+      data.topEng = data.empresas[0].avgEng
+      data.avgEng = Math.round(posts.reduce(function(s, p) { return s + (p.likes || 0) + (p.comments || 0) }, 0) / posts.length)
+    }
+    // Contenido
+    var contRes = await supabase.from('radar_contenido').select('id').eq('suscripcion_id', suscripcionId)
+    data.contenidoCount = (contRes.data || []).length
+    // Auditoría
+    var audRes = await supabase.from('copilot_auditorias').select('score_general').eq('suscripcion_id', suscripcionId).order('created_at', { ascending: false }).limit(1)
+    if (audRes.data && audRes.data[0]) data.auditoriaScore = audRes.data[0].score_general
+    // Árbol
+    var arbRes = await supabase.from('copilot_arboles').select('datos').eq('suscripcion_id', suscripcionId).limit(1)
+    if (arbRes.data && arbRes.data[0] && arbRes.data[0].datos) data.arbolRamas = (arbRes.data[0].datos.ramas || []).length
+    // Reporte
+    var repRes = await supabase.from('copilot_reportes').select('datos').eq('suscripcion_id', suscripcionId).order('created_at', { ascending: false }).limit(1)
+    if (repRes.data && repRes.data[0] && repRes.data[0].datos) data.reporteAcciones = (repRes.data[0].datos.acciones_inteligentes || []).length
+    // Aprendizajes
+    var apRes = await supabase.from('copilot_aprendizajes').select('id').eq('suscripcion_id', suscripcionId).eq('activo', true)
+    data.aprendizajes = (apRes.data || []).length
+  } catch (e) { console.log('    Data error: ' + e.message) }
+  return data
 }
 
 // ═══ TEMPLATES ═══
@@ -127,42 +174,68 @@ function emailBienvenida(sub) {
     + footer()
 }
 
-// ═══ DIA 3: PRIMER VALOR ═══
-function emailDia3(sub) {
+// ═══ DIA 3: PRIMER VALOR (con data real) ═══
+function emailDia3(sub, data) {
+  data = data || {}
   var nombre = (sub.perfil_empresa || {}).nombre || sub.nombre || sub.email.split('@')[0]
-  return header('Tu an\u00e1lisis de competencia est\u00e1 listo', '3 d\u00edas con Copilot')
+  var html = header('Tu an\u00e1lisis de competencia est\u00e1 listo', '3 d\u00edas con Copilot')
     + '<div style="background:white;padding:28px 32px;">'
     + '<p style="font-size:15px;line-height:1.7;color:#374151;">Hola ' + nombre + ',</p>'
-    + '<p style="font-size:15px;line-height:1.7;color:#374151;">Copilot ya analiz\u00f3 a tus competidores. En tu dashboard puedes ver:</p>'
-    + '<ul style="font-size:14px;color:#374151;line-height:2;">'
-    + '<li>Cu\u00e1ntos posts public\u00f3 cada competidor y cu\u00e1l tiene mejor engagement</li>'
-    + '<li>Qu\u00e9 formatos y temas les funcionan mejor</li>'
-    + '<li>C\u00f3mo se compara tu industria con el promedio de Chile</li>'
-    + '<li>Copies y contenido sugerido basado en lo que funciona en tu mercado</li>'
-    + '</ul>'
-    + boton('Ver an\u00e1lisis completo', dashUrl(sub))
+
+  if (data.totalPosts > 0 && data.empresas.length > 0) {
+    html += '<p style="font-size:15px;line-height:1.7;color:#374151;">Copilot analiz\u00f3 <strong>' + data.totalPosts + ' posts</strong> de ' + data.empresas.length + ' competidores. Esto es lo que encontr\u00f3:</p>'
+    html += '<div style="background:#f5f3ff;padding:16px 20px;border-radius:10px;margin:16px 0;">'
+    data.empresas.slice(0, 4).forEach(function(e) {
+      var engColor = e.avgEng >= 50 ? '#059669' : e.avgEng >= 20 ? '#D97706' : '#DC2626'
+      html += '<p style="margin:0 0 8px;font-size:14px;color:#4c1d95;"><strong>' + e.nombre + '</strong> \u2014 ' + e.posts + ' posts, <span style="color:' + engColor + ';font-weight:700;">' + e.avgEng + ' eng/post</span></p>'
+    })
+    html += '<p style="margin:8px 0 0;font-size:12px;color:#7c3aed;">Engagement = likes + comentarios por post. Promedio de la industria: ~40</p>'
+    html += '</div>'
+  } else {
+    html += '<p style="font-size:15px;line-height:1.7;color:#374151;">Copilot ya analiz\u00f3 a tus competidores. En tu dashboard puedes ver qu\u00e9 publican, qu\u00e9 les funciona, y d\u00f3nde hay oportunidades.</p>'
+  }
+
+  if (data.contenidoCount > 0) {
+    html += '<p style="font-size:14px;color:#374151;">Adem\u00e1s, ya tienes <strong>' + data.contenidoCount + ' batches de contenido</strong> sugerido basado en lo que funciona en tu mercado.</p>'
+  }
+
+  html += boton('Ver an\u00e1lisis completo', dashUrl(sub))
     + '<p style="font-size:13px;color:#9ca3af;text-align:center;">Cada dato se explica, se compara con la industria, y viene con una acci\u00f3n concreta.</p>'
     + '</div>'
     + footer()
+  return html
 }
 
-// ═══ DIA 5: ENGAGEMENT ═══
-function emailDia5(sub) {
+// ═══ DIA 5: ENGAGEMENT (con data real) ═══
+function emailDia5(sub, data) {
+  data = data || {}
   var nombre = (sub.perfil_empresa || {}).nombre || sub.nombre || sub.email.split('@')[0]
-  return header('Copilot ya aprendi\u00f3 algo de tu negocio', '5 d\u00edas — y mejorando')
+  var html = header('Copilot ya aprendi\u00f3 de tu negocio', '5 d\u00edas \u2014 y mejorando')
     + '<div style="background:white;padding:28px 32px;">'
     + '<p style="font-size:15px;line-height:1.7;color:#374151;">Hola ' + nombre + ',</p>'
-    + '<p style="font-size:15px;line-height:1.7;color:#374151;">En 5 d\u00edas, Copilot ya acumul\u00f3 aprendizajes sobre tu mercado. Cada semana que pasa, las recomendaciones son m\u00e1s precisas porque se alimentan de datos reales de tu competencia.</p>'
-    + '<p style="font-size:15px;line-height:1.7;color:#374151;">Algunas preguntas para que aproveches el dashboard:</p>'
-    + '<ul style="font-size:14px;color:#374151;line-height:2;">'
-    + '<li>\u00bfQu\u00e9 competidor tiene mejor engagement y por qu\u00e9?</li>'
-    + '<li>\u00bfLos copies sugeridos te sirven o los rechazar\u00edas? (Copilot aprende de tu feedback)</li>'
-    + '<li>\u00bfEl \u00e1rbol de inversi\u00f3n refleja c\u00f3mo distribuyes tu presupuesto?</li>'
-    + '</ul>'
-    + '<p style="font-size:14px;color:#6b7280;">Tu prueba termina en 2 d\u00edas. Si Copilot te est\u00e1 sirviendo, elige tu plan para seguir.</p>'
-    + boton('Ver planes desde $34.990/mes', 'https://www.mulleryperez.cl/copilot/contratar/' + sub.id)
-    + '</div>'
-    + footer()
+
+  // Stats reales
+  var statsHtml = ''
+  if (data.totalPosts > 0 || data.auditoriaScore > 0 || data.arbolRamas > 0) {
+    statsHtml = '<div style="background:#f5f3ff;padding:16px 20px;border-radius:10px;margin:16px 0;">'
+    statsHtml += '<p style="margin:0 0 4px;font-size:13px;color:#7c3aed;font-weight:700;">Lo que Copilot hizo por ti en 5 d\u00edas:</p>'
+    if (data.totalPosts > 0) statsHtml += '<p style="margin:4px 0;font-size:14px;color:#4c1d95;">\uD83D\uDD0D Analiz\u00f3 <strong>' + data.totalPosts + ' posts</strong> de ' + data.empresas.length + ' competidores (promedio ' + data.avgEng + ' eng/post)</p>'
+    if (data.contenidoCount > 0) statsHtml += '<p style="margin:4px 0;font-size:14px;color:#4c1d95;">\u270D\uFE0F Gener\u00f3 <strong>' + data.contenidoCount + ' batches</strong> de contenido profesional</p>'
+    if (data.auditoriaScore > 0) statsHtml += '<p style="margin:4px 0;font-size:14px;color:#4c1d95;">\uD83D\uDCCA Tu score de auditor\u00eda: <strong>' + data.auditoriaScore + '/100</strong> vs benchmark de tu industria</p>'
+    if (data.arbolRamas > 0) statsHtml += '<p style="margin:4px 0;font-size:14px;color:#4c1d95;">\uD83C\uDF33 \u00c1rbol de inversi\u00f3n con <strong>' + data.arbolRamas + ' ramas</strong> y 3 escenarios</p>'
+    if (data.reporteAcciones > 0) statsHtml += '<p style="margin:4px 0;font-size:14px;color:#4c1d95;">\uD83C\uDFAF Reporte con <strong>' + data.reporteAcciones + ' acciones</strong> inteligentes priorizadas</p>'
+    if (data.aprendizajes > 0) statsHtml += '<p style="margin:4px 0;font-size:14px;color:#4c1d95;">\uD83E\uDDE0 Acumul\u00f3 <strong>' + data.aprendizajes + ' aprendizajes</strong> sobre tu mercado</p>'
+    statsHtml += '</div>'
+  }
+
+  html += '<p style="font-size:15px;line-height:1.7;color:#374151;">En 5 d\u00edas, Copilot ya entiende tu mercado mejor que la mayor\u00eda de las herramientas despu\u00e9s de meses.</p>'
+  html += statsHtml
+  html += '<p style="font-size:15px;line-height:1.7;color:#374151;">Y esto reci\u00e9n empieza \u2014 cada mes que pasa, las recomendaciones son m\u00e1s precisas porque Copilot aprende de tus datos y tu feedback.</p>'
+  html += '<p style="font-size:14px;color:#6b7280;">Tu prueba termina en 2 d\u00edas. Si Copilot te est\u00e1 sirviendo, elige tu plan:</p>'
+  html += boton('Ver planes desde $34.990/mes', 'https://www.mulleryperez.cl/copilot/contratar/' + sub.id)
+  html += '</div>'
+  html += footer()
+  return html
 }
 
 // ═══ DIA 6: FIN TRIAL ═══
