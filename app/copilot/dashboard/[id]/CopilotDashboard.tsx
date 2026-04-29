@@ -1750,10 +1750,10 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-white/[0.04]">
-                      {Object.keys(datos.metricas_competidores).map(function(nombre: string, i: number) {
-                        var m = datos.metricas_competidores[nombre]
-                        var tendColor = (m.tendencia_engagement || '').includes('+') ? 'text-green-400' : (m.tendencia_engagement || '').includes('-') ? 'text-red-400' : 'text-[#94a3b8]'
-                        return <tr key={nombre} className={i % 2 === 0 ? '' : 'bg-[#12102a]'}>
+                      {(Array.isArray(datos.metricas_competidores) ? datos.metricas_competidores : Object.keys(datos.metricas_competidores).map(function(k) { return Object.assign({ _nombre: k }, datos.metricas_competidores[k]) })).map(function(m: any, i: number) {
+                        var nombre = m.nombre || m._nombre || m.empresa || ('Competidor ' + (i + 1))
+                        var tendColor = ((m.tendencia_engagement || m.tendencia || '') + '').includes('+') ? 'text-green-400' : ((m.tendencia_engagement || m.tendencia || '') + '').includes('-') ? 'text-red-400' : 'text-[#94a3b8]'
+                        return <tr key={i} className={i % 2 === 0 ? '' : 'bg-[#12102a]'}>
                           <td className="px-3 py-2 font-semibold text-white">{nombre}</td>
                           <td className="px-3 py-2 text-center text-white font-bold">{m.total_posts || 0}</td>
                           <td className="px-3 py-2 text-center">
@@ -1804,35 +1804,70 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
             )}
 
             {/* Plan de campaña */}
-            {analisis && analisis.plan_campana && (
-              <div className="bg-[#1a1745] rounded-xl p-5 border border-orange-500/20 mb-4">
-                <h4 className="text-sm font-bold text-orange-400 uppercase tracking-wider mb-3">Plan de campa{'ñ'}a sugerido</h4>
-                {analisis.plan_campana.canales && Array.isArray(analisis.plan_campana.canales) && (
-                  <div className="space-y-2 mb-3">
-                    {analisis.plan_campana.canales.map(function(canal: any, ci: number) {
+            {/* PLAN DE CAMPAÑA — usar árbol de decisión si existe, sino plan del benchmark */}
+            {(function() {
+              // Primero intentar mostrar el árbol de decisión real
+              var arbolData = arboles.length > 0 ? (arboles[0].datos || {}) : null
+              if (arbolData && arbolData.ramas && arbolData.ramas.length > 0) {
+                return <div className="bg-[#1a1745] rounded-xl p-5 border border-orange-500/20 mb-4">
+                  <h4 className="text-sm font-bold text-orange-400 uppercase tracking-wider mb-3">{'\u00C1'}rbol de decisi{'ó'}n — distribuci{'ó'}n de pauta</h4>
+                  <div className="bg-gradient-to-r from-[#2563EB] to-[#9333EA] rounded-lg p-3 text-center mb-3">
+                    <p className="text-white font-bold">${(arbolData.presupuesto_total || 0).toLocaleString()} / mes</p>
+                  </div>
+                  <div className="space-y-2">
+                    {arbolData.ramas.map(function(r: any, ri: number) {
+                      var kpis = r.kpis_esperados || r.kpis || {}
+                      return <div key={ri} className="bg-[#12102a] rounded-lg p-3">
+                        <div className="flex items-center justify-between mb-1">
+                          <p className="text-white font-semibold text-xs">{r.nombre || r.plataforma}</p>
+                          <span className="text-orange-400 font-bold text-sm">{r.porcentaje}% (${(r.presupuesto || 0).toLocaleString()})</span>
+                        </div>
+                        <p className="text-[10px] text-[#94a3b8] mb-1">{r.justificacion || r.segmentacion || r.objetivo || ''}</p>
+                        {kpis.leads !== undefined && (
+                          <div className="flex gap-3 text-[9px] text-[#64748b]">
+                            <span>{kpis.clicks || '?'} clicks</span>
+                            <span>{kpis.leads || '?'} leads</span>
+                            <span>CPL ${(kpis.cpl || 0).toLocaleString()}</span>
+                            {kpis.roas !== undefined && <span>ROAS {kpis.roas}x</span>}
+                          </div>
+                        )}
+                      </div>
+                    })}
+                  </div>
+                  {arbolData.escenarios && (
+                    <div className="grid grid-cols-3 gap-2 mt-3">
+                      {['pesimista', 'realista', 'optimista'].map(function(esc) {
+                        var e = arbolData.escenarios[esc] || {}
+                        var c = esc === 'pesimista' ? 'text-red-400' : esc === 'optimista' ? 'text-green-400' : 'text-indigo-400'
+                        return <div key={esc} className="bg-[#0f0d2e] rounded p-2 text-center">
+                          <div className={'text-[9px] font-bold uppercase ' + c}>{esc}</div>
+                          <div className="text-xs text-white font-bold">{e.leads || e.leads_totales || '?'} leads</div>
+                          <div className="text-[9px] text-[#475569]">{e.conversiones || '?'} ventas · ROAS {e.roas || '?'}x</div>
+                        </div>
+                      })}
+                    </div>
+                  )}
+                </div>
+              }
+              // Fallback al plan del benchmark
+              if (analisis && analisis.plan_campana && analisis.plan_campana.canales) {
+                return <div className="bg-[#1a1745] rounded-xl p-5 border border-orange-500/20 mb-4">
+                  <h4 className="text-sm font-bold text-orange-400 uppercase tracking-wider mb-3">Plan de campa{'ñ'}a sugerido</h4>
+                  <div className="space-y-2">
+                    {(Array.isArray(analisis.plan_campana.canales) ? analisis.plan_campana.canales : []).map(function(canal: any, ci: number) {
                       return <div key={ci} className="bg-[#12102a] rounded-lg p-3 flex items-center gap-3">
                         <div className="flex-1">
                           <p className="text-white font-semibold text-xs">{canal.canal || canal.nombre || 'Canal'}</p>
-                          <p className="text-[10px] text-[#94a3b8]">{canal.formatos || canal.formato || ''} · {canal.frecuencia || ''}</p>
+                          <p className="text-[10px] text-[#94a3b8]">{canal.formatos || canal.formato || ''} · {canal.frecuencia || ''} · {canal.justificacion || ''}</p>
                         </div>
                         {canal.presupuesto_pct && <span className="text-orange-400 font-bold text-sm">{canal.presupuesto_pct}%</span>}
                       </div>
                     })}
                   </div>
-                )}
-                {analisis.plan_campana.plan_mensual && Array.isArray(analisis.plan_campana.plan_mensual) && (
-                  <div>
-                    <p className="text-xs text-[#64748b] font-semibold mb-2">Plan por semana</p>
-                    {analisis.plan_campana.plan_mensual.map(function(sem: any, si: number) {
-                      return <div key={si} className="flex items-start gap-2 mb-1">
-                        <span className="text-[10px] bg-orange-900/30 text-orange-400 px-2 py-0.5 rounded">S{si + 1}</span>
-                        <p className="text-xs text-[#a5b4fc]">{typeof sem === 'string' ? sem : (sem.enfoque || sem.descripcion || JSON.stringify(sem))}</p>
-                      </div>
-                    })}
-                  </div>
-                )}
-              </div>
-            )}
+                </div>
+              }
+              return null
+            })()}
 
             {/* Alertas de riesgo */}
             {analisis && analisis.alertas_riesgo && Array.isArray(analisis.alertas_riesgo) && analisis.alertas_riesgo.length > 0 && (
