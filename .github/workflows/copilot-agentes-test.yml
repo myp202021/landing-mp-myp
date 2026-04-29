@@ -40,7 +40,7 @@ jobs:
           echo "Ejecutando: $CMD"
           $CMD
         env:
-          APIFY_TOKEN: "SKIP"
+          APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           ANTHROPIC_API_KEY_GRILLAS: ${{ secrets.ANTHROPIC_API_KEY_GRILLAS }}
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
