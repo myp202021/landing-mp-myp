@@ -149,12 +149,17 @@ async function generarAuditoria(posts, contenido, cuentas, supabase, suscripcion
     + 'INDUSTRIA: ' + bench.label + '\n'
     + 'BENCHMARK INDUSTRIA: ' + bench.engPerPost + ' eng/post, ' + bench.postsPerMonth + ' posts/mes, mejor formato: ' + bench.bestFormat + '\n\n'
     + 'COMPETENCIA (' + empresasCount + ' empresas, ' + posts.length + ' posts):\n'
-    + empresasResumen + '\n'
-    + 'Engagement promedio general: ' + avgEngPerPost + ' eng/post (benchmark: ' + bench.engPerPost + ')\n'
-    + (igPosts.length > 0 ? 'Instagram: ' + igPosts.length + ' posts, avg ' + avgEngIG + ' eng/post\n' : '')
-    + (liPosts.length > 0 ? 'LinkedIn: ' + liPosts.length + ' posts, avg ' + avgEngLI + ' eng/post (benchmark LI: ~25-50 reactions)\n' : '')
-    + 'Ratio comentarios/likes: ' + (commentRatio * 100).toFixed(1) + '% (benchmark: ' + (bench.commentRatio * 100).toFixed(1) + '%)\n'
-    + 'Formatos: ' + formatosStr + '\n\n'
+    + empresasResumen + '\n\n'
+    + '── DESGLOSE POR PLATAFORMA (OBLIGATORIO generar criterios separados) ──\n'
+    + (igPosts.length > 0
+      ? 'INSTAGRAM: ' + igPosts.length + ' posts, avg ' + avgEngIG + ' eng/post (benchmark industria: ' + bench.engPerPost + ')\n'
+        + '  Ratio comentarios/likes IG: ' + (igPosts.reduce(function(s,p){return s+(p.comments||0)},0) > 0 ? (igPosts.reduce(function(s,p){return s+(p.comments||0)},0) / Math.max(1, igPosts.reduce(function(s,p){return s+(p.likes||0)},0)) * 100).toFixed(1) + '%' : 'sin datos') + '\n'
+      : 'INSTAGRAM: sin posts de competencia\n')
+    + (liPosts.length > 0
+      ? 'LINKEDIN: ' + liPosts.length + ' posts, avg ' + avgEngLI + ' eng/post (benchmark LI B2B: 25-50 reactions)\n'
+        + '  Ratio comentarios/reacciones LI: ' + (liPosts.reduce(function(s,p){return s+(p.comments||0)},0) > 0 ? (liPosts.reduce(function(s,p){return s+(p.comments||0)},0) / Math.max(1, liPosts.reduce(function(s,p){return s+(p.likes||0)},0)) * 100).toFixed(1) + '%' : 'sin datos') + '\n'
+      : 'LINKEDIN: sin posts de competencia\n')
+    + '\nFormatos: ' + formatosStr + '\n\n'
     + (postsCliente.length > 0 ? 'CLIENTE PROPIO: ' + postsCliente.length + ' posts, avg ' + clienteAvg + ' eng/post (vs competencia: ' + avgEngPerPost + ')\n\n' : '')
     + (avgCopyScore > 0 ? 'CONTENIDO GENERADO: score promedio ' + avgCopyScore + '/100\n\n' : '')
     + (briefEstrategico ? 'BRIEF: ' + (briefEstrategico.propuesta_valor_unica || '').substring(0, 200) + '\n' : '')
@@ -184,13 +189,19 @@ async function generarAuditoria(posts, contenido, cuentas, supabase, suscripcion
     + '  "debilidad_principal": "Lo peor, con acción para resolverlo"\n'
     + '}\n\n'
     + 'REGLAS:\n'
-    + '- Mínimo 6 criterios, máximo 10\n'
+    + '- Mínimo 8 criterios, máximo 12\n'
+    + '- Si hay datos de AMBAS redes (IG + LinkedIn), OBLIGATORIO incluir criterios SEPARADOS:\n'
+    + '  * "Engagement Instagram" con benchmark de IG\n'
+    + '  * "Engagement LinkedIn" con benchmark de LI (distinto: LI mide reacciones, no likes)\n'
+    + '  * "Frecuencia Instagram" vs "Frecuencia LinkedIn"\n'
+    + '  * "Formatos Instagram" (reel>carrusel>post) vs "Formatos LinkedIn" (artículo>carrusel>post)\n'
     + '- CADA criterio DEBE tener dato real, benchmark, comparación y acción\n'
     + '- Las acciones deben ser CONCRETAS (no "mejorar contenido" sino "publicar 2 reels/semana con formato X")\n'
     + '- Si el dato del cliente está sobre el benchmark: explicar por qué y cómo mantenerlo\n'
     + '- Si está bajo: explicar qué hacer para subirlo con número meta\n'
     + '- El resumen ejecutivo debe ser útil para alguien que NO sabe de marketing\n'
-    + '- NUNCA inventar datos. Si no hay datos de algo, decir "sin datos" no inventar un número\n\n'
+    + '- NUNCA inventar datos. Si no hay datos de algo, decir "sin datos" no inventar un número\n'
+    + '- Cada criterio DEBE incluir "fuente" indicando de dónde viene el dato\n\n'
     + 'Responde SOLO JSON válido.'
 
   try {

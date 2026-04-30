@@ -848,10 +848,15 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
                     var formatos = typeof t === 'object' && Array.isArray(t.formatos_recomendados) ? t.formatos_recomendados : []
                     var frecuencia = typeof t === 'object' ? (t.frecuencia_sugerida || '') : ''
                     var ejemplo = typeof t === 'object' ? (t.ejemplo_angulo || '') : ''
+                    var ejemploIG = typeof t === 'object' ? (t.ejemplo_angulo_ig || '') : ''
+                    var ejemploLI = typeof t === 'object' ? (t.ejemplo_angulo_li || '') : ''
+                    var platPrincipal = typeof t === 'object' ? (t.plataforma_principal || '') : ''
+                    var platBadge = platPrincipal === 'Instagram' ? 'bg-pink-900/30 text-pink-400' : platPrincipal === 'LinkedIn' ? 'bg-blue-900/30 text-blue-400' : platPrincipal === 'ambas' ? 'bg-purple-900/30 text-purple-400' : ''
                     return <div key={i} className="bg-[#12102a] rounded-lg p-4 border border-white/[0.04]">
                       <div className="flex items-center gap-2 mb-2">
                         <span className="bg-cyan-600 text-white text-xs font-bold px-2 py-0.5 rounded">{i + 1}</span>
                         <span className="text-white font-semibold text-sm">{nombre}</span>
+                        {platPrincipal && <span className={'text-[9px] font-bold px-1.5 py-0.5 rounded ' + platBadge}>{platPrincipal}</span>}
                         {frecuencia && <span className="text-[10px] text-[#64748b] ml-auto">{frecuencia}</span>}
                       </div>
                       {justificacion && <p className="text-xs text-[#94a3b8] mb-2">{justificacion}</p>}
@@ -859,6 +864,8 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
                         return <span key={fi} className="text-[10px] bg-white/5 text-[#a5b4fc] px-2 py-0.5 rounded">{f}</span>
                       })}</div>}
                       {ejemplo && <p className="text-[11px] text-cyan-300 mt-1 italic">{'\u201c'}{ejemplo}{'\u201d'}</p>}
+                      {ejemploIG && <p className="text-[11px] text-pink-300 mt-1"><span className="text-[9px] bg-pink-900/30 text-pink-400 px-1 rounded mr-1">IG</span> {ejemploIG}</p>}
+                      {ejemploLI && <p className="text-[11px] text-blue-300 mt-1"><span className="text-[9px] bg-blue-900/30 text-blue-400 px-1 rounded mr-1">LI</span> {ejemploLI}</p>}
                     </div>
                   })}
                 </div>
@@ -968,6 +975,28 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
                 )}
               </div>
             )}
+
+            {/* Versiones anteriores del brief */}
+            {(function() {
+              var historial = (sub.perfil_empresa || {}).brief_historial || []
+              if (historial.length === 0) return null
+              return <div className="bg-[#1a1745] rounded-xl p-5 border border-white/[0.06] mb-4">
+                <details>
+                  <summary className="text-sm font-bold text-cyan-400 uppercase tracking-wider cursor-pointer">Versiones anteriores ({historial.length})</summary>
+                  <div className="mt-3 space-y-2">
+                    {historial.map(function(v: any, vi: number) {
+                      return <div key={vi} className="bg-[#12102a] rounded-lg p-3 border border-white/[0.04]">
+                        <div className="flex items-center gap-3">
+                          <span className="text-xs text-[#64748b]">{v.fecha}</span>
+                          <span className="text-[10px] text-[#94a3b8]">{v.territorios} territorios, {v.competidores} competidores</span>
+                        </div>
+                        {v.propuesta_valor && <p className="text-[11px] text-[#94a3b8] mt-1 italic">{v.propuesta_valor}</p>}
+                      </div>
+                    })}
+                  </div>
+                </details>
+              </div>
+            })()}
 
             {/* Interconnection diagram */}
             <div className="bg-[#12102a] rounded-xl p-5 border border-cyan-500/20">
@@ -1259,15 +1288,26 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
           copiesMes.forEach(function(c: any) { if (Array.isArray(c.datos)) c.datos.forEach(function(d: any) { if (d.score) { scoreMesTotal += d.score; scoreMesN++ } }) })
           var scoreMesAvg = scoreMesN > 0 ? Math.round(scoreMesTotal / scoreMesN) : 0
 
+          // Desglose por plataforma
+          var igCopies = 0; var liCopies = 0; var igGrilla = 0; var liGrilla = 0
+          copiesMes.forEach(function(c: any) { if (Array.isArray(c.datos)) c.datos.forEach(function(d: any) {
+            if ((d.plataforma || '').toLowerCase() === 'linkedin') liCopies++; else igCopies++
+          })})
+          grillasMes.forEach(function(c: any) { if (Array.isArray(c.datos)) c.datos.forEach(function(d: any) {
+            if ((d.plataforma || '').toLowerCase() === 'linkedin') liGrilla++; else igGrilla++
+          })})
+
           return <>
             <div className="grid grid-cols-3 gap-4 mb-8">
               <div className="bg-[#1a1745] rounded-xl p-5 border border-white/[0.06] text-center">
                 <div className="text-3xl font-bold text-purple-600">{copiesMesCount}</div>
                 <div className="text-xs text-[#94a3b8] mt-1">Copies {MESES_NOMBRES[mesGlobal]}</div>
+                {(igCopies > 0 || liCopies > 0) && <div className="text-[10px] mt-2">{igCopies > 0 && <span className="text-pink-400">{igCopies} IG</span>}{igCopies > 0 && liCopies > 0 && <span className="text-[#475569]"> + </span>}{liCopies > 0 && <span className="text-blue-400">{liCopies} LI</span>}</div>}
               </div>
               <div className="bg-[#1a1745] rounded-xl p-5 border border-white/[0.06] text-center">
-                <div className="text-3xl font-bold text-indigo-600">{totalGrillaPosts}</div>
+                <div className="text-3xl font-bold text-indigo-600">{grillasMesCount}</div>
                 <div className="text-xs text-[#94a3b8] mt-1">Posts grilla {MESES_NOMBRES[mesGlobal]}</div>
+                {(igGrilla > 0 || liGrilla > 0) && <div className="text-[10px] mt-2">{igGrilla > 0 && <span className="text-pink-400">{igGrilla} IG</span>}{igGrilla > 0 && liGrilla > 0 && <span className="text-[#475569]"> + </span>}{liGrilla > 0 && <span className="text-blue-400">{liGrilla} LI</span>}</div>}
               </div>
               <div className="bg-[#1a1745] rounded-xl p-5 border border-white/[0.06] text-center">
                 <div className="text-3xl font-bold text-green-600">{scoreMesAvg || '-'}</div>
@@ -1566,6 +1606,7 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
                           {cr.comparacion && <div><span className="text-[#64748b] block">Comparaci{'ó'}n</span><span className={score >= 7 ? 'text-green-400' : score >= 5 ? 'text-amber-400' : 'text-red-400'}>{cr.comparacion}</span></div>}
                         </div>
                         {cr.explicacion && <p className="text-[10px] text-[#94a3b8] mb-1">{cr.explicacion}</p>}
+                        {cr.fuente && <span className="inline-block text-[9px] bg-white/5 text-[#64748b] px-1.5 py-0.5 rounded mb-1">Fuente: {cr.fuente}</span>}
                         {cr.accion && <p className="text-[10px] text-cyan-400 font-semibold">{'\u2192'} {cr.accion}</p>}
                       </div>
                     })}
@@ -2243,6 +2284,11 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
           var ideasFiltradas = ideas.filter(function(idea: any) {
             if (ideaFiltroCategoria !== 'todas' && idea.categoria !== ideaFiltroCategoria) return false
             if (ideaFiltroEstado !== 'todos' && idea.estado !== ideaFiltroEstado) return false
+            // Filtrar por mes global (basado en created_at)
+            if (idea.created_at) {
+              var mesIdea = parseInt((idea.created_at || '').substring(5, 7))
+              if (mesIdea && mesIdea !== mesGlobal) return false
+            }
             return true
           })
 
@@ -2578,6 +2624,7 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
                               <div className="flex items-center gap-2 mb-1">
                                 <span className="text-[10px] font-bold text-indigo-400">#{a.prioridad || ai + 1}</span>
                                 <span className="text-[10px] bg-indigo-900/30 text-indigo-300 px-2 py-0.5 rounded">{a.area || 'general'}</span>
+                                {a.plataforma && a.plataforma !== 'general' && <span className={'text-[9px] font-bold px-1.5 py-0.5 rounded ' + (a.plataforma === 'instagram' ? 'bg-pink-900/30 text-pink-400' : a.plataforma === 'linkedin' ? 'bg-blue-900/30 text-blue-400' : 'bg-purple-900/30 text-purple-400')}>{a.plataforma === 'ambas' ? 'IG+LI' : a.plataforma === 'instagram' ? 'IG' : 'LI'}</span>}
                                 <span className="text-[10px] text-[#475569]">{a.plazo || ''}</span>
                               </div>
                               <p className="text-xs text-white font-semibold">{a.accion}</p>
@@ -2595,9 +2642,10 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
                         <div className="space-y-1">
                           {rd.hallazgos_clave.map(function(h: any, hi: number) {
                             var icon = h.tipo === 'positivo' ? '\u2705' : h.tipo === 'negativo' ? '\u274C' : '\u26A0\uFE0F'
+                            var platBadge = h.plataforma === 'instagram' ? 'bg-pink-900/30 text-pink-400' : h.plataforma === 'linkedin' ? 'bg-blue-900/30 text-blue-400' : h.plataforma === 'ambas' ? 'bg-purple-900/30 text-purple-400' : ''
                             return <div key={hi} className="flex items-start gap-2 text-xs">
                               <span>{icon}</span>
-                              <span className="text-[#94a3b8]">{h.hallazgo} <span className="text-[#475569]">({h.fuente})</span></span>
+                              <span className="text-[#94a3b8]">{h.plataforma && platBadge && <span className={'text-[9px] font-bold px-1.5 py-0.5 rounded mr-1 ' + platBadge}>{h.plataforma === 'ambas' ? 'IG+LI' : h.plataforma === 'instagram' ? 'IG' : 'LI'}</span>}{h.hallazgo} <span className="text-[#475569]">({h.fuente})</span></span>
                             </div>
                           })}
                         </div>

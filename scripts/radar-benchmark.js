@@ -598,7 +598,7 @@ function construirPrompt(perfil, metricasCompetidores, metricasCliente, tendenci
   p += '  },\n\n'
   p += '  "cuadro_comparativo": [\n'
   p += '    {\n'
-  p += '      "dimension": "Tono de comunicacion|Concepto principal|Formato dominante|Frecuencia|Engagement promedio|Canales activos|Tipo de contenido|Mensaje clave",\n'
+  p += '      "dimension": "Tono de comunicacion|Concepto principal|Formato dominante IG|Formato dominante LI|Frecuencia IG|Frecuencia LI|Engagement promedio IG|Engagement promedio LI|Tipo de contenido|Mensaje clave",\n'
   p += '      "valores": {\n'
   p += '        "competidor1": "valor para esta dimension",\n'
   p += '        "competidor2": "valor",\n'

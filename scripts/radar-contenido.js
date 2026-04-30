@@ -30,17 +30,34 @@ async function paso1_analizar(posts, empresas, modo, perfil, copiesPrevios, brie
     return engB - engA
   })
 
-  // Top 10 posts por engagement con texto completo (no truncado)
-  var top10 = postsOrdenados.slice(0, 10).map(function(p, idx) {
-    var eng = (parseInt(p.likes) || 0) + (parseInt(p.comments) || 0)
-    return 'TOP ' + (idx + 1) + ' [' + (p.red || 'IG') + '] ' + (p.nombre || p.handle || 'desconocido')
-      + ' | Engagement: ' + eng + ' (likes: ' + (p.likes || 0) + ', comments: ' + (p.comments || 0) + ')'
-      + ' | Tipo: ' + (p.type || 'post')
-      + '\nTexto completo: "' + (p.texto || '').substring(0, 500) + '"'
-      + '\n---'
-  }).join('\n')
+  // Separar posts por plataforma ANTES de rankear
+  var igPosts = postsOrdenados.filter(function(p) { return ((p.red || 'Instagram') + '').toLowerCase() !== 'linkedin' })
+  var liPosts = postsOrdenados.filter(function(p) { return ((p.red || '') + '').toLowerCase() === 'linkedin' })
 
-  // Todos los posts para contexto general (resumen)
+  function formatearTop(postsList, label, limit) {
+    return postsList.slice(0, limit).map(function(p, idx) {
+      var eng = (parseInt(p.likes) || 0) + (parseInt(p.comments) || 0)
+      return 'TOP ' + (idx + 1) + ' [' + label + '] ' + (p.nombre || p.handle || 'desconocido')
+        + ' | Engagement: ' + eng + ' (likes: ' + (p.likes || 0) + ', comments: ' + (p.comments || 0) + ')'
+        + ' | Tipo: ' + (p.type || 'post')
+        + '\nTexto completo: "' + (p.texto || '').substring(0, 500) + '"'
+        + '\n---'
+    }).join('\n')
+  }
+
+  // Top por plataforma (no mezclados)
+  var topIG = formatearTop(igPosts, 'IG', 6)
+  var topLI = formatearTop(liPosts, 'LI', 4)
+  var top10 = ''
+  if (igPosts.length > 0) top10 += '── INSTAGRAM ──\n' + topIG + '\n'
+  if (liPosts.length > 0) top10 += '\n── LINKEDIN ──\n' + topLI + '\n'
+  if (!top10) top10 = formatearTop(postsOrdenados, 'IG', 10) // fallback
+
+  // Métricas por plataforma
+  var avgEngIG = igPosts.length > 0 ? Math.round(igPosts.reduce(function(s, p) { return s + (parseInt(p.likes) || 0) + (parseInt(p.comments) || 0) }, 0) / igPosts.length) : 0
+  var avgEngLI = liPosts.length > 0 ? Math.round(liPosts.reduce(function(s, p) { return s + (parseInt(p.likes) || 0) + (parseInt(p.comments) || 0) }, 0) / liPosts.length) : 0
+
+  // Resumen (posts restantes)
   var postsSummary = postsOrdenados.slice(10, 40).map(function(p) {
     var eng = (parseInt(p.likes) || 0) + (parseInt(p.comments) || 0)
     return '[' + (p.red || 'IG') + '] ' + (p.nombre || p.handle) + ': "' + (p.texto || '').substring(0, 120) + '" (eng: ' + eng + ', tipo: ' + (p.type || 'post') + ')'
@@ -162,7 +179,13 @@ async function paso1_analizar(posts, empresas, modo, perfil, copiesPrevios, brie
     + (instrEstrategicas ? instrEstrategicas + '\n' : '')
     + estacionalidad + '\n'
     + '══════════════════════════════════\n'
-    + 'TOP 10 POSTS DE LA COMPETENCIA POR ENGAGEMENT (estos son los que MAS funcionaron):\n'
+    + 'MÉTRICAS POR PLATAFORMA:\n'
+    + '══════════════════════════════════\n'
+    + (igPosts.length > 0 ? 'Instagram: ' + igPosts.length + ' posts, avg ' + avgEngIG + ' eng/post\n' : '')
+    + (liPosts.length > 0 ? 'LinkedIn: ' + liPosts.length + ' posts, avg ' + avgEngLI + ' eng/post\n' : '')
+    + '\n'
+    + '══════════════════════════════════\n'
+    + 'TOP POSTS POR PLATAFORMA (separados porque IG y LI son MUNDOS DIFERENTES):\n'
     + '══════════════════════════════════\n'
     + top10 + '\n\n'
     + (postsSummary ? 'OTROS POSTS RELEVANTES:\n' + postsSummary + '\n\n' : '')
@@ -276,8 +299,9 @@ async function paso2_crear(briefs, posts, perfil) {
       return (p.nombre || p.handle) + ' publico: "' + p.texto.substring(0, 80) + '"'
     }).join('\n')
 
-    // Minimo de palabras por plataforma
-    var minPalabras = brief.plataforma === 'LinkedIn' ? 250 : brief.tipo === 'Reel' ? 80 : 150
+    // Mínimo de palabras y contexto por plataforma
+    var esLI = (brief.plataforma || '').toLowerCase() === 'linkedin'
+    var minPalabras = esLI ? 250 : brief.tipo === 'Reel' ? 80 : 150
 
     // Extraer datos de competidor de referencia
     var refInfo = ''
@@ -303,8 +327,36 @@ async function paso2_crear(briefs, posts, perfil) {
       compData += '- OBLIGATORIO: el copy debe mencionar este competidor por nombre o hacer referencia clara a lo que publican. Ejemplo: "Mientras empresas como ' + brief.competidor_referencia + ' apuestan por [tema], nosotros en ' + (perfil.nombre || 'la empresa') + ' vamos mas alla con [diferenciador]"\n'
     }
 
-    var prompt = 'Eres un copywriter senior de ' + (perfil.nombre || 'la empresa') + '. NO escribes copies genericos que cualquiera haria con ChatGPT. '
-      + 'Tu ventaja: tienes DATOS REALES de la competencia y los usas para crear contenido que los supere.\n\n'
+    // ═══ PROMPT COMPLETAMENTE DIFERENTE POR PLATAFORMA ═══
+    var reglasPlataforma
+    if (esLI) {
+      reglasPlataforma = 'REGLAS LINKEDIN (plataforma profesional B2B):\n'
+        + '1. HOOK: empieza con DATO de industria o INSIGHT provocador. "En 2026, el ' + (perfil.rubro || 'sector') + ' en Chile enfrenta..." — NO preguntas retóricas.\n'
+        + '2. TONO: líder de opinión. "He visto que...", "Los datos muestran...", "En mi experiencia con empresas de ' + (perfil.rubro || 'este sector') + '...".\n'
+        + '3. ESTRUCTURA: gancho (1 línea) → contexto (2-3 líneas) → desarrollo con datos (3-4 párrafos) → reflexión → CTA profesional.\n'
+        + '4. USA saltos de línea cada 2-3 oraciones. LinkedIn muestra "ver más" después de 3 líneas.\n'
+        + '5. MÍNIMO 250 palabras. LinkedIn premia contenido largo y reflexivo.\n'
+        + '6. CTA PROFESIONAL: "Qué opinas? Te leo en comentarios", "Comparte si te identificas", "Guarda para tu próxima reunión de equipo".\n'
+        + '7. Máximo 3-4 emojis SUTILES. LinkedIn NO es Instagram.\n'
+        + '8. Hashtags: 3-5 profesionales al final (#' + (perfil.rubro || 'Industria').replace(/\s+/g, '') + ' #B2B #Chile).\n'
+        + '9. Si es Artículo: mínimo 400 palabras con subtítulos H2. Si es Carrusel: insights por slide para decisores.\n'
+        + '10. DATO REAL: al menos 1 número concreto de la industria ' + (perfil.rubro || '') + '.\n'
+    } else {
+      reglasPlataforma = 'REGLAS INSTAGRAM (plataforma visual, scroll rápido):\n'
+        + '1. HOOK: primera línea PARA EL SCROLL. Máximo 60-80 chars. Dato impactante o afirmación fuerte.\n'
+        + '2. TONO: cercano, directo, como alguien que te cuenta algo útil. "Te cuento algo", "El error más común que veo".\n'
+        + '3. ESTRUCTURA: hook corto → desarrollo breve → valor → CTA interactivo.\n'
+        + '4. MÍNIMO ' + minPalabras + ' palabras, MÁXIMO 180 (Instagram = conciso + impactante).\n'
+        + '5. Emojis estratégicos: 3-5 bien ubicados, no spam.\n'
+        + '6. CTA INTERACTIVO: "Comenta 🔥 si te pasó", "Guarda este post para después", "Etiqueta a quien necesite ver esto".\n'
+        + '7. Si es Reel: escenas con [PANTALLA: texto overlay] + [VOZ: narración] por escena.\n'
+        + '8. Si es Carrusel: contenido por slide (min 5), cada slide 1 idea clara con visual.\n'
+        + '9. Hashtags: 6-10 al final (mix nicho + populares).\n'
+        + '10. TEMPORAL: menciona mes actual o temporada.\n'
+    }
+
+    var prompt = 'Eres copywriter senior de ' + (esLI ? 'LINKEDIN' : 'INSTAGRAM') + ' para ' + (perfil.nombre || 'la empresa') + '. '
+      + 'NO escribes copies genéricos. Tu ventaja: tienes DATOS REALES de la competencia.\n\n'
       + clienteCtx + '\n'
       + refInfo
       + compData + '\n'
@@ -315,17 +367,9 @@ async function paso2_crear(briefs, posts, perfil) {
       + '- Justificacion: ' + brief.justificacion + '\n'
       + '- Instrucciones: ' + brief.instrucciones_copy + '\n\n'
       + 'CONTEXTO COMPETITIVO (posts reales esta semana):\n' + contextPosts + '\n\n'
-      + 'REGLAS NO NEGOCIABLES:\n'
-      + '1. HOOK: empieza con DATO CONCRETO. "El 73% de empresas de RRHH en Chile..." o "Mientras ' + (brief.competidor_referencia || 'la competencia') + ' apuesta por X, nosotros..."\n'
-      + '2. COMPETENCIA: MENCIONA al competidor o la tendencia competitiva EN EL TEXTO. No basta con saberlo internamente — el lector debe sentir que este contenido viene de alguien que CONOCE el mercado.\n'
-      + '3. DATO REAL: al menos 1 numero concreto del mercado o la industria (engagement, %, cantidad).\n'
-      + '4. CTA MEDIBLE: "Comenta con [emoji]", "Guarda para el lunes", "Envia a un colega". NUNCA "Contactanos" o "Siguenos".\n'
-      + '5. MINIMO ' + minPalabras + ' palabras.\n'
-      + '6. TEMPORAL: menciona mes actual o temporada ("este abril", "Q2 2026", "esta semana").\n'
-      + '7. Si es Carrusel: contenido por slide (min 5). Si es Reel: escenas con texto en pantalla.\n'
-      + '8. Hashtags: 5-8 al final.\n'
-      + '9. PROHIBIDO: "no es solo", "es fundamental", "en la era digital", "paradigma", "sinergia", "te invitamos", "de vanguardia".\n'
-      + '10. Escribe como CM senior con 10 anos de experiencia, NO como chatbot.\n\n'
+      + reglasPlataforma + '\n'
+      + 'PROHIBIDO: "no es solo", "es fundamental", "en la era digital", "paradigma", "sinergia", "te invitamos", "de vanguardia".\n'
+      + 'Escribe como CM senior con 10 años de experiencia, NO como chatbot.\n\n'
       + 'Responde SOLO el copy listo para publicar.'
 
     try {
@@ -415,25 +459,31 @@ async function paso3_revisar(copies) {
     var copyLower = c.copy.toLowerCase()
     var palabras = c.palabras || c.copy.split(/\s+/).length
 
-    // ── PENALIZACIONES DURAS ──
+    // ── PENALIZACIONES POR PLATAFORMA ──
+    var esLI = (c.plataforma || '').toLowerCase() === 'linkedin'
 
-    // Largo minimo absoluto
-    if (palabras < 80) {
-      score -= 25
-      problemas.push('Copy inaceptablemente corto: ' + palabras + ' palabras (minimo 80 para reels, 150 IG, 250 LI)')
-    } else if (palabras < 150) {
-      score -= 15
-      problemas.push('Copy corto: ' + palabras + ' palabras (minimo 150 para IG)')
+    if (esLI) {
+      // LinkedIn: contenido largo, profesional, datos obligatorios
+      if (palabras < 150) { score -= 25; problemas.push('LinkedIn inaceptablemente corto: ' + palabras + ' palabras (mínimo 250)') }
+      else if (palabras < 250) { score -= 15; problemas.push('LinkedIn corto: ' + palabras + ' palabras (mínimo 250 para thought leadership)') }
+      if (palabras > 600) { score -= 5; problemas.push('LinkedIn excesivamente largo: ' + palabras + ' palabras (ideal 250-500)') }
+    } else {
+      // Instagram: contenido conciso, visual, hooks cortos
+      if (palabras < 60) { score -= 25; problemas.push('Instagram inaceptablemente corto: ' + palabras + ' palabras (mínimo 80 reels, 100 posts)') }
+      else if (c.tipo === 'Reel' && palabras < 80) { score -= 10; problemas.push('Reel muy corto: ' + palabras + ' palabras (mínimo 80)') }
+      else if (c.tipo !== 'Reel' && palabras < 100) { score -= 10; problemas.push('Instagram copy corto: ' + palabras + ' palabras (mínimo 100)') }
+      if (palabras > 250) { score -= 5; problemas.push('Instagram demasiado largo: ' + palabras + ' palabras — pierde atención') }
     }
 
-    // Largo minimo por plataforma
-    if (c.plataforma === 'LinkedIn' && palabras < 250) { score -= 15; problemas.push('LinkedIn requiere minimo 250 palabras para aportar valor real') }
-    if (c.plataforma === 'Instagram' && c.tipo !== 'Reel' && palabras < 150) { score -= 10; problemas.push('Instagram copy profesional necesita minimo 150 palabras') }
-
-    // Sin hashtags
+    // Hashtags — criterio por plataforma
     var hashtagCount = (c.copy.match(/#\w+/g) || []).length
-    if (hashtagCount === 0) { score -= 10; problemas.push('Sin hashtags (se necesitan 5-8)') }
-    else if (hashtagCount < 3) { score -= 5; problemas.push('Pocos hashtags: ' + hashtagCount + ' (minimo 5)') }
+    if (esLI) {
+      if (hashtagCount === 0) { score -= 6; problemas.push('LinkedIn sin hashtags (necesita 3-5 profesionales)') }
+      else if (hashtagCount > 7) { score -= 4; problemas.push('LinkedIn demasiados hashtags: ' + hashtagCount + ' (máx 5)') }
+    } else {
+      if (hashtagCount === 0) { score -= 10; problemas.push('Instagram sin hashtags (necesita 6-10)') }
+      else if (hashtagCount < 4) { score -= 5; problemas.push('Instagram pocos hashtags: ' + hashtagCount + ' (mínimo 6)') }
+    }
 
     // Palabras prohibidas (ChatGPT speak)
     PALABRAS_PROHIBIDAS.forEach(function(palabra) {
@@ -520,28 +570,37 @@ async function paso3_revisar(copies) {
       problemas.push('Sin estructura visual (necesita parrafos/saltos de linea)')
     }
 
-    // ── BONOS (max +20) ──
-    // Bonus: incluye numero/estadistica concreta (+5)
-    var tieneNumeroConcreto = /\d{2,}/.test(c.copy) || (copyLower.includes('%') && /\d/.test(c.copy))
-    if (tieneNumeroConcreto) { score += 5; bonos.push('Incluye dato numerico concreto (+5)') }
-
-    // Bonus: referencia a competidor especifico (+3)
-    if (c.competidor_referencia || c.engagement_referencia) { score += 3; bonos.push('Referencia competidor especifico (+3)') }
-
-    // Bonus: copy extenso y detallado
-    if (palabras >= 250) { score += 5; bonos.push('Copy extenso y detallado (+5)') }
-
-    // Bonus: hashtags bien calibrados
-    if (hashtagCount >= 5 && hashtagCount <= 10) { score += 3; bonos.push('Hashtags bien calibrados (+3)') }
-
-    // Bonus: buena estructura
-    if (lineas.length >= 5) { score += 2; bonos.push('Buena estructura visual (+2)') }
-
-    // Bonus: CTA medible (no generico)
-    var ctaMedible = copyLower.includes('comenta con') || copyLower.includes('guarda este')
-      || copyLower.includes('envia un dm') || copyLower.includes('envía un dm')
-      || copyLower.includes('etiqueta a') || copyLower.includes('comparte con')
-    if (ctaMedible && !ctaGenerico) { score += 2; bonos.push('CTA medible y especifico (+2)') }
+    // ── BONOS POR PLATAFORMA ──
+    if (esLI) {
+      // LinkedIn bonos
+      var tieneNumero = /\d{2,}/.test(c.copy) || (copyLower.includes('%') && /\d/.test(c.copy))
+      if (tieneNumero) { score += 5; bonos.push('LinkedIn con datos concretos (+5)') }
+      if (c.competidor_referencia || c.engagement_referencia) { score += 3; bonos.push('Referencia competidor especifico (+3)') }
+      if (palabras >= 250 && palabras <= 500) { score += 5; bonos.push('LinkedIn largo ideal: ' + palabras + ' palabras (+5)') }
+      if (hashtagCount >= 3 && hashtagCount <= 5) { score += 3; bonos.push('LinkedIn hashtags profesionales calibrados (+3)') }
+      if (lineas.length >= 6) { score += 3; bonos.push('LinkedIn buena estructura visual (+3)') }
+      var ctaProfesional = copyLower.includes('que opinas') || copyLower.includes('qué opinas')
+        || copyLower.includes('comparte si') || copyLower.includes('te leo')
+      if (ctaProfesional && !ctaGenerico) { score += 3; bonos.push('LinkedIn CTA profesional (+3)') }
+      // Tono thought leadership
+      if (copyLower.includes('en mi experiencia') || copyLower.includes('he visto') || copyLower.includes('los datos muestran')) {
+        score += 2; bonos.push('Tono thought leadership (+2)')
+      }
+    } else {
+      // Instagram bonos
+      var tieneNumeroIG = /\d{2,}/.test(c.copy) || (copyLower.includes('%') && /\d/.test(c.copy))
+      if (tieneNumeroIG) { score += 3; bonos.push('Incluye dato numérico (+3)') }
+      if (c.competidor_referencia || c.engagement_referencia) { score += 3; bonos.push('Referencia competidor (+3)') }
+      if (palabras >= 100 && palabras <= 180) { score += 4; bonos.push('Instagram largo ideal: ' + palabras + ' palabras (+4)') }
+      if (hashtagCount >= 6 && hashtagCount <= 10) { score += 3; bonos.push('Instagram hashtags bien calibrados (+3)') }
+      if (lineas.length >= 4) { score += 2; bonos.push('Buena estructura visual (+2)') }
+      var ctaInteractivo = copyLower.includes('comenta con') || copyLower.includes('guarda este')
+        || copyLower.includes('etiqueta a') || copyLower.includes('comparte con')
+      if (ctaInteractivo && !ctaGenerico) { score += 3; bonos.push('Instagram CTA interactivo (+3)') }
+      // Hook conciso
+      var hook = c.copy.split('\n')[0] || ''
+      if (hook.length <= 80 && hook.length > 10) { score += 2; bonos.push('Hook conciso y directo (+2)') }
+    }
 
     // Clamp score
     score = Math.max(0, Math.min(score, 95))

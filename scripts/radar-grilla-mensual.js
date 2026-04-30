@@ -214,14 +214,20 @@ async function generarGrillaMensual(posts, empresas, suscriptor, mesSiguiente, a
     var lower = (g.copy || '').toLowerCase()
     var palabras = g.palabras || (g.copy || '').split(/\s+/).length
 
-    // ── PENALIZACIONES ──
+    // ── PENALIZACIONES POR PLATAFORMA ──
+    var esLI = (g.plataforma || '').toLowerCase() === 'linkedin'
 
-    // Largo minimo por plataforma
-    if (g.plataforma === 'LinkedIn' && palabras < 150) { score -= 15; problemas.push('LinkedIn requiere min 150 palabras (' + palabras + ')') }
-    else if (palabras < 80) { score -= 20; problemas.push('Copy muy corto: ' + palabras + ' palabras') }
-    else if (palabras < 100) { score -= 10; problemas.push('Copy corto: ' + palabras + ' palabras') }
+    // Largo mínimo diferenciado
+    if (esLI) {
+      if (palabras < 150) { score -= 20; problemas.push('LinkedIn REQUIERE min 200 palabras, tiene ' + palabras + ' — insuficiente para thought leadership') }
+      else if (palabras < 200) { score -= 10; problemas.push('LinkedIn corto: ' + palabras + ' palabras (ideal: 200-400)') }
+    } else {
+      if (palabras < 80) { score -= 20; problemas.push('Instagram copy muy corto: ' + palabras + ' palabras (min 80)') }
+      else if (palabras < 100) { score -= 8; problemas.push('Instagram copy corto: ' + palabras + ' palabras (ideal: 100-180)') }
+      if (palabras > 250) { score -= 5; problemas.push('Instagram copy muy largo: ' + palabras + ' palabras — pierde atención') }
+    }
 
-    // ChatGPT speak
+    // ChatGPT speak (igual para ambas)
     for (var k = 0; k < PALABRAS_PROHIBIDAS.length; k++) {
       if (lower.includes(PALABRAS_PROHIBIDAS[k])) { score -= 10; problemas.push('ChatGPT speak: "' + PALABRAS_PROHIBIDAS[k] + '"') }
     }
@@ -246,29 +252,69 @@ async function generarGrillaMensual(posts, empresas, suscriptor, mesSiguiente, a
       score -= 8; problemas.push('Hook genérico sin dato')
     }
 
-    // Sin hashtags
+    // Hashtags — criterio diferente por plataforma
     var hashCount = ((g.copy || '').match(/#\w+/g) || []).length + ((g.hashtags || '').match(/#\w+/g) || []).length
-    if (hashCount === 0) { score -= 8; problemas.push('Sin hashtags') }
-    else if (hashCount < 3) { score -= 4; problemas.push('Pocos hashtags: ' + hashCount) }
+    if (esLI) {
+      // LinkedIn: 3-5 hashtags profesionales
+      if (hashCount === 0) { score -= 6; problemas.push('LinkedIn sin hashtags (necesita 3-5 profesionales)') }
+      else if (hashCount > 7) { score -= 4; problemas.push('LinkedIn con demasiados hashtags: ' + hashCount + ' (máx 5)') }
+    } else {
+      // Instagram: 6-10 hashtags
+      if (hashCount === 0) { score -= 8; problemas.push('Instagram sin hashtags (necesita 6-10)') }
+      else if (hashCount < 4) { score -= 4; problemas.push('Instagram pocos hashtags: ' + hashCount + ' (min 6)') }
+    }
 
     // Sin titulo grafico
     if (!g.titulo_grafico) { score -= 5; problemas.push('Sin titulo grafico') }
 
-    // Sin CTA
-    var tieneCTA = lower.includes('comenta') || lower.includes('comparte') || lower.includes('guarda')
-      || lower.includes('escribe') || lower.includes('agenda') || lower.includes('cotiza')
-      || lower.includes('descarga') || lower.includes('whatsapp') || lower.includes('dm')
-      || lower.includes('envia') || lower.includes('envía')
-    if (!tieneCTA && !ctaGenerico) { score -= 8; problemas.push('Sin CTA detectado') }
+    // CTA — diferentes expectativas por plataforma
+    var tieneCTAProfesional = lower.includes('comparte') || lower.includes('opinas')
+      || lower.includes('te leo') || lower.includes('comenta') || lower.includes('guarda')
+      || lower.includes('agenda') || lower.includes('cotiza') || lower.includes('descarga')
+    var tieneCTAInteractivo = lower.includes('comenta') || lower.includes('etiqueta')
+      || lower.includes('guarda') || lower.includes('escribe') || lower.includes('dm')
+      || lower.includes('whatsapp') || lower.includes('envia') || lower.includes('envía')
+    if (esLI && !tieneCTAProfesional && !ctaGenerico) { score -= 8; problemas.push('LinkedIn sin CTA profesional (ej: "Qué opinas?", "Comparte si te identificas")') }
+    if (!esLI && !tieneCTAInteractivo && !ctaGenerico) { score -= 8; problemas.push('Instagram sin CTA interactivo (ej: "Comenta 🔥", "Etiqueta a alguien")') }
 
-    // ── BONOS ──
-    if (/\d{2,}/.test(g.copy || '') || lower.includes('%')) { score += 4; }
-    if (palabras >= 200) { score += 4; }
-    if (hashCount >= 5 && hashCount <= 10) { score += 3; }
-    var lineas = (g.copy || '').split('\n').filter(function(l) { return l.trim().length > 0 })
-    if (lineas.length >= 4) { score += 2; }
-    var ctaMedible = lower.includes('comenta con') || lower.includes('guarda este') || lower.includes('etiqueta a')
-    if (ctaMedible && !ctaGenerico) { score += 2; }
+    // ── PENALIZACIONES ESPECÍFICAS POR PLATAFORMA ──
+
+    if (esLI) {
+      // LinkedIn: DEBE tener datos/números
+      if (!/\d{2,}/.test(g.copy || '') && !lower.includes('%')) {
+        score -= 10; problemas.push('LinkedIn sin datos numéricos — thought leadership requiere cifras')
+      }
+      // LinkedIn: DEBE tener estructura con saltos de línea
+      var lineasLI = (g.copy || '').split('\n').filter(function(l) { return l.trim().length > 0 })
+      if (lineasLI.length < 5) { score -= 8; problemas.push('LinkedIn sin estructura visual — necesita saltos de línea cada 2-3 oraciones') }
+      // LinkedIn: penalizar emoji spam
+      var emojiCount = ((g.copy || '').match(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F1E0}-\u{1F1FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu) || []).length
+      if (emojiCount > 4) { score -= 6; problemas.push('LinkedIn con demasiados emojis: ' + emojiCount + ' (máx 3-4 sutiles)') }
+    } else {
+      // Instagram: DEBE tener hook visual en primera línea
+      if (primeraLinea.length > 100) { score -= 5; problemas.push('Instagram hook muy largo: ' + primeraLinea.length + ' chars (ideal < 80)') }
+    }
+
+    // ── BONOS POR PLATAFORMA ──
+    if (esLI) {
+      // LinkedIn bonos
+      if (/\d{2,}/.test(g.copy || '') || lower.includes('%')) { score += 5; } // Datos concretos
+      if (palabras >= 250 && palabras <= 500) { score += 5; } // Largo ideal
+      if ((g.copy || '').split('\n').filter(function(l) { return l.trim().length > 0 }).length >= 8) { score += 3; } // Buena estructura
+      if (lower.includes('en mi experiencia') || lower.includes('he visto') || lower.includes('los datos muestran')) { score += 3; } // Tono lider
+      var ctaMedibleLI = lower.includes('que opinas') || lower.includes('qué opinas') || lower.includes('comparte si') || lower.includes('te leo')
+      if (ctaMedibleLI && !ctaGenerico) { score += 2; }
+    } else {
+      // Instagram bonos
+      if (/\d{2,}/.test(g.copy || '') || lower.includes('%')) { score += 3; } // Datos
+      if (palabras >= 100 && palabras <= 180) { score += 4; } // Largo ideal IG
+      if (hashCount >= 6 && hashCount <= 10) { score += 3; } // Hashtags bien calibrados
+      var lineasIG = (g.copy || '').split('\n').filter(function(l) { return l.trim().length > 0 })
+      if (lineasIG.length >= 4) { score += 2; } // Estructura
+      var ctaMedibleIG = lower.includes('comenta con') || lower.includes('guarda este') || lower.includes('etiqueta a')
+      if (ctaMedibleIG && !ctaGenerico) { score += 3; }
+      if (primeraLinea.length <= 60 && primeraLinea.length > 10) { score += 2; } // Hook conciso
+    }
 
     // Clamp
     score = Math.max(0, Math.min(score, 95))
@@ -341,36 +387,70 @@ function extraerPlataformas(cuentas) {
 }
 
 function extraerInsights(posts) {
-  var porFormato = {}
-  var porEmpresa = {}
-  var temas = []
+  // Separar posts por plataforma ANTES de analizar
+  var igPosts = posts.filter(function(p) { return ((p.red || 'Instagram') + '').toLowerCase() !== 'linkedin' })
+  var liPosts = posts.filter(function(p) { return ((p.red || '') + '').toLowerCase() === 'linkedin' })
 
-  posts.forEach(function(p) {
-    // Formato
-    var tipo = p.type || p.tipo_post || 'Post'
-    if (!porFormato[tipo]) porFormato[tipo] = { count: 0, likes: 0 }
-    porFormato[tipo].count++
-    porFormato[tipo].likes += (p.likes || 0)
+  function analizarPorPlataforma(subPosts) {
+    var porFormato = {}
+    var porEmpresa = {}
+    var temas = []
+    var totalEng = 0
 
-    // Empresa
-    var nombre = p.nombre || p.nombre_empresa || p.handle
-    if (!porEmpresa[nombre]) porEmpresa[nombre] = { count: 0, likes: 0 }
-    porEmpresa[nombre].count++
-    porEmpresa[nombre].likes += (p.likes || 0)
+    subPosts.forEach(function(p) {
+      var eng = (p.likes || 0) + (p.comments || 0)
+      totalEng += eng
 
-    // Temas (primeras 20 palabras del texto)
-    if (p.texto) temas.push(p.texto.substring(0, 100))
-  })
+      var tipo = p.type || p.tipo_post || 'Post'
+      if (!porFormato[tipo]) porFormato[tipo] = { count: 0, eng: 0 }
+      porFormato[tipo].count++
+      porFormato[tipo].eng += eng
+
+      var nombre = p.nombre || p.nombre_empresa || p.handle
+      if (!porEmpresa[nombre]) porEmpresa[nombre] = { count: 0, eng: 0 }
+      porEmpresa[nombre].count++
+      porEmpresa[nombre].eng += eng
+
+      if (p.texto) temas.push(p.texto.substring(0, 100))
+    })
+
+    var formatoGanador = Object.keys(porFormato).sort(function(a, b) {
+      var avgA = porFormato[a].count > 0 ? porFormato[a].eng / porFormato[a].count : 0
+      var avgB = porFormato[b].count > 0 ? porFormato[b].eng / porFormato[b].count : 0
+      return avgB - avgA
+    })[0] || 'Post'
+
+    var empresaMasActiva = Object.keys(porEmpresa).sort(function(a, b) {
+      return porEmpresa[b].count - porEmpresa[a].count
+    })[0] || ''
+
+    var avgEng = subPosts.length > 0 ? Math.round(totalEng / subPosts.length) : 0
+
+    return {
+      totalPosts: subPosts.length,
+      formatoGanador: formatoGanador,
+      empresaMasActiva: empresaMasActiva,
+      temas: temas.slice(0, 8).join(' | '),
+      avgEng: avgEng,
+      porFormato: porFormato,
+      porEmpresa: porEmpresa,
+    }
+  }
+
+  var ig = analizarPorPlataforma(igPosts)
+  var li = analizarPorPlataforma(liPosts)
 
   return {
-    formatoGanador: Object.keys(porFormato).sort(function(a, b) {
-      return (porFormato[b].likes / porFormato[b].count) - (porFormato[a].likes / porFormato[a].count)
-    })[0] || 'Post',
+    // Datos globales (retrocompatibilidad)
+    formatoGanador: ig.formatoGanador,
     totalPosts: posts.length,
-    empresaMasActiva: Object.keys(porEmpresa).sort(function(a, b) { return porEmpresa[b].count - porEmpresa[a].count })[0] || '',
-    temasCompetencia: temas.slice(0, 10).join(' | '),
-    porFormato: porFormato,
-    porEmpresa: porEmpresa,
+    empresaMasActiva: ig.empresaMasActiva || li.empresaMasActiva,
+    temasCompetencia: ig.temas + (li.temas ? ' ||| LI: ' + li.temas : ''),
+    porFormato: ig.porFormato,
+    porEmpresa: ig.porEmpresa,
+    // NUEVO: datos por plataforma
+    instagram: ig,
+    linkedin: li,
   }
 }
 
@@ -475,10 +555,17 @@ async function generarBrief(nombre, rubro, tono, difs, plats, insights, mes, ani
     + empresaExtra
     + briefCtx
     + copiesCtx + '\n'
-    + '=== COMPETENCIA ===\n'
-    + 'Posts analizados: ' + insights.totalPosts + ' | Empresa más activa: ' + insights.empresaMasActiva + '\n'
-    + 'Formato ganador: ' + insights.formatoGanador + '\n'
-    + 'Temas competencia: ' + insights.temasCompetencia.substring(0, 300) + '\n\n'
+    + '=== COMPETENCIA POR PLATAFORMA ===\n'
+    + 'Posts totales: ' + insights.totalPosts + '\n'
+    + (insights.instagram && insights.instagram.totalPosts > 0
+      ? 'INSTAGRAM: ' + insights.instagram.totalPosts + ' posts, avg ' + insights.instagram.avgEng + ' eng/post, formato ganador: ' + insights.instagram.formatoGanador + '\n'
+        + '  Temas IG: ' + (insights.instagram.temas || '').substring(0, 200) + '\n'
+      : '')
+    + (insights.linkedin && insights.linkedin.totalPosts > 0
+      ? 'LINKEDIN: ' + insights.linkedin.totalPosts + ' posts, avg ' + insights.linkedin.avgEng + ' eng/post, formato ganador: ' + insights.linkedin.formatoGanador + '\n'
+        + '  Temas LI: ' + (insights.linkedin.temas || '').substring(0, 200) + '\n'
+      : '')
+    + '\n'
     + '=== ESTACIONALIDAD ' + MESES[mes].toUpperCase() + ' (MÁXIMO 2 posts sobre esto) ===\n' + est + '\n\n'
     + (aprendizajeCtx ? aprendizajeCtx + '\n' : '')
     + slotsCtx
@@ -538,45 +625,83 @@ async function generarCopy(plan, nombre, rubro, tono, insights, plats, briefEstr
     }
   }
 
-  var prompt = 'Eres copywriter senior para redes sociales B2B en Chile. '
-    + 'Empresa: ' + nombre + ' (' + rubro + '). Tono: ' + tono + '.\n'
-    + (briefRules ? '\nDIRECTRICES DEL BRIEF ESTRATEGICO:\n' + briefRules + '\n' : '')
-    + 'BRIEF DEL POST:\n'
-    + '- Plataforma: ' + plan.plataforma + '\n'
-    + '- Tipo: ' + plan.tipo_post + '\n'
-    + '- Angulo: ' + plan.angulo + '\n'
-    + '- Objetivo: ' + plan.objetivo + '\n'
-    + '- Gancho: ' + plan.gancho + '\n'
-    + '- Argumento: ' + plan.argumento + '\n'
-    + '- CTA: ' + plan.cta + '\n\n'
-    + 'CONTEXTO: formato ganador del mes es ' + insights.formatoGanador + '. '
-    + 'La competencia esta publicando sobre: ' + insights.temasCompetencia.substring(0, 200) + '\n\n'
-    + 'ESCRIBE:\n'
-    + '1. copy: el post completo (min 150 pal LinkedIn, 100 pal IG/FB). '
-    + 'Si es carrusel escribe el contenido de cada slide. Si es reel escribe guion con texto en pantalla.\n'
-    + '2. titulo_grafico: headline corto para la pieza visual (max 8 palabras)\n'
-    + '3. hashtags: 5-8 hashtags relevantes\n'
-    + '4. nota_diseno: instruccion para el disenador (colores, estilo, elementos)\n\n'
-    + 'NO uses frases cliche. NO inventes estadisticas. Escribe como humano, no como robot.\n\n'
-    + 'Responde SOLO en JSON: {"copy":"...","titulo_grafico":"...","hashtags":"...","nota_diseno":"..."}'
+  var esLinkedIn = (plan.plataforma || '').toLowerCase() === 'linkedin'
+
+  // ═══ INSIGHTS POR PLATAFORMA — el copy se nutre de la data de SU red ═══
+  var platInsights = esLinkedIn ? (insights.linkedin || {}) : (insights.instagram || {})
+  var formatoCtx = platInsights.totalPosts > 0
+    ? 'En ' + plan.plataforma + ' el formato ganador es ' + (platInsights.formatoGanador || 'Post') + ' con avg ' + (platInsights.avgEng || 0) + ' eng/post.'
+    : 'Sin datos de competencia en ' + plan.plataforma + '.'
+  var temasCtx = platInsights.temas ? 'Temas que funcionan en ' + plan.plataforma + ': ' + platInsights.temas.substring(0, 200) : ''
+
+  // ═══ PROMPT DIFERENCIADO POR PLATAFORMA ═══
+  var prompt
+  if (esLinkedIn) {
+    // ── LINKEDIN: B2B, thought leadership, datos, largo ──
+    prompt = 'Eres copywriter senior de LINKEDIN para empresas B2B en Chile. '
+      + 'Tu especialidad: posts largos que posicionan como lider de opinion. Escribes para decisores (gerentes, directores, dueños de empresa).\n\n'
+      + 'Empresa: ' + nombre + ' (' + rubro + '). Tono: ' + tono + ' pero siempre profesional.\n'
+      + (briefRules ? '\nDIRECTRICES:\n' + briefRules + '\n' : '')
+      + 'BRIEF DEL POST:\n'
+      + '- Formato: ' + plan.tipo_post + ' | Angulo: ' + plan.angulo + ' | Objetivo: ' + plan.objetivo + '\n'
+      + '- Gancho: ' + plan.gancho + '\n'
+      + '- Argumento: ' + plan.argumento + '\n'
+      + '- CTA: ' + plan.cta + '\n\n'
+      + 'CONTEXTO LINKEDIN: ' + formatoCtx + '\n' + temasCtx + '\n\n'
+      + 'REGLAS LINKEDIN (NO NEGOCIABLES):\n'
+      + '1. MINIMO 200 palabras. LinkedIn premia contenido largo y reflexivo.\n'
+      + '2. Empieza con DATO de industria o INSIGHT provocador (no pregunta retórica).\n'
+      + '3. Estructura: gancho (1 línea) → contexto (2-3 líneas) → desarrollo con datos → reflexión → CTA profesional.\n'
+      + '4. USA saltos de línea cada 2-3 oraciones (así se lee en LinkedIn).\n'
+      + '5. CTA profesional: "Comparte si te identificas", "Qué opinas? Te leo en comentarios", "Guarda para tu próxima reunión de equipo".\n'
+      + '6. NUNCA uses emojis excesivos (máximo 2-3 sutiles). LinkedIn no es Instagram.\n'
+      + '7. Incluye al menos 1 dato numérico real o verosímil de la industria ' + rubro + '.\n'
+      + '8. Si es Artículo: escribe mínimo 400 palabras con subtítulos. Si es Carrusel: contenido por slide con insights por cada uno.\n'
+      + '9. Hashtags: 3-5 profesionales (#' + rubro.replace(/\s+/g, '') + ' #B2B #Chile #MarketingDigital #Industria).\n'
+      + '10. Tono de LÍDER DE OPINIÓN: "He visto esto en la industria…", "En mi experiencia con empresas de…", "Los datos muestran que…"\n\n'
+      + 'ESCRIBE en JSON: {"copy":"el post completo","titulo_grafico":"headline para pieza visual (max 8 palabras)","hashtags":"3-5 hashtags profesionales","nota_diseno":"instrucción diseño: estilo corporativo, colores sobrios, gráfico de datos si aplica"}'
+  } else {
+    // ── INSTAGRAM: visual, hooks cortos, scroll-stopping ──
+    prompt = 'Eres copywriter senior de INSTAGRAM para marcas en Chile. '
+      + 'Tu especialidad: textos que PARAN EL SCROLL. Escribes para una audiencia que consume rápido y decide en 2 segundos.\n\n'
+      + 'Empresa: ' + nombre + ' (' + rubro + '). Tono: ' + tono + ' pero cercano.\n'
+      + (briefRules ? '\nDIRECTRICES:\n' + briefRules + '\n' : '')
+      + 'BRIEF DEL POST:\n'
+      + '- Formato: ' + plan.tipo_post + ' | Angulo: ' + plan.angulo + ' | Objetivo: ' + plan.objetivo + '\n'
+      + '- Gancho: ' + plan.gancho + '\n'
+      + '- Argumento: ' + plan.argumento + '\n'
+      + '- CTA: ' + plan.cta + '\n\n'
+      + 'CONTEXTO INSTAGRAM: ' + formatoCtx + '\n' + temasCtx + '\n\n'
+      + 'REGLAS INSTAGRAM (NO NEGOCIABLES):\n'
+      + '1. MINIMO 100 palabras, MAXIMO 180 (Instagram = conciso + impactante).\n'
+      + '2. Primera línea = HOOK que pare el scroll. Dato impactante, afirmación fuerte, o problema del cliente.\n'
+      + '3. Estructura: hook (1 línea) → desarrollo breve → valor → CTA directo.\n'
+      + '4. Emojis estratégicos (3-5 bien ubicados, no spam).\n'
+      + '5. CTA interactivo: "Comenta 🔥 si te pasó", "Guarda este post", "Etiqueta a quien necesite ver esto".\n'
+      + '6. Si es Reel: escribe guión con [PANTALLA: texto overlay] + [VOZ: lo que se dice] por escena.\n'
+      + '7. Si es Carrusel: contenido por slide (min 5 slides), cada slide con 1 idea clara.\n'
+      + '8. Hashtags: 6-10 (mix nicho + populares: #' + rubro.replace(/\s+/g, '') + ' #Chile #Emprendedores #Tips).\n'
+      + '9. Lenguaje CERCANO y directo. "Esto te va a servir", "El error más común que veo", "Te cuento algo".\n'
+      + '10. El titulo_grafico es lo que va EN LA PIEZA VISUAL — debe ser legible en thumbnail.\n\n'
+      + 'ESCRIBE en JSON: {"copy":"el post completo","titulo_grafico":"headline para pieza visual (max 6 palabras, impactante)","hashtags":"6-10 hashtags","nota_diseno":"instrucción diseño: colores vibrantes, tipografía grande, visual que impacte"}'
+  }
 
   try {
     var res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: { 'x-api-key': ANTHROPIC_KEY, 'anthropic-version': '2023-06-01', 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514', max_tokens: 1200,
+        model: 'claude-sonnet-4-20250514', max_tokens: esLinkedIn ? 1800 : 1200,
         messages: [{ role: 'user', content: prompt }],
       }),
     })
     if (!res.ok) throw new Error('HTTP ' + res.status)
     var data = await res.json()
     var text = data.content[0].text || '{}'
-    // Limpiar markdown si viene envuelto
     text = text.replace(/^```json\s*/, '').replace(/\s*```$/, '')
     return JSON.parse(text)
   } catch (e) {
-    console.error('   Copy error: ' + e.message)
+    console.error('   Copy error (' + plan.plataforma + '): ' + e.message)
     return { copy: '', titulo_grafico: '', hashtags: '', nota_diseno: '' }
   }
 }
