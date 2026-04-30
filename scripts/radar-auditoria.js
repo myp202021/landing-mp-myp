@@ -221,7 +221,24 @@ async function generarAuditoria(posts, contenido, cuentas, supabase, suscripcion
     var data = await res.json()
     var parsed = JSON.parse(data.choices[0].message.content)
 
+    // ═══ FORZAR scores_red desde los datos reales (código, no IA) ═══
+    if (!parsed.scores_red) parsed.scores_red = {}
+    if (igPosts.length > 0 && !parsed.scores_red.Instagram) {
+      // Calcular score IG basado en criterios que mencionan Instagram
+      var igCriterios = (parsed.criterios || []).filter(function(c) { return (c.nombre || '').toLowerCase().includes('instagram') })
+      parsed.scores_red.Instagram = igCriterios.length > 0
+        ? Math.round(igCriterios.reduce(function(s, c) { return s + (c.score || 0) }, 0) / igCriterios.length * 10)
+        : parsed.score_general
+    }
+    if (liPosts.length > 0 && !parsed.scores_red.LinkedIn) {
+      var liCriterios = (parsed.criterios || []).filter(function(c) { return (c.nombre || '').toLowerCase().includes('linkedin') })
+      parsed.scores_red.LinkedIn = liCriterios.length > 0
+        ? Math.round(liCriterios.reduce(function(s, c) { return s + (c.score || 0) }, 0) / liCriterios.length * 10)
+        : parsed.score_general
+    }
+
     console.log('   Auditoría IA: score ' + parsed.score_general + '/100, ' + (parsed.criterios || []).length + ' criterios, ' + (parsed.top_3_acciones || []).length + ' acciones')
+    console.log('   Scores por red: ' + JSON.stringify(parsed.scores_red))
 
     // Guardar
     if (supabase && suscripcionId) {
@@ -244,9 +261,9 @@ async function generarAuditoria(posts, contenido, cuentas, supabase, suscripcion
             .limit(1)
           if (existeCheck.data && existeCheck.data.length > 0) {
             await supabase.from('copilot_auditorias')
-              .update({ score_general: parsed.score_general, datos: parsed })
+              .update({ score_general: parsed.score_general, criterios: parsed.criterios, scores_red: parsed.scores_red || null, created_at: new Date().toISOString() })
               .eq('id', existeCheck.data[0].id)
-            console.log('   Auditoría actualizada (existía)')
+            console.log('   Auditoría actualizada (existía) — score ' + parsed.score_general)
           } else {
             await supabase.from('copilot_auditorias').insert({
               suscripcion_id: suscripcionId,

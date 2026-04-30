@@ -262,7 +262,25 @@ async function paso1_analizar(posts, empresas, modo, perfil, copiesPrevios, brie
     if (parsed.analisis_competencia) {
       console.log('   Analisis competencia: ' + parsed.analisis_competencia.substring(0, 200))
     }
-    console.log('   PASO 1 OK: ' + briefs.length + ' briefs generados')
+
+    // ═══ VALIDACIÓN DE PLATAFORMAS (código, no IA) ═══
+    // Determinar plataformas válidas del cliente
+    var platsValidas = []
+    if (perfil.instagram) platsValidas.push('Instagram')
+    if (perfil.linkedin) platsValidas.push('LinkedIn')
+    if (perfil.facebook) platsValidas.push('Facebook')
+    if (platsValidas.length === 0) platsValidas = ['Instagram'] // default
+
+    // Corregir briefs que usen plataformas no disponibles
+    briefs.forEach(function(b) {
+      if (platsValidas.indexOf(b.plataforma) === -1) {
+        var original = b.plataforma
+        b.plataforma = platsValidas[0] // reemplazar por la primera válida
+        console.log('   CORRECCIÓN: brief usaba "' + original + '" (cliente no tiene), cambiado a "' + b.plataforma + '"')
+      }
+    })
+
+    console.log('   PASO 1 OK: ' + briefs.length + ' briefs generados (plataformas válidas: ' + platsValidas.join('+') + ')')
     return briefs
   } catch (e) {
     console.error('   PASO 1 ERROR: ' + e.message)
