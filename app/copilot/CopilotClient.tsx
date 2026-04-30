@@ -554,15 +554,16 @@ export default function CopilotClient() {
             })}
           </div>
 
+          {/* Spotlight info — zona fija entre pasos y canvas */}
+          <div id="copilot-spotlight" style={{ height: 70, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', textAlign: 'center', opacity: 0, transition: 'opacity 0.4s ease', marginBottom: 8 }}>
+            <div id="copilot-spot-name" style={{ fontSize: 20, fontWeight: 900, background: 'linear-gradient(135deg, #818cf8, #c084fc, #f472b6)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}></div>
+            <div id="copilot-spot-desc" style={{ fontSize: 13, color: 'rgba(255,255,255,0.65)', lineHeight: 1.5, marginTop: 4, maxWidth: 550 }}></div>
+            <div id="copilot-spot-detail" style={{ fontSize: 11, color: 'rgba(124,58,237,0.7)', fontWeight: 600, marginTop: 3 }}></div>
+          </div>
+
           {/* Canvas container */}
-          <div style={{ position: 'relative', height: 520 }}>
+          <div style={{ position: 'relative', height: 440 }}>
             <canvas ref={function(el) { if (el && !(el as any)._copilotInit) { (el as any)._copilotInit = true; initAgentCanvas(el) } }} style={{ width: '100%', height: '100%', display: 'block' }} />
-            {/* Spotlight info (click) */}
-            <div id="copilot-spotlight" style={{ position: 'absolute', bottom: 20, left: '50%', transform: 'translateX(-50%)', textAlign: 'center', width: 550, maxWidth: '90%', pointerEvents: 'none', opacity: 0, transition: 'opacity 0.5s ease' }}>
-              <div id="copilot-spot-name" style={{ fontSize: 22, fontWeight: 900, background: 'linear-gradient(135deg, #818cf8, #c084fc, #f472b6)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}></div>
-              <div id="copilot-spot-desc" style={{ fontSize: 14, color: 'rgba(255,255,255,0.7)', lineHeight: 1.6, marginTop: 6 }}></div>
-              <div id="copilot-spot-detail" style={{ fontSize: 12, color: 'rgba(124,58,237,0.8)', fontWeight: 600, marginTop: 6 }}></div>
-            </div>
           </div>
 
           {/* Stats */}
