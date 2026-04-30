@@ -456,6 +456,59 @@ async function ejecutarAuditoria(contexto, supabase, suscripcionId) {
     timestamp: new Date().toISOString(),
   }
 
+  // ═══ AUTO-LIMPIEZA DE DUPLICADOS ═══
+  if (supabase && suscripcionId) {
+    try {
+      // Limpiar radar_contenido duplicados (mantener el más reciente por tipo+mes)
+      var contRes = await supabase.from('radar_contenido')
+        .select('id,tipo,mes,anio,created_at')
+        .eq('suscripcion_id', suscripcionId)
+        .order('created_at', { ascending: false })
+      var contRows = contRes.data || []
+      var contGroups = {}
+      contRows.forEach(function(r) {
+        var key = r.tipo + '-' + r.mes + '-' + r.anio
+        if (!contGroups[key]) contGroups[key] = []
+        contGroups[key].push(r.id)
+      })
+      var contDeleted = 0
+      for (var gk in contGroups) {
+        if (contGroups[gk].length > 1) {
+          var toDelete = contGroups[gk].slice(1) // mantener el primero (más reciente)
+          for (var di = 0; di < toDelete.length; di++) {
+            await supabase.from('radar_contenido').delete().eq('id', toDelete[di])
+            contDeleted++
+          }
+        }
+      }
+      if (contDeleted > 0) console.log('   QA: ' + contDeleted + ' contenido duplicados eliminados')
+
+      // Limpiar copilot_auditorias duplicados
+      var audRes = await supabase.from('copilot_auditorias')
+        .select('id,mes,anio,created_at')
+        .eq('suscripcion_id', suscripcionId)
+        .order('created_at', { ascending: false })
+      var audRows = audRes.data || []
+      var audGroups = {}
+      audRows.forEach(function(r) {
+        var key = r.mes + '-' + r.anio
+        if (!audGroups[key]) audGroups[key] = []
+        audGroups[key].push(r.id)
+      })
+      var audDeleted = 0
+      for (var ak in audGroups) {
+        if (audGroups[ak].length > 1) {
+          var toDeleteA = audGroups[ak].slice(1)
+          for (var ai = 0; ai < toDeleteA.length; ai++) {
+            await supabase.from('copilot_auditorias').delete().eq('id', toDeleteA[ai])
+            audDeleted++
+          }
+        }
+      }
+      if (audDeleted > 0) console.log('   QA: ' + audDeleted + ' auditorías duplicadas eliminadas')
+    } catch (e) { console.log('   QA limpieza skip: ' + e.message) }
+  }
+
   console.log('\n   === QA AUDITOR COMPLETADO: ' + resultado.veredicto + ' (' + scoreGlobal + '/100) ===\n')
 
   return resultado

@@ -731,17 +731,36 @@ async function generarContenidoSugerido(posts, empresas, modo, perfil, supabase,
   if (supabase && suscripcionId && aprobados.length > 0) {
     try {
       var ahora = new Date()
+      var mesSave = ahora.getMonth() + 1
+      var anioSave = ahora.getFullYear()
+      var semanaSave = Math.ceil(ahora.getDate() / 7)
       var avgScore = aprobados.reduce(function(s, c) { return s + (c.score || 0) }, 0) / aprobados.length
-      await supabase.from('radar_contenido').insert({
-        suscripcion_id: suscripcionId,
-        tipo: 'copy',
-        datos: aprobados,
-        semana: Math.ceil(ahora.getDate() / 7),
-        mes: ahora.getMonth() + 1,
-        anio: ahora.getFullYear(),
-        score_promedio: Math.round(avgScore),
-      })
-      console.log('   ' + aprobados.length + ' copies aprobados guardados (score avg ' + Math.round(avgScore) + ')')
+      // UPSERT: si ya existe copy de esta semana+mes, actualizar en vez de duplicar
+      var existCheck = await supabase.from('radar_contenido')
+        .select('id')
+        .eq('suscripcion_id', suscripcionId)
+        .eq('tipo', 'copy')
+        .eq('mes', mesSave)
+        .eq('anio', anioSave)
+        .eq('semana', semanaSave)
+        .limit(1)
+      if (existCheck.data && existCheck.data.length > 0) {
+        await supabase.from('radar_contenido')
+          .update({ datos: aprobados, score_promedio: Math.round(avgScore) })
+          .eq('id', existCheck.data[0].id)
+        console.log('   ' + aprobados.length + ' copies ACTUALIZADOS (upsert, score avg ' + Math.round(avgScore) + ')')
+      } else {
+        await supabase.from('radar_contenido').insert({
+          suscripcion_id: suscripcionId,
+          tipo: 'copy',
+          datos: aprobados,
+          semana: semanaSave,
+          mes: mesSave,
+          anio: anioSave,
+          score_promedio: Math.round(avgScore),
+        })
+        console.log('   ' + aprobados.length + ' copies NUEVOS guardados (score avg ' + Math.round(avgScore) + ')')
+      }
     } catch (e) { console.error('   Error guardando copies: ' + e.message) }
   } else if (aprobados.length === 0) {
     console.log('   ⚠ Ningun copy aprobado — no se guarda nada')

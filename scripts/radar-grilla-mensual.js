@@ -351,15 +351,30 @@ async function generarGrillaMensual(posts, empresas, suscriptor, mesSiguiente, a
   if (supabase && suscriptor.id && grilla.length > 0) {
     try {
       var avgScore = grilla.reduce(function(s, g) { return s + g.score }, 0) / grilla.length
-      await supabase.from('radar_contenido').insert({
-        suscripcion_id: suscriptor.id,
-        tipo: 'grilla',
-        datos: grilla,
-        mes: mesSiguiente,
-        anio: anio,
-        score_promedio: Math.round(avgScore),
-      })
-      console.log('   Grilla guardada en radar_contenido')
+      // UPSERT: si ya existe grilla de este mes, actualizar en vez de duplicar
+      var existCheck = await supabase.from('radar_contenido')
+        .select('id')
+        .eq('suscripcion_id', suscriptor.id)
+        .eq('tipo', 'grilla')
+        .eq('mes', mesSiguiente)
+        .eq('anio', anio)
+        .limit(1)
+      if (existCheck.data && existCheck.data.length > 0) {
+        await supabase.from('radar_contenido')
+          .update({ datos: grilla, score_promedio: Math.round(avgScore) })
+          .eq('id', existCheck.data[0].id)
+        console.log('   Grilla ACTUALIZADA (upsert, score ' + Math.round(avgScore) + ')')
+      } else {
+        await supabase.from('radar_contenido').insert({
+          suscripcion_id: suscriptor.id,
+          tipo: 'grilla',
+          datos: grilla,
+          mes: mesSiguiente,
+          anio: anio,
+          score_promedio: Math.round(avgScore),
+        })
+        console.log('   Grilla NUEVA guardada (score ' + Math.round(avgScore) + ')')
+      }
     } catch (e) { console.error('   Error guardando grilla: ' + e.message) }
   }
 
