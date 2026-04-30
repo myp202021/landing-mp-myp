@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
 // WordPress/LinkedIn legacy query params that cause redirect loops
-const STRIP_PARAMS = ['page_id', 'trk', 'p', 'm', 'cat', 's', 'preview', 'attachment_id', 'layout_sidebar']
+const STRIP_PARAMS = ['page_id', 'trk', 'p', 'm', 'cat', 's', 'attachment_id', 'layout_sidebar']
 
 export function middleware(request: NextRequest) {
   const { pathname, searchParams } = request.nextUrl
