@@ -533,8 +533,24 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
 
       <div className="max-w-5xl mx-auto px-6 py-6">
 
-        {/* ONBOARDING — si no tiene data entry completado */}
-        {sub && !(sub.perfil_empresa || {}).presupuesto_mensual && (
+        {/* ESTADO DE ESPERA — primer run aún no ha corrido (sin posts = sin data) */}
+        {posts.length === 0 && contenido.length === 0 && auditorias.length === 0 && (
+          <div className="bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/20 rounded-xl p-8 mb-6 text-center">
+            <div className="text-5xl mb-4">{'\u23F3'}</div>
+            <h3 className="text-lg font-bold text-white mb-2">Tu primer an{'a'}lisis se est{'a'} preparando</h3>
+            <p className="text-sm text-[#c4b5fd] mb-3 max-w-md mx-auto">
+              Esta noche 21 agentes de IA analizan tu competencia en Instagram y LinkedIn, generan contenido profesional y preparan tu reporte ejecutivo.
+            </p>
+            <div className="bg-[#1a1745] rounded-lg p-4 max-w-sm mx-auto mb-4">
+              <p className="text-xs text-amber-400 font-bold mb-1">Ma{'n'}ana a las 8:00 AM</p>
+              <p className="text-xs text-[#94a3b8]">Recibes un email con tu primer informe completo. Cuando llegue, este dashboard tendr{'a'} todos los datos.</p>
+            </div>
+            <p className="text-[11px] text-[#64748b]">{(sub.cuentas || []).filter(function(c: any) { return c.red !== 'prensa' }).length} cuentas configuradas | Plan {sub.plan} | Trial {sub.estado === 'trial' ? 'activo' : sub.estado}</p>
+          </div>
+        )}
+
+        {/* ONBOARDING — si no tiene data entry completado (solo si YA tiene data) */}
+        {posts.length > 0 && sub && !(sub.perfil_empresa || {}).presupuesto_mensual && (
           <div className="bg-gradient-to-r from-indigo-500/10 to-purple-500/10 border border-indigo-500/20 rounded-xl p-5 mb-6">
             <div className="flex items-start gap-4">
               <div className="text-3xl flex-shrink-0">{'\uD83D\uDC4B'}</div>

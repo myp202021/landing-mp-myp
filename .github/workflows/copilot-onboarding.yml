@@ -1,0 +1,69 @@
+name: "Copilot — Onboarding nuevos trials (04:00 AM Chile)"
+
+on:
+  schedule:
+    - cron: '0 7 * * *'  # 07:00 UTC = 04:00 AM Chile (CLT = UTC-3)
+  workflow_dispatch:
+    inputs:
+      id:
+        description: 'ID suscripción específico (vacío = todos los trials nuevos)'
+        required: false
+        default: ''
+
+jobs:
+  onboarding:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm install node-fetch@2 @supabase/supabase-js xlsx exceljs
+
+      - name: "Primer run para trials nuevos"
+        run: |
+          ID="${{ github.event.inputs.id }}"
+
+          if [ -n "$ID" ]; then
+            echo "Run específico para: $ID"
+            node scripts/radar-clipping.js --mensual --id=$ID
+          else
+            echo "Buscando trials nuevos (creados ayer)..."
+            node -e "
+              var { createClient } = require('@supabase/supabase-js')
+              var sb = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY)
+              async function main() {
+                var ayer = new Date(Date.now() - 24*60*60*1000).toISOString().split('T')[0]
+                var hoy = new Date().toISOString().split('T')[0]
+                var res = await sb.from('clipping_suscripciones')
+                  .select('id, email, nombre, estado, created_at')
+                  .eq('estado', 'trial')
+                  .gte('created_at', ayer + 'T00:00:00')
+                  .lt('created_at', hoy + 'T00:00:00')
+                var trials = res.data || []
+                if (trials.length === 0) { console.log('Sin trials nuevos de ayer'); process.exit(0) }
+                console.log(trials.length + ' trials nuevos encontrados:')
+                trials.forEach(function(t) { console.log('  ' + t.email + ' (' + t.id + ')') })
+                // Escribir IDs a archivo para el siguiente step
+                require('fs').writeFileSync('/tmp/new_trials.txt', trials.map(function(t) { return t.id }).join('\n'))
+              }
+              main().catch(function(e) { console.error(e); process.exit(1) })
+            "
+
+            if [ -f /tmp/new_trials.txt ]; then
+              while IFS= read -r TRIAL_ID; do
+                echo "=== Corriendo pipeline para: $TRIAL_ID ==="
+                node scripts/radar-clipping.js --mensual --id=$TRIAL_ID || echo "Error en $TRIAL_ID, continuando..."
+                echo "=== Completado: $TRIAL_ID ==="
+              done < /tmp/new_trials.txt
+            fi
+          fi
+        env:
+          APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
+          LINKDAPI_KEY: ${{ secrets.LINKDAPI_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          ANTHROPIC_API_KEY_GRILLAS: ${{ secrets.ANTHROPIC_API_KEY_GRILLAS }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          RESEND: ${{ secrets.RESEND }}

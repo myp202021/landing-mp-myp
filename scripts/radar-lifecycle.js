@@ -159,22 +159,41 @@ function dashUrl(sub) {
   return 'https://www.mulleryperez.cl/copilot/dashboard/' + sub.id
 }
 
-// ═══ DIA 0: BIENVENIDA ═══
+// ═══ DIA 0: BIENVENIDA — "Mañana recibes tu primer análisis" ═══
 function emailBienvenida(sub) {
   var nombre = (sub.perfil_empresa || {}).nombre || sub.nombre || sub.email.split('@')[0]
   var nCuentas = (sub.cuentas || []).filter(function(c) { return c.red !== 'prensa' }).length
-  return header('Tu Copilot est\u00e1 activo', 'Tu departamento de marketing digital')
+  var igCuentas = (sub.cuentas || []).filter(function(c) { return c.red === 'instagram' }).length
+  var liCuentas = (sub.cuentas || []).filter(function(c) { return c.red === 'linkedin' }).length
+  var redesStr = ''
+  if (igCuentas > 0 && liCuentas > 0) redesStr = igCuentas + ' de Instagram + ' + liCuentas + ' de LinkedIn'
+  else if (igCuentas > 0) redesStr = igCuentas + ' de Instagram'
+  else if (liCuentas > 0) redesStr = liCuentas + ' de LinkedIn'
+  else redesStr = nCuentas + ' cuentas'
+
+  return header('Estamos preparando tu Copilot', nombre)
     + '<div style="background:white;padding:28px 32px;">'
     + '<p style="font-size:15px;line-height:1.7;color:#374151;">Hola ' + nombre + ',</p>'
-    + '<p style="font-size:15px;line-height:1.7;color:#374151;">Copilot ya est\u00e1 analizando tu mercado. Configuramos <strong>' + nCuentas + ' cuentas</strong> de competidores. Esto es lo que vas a recibir:</p>'
-    + '<div style="background:#f5f3ff;padding:16px 20px;border-radius:10px;margin:16px 0;">'
-    + '<p style="margin:0 0 10px;font-size:14px;color:#4c1d95;"><strong>\uD83D\uDD0D Inteligencia competitiva</strong> \u2014 Qu\u00e9 publica tu competencia, qu\u00e9 les funciona, d\u00f3nde hay oportunidades para ti</p>'
-    + '<p style="margin:0 0 10px;font-size:14px;color:#4c1d95;"><strong>\u270D\uFE0F Contenido profesional</strong> \u2014 Copies, grilla con calendario, guiones de video. Listos para publicar</p>'
-    + '<p style="margin:0 0 10px;font-size:14px;color:#4c1d95;"><strong>\uD83D\uDCCA Auditor\u00eda vs tu industria</strong> \u2014 Tus n\u00fameros comparados con el benchmark de tu rubro en Chile</p>'
-    + '<p style="margin:0 0 10px;font-size:14px;color:#4c1d95;"><strong>\uD83C\uDF33 \u00c1rbol de inversi\u00f3n</strong> \u2014 D\u00f3nde invertir cada peso y qu\u00e9 esperar de cada canal</p>'
+    + '<p style="font-size:15px;line-height:1.7;color:#374151;">Recibimos tus datos. Configuramos <strong>' + redesStr + '</strong> de competidores para monitorear.</p>'
+
+    // Bloque principal: qué pasa ahora
+    + '<div style="background:#fef3c7;padding:16px 20px;border-radius:10px;margin:16px 0;border-left:4px solid #F59E0B;">'
+    + '<p style="margin:0;font-size:15px;color:#92400E;font-weight:700;">Ma\u00f1ana a las 8:00 AM recibes tu primer an\u00e1lisis</p>'
+    + '<p style="margin:8px 0 0;font-size:14px;color:#92400E;">Esta noche 21 agentes de IA analizan tu competencia, generan contenido y preparan tu reporte. Todo llega a este mismo correo.</p>'
+    + '</div>'
+
+    // Lo que va a recibir
+    + '<p style="font-size:14px;font-weight:700;color:#374151;margin:20px 0 12px;">Esto es lo que vas a recibir ma\u00f1ana:</p>'
+    + '<div style="background:#f5f3ff;padding:16px 20px;border-radius:10px;margin:0 0 16px;">'
+    + '<p style="margin:0 0 10px;font-size:14px;color:#4c1d95;"><strong>\uD83D\uDD0D Inteligencia competitiva</strong> \u2014 Qu\u00e9 publicaron tus competidores en Instagram y LinkedIn, qu\u00e9 les funcion\u00f3, d\u00f3nde hay oportunidades</p>'
+    + '<p style="margin:0 0 10px;font-size:14px;color:#4c1d95;"><strong>\u270D\uFE0F Contenido diferenciado</strong> \u2014 Copies para Instagram (visual, hooks cortos) y LinkedIn (datos, B2B). Listos para publicar</p>'
+    + '<p style="margin:0 0 10px;font-size:14px;color:#4c1d95;"><strong>\uD83D\uDCCA Auditor\u00eda por plataforma</strong> \u2014 Score separado para IG y LinkedIn, comparado con tu industria en Chile</p>'
+    + '<p style="margin:0 0 10px;font-size:14px;color:#4c1d95;"><strong>\uD83C\uDF33 \u00c1rbol de inversi\u00f3n</strong> \u2014 D\u00f3nde invertir cada peso, cu\u00e1ntos leads esperar, 3 escenarios</p>'
     + '<p style="margin:0;font-size:14px;color:#4c1d95;"><strong>\uD83C\uDFAF Reporte con acciones</strong> \u2014 Qu\u00e9 hacer este mes, con qu\u00e9 prioridad y por qu\u00e9</p>'
     + '</div>'
+
     + '<p style="font-size:14px;color:#6b7280;">Tu prueba dura 7 d\u00edas. Si te sirve, eliges un plan. Si no, se desactiva solo. Sin cargos.</p>'
+    + '<p style="font-size:13px;color:#9CA3AF;margin:16px 0 0;">Tu dashboard se est\u00e1 preparando. Ma\u00f1ana cuando recibas el email, haz clic para ver todos los datos:</p>'
     + boton('Ver tu dashboard', dashUrl(sub))
     + '</div>'
     + footer()
