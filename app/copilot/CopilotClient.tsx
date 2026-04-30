@@ -169,6 +169,189 @@ export default function CopilotClient() {
     if (el) el.scrollIntoView({ behavior: 'smooth' })
   }
 
+  function initAgentCanvas(canvas: HTMLCanvasElement) {
+    var ctx = canvas.getContext('2d')
+    if (!ctx) return
+    var container = canvas.parentElement
+    if (!container) return
+
+    function resize() {
+      canvas.width = container!.clientWidth
+      canvas.height = container!.clientHeight
+    }
+    resize()
+    window.addEventListener('resize', resize)
+
+    var W = function() { return canvas.width }
+    var H = function() { return canvas.height }
+
+    var agentesData = [
+      { name: 'Scraping', color: '#f472b6', ring: 0, icon: '\uD83D\uDD0D', desc: 'Extrae posts de Instagram y LinkedIn de la competencia cada semana.', detail: 'Apify + LinkdAPI' },
+      { name: 'Memoria', color: '#a78bfa', ring: 0, icon: '\uD83E\uDDE0', desc: 'Recuerda qu\u00e9 funcion\u00f3, qu\u00e9 rechazaste, qu\u00e9 aprob\u00f3 tu equipo.', detail: 'Inteligencia acumulada' },
+      { name: 'Brief', color: '#60a5fa', ring: 0, icon: '\uD83C\uDFAF', desc: 'Genera territorios de contenido separados para Instagram y LinkedIn.', detail: 'La base de todo el sistema' },
+      { name: 'Copies', color: '#34d399', ring: 0, icon: '\u270D\uFE0F', desc: 'LinkedIn: thought leadership. Instagram: hooks que paran el scroll.', detail: 'Prompts diferentes por red' },
+      { name: 'Grilla', color: '#fbbf24', ring: 0, icon: '\uD83D\uDCC5', desc: '16 posts con calendario, plataforma y \u00e1ngulo asignados por c\u00f3digo.', detail: '11 IG + 5 LinkedIn' },
+      { name: 'Guiones', color: '#f97316', ring: 0, icon: '\uD83C\uDFAC', desc: 'Scripts de video con storyboard, texto en pantalla y timing.', detail: 'Listos para grabar' },
+      { name: 'Auditor\u00eda', color: '#14b8a6', ring: 0, icon: '\uD83D\uDCCA', desc: 'Score separado IG vs LinkedIn con benchmark de tu industria.', detail: 'No mezcla redes' },
+      { name: 'Benchmark', color: '#8b5cf6', ring: 0, icon: '\uD83C\uDFC6', desc: 'Cuadro comparativo por competidor: formato, tono, engagement.', detail: 'An\u00e1lisis tipo consultora' },
+      { name: '\u00c1rbol', color: '#ec4899', ring: 1, icon: '\uD83C\uDF33', desc: 'Cu\u00e1nto invertir por canal, cu\u00e1ntos leads esperar, 3 escenarios.', detail: 'Predictor M&P con data real' },
+      { name: 'Reporte', color: '#06b6d4', ring: 1, icon: '\uD83D\uDCCB', desc: '6 acciones priorizadas por plataforma, hallazgos y predicci\u00f3n.', detail: 'Para decidir, no decorar' },
+      { name: 'Ads', color: '#f43f5e', ring: 1, icon: '\uD83C\uDFAF', desc: 'Headlines Google (30 chars) + primary text Meta (125 chars).', detail: 'Google + Meta validados' },
+      { name: 'Campa\u00f1a', color: '#84cc16', ring: 1, icon: '\uD83D\uDCE2', desc: 'Estrategia de campa\u00f1a: canales, presupuesto, calendario.', detail: 'Paid media plan' },
+      { name: 'Ideas', color: '#a855f7', ring: 1, icon: '\uD83D\uDCA1', desc: 'Detecta gaps vs competencia y oportunidades tem\u00e1ticas.', detail: 'Acumulativo mes a mes' },
+      { name: 'Industria', color: '#64748b', ring: 2, icon: '\uD83C\uDFED', desc: '22 industrias con benchmarks Chile: CPC, CVR, ROAS.', detail: 'Data real' },
+      { name: 'Decisiones', color: '#94a3b8', ring: 2, icon: '\u2699\uFE0F', desc: 'Decide qu\u00e9 agentes correr seg\u00fan plan y datos.', detail: 'Inteligencia operativa' },
+      { name: 'Perfil', color: '#78716c', ring: 2, icon: '\uD83D\uDC64', desc: 'Auto-genera perfil: rubro, competencia, diferenciadores.', detail: 'Desde el d\u00eda 1' },
+      { name: 'Lifecycle', color: '#fb923c', ring: 2, icon: '\uD83D\uDCE7', desc: '6 emails con data real del dashboard.', detail: 'Trial \u2192 pagado' },
+      { name: 'Validador', color: '#4ade80', ring: 2, icon: '\u2705', desc: 'Verifica que las cuentas IG/LinkedIn existen.', detail: 'Previene errores' },
+      { name: 'QA Auditor', color: '#ef4444', ring: 2, icon: '\uD83D\uDEE1\uFE0F', desc: 'Revisa TODOS los entregables y rechaza lo que no cumple.', detail: 'Calidad certificada' },
+      { name: 'Aprendizaje', color: '#c084fc', ring: 2, icon: '\uD83D\uDCDA', desc: 'Guarda correcciones del QA para el pr\u00f3ximo run.', detail: 'Autocorrecci\u00f3n' },
+      { name: 'LinkedIn API', color: '#0077b5', ring: 2, icon: '\uD83D\uDD17', desc: 'Posts LinkedIn con reacciones y comentarios.', detail: 'LinkdAPI' },
+    ]
+
+    var conns = [
+      [0,1],[0,2],[0,3],[0,6],[0,7],[1,2],[1,3],[1,4],[1,6],[2,3],[2,4],[2,5],[2,11],
+      [3,4],[3,12],[6,9],[6,2],[7,9],[7,8],[8,9],[8,11],[9,19],[13,6],[13,8],[13,7],
+      [14,3],[14,5],[15,2],[20,0],[18,19],[18,9],[19,1],[10,11],[16,15],[17,0]
+    ]
+
+    var ringCounts = [0, 0, 0]
+    agentesData.forEach(function(a) { ringCounts[a.ring]++ })
+    var ringIdx = [0, 0, 0]
+
+    var nodes = agentesData.map(function(a) {
+      var ring = a.ring
+      var idx = ringIdx[ring]++
+      var total = ringCounts[ring]
+      var angle = (idx / total) * Math.PI * 2 - Math.PI / 2
+      return {
+        name: a.name, color: a.color, icon: a.icon, ring: ring, desc: a.desc, detail: a.detail,
+        baseAngle: angle,
+        radius: ring === 0 ? 160 : ring === 1 ? 260 : 340,
+        size: ring === 0 ? 22 : ring === 1 ? 17 : 14,
+        glowPhase: Math.random() * Math.PI * 2,
+        x: 0, y: 0, cz: 0,
+      }
+    })
+
+    var particles: { fi: number; ti: number; progress: number; speed: number; color: string; size: number }[] = []
+    var time = 0
+    var hovNode: typeof nodes[0] | null = null
+    var selNode: typeof nodes[0] | null = null
+    var mx = 0, my = 0
+
+    canvas.addEventListener('mousemove', function(e) {
+      var rect = canvas.getBoundingClientRect()
+      mx = e.clientX - rect.left; my = e.clientY - rect.top
+      hovNode = null
+      for (var i = 0; i < nodes.length; i++) {
+        var dx = mx - nodes[i].x, dy = my - nodes[i].y
+        if (dx * dx + dy * dy < nodes[i].size * nodes[i].size * 3) { hovNode = nodes[i]; break }
+      }
+      canvas.style.cursor = hovNode ? 'pointer' : 'default'
+    })
+
+    canvas.addEventListener('click', function() {
+      var spot = document.getElementById('copilot-spotlight')
+      if (!spot) return
+      if (hovNode) {
+        selNode = hovNode
+        spot.querySelector('#copilot-spot-name')!.textContent = hovNode.icon + ' ' + hovNode.name
+        spot.querySelector('#copilot-spot-desc')!.textContent = hovNode.desc
+        spot.querySelector('#copilot-spot-detail')!.textContent = hovNode.detail
+        ;(spot as HTMLElement).style.opacity = '1'
+      } else {
+        selNode = null
+        ;(spot as HTMLElement).style.opacity = '0'
+      }
+    })
+
+    function frame() {
+      time += 0.016
+      var w = W(), h = H()
+      ctx!.fillStyle = 'rgba(10, 10, 26, 0.18)'
+      ctx!.fillRect(0, 0, w, h)
+
+      var cx = w / 2, cy = h / 2 - 10
+      var rot = time * 0.018
+
+      nodes.forEach(function(n) {
+        var a = n.baseAngle + rot * (n.ring === 0 ? 1 : n.ring === 1 ? 0.7 : 0.4)
+        var p = 1 + Math.sin(a * 0.5) * 0.06
+        n.x = cx + Math.cos(a) * n.radius * p
+        n.y = cy + Math.sin(a) * n.radius * 0.5 * p
+        n.cz = Math.cos(a) * 50
+      })
+
+      // Connections
+      conns.forEach(function(c) {
+        var f = nodes[c[0]], t = nodes[c[1]]
+        var active = selNode && (selNode === f || selNode === t)
+        var alpha = active ? 0.4 : 0.07
+        var mx2 = (f.x + t.x) / 2 + (f.y - t.y) * 0.12
+        var my2 = (f.y + t.y) / 2 + (t.x - f.x) * 0.12
+        ctx!.beginPath()
+        ctx!.moveTo(f.x, f.y)
+        ctx!.quadraticCurveTo(mx2, my2, t.x, t.y)
+        ctx!.strokeStyle = 'rgba(124,58,237,' + alpha + ')'
+        ctx!.lineWidth = active ? 2 : 0.6
+        ctx!.stroke()
+      })
+
+      // Particles
+      if (Math.random() < 0.12) {
+        var ci = conns[Math.floor(Math.random() * conns.length)]
+        particles.push({ fi: ci[0], ti: ci[1], progress: 0, speed: 0.004 + Math.random() * 0.005, color: nodes[ci[0]].color, size: 1.5 + Math.random() * 1.5 })
+      }
+      particles = particles.filter(function(p) {
+        p.progress += p.speed
+        if (p.progress >= 1) return false
+        var f = nodes[p.fi], t = nodes[p.ti], tp = p.progress
+        var mx2 = (f.x+t.x)/2+(f.y-t.y)*0.12, my2 = (f.y+t.y)/2+(t.x-f.x)*0.12
+        var px = (1-tp)*(1-tp)*f.x+2*(1-tp)*tp*mx2+tp*tp*t.x
+        var py = (1-tp)*(1-tp)*f.y+2*(1-tp)*tp*my2+tp*tp*t.y
+        ctx!.beginPath(); ctx!.arc(px, py, p.size, 0, Math.PI*2)
+        ctx!.fillStyle = p.color; ctx!.globalAlpha = 0.6*(1-Math.abs(tp-0.5)*2)
+        ctx!.fill(); ctx!.globalAlpha = 1
+        return true
+      })
+
+      // Nodes
+      var sorted = nodes.slice().sort(function(a, b) { return a.cz - b.cz })
+      sorted.forEach(function(n) {
+        var da = 0.5 + (n.cz + 50) / 100 * 0.5
+        var glow = Math.sin(time * 3 + n.glowPhase) * 0.3 + 0.7
+        var act = hovNode === n || selNode === n
+        var sz = n.size * (act ? 1.4 : 1) * (0.85 + da * 0.15)
+
+        var gr = ctx!.createRadialGradient(n.x, n.y, 0, n.x, n.y, sz * (act ? 3.5 : 2.2))
+        gr.addColorStop(0, n.color + (act ? '70' : '18'))
+        gr.addColorStop(1, n.color + '00')
+        ctx!.beginPath(); ctx!.arc(n.x, n.y, sz * (act ? 3.5 : 2.2), 0, Math.PI * 2)
+        ctx!.fillStyle = gr; ctx!.fill()
+
+        ctx!.beginPath(); ctx!.arc(n.x, n.y, sz, 0, Math.PI * 2)
+        ctx!.fillStyle = n.color + (act ? 'ff' : Math.round(da * glow * 180).toString(16).padStart(2, '0'))
+        ctx!.fill()
+        ctx!.strokeStyle = n.color + (act ? 'ff' : '60')
+        ctx!.lineWidth = act ? 2.5 : 0.8
+        ctx!.stroke()
+
+        ctx!.font = Math.round(sz * 0.85) + 'px serif'
+        ctx!.textAlign = 'center'; ctx!.textBaseline = 'middle'
+        ctx!.fillText(n.icon, n.x, n.y)
+
+        var fs = act ? 12 : n.ring === 0 ? 11 : 9
+        ctx!.font = (act ? 'bold ' : '') + fs + 'px Inter,sans-serif'
+        ctx!.fillStyle = 'rgba(255,255,255,' + (act ? 1 : da * (n.ring === 0 ? 0.75 : 0.5)) + ')'
+        ctx!.fillText(n.name, n.x, n.y + sz + 12)
+      })
+
+      requestAnimationFrame(frame)
+    }
+    frame()
+  }
+
   return (
     <div style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
       {/* ─── GLOBAL STYLES ─── */}
@@ -323,35 +506,61 @@ export default function CopilotClient() {
       </section>
 
       {/* ═══════════════════════════════════════════════════════════ */}
-      {/* SECTION 3 — HOW IT WORKS */}
+      {/* SECTION 3 — HOW IT WORKS (3D Visualization) */}
       {/* ═══════════════════════════════════════════════════════════ */}
-      <section style={{ padding: '80px 24px', background: '#FAFAFA' }}>
-        <div style={{ maxWidth: 1000, margin: '0 auto' }}>
-          <div className="reveal" style={{ textAlign: 'center', marginBottom: 56 }}>
-            <h2 style={{ fontSize: 38, fontWeight: 800, color: '#111827', margin: '0 0 16px' }}>
-              Cómo funciona
+      <section style={{ padding: '60px 24px 40px', background: '#0a0a1a', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto', position: 'relative', zIndex: 2 }}>
+          <div className="reveal" style={{ textAlign: 'center', marginBottom: 20 }}>
+            <h2 style={{ fontSize: 38, fontWeight: 800, margin: '0 0 12px', background: 'linear-gradient(135deg, #818cf8, #c084fc, #f472b6)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+              21 Agentes de IA trabajando juntos
             </h2>
-            <p style={{ fontSize: 18, color: '#6B7280' }}>
-              Conecta tu negocio, Copilot hace el trabajo, t{'\u00fa'} tomas las decisiones.
+            <p style={{ fontSize: 17, color: 'rgba(255,255,255,0.5)' }}>
+              Un sistema que piensa, aprende y se corrige solo. Haz click en cada agente.
             </p>
           </div>
 
-          <div className="steps-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 32 }}>
+          {/* 3 Steps over the visualization */}
+          <div className="steps-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20, marginBottom: 16 }}>
             {[
-              { step: '1', title: 'Conecta tus competidores', desc: 'Agrega las cuentas de Instagram y LinkedIn de tu competencia. Copilot empieza a monitorear en minutos.', icon: '\u26A1' },
-              { step: '2', title: '21 agentes trabajan para ti', desc: 'Scraping, brief, copies, grilla, auditor\u00eda, benchmark, reporte. Cada agente alimenta al siguiente. Todo autom\u00e1tico, cada semana.', icon: '\uD83E\uDDE0' },
-              { step: '3', title: 'Apruebas, rechazas, Copilot aprende', desc: 'Recibes contenido y acciones. Lo que apruebas se refuerza, lo que rechazas se evita. El mes siguiente es mejor que el anterior.', icon: '\uD83D\uDE80' },
+              { step: '1', title: 'Conecta', desc: 'Agrega competidores de IG + LinkedIn', icon: '\u26A1', color: '#818cf8' },
+              { step: '2', title: '21 agentes analizan', desc: 'Scraping, brief, copies, auditor\u00eda, benchmark, reporte', icon: '\uD83E\uDDE0', color: '#c084fc' },
+              { step: '3', title: 'Apruebas y aprende', desc: 'Lo que apruebas se refuerza. Cada mes es mejor', icon: '\uD83D\uDE80', color: '#f472b6' },
             ].map(function(s, i) {
               return (
-                <div key={i} className="reveal" style={{ textAlign: 'center', padding: '40px 24px', background: 'white', borderRadius: 20, border: '1px solid #F3F4F6' }}>
-                  <div style={{ width: 64, height: 64, borderRadius: '50%', background: 'linear-gradient(135deg, #EEF2FF, #F3E8FF)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px', fontSize: 28 }}>
-                    {s.icon}
-                  </div>
-                  <div style={{ fontSize: 13, fontWeight: 700, color: '#7C3AED', textTransform: 'uppercase' as const, letterSpacing: 1, marginBottom: 8 }}>Paso {s.step}</div>
-                  <h3 style={{ fontSize: 20, fontWeight: 700, color: '#111827', margin: '0 0 10px' }}>{s.title}</h3>
-                  <p style={{ fontSize: 15, color: '#6B7280', margin: 0, lineHeight: 1.6 }}>{s.desc}</p>
+                <div key={i} style={{ textAlign: 'center', padding: '16px 12px', background: 'rgba(255,255,255,0.04)', borderRadius: 14, border: '1px solid rgba(255,255,255,0.06)' }}>
+                  <span style={{ fontSize: 24 }}>{s.icon}</span>
+                  <span style={{ fontSize: 11, fontWeight: 700, color: s.color, textTransform: 'uppercase' as const, letterSpacing: 1, marginLeft: 8 }}>Paso {s.step}</span>
+                  <span style={{ fontSize: 15, fontWeight: 700, color: 'white', marginLeft: 8 }}>{s.title}</span>
+                  <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)', margin: '4px 0 0' }}>{s.desc}</p>
                 </div>
               )
+            })}
+          </div>
+
+          {/* Canvas container */}
+          <div style={{ position: 'relative', height: 520 }}>
+            <canvas ref={function(el) { if (el && !(el as any)._copilotInit) { (el as any)._copilotInit = true; initAgentCanvas(el) } }} style={{ width: '100%', height: '100%', display: 'block' }} />
+            {/* Spotlight info (click) */}
+            <div id="copilot-spotlight" style={{ position: 'absolute', bottom: 20, left: '50%', transform: 'translateX(-50%)', textAlign: 'center', width: 550, maxWidth: '90%', pointerEvents: 'none', opacity: 0, transition: 'opacity 0.5s ease' }}>
+              <div id="copilot-spot-name" style={{ fontSize: 22, fontWeight: 900, background: 'linear-gradient(135deg, #818cf8, #c084fc, #f472b6)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}></div>
+              <div id="copilot-spot-desc" style={{ fontSize: 14, color: 'rgba(255,255,255,0.7)', lineHeight: 1.6, marginTop: 6 }}></div>
+              <div id="copilot-spot-detail" style={{ fontSize: 12, color: 'rgba(124,58,237,0.8)', fontWeight: 600, marginTop: 6 }}></div>
+            </div>
+          </div>
+
+          {/* Stats */}
+          <div style={{ display: 'flex', justifyContent: 'center', gap: 40, marginTop: 16 }}>
+            {[
+              { num: '21', label: 'Agentes IA' },
+              { num: '34', label: 'Conexiones' },
+              { num: '2', label: 'Plataformas' },
+              { num: '8', label: 'Herramientas' },
+              { num: '22', label: 'Industrias' },
+            ].map(function(s, i) {
+              return <div key={i} style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: 28, fontWeight: 900, background: 'linear-gradient(135deg, #818cf8, #c084fc)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>{s.num}</div>
+                <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.4)', marginTop: 2, letterSpacing: 1, textTransform: 'uppercase' as const }}>{s.label}</div>
+              </div>
             })}
           </div>
         </div>
