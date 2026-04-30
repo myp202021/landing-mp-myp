@@ -251,18 +251,35 @@ export default function CopilotClient() {
       canvas.style.cursor = hovNode ? 'pointer' : 'default'
     })
 
-    canvas.addEventListener('click', function() {
+    // Spotlight on hover (not click)
+    var lastHov = ''
+    canvas.addEventListener('mousemove', function(e2: any) {
+      var rect2 = canvas.getBoundingClientRect()
+      mx = e2.clientX - rect2.left; my = e2.clientY - rect2.top
+      hovNode = null
+      for (var ii = 0; ii < nodes.length; ii++) {
+        var ddx = mx - nodes[ii].x, ddy = my - nodes[ii].y
+        if (ddx * ddx + ddy * ddy < nodes[ii].size * nodes[ii].size * 3) { hovNode = nodes[ii]; break }
+      }
+      canvas.style.cursor = hovNode ? 'pointer' : 'default'
+
       var spot = document.getElementById('copilot-spotlight')
       if (!spot) return
       if (hovNode) {
-        selNode = hovNode
-        spot.querySelector('#copilot-spot-name')!.textContent = hovNode.icon + ' ' + hovNode.name
-        spot.querySelector('#copilot-spot-desc')!.textContent = hovNode.desc
-        spot.querySelector('#copilot-spot-detail')!.textContent = hovNode.detail
-        ;(spot as HTMLElement).style.opacity = '1'
+        if (hovNode.name !== lastHov) {
+          lastHov = hovNode.name
+          selNode = hovNode
+          spot.querySelector('#copilot-spot-name')!.textContent = hovNode.icon + ' ' + hovNode.name
+          spot.querySelector('#copilot-spot-desc')!.textContent = hovNode.desc
+          spot.querySelector('#copilot-spot-detail')!.textContent = hovNode.detail
+          ;(spot as HTMLElement).style.opacity = '1'
+        }
       } else {
-        selNode = null
-        ;(spot as HTMLElement).style.opacity = '0'
+        if (lastHov) {
+          lastHov = ''
+          selNode = null
+          ;(spot as HTMLElement).style.opacity = '0'
+        }
       }
     })
 
