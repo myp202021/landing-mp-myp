@@ -13,6 +13,13 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     const { nombre, empresa, email, telefono, solicitud, destinatario, fuente } = body
 
+    // Capturar IP del remitente
+    const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
+      || request.headers.get('x-real-ip')
+      || 'desconocida'
+    const userAgent = request.headers.get('user-agent') || ''
+    console.log(`[CONTACTO] IP: ${ip} | ${nombre} | ${empresa} | ${email} | UA: ${userAgent.substring(0, 100)}`)
+
     // Validar campos requeridos
     if (!nombre || !empresa || !email || !telefono || !solicitud) {
       return NextResponse.json(
@@ -36,6 +43,7 @@ ${solicitud}
 ---
 Enviado desde: Predictor 2025 - Muller y Pérez
 Fecha: ${new Date().toLocaleString('es-CL')}
+IP: ${ip}
     `.trim()
 
     // Crear HTML mejorado para el email
@@ -93,7 +101,8 @@ Fecha: ${new Date().toLocaleString('es-CL')}
 
     <div class="footer">
       Enviado desde <strong>Predictor 2025</strong> - Muller y Pérez<br>
-      ${new Date().toLocaleString('es-CL')}
+      ${new Date().toLocaleString('es-CL')}<br>
+      <span style="font-size:11px;color:#9CA3AF;">IP: ${ip}</span>
     </div>
   </div>
 </body>
