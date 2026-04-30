@@ -676,6 +676,37 @@ async function main() {
       if (reporteData) console.log('   ✓ Reporte inteligente generado')
     }
 
+    // ═══ QA AUDITOR — revisa TODOS los entregables ═══
+    var qaResult = null
+    try {
+      var qaModule = require('./radar-qa-auditor.js')
+      // Cargar datos completos para auditar duplicados
+      var contenidoAll = []
+      var auditoriasAll = []
+      try {
+        var cRes = await supabase.from('radar_contenido').select('tipo,mes,anio').eq('suscripcion_id', sub.id)
+        contenidoAll = cRes.data || []
+        var aRes = await supabase.from('copilot_auditorias').select('mes,anio').eq('suscripcion_id', sub.id)
+        auditoriasAll = aRes.data || []
+      } catch (e) {}
+
+      qaResult = await qaModule.ejecutarAuditoria({
+        posts: misPosts, postsCliente: postsCliente, perfil: sub.perfil_empresa || {},
+        cuentas: cuentas,
+        contenido: contenidoAll.concat(contenidoSugerido ? [{ tipo: 'copy', datos: contenidoSugerido, mes: new Date().getMonth() + 1, anio: new Date().getFullYear() }] : []),
+        auditoria: auditoriaData,
+        reporte: reporteData,
+        auditorias: auditoriasAll,
+      }, supabase, sub.id)
+
+      if (qaResult) {
+        console.log('   QA: ' + qaResult.veredicto + ' (' + qaResult.scoreGlobal + '/100, ' + qaResult.todosProblemas.length + ' problemas)')
+        if (qaResult.todosProblemas.length > 0) {
+          agenteFallos.push('QA Auditor: ' + qaResult.todosProblemas.length + ' problemas detectados (score ' + qaResult.scoreGlobal + ')')
+        }
+      }
+    } catch (e) { console.log('   QA skip: ' + e.message) }
+
     var html = generarEmailHTML(misPosts, cuentas, hoy, MODO, resumenIA, empresas, trends, sub.id, contenidoSugerido, sub.estado, sub.plan, sub.trial_ends, grillaMensual, guionesData, null, auditoriaData, sub.brief_estrategico)
     var pdf = generarPDFEjecutivo(misPosts, empresas, hoy, MODO, resumenIA, contenidoSugerido, auditoriaData, guionesData, sub, grillaMensual)
 
