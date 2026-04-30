@@ -35,12 +35,12 @@ var IMG_BENCHMARK = '/copilot/mockup-dashboard.png'
 
 /* ─── FEATURE CARDS — mapeadas 1:1 con el dashboard ─── */
 var featureCards = [
-  { title: 'Inteligencia competitiva', desc: 'Analiza los posts de tus competidores cada semana. Engagement, formatos, temas, frecuencia. Comparado contra el promedio de tu industria en Chile.', img: '/copilot/mockup-email-diario.png', icon: '\uD83D\uDD0D' },
-  { title: 'Contenido profesional', desc: '16 posts con calendario, copies listos, hashtags y sugerencias de dise\u00f1o. Guiones de video con storyboard y timing. Todo listo para publicar o editar.', img: '/copilot/mockup-copies.png', icon: '\u270D\uFE0F' },
-  { title: 'Auditor\u00eda vs tu industria', desc: 'Score mensual que compara tu marca contra el benchmark de tu rubro. Cada criterio con dato real, referencia y acci\u00f3n concreta para mejorar.', img: '/copilot/mockup-auditoria.png', icon: '\uD83D\uDCCA' },
-  { title: '\u00c1rbol de inversi\u00f3n digital', desc: 'Cu\u00e1nto invertir en cada canal, cu\u00e1ntos leads esperar, y tres escenarios de retorno. Calculado con datos reales de tu industria.', img: '/copilot/mockup-grilla.png', icon: '\uD83C\uDF33' },
-  { title: 'Reporte con acciones', desc: 'Cada mes un reporte ejecutivo con 6 acciones priorizadas, hallazgos clave y predicci\u00f3n del mes siguiente. Para tomar decisiones, no para decorar.', img: '/copilot/mockup-reporte.png', icon: '\uD83C\uDFAF' },
-  { title: 'Aprende de tu negocio', desc: 'Copilot recuerda qu\u00e9 aprobaste, qu\u00e9 rechazaste, qu\u00e9 funcion\u00f3. Cada mes el contenido y las recomendaciones son m\u00e1s precisas. Inteligencia acumulada.', img: '/copilot/mockup-email-diario.png', icon: '\uD83E\uDDE0' },
+  { title: 'Instagram + LinkedIn en paralelo', desc: 'Monitorea a tus competidores en ambas redes. Engagement, formatos y temas analizados por separado porque IG y LinkedIn son mundos distintos. Cada dato comparado con tu industria en Chile.', img: '/copilot/mockup-email-diario.png', icon: '\uD83D\uDD0D' },
+  { title: 'Contenido diferenciado por red', desc: 'Copies profesionales para Instagram (hooks cortos, visual) y LinkedIn (thought leadership, datos). 16 posts con calendario, guiones de video y sugerencias de dise\u00f1o. Listos para publicar.', img: '/copilot/mockup-copies.png', icon: '\u270D\uFE0F' },
+  { title: 'Auditor\u00eda por plataforma', desc: 'Score mensual con criterios separados para IG y LinkedIn. Cada uno con dato real, benchmark de tu rubro y acci\u00f3n concreta. No mezcla m\u00e9tricas de redes distintas.', img: '/copilot/mockup-auditoria.png', icon: '\uD83D\uDCCA' },
+  { title: '\u00c1rbol de inversi\u00f3n digital', desc: 'Cu\u00e1nto invertir en cada canal, cu\u00e1ntos leads esperar, y tres escenarios de retorno. Calculado con datos reales de 22 industrias en Chile.', img: '/copilot/mockup-grilla.png', icon: '\uD83C\uDF33' },
+  { title: 'Reporte con acciones por red', desc: 'Reporte ejecutivo mensual con acciones priorizadas, hallazgos separados por Instagram y LinkedIn, y predicci\u00f3n del mes siguiente. Para tomar decisiones, no para decorar.', img: '/copilot/mockup-reporte.png', icon: '\uD83C\uDFAF' },
+  { title: 'Aprende de tu negocio', desc: 'Copilot recuerda qu\u00e9 aprobaste, qu\u00e9 rechazaste, qu\u00e9 funcion\u00f3. Cada mes el contenido es m\u00e1s preciso. Los agentes se retroalimentan entre s\u00ed: el brief mejora los copies, la auditor\u00eda mejora el brief.', img: '/copilot/mockup-email-diario.png', icon: '\uD83E\uDDE0' },
 ]
 
 /* ─── PLANS DATA ─── */
@@ -48,13 +48,13 @@ var plans = [
   {
     name: 'Starter',
     price: 34990,
-    desc: 'Ideal para comenzar a monitorear',
+    desc: 'Monitoreo b\u00e1sico de competencia',
     features: [
       '5 cuentas Instagram + LinkedIn',
-      'Análisis diario con IA',
-      '4 posts en grilla mensual',
-      'Email diario',
-      'Dashboard básico',
+      'An\u00e1lisis semanal con IA',
+      '4 copies por semana',
+      'Email semanal de competencia',
+      'Dashboard con m\u00e9tricas',
     ],
     cta: 'Comenzar gratis',
     popular: false,
@@ -62,29 +62,29 @@ var plans = [
   {
     name: 'Pro',
     price: 69990,
-    desc: 'El más elegido por equipos de marketing',
+    desc: 'Inteligencia competitiva completa',
     features: [
-      '15 cuentas IG + LinkedIn + Facebook',
-      'Copies semanales listos para publicar',
-      '8 posts en grilla mensual',
-      'WhatsApp + Email',
-      'Auditoría mensual de perfil',
-      'Reporte ejecutivo PDF',
-      'Banco de ideas acumulativo',
+      '15 cuentas IG + LinkedIn',
+      'Copies diferenciados IG vs LinkedIn',
+      'Grilla mensual 8 posts con calendario',
+      'Auditor\u00eda mensual por plataforma',
+      'Brief estrat\u00e9gico con territorios',
+      'Reporte ejecutivo con acciones',
+      'Banco de ideas + aprendizaje',
     ],
-    cta: 'Probar gratis 7 días',
+    cta: 'Probar gratis 7 d\u00edas',
     popular: true,
   },
   {
     name: 'Business',
     price: 119990,
-    desc: 'Para marcas que quieren dominar',
+    desc: 'Estrategia completa multi-red',
     features: [
-      '30 cuentas multi-red',
-      'Guiones de reels y stories',
-      '16 posts + sugerencias de imagen',
-      'Benchmark mensual de competidores',
-      'Reunión estratégica mensual',
+      '30 cuentas IG + LinkedIn',
+      'Grilla 16 posts + guiones de video',
+      'Benchmark competitivo mensual',
+      '\u00c1rbol de inversi\u00f3n con predictor',
+      'Copies de anuncios Google + Meta',
       'Excel descargable de grilla',
       'Todo lo de Pro incluido',
     ],
@@ -96,26 +96,26 @@ var plans = [
 /* ─── DEEP DIVE DATA — c\u00f3mo funciona Copilot ─── */
 var deepDive = [
   {
-    title: '\u00bfQu\u00e9 publica tu competencia? Copilot lo sabe',
-    desc: 'Cada semana analiza las redes de tus competidores: qu\u00e9 publican, qu\u00e9 les funciona, qu\u00e9 no. Te muestra en n\u00fameros claros si vas mejor o peor que el promedio de tu industria. Sin abrir una sola red social.',
+    title: 'Instagram y LinkedIn analizados por separado',
+    desc: 'No mezcla m\u00e9tricas de redes distintas. En Instagram mide engagement visual (likes, comentarios, saves). En LinkedIn mide reacciones, comentarios y alcance B2B. Cada competidor con desglose por red, formato ganador y tema dominante.',
     img: '/copilot/mockup-email-diario.png',
     reverse: false,
   },
   {
-    title: 'Tu contenido del mes, listo para publicar',
-    desc: 'Copies, grilla con calendario, guiones de video con storyboard. Todo basado en lo que funciona en TU industria, no en plantillas gen\u00e9ricas. Con hashtags, sugerencias de dise\u00f1o y bot\u00f3n para copiar directo.',
+    title: 'Copies que suenan a cada plataforma',
+    desc: 'Para Instagram: hooks cortos que paran el scroll, CTAs interactivos, 6-10 hashtags. Para LinkedIn: thought leadership con datos de industria, tono profesional, estructura larga. El mismo tema, dos enfoques completamente distintos.',
     img: '/copilot/mockup-grilla.png',
     reverse: true,
   },
   {
-    title: 'Cada mes, Copilot entiende mejor tu negocio',
-    desc: 'No es un generador que repite lo mismo. Copilot recuerda qu\u00e9 funcion\u00f3, qu\u00e9 rechazaste, qu\u00e9 aprob\u00f3 tu equipo. El contenido de junio es mejor que el de mayo porque aprendi\u00f3 de tus datos. Como un equipo que no olvida.',
+    title: '21 agentes que se retroalimentan',
+    desc: 'Brief \u2192 Contenido \u2192 Grilla \u2192 Auditor\u00eda \u2192 Benchmark \u2192 Reporte. Cada agente lee lo que gener\u00f3 el anterior y mejora su output. La auditor\u00eda alimenta el brief del mes siguiente. El reporte corrige a los dem\u00e1s agentes. Ciclo continuo.',
     img: '/copilot/mockup-auditoria.png',
     reverse: false,
   },
   {
     title: 'Acciones concretas, no m\u00e9tricas vac\u00edas',
-    desc: 'Reporte ejecutivo con acciones inteligentes: qu\u00e9 hacer esta semana, con qu\u00e9 prioridad, y por qu\u00e9. Auditor\u00eda que compara tus n\u00fameros con la industria y te dice d\u00f3nde mejorar. Todo explicado para que cualquiera lo entienda.',
+    desc: 'Reporte ejecutivo con acciones separadas por plataforma: qu\u00e9 hacer en Instagram esta semana, qu\u00e9 publicar en LinkedIn, con qu\u00e9 prioridad. Auditor\u00eda con benchmarks reales de tu industria. Explicado para que un due\u00f1o de empresa lo entienda.',
     img: '/copilot/mockup-dashboard.png',
     reverse: true,
   },
@@ -203,13 +203,13 @@ export default function CopilotClient() {
           {/* Left */}
           <div style={{ flex: 1 }}>
             <div className="reveal" style={{ display: 'inline-block', background: 'linear-gradient(135deg, #EEF2FF, #F3E8FF)', borderRadius: 100, padding: '8px 20px', marginBottom: 24, fontSize: 14, fontWeight: 600, color: '#4338CA' }}>
-              Competencia + Contenido + Estrategia + Predicci{'\u00f3'}n
+              Instagram + LinkedIn + Estrategia + Predicci{'\u00f3'}n
             </div>
             <h1 className="reveal" style={{ fontSize: 46, fontWeight: 800, lineHeight: 1.1, margin: '0 0 20px', color: '#111827' }}>
-              Tu departamento de<br/>marketing digital.<br/><span className="gradient-text">Desde $34.990/mes.</span>
+              Inteligencia competitiva<br/>para Instagram y LinkedIn.<br/><span className="gradient-text">Desde $34.990/mes.</span>
             </h1>
             <p className="reveal" style={{ fontSize: 19, lineHeight: 1.65, color: '#6B7280', margin: '0 0 32px', maxWidth: 560 }}>
-              Copilot analiza tu competencia, genera contenido profesional, audita tu marca contra la industria, y te entrega un plan de acci{'\u00f3'}n concreto cada mes. Aprende de tu negocio y mejora autom{'\u00e1'}ticamente.
+              Copilot monitorea a tu competencia en ambas redes, genera contenido profesional diferenciado por plataforma, y te entrega acciones concretas cada mes. 21 agentes de IA que aprenden de tu negocio.
             </p>
             <div className="reveal" style={{ display: 'flex', gap: 16, flexWrap: 'wrap', marginBottom: 20 }}>
               <button className="btn-primary" onClick={function() { scrollTo('trial') }}>
@@ -220,7 +220,7 @@ export default function CopilotClient() {
               </button>
             </div>
             <p className="reveal" style={{ fontSize: 13, color: '#9CA3AF', margin: 0 }}>
-              Sin tarjeta · Se cancela solo · 100+ empresas
+              Sin tarjeta · Se cancela solo · 37 empresas activas
             </p>
           </div>
 
@@ -338,9 +338,9 @@ export default function CopilotClient() {
 
           <div className="steps-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 32 }}>
             {[
-              { step: '1', title: 'Conecta tu negocio', desc: 'Tu empresa, tu industria, tus competidores. Copilot entiende tu mercado desde el primer d\u00eda.', icon: '\u26A1' },
-              { step: '2', title: 'Copilot analiza y crea', desc: 'Cada semana analiza tu competencia, genera contenido profesional, y compara tus n\u00fameros con la industria.', icon: '\uD83E\uDDE0' },
-              { step: '3', title: 'T\u00fa decides y Copilot aprende', desc: 'Recibes acciones concretas. Apruebas o rechazas. Copilot recuerda y el pr\u00f3ximo mes es mejor.', icon: '\uD83D\uDE80' },
+              { step: '1', title: 'Conecta tus competidores', desc: 'Agrega las cuentas de Instagram y LinkedIn de tu competencia. Copilot empieza a monitorear en minutos.', icon: '\u26A1' },
+              { step: '2', title: '21 agentes trabajan para ti', desc: 'Scraping, brief, copies, grilla, auditor\u00eda, benchmark, reporte. Cada agente alimenta al siguiente. Todo autom\u00e1tico, cada semana.', icon: '\uD83E\uDDE0' },
+              { step: '3', title: 'Apruebas, rechazas, Copilot aprende', desc: 'Recibes contenido y acciones. Lo que apruebas se refuerza, lo que rechazas se evita. El mes siguiente es mejor que el anterior.', icon: '\uD83D\uDE80' },
             ].map(function(s, i) {
               return (
                 <div key={i} className="reveal" style={{ textAlign: 'center', padding: '40px 24px', background: 'white', borderRadius: 20, border: '1px solid #F3F4F6' }}>
@@ -400,9 +400,9 @@ export default function CopilotClient() {
 
           <div className="feature-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 28 }}>
             {[
-              { img: '/copilot/mockup-email-diario.png', title: 'Qu\u00e9 hace tu competencia', desc: 'An\u00e1lisis de posts de tus competidores: qu\u00e9 publican, qu\u00e9 les funciona, d\u00f3nde hay oportunidades para ti.', tag: 'Cada semana' },
-              { img: '/copilot/mockup-copies.png', title: 'Tu contenido listo', desc: 'Copies profesionales, guiones de video con storyboard, y copies de anuncios Google + Meta. Listos para publicar.', tag: 'Cada semana' },
-              { img: '/copilot/mockup-reporte.png', title: 'Tu plan de acci\u00f3n', desc: 'Reporte ejecutivo con acciones inteligentes, auditor\u00eda vs industria, \u00e1rbol de decisi\u00f3n y predicci\u00f3n del mes siguiente.', tag: 'Cada mes' },
+              { img: '/copilot/mockup-email-diario.png', title: 'Competencia IG + LinkedIn', desc: 'Qu\u00e9 publican tus competidores en cada red, qu\u00e9 formatos les funcionan, d\u00f3nde hay gaps. Cuadro comparativo por empresa.', tag: 'Cada semana' },
+              { img: '/copilot/mockup-copies.png', title: 'Contenido por plataforma', desc: 'Copies para Instagram (visual, hooks cortos) y LinkedIn (datos, B2B). Grilla con calendario. Guiones de video. Copies de anuncios.', tag: 'Cada semana' },
+              { img: '/copilot/mockup-reporte.png', title: 'Reporte + Auditor\u00eda', desc: 'Acciones priorizadas por red, auditor\u00eda con criterios separados IG vs LinkedIn, \u00e1rbol de inversi\u00f3n y predicci\u00f3n del pr\u00f3ximo mes.', tag: 'Cada mes' },
             ].map(function(item, i) {
               return (
                 <div key={i} className="reveal card-hover" style={{ background: '#0F0D2E', borderRadius: 20, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.08)' }}>
@@ -439,7 +439,7 @@ export default function CopilotClient() {
                 Control de asistencia líder en Chile
               </p>
               <p style={{ fontSize: 13, color: '#9CA3AF', margin: 0 }}>
-                100+ empresas confían en Copilot
+                37 empresas activas en Copilot
               </p>
             </div>
           </div>
