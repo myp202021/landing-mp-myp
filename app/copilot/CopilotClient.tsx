@@ -204,7 +204,7 @@ export default function CopilotClient() {
     ]
     var SYN = [[0,1],[0,2],[0,3],[0,6],[0,7],[1,2],[1,3],[1,4],[1,6],[2,3],[2,4],[2,5],[2,11],[3,4],[3,12],[6,9],[6,2],[7,9],[7,8],[8,9],[8,11],[9,19],[13,6],[13,8],[13,7],[14,3],[14,5],[15,2],[20,0],[18,19],[18,9],[19,1],[10,11],[16,15],[17,0],[10,9],[10,3],[12,2],[12,6],[16,9],[16,1],[17,6],[17,7],[20,7],[20,6],[5,4],[5,3],[11,9],[11,8],[15,9],[4,9],[13,2],[19,0]]
     var phi=(1+Math.sqrt(5))/2
-    var nodes=AD.map(function(a,i){var fA=i*Math.PI*2/phi;var bR=a.r===0?130+(i%8)*18:a.r===1?240+(i%5)*22:360+(i%8)*16;return{name:a.n,ring:a.r,desc:a.d,detail:a.dt,color:COLS[a.ci],baseAngle:fA,radius:bR,offsetX:Math.sin(i*2.7)*40,offsetY:Math.cos(i*3.1)*25,size:a.r===0?15:a.r===1?11:8,x:0,y:0,cz:0,fireLevel:0,breathPhase:Math.random()*Math.PI*2,driftX:(Math.random()-0.5)*0.06,driftY:(Math.random()-0.5)*0.04}})
+    var nodes=AD.map(function(a,i){var fA=i*Math.PI*2/phi;var bR=a.r===0?110+(i%8)*15:a.r===1?210+(i%5)*18:310+(i%8)*14;return{name:a.n,ring:a.r,desc:a.d,detail:a.dt,color:COLS[a.ci],baseAngle:fA,radius:bR,offsetX:Math.sin(i*2.7)*40,offsetY:Math.cos(i*3.1)*25,size:a.r===0?15:a.r===1?11:8,x:0,y:0,cz:0,fireLevel:0,breathPhase:Math.random()*Math.PI*2,driftX:(Math.random()-0.5)*0.06,driftY:(Math.random()-0.5)*0.04}})
     var dust=Array.from({length:150},function(){return{x:Math.random()*2000,y:Math.random()*1000,vx:(Math.random()-0.5)*0.12,vy:(Math.random()-0.5)*0.08,size:Math.random()*1.1,color:COLS[Math.floor(Math.random()*COLS.length)],alpha:0.03+Math.random()*0.1,twinkle:Math.random()*Math.PI*2,twinkleSpeed:0.5+Math.random()*2}})
     var particles:any[]=[];var time2=0;var hovN:any=null;var selN:any=null;var lastH='';var mmx=0;var mmy=0
 
@@ -458,7 +458,7 @@ export default function CopilotClient() {
           </div>
 
           {/* Canvas container */}
-          <div style={{ position: 'relative', height: 440 }}>
+          <div style={{ position: 'relative', height: 540 }}>
             <canvas ref={function(el) { if (el && !(el as any)._copilotInit) { (el as any)._copilotInit = true; initAgentCanvas(el) } }} style={{ width: '100%', height: '100%', display: 'block' }} />
           </div>
 
