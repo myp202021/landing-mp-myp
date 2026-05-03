@@ -174,198 +174,94 @@ export default function CopilotClient() {
     if (!ctx) return
     var container = canvas.parentElement
     if (!container) return
+    function resize() { canvas.width = container!.clientWidth; canvas.height = container!.clientHeight }
+    resize(); window.addEventListener('resize', resize)
+    var GW = function() { return canvas.width }, GH = function() { return canvas.height }
 
-    function resize() {
-      canvas.width = container!.clientWidth
-      canvas.height = container!.clientHeight
-    }
-    resize()
-    window.addEventListener('resize', resize)
-
-    var W = function() { return canvas.width }
-    var H = function() { return canvas.height }
-
-    var agentesData = [
-      { name: 'Scraping', color: '#f472b6', ring: 0, icon: '\uD83D\uDD0D', desc: 'Extrae posts de Instagram y LinkedIn de la competencia cada semana.', detail: 'Apify + LinkdAPI' },
-      { name: 'Memoria', color: '#a78bfa', ring: 0, icon: '\uD83E\uDDE0', desc: 'Recuerda qu\u00e9 funcion\u00f3, qu\u00e9 rechazaste, qu\u00e9 aprob\u00f3 tu equipo.', detail: 'Inteligencia acumulada' },
-      { name: 'Brief', color: '#60a5fa', ring: 0, icon: '\uD83C\uDFAF', desc: 'Genera territorios de contenido separados para Instagram y LinkedIn.', detail: 'La base de todo el sistema' },
-      { name: 'Copies', color: '#34d399', ring: 0, icon: '\u270D\uFE0F', desc: 'LinkedIn: thought leadership. Instagram: hooks que paran el scroll.', detail: 'Prompts diferentes por red' },
-      { name: 'Grilla', color: '#fbbf24', ring: 0, icon: '\uD83D\uDCC5', desc: '16 posts con calendario, plataforma y \u00e1ngulo asignados por c\u00f3digo.', detail: '11 IG + 5 LinkedIn' },
-      { name: 'Guiones', color: '#f97316', ring: 0, icon: '\uD83C\uDFAC', desc: 'Scripts de video con storyboard, texto en pantalla y timing.', detail: 'Listos para grabar' },
-      { name: 'Auditor\u00eda', color: '#14b8a6', ring: 0, icon: '\uD83D\uDCCA', desc: 'Score separado IG vs LinkedIn con benchmark de tu industria.', detail: 'No mezcla redes' },
-      { name: 'Benchmark', color: '#8b5cf6', ring: 0, icon: '\uD83C\uDFC6', desc: 'Cuadro comparativo por competidor: formato, tono, engagement.', detail: 'An\u00e1lisis tipo consultora' },
-      { name: '\u00c1rbol', color: '#ec4899', ring: 1, icon: '\uD83C\uDF33', desc: 'Cu\u00e1nto invertir por canal, cu\u00e1ntos leads esperar, 3 escenarios.', detail: 'Predictor M&P con data real' },
-      { name: 'Reporte', color: '#06b6d4', ring: 1, icon: '\uD83D\uDCCB', desc: '6 acciones priorizadas por plataforma, hallazgos y predicci\u00f3n.', detail: 'Para decidir, no decorar' },
-      { name: 'Ads', color: '#f43f5e', ring: 1, icon: '\uD83C\uDFAF', desc: 'Headlines Google (30 chars) + primary text Meta (125 chars).', detail: 'Google + Meta validados' },
-      { name: 'Campa\u00f1a', color: '#84cc16', ring: 1, icon: '\uD83D\uDCE2', desc: 'Estrategia de campa\u00f1a: canales, presupuesto, calendario.', detail: 'Paid media plan' },
-      { name: 'Ideas', color: '#a855f7', ring: 1, icon: '\uD83D\uDCA1', desc: 'Detecta gaps vs competencia y oportunidades tem\u00e1ticas.', detail: 'Acumulativo mes a mes' },
-      { name: 'Industria', color: '#64748b', ring: 2, icon: '\uD83C\uDFED', desc: '22 industrias con benchmarks Chile: CPC, CVR, ROAS.', detail: 'Data real' },
-      { name: 'Decisiones', color: '#94a3b8', ring: 2, icon: '\u2699\uFE0F', desc: 'Decide qu\u00e9 agentes correr seg\u00fan plan y datos.', detail: 'Inteligencia operativa' },
-      { name: 'Perfil', color: '#78716c', ring: 2, icon: '\uD83D\uDC64', desc: 'Auto-genera perfil: rubro, competencia, diferenciadores.', detail: 'Desde el d\u00eda 1' },
-      { name: 'Lifecycle', color: '#fb923c', ring: 2, icon: '\uD83D\uDCE7', desc: '6 emails con data real del dashboard.', detail: 'Trial \u2192 pagado' },
-      { name: 'Validador', color: '#4ade80', ring: 2, icon: '\u2705', desc: 'Verifica que las cuentas IG/LinkedIn existen.', detail: 'Previene errores' },
-      { name: 'QA Auditor', color: '#ef4444', ring: 2, icon: '\uD83D\uDEE1\uFE0F', desc: 'Revisa TODOS los entregables y rechaza lo que no cumple.', detail: 'Calidad certificada' },
-      { name: 'Aprendizaje', color: '#c084fc', ring: 2, icon: '\uD83D\uDCDA', desc: 'Guarda correcciones del QA para el pr\u00f3ximo run.', detail: 'Autocorrecci\u00f3n' },
-      { name: 'LinkedIn API', color: '#0077b5', ring: 2, icon: '\uD83D\uDD17', desc: 'Posts LinkedIn con reacciones y comentarios.', detail: 'LinkdAPI' },
+    var COLS = [[56,189,248],[129,140,248],[167,139,250],[192,132,252],[232,121,249],[244,114,182],[34,211,238],[96,165,250]]
+    var AD = [
+      {n:'Scraping',ci:0,r:0,d:'Extrae posts de Instagram y LinkedIn de tus competidores.',dt:'Apify + LinkdAPI'},
+      {n:'Memoria',ci:3,r:0,d:'Recuerda qu\u00e9 funcion\u00f3, qu\u00e9 rechazaste, qu\u00e9 aprob\u00f3 tu equipo.',dt:'Persistent storage'},
+      {n:'Brief',ci:7,r:0,d:'Genera territorios de contenido para Instagram y LinkedIn por separado.',dt:'Planning layer'},
+      {n:'Copies',ci:6,r:0,d:'IG: hooks cortos. LI: thought leadership con datos.',dt:'Dual generation'},
+      {n:'Grilla',ci:4,r:0,d:'16 posts con calendario. C\u00f3digo decide estructura, IA genera contenido.',dt:'11 IG + 5 LI'},
+      {n:'Guiones',ci:5,r:0,d:'Scripts de video con storyboard: escenas, texto, timing.',dt:'Video pipeline'},
+      {n:'Auditor\u00eda',ci:1,r:0,d:'Score separado IG vs LinkedIn con benchmark de tu industria.',dt:'Per-platform scoring'},
+      {n:'Benchmark',ci:2,r:0,d:'Cuadro comparativo competidor \u00d7 formato \u00d7 tono \u00d7 engagement.',dt:'Claude Sonnet'},
+      {n:'\u00c1rbol',ci:4,r:1,d:'Inversi\u00f3n por canal con 3 escenarios de retorno.',dt:'M&P Predictor'},
+      {n:'Reporte',ci:0,r:1,d:'6 acciones priorizadas, hallazgos, predicci\u00f3n.',dt:'Executive output'},
+      {n:'Ads',ci:5,r:1,d:'Headlines Google 30ch + Meta 125ch. Auto-validated.',dt:'Ad creative'},
+      {n:'Campa\u00f1a',ci:6,r:1,d:'Canales, presupuesto, calendario, KPIs.',dt:'Execution plan'},
+      {n:'Ideas',ci:3,r:1,d:'Gaps vs competencia y oportunidades.',dt:'Opportunity bank'},
+      {n:'Industria',ci:7,r:2,d:'22 industrias \u00d7 CPC \u00d7 CVR \u00d7 ROAS.',dt:'Reference data'},
+      {n:'Decisiones',ci:1,r:2,d:'Decide qu\u00e9 agentes correr seg\u00fan plan y datos.',dt:'Signal router'},
+      {n:'Perfil',ci:2,r:2,d:'Auto-genera rubro, competencia, diferenciadores.',dt:'Auto-detection'},
+      {n:'Lifecycle',ci:5,r:2,d:'6 emails con data real del dashboard.',dt:'Conversion funnel'},
+      {n:'Validador',ci:6,r:2,d:'Verifica cuentas IG/LinkedIn.',dt:'Input validation'},
+      {n:'QA',ci:5,r:2,d:'Revisa todos los entregables. Rechaza basura.',dt:'Quality gate'},
+      {n:'Aprendizaje',ci:3,r:2,d:'Correcciones del QA \u2192 agentes se autocorrigen.',dt:'Self-correction'},
+      {n:'LinkdAPI',ci:0,r:2,d:'Posts LinkedIn con reacciones y comentarios.',dt:'LinkedIn data'},
     ]
+    var SYN = [[0,1],[0,2],[0,3],[0,6],[0,7],[1,2],[1,3],[1,4],[1,6],[2,3],[2,4],[2,5],[2,11],[3,4],[3,12],[6,9],[6,2],[7,9],[7,8],[8,9],[8,11],[9,19],[13,6],[13,8],[13,7],[14,3],[14,5],[15,2],[20,0],[18,19],[18,9],[19,1],[10,11],[16,15],[17,0],[10,9],[10,3],[12,2],[12,6],[16,9],[16,1],[17,6],[17,7],[20,7],[20,6],[5,4],[5,3],[11,9],[11,8],[15,9],[4,9],[13,2],[19,0]]
+    var phi=(1+Math.sqrt(5))/2
+    var nodes=AD.map(function(a,i){var fA=i*Math.PI*2/phi;var bR=a.r===0?130+(i%8)*18:a.r===1?240+(i%5)*22:360+(i%8)*16;return{name:a.n,ring:a.r,desc:a.d,detail:a.dt,color:COLS[a.ci],baseAngle:fA,radius:bR,offsetX:Math.sin(i*2.7)*40,offsetY:Math.cos(i*3.1)*25,size:a.r===0?15:a.r===1?11:8,x:0,y:0,cz:0,fireLevel:0,breathPhase:Math.random()*Math.PI*2,driftX:(Math.random()-0.5)*0.06,driftY:(Math.random()-0.5)*0.04}})
+    var dust=Array.from({length:150},function(){return{x:Math.random()*2000,y:Math.random()*1000,vx:(Math.random()-0.5)*0.12,vy:(Math.random()-0.5)*0.08,size:Math.random()*1.1,color:COLS[Math.floor(Math.random()*COLS.length)],alpha:0.03+Math.random()*0.1,twinkle:Math.random()*Math.PI*2,twinkleSpeed:0.5+Math.random()*2}})
+    var particles:any[]=[];var time2=0;var hovN:any=null;var selN:any=null;var lastH='';var mmx=0;var mmy=0
 
-    var conns = [
-      [0,1],[0,2],[0,3],[0,6],[0,7],[1,2],[1,3],[1,4],[1,6],[2,3],[2,4],[2,5],[2,11],
-      [3,4],[3,12],[6,9],[6,2],[7,9],[7,8],[8,9],[8,11],[9,19],[13,6],[13,8],[13,7],
-      [14,3],[14,5],[15,2],[20,0],[18,19],[18,9],[19,1],[10,11],[16,15],[17,0]
-    ]
-
-    var ringCounts = [0, 0, 0]
-    agentesData.forEach(function(a) { ringCounts[a.ring]++ })
-    var ringIdx = [0, 0, 0]
-
-    var nodes = agentesData.map(function(a) {
-      var ring = a.ring
-      var idx = ringIdx[ring]++
-      var total = ringCounts[ring]
-      var angle = (idx / total) * Math.PI * 2 - Math.PI / 2
-      return {
-        name: a.name, color: a.color, icon: a.icon, ring: ring, desc: a.desc, detail: a.detail,
-        baseAngle: angle,
-        radius: ring === 0 ? 160 : ring === 1 ? 260 : 340,
-        size: ring === 0 ? 22 : ring === 1 ? 17 : 14,
-        glowPhase: Math.random() * Math.PI * 2,
-        x: 0, y: 0, cz: 0,
-      }
+    canvas.addEventListener('mousemove',function(e:any){var rect=canvas.getBoundingClientRect();mmx=e.clientX-rect.left;mmy=e.clientY-rect.top;hovN=null
+      for(var i=0;i<nodes.length;i++){var dx=mmx-nodes[i].x,dy=mmy-nodes[i].y;if(dx*dx+dy*dy<nodes[i].size*nodes[i].size*6){hovN=nodes[i];break}}
+      canvas.style.cursor=hovN?'pointer':'default'
+      var sp=document.getElementById('copilot-spotlight');if(!sp)return
+      if(hovN&&hovN.name!==lastH){lastH=hovN.name;selN=hovN;sp.querySelector('#copilot-spot-name')!.textContent=hovN.name.toUpperCase();sp.querySelector('#copilot-spot-desc')!.textContent=hovN.desc;sp.querySelector('#copilot-spot-detail')!.textContent=hovN.detail;(sp as HTMLElement).style.opacity='1'}
+      else if(!hovN&&lastH){lastH='';selN=null;(sp as HTMLElement).style.opacity='0'}
     })
 
-    var particles: { fi: number; ti: number; progress: number; speed: number; color: string; size: number }[] = []
-    var time = 0
-    var hovNode: typeof nodes[0] | null = null
-    var selNode: typeof nodes[0] | null = null
-    var mx = 0, my = 0
-
-    canvas.addEventListener('mousemove', function(e) {
-      var rect = canvas.getBoundingClientRect()
-      mx = e.clientX - rect.left; my = e.clientY - rect.top
-      hovNode = null
-      for (var i = 0; i < nodes.length; i++) {
-        var dx = mx - nodes[i].x, dy = my - nodes[i].y
-        if (dx * dx + dy * dy < nodes[i].size * nodes[i].size * 3) { hovNode = nodes[i]; break }
-      }
-      canvas.style.cursor = hovNode ? 'pointer' : 'default'
-    })
-
-    // Spotlight on hover (not click)
-    var lastHov = ''
-    canvas.addEventListener('mousemove', function(e2: any) {
-      var rect2 = canvas.getBoundingClientRect()
-      mx = e2.clientX - rect2.left; my = e2.clientY - rect2.top
-      hovNode = null
-      for (var ii = 0; ii < nodes.length; ii++) {
-        var ddx = mx - nodes[ii].x, ddy = my - nodes[ii].y
-        if (ddx * ddx + ddy * ddy < nodes[ii].size * nodes[ii].size * 3) { hovNode = nodes[ii]; break }
-      }
-      canvas.style.cursor = hovNode ? 'pointer' : 'default'
-
-      var spot = document.getElementById('copilot-spotlight')
-      if (!spot) return
-      if (hovNode) {
-        if (hovNode.name !== lastHov) {
-          lastHov = hovNode.name
-          selNode = hovNode
-          spot.querySelector('#copilot-spot-name')!.textContent = hovNode.icon + ' ' + hovNode.name
-          spot.querySelector('#copilot-spot-desc')!.textContent = hovNode.desc
-          spot.querySelector('#copilot-spot-detail')!.textContent = hovNode.detail
-          ;(spot as HTMLElement).style.opacity = '1'
-        }
-      } else {
-        if (lastHov) {
-          lastHov = ''
-          selNode = null
-          ;(spot as HTMLElement).style.opacity = '0'
-        }
-      }
-    })
-
-    function frame() {
-      time += 0.016
-      var w = W(), h = H()
-      ctx!.fillStyle = 'rgba(10, 10, 26, 0.18)'
-      ctx!.fillRect(0, 0, w, h)
-
-      var cx = w / 2, cy = h / 2 - 10
-      var rot = time * 0.018
-
-      nodes.forEach(function(n) {
-        var a = n.baseAngle + rot * (n.ring === 0 ? 1 : n.ring === 1 ? 0.7 : 0.4)
-        var p = 1 + Math.sin(a * 0.5) * 0.06
-        n.x = cx + Math.cos(a) * n.radius * p
-        n.y = cy + Math.sin(a) * n.radius * 0.5 * p
-        n.cz = Math.cos(a) * 50
+    function frame(){time2+=0.016;var w=GW(),h=GH();ctx!.fillStyle='rgba(2,8,23,0.07)';ctx!.fillRect(0,0,w,h)
+      var cx=w/2,cy=h/2,rot=time2*0.004
+      // Stardust
+      dust.forEach(function(d){d.x+=d.vx;d.y+=d.vy;if(d.x<-10)d.x=w+10;if(d.x>w+10)d.x=-10;if(d.y<-10)d.y=h+10;if(d.y>h+10)d.y=-10
+        var tw=(Math.sin(time2*d.twinkleSpeed+d.twinkle)*0.5+0.5);var a=d.alpha*tw
+        ctx!.beginPath();ctx!.arc(d.x,d.y,d.size,0,Math.PI*2);ctx!.fillStyle='rgba('+d.color.join(',')+','+a+')';ctx!.fill()
+        if(d.size>0.8&&tw>0.7){ctx!.beginPath();ctx!.arc(d.x,d.y,d.size*3,0,Math.PI*2);ctx!.fillStyle='rgba('+d.color.join(',')+','+(a*0.15)+')';ctx!.fill()}
       })
-
+      // Nebula + pulse
+      var ng=ctx!.createRadialGradient(cx,cy,0,cx,cy,300);ng.addColorStop(0,'rgba(255,220,180,0.02)');ng.addColorStop(0.15,'rgba(192,132,252,0.025)');ng.addColorStop(0.35,'rgba(56,189,248,0.015)');ng.addColorStop(1,'rgba(2,8,23,0)')
+      ctx!.beginPath();ctx!.arc(cx,cy,300,0,Math.PI*2);ctx!.fillStyle=ng;ctx!.fill()
+      var pR=80+Math.sin(time2*0.5)*25;var pg=ctx!.createRadialGradient(cx,cy,0,cx,cy,pR);pg.addColorStop(0,'rgba(255,230,200,0.025)');pg.addColorStop(1,'rgba(139,92,246,0)')
+      ctx!.beginPath();ctx!.arc(cx,cy,pR,0,Math.PI*2);ctx!.fillStyle=pg;ctx!.fill()
+      // Update nodes
+      nodes.forEach(function(n){var a2=n.baseAngle+rot*(n.ring===0?0.8:n.ring===1?0.4:0.2);var br=1+Math.sin(time2*0.25+n.breathPhase)*0.02
+        n.x=cx+Math.cos(a2)*n.radius*br+n.offsetX+Math.sin(time2*n.driftX)*10;n.y=cy+Math.sin(a2)*n.radius*0.52*br+n.offsetY+Math.cos(time2*n.driftY)*7
+        n.cz=Math.cos(a2)*50;n.fireLevel=Math.max(0,n.fireLevel-0.005)})
       // Connections
-      conns.forEach(function(c) {
-        var f = nodes[c[0]], t = nodes[c[1]]
-        var active = selNode && (selNode === f || selNode === t)
-        var alpha = active ? 0.4 : 0.07
-        var mx2 = (f.x + t.x) / 2 + (f.y - t.y) * 0.12
-        var my2 = (f.y + t.y) / 2 + (t.x - f.x) * 0.12
-        ctx!.beginPath()
-        ctx!.moveTo(f.x, f.y)
-        ctx!.quadraticCurveTo(mx2, my2, t.x, t.y)
-        ctx!.strokeStyle = 'rgba(124,58,237,' + alpha + ')'
-        ctx!.lineWidth = active ? 2 : 0.6
-        ctx!.stroke()
-      })
-
-      // Particles
-      if (Math.random() < 0.12) {
-        var ci = conns[Math.floor(Math.random() * conns.length)]
-        particles.push({ fi: ci[0], ti: ci[1], progress: 0, speed: 0.004 + Math.random() * 0.005, color: nodes[ci[0]].color, size: 1.5 + Math.random() * 1.5 })
-      }
-      particles = particles.filter(function(p) {
-        p.progress += p.speed
-        if (p.progress >= 1) return false
-        var f = nodes[p.fi], t = nodes[p.ti], tp = p.progress
-        var mx2 = (f.x+t.x)/2+(f.y-t.y)*0.12, my2 = (f.y+t.y)/2+(t.x-f.x)*0.12
-        var px = (1-tp)*(1-tp)*f.x+2*(1-tp)*tp*mx2+tp*tp*t.x
-        var py = (1-tp)*(1-tp)*f.y+2*(1-tp)*tp*my2+tp*tp*t.y
-        ctx!.beginPath(); ctx!.arc(px, py, p.size, 0, Math.PI*2)
-        ctx!.fillStyle = p.color; ctx!.globalAlpha = 0.6*(1-Math.abs(tp-0.5)*2)
-        ctx!.fill(); ctx!.globalAlpha = 1
-        return true
-      })
-
+      SYN.forEach(function(s){var f=nodes[s[0]],t=nodes[s[1]];var act=selN&&(selN===f||selN===t);var fire=Math.max(f.fireLevel,t.fireLevel)
+        var mc=[Math.round((f.color[0]+t.color[0])/2),Math.round((f.color[1]+t.color[1])/2),Math.round((f.color[2]+t.color[2])/2)]
+        var al=act?0.3:0.04*((f.cz+t.cz+100)/200*0.5+0.5)+fire*0.15
+        var mx2=(f.x+t.x)/2+(f.y-t.y)*0.06,my2=(f.y+t.y)/2+(t.x-f.x)*0.06
+        if(act||fire>0.2){ctx!.beginPath();ctx!.moveTo(f.x,f.y);ctx!.quadraticCurveTo(mx2,my2,t.x,t.y);ctx!.strokeStyle='rgba('+mc.join(',')+','+(act?0.08:fire*0.06)+')';ctx!.lineWidth=4;ctx!.stroke()}
+        ctx!.beginPath();ctx!.moveTo(f.x,f.y);ctx!.quadraticCurveTo(mx2,my2,t.x,t.y);ctx!.strokeStyle='rgba('+mc.join(',')+','+al+')';ctx!.lineWidth=act?1.5:0.5+fire*0.7;ctx!.stroke()})
+      // Impulses
+      if(Math.random()<0.05){var si=SYN[Math.floor(Math.random()*SYN.length)];particles.push({fi:si[0],ti:si[1],progress:0,speed:0.002+Math.random()*0.003,color:nodes[si[0]].color})}
+      particles=particles.filter(function(p:any){p.progress+=p.speed;if(p.progress>=1){nodes[p.ti].fireLevel=Math.min(1,nodes[p.ti].fireLevel+0.6);return false}
+        var f=nodes[p.fi],t=nodes[p.ti],tp=p.progress;var mx2=(f.x+t.x)/2+(f.y-t.y)*0.06,my2=(f.y+t.y)/2+(t.x-f.x)*0.06
+        var px=(1-tp)*(1-tp)*f.x+2*(1-tp)*tp*mx2+tp*tp*t.x,py=(1-tp)*(1-tp)*f.y+2*(1-tp)*tp*my2+tp*tp*t.y
+        var ig=ctx!.createRadialGradient(px,py,0,px,py,8);ig.addColorStop(0,'rgba('+p.color.join(',')+',0.35)');ig.addColorStop(1,'rgba('+p.color.join(',')+',0)')
+        ctx!.beginPath();ctx!.arc(px,py,8,0,Math.PI*2);ctx!.fillStyle=ig;ctx!.fill()
+        ctx!.beginPath();ctx!.arc(px,py,1.5,0,Math.PI*2);ctx!.fillStyle='rgba(224,242,254,0.8)';ctx!.fill();return true})
       // Nodes
-      var sorted = nodes.slice().sort(function(a, b) { return a.cz - b.cz })
-      sorted.forEach(function(n) {
-        var da = 0.5 + (n.cz + 50) / 100 * 0.5
-        var glow = Math.sin(time * 3 + n.glowPhase) * 0.3 + 0.7
-        var act = hovNode === n || selNode === n
-        var sz = n.size * (act ? 1.4 : 1) * (0.85 + da * 0.15)
-
-        var gr = ctx!.createRadialGradient(n.x, n.y, 0, n.x, n.y, sz * (act ? 3.5 : 2.2))
-        gr.addColorStop(0, n.color + (act ? '70' : '18'))
-        gr.addColorStop(1, n.color + '00')
-        ctx!.beginPath(); ctx!.arc(n.x, n.y, sz * (act ? 3.5 : 2.2), 0, Math.PI * 2)
-        ctx!.fillStyle = gr; ctx!.fill()
-
-        ctx!.beginPath(); ctx!.arc(n.x, n.y, sz, 0, Math.PI * 2)
-        ctx!.fillStyle = n.color + (act ? 'ff' : Math.round(da * glow * 180).toString(16).padStart(2, '0'))
-        ctx!.fill()
-        ctx!.strokeStyle = n.color + (act ? 'ff' : '60')
-        ctx!.lineWidth = act ? 2.5 : 0.8
-        ctx!.stroke()
-
-        ctx!.font = Math.round(sz * 0.85) + 'px serif'
-        ctx!.textAlign = 'center'; ctx!.textBaseline = 'middle'
-        ctx!.fillText(n.icon, n.x, n.y)
-
-        var fs = act ? 12 : n.ring === 0 ? 11 : 9
-        ctx!.font = (act ? 'bold ' : '') + fs + 'px Inter,sans-serif'
-        ctx!.fillStyle = 'rgba(255,255,255,' + (act ? 1 : da * (n.ring === 0 ? 0.75 : 0.5)) + ')'
-        ctx!.fillText(n.name, n.x, n.y + sz + 12)
-      })
-
-      requestAnimationFrame(frame)
-    }
+      nodes.slice().sort(function(a:any,b:any){return a.cz-b.cz}).forEach(function(n:any){var da=0.3+(n.cz+50)/100*0.7;var act=hovN===n||selN===n;var fire=n.fireLevel;var sz=n.size*(act?1.4:1);var col=n.color
+        if(fire>0.03){var fr2=sz*(2+fire*3);var fg=ctx!.createRadialGradient(n.x,n.y,sz*0.5,n.x,n.y,fr2);fg.addColorStop(0,'rgba('+col.join(',')+','+(fire*0.2)+')');fg.addColorStop(1,'rgba('+col.join(',')+',0)');ctx!.beginPath();ctx!.arc(n.x,n.y,fr2,0,Math.PI*2);ctx!.fillStyle=fg;ctx!.fill()
+          ctx!.beginPath();ctx!.arc(n.x,n.y,sz*(1.2+fire),0,Math.PI*2);ctx!.strokeStyle='rgba('+col.join(',')+','+(fire*0.25)+')';ctx!.lineWidth=0.5;ctx!.stroke()}
+        var og=ctx!.createRadialGradient(n.x,n.y,0,n.x,n.y,sz*(act?4:2.8));og.addColorStop(0,'rgba('+col.join(',')+','+(act?0.25:0.08*da+fire*0.12)+')');og.addColorStop(0.5,'rgba('+col.join(',')+','+(act?0.08:0.02*da+fire*0.04)+')');og.addColorStop(1,'rgba('+col.join(',')+',0)')
+        ctx!.beginPath();ctx!.arc(n.x,n.y,sz*(act?4:2.8),0,Math.PI*2);ctx!.fillStyle=og;ctx!.fill()
+        ctx!.beginPath();ctx!.arc(n.x,n.y,sz,0,Math.PI*2);ctx!.strokeStyle='rgba('+col.join(',')+','+(act?0.9:da*0.4+fire*0.4)+')';ctx!.lineWidth=act?2:1+fire;ctx!.stroke()
+        var ig2=ctx!.createRadialGradient(n.x,n.y,0,n.x,n.y,sz*0.85);ig2.addColorStop(0,'rgba(255,255,255,'+(act?0.35:0.1*da+fire*0.15)+')');ig2.addColorStop(0.5,'rgba('+col.join(',')+','+(act?0.5:0.2*da+fire*0.25)+')');ig2.addColorStop(1,'rgba('+col.join(',')+','+(act?0.3:0.08*da+fire*0.12)+')')
+        ctx!.beginPath();ctx!.arc(n.x,n.y,sz*0.85,0,Math.PI*2);ctx!.fillStyle=ig2;ctx!.fill()
+        ctx!.beginPath();ctx!.arc(n.x,n.y,3+fire*2,0,Math.PI*2);ctx!.fillStyle='rgba(255,255,255,'+(act?0.8:da*0.35+fire*0.4)+')';ctx!.fill()
+        var fs2=act?13:n.ring===0?11:9;ctx!.font=(act?'700 ':'500 ')+fs2+'px Inter,sans-serif';ctx!.textAlign='center'
+        ctx!.fillStyle='rgba(2,8,23,0.5)';ctx!.fillText(n.name,n.x+1,n.y+sz+15)
+        ctx!.fillStyle='rgba('+col.join(',')+','+(act?1:da*(n.ring===0?0.7:0.5)+fire*0.3)+')';ctx!.fillText(n.name,n.x,n.y+sz+14)})
+      requestAnimationFrame(frame)}
     frame()
   }
 
@@ -556,9 +452,9 @@ export default function CopilotClient() {
 
           {/* Spotlight info — zona fija entre pasos y canvas */}
           <div id="copilot-spotlight" style={{ height: 70, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', textAlign: 'center', opacity: 0, transition: 'opacity 0.4s ease', marginBottom: 8 }}>
-            <div id="copilot-spot-name" style={{ fontSize: 20, fontWeight: 900, background: 'linear-gradient(135deg, #818cf8, #c084fc, #f472b6)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}></div>
-            <div id="copilot-spot-desc" style={{ fontSize: 13, color: 'rgba(255,255,255,0.65)', lineHeight: 1.5, marginTop: 4, maxWidth: 550 }}></div>
-            <div id="copilot-spot-detail" style={{ fontSize: 11, color: 'rgba(124,58,237,0.7)', fontWeight: 600, marginTop: 3 }}></div>
+            <div id="copilot-spot-name" style={{ fontSize: 16, fontWeight: 700, color: 'rgba(255,255,255,0.95)', letterSpacing: 2 }}></div>
+            <div id="copilot-spot-desc" style={{ fontSize: 13, fontWeight: 400, color: 'rgba(226,232,240,0.75)', lineHeight: 1.6, marginTop: 5, maxWidth: 500 }}></div>
+            <div id="copilot-spot-detail" style={{ fontSize: 10, color: 'rgba(56,189,248,0.55)', fontWeight: 500, marginTop: 4, letterSpacing: 1 }}></div>
           </div>
 
           {/* Canvas container */}
