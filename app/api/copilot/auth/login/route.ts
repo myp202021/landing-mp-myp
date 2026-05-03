@@ -8,6 +8,7 @@ const supabase = createClient(
 )
 
 function verifyPassword(password: string, stored: string): boolean {
+  // Formato con salt: sha256:salt:hash
   if (stored.startsWith('sha256:')) {
     const parts = stored.split(':')
     const salt = parts[1]
@@ -15,7 +16,9 @@ function verifyPassword(password: string, stored: string): boolean {
     const check = crypto.createHash('sha256').update(salt + password).digest('hex')
     return check === hash
   }
-  return false
+  // Formato simple: hash directo (generado por trial)
+  const simpleHash = crypto.createHash('sha256').update(password).digest('hex')
+  return simpleHash === stored
 }
 
 function generateSessionToken(): string {
