@@ -140,8 +140,8 @@ function esPostRelevante(texto) {
 // ─── Main ────────────────────────────────────────────────────────────────────
 async function main() {
   const hoy = new Date().toISOString().split('T')[0]
-  // Ventana de 48h: tolera reportes que corren tarde y captura todo el día anterior + el actual
-  const hace24h = new Date(Date.now() - 48 * 60 * 60 * 1000)
+  // Ventana de 28h: captura posts del día + margen por si el cron corre unos minutos tarde
+  const hace24h = new Date(Date.now() - 28 * 60 * 60 * 1000)
 
   console.log(`📅 Generando reporte para ${hoy}...`)
 
