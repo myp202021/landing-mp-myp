@@ -61,6 +61,8 @@ export async function POST(req: NextRequest) {
     const email = (body.email || '').trim().toLowerCase()
     const nombreEmpresa = body.nombre_empresa || ''
     const descripcion = body.descripcion || ''
+    const webCliente = body.web || ''
+    const igCliente = (body.instagram || '').replace(/^@/, '').trim()
 
     // Aceptar tanto "competidores" (URLs del form) como "cuentas" (objetos directos)
     var cuentas: any[] = []
@@ -116,6 +118,8 @@ export async function POST(req: NextRequest) {
           nombre: nombreEmpresa || email.split('@')[0],
           descripcion: descripcion || '',
           tono: 'profesional',
+          web: webCliente || '',
+          instagram: igCliente || '',
         },
         password_hash: passwordHash,
         debe_cambiar_password: true,

@@ -126,6 +126,8 @@ export default function CopilotClient() {
   var [trialEmail, setTrialEmail] = useState('')
   var [nombreEmpresa, setNombreEmpresa] = useState('')
   var [descripcion, setDescripcion] = useState('')
+  var [webCliente, setWebCliente] = useState('')
+  var [igCliente, setIgCliente] = useState('')
   var [url1, setUrl1] = useState('')
   var [url2, setUrl2] = useState('')
   var [url3, setUrl3] = useState('')
@@ -147,16 +149,20 @@ export default function CopilotClient() {
         email: trialEmail,
         nombre_empresa: nombreEmpresa,
         descripcion: descripcion,
+        web: webCliente,
+        instagram: igCliente,
         competidores: [url1, url2, url3].filter(Boolean),
       }),
     })
       .then(function(res) { return res.json() })
       .then(function(data) {
         setEnviando(false)
-        setEnviado(true)
-        if (data.id) {
-          window.location.href = '/copilot/dashboard/' + data.id
+        if (data.error) {
+          alert(data.error)
+          return
         }
+        setEnviado(true)
+        // NO redirigir al dashboard — mostrar página de gracias
       })
       .catch(function() {
         setEnviando(false)
@@ -630,9 +636,14 @@ export default function CopilotClient() {
 
           {enviado ? (
             <div className="reveal" style={{ textAlign: 'center', background: 'white', borderRadius: 20, padding: 48, border: '1px solid #E5E7EB' }}>
-              <div style={{ fontSize: 48, marginBottom: 16 }}>🚀</div>
-              <h3 style={{ fontSize: 24, fontWeight: 700, color: '#111827', margin: '0 0 12px' }}>Copilot activado</h3>
-              <p style={{ fontSize: 16, color: '#6B7280' }}>Revisa tu email para los próximos pasos.</p>
+              <div style={{ fontSize: 48, marginBottom: 16 }}>{'\u2705'}</div>
+              <h3 style={{ fontSize: 24, fontWeight: 700, color: '#111827', margin: '0 0 12px' }}>Tu Copilot se est{'a'} preparando</h3>
+              <p style={{ fontSize: 16, color: '#6B7280', marginBottom: 20 }}>Revisa tu email — te enviamos tus credenciales de acceso.</p>
+              <div style={{ background: '#FEF3C7', borderLeft: '4px solid #F59E0B', borderRadius: 8, padding: '16px 20px', textAlign: 'left', marginBottom: 20 }}>
+                <p style={{ fontSize: 15, fontWeight: 700, color: '#92400E', margin: 0 }}>Ma{'n'}ana a las 8:00 AM recibes tu primer an{'a'}lisis</p>
+                <p style={{ fontSize: 13, color: '#92400E', margin: '6px 0 0' }}>Esta noche 21 agentes de IA analizan tu competencia, generan contenido y preparan tu reporte. Todo llega a tu correo.</p>
+              </div>
+              <p style={{ fontSize: 13, color: '#9CA3AF' }}>Si no ves el email, revisa tu carpeta de spam.</p>
             </div>
           ) : (
             <form onSubmit={handleTrial} className="reveal" style={{ background: 'white', borderRadius: 20, padding: '40px 36px', border: '1px solid #E5E7EB', boxShadow: '0 8px 40px rgba(0,0,0,0.04)' }}>
@@ -645,8 +656,18 @@ export default function CopilotClient() {
                 <input type="text" required className="input-field" placeholder="Mi Empresa SpA" value={nombreEmpresa} onChange={function(e) { setNombreEmpresa(e.target.value) }} />
               </div>
               <div style={{ marginBottom: 20 }}>
-                <label style={{ display: 'block', fontSize: 14, fontWeight: 600, color: '#374151', marginBottom: 6 }}>Describe tu empresa en 1 línea</label>
+                <label style={{ display: 'block', fontSize: 14, fontWeight: 600, color: '#374151', marginBottom: 6 }}>Describe tu empresa en 1 l{'í'}nea</label>
                 <input type="text" className="input-field" placeholder="Vendemos X a Y en Chile" value={descripcion} onChange={function(e) { setDescripcion(e.target.value) }} />
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 20 }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: 14, fontWeight: 600, color: '#374151', marginBottom: 6 }}>Sitio web</label>
+                  <input type="text" className="input-field" placeholder="www.tuempresa.cl" value={webCliente} onChange={function(e) { setWebCliente(e.target.value) }} />
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: 14, fontWeight: 600, color: '#374151', marginBottom: 6 }}>Instagram de tu empresa</label>
+                  <input type="text" className="input-field" placeholder="@tuempresa" value={igCliente} onChange={function(e) { setIgCliente(e.target.value) }} />
+                </div>
               </div>
               <div style={{ marginBottom: 8 }}>
                 <label style={{ display: 'block', fontSize: 14, fontWeight: 600, color: '#374151', marginBottom: 6 }}>Competidores a monitorear</label>
