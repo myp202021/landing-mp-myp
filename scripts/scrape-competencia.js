@@ -182,7 +182,7 @@ async function main() {
       console.log(`   IG timestamps recientes: ${ts.join(' | ')}`)
     }
     const recientesIG = all.filter(p => p.timestamp && new Date(p.timestamp) > hace24h)
-    console.log(`   IG en ventana 48h: ${recientesIG.length}`)
+    console.log(`   IG en ventana 28h: ${recientesIG.length}`)
 
     // Dedup: excluir posts cuya URL ya apareció en el reporte de ayer
     const sinDuplicados = recientesIG.filter(p => {
@@ -215,7 +215,7 @@ async function main() {
       if (!existing || new Date(p.timestamp) > new Date(existing.timestamp)) igPorOwner.set(k, p)
     }
     postsIG = Array.from(igPorOwner.values())
-    console.log(`✅ Instagram: ${postsIG.length} competidores con post en últimas 48h (de ${recientesIG.length} posts, ${all.length} total)`)
+    console.log(`✅ Instagram: ${postsIG.length} competidores con post en últimas 28h (de ${recientesIG.length} posts, ${all.length} total)`)
   } catch (err) {
     console.error('❌ Error Instagram:', err.message)
   }
@@ -400,14 +400,14 @@ async function scrapeLinkedin(hace24h, urlsYaReportadas = new Set()) {
         const tsp = p.timeSincePosted.trim().toLowerCase()
         const num = parseInt(tsp)
         if (!isNaN(num)) {
-          if (tsp.includes('h') && num <= 48) return true
-          if (tsp.includes('d') && num <= 2) return true
-          if (tsp.includes('m') && !tsp.includes('mo')) return true
+          if (tsp.includes('h') && num <= 28) return true   // hasta 28 horas
+          if (tsp.includes('d') && num <= 1) return true    // solo hoy (1d)
+          if (tsp.includes('m') && !tsp.includes('mo')) return true // minutos
         }
       }
       return false
     })
-    console.log(`✅ LinkedIn: ${recientes.length} posts en últimas 48h (de ${all.length} total)`)
+    console.log(`✅ LinkedIn: ${recientes.length} posts en últimas 28h (de ${all.length} total)`)
 
     // Dedup vs ayer
     const sinDupLI = recientes.filter(p => {
@@ -477,7 +477,7 @@ async function scrapeFacebook(hace24h, urlsYaReportadas = new Set()) {
       const d = typeof t === 'number' ? (t > 1e12 ? new Date(t) : new Date(t * 1000)) : new Date(t)
       return !isNaN(d.getTime()) && d > hace24h
     })
-    console.log(`✅ Facebook: ${recientes.length} posts en últimas 48h (de ${all.length} total)`)
+    console.log(`✅ Facebook: ${recientes.length} posts en últimas 28h (de ${all.length} total)`)
 
     // Dedup vs ayer
     const sinDupFB = recientes.filter(p => {
