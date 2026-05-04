@@ -133,6 +133,7 @@ export default function CopilotClient() {
   var [url3, setUrl3] = useState('')
   var [enviado, setEnviado] = useState(false)
   var [enviando, setEnviando] = useState(false)
+  var [trialId, setTrialId] = useState('')
   var [tab, setTab] = useState('competencia')
   var [faqOpen, setFaqOpen] = useState(-1)
   var [modalOpen, setModalOpen] = useState(false)
@@ -151,7 +152,7 @@ export default function CopilotClient() {
         descripcion: descripcion,
         web: webCliente,
         instagram: igCliente,
-        competidores: [url1, url2, url3].filter(Boolean),
+        competidores: [],
       }),
     })
       .then(function(res) { return res.json() })
@@ -161,8 +162,8 @@ export default function CopilotClient() {
           alert(data.error)
           return
         }
+        setTrialId(data.id || '')
         setEnviado(true)
-        // NO redirigir al dashboard — mostrar página de gracias
       })
       .catch(function() {
         setEnviando(false)
@@ -635,15 +636,29 @@ export default function CopilotClient() {
           </div>
 
           {enviado ? (
-            <div className="reveal" style={{ textAlign: 'center', background: 'white', borderRadius: 20, padding: 48, border: '1px solid #E5E7EB' }}>
-              <div style={{ fontSize: 48, marginBottom: 16 }}>{'\u2705'}</div>
-              <h3 style={{ fontSize: 24, fontWeight: 700, color: '#111827', margin: '0 0 12px' }}>Tu Copilot se est{'a'} preparando</h3>
-              <p style={{ fontSize: 16, color: '#6B7280', marginBottom: 20 }}>Revisa tu email — te enviamos tus credenciales de acceso.</p>
-              <div style={{ background: '#FEF3C7', borderLeft: '4px solid #F59E0B', borderRadius: 8, padding: '16px 20px', textAlign: 'left', marginBottom: 20 }}>
-                <p style={{ fontSize: 15, fontWeight: 700, color: '#92400E', margin: 0 }}>Ma{'n'}ana a las 8:00 AM recibes tu primer an{'a'}lisis</p>
-                <p style={{ fontSize: 13, color: '#92400E', margin: '6px 0 0' }}>Esta noche 21 agentes de IA analizan tu competencia, generan contenido y preparan tu reporte. Todo llega a tu correo.</p>
+            <div className="reveal" style={{ background: 'white', borderRadius: 20, padding: 48, border: '1px solid #E5E7EB' }}>
+              <div style={{ textAlign: 'center', marginBottom: 24 }}>
+                <div style={{ fontSize: 48, marginBottom: 12 }}>{'\u2705'}</div>
+                <h3 style={{ fontSize: 24, fontWeight: 700, color: '#111827', margin: '0 0 8px' }}>Cuenta creada</h3>
+                <p style={{ fontSize: 15, color: '#6B7280' }}>Revisa tu email — te enviamos tu usuario y contrase{'n'}a.</p>
               </div>
-              <p style={{ fontSize: 13, color: '#9CA3AF' }}>Si no ves el email, revisa tu carpeta de spam.</p>
+
+              <div style={{ background: 'linear-gradient(135deg, #EEF2FF, #F5F3FF)', borderRadius: 14, padding: '20px 24px', marginBottom: 20 }}>
+                <p style={{ fontSize: 13, fontWeight: 700, color: '#4338CA', margin: '0 0 8px', letterSpacing: 0.5 }}>SIGUIENTE PASO</p>
+                <p style={{ fontSize: 15, fontWeight: 600, color: '#111827', margin: '0 0 6px' }}>Configura tu empresa y competencia</p>
+                <p style={{ fontSize: 13, color: '#6B7280', margin: '0 0 16px', lineHeight: 1.6 }}>Agrega tus competidores de Instagram y LinkedIn, describe tu rubro y p{'u'}blico objetivo. Con esa informaci{'o'}n, 21 agentes de IA preparan tu primer an{'a'}lisis.</p>
+                <a href={'/copilot/configurar/' + trialId}
+                  style={{ display: 'inline-block', background: 'linear-gradient(135deg, #4338CA, #7C3AED)', color: 'white', padding: '14px 32px', borderRadius: 12, fontSize: 16, fontWeight: 600, textDecoration: 'none' }}>
+                  Configurar mi empresa {'\u2192'}
+                </a>
+              </div>
+
+              <div style={{ background: '#FEF3C7', borderLeft: '4px solid #F59E0B', borderRadius: 8, padding: '14px 18px', marginBottom: 16 }}>
+                <p style={{ fontSize: 13, fontWeight: 700, color: '#92400E', margin: 0 }}>En 24 horas tu dashboard tendr{'a'} datos reales</p>
+                <p style={{ fontSize: 12, color: '#92400E', margin: '4px 0 0' }}>Despu{'e'}s de configurar, el pipeline corre autom{'a'}ticamente. Recibes tu primer informe por email + acceso al dashboard.</p>
+              </div>
+
+              <p style={{ fontSize: 12, color: '#9CA3AF', textAlign: 'center' }}>Si no ves el email, revisa spam. Tu trial dura 7 d{'í'}as.</p>
             </div>
           ) : (
             <form onSubmit={handleTrial} className="reveal" style={{ background: 'white', borderRadius: 20, padding: '40px 36px', border: '1px solid #E5E7EB', boxShadow: '0 8px 40px rgba(0,0,0,0.04)' }}>
@@ -665,27 +680,15 @@ export default function CopilotClient() {
                   <input type="text" className="input-field" placeholder="www.tuempresa.cl" value={webCliente} onChange={function(e) { setWebCliente(e.target.value) }} />
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: 14, fontWeight: 600, color: '#374151', marginBottom: 6 }}>Instagram de tu empresa</label>
+                  <label style={{ display: 'block', fontSize: 14, fontWeight: 600, color: '#374151', marginBottom: 6 }}>Tu Instagram</label>
                   <input type="text" className="input-field" placeholder="@tuempresa" value={igCliente} onChange={function(e) { setIgCliente(e.target.value) }} />
                 </div>
               </div>
-              <div style={{ marginBottom: 8 }}>
-                <label style={{ display: 'block', fontSize: 14, fontWeight: 600, color: '#374151', marginBottom: 6 }}>Competidores a monitorear</label>
-              </div>
-              <div style={{ marginBottom: 12 }}>
-                <input type="url" className="input-field" placeholder="Instagram o LinkedIn del competidor 1" value={url1} onChange={function(e) { setUrl1(e.target.value) }} />
-              </div>
-              <div style={{ marginBottom: 12 }}>
-                <input type="url" className="input-field" placeholder="Instagram o LinkedIn del competidor 2" value={url2} onChange={function(e) { setUrl2(e.target.value) }} />
-              </div>
-              <div style={{ marginBottom: 28 }}>
-                <input type="url" className="input-field" placeholder="Instagram o LinkedIn del competidor 3" value={url3} onChange={function(e) { setUrl3(e.target.value) }} />
-              </div>
               <button type="submit" className="btn-primary" style={{ width: '100%', textAlign: 'center', fontSize: 17, padding: '16px 32px' }} disabled={enviando}>
-                {enviando ? 'Activando...' : 'Activar mi Copilot gratis'}
+                {enviando ? 'Creando cuenta...' : 'Comenzar gratis'}
               </button>
               <p style={{ fontSize: 13, color: '#9CA3AF', textAlign: 'center', marginTop: 16, marginBottom: 0 }}>
-                Sin tarjeta de crédito · Cancela cuando quieras
+                Sin tarjeta de cr{'e'}dito · 7 d{'í'}as gratis · Cancela cuando quieras
               </p>
             </form>
           )}

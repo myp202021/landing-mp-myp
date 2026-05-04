@@ -79,9 +79,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Email requerido' }, { status: 400 })
     }
 
-    if (cuentas.length === 0) {
-      return NextResponse.json({ error: 'Agrega al menos 1 competidor (Instagram o LinkedIn)' }, { status: 400 })
-    }
+    // Competidores opcionales — el usuario los agrega en /configurar después
 
     // Verificar si ya existe
     const { data: existing } = await supabase
@@ -178,8 +176,9 @@ export async function POST(req: NextRequest) {
             + '</div>'
 
             + '<div style="text-align:center;margin:24px 0;">'
-            + '<a href="' + dashUrl + '" style="display:inline-block;background:#4338CA;color:white;padding:14px 32px;border-radius:10px;font-weight:700;font-size:15px;text-decoration:none;">Acceder a tu dashboard</a>'
+            + '<a href="' + configUrl + '" style="display:inline-block;background:#4338CA;color:white;padding:14px 32px;border-radius:10px;font-weight:700;font-size:15px;text-decoration:none;">Configurar mi empresa y competencia</a>'
             + '</div>'
+            + '<p style="font-size:12px;color:#6b7280;text-align:center;">Despu\u00e9s de configurar, en 24 horas tu dashboard tendr\u00e1 datos reales.</p>'
 
             + '<p style="font-size:13px;color:#6b7280;text-align:center;">Tu trial vence el ' + trialEnds.toISOString().split('T')[0] + '. Planes desde $34.990/mes.</p>'
             + '</div>'
