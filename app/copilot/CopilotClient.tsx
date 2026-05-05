@@ -137,10 +137,9 @@ export default function CopilotClient() {
   var [tab, setTab] = useState('competencia')
   var [faqOpen, setFaqOpen] = useState(-1)
   var [modalOpen, setModalOpen] = useState(false)
+  var [formError, setFormError] = useState('')
 
   useScrollReveal()
-
-  var [formError, setFormError] = useState('')
 
   function handleTrial(e: React.FormEvent) {
     e.preventDefault()
