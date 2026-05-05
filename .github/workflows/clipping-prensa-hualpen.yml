@@ -35,7 +35,7 @@ jobs:
 
       - name: Instalar dependencias
         if: steps.check.outputs.already_ran == 'false'
-        run: npm install node-fetch@2 @supabase/supabase-js
+        run: npm install node-fetch@2 @supabase/supabase-js ws
 
       - name: Ejecutar clipping
         if: steps.check.outputs.already_ran == 'false'

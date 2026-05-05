@@ -25,7 +25,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - run: npm install node-fetch@2 @supabase/supabase-js
+      - run: npm install node-fetch@2 @supabase/supabase-js ws
 
       - name: "Fase 1: Generar briefings con OpenAI"
         run: |
@@ -50,7 +50,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - run: npm install node-fetch@2 @supabase/supabase-js
+      - run: npm install node-fetch@2 @supabase/supabase-js ws
 
       - name: "Fase 2: Generar grillas mayo + Ads Creative (Copilot)"
         run: |

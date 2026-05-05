@@ -22,7 +22,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - run: npm install node-fetch@2 @supabase/supabase-js
+      - run: npm install node-fetch@2 @supabase/supabase-js ws
 
       - name: "Descubrir inmobiliarias"
         run: node scripts/prospect-discover.js inmobiliarias ${{ github.event.inputs.max_results || '30' }}
@@ -61,7 +61,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - run: npm install node-fetch@2 @supabase/supabase-js
+      - run: npm install node-fetch@2 @supabase/supabase-js ws
 
       - name: "Descubrir SaaS"
         run: node scripts/prospect-discover.js saas ${{ github.event.inputs.max_results || '30' }}

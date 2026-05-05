@@ -16,7 +16,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - run: npm install node-fetch@2 @supabase/supabase-js
+      - run: npm install node-fetch@2 @supabase/supabase-js ws
       - name: "QA Técnico"
         run: node scripts/copilot-qa-tecnico.js --id=${{ inputs.suscriptor_id }}
         env:

@@ -16,7 +16,7 @@ jobs:
           node-version: '20'
 
       - name: Instalar dependencias
-        run: npm install @supabase/supabase-js node-fetch@2 cheerio@1
+        run: npm install @supabase/supabase-js ws node-fetch@2 cheerio@1
 
       - name: Ejecutar Indicadores de Marketing
         env:
