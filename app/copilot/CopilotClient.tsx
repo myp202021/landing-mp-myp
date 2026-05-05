@@ -140,9 +140,12 @@ export default function CopilotClient() {
 
   useScrollReveal()
 
+  var [formError, setFormError] = useState('')
+
   function handleTrial(e: React.FormEvent) {
     e.preventDefault()
     setEnviando(true)
+    setFormError('')
     fetch('/api/copilot/trial', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -155,11 +158,18 @@ export default function CopilotClient() {
         competidores: [],
       }),
     })
-      .then(function(res) { return res.json() })
-      .then(function(data) {
+      .then(function(res) { return res.json().then(function(data) { return { status: res.status, data: data } }) })
+      .then(function(result) {
         setEnviando(false)
+        var data = result.data
+        if (result.status === 409 && data.id) {
+          // Ya existe — llevar directo a configurar
+          setTrialId(data.id)
+          setEnviado(true)
+          return
+        }
         if (data.error) {
-          alert(data.error)
+          setFormError(data.error)
           return
         }
         setTrialId(data.id || '')
@@ -167,7 +177,7 @@ export default function CopilotClient() {
       })
       .catch(function() {
         setEnviando(false)
-        alert('Error al enviar. Intenta de nuevo.')
+        setFormError('Error de conexión. Intenta de nuevo.')
       })
   }
 
@@ -684,6 +694,11 @@ export default function CopilotClient() {
                   <input type="text" className="input-field" placeholder="@tuempresa" value={igCliente} onChange={function(e) { setIgCliente(e.target.value) }} />
                 </div>
               </div>
+              {formError && (
+                <div style={{ background: '#FEF2F2', border: '1px solid #FECACA', borderRadius: 12, padding: '14px 18px', marginBottom: 16, textAlign: 'center' }}>
+                  <p style={{ fontSize: 14, fontWeight: 600, color: '#991B1B', margin: 0 }}>{formError}</p>
+                </div>
+              )}
               <button type="submit" className="btn-primary" style={{ width: '100%', textAlign: 'center', fontSize: 17, padding: '16px 32px' }} disabled={enviando}>
                 {enviando ? 'Creando cuenta...' : 'Comenzar gratis'}
               </button>
