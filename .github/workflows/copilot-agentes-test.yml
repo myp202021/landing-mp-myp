@@ -24,7 +24,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
       - run: npm install node-fetch@2 @supabase/supabase-js ws
 
       - name: "Correr agentes Copilot (sin scraping)"

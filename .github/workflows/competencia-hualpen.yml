@@ -31,7 +31,7 @@ jobs:
       - uses: actions/setup-node@v4
         if: steps.check.outputs.already_ran == 'false'
         with:
-          node-version: '20'
+          node-version: '22'
 
       - name: Instalar wkhtmltopdf
         if: steps.check.outputs.already_ran == 'false'
