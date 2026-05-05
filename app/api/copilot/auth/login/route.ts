@@ -33,15 +33,18 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Email y password son requeridos' }, { status: 400 })
     }
 
-    // Buscar suscripción
-    const { data: sub, error } = await supabase
+    // Buscar suscripción más reciente (activa o trial primero)
+    const { data: subs, error } = await supabase
       .from('clipping_suscripciones')
       .select('id, email, nombre, plan, estado, password_hash, debe_cambiar_password')
       .eq('email', email.toLowerCase().trim())
-      .single()
+      .order('created_at', { ascending: false })
+      .limit(1)
+
+    const sub = subs && subs.length > 0 ? subs[0] : null
 
     if (error || !sub) {
-      return NextResponse.json({ error: 'Email o contraseña incorrectos' }, { status: 401 })
+      return NextResponse.json({ error: 'Usuario o contraseña incorrectos' }, { status: 401 })
     }
 
     // Verificar estado
