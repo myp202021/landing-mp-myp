@@ -27,17 +27,19 @@ function generateSessionToken(): string {
 
 export async function POST(req: NextRequest) {
   try {
-    const { email, password } = await req.json()
+    const body = await req.json()
+    const email = (body.email || '').toLowerCase().trim()
+    const password = (body.password || '').trim()
 
     if (!email || !password) {
       return NextResponse.json({ error: 'Email y password son requeridos' }, { status: 400 })
     }
 
-    // Buscar suscripción más reciente (activa o trial primero)
+    // Buscar suscripción más reciente
     const { data: subs, error } = await supabase
       .from('clipping_suscripciones')
       .select('id, email, nombre, plan, estado, password_hash, debe_cambiar_password')
-      .eq('email', email.toLowerCase().trim())
+      .eq('email', email)
       .order('created_at', { ascending: false })
       .limit(1)
 
@@ -60,15 +62,18 @@ export async function POST(req: NextRequest) {
     // Verificar password
     const valid = verifyPassword(password, sub.password_hash)
     if (!valid) {
-      // Log intento fallido
-      await supabase.from('copilot_access_log').insert({
-        suscripcion_id: sub.id,
-        accion: 'login_fallido',
-        ip: req.headers.get('x-forwarded-for') || 'unknown',
-        user_agent: (req.headers.get('user-agent') || '').substring(0, 200),
-      }); // @ts-ignore
+      console.error('Login fallido:', email, '| hash guardado:', sub.password_hash?.substring(0, 12) + '...', '| hash ingresado:', crypto.createHash('sha256').update(password).digest('hex').substring(0, 12) + '...')
 
-      return NextResponse.json({ error: 'Email o contraseña incorrectos' }, { status: 401 })
+      try {
+        await supabase.from('copilot_access_log').insert({
+          suscripcion_id: sub.id,
+          accion: 'login_fallido',
+          ip: req.headers.get('x-forwarded-for') || 'unknown',
+          user_agent: (req.headers.get('user-agent') || '').substring(0, 200),
+        })
+      } catch(_) {}
+
+      return NextResponse.json({ error: 'Usuario o contraseña incorrectos' }, { status: 401 })
     }
 
     // Login exitoso — generar session token
