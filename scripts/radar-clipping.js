@@ -699,7 +699,7 @@ async function main() {
       var contenidoAll = []
       var auditoriasAll = []
       try {
-        var cRes = await supabase.from('radar_contenido').select('tipo,mes,anio').eq('suscripcion_id', sub.id)
+        var cRes = await supabase.from('radar_contenido').select('tipo,mes,anio,datos,semana,score_promedio').eq('suscripcion_id', sub.id)
         contenidoAll = cRes.data || []
         var aRes = await supabase.from('copilot_auditorias').select('mes,anio').eq('suscripcion_id', sub.id)
         auditoriasAll = aRes.data || []

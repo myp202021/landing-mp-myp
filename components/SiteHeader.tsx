@@ -197,7 +197,7 @@ export default function SiteHeader() {
 
           {/* Acceso Clientes */}
           <Link
-            href="/crm/login"
+            href="/copilot/login"
             className="inline-flex items-center gap-2 px-3 py-2 md:px-4 border-2 border-blue-600 text-blue-600 font-semibold hover:bg-blue-50 transition-all duration-300 rounded-lg text-sm"
             aria-label="Acceso clientes"
           >
