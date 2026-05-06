@@ -45,14 +45,16 @@ function parsearCompetidor(url: string): { red: string; handle: string; nombre: 
   return null
 }
 
-// Generar password temporal
+// Generar password temporal (12 chars para más seguridad)
 function generarPassword(): string {
-  return crypto.randomBytes(4).toString('hex') // 8 chars alfanumérico
+  return crypto.randomBytes(6).toString('hex') // 12 chars hex
 }
 
-// Hash simple de password (SHA256 — para MVP)
+// Hash de password con salt (formato: sha256:salt:hash)
 function hashPassword(pass: string): string {
-  return crypto.createHash('sha256').update(pass).digest('hex')
+  const salt = crypto.randomBytes(16).toString('hex')
+  const hash = crypto.createHash('sha256').update(salt + pass).digest('hex')
+  return 'sha256:' + salt + ':' + hash
 }
 
 export async function POST(req: NextRequest) {
@@ -215,7 +217,7 @@ export async function POST(req: NextRequest) {
     console.log(`Trial creado: ${email} con ${cuentas.length} cuentas (${cuentasResumen}), password temporal generado, expira ${trialEnds.toISOString().split('T')[0]}`)
 
     // Setear cookie de sesión para acceso inmediato al dashboard
-    const sessionToken = subId + ':' + Date.now()
+    const sessionToken = subId + ':' + crypto.randomBytes(32).toString('hex')
     const response = NextResponse.json({ ok: true, trial_ends: trialEnds.toISOString(), id: subId })
     response.cookies.set('copilot_session', sessionToken, {
       httpOnly: true,

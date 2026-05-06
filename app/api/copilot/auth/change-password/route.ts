@@ -20,7 +20,9 @@ function verifyPassword(password: string, stored: string): boolean {
     const hash = parts[2]
     return crypto.createHash('sha256').update(salt + password).digest('hex') === hash
   }
-  return false
+  // Formato legacy (trial users con hash simple sin salt)
+  const simpleHash = crypto.createHash('sha256').update(password).digest('hex')
+  return simpleHash === stored
 }
 
 export async function POST(req: NextRequest) {

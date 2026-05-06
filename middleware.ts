@@ -7,36 +7,48 @@ const STRIP_PARAMS = ['page_id', 'trk', 'p', 'm', 'cat', 's', 'attachment_id', '
 export function middleware(request: NextRequest) {
   const { pathname, searchParams } = request.nextUrl
 
-  // ═══ COPILOT AUTH: proteger /copilot/dashboard/* ═══
-  if (pathname.startsWith('/copilot/dashboard/')) {
-    // Bypass con token de preview (para testing y acceso admin)
-    if (searchParams.get('preview') === 'myp2026') {
-      return NextResponse.next()
-    }
-
+  // ═══ COPILOT AUTH: helper para verificar sesión + ownership ═══
+  function verifyCopilotSession(request: NextRequest, pathname: string, prefix: string): NextResponse | null {
     const session = request.cookies.get('copilot_session')
     if (!session || !session.value) {
-      const loginUrl = new URL('/copilot/login', request.url)
-      return NextResponse.redirect(loginUrl)
+      return NextResponse.redirect(new URL('/copilot/login', request.url))
     }
-
-    // Verificar que el session token corresponde al dashboard que intenta acceder
     const parts = session.value.split(':')
-    const sessionSubId = parts[0]
-    // Extraer el ID del dashboard de la URL
-    const dashId = pathname.replace('/copilot/dashboard/', '').split('/')[0]
-
-    if (dashId && sessionSubId && dashId !== sessionSubId) {
-      // Intenta acceder al dashboard de otro suscriptor → redirect a su propio dashboard
-      const ownDash = new URL('/copilot/dashboard/' + sessionSubId, request.url)
-      return NextResponse.redirect(ownDash)
+    if (parts.length < 2) {
+      return NextResponse.redirect(new URL('/copilot/login', request.url))
     }
+    const sessionSubId = parts[0]
+    const urlId = pathname.replace(prefix, '').split('/')[0]
+    if (urlId && sessionSubId && urlId !== sessionSubId) {
+      return NextResponse.redirect(new URL(prefix + sessionSubId, request.url))
+    }
+    return null // OK — continuar
+  }
+
+  // ═══ COPILOT AUTH: proteger /copilot/dashboard/* ═══
+  if (pathname.startsWith('/copilot/dashboard/')) {
+    const result = verifyCopilotSession(request, pathname, '/copilot/dashboard/')
+    if (result) return result
   }
 
   // ═══ COPILOT AUTH: proteger /copilot/configurar/* ═══
   if (pathname.startsWith('/copilot/configurar/')) {
+    const result = verifyCopilotSession(request, pathname, '/copilot/configurar/')
+    if (result) return result
+  }
+
+  // ═══ COPILOT AUTH: proteger /copilot/contratar/* ═══
+  if (pathname.startsWith('/copilot/contratar/')) {
+    const result = verifyCopilotSession(request, pathname, '/copilot/contratar/')
+    if (result) return result
+  }
+
+  // ═══ COPILOT AUTH: proteger /copilot/admin ═══
+  if (pathname === '/copilot/admin') {
     const session = request.cookies.get('copilot_session')
-    if (!session || !session.value) {
+    const crmCookie = request.cookies.get('mp_session')
+    const isCrm = crmCookie && crmCookie.value === 'myp2025'
+    if (!session && !isCrm) {
       return NextResponse.redirect(new URL('/copilot/login', request.url))
     }
   }

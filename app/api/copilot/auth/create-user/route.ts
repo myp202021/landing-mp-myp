@@ -28,12 +28,13 @@ function generatePassword(): string {
 // POST: crear credenciales para un suscriptor (admin only — API key en header)
 export async function POST(req: NextRequest) {
   try {
-    // Verificar que es admin (simple: verificar que viene de CRM con cookie mp_session o admin key)
+    // Verificar que es admin
     const adminKey = req.headers.get('x-admin-key')
-    if (adminKey !== process.env.SUPABASE_SERVICE_ROLE_KEY?.substring(0, 20)) {
-      // También aceptar copilot_session de admin
-      const cookie = req.cookies.get('copilot_session')
-      // Por ahora aceptar cualquier request (TODO: restringir a admin CRM)
+    const crmCookie = req.cookies.get('mp_session')
+    const isAdmin = adminKey === process.env.SUPABASE_SERVICE_ROLE_KEY?.substring(0, 20)
+    const isCrm = crmCookie && crmCookie.value === 'myp2025'
+    if (!isAdmin && !isCrm) {
+      return NextResponse.json({ error: 'No autorizado' }, { status: 403 })
     }
 
     const { suscripcion_id, password, send_email } = await req.json()
