@@ -88,6 +88,21 @@ var LINKDAPI_KEY = process.env.LINKDAPI_KEY
 var RESEND_KEY = process.env.RESEND
 var OPENAI_KEY = process.env.OPENAI_API_KEY
 var ANTHROPIC_KEY = process.env.ANTHROPIC_API_KEY_GRILLAS
+
+// Validar secrets críticos al inicio
+var missingSecrets = []
+if (!process.env.SUPABASE_URL) missingSecrets.push('SUPABASE_URL')
+if (!process.env.SUPABASE_SERVICE_KEY) missingSecrets.push('SUPABASE_SERVICE_KEY')
+if (!APIFY_TOKEN) missingSecrets.push('APIFY_TOKEN')
+if (!RESEND_KEY) missingSecrets.push('RESEND')
+if (missingSecrets.length > 0) {
+  console.error('FALTAN SECRETS CRÍTICOS: ' + missingSecrets.join(', '))
+  process.exit(1)
+}
+if (!LINKDAPI_KEY) console.warn('⚠️ LINKDAPI_KEY no configurada — LinkedIn scraping deshabilitado')
+if (!OPENAI_KEY) console.warn('⚠️ OPENAI_API_KEY no configurada — agentes IA con OpenAI deshabilitados')
+if (!ANTHROPIC_KEY) console.warn('⚠️ ANTHROPIC_API_KEY_GRILLAS no configurada — agentes IA con Claude deshabilitados')
+
 var supabase = supabaseLib.createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY)
 
 // ═══ RETRY INTELIGENTE ═══
