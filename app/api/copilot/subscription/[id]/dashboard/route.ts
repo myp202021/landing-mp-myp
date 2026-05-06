@@ -31,10 +31,10 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
     supabase.from('copilot_guiones').select('*').eq('suscripcion_id', id).order('created_at', { ascending: false }),
     supabase.from('copilot_ideas').select('*').eq('suscripcion_id', id).order('created_at', { ascending: false }),
     supabase.from('copilot_benchmarks').select('*').eq('suscripcion_id', id).order('created_at', { ascending: false }),
-    supabase.from('copilot_ads_creativos').select('*').eq('suscripcion_id', id).order('created_at', { ascending: false }).then(r => r).catch(() => ({ data: [], error: null })),
-    supabase.from('copilot_arboles').select('*').eq('suscripcion_id', id).order('created_at', { ascending: false }).then(r => r).catch(() => ({ data: [], error: null })),
-    supabase.from('copilot_reportes').select('*').eq('suscripcion_id', id).order('created_at', { ascending: false }).then(r => r).catch(() => ({ data: [], error: null })),
-    supabase.from('copilot_aprendizajes').select('*').eq('suscripcion_id', id).eq('activo', true).order('confianza', { ascending: false }).limit(20).then(r => r).catch(() => ({ data: [], error: null })),
+    Promise.resolve(supabase.from('copilot_ads_creativos').select('*').eq('suscripcion_id', id).order('created_at', { ascending: false })).catch(() => ({ data: [], error: null })),
+    Promise.resolve(supabase.from('copilot_arboles').select('*').eq('suscripcion_id', id).order('created_at', { ascending: false })).catch(() => ({ data: [], error: null })),
+    Promise.resolve(supabase.from('copilot_reportes').select('*').eq('suscripcion_id', id).order('created_at', { ascending: false })).catch(() => ({ data: [], error: null })),
+    Promise.resolve(supabase.from('copilot_aprendizajes').select('*').eq('suscripcion_id', id).eq('activo', true).order('confianza', { ascending: false }).limit(20)).catch(() => ({ data: [], error: null })),
   ])
 
   if (rSub.error || !rSub.data) {
