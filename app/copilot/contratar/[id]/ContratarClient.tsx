@@ -2,12 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 
-var SUPABASE_URL = 'https://faitwrutauavjwnsnlzq.supabase.co'
-var SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZhaXR3cnV0YXVhdmp3bnNubHpxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE2NzQ3MTcsImV4cCI6MjA3NzI1MDcxN30.ZfGDfQv2UzWQR6AJz0o0Prir5IJfJppkiNwWiF24pkQ'
-
-function hdrs() {
-  return { 'apikey': SUPABASE_ANON, 'Authorization': 'Bearer ' + SUPABASE_ANON, 'Content-Type': 'application/json' }
-}
+// Data se carga via API route server-side
 
 function fmt(n: number) { return '$' + n.toLocaleString('es-CL') }
 
@@ -27,25 +22,13 @@ export default function ContratarClient(props: { suscripcionId: string }) {
   var [procesando, setProcesando] = useState(false)
   var [showTest, setShowTest] = useState(false)
 
-  useEffect(function() {
-    if (window.location.search.includes('test=1')) setShowTest(true)
-  }, [])
-
-  var PLANES = showTest ? [PLAN_TEST].concat(PLANES_BASE) : PLANES_BASE
+  var PLANES = PLANES_BASE
 
   useEffect(function() {
-    fetch(SUPABASE_URL + '/rest/v1/clipping_suscripciones?id=eq.' + props.suscripcionId + '&select=*', { headers: hdrs() })
-      .then(function(r) { return r.json() })
-      .then(function(data) {
-        if (data && data.length > 0) {
-          var email = data[0].email || ''
-          if (email.includes('mulleryperez') || email.includes('chmuller5')) setShowTest(true)
-        }
-        if (!data || data.length === 0) { setError('Suscripcion no encontrada') }
-        else { setSub(data[0]) }
-        setLoading(false)
-      })
-      .catch(function() { setError('Error cargando datos'); setLoading(false) })
+    fetch('/api/copilot/subscription/' + props.suscripcionId)
+      .then(function(r) { if (!r.ok) throw new Error('No encontrado'); return r.json() })
+      .then(function(data) { setSub(data); setLoading(false) })
+      .catch(function() { setError('Suscripcion no encontrada'); setLoading(false) })
   }, [])
 
   async function contratar(planId: string) {

@@ -2,12 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 
-var SUPABASE_URL = 'https://faitwrutauavjwnsnlzq.supabase.co'
-var SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZhaXR3cnV0YXVhdmp3bnNubHpxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE2NzQ3MTcsImV4cCI6MjA3NzI1MDcxN30.ZfGDfQv2UzWQR6AJz0o0Prir5IJfJppkiNwWiF24pkQ'
-
-function hdrs() {
-  return { 'apikey': SUPABASE_ANON, 'Authorization': 'Bearer ' + SUPABASE_ANON, 'Content-Type': 'application/json' }
-}
+// Data se carga via API route server-side (no expone keys de Supabase)
 
 var PLAN_LIMITS: Record<string, number> = { starter: 5, pro: 15, business: 30 }
 
@@ -36,10 +31,9 @@ export default function ConfigClient(props: { suscripcionId: string }) {
   async function loadData() {
     setLoading(true)
     try {
-      var r = await fetch(SUPABASE_URL + '/rest/v1/clipping_suscripciones?id=eq.' + props.suscripcionId + '&select=*', { headers: hdrs() })
-      var data = await r.json()
-      if (!data || data.length === 0) { setError('Suscripcion no encontrada'); setLoading(false); return }
-      var s = data[0]
+      var r = await fetch('/api/copilot/subscription/' + props.suscripcionId)
+      if (!r.ok) { setError('Suscripcion no encontrada'); setLoading(false); return }
+      var s = await r.json()
       setSub(s)
       var c = (s.cuentas || []).filter(function(x: any) { return x.red !== 'prensa' })
       setCuentas(c)
@@ -93,11 +87,11 @@ export default function ConfigClient(props: { suscripcionId: string }) {
       allCuentas.push({ red: 'prensa', keywords: kwStr.split(',').map(function(k: string) { return k.trim().toLowerCase() }).filter(function(k: string) { return k !== '' }) })
     }
     try {
-      var r = await fetch(SUPABASE_URL + '/rest/v1/clipping_suscripciones?id=eq.' + props.suscripcionId, {
-        method: 'PATCH', headers: hdrs(),
+      var r = await fetch('/api/copilot/subscription/' + props.suscripcionId, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           cuentas: allCuentas,
-          nombre: nombre,
           perfil_empresa: {
             nombre: nombre,
             descripcion: descripcion,
@@ -106,11 +100,11 @@ export default function ConfigClient(props: { suscripcionId: string }) {
             instagram: igPropio,
             linkedin: liPropio,
           },
-          updated_at: new Date().toISOString(),
         }),
       })
       if (r.ok) { setSaved(true); setTimeout(function() { setSaved(false) }, 3000) }
-    } catch (e) { setError('Error guardando') }
+      else { var err = await r.json(); setError(err.error || 'Error guardando') }
+    } catch (e) { setError('Error de conexión al guardar') }
     setSaving(false)
   }
 
@@ -249,6 +243,7 @@ export default function ConfigClient(props: { suscripcionId: string }) {
             {saving ? 'Guardando...' : 'Guardar configuracion'}
           </button>
           {saved && <span className="text-green-600 font-semibold text-sm">Guardado. Los cambios aplican desde el proximo informe.</span>}
+          {error && !loading && <span className="text-red-400 font-semibold text-sm">{error}</span>}
         </div>
 
         {/* LINKS */}

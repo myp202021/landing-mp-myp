@@ -2,12 +2,8 @@
 
 import React, { useState, useEffect } from 'react'
 
-var SUPABASE_URL = 'https://faitwrutauavjwnsnlzq.supabase.co'
-var SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZhaXR3cnV0YXVhdmp3bnNubHpxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE2NzQ3MTcsImV4cCI6MjA3NzI1MDcxN30.ZfGDfQv2UzWQR6AJz0o0Prir5IJfJppkiNwWiF24pkQ'
-
-function hdrs() {
-  return { 'apikey': SUPABASE_ANON, 'Authorization': 'Bearer ' + SUPABASE_ANON, 'Content-Type': 'application/json' }
-}
+// Data se carga via API route server-side (no expone keys de Supabase)
+var API_BASE = '/api/copilot/subscription/'
 
 function engagementBadge(likes: number, comments: number) {
   var total = likes + comments
@@ -357,62 +353,21 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
   async function loadData() {
     setLoading(true)
     try {
-      var r1 = await fetch(SUPABASE_URL + '/rest/v1/clipping_suscripciones?id=eq.' + props.suscripcionId + '&select=*', { headers: hdrs() })
-      var subs = await r1.json()
-      if (!subs || subs.length === 0) { setError('Suscripci\u00f3n no encontrada'); setLoading(false); return }
-      setSub(subs[0])
-
-      var dias = periodo === '7d' ? 7 : periodo === '30d' ? 30 : 90
-      var desde = new Date(Date.now() - dias * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
-      var r2 = await fetch(SUPABASE_URL + '/rest/v1/radar_posts?suscripcion_id=eq.' + props.suscripcionId + '&fecha_scrape=gte.' + desde + '&select=*&order=fecha_scrape.desc', { headers: hdrs() })
-      var data = await r2.json()
-      setPosts(Array.isArray(data) ? data : [])
-
-      var r3 = await fetch(SUPABASE_URL + '/rest/v1/radar_contenido?suscripcion_id=eq.' + props.suscripcionId + '&select=*&order=created_at.desc', { headers: hdrs() })
-      var cData = await r3.json()
-      setContenido(Array.isArray(cData) ? cData : [])
-
-      var r4 = await fetch(SUPABASE_URL + '/rest/v1/copilot_auditorias?suscripcion_id=eq.' + props.suscripcionId + '&select=*&order=created_at.desc', { headers: hdrs() })
-      var aData = await r4.json()
-      setAuditorias(Array.isArray(aData) ? aData : [])
-
-      var r5 = await fetch(SUPABASE_URL + '/rest/v1/copilot_guiones?suscripcion_id=eq.' + props.suscripcionId + '&select=*&order=created_at.desc', { headers: hdrs() })
-      var gData = await r5.json()
-      setGuiones(Array.isArray(gData) ? gData : [])
-
-      var r6 = await fetch(SUPABASE_URL + '/rest/v1/copilot_ideas?suscripcion_id=eq.' + props.suscripcionId + '&select=*&order=created_at.desc', { headers: hdrs() })
-      var iData = await r6.json()
-      setIdeas(Array.isArray(iData) ? iData : [])
-
-      var r7 = await fetch(SUPABASE_URL + '/rest/v1/copilot_benchmarks?suscripcion_id=eq.' + props.suscripcionId + '&select=*&order=created_at.desc', { headers: hdrs() })
-      var bData = await r7.json()
-      setBenchmarks(Array.isArray(bData) ? bData : [])
-
-      // Nuevas tablas Copilot
-      try {
-        var r8 = await fetch(SUPABASE_URL + '/rest/v1/copilot_ads_creativos?suscripcion_id=eq.' + props.suscripcionId + '&select=*&order=created_at.desc', { headers: hdrs() })
-        var adsData = await r8.json()
-        setAdsCreativos(Array.isArray(adsData) ? adsData : [])
-      } catch (e) { /* tabla puede no existir */ }
-
-      try {
-        var r9 = await fetch(SUPABASE_URL + '/rest/v1/copilot_arboles?suscripcion_id=eq.' + props.suscripcionId + '&select=*&order=created_at.desc', { headers: hdrs() })
-        var arbolesData = await r9.json()
-        setArboles(Array.isArray(arbolesData) ? arbolesData : [])
-      } catch (e) {}
-
-      try {
-        var r11 = await fetch(SUPABASE_URL + '/rest/v1/copilot_reportes?suscripcion_id=eq.' + props.suscripcionId + '&select=*&order=created_at.desc', { headers: hdrs() })
-        var repData = await r11.json()
-        setReportes(Array.isArray(repData) ? repData : [])
-      } catch (e) {}
-
-      try {
-        var r10 = await fetch(SUPABASE_URL + '/rest/v1/copilot_aprendizajes?suscripcion_id=eq.' + props.suscripcionId + '&activo=eq.true&select=*&order=confianza.desc&limit=20', { headers: hdrs() })
-        var apData = await r10.json()
-        setAprendizajes(Array.isArray(apData) ? apData : [])
-      } catch (e) { /* tabla puede no existir */ }
-    } catch (e) { setError('Error cargando datos') }
+      var r = await fetch(API_BASE + props.suscripcionId + '/dashboard')
+      if (!r.ok) { setError('Error cargando datos'); setLoading(false); return }
+      var d = await r.json()
+      setSub(d.suscripcion)
+      setPosts(d.posts || [])
+      setContenido(d.contenido || [])
+      setAuditorias(d.auditorias || [])
+      setGuiones(d.guiones || [])
+      setIdeas(d.ideas || [])
+      setBenchmarks(d.benchmarks || [])
+      setAdsCreativos(d.ads || [])
+      setArboles(d.arboles || [])
+      setReportes(d.reportes || [])
+      setAprendizajes(d.aprendizajes || [])
+    } catch (e) { setError('Error de conexión') }
     setLoading(false)
   }
 
@@ -442,11 +397,10 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
       })
       setFeedbackSent(itemId || tipo)
       setTimeout(function() { setFeedbackSent('') }, 3000)
-      // Recargar aprendizajes
+      // Recargar dashboard data
       try {
-        var r = await fetch(SUPABASE_URL + '/rest/v1/copilot_aprendizajes?suscripcion_id=eq.' + props.suscripcionId + '&activo=eq.true&select=*&order=confianza.desc&limit=20', { headers: hdrs() })
-        var data = await r.json()
-        setAprendizajes(Array.isArray(data) ? data : [])
+        var rr = await fetch(API_BASE + props.suscripcionId + '/dashboard')
+        if (rr.ok) { var dd = await rr.json(); setAprendizajes(dd.aprendizajes || []) }
       } catch (e) {}
     } catch (e) {
       console.error('Feedback error:', e)
@@ -622,10 +576,10 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
             try {
               var perfilActual = sub.perfil_empresa || {}
               perfilActual.brief = updatedBrief
-              await fetch(SUPABASE_URL + '/rest/v1/clipping_suscripciones?id=eq.' + props.suscripcionId, {
+              await fetch(API_BASE + props.suscripcionId + '/dashboard', {
                 method: 'PATCH',
-                headers: hdrs(),
-                body: JSON.stringify({ perfil_empresa: perfilActual }),
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'update_perfil', perfil_empresa: perfilActual }),
               })
               setSub(Object.assign({}, sub, { perfil_empresa: perfilActual }))
               setBriefEditMode(false)
@@ -637,8 +591,8 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
           async function guardarDataEntry(campo: string, valor: any) {
             var perfilActual = sub.perfil_empresa || {}
             perfilActual[campo] = valor
-            await fetch(SUPABASE_URL + '/rest/v1/clipping_suscripciones?id=eq.' + props.suscripcionId, {
-              method: 'PATCH', headers: hdrs(), body: JSON.stringify({ perfil_empresa: perfilActual }),
+            await fetch(API_BASE + props.suscripcionId + '/dashboard', {
+              method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'update_perfil', perfil_empresa: perfilActual }),
             })
             setSub(Object.assign({}, sub, { perfil_empresa: perfilActual }))
           }
@@ -2346,10 +2300,10 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
 
           async function actualizarEstadoIdea(ideaId: string, nuevoEstado: string) {
             try {
-              await fetch(SUPABASE_URL + '/rest/v1/copilot_ideas?id=eq.' + ideaId, {
+              await fetch(API_BASE + props.suscripcionId + '/dashboard', {
                 method: 'PATCH',
-                headers: hdrs(),
-                body: JSON.stringify({ estado: nuevoEstado }),
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'update_idea', idea_id: ideaId, estado: nuevoEstado }),
               })
               // Update local state
               var ideaActualizada = ideas.find(function(i: any) { return i.id === ideaId })
@@ -2387,15 +2341,14 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
                 prioridad: ideaPri,
                 estado: 'nueva',
               }
-              var r = await fetch(SUPABASE_URL + '/rest/v1/copilot_ideas', {
-                method: 'POST',
-                headers: Object.assign({}, hdrs(), { 'Prefer': 'return=representation' }),
-                body: JSON.stringify(body),
+              await fetch(API_BASE + props.suscripcionId + '/dashboard', {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'create_idea', titulo: ideaTitulo, descripcion: ideaDesc }),
               })
-              var newIdea = await r.json()
-              if (Array.isArray(newIdea) && newIdea.length > 0) {
-                setIdeas([newIdea[0]].concat(ideas))
-              }
+              // Recargar ideas
+              var rr = await fetch(API_BASE + props.suscripcionId + '/dashboard')
+              if (rr.ok) { var dd = await rr.json(); setIdeas(dd.ideas || []) }
               setIdeaTitulo('')
               setIdeaDesc('')
               setIdeaCat('educativo')
