@@ -102,7 +102,11 @@ export default function ConfigClient(props: { suscripcionId: string }) {
           },
         }),
       })
-      if (r.ok) { setSaved(true); setTimeout(function() { setSaved(false) }, 3000) }
+      if (r.ok) {
+        setSaved(true)
+        // Redirect al dashboard después de 2 segundos
+        setTimeout(function() { window.location.href = '/copilot/dashboard/' + props.suscripcionId }, 2000)
+      }
       else { var err = await r.json(); setError(err.error || 'Error guardando') }
     } catch (e) { setError('Error de conexión al guardar') }
     setSaving(false)

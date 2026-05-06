@@ -146,8 +146,9 @@ export async function POST(req: NextRequest) {
     const redesStr = [igCount > 0 ? igCount + ' de Instagram' : '', liCount > 0 ? liCount + ' de LinkedIn' : ''].filter(Boolean).join(' + ')
 
     // Email de bienvenida con password
+    let emailEnviado = false
     try {
-      await fetch('https://api.resend.com/emails', {
+      const emailRes = await fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${process.env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -189,7 +190,9 @@ export async function POST(req: NextRequest) {
             + '</div></div>',
         }),
       })
-    } catch (emailErr) { console.error('Email bienvenida fallo:', emailErr) }
+      if (emailRes.ok) emailEnviado = true
+      else console.error('Email bienvenida fallo:', await emailRes.text())
+    } catch (emailErr) { console.error('Email bienvenida error:', emailErr) }
 
     // Notificar a M&P internamente
     try {
@@ -218,7 +221,14 @@ export async function POST(req: NextRequest) {
 
     // Setear cookie de sesión para acceso inmediato al dashboard
     const sessionToken = subId + ':' + crypto.randomBytes(32).toString('hex')
-    const response = NextResponse.json({ ok: true, trial_ends: trialEnds.toISOString(), id: subId })
+    const response = NextResponse.json({
+      ok: true,
+      trial_ends: trialEnds.toISOString(),
+      id: subId,
+      email_enviado: emailEnviado,
+      // Si el email no se envió, incluir password para mostrarlo en pantalla
+      ...(!emailEnviado ? { password: tempPassword } : {}),
+    })
     response.cookies.set('copilot_session', sessionToken, {
       httpOnly: true,
       secure: true,

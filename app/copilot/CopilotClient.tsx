@@ -138,6 +138,7 @@ export default function CopilotClient() {
   var [faqOpen, setFaqOpen] = useState(-1)
   var [modalOpen, setModalOpen] = useState(false)
   var [formError, setFormError] = useState('')
+  var [fallbackPassword, setFallbackPassword] = useState('')
 
   useScrollReveal()
 
@@ -172,6 +173,7 @@ export default function CopilotClient() {
           return
         }
         setTrialId(data.id || '')
+        if (data.password) setFallbackPassword(data.password)
         setEnviado(true)
       })
       .catch(function() {
@@ -649,8 +651,16 @@ export default function CopilotClient() {
               <div style={{ textAlign: 'center', marginBottom: 24 }}>
                 <div style={{ fontSize: 48, marginBottom: 12 }}>{'\u2705'}</div>
                 <h3 style={{ fontSize: 24, fontWeight: 700, color: '#111827', margin: '0 0 8px' }}>Cuenta creada</h3>
-                <p style={{ fontSize: 15, color: '#6B7280' }}>Revisa tu email — te enviamos tu usuario y contrase{'n'}a.</p>
+                <p style={{ fontSize: 15, color: '#6B7280' }}>{fallbackPassword ? 'Tu cuenta está lista. Guarda tus credenciales:' : 'Revisa tu email — te enviamos tu usuario y contraseña.'}</p>
               </div>
+
+              {fallbackPassword && (
+                <div style={{ background: '#FEF2F2', border: '1px solid #FECACA', borderRadius: 12, padding: '16px 20px', marginBottom: 20, textAlign: 'center' }}>
+                  <p style={{ fontSize: 13, fontWeight: 700, color: '#991B1B', margin: '0 0 8px' }}>No pudimos enviar el email. Guarda estos datos:</p>
+                  <p style={{ fontSize: 14, color: '#111827', margin: '0 0 4px' }}>Usuario: <strong>{trialEmail}</strong></p>
+                  <p style={{ fontSize: 14, color: '#111827', margin: 0 }}>Contraseña: <strong style={{ fontFamily: 'monospace', fontSize: 16, letterSpacing: 1 }}>{fallbackPassword}</strong></p>
+                </div>
+              )}
 
               <div style={{ background: 'linear-gradient(135deg, #EEF2FF, #F5F3FF)', borderRadius: 14, padding: '20px 24px', marginBottom: 20 }}>
                 <p style={{ fontSize: 13, fontWeight: 700, color: '#4338CA', margin: '0 0 8px', letterSpacing: 0.5 }}>SIGUIENTE PASO</p>
