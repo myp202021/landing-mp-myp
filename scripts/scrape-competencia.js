@@ -9,6 +9,18 @@ const { execSync } = require('child_process')
 const fs = require('fs')
 
 const APIFY_TOKEN = process.env.APIFY_TOKEN
+
+// Descargar imagen y convertir a base64 data URI (para que no expiren en el PDF)
+async function imgToBase64(url) {
+  if (!url) return ''
+  try {
+    var res = await fetch(url, { timeout: 8000 })
+    if (!res.ok) return ''
+    var buf = await res.buffer()
+    var ct = res.headers.get('content-type') || 'image/jpeg'
+    return 'data:' + ct + ';base64,' + buf.toString('base64')
+  } catch (e) { return '' }
+}
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY)
 
 const COMPETIDORES = [
@@ -742,6 +754,16 @@ async function enviarEmail({ hoy, postsIG, competidoresConPost, sinActividad, po
     console.warn('⚠️  RESEND_API_KEY no definida — email no enviado.')
     return
   }
+
+  // Convertir imágenes de stories a base64 para que no expiren en el PDF
+  console.log('🖼️  Descargando imágenes de stories para el PDF...')
+  for (var si = 0; si < (storiesIG || []).length; si++) {
+    if (storiesIG[si].imageUrl) {
+      var b64 = await imgToBase64(storiesIG[si].imageUrl)
+      if (b64) storiesIG[si].imageUrl = b64
+    }
+  }
+  console.log('✅ Imágenes descargadas')
 
   const reporteHtml = generarHtmlReporte({ hoy, postsIG, competidoresConPost, sinActividad, postsLinkedin, postsFacebook, storiesIG })
   const fecha = new Date(hoy + 'T12:00:00').toLocaleDateString('es-CL', {

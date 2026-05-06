@@ -47,6 +47,17 @@ const KEYWORDS_MENCIONES = [
   'transporte de personal', 'transporte de trabajadores',
   'buses de acercamiento', 'bus de acercamiento',
   'servicio especial de transporte', 'transporte minero',
+  // Términos genéricos transporte (ampliar cobertura)
+  'transporte público', 'transporte publico', 'transporte privado',
+  'buses', 'bus', 'flotas', 'flota',
+  'pasajeros', 'choferes', 'conductores',
+  'terminal de buses', 'terminal',
+  'licitación transporte', 'licitacion transporte',
+  'electromovilidad', 'buses eléctricos', 'buses electricos',
+  'accidente bus', 'accidente de tránsito', 'accidente de transito',
+  'ruta interurbana', 'transporte interurbano',
+  'transporte escolar', 'transporte urbano',
+  'subsidio transporte', 'tarifa transporte',
 ]
 
 function mencionaCompetencia(texto) {

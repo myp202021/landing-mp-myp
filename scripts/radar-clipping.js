@@ -702,7 +702,7 @@ async function main() {
       if (qaResult) {
         console.log('   QA: ' + qaResult.veredicto + ' (' + qaResult.scoreGlobal + '/100, ' + qaResult.todosProblemas.length + ' problemas)')
         if (qaResult.todosProblemas.length > 0) {
-          agenteFallos.push('QA Auditor: ' + qaResult.todosProblemas.length + ' problemas detectados (score ' + qaResult.scoreGlobal + ')')
+          agenteFallos.push({ agente: 'QA Auditor', error: qaResult.todosProblemas.length + ' problemas detectados (score ' + qaResult.scoreGlobal + ')', timestamp: new Date().toISOString() })
         }
       }
     } catch (e) { console.log('   QA skip: ' + e.message) }
