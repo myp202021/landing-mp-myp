@@ -1,0 +1,21 @@
+name: "Invas WMS — Rankings Iniciales (una vez)"
+on:
+  workflow_dispatch:
+jobs:
+  rankings:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install node-fetch@2
+      - name: "Generar 5 rankings"
+        run: node scripts/invas-rankings-iniciales.js
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          INVAS_WP_URL: https://www.invaswms.com
+          INVAS_WP_USER: Ad-invas-miN
+          INVAS_WP_APP_PASSWORD: ${{ secrets.INVAS_WP_APP_PASSWORD }}
+          RESEND: ${{ secrets.RESEND }}
