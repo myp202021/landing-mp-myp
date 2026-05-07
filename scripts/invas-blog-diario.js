@@ -199,7 +199,10 @@ async function obtenerOCrearCategoria(nombre) {
 }
 
 async function publicarEnWordPress(articulo) {
-  var catId = await obtenerOCrearCategoria(articulo.categoria)
+  // Categoría 57 = "Documentos Técnicos" — aparece en la página de blog de Elementor
+  var catId = 57
+  // También agregar categoría específica si existe
+  var catExtra = await obtenerOCrearCategoria(articulo.categoria)
 
   var res = await fetch(WP_URL + '/wp-json/wp/v2/posts', {
     method: 'POST',
@@ -210,7 +213,7 @@ async function publicarEnWordPress(articulo) {
       content: articulo.contenido_html,
       excerpt: articulo.extracto,
       status: 'publish',
-      categories: [catId],
+      categories: [catId, catExtra].filter(function(v,i,a) { return a.indexOf(v) === i }),
       meta: {
         rank_math_title: articulo.titulo_seo + ' | invasWMS Blog',
         rank_math_description: articulo.meta_description,
