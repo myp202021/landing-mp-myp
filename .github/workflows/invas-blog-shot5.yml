@@ -1,0 +1,20 @@
+name: "Invas WMS — Shot 5 Blogs"
+on:
+  workflow_dispatch:
+jobs:
+  blogs:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install node-fetch@2
+      - run: node scripts/invas-blog-shot-5.js
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          INVAS_WP_URL: https://www.invaswms.com
+          INVAS_WP_USER: Ad-invas-miN
+          INVAS_WP_APP_PASSWORD: ${{ secrets.INVAS_WP_APP_PASSWORD }}
+          RESEND: ${{ secrets.RESEND }}
