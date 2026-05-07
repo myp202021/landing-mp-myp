@@ -545,7 +545,7 @@ async function main() {
 
     // Pipeline contenido sugerido (solo si el motor decide)
     var contenidoSugerido = []
-    if ((MODO === 'semanal' || MODO === 'mensual') && misPosts.length >= 2 && (sub.plan === 'pro' || sub.plan === 'business' || sub.plan === 'test')) {
+    if ((MODO === 'semanal' || MODO === 'mensual') && (sub.plan === 'starter' || sub.plan === 'pro' || sub.plan === 'business' || sub.plan === 'test')) {
       if (!decCopies || decCopies.generar) {
         // Generar instrucciones estratégicas basadas en decisiones
         var instrEstrategicas = (ctx && decCopies) ? decisionModule.generarInstruccionesParaCopies(ctx, decCopies) : ''
@@ -568,7 +568,7 @@ async function main() {
     // Grilla mensual (todos los planes, cantidad de posts varía)
     // INTERCONEXION: recibe brief estratégico + copies previos para no repetir
     var grillaMensual = null
-    if (MODO === 'mensual' && misPosts.length >= 2) {
+    if (MODO === 'mensual') {
       var POSTS_POR_PLAN = { starter: 4, pro: 8, business: 16, test: 16 }
       var cantidadPosts = POSTS_POR_PLAN[sub.plan] || 8
       var mesSig = new Date().getMonth() + 2
@@ -1289,7 +1289,7 @@ function generarEmailHTML(posts, cuentas, fecha, modo, resumenIA, empresas, tren
   }
 
   // === 7. GRILLA PREVIEW (mensual only, Pro+Business) ===
-  if (grillaMensual && grillaMensual.posts && grillaMensual.posts.length > 0 && modo === 'mensual' && (plan === 'pro' || plan === 'business' || plan === 'test')) {
+  if (grillaMensual && grillaMensual.posts && grillaMensual.posts.length > 0 && modo === 'mensual') {
     var grillaPosts = grillaMensual.posts
     var maxGrilla = Math.min(grillaPosts.length, 3)
     h += '<tr><td bgcolor="#0F0D2E" style="padding:4px 0 0 0;"></td></tr>'
