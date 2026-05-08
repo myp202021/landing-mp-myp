@@ -647,7 +647,7 @@ export default function CopilotClient() {
           </div>
 
           {enviado ? (
-            <div className="reveal" style={{ background: 'white', borderRadius: 20, padding: 48, border: '1px solid #E5E7EB' }}>
+            <div style={{ background: 'white', borderRadius: 20, padding: 48, border: '1px solid #E5E7EB' }}>
               <div style={{ textAlign: 'center', marginBottom: 24 }}>
                 <div style={{ fontSize: 48, marginBottom: 12 }}>{'\u2705'}</div>
                 <h3 style={{ fontSize: 24, fontWeight: 700, color: '#111827', margin: '0 0 8px' }}>Cuenta creada</h3>

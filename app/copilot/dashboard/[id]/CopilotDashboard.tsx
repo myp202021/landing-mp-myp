@@ -420,6 +420,44 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
     </div>
   )
 
+  // Empty state: pipeline aún no ha corrido para esta suscripción
+  var pipelineVacio = posts.length === 0 && contenido.length === 0 && benchmarks.length === 0 && auditorias.length === 0
+  if (pipelineVacio && sub) {
+    var nombreEmpresa = sub.empresa || sub.nombre || 'tu empresa'
+    var tieneCuentas = (sub.cuentas || []).length > 0
+    return (
+      <div className="min-h-screen bg-[#0F0D2E] flex items-center justify-center p-8">
+        <div className="max-w-lg text-center">
+          <div style={{ fontSize: 64, marginBottom: 16 }}>{'\u{1F680}'}</div>
+          <h2 className="text-2xl font-bold text-white mb-3">Tu Copilot se está preparando</h2>
+          <p className="text-[#94a3b8] text-base mb-6">
+            {tieneCuentas
+              ? 'Ya configuraste las cuentas de ' + nombreEmpresa + '. Nuestro pipeline de inteligencia está analizando a tu competencia, generando contenido y armando tu benchmark. Los datos aparecerán aquí en las próximas horas.'
+              : 'Para activar tu Copilot, primero necesitas configurar las cuentas de redes sociales de ' + nombreEmpresa + ' y su competencia.'}
+          </p>
+          <div style={{ background: 'rgba(99,102,241,0.1)', border: '1px solid rgba(99,102,241,0.3)', borderRadius: 12, padding: '16px 20px', marginBottom: 20 }}>
+            <p className="text-[#a5b4fc] text-sm font-semibold mb-2">Qué está pasando ahora:</p>
+            <ul className="text-[#94a3b8] text-sm text-left" style={{ listStyle: 'none', padding: 0 }}>
+              <li style={{ padding: '4px 0' }}>{tieneCuentas ? '\u2705' : '\u23F3'} Configuración de cuentas</li>
+              <li style={{ padding: '4px 0' }}>{'\u23F3'} Scraping de competencia (Instagram + LinkedIn)</li>
+              <li style={{ padding: '4px 0' }}>{'\u23F3'} Benchmark competitivo con IA</li>
+              <li style={{ padding: '4px 0' }}>{'\u23F3'} Generación de contenido y grilla</li>
+              <li style={{ padding: '4px 0' }}>{'\u23F3'} Auditoría de calidad</li>
+            </ul>
+          </div>
+          {!tieneCuentas && (
+            <a href={'/copilot/configurar/' + props.suscripcionId} style={{ display: 'inline-block', background: 'linear-gradient(135deg, #6366F1, #8B5CF6)', color: '#fff', padding: '12px 28px', borderRadius: 10, fontWeight: 700, fontSize: 15, textDecoration: 'none' }}>
+              Configurar cuentas
+            </a>
+          )}
+          {tieneCuentas && (
+            <p className="text-[#64748b] text-sm">El pipeline corre automáticamente. Vuelve a revisar en unas horas o mañana temprano.</p>
+          )}
+        </div>
+      </div>
+    )
+  }
+
   var cuentas = (sub.cuentas || []).filter(function(c: any) { return c.red !== 'prensa' })
   var empresas = {} as Record<string, { ig: number, li: number, likes: number, comments: number }>
   cuentas.forEach(function(c: any) {
