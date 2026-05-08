@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
     // Verificar que es admin
     const adminKey = req.headers.get('x-admin-key')
     const crmCookie = req.cookies.get('mp_session')
-    const isAdmin = adminKey === process.env.SUPABASE_SERVICE_ROLE_KEY?.substring(0, 20)
+    const isAdmin = adminKey === (process.env.COPILOT_ADMIN_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY)
     const isCrm = crmCookie && crmCookie.value === 'myp2025'
     if (!isAdmin && !isCrm) {
       return NextResponse.json({ error: 'No autorizado' }, { status: 403 })
@@ -71,7 +71,7 @@ export async function POST(req: NextRequest) {
       suscripcion_id: suscripcion_id,
       accion: sub.password_hash ? 'password_reset' : 'user_created',
       ip: req.headers.get('x-forwarded-for') || 'admin',
-    }); // @ts-ignore
+    })
 
     // Enviar email con credenciales si send_email=true
     if (send_email !== false) {

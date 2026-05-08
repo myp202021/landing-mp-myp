@@ -219,8 +219,9 @@ export async function POST(req: NextRequest) {
 
     console.log(`Trial creado: ${email} con ${cuentas.length} cuentas (${cuentasResumen}), password temporal generado, expira ${trialEnds.toISOString().split('T')[0]}`)
 
-    // Setear cookie de sesión para acceso inmediato al dashboard
-    const sessionToken = subId + ':' + crypto.randomBytes(32).toString('hex')
+    // Setear cookie de sesión segura (token guardado en DB)
+    const { createSessionToken, cookieOptions } = await import('@/lib/copilot-auth')
+    const sessionCookie = await createSessionToken(subId)
     const response = NextResponse.json({
       ok: true,
       trial_ends: trialEnds.toISOString(),
@@ -229,13 +230,7 @@ export async function POST(req: NextRequest) {
       // Si el email no se envió, incluir password para mostrarlo en pantalla
       ...(!emailEnviado ? { password: tempPassword } : {}),
     })
-    response.cookies.set('copilot_session', sessionToken, {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'lax',
-      path: '/',
-      maxAge: 60 * 60 * 24 * 7, // 7 días
-    })
+    response.cookies.set('copilot_session', sessionCookie, cookieOptions(7))
 
     return response
 

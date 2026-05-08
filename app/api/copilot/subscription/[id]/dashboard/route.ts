@@ -6,21 +6,18 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 )
 
-function verifyOwnership(request: NextRequest, id: string): boolean {
-  const session = request.cookies.get('copilot_session')
-  if (!session || !session.value) return false
-  return session.value.split(':')[0] === id
-}
-
 // GET: toda la data del dashboard en una sola llamada
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
   const id = params.id
-  if (!verifyOwnership(req, id)) {
+  const { verifyOwnership } = await import('@/lib/copilot-auth')
+  if (!(await verifyOwnership(req, id))) {
     return NextResponse.json({ error: 'No autorizado' }, { status: 403 })
   }
 
-  // Fecha desde (últimos 60 días por defecto)
-  const desde = new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+  // Periodo dinámico desde query param (default 60 días)
+  const periodo = req.nextUrl.searchParams.get('periodo') || '60d'
+  const dias = parseInt(periodo) || 60
+  const desde = new Date(Date.now() - dias * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
 
   // Ejecutar todas las queries en paralelo
   const [rSub, rPosts, rContenido, rAuditoria, rGuiones, rIdeas, rBenchmarks, rAds, rArboles, rReportes, rAprendizajes] = await Promise.all([
@@ -59,7 +56,8 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
 // PATCH: actualizar ideas (aprobar/rechazar), guardar feedback
 export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
   const id = params.id
-  if (!verifyOwnership(req, id)) {
+  const { verifyOwnership } = await import('@/lib/copilot-auth')
+  if (!(await verifyOwnership(req, id))) {
     return NextResponse.json({ error: 'No autorizado' }, { status: 403 })
   }
 
@@ -77,12 +75,15 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
 
   // Crear idea
   if (body.action === 'create_idea') {
-    const { error } = await supabase.from('copilot_ideas').insert({
+    const insertData: Record<string, any> = {
       suscripcion_id: id,
       titulo: body.titulo,
       descripcion: body.descripcion || '',
       estado: 'pendiente',
-    })
+    }
+    if (body.categoria) insertData.categoria = body.categoria
+    if (body.prioridad) insertData.prioridad = body.prioridad
+    const { error } = await supabase.from('copilot_ideas').insert(insertData)
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
     return NextResponse.json({ success: true })
   }

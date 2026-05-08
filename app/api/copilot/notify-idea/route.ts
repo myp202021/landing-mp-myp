@@ -17,6 +17,12 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Faltan campos' }, { status: 400 })
     }
 
+    // Auth check
+    const { verifyOwnership } = await import('@/lib/copilot-auth')
+    if (!(await verifyOwnership(req as any, suscripcion_id))) {
+      return NextResponse.json({ error: 'No autorizado' }, { status: 403 })
+    }
+
     // Solo notificar en estados relevantes
     if (estado !== 'aprobada' && estado !== 'descartada') {
       return NextResponse.json({ ok: true, notified: false })

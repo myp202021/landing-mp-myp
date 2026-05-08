@@ -32,6 +32,7 @@ export default function ConfigClient(props: { suscripcionId: string }) {
     setLoading(true)
     try {
       var r = await fetch('/api/copilot/subscription/' + props.suscripcionId)
+      if (r.status === 403) { window.location.href = '/copilot/login?redirect=/copilot/configurar/' + props.suscripcionId; return }
       if (!r.ok) { setError('Suscripcion no encontrada'); setLoading(false); return }
       var s = await r.json()
       setSub(s)

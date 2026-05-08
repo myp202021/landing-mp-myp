@@ -6,18 +6,11 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 )
 
-// Verificar que el usuario autenticado es dueño de esta suscripción
-function verifyOwnership(request: NextRequest, id: string): boolean {
-  const session = request.cookies.get('copilot_session')
-  if (!session || !session.value) return false
-  const sessionSubId = session.value.split(':')[0]
-  return sessionSubId === id
-}
-
 // GET: obtener datos de suscripción
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
   const id = params.id
-  if (!verifyOwnership(req, id)) {
+  const { verifyOwnership } = await import('@/lib/copilot-auth')
+  if (!(await verifyOwnership(req, id))) {
     return NextResponse.json({ error: 'No autorizado' }, { status: 403 })
   }
 
@@ -37,7 +30,8 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
 // PATCH: actualizar datos básicos de suscripción (perfil_empresa, etc.)
 export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
   const id = params.id
-  if (!verifyOwnership(req, id)) {
+  const { verifyOwnership } = await import('@/lib/copilot-auth')
+  if (!(await verifyOwnership(req, id))) {
     return NextResponse.json({ error: 'No autorizado' }, { status: 403 })
   }
 

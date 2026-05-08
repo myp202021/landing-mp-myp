@@ -76,8 +76,9 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Usuario o contraseña incorrectos' }, { status: 401 })
     }
 
-    // Login exitoso — generar session token
-    const sessionToken = generateSessionToken()
+    // Login exitoso — generar session token y guardar en DB
+    const { createSessionToken, cookieOptions } = await import('@/lib/copilot-auth')
+    const sessionCookie = await createSessionToken(sub.id)
 
     // Actualizar ultimo_login
     await supabase.from('clipping_suscripciones')
@@ -90,7 +91,7 @@ export async function POST(req: NextRequest) {
       accion: 'login',
       ip: req.headers.get('x-forwarded-for') || 'unknown',
       user_agent: (req.headers.get('user-agent') || '').substring(0, 200),
-    }); // @ts-ignore
+    })
 
     // Crear response con httpOnly cookie
     const res = NextResponse.json({
@@ -100,21 +101,11 @@ export async function POST(req: NextRequest) {
         email: sub.email,
         nombre: sub.nombre,
         plan: sub.plan,
-        debe_cambiar_password: sub.debe_cambiar_password,
       },
       redirect: '/copilot/dashboard/' + sub.id,
     })
 
-    // Cookie segura: httpOnly, SameSite, Secure en producción
-    // Token format: subId:sessionToken (para validar que el user solo accede a su dashboard)
-    const cookieValue = sub.id + ':' + sessionToken
-    res.cookies.set('copilot_session', cookieValue, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      path: '/',
-      maxAge: 30 * 24 * 60 * 60, // 30 días
-    })
+    res.cookies.set('copilot_session', sessionCookie, cookieOptions(30))
 
     return res
   } catch (e: any) {

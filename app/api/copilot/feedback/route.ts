@@ -28,6 +28,12 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'suscripcion_id, tipo y feedback son requeridos' }, { status: 400 })
     }
 
+    // Auth check
+    const { verifyOwnership } = await import('@/lib/copilot-auth')
+    if (!(await verifyOwnership(request as any, suscripcion_id))) {
+      return NextResponse.json({ error: 'No autorizado' }, { status: 403 })
+    }
+
     // Mapear el feedback a un aprendizaje que los agentes puedan usar
     let agente = 'cliente'
     let tipoAprendizaje = 'preferencia_cliente'
@@ -76,9 +82,9 @@ export async function POST(request: Request) {
       })
 
     if (aprendizajeError) {
-      // Tabla puede no existir aún
-      console.error('Feedback save error:', aprendizajeError.message)
-      return NextResponse.json({ error: 'Error guardando feedback: ' + aprendizajeError.message }, { status: 500 })
+      // Tabla puede no existir aún — no fallar, solo avisar
+      console.error('Feedback save warning:', aprendizajeError.message)
+      return NextResponse.json({ ok: false, warning: 'No se pudo guardar: ' + aprendizajeError.message })
     }
 
     // Si es aprobación/rechazo de una idea, actualizar estado en copilot_ideas
@@ -108,6 +114,12 @@ export async function GET(request: Request) {
 
   if (!suscripcionId) {
     return NextResponse.json({ error: 'suscripcion_id requerido' }, { status: 400 })
+  }
+
+  // Auth check
+  const { verifyOwnership } = await import('@/lib/copilot-auth')
+  if (!(await verifyOwnership(request as any, suscripcionId))) {
+    return NextResponse.json({ error: 'No autorizado' }, { status: 403 })
   }
 
   const { data, error } = await supabase

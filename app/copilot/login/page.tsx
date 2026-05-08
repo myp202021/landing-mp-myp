@@ -26,7 +26,10 @@ export default function CopilotLogin() {
           return
         }
         // Cookie httpOnly ya fue seteada por el servidor
-        window.location.href = result.data.redirect
+        // Redirect: primero check query param (viene de config sin cookie), luego API, luego fallback
+        var params = new URLSearchParams(window.location.search)
+        var redirectTo = params.get('redirect') || result.data?.redirect || '/copilot'
+        window.location.href = redirectTo
       })
       .catch(function() {
         setLoading(false)

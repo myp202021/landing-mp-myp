@@ -155,7 +155,7 @@ export default function CopilotClient() {
         descripcion: descripcion,
         web: webCliente,
         instagram: igCliente,
-        competidores: [],
+        competidores: [url1, url2, url3].filter(function(u) { return u.trim() !== '' }),
       }),
     })
       .then(function(res) { return res.json().then(function(data) { return { status: res.status, data: data } }) })
@@ -172,7 +172,11 @@ export default function CopilotClient() {
           setFormError(data.error)
           return
         }
-        setTrialId(data.id || '')
+        if (!data.id) {
+          setFormError('Error creando la cuenta. Intenta de nuevo.')
+          return
+        }
+        setTrialId(data.id)
         if (data.password) setFallbackPassword(data.password)
         setEnviado(true)
       })

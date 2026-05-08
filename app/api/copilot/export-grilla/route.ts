@@ -3,8 +3,8 @@ import { createClient } from '@supabase/supabase-js'
 import ExcelJS from 'exceljs'
 
 const supabase = createClient(
-  'https://faitwrutauavjwnsnlzq.supabase.co',
-  process.env.SUPABASE_SERVICE_ROLE_KEY || ''
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
 )
 
 const HEADER_FILL: ExcelJS.Fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF4338CA' } }
@@ -30,6 +30,12 @@ export async function GET(req: NextRequest) {
     const subId = req.nextUrl.searchParams.get('id')
     const mes = req.nextUrl.searchParams.get('mes')
     if (!subId) return NextResponse.json({ error: 'id requerido' }, { status: 400 })
+
+    // Auth check
+    const { verifyOwnership } = await import('@/lib/copilot-auth')
+    if (!(await verifyOwnership(req, subId))) {
+      return NextResponse.json({ error: 'No autorizado' }, { status: 403 })
+    }
 
     let query = supabase
       .from('radar_contenido')
