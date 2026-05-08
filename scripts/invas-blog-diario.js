@@ -117,59 +117,71 @@ function seleccionarTema(existentes) {
 }
 
 async function generarArticulo(tema) {
-  var prompt = `Eres el content manager de invasWMS, un software WMS (Warehouse Management System) 100% en la nube para Latinoamérica. Genera un artículo de blog profesional.
+  var systemPrompt = `Eres un periodista especializado en logística y supply chain con 15 años de experiencia en Latinoamérica. Escribes para el blog de invasWMS (software WMS 100% cloud). Tu escritura es directa, con datos concretos, ejemplos reales y opinión fundamentada. NUNCA escribes contenido genérico ni relleno.
 
-DATOS DE invasWMS para mencionar naturalmente:
-- +700 sitios conectados en América
-- +250.000 líneas despachadas diariamente
-- +1.800 usuarios conectados
-- Presencia en Chile, Colombia, México, Perú y USA
-- Caso: +400% capacidad de despacho en 30 días
-- Caso: -60% tiempo de preparación de pedidos
-- Caso: -25% errores de picking
-- Implementación en menos de 30 días
-- 100% cloud, escalable, resiliente
+REGLAS DE ESCRITURA OBLIGATORIAS:
+- Párrafos cortos (3-4 oraciones máximo). El lector escanea, no lee todo.
+- Cada H2 debe prometer algo concreto y cumplirlo en esa sección.
+- Datos duros: cifras, porcentajes, estudios reales, nombres de empresas. Si no tienes el dato exacto, da un rango realista con fuente ("según Gartner, entre 15% y 25%").
+- Ejemplos situacionales: "Imagina un centro de distribución en Santiago que despacha 5.000 pedidos/día..." — el lector se tiene que ver reflejado.
+- CERO frases vacías tipo: "en el vertiginoso mundo de", "sinergia", "potenciar", "apalancarse", "es importante destacar que", "cabe señalar", "en la actualidad".
+- NO empieces párrafos con "Es importante", "Cabe destacar", "En este sentido", "Por otro lado".
+- Tono: como si le explicaras a un gerente de operaciones inteligente que no tiene tiempo. Directo, útil, sin rodeos.
 
-TEMA DEL ARTÍCULO: ${tema.titulo}
-KEYWORDS TARGET: ${tema.keywords}
-TIPO: ${tema.tipo}
+DATOS DE invasWMS (mencionar natural, 2-3 veces máximo, NO como publicidad):
+- +700 sitios conectados en América, +250.000 líneas/día, +1.800 usuarios
+- Chile, Colombia, México, Perú, USA
+- Caso real: +400% capacidad de despacho en 30 días
+- Caso real: -60% tiempo de picking, -25% errores
+- Implementación <30 días, 100% cloud, multi-país`
 
-INSTRUCCIONES:
-1. Escribe en español profesional pero accesible. No uses jerga innecesaria.
-2. Mínimo 1500 palabras, máximo 2500.
-3. Estructura con H2 (mínimo 5 secciones) y H3 donde aplique.
-4. Incluye datos concretos, estadísticas del mercado WMS y ejemplos reales.
-5. Menciona invasWMS de forma natural 2-3 veces (no más), como solución relevante.
-6. Incluye links internos como HTML:
-   - <a href="/sistema-de-gestion-de-almacenes-wms/">invasWMS</a>
-   - <a href="/software-logistico-por-industria/software-logistico-para-alimentos/">WMS para alimentos</a>
-   - <a href="/software-logistico-por-industria/software-logistico-para-3pl-y-4pl/">WMS para 3PL</a>
-   - <a href="/contacto-invas/">solicitar una demo</a>
-7. Al final, incluye una sección de conclusión con CTA suave hacia invasWMS.
-8. NO uses frases como "en el vertiginoso mundo", "sinergia", "potenciar", "apalancarse".
-9. Escribe como si fueras un experto en logística que comparte conocimiento.
+  var userPrompt = `ESCRIBE UN ARTÍCULO DE BLOG COMPLETO.
 
-FORMATO DE RESPUESTA (JSON):
+TEMA: ${tema.titulo}
+KEYWORDS PRINCIPALES: ${tema.keywords}
+TIPO DE ARTÍCULO: ${tema.tipo}
+
+ESTRUCTURA OBLIGATORIA DEL HTML:
+1. NO incluyas H1 (WordPress lo genera del título).
+2. Empieza con un párrafo gancho de 2-3 oraciones que enganche: un dato impactante, una pregunta provocadora o un problema real.
+3. Mínimo 6 secciones H2, cada una con 200-400 palabras. Algunas con H3 dentro.
+4. Usa listas (<ul><li>) donde haya enumeraciones. Usa <strong> para conceptos clave.
+5. Incluye AL MENOS una tabla HTML comparativa o de datos en el artículo.
+6. Sección final H2 "Conclusión" con CTA suave: link a <a href="/contacto-invas/">contactar a invasWMS</a>.
+7. Última sección H2 "Preguntas frecuentes" con 5 preguntas en formato <h3>pregunta</h3><p>respuesta</p>.
+
+LINKS INTERNOS (incluir al menos 3, distribuidos naturalmente):
+- <a href="/sistema-de-gestion-de-almacenes-wms/">sistema WMS de invasWMS</a>
+- <a href="/software-logistico-por-industria/software-logistico-para-alimentos/">WMS para alimentos</a>
+- <a href="/software-logistico-por-industria/software-logistico-para-3pl-y-4pl/">WMS para operadores 3PL</a>
+- <a href="/software-logistico-por-industria/software-logistico-retail-omnicanal/">WMS retail omnicanal</a>
+- <a href="/plataforma-de-datos-logisticos/">plataforma de datos logísticos</a>
+- <a href="/contacto-invas/">solicitar una demo</a>
+
+EXTENSIÓN: Mínimo 2.000 palabras de contenido real (no relleno). El contenido_html debe tener al menos 12.000 caracteres.
+
+RESPONDE SOLO CON ESTE JSON (sin markdown, sin backticks):
 {
-  "titulo_seo": "Título optimizado para Google (max 60 chars)",
-  "meta_description": "Meta description (max 155 chars)",
-  "slug": "url-amigable-del-articulo",
-  "extracto": "Resumen de 2 líneas para el listado del blog",
+  "titulo_seo": "Título para Google, max 60 caracteres, con keyword principal al inicio",
+  "meta_description": "155 caracteres máximo. Debe incluir la keyword, un beneficio concreto y un call-to-action implícito. NO empieces con 'Descubre' ni 'En este artículo'.",
+  "slug": "slug-con-keyword-principal-corto",
+  "extracto": "2 oraciones: qué aprenderá el lector y por qué le importa.",
   "contenido_html": "<h2>...</h2><p>...</p>...",
   "categoria": "${tema.categoria}",
-  "tags": ["tag1", "tag2", "tag3"]
-}
-
-Responde SOLO con el JSON, sin texto adicional.`
+  "tags": ["${tema.keywords.split(',')[0].trim()}", "WMS", "logística", "${tema.categoria.toLowerCase()}"]
+}`
 
   var res = await fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
     headers: { 'Authorization': 'Bearer ' + OPENAI_KEY, 'Content-Type': 'application/json' },
     body: JSON.stringify({
       model: 'gpt-4o',
-      messages: [{ role: 'user', content: prompt }],
-      temperature: 0.7,
-      max_tokens: 4000,
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: userPrompt }
+      ],
+      temperature: 0.6,
+      max_tokens: 8000,
     })
   })
 
@@ -177,7 +189,45 @@ Responde SOLO con el JSON, sin texto adicional.`
   var content = data.choices[0].message.content.trim()
   // Limpiar markdown code blocks si los tiene
   content = content.replace(/^```json?\n?/, '').replace(/\n?```$/, '')
-  return JSON.parse(content)
+  var articulo = JSON.parse(content)
+
+  // Validar calidad mínima
+  var htmlLen = (articulo.contenido_html || '').length
+  var h2Count = (articulo.contenido_html || '').split('<h2').length - 1
+  var hasTable = (articulo.contenido_html || '').includes('<table')
+  var hasFaq = (articulo.contenido_html || '').toLowerCase().includes('pregunta')
+
+  console.log('  HTML: ' + htmlLen + ' chars, H2s: ' + h2Count + ', tabla: ' + hasTable + ', FAQ: ' + hasFaq)
+
+  if (htmlLen < 8000) {
+    console.error('❌ Artículo muy corto (' + htmlLen + ' chars, mínimo 8000). Reintentando...')
+    // Reintentar una vez con instrucción más agresiva
+    var retry = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + OPENAI_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'gpt-4o',
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: userPrompt },
+          { role: 'assistant', content: content },
+          { role: 'user', content: 'El artículo tiene solo ' + htmlLen + ' caracteres. Necesito MÍNIMO 12.000 caracteres de HTML. Reescríbelo completo, mucho más extenso. Cada sección H2 debe tener 300-500 palabras. Agrega más ejemplos, más datos, más análisis. Mismo formato JSON.' }
+        ],
+        temperature: 0.6,
+        max_tokens: 10000,
+      })
+    })
+    var retryData = await retry.json()
+    var retryContent = retryData.choices[0].message.content.trim().replace(/^```json?\n?/, '').replace(/\n?```$/, '')
+    articulo = JSON.parse(retryContent)
+    console.log('  Reintento HTML: ' + (articulo.contenido_html || '').length + ' chars')
+  }
+
+  if (h2Count < 4) {
+    console.warn('⚠️ Solo ' + h2Count + ' secciones H2 (mínimo esperado: 6)')
+  }
+
+  return articulo
 }
 
 async function obtenerOCrearCategoria(nombre) {

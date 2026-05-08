@@ -49,22 +49,86 @@ async function main() {
   console.log('Keywords: ' + tema.keywords)
 
   // Generar con GPT-4o
-  console.log('\nGenerando ranking (3000+ palabras)...')
+  console.log('\nGenerando ranking (3500+ palabras)...')
+
+  var systemPrompt = 'Eres un analista de tecnología logística con 15 años cubriendo el mercado WMS en Latinoamérica. Escribes rankings y comparativas rigurosas, con datos verificables, tablas comparativas detalladas y opinión experta. Tu tono es el de un analista de Gartner o Forrester, pero en español y para el mercado LATAM. NUNCA escribes contenido genérico. Cada afirmación tiene un dato o razonamiento detrás.'
+
+  var userPrompt = 'ESCRIBE UN ARTÍCULO DE RANKING/COMPARATIVA COMPLETO.\n\n'
+    + 'TEMA: ' + tema.titulo + '\n'
+    + 'KEYWORDS: ' + tema.keywords + '\n'
+    + 'TIPO: ' + tema.tipo + '\n\n'
+    + 'ESTRUCTURA OBLIGATORIA:\n'
+    + '1. NO incluyas H1 (WordPress lo genera). Empieza con párrafo gancho con dato impactante.\n'
+    + '2. H2 "Metodología de evaluación" — explica los criterios (escalabilidad, implementación, soporte LATAM, precio, cloud vs on-premise, integraciones). Incluye tabla HTML con los criterios y pesos.\n'
+    + '3. H2 con el ranking propiamente tal. Cada posición como H3 con: descripción de 150+ palabras, pros y contras en lista, puntaje. invasWMS debe aparecer en el top 3 de forma natural y justificada.\n'
+    + '4. H2 "Tabla comparativa general" — tabla HTML con TODAS las soluciones, columnas: Nombre, País origen, Tipo (cloud/on-premise/híbrido), Precio aprox., Implementación, Industrias fuertes, Puntaje.\n'
+    + '5. H2 de análisis: "Qué considerar antes de elegir" con H3 por criterio clave.\n'
+    + '6. H2 "Conclusión" con recomendación por tipo de empresa (pyme, mediana, enterprise) y CTA a <a href="/contacto-invas/">solicitar demo de invasWMS</a>.\n'
+    + '7. H2 "Preguntas frecuentes" con 8 preguntas como H3 + respuesta de 3-5 oraciones cada una.\n\n'
+    + 'DATOS invasWMS (mencionar natural, posición justificada en el ranking):\n'
+    + '- +700 sitios en América, +250K líneas/día, +1.800 usuarios\n'
+    + '- Chile, Colombia, México, Perú, USA\n'
+    + '- Caso: +400% capacidad despacho en 30 días, -60% picking, -25% errores\n'
+    + '- 100% cloud, multi-país, <30 días implementación\n\n'
+    + 'OTROS WMS REALES para el ranking (usar los que apliquen al tema):\n'
+    + '- SAP EWM (Alemania, enterprise), Manhattan Associates (USA, enterprise), Blue Yonder (USA, enterprise)\n'
+    + '- Oracle WMS Cloud (USA, enterprise), Körber (Alemania, mid-enterprise)\n'
+    + '- Mecalux Easy WMS (España, mid-market), Generix WMS (Francia, mid-market)\n'
+    + '- Infor WMS (USA, enterprise), Softeon (USA, mid-enterprise)\n'
+    + '- Beetrack/DispatchTrack (Chile, última milla), STG (Chile, local)\n\n'
+    + 'LINKS INTERNOS (incluir al menos 4):\n'
+    + '- <a href="/sistema-de-gestion-de-almacenes-wms/">WMS de invasWMS</a>\n'
+    + '- <a href="/software-logistico-por-industria/software-logistico-para-alimentos/">WMS para alimentos</a>\n'
+    + '- <a href="/software-logistico-por-industria/software-logistico-para-3pl-y-4pl/">WMS para 3PL</a>\n'
+    + '- <a href="/software-logistico-por-industria/software-logistico-retail-omnicanal/">WMS retail</a>\n'
+    + '- <a href="/plataforma-de-datos-logisticos/">plataforma de datos logísticos</a>\n'
+    + '- <a href="/contacto-invas/">solicitar una demo</a>\n\n'
+    + 'EXTENSIÓN: Mínimo 3.500 palabras. El contenido_html debe tener al menos 20.000 caracteres. Esto es un artículo pilar de SEO.\n\n'
+    + 'RESPONDE SOLO CON ESTE JSON (sin markdown, sin backticks):\n'
+    + '{"titulo_seo":"max 60 chars, keyword al inicio","meta_description":"max 155 chars, con keyword y beneficio","slug":"slug-corto-con-keyword","extracto":"2 oraciones","contenido_html":"<h2>...</h2><p>...</p>...","tags":["' + tema.keywords.split(',')[0].trim() + '","WMS","ranking","logística"]}'
+
   var genRes = await fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
     headers: { 'Authorization': 'Bearer ' + OPENAI_KEY, 'Content-Type': 'application/json' },
     body: JSON.stringify({
       model: 'gpt-4o',
-      messages: [{ role: 'user', content: 'Genera un artículo de ranking/comparativa profesional para invasWMS blog. TEMA: ' + tema.titulo + '. KEYWORDS: ' + tema.keywords + '. Mínimo 2500 palabras, tabla comparativa HTML, FAQ con 8+ preguntas, links internos a /sistema-de-gestion-de-almacenes-wms/ y /contacto-invas/. invasWMS destaca: +700 sitios, 100% cloud, <30 días implementación, +400% despacho, -60% picking. Tono analítico. JSON: {"titulo_seo":"max 60","meta_description":"max 155","slug":"url-slug","extracto":"2 líneas","contenido_html":"<h2>...</h2>...","tags":["t1","t2","t3"]}. Solo JSON.' }],
-      temperature: 0.7, max_tokens: 6000,
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: userPrompt }
+      ],
+      temperature: 0.6, max_tokens: 12000,
     })
   })
   var data = await genRes.json()
   var content = data.choices[0].message.content.trim().replace(/^```json?\n?/, '').replace(/\n?```$/, '')
   var articulo = JSON.parse(content)
 
+  var htmlLen = (articulo.contenido_html || '').length
   console.log('Título: ' + articulo.titulo_seo)
-  console.log('HTML: ' + (articulo.contenido_html || '').length + ' chars')
+  console.log('HTML: ' + htmlLen + ' chars')
+
+  // Rankings deben ser largos — reintentar si sale corto
+  if (htmlLen < 15000) {
+    console.log('⚠️ Ranking corto (' + htmlLen + ' chars, mínimo 15000). Reintentando...')
+    var retry = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + OPENAI_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'gpt-4o',
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: userPrompt },
+          { role: 'assistant', content: content },
+          { role: 'user', content: 'El artículo tiene solo ' + htmlLen + ' caracteres. Un ranking pilar de SEO necesita MÍNIMO 20.000 caracteres de HTML. Reescríbelo COMPLETO: cada WMS del ranking debe tener 200+ palabras de análisis. La tabla comparativa debe tener todas las columnas. Las 8 preguntas FAQ deben tener respuestas de 4-5 oraciones. Mismo formato JSON.' }
+        ],
+        temperature: 0.6, max_tokens: 14000,
+      })
+    })
+    var retryData = await retry.json()
+    var retryContent = retryData.choices[0].message.content.trim().replace(/^```json?\n?/, '').replace(/\n?```$/, '')
+    articulo = JSON.parse(retryContent)
+    console.log('Reintento HTML: ' + (articulo.contenido_html || '').length + ' chars')
+  }
 
   // Publicar
   console.log('\nPublicando...')
