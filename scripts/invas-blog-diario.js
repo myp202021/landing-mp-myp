@@ -191,43 +191,93 @@ RESPONDE SOLO CON ESTE JSON (sin markdown, sin backticks):
   content = content.replace(/^```json?\n?/, '').replace(/\n?```$/, '')
   var articulo = JSON.parse(content)
 
-  // Validar calidad mínima
-  var htmlLen = (articulo.contenido_html || '').length
-  var h2Count = (articulo.contenido_html || '').split('<h2').length - 1
-  var hasTable = (articulo.contenido_html || '').includes('<table')
-  var hasFaq = (articulo.contenido_html || '').toLowerCase().includes('pregunta')
-
-  console.log('  HTML: ' + htmlLen + ' chars, H2s: ' + h2Count + ', tabla: ' + hasTable + ', FAQ: ' + hasFaq)
-
-  if (htmlLen < 8000) {
-    console.error('❌ Artículo muy corto (' + htmlLen + ' chars, mínimo 8000). Reintentando...')
-    // Reintentar una vez con instrucción más agresiva
-    var retry = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: { 'Authorization': 'Bearer ' + OPENAI_KEY, 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'gpt-4o',
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: userPrompt },
-          { role: 'assistant', content: content },
-          { role: 'user', content: 'El artículo tiene solo ' + htmlLen + ' caracteres. Necesito MÍNIMO 12.000 caracteres de HTML. Reescríbelo completo, mucho más extenso. Cada sección H2 debe tener 300-500 palabras. Agrega más ejemplos, más datos, más análisis. Mismo formato JSON.' }
-        ],
-        temperature: 0.6,
-        max_tokens: 10000,
-      })
-    })
-    var retryData = await retry.json()
-    var retryContent = retryData.choices[0].message.content.trim().replace(/^```json?\n?/, '').replace(/\n?```$/, '')
-    articulo = JSON.parse(retryContent)
-    console.log('  Reintento HTML: ' + (articulo.contenido_html || '').length + ' chars')
-  }
-
-  if (h2Count < 4) {
-    console.warn('⚠️ Solo ' + h2Count + ' secciones H2 (mínimo esperado: 6)')
-  }
-
+  // Validar y reintentar si falla
+  articulo = await validarYReintentar(articulo, content, systemPrompt, userPrompt, 'diario')
   return articulo
+}
+
+// ═══════════════════════════════════════════
+// VALIDACIÓN DE CALIDAD
+// ═══════════════════════════════════════════
+
+var QUALITY_RULES = {
+  diario: { minChars: 8000, minH2: 5, requireTable: true, requireFaq: true, minLinks: 2 },
+  ranking: { minChars: 15000, minH2: 7, requireTable: true, requireFaq: true, minLinks: 3 },
+}
+
+function checkQuality(html, type) {
+  var rules = QUALITY_RULES[type] || QUALITY_RULES.diario
+  var issues = []
+
+  var len = (html || '').length
+  var h2s = (html || '').split('<h2').length - 1
+  var tables = (html || '').split('<table').length - 1
+  var hasFaq = /<h[23][^>]*>[^<]*(pregunta|faq|frecuente)/i.test(html || '')
+  var links = ((html || '').match(/href="\//g) || []).length
+
+  if (len < rules.minChars) issues.push('HTML: ' + len + ' chars (mín ' + rules.minChars + ')')
+  if (h2s < rules.minH2) issues.push('H2: ' + h2s + ' (mín ' + rules.minH2 + ')')
+  if (rules.requireTable && tables < 1) issues.push('Sin tabla HTML')
+  if (rules.requireFaq && !hasFaq) issues.push('Sin sección FAQ/Preguntas')
+  if (links < rules.minLinks) issues.push('Links internos: ' + links + ' (mín ' + rules.minLinks + ')')
+
+  return { pass: issues.length === 0, issues: issues, stats: { len: len, h2s: h2s, tables: tables, faq: hasFaq, links: links } }
+}
+
+async function validarYReintentar(articulo, rawContent, sysPrompt, usrPrompt, type) {
+  var check = checkQuality(articulo.contenido_html, type)
+  console.log('  QA: HTML=' + check.stats.len + ' H2=' + check.stats.h2s + ' tablas=' + check.stats.tables + ' FAQ=' + check.stats.faq + ' links=' + check.stats.links)
+
+  if (check.pass) {
+    console.log('  ✅ QA aprobado')
+    return articulo
+  }
+
+  console.log('  ⚠️ QA falló: ' + check.issues.join(', '))
+  console.log('  Reintentando...')
+
+  var retry = await fetch('https://api.openai.com/v1/chat/completions', {
+    method: 'POST',
+    headers: { 'Authorization': 'Bearer ' + OPENAI_KEY, 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: 'gpt-4o',
+      messages: [
+        { role: 'system', content: sysPrompt },
+        { role: 'user', content: usrPrompt },
+        { role: 'assistant', content: rawContent },
+        { role: 'user', content: 'El artículo NO cumple con los estándares de calidad. Problemas detectados:\n' + check.issues.map(function(i) { return '- ' + i }).join('\n') + '\n\nReescríbelo COMPLETO corrigiendo todos estos problemas. Cada H2 necesita 300-500 palabras de contenido real con datos y ejemplos. Incluye tabla HTML comparativa. Incluye sección H2 "Preguntas frecuentes" con 5+ preguntas como H3. Incluye links internos (<a href="/...">) a páginas de producto. Mismo formato JSON.' }
+      ],
+      temperature: 0.6,
+      max_tokens: type === 'ranking' ? 14000 : 10000,
+    })
+  })
+  var retryData = await retry.json()
+  var retryContent = retryData.choices[0].message.content.trim().replace(/^```json?\n?/, '').replace(/\n?```$/, '')
+  var articulo2 = JSON.parse(retryContent)
+
+  var check2 = checkQuality(articulo2.contenido_html, type)
+  console.log('  Reintento QA: HTML=' + check2.stats.len + ' H2=' + check2.stats.h2s + ' tablas=' + check2.stats.tables)
+
+  if (check2.pass) {
+    console.log('  ✅ Reintento aprobado')
+    return articulo2
+  }
+
+  // Si el reintento es mejor que el original, usarlo
+  if (check2.stats.len > check.stats.len) {
+    console.log('  ⚡ Reintento mejoró (' + check.stats.len + ' → ' + check2.stats.len + ' chars) pero aún no pasa QA: ' + check2.issues.join(', '))
+    // Aún así publicar si tiene al menos 60% del mínimo
+    var minChars = (QUALITY_RULES[type] || QUALITY_RULES.diario).minChars
+    if (check2.stats.len >= minChars * 0.6) {
+      console.log('  📝 Publicando con advertencia (>60% del mínimo)')
+      return articulo2
+    }
+  }
+
+  // Falló dos veces — NO publicar, mandar alerta
+  console.error('  ❌ QA FALLÓ 2 VECES. NO SE PUBLICA.')
+  console.error('  Issues: ' + check2.issues.join(', '))
+  throw new Error('QA_FAILED: Artículo no cumple estándares mínimos después de 2 intentos. Issues: ' + check2.issues.join(', '))
 }
 
 async function obtenerOCrearCategoria(nombre) {
@@ -357,7 +407,29 @@ async function main() {
   }
 }
 
-main().catch(function(e) {
+main().catch(async function(e) {
   console.error('Error fatal:', e.message)
+
+  // Si falla QA, mandar alerta por email en vez de solo fallar silenciosamente
+  if (RESEND_KEY && e.message && e.message.startsWith('QA_FAILED')) {
+    try {
+      await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: { 'Authorization': 'Bearer ' + RESEND_KEY, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          from: 'M&P SEO <contacto@mulleryperez.cl>',
+          to: ['contacto@mulleryperez.cl'],
+          subject: '⚠️ invasWMS Blog: artículo NO publicado (QA falló)',
+          html: '<div style="font-family:sans-serif;max-width:500px">'
+            + '<h2 style="color:#dc2626">Blog diario no se publicó hoy</h2>'
+            + '<p>El artículo generado no pasó el control de calidad después de 2 intentos.</p>'
+            + '<p><strong>Error:</strong> ' + e.message.replace('QA_FAILED: ', '') + '</p>'
+            + '<p>Esto es preferible a publicar contenido malo. El workflow intentará de nuevo mañana con otro tema.</p>'
+            + '</div>'
+        })
+      })
+    } catch (ignored) {}
+  }
+
   process.exit(1)
 })

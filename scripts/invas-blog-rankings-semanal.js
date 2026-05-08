@@ -103,13 +103,39 @@ async function main() {
   var content = data.choices[0].message.content.trim().replace(/^```json?\n?/, '').replace(/\n?```$/, '')
   var articulo = JSON.parse(content)
 
-  var htmlLen = (articulo.contenido_html || '').length
   console.log('Título: ' + articulo.titulo_seo)
-  console.log('HTML: ' + htmlLen + ' chars')
+  console.log('HTML: ' + (articulo.contenido_html || '').length + ' chars')
 
-  // Rankings deben ser largos — reintentar si sale corto
-  if (htmlLen < 15000) {
-    console.log('⚠️ Ranking corto (' + htmlLen + ' chars, mínimo 15000). Reintentando...')
+  // ═══════════════════════════════════════════
+  // VALIDACIÓN DE CALIDAD (misma lógica que blog diario)
+  // ═══════════════════════════════════════════
+
+  var QUALITY_RULES = {
+    minChars: 15000, minH2: 7, requireTable: true, requireFaq: true, minLinks: 3
+  }
+
+  function checkQuality(html) {
+    var issues = []
+    var len = (html || '').length
+    var h2s = (html || '').split('<h2').length - 1
+    var tables = (html || '').split('<table').length - 1
+    var hasFaq = /<h[23][^>]*>[^<]*(pregunta|faq|frecuente)/i.test(html || '')
+    var links = ((html || '').match(/href="\//g) || []).length
+
+    if (len < QUALITY_RULES.minChars) issues.push('HTML: ' + len + ' (mín ' + QUALITY_RULES.minChars + ')')
+    if (h2s < QUALITY_RULES.minH2) issues.push('H2: ' + h2s + ' (mín ' + QUALITY_RULES.minH2 + ')')
+    if (tables < 1) issues.push('Sin tabla HTML')
+    if (!hasFaq) issues.push('Sin sección FAQ')
+    if (links < QUALITY_RULES.minLinks) issues.push('Links internos: ' + links + ' (mín ' + QUALITY_RULES.minLinks + ')')
+
+    return { pass: issues.length === 0, issues: issues, stats: { len: len, h2s: h2s, tables: tables } }
+  }
+
+  var check = checkQuality(articulo.contenido_html)
+  console.log('QA: HTML=' + check.stats.len + ' H2=' + check.stats.h2s + ' tablas=' + check.stats.tables)
+
+  if (!check.pass) {
+    console.log('⚠️ QA falló: ' + check.issues.join(', ') + '. Reintentando...')
     var retry = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: { 'Authorization': 'Bearer ' + OPENAI_KEY, 'Content-Type': 'application/json' },
@@ -119,16 +145,40 @@ async function main() {
           { role: 'system', content: systemPrompt },
           { role: 'user', content: userPrompt },
           { role: 'assistant', content: content },
-          { role: 'user', content: 'El artículo tiene solo ' + htmlLen + ' caracteres. Un ranking pilar de SEO necesita MÍNIMO 20.000 caracteres de HTML. Reescríbelo COMPLETO: cada WMS del ranking debe tener 200+ palabras de análisis. La tabla comparativa debe tener todas las columnas. Las 8 preguntas FAQ deben tener respuestas de 4-5 oraciones. Mismo formato JSON.' }
+          { role: 'user', content: 'El artículo NO cumple calidad. Problemas:\n' + check.issues.map(function(i) { return '- ' + i }).join('\n') + '\n\nReescríbelo COMPLETO. Cada WMS del ranking: 200+ palabras. Tabla comparativa con todas las columnas. 8 FAQ con respuestas de 4-5 oraciones. Links internos a /sistema-de-gestion-de-almacenes-wms/ y otras páginas. Mismo formato JSON.' }
         ],
         temperature: 0.6, max_tokens: 14000,
       })
     })
     var retryData = await retry.json()
     var retryContent = retryData.choices[0].message.content.trim().replace(/^```json?\n?/, '').replace(/\n?```$/, '')
-    articulo = JSON.parse(retryContent)
-    console.log('Reintento HTML: ' + (articulo.contenido_html || '').length + ' chars')
+    var articulo2 = JSON.parse(retryContent)
+    var check2 = checkQuality(articulo2.contenido_html)
+    console.log('Reintento QA: HTML=' + check2.stats.len + ' H2=' + check2.stats.h2s + ' tablas=' + check2.stats.tables)
+
+    if (check2.pass || check2.stats.len > check.stats.len) {
+      articulo = articulo2
+      if (!check2.pass && check2.stats.len < QUALITY_RULES.minChars * 0.6) {
+        // Muy malo incluso en reintento — no publicar
+        console.error('❌ QA FALLÓ 2 VECES. NO SE PUBLICA.')
+        if (RESEND_KEY) {
+          await fetch('https://api.resend.com/emails', {
+            method: 'POST',
+            headers: { 'Authorization': 'Bearer ' + RESEND_KEY, 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              from: 'M&P SEO <contacto@mulleryperez.cl>',
+              to: ['contacto@mulleryperez.cl'],
+              subject: '⚠️ invasWMS Ranking: NO publicado (QA falló)',
+              html: '<h2 style="color:#dc2626">Ranking semanal no se publicó</h2><p>Issues: ' + check2.issues.join(', ') + '</p>'
+            })
+          }).catch(function() {})
+        }
+        process.exit(1)
+      }
+    }
   }
+
+  console.log('✅ QA ' + (checkQuality(articulo.contenido_html).pass ? 'aprobado' : 'aceptable'))
 
   // Publicar
   console.log('\nPublicando...')
@@ -148,9 +198,11 @@ async function main() {
   var post = await pubRes.json()
 
   if (post.id) {
+    var postUrl = post.link || 'https://www.invaswms.com/' + articulo.slug
     console.log('\n✅ PUBLICADO')
     console.log('   ID: ' + post.id)
-    console.log('   URL: ' + (post.link || articulo.slug))
+    console.log('   URL: ' + postUrl)
+    console.log('   HTML: ' + (articulo.contenido_html || '').length + ' chars')
 
     if (RESEND_KEY) {
       await fetch('https://api.resend.com/emails', {
@@ -160,7 +212,7 @@ async function main() {
           from: 'M&P SEO <contacto@mulleryperez.cl>',
           to: ['contacto@mulleryperez.cl', 'jvio@impruvex.com'],
           subject: '📊 invasWMS Ranking: ' + articulo.titulo_seo,
-          html: '<h2>Nuevo ranking publicado</h2><p><strong>' + articulo.titulo_seo + '</strong></p><p>' + articulo.meta_description + '</p><p><a href="' + (post.link || 'https://www.invaswms.com/' + articulo.slug) + '">Ver artículo →</a></p>'
+          html: '<div style="font-family:sans-serif"><h2>Nuevo ranking publicado</h2><p><strong>' + articulo.titulo_seo + '</strong></p><p>' + articulo.meta_description + '</p><p>HTML: ' + (articulo.contenido_html||'').length + ' chars | QA: aprobado</p><p><a href="' + postUrl + '">Ver artículo →</a></p></div>'
         })
       }).catch(function() {})
       console.log('   Email: enviado')
