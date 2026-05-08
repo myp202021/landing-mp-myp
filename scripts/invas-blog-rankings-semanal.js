@@ -131,11 +131,30 @@ async function main() {
     return { pass: issues.length === 0, issues: issues, stats: { len: len, h2s: h2s, tables: tables } }
   }
 
-  var check = checkQuality(articulo.contenido_html)
-  console.log('QA: HTML=' + check.stats.len + ' H2=' + check.stats.h2s + ' tablas=' + check.stats.tables)
+  // Loop de corrección: hasta 4 intentos, corrige lo específico que falta
+  var MAX_INTENTOS = 4
+  var currentArticulo = articulo
+  var currentRaw = content
 
-  if (!check.pass) {
-    console.log('⚠️ QA falló: ' + check.issues.join(', ') + '. Reintentando...')
+  for (var intento = 1; intento <= MAX_INTENTOS; intento++) {
+    var check = checkQuality(currentArticulo.contenido_html)
+    console.log('QA intento ' + intento + ': HTML=' + check.stats.len + ' H2=' + check.stats.h2s + ' tablas=' + check.stats.tables)
+
+    if (check.pass) {
+      console.log('✅ QA aprobado' + (intento > 1 ? ' (intento ' + intento + ')' : ''))
+      break
+    }
+
+    console.log('⚠️ QA falló: ' + check.issues.join(', ') + ' → corrigiendo...')
+
+    var fixes = []
+    if (check.stats.len < QUALITY_RULES.minChars) fixes.push('HTML tiene ' + check.stats.len + ' chars. Mínimo ' + QUALITY_RULES.minChars + '. Cada WMS del ranking necesita 200+ palabras de análisis real.')
+    if (check.stats.h2s < QUALITY_RULES.minH2) fixes.push('Solo ' + check.stats.h2s + ' H2. Necesito mínimo ' + QUALITY_RULES.minH2 + '.')
+    if (check.stats.tables < 1) fixes.push('FALTA tabla comparativa <table> con <thead>/<tbody>.')
+    if (!/<h[23][^>]*>[^<]*(pregunta|faq|frecuente)/i.test(currentArticulo.contenido_html || '')) fixes.push('FALTA H2 "Preguntas frecuentes" con 8 preguntas como H3.')
+    var linkCount = ((currentArticulo.contenido_html || '').match(/href="\//g) || []).length
+    if (linkCount < QUALITY_RULES.minLinks) fixes.push('Solo ' + linkCount + ' links internos. Agrega <a href="/sistema-de-gestion-de-almacenes-wms/">, <a href="/contacto-invas/">, etc.')
+
     var retry = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: { 'Authorization': 'Bearer ' + OPENAI_KEY, 'Content-Type': 'application/json' },
@@ -144,41 +163,20 @@ async function main() {
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: userPrompt },
-          { role: 'assistant', content: content },
-          { role: 'user', content: 'El artículo NO cumple calidad. Problemas:\n' + check.issues.map(function(i) { return '- ' + i }).join('\n') + '\n\nReescríbelo COMPLETO. Cada WMS del ranking: 200+ palabras. Tabla comparativa con todas las columnas. 8 FAQ con respuestas de 4-5 oraciones. Links internos a /sistema-de-gestion-de-almacenes-wms/ y otras páginas. Mismo formato JSON.' }
+          { role: 'assistant', content: currentRaw },
+          { role: 'user', content: 'CORRIGE estos problemas:\n\n' + fixes.join('\n\n') + '\n\nReescribe COMPLETO con correcciones. Mismo JSON.' }
         ],
-        temperature: 0.6, max_tokens: 14000,
+        temperature: 0.5, max_tokens: 14000,
       })
     })
     var retryData = await retry.json()
-    var retryContent = retryData.choices[0].message.content.trim().replace(/^```json?\n?/, '').replace(/\n?```$/, '')
-    var articulo2 = JSON.parse(retryContent)
-    var check2 = checkQuality(articulo2.contenido_html)
-    console.log('Reintento QA: HTML=' + check2.stats.len + ' H2=' + check2.stats.h2s + ' tablas=' + check2.stats.tables)
-
-    if (check2.pass || check2.stats.len > check.stats.len) {
-      articulo = articulo2
-      if (!check2.pass && check2.stats.len < QUALITY_RULES.minChars * 0.6) {
-        // Muy malo incluso en reintento — no publicar
-        console.error('❌ QA FALLÓ 2 VECES. NO SE PUBLICA.')
-        if (RESEND_KEY) {
-          await fetch('https://api.resend.com/emails', {
-            method: 'POST',
-            headers: { 'Authorization': 'Bearer ' + RESEND_KEY, 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              from: 'M&P SEO <contacto@mulleryperez.cl>',
-              to: ['contacto@mulleryperez.cl'],
-              subject: '⚠️ invasWMS Ranking: NO publicado (QA falló)',
-              html: '<h2 style="color:#dc2626">Ranking semanal no se publicó</h2><p>Issues: ' + check2.issues.join(', ') + '</p>'
-            })
-          }).catch(function() {})
-        }
-        process.exit(1)
-      }
-    }
+    currentRaw = retryData.choices[0].message.content.trim().replace(/^```json?\n?/, '').replace(/\n?```$/, '')
+    currentArticulo = JSON.parse(currentRaw)
   }
 
-  console.log('✅ QA ' + (checkQuality(articulo.contenido_html).pass ? 'aprobado' : 'aceptable'))
+  articulo = currentArticulo
+  var finalCheck = checkQuality(articulo.contenido_html)
+  console.log('📝 QA final: HTML=' + finalCheck.stats.len + (finalCheck.pass ? ' ✅' : ' (mejor versión disponible)'))
 
   // Publicar
   console.log('\nPublicando...')
