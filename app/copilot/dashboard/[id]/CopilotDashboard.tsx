@@ -544,20 +544,20 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
           </div>
         )}
 
-        {/* TABS */}
+        {/* TABS — filtrados por plan */}
         <div className="flex gap-1 mb-6 bg-[#12102a] rounded-xl p-1 overflow-x-auto">
           {[
-            { key: 'competencia', label: 'Competencia', icon: '\uD83D\uDD0D', color: 'text-indigo-700' },
-            { key: 'brief', label: 'Brief', icon: '\uD83C\uDFAF', color: 'text-cyan-700' },
-            { key: 'contenido', label: 'Contenido', icon: '\u270D\uFE0F', color: 'text-purple-700' },
-            { key: 'auditoria', label: 'Auditor\u00EDa', icon: '\uD83D\uDCCA', color: 'text-teal-700' },
-            { key: 'guiones', label: 'Guiones', icon: '\uD83C\uDFAC', color: 'text-pink-700' },
-            { key: 'benchmark', label: 'Benchmark', icon: '\uD83C\uDFC6', color: 'text-orange-700' },
-            { key: 'ads', label: 'Ads', icon: '\uD83C\uDFAF', color: 'text-rose-700' },
-            { key: 'arbol', label: '\u00C1rbol', icon: '\uD83C\uDF33', color: 'text-lime-700' },
-            { key: 'ideas', label: 'Ideas', icon: '\uD83D\uDCA1', color: 'text-amber-700' },
-            { key: 'reporte', label: 'Reporte', icon: '\uD83D\uDCCB', color: 'text-emerald-700' },
-          ].map(function(t) {
+            { key: 'competencia', label: 'Competencia', icon: '\uD83D\uDD0D', color: 'text-indigo-700', plans: ['starter','pro','business','test'] },
+            { key: 'brief', label: 'Brief', icon: '\uD83C\uDFAF', color: 'text-cyan-700', plans: ['starter','pro','business','test'] },
+            { key: 'contenido', label: 'Contenido', icon: '\u270D\uFE0F', color: 'text-purple-700', plans: ['starter','pro','business','test'] },
+            { key: 'auditoria', label: 'Auditor\u00EDa', icon: '\uD83D\uDCCA', color: 'text-teal-700', plans: ['pro','business','test'] },
+            { key: 'guiones', label: 'Guiones', icon: '\uD83C\uDFAC', color: 'text-pink-700', plans: ['business','test'] },
+            { key: 'benchmark', label: 'Benchmark', icon: '\uD83C\uDFC6', color: 'text-orange-700', plans: ['starter','pro','business','test'] },
+            { key: 'ads', label: 'Ads', icon: '\uD83C\uDFAF', color: 'text-rose-700', plans: ['pro','business','test'] },
+            { key: 'arbol', label: '\u00C1rbol', icon: '\uD83C\uDF33', color: 'text-lime-700', plans: ['pro','business','test'] },
+            { key: 'ideas', label: 'Ideas', icon: '\uD83D\uDCA1', color: 'text-amber-700', plans: ['starter','pro','business','test'] },
+            { key: 'reporte', label: 'Reporte', icon: '\uD83D\uDCCB', color: 'text-emerald-700', plans: ['business','test'] },
+          ].filter(function(t) { return t.plans.includes(sub.plan || 'starter') }).map(function(t) {
             return <button key={t.key} onClick={function() { setTab(t.key) }} className={'flex-shrink-0 flex-1 py-2.5 rounded-lg text-sm font-semibold transition whitespace-nowrap px-3 ' + (tab === t.key ? 'bg-[#1a1745] ' + t.color + ' shadow-sm' : 'text-[#64748b] hover:text-[#c4b5fd]')}>
               <span className="mr-1">{t.icon}</span> {t.label}
             </button>
@@ -2279,11 +2279,7 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
           var ideasFiltradas = ideas.filter(function(idea: any) {
             if (ideaFiltroCategoria !== 'todas' && idea.categoria !== ideaFiltroCategoria) return false
             if (ideaFiltroEstado !== 'todos' && idea.estado !== ideaFiltroEstado) return false
-            // Filtrar por mes global (basado en created_at)
-            if (idea.created_at) {
-              var mesIdea = parseInt((idea.created_at || '').substring(5, 7))
-              if (mesIdea && mesIdea !== mesGlobal) return false
-            }
+            // Ideas no se filtran por mes — son transversales, no contenido mensual
             return true
           })
 

@@ -197,7 +197,7 @@ async function main() {
   console.log('Suscriptores: ' + activos.length)
 
   // Construir mapa handle->nombre y sets por red
-  var igSet = new Set(), liSet = new Set(), prensaKws = []
+  var igSet = new Set(), liSet = new Set(), prensaKws = [], prensaKwsBySub = {}
   for (var i = 0; i < activos.length; i++) {
     var cuentas = activos[i].cuentas || []
     for (var j = 0; j < cuentas.length; j++) {
@@ -211,7 +211,13 @@ async function main() {
       var redLower = (c.red || '').toLowerCase()
       if (redLower === 'instagram') igSet.add(c.handle.toLowerCase())
       else if (redLower === 'linkedin') liSet.add(c.handle.toLowerCase())
-      else if (redLower === 'prensa' && c.keywords) prensaKws = c.keywords.map(function(k) { return k.toLowerCase() })
+      else if (redLower === 'prensa' && c.keywords) {
+        var kwsLower = c.keywords.map(function(k) { return k.toLowerCase() })
+        // Global: unir todos los keywords para scraping
+        kwsLower.forEach(function(k) { if (!prensaKws.includes(k)) prensaKws.push(k) })
+        // Per-subscriber: guardar keywords de cada suscriptor
+        prensaKwsBySub[activos[i].id] = kwsLower
+      }
     }
   }
 
@@ -390,8 +396,14 @@ async function main() {
     var sub = activos[si]
     var cuentas = sub.cuentas || []
     var handles = cuentas.filter(function(c) { return c.red !== 'prensa' }).map(function(c) { return c.handle.toLowerCase() })
+    var misPrensaKws = prensaKwsBySub[sub.id] || []
     var misPosts = allPosts.filter(function(p) {
-      if (p.red === 'Prensa') return true
+      if (p.red === 'Prensa') {
+        // Solo incluir prensa que matchee las keywords de ESTE suscriptor
+        if (misPrensaKws.length === 0) return false
+        var texto = ((p.texto || '') + ' ' + (p.titulo || '')).toLowerCase()
+        return misPrensaKws.some(function(kw) { return texto.includes(kw) })
+      }
       return handles.includes(p.handle)
     })
     var destinos = (sub.emails_destino && sub.emails_destino.length > 0) ? sub.emails_destino : [sub.email]
@@ -565,10 +577,10 @@ async function main() {
       }
     }
 
-    // Grilla mensual (todos los planes, cantidad de posts varía)
+    // Grilla mensual (pro, business, test — starter solo recibe copies, no grilla)
     // INTERCONEXION: recibe brief estratégico + copies previos para no repetir
     var grillaMensual = null
-    if (MODO === 'mensual') {
+    if (MODO === 'mensual' && sub.plan !== 'starter') {
       var POSTS_POR_PLAN = { starter: 4, pro: 8, business: 16, test: 16 }
       var cantidadPosts = POSTS_POR_PLAN[sub.plan] || 8
       var mesSig = new Date().getMonth() + 2
