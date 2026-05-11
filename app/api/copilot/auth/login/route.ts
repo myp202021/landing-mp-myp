@@ -85,13 +85,15 @@ export async function POST(req: NextRequest) {
       .update({ ultimo_login: new Date().toISOString() })
       .eq('id', sub.id)
 
-    // Log login exitoso
-    await supabase.from('copilot_access_log').insert({
-      suscripcion_id: sub.id,
-      accion: 'login',
-      ip: req.headers.get('x-forwarded-for') || 'unknown',
-      user_agent: (req.headers.get('user-agent') || '').substring(0, 200),
-    })
+    // Log login exitoso (no bloquear si falla)
+    try {
+      await supabase.from('copilot_access_log').insert({
+        suscripcion_id: sub.id,
+        accion: 'login',
+        ip: req.headers.get('x-forwarded-for') || 'unknown',
+        user_agent: (req.headers.get('user-agent') || '').substring(0, 200),
+      })
+    } catch(_) {}
 
     // Crear response con httpOnly cookie
     const res = NextResponse.json({

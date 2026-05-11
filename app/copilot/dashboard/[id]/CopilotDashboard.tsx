@@ -355,6 +355,7 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
     try {
       var dias = periodo === '7d' ? 7 : periodo === '30d' ? 30 : 90
       var r = await fetch(API_BASE + props.suscripcionId + '/dashboard?periodo=' + dias + 'd')
+      if (r.status === 403) { window.location.href = '/copilot/login?redirect=/copilot/dashboard/' + props.suscripcionId; return }
       if (!r.ok) { setError('Error cargando datos'); setLoading(false); return }
       var d = await r.json()
       setSub(d.suscripcion)
