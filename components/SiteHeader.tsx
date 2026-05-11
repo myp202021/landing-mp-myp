@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { ChevronDown, Calendar } from 'lucide-react'
 
 export default function SiteHeader() {
+  const [planesDropdown, setPlanesDropdown] = useState(false)
   const [labsDropdown, setLabsDropdown] = useState(false)
   const [utilidadesDropdown, setUtilidadesDropdown] = useState(false)
   const [noticiasDropdown, setNoticiasDropdown] = useState(false)
@@ -18,28 +19,45 @@ export default function SiteHeader() {
         </Link>
 
         <nav className="flex items-center gap-5" role="navigation" aria-label="Navegación principal">
-          {/* Planes */}
-          <Link
-            href="/#planes"
-            className="hidden md:block text-sm font-semibold text-gray-700 hover:text-blue-600 transition-all duration-200"
+          {/* Planes Dropdown */}
+          <div
+            className="relative hidden md:block"
+            onMouseEnter={() => setPlanesDropdown(true)}
+            onMouseLeave={() => setPlanesDropdown(false)}
           >
-            Planes
-          </Link>
+            <Link
+              href="/#planes"
+              className="flex items-center gap-1 text-sm font-semibold text-gray-700 hover:text-blue-600 transition-all duration-200"
+              aria-expanded={planesDropdown}
+              aria-haspopup="true"
+            >
+              Planes
+              <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${planesDropdown ? 'rotate-180' : ''}`} aria-hidden="true" />
+            </Link>
+            {planesDropdown && (
+              <div className="absolute top-full mt-1 left-0 bg-white rounded-xl shadow-2xl border border-gray-100 py-2 min-w-[260px] animate-in fade-in slide-in-from-top-2 duration-200">
+                <Link href="/#planes" className="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+                  <div className="font-semibold">Planes</div>
+                  <div className="text-xs text-gray-500 mt-0.5">Silver · Gold · Platinum</div>
+                </Link>
+                <Link href="/#clientes" className="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+                  <div className="font-semibold">Clientes</div>
+                  <div className="text-xs text-gray-500 mt-0.5">Empresas que confían en nosotros</div>
+                </Link>
+                <Link href="/tecnologia" className="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+                  <div className="font-semibold">Tecnología</div>
+                  <div className="text-xs text-gray-500 mt-0.5">Stack y herramientas propias</div>
+                </Link>
+              </div>
+            )}
+          </div>
 
-          {/* Tecnología */}
+          {/* Agentes */}
           <Link
-            href="/tecnologia"
+            href="/agentes"
             className="hidden md:block text-sm font-semibold text-gray-700 hover:text-blue-600 transition-all duration-200"
           >
-            Tecnología
-          </Link>
-
-          {/* Clientes */}
-          <Link
-            href="/#clientes"
-            className="hidden md:block text-sm font-semibold text-gray-700 hover:text-blue-600 transition-all duration-200"
-          >
-            Clientes
+            Agentes
           </Link>
 
           {/* Copilot */}
