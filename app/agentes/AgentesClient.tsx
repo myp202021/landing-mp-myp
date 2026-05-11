@@ -88,7 +88,7 @@ export default function AgentesClient() {
         </h2>
         <p style={{ textAlign: 'center', color: 'rgba(255,255,255,0.4)', fontSize: 15, marginBottom: 36 }}>Configuramos tu sitio una vez. Después, el agente trabaja solo todos los días.</p>
         <div style={{ maxWidth: 880, margin: '0 auto' }}>
-          <svg viewBox="0 0 880 380" xmlns="http://www.w3.org/2000/svg" style={{ width: '100%' }}>
+          <svg viewBox="0 0 820 360" xmlns="http://www.w3.org/2000/svg" style={{ width: '100%', maxWidth: 820, margin: '0 auto', display: 'block' }}>
             <defs>
               <linearGradient id="g1" x1="0%" y1="0%" x2="100%"><stop offset="0%" stopColor="#2563EB" stopOpacity="0.7"/><stop offset="100%" stopColor="#7C3AED" stopOpacity="0.7"/></linearGradient>
               <linearGradient id="g2" x1="0%" y1="0%" x2="100%"><stop offset="0%" stopColor="#7C3AED" stopOpacity="0.7"/><stop offset="100%" stopColor="#EC4899" stopOpacity="0.7"/></linearGradient>
@@ -96,40 +96,49 @@ export default function AgentesClient() {
               <linearGradient id="glV" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stopColor="#7C3AED" stopOpacity="0.6"/><stop offset="100%" stopColor="#10B981" stopOpacity="0.6"/></linearGradient>
               <filter id="gl"><feGaussianBlur stdDeviation="4"/><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
             </defs>
-            <line x1="195" y1="75" x2="310" y2="75" stroke="url(#g1)" strokeWidth="2.5" filter="url(#gl)"/>
-            <line x1="490" y1="75" x2="600" y2="75" stroke="url(#g2)" strokeWidth="2.5" filter="url(#gl)"/>
-            <line x1="700" y1="105" x2="700" y2="175" stroke="url(#g3)" strokeWidth="2" filter="url(#gl)" opacity="0.6"/>
-            <line x1="700" y1="175" x2="540" y2="175" stroke="#10B981" strokeWidth="1.5" filter="url(#gl)" opacity="0.4"/>
-            <line x1="700" y1="175" x2="700" y2="240" stroke="#818CF8" strokeWidth="1.5" filter="url(#gl)" opacity="0.4"/>
-            <line x1="700" y1="175" x2="860" y2="175" stroke="#10B981" strokeWidth="1.5" filter="url(#gl)" opacity="0.4"/>
-            <line x1="540" y1="235" x2="640" y2="300" stroke="#10B981" strokeWidth="1.5" filter="url(#gl)" opacity="0.3"/>
-            <line x1="700" y1="290" x2="700" y2="300" stroke="#10B981" strokeWidth="1.5" filter="url(#gl)" opacity="0.3"/>
-            <line x1="860" y1="235" x2="760" y2="300" stroke="#10B981" strokeWidth="1.5" filter="url(#gl)" opacity="0.3"/>
-            <circle r="5" fill="#60A5FA" filter="url(#gl)"><animateMotion dur="1.5s" repeatCount="indefinite" path="M 195 75 L 310 75"/></circle>
-            <circle r="5" fill="#C084FC" filter="url(#gl)"><animateMotion dur="1.5s" repeatCount="indefinite" path="M 490 75 L 600 75"/></circle>
-            <circle r="4" fill="#34D399" filter="url(#gl)"><animateMotion dur="2s" repeatCount="indefinite" path="M 700 105 L 700 175 L 700 240"/></circle>
-            <rect x="20" y="35" width="175" height="80" rx="16" fill="#0C0B24" stroke="#2563EB" strokeWidth="2" filter="url(#gl)"/>
-            <text x="107" y="68" textAnchor="middle" fill="#fff" fontSize="14" fontWeight="800" fontFamily="Inter">Tu negocio</text>
-            <text x="107" y="88" textAnchor="middle" fill="rgba(255,255,255,0.4)" fontSize="10" fontFamily="Inter">Rubro · Keywords · Tono</text>
-            <rect x="310" y="30" width="180" height="90" rx="18" fill="#0C0B24" stroke="#7C3AED" strokeWidth="2.5" filter="url(#gl)"/>
-            <text x="400" y="62" textAnchor="middle" fill="#C084FC" fontSize="16" fontWeight="900" fontFamily="Inter">Agente IA</text>
-            <text x="400" y="82" textAnchor="middle" fill="rgba(255,255,255,0.45)" fontSize="10" fontFamily="Inter">Escribe · Optimiza · Publica</text>
-            <text x="400" y="100" textAnchor="middle" fill="rgba(255,255,255,0.3)" fontSize="9" fontFamily="Inter">24 artículos / mes automático</text>
-            <rect x="600" y="35" width="200" height="80" rx="16" fill="#0C0B24" stroke="#EC4899" strokeWidth="2" filter="url(#gl)"/>
-            <text x="700" y="65" textAnchor="middle" fill="#F472B6" fontSize="14" fontWeight="800" fontFamily="Inter">Tu sitio web</text>
-            <text x="700" y="85" textAnchor="middle" fill="rgba(255,255,255,0.4)" fontSize="10" fontFamily="Inter">Blog con artículos SEO + Schemas</text>
-            <rect x="475" y="185" width="130" height="50" rx="12" fill="rgba(16,185,129,0.08)" stroke="#10B981" strokeWidth="1.5"/>
-            <text x="540" y="208" textAnchor="middle" fill="#34D399" fontSize="11" fontWeight="700" fontFamily="Inter">Google</text>
-            <text x="540" y="224" textAnchor="middle" fill="rgba(255,255,255,0.3)" fontSize="9" fontFamily="Inter">Te posiciona</text>
-            <rect x="635" y="240" width="130" height="50" rx="12" fill="rgba(129,140,248,0.08)" stroke="#818CF8" strokeWidth="1.5"/>
-            <text x="700" y="263" textAnchor="middle" fill="#A5B4FC" fontSize="11" fontWeight="700" fontFamily="Inter">Buscadores IA</text>
-            <text x="700" y="279" textAnchor="middle" fill="rgba(255,255,255,0.3)" fontSize="9" fontFamily="Inter">Te citan</text>
-            <rect x="795" y="185" width="130" height="50" rx="12" fill="rgba(99,102,241,0.08)" stroke="#6366F1" strokeWidth="1.5"/>
-            <text x="860" y="208" textAnchor="middle" fill="#818CF8" fontSize="11" fontWeight="700" fontFamily="Inter">Schemas</text>
-            <text x="860" y="224" textAnchor="middle" fill="rgba(255,255,255,0.3)" fontSize="9" fontFamily="Inter">La IA te entiende</text>
-            <rect x="600" y="300" width="200" height="60" rx="16" fill="rgba(16,185,129,0.06)" stroke="#10B981" strokeWidth="2" filter="url(#gl)"/>
-            <text x="700" y="327" textAnchor="middle" fill="#34D399" fontSize="15" fontWeight="900" fontFamily="Inter">Leads orgánicos</text>
-            <text x="700" y="348" textAnchor="middle" fill="rgba(255,255,255,0.4)" fontSize="10" fontFamily="Inter">Sin pauta · 24/7 · Crecen cada mes</text>
+            {/* Lines */}
+            <line x1="175" y1="75" x2="270" y2="75" stroke="url(#g1)" strokeWidth="2.5" filter="url(#gl)"/>
+            <line x1="450" y1="75" x2="540" y2="75" stroke="url(#g2)" strokeWidth="2.5" filter="url(#gl)"/>
+            <line x1="640" y1="105" x2="640" y2="165" stroke="url(#g3)" strokeWidth="2" filter="url(#gl)" opacity="0.6"/>
+            <line x1="640" y1="165" x2="490" y2="165" stroke="#10B981" strokeWidth="1.5" filter="url(#gl)" opacity="0.4"/>
+            <line x1="640" y1="165" x2="640" y2="225" stroke="#818CF8" strokeWidth="1.5" filter="url(#gl)" opacity="0.4"/>
+            <line x1="640" y1="165" x2="780" y2="165" stroke="#10B981" strokeWidth="1.5" filter="url(#gl)" opacity="0.4"/>
+            <line x1="490" y1="215" x2="570" y2="275" stroke="#10B981" strokeWidth="1.5" filter="url(#gl)" opacity="0.3"/>
+            <line x1="640" y1="275" x2="640" y2="285" stroke="#10B981" strokeWidth="1.5" filter="url(#gl)" opacity="0.3"/>
+            <line x1="780" y1="215" x2="700" y2="275" stroke="#10B981" strokeWidth="1.5" filter="url(#gl)" opacity="0.3"/>
+            {/* Particles */}
+            <circle r="5" fill="#60A5FA" filter="url(#gl)"><animateMotion dur="1.5s" repeatCount="indefinite" path="M 175 75 L 270 75"/></circle>
+            <circle r="5" fill="#C084FC" filter="url(#gl)"><animateMotion dur="1.5s" repeatCount="indefinite" path="M 450 75 L 540 75"/></circle>
+            <circle r="4" fill="#34D399" filter="url(#gl)"><animateMotion dur="2s" repeatCount="indefinite" path="M 640 105 L 640 165 L 640 225"/></circle>
+            {/* Node: Tu negocio */}
+            <rect x="15" y="35" width="160" height="80" rx="16" fill="#0C0B24" stroke="#2563EB" strokeWidth="2" filter="url(#gl)"/>
+            <text x="95" y="68" textAnchor="middle" fill="#fff" fontSize="14" fontWeight="800" fontFamily="Inter">Tu negocio</text>
+            <text x="95" y="88" textAnchor="middle" fill="rgba(255,255,255,0.4)" fontSize="10" fontFamily="Inter">Rubro · Keywords · Tono</text>
+            {/* Node: Agente IA */}
+            <rect x="270" y="30" width="180" height="90" rx="18" fill="#0C0B24" stroke="#7C3AED" strokeWidth="2.5" filter="url(#gl)"/>
+            <text x="360" y="62" textAnchor="middle" fill="#C084FC" fontSize="16" fontWeight="900" fontFamily="Inter">Agente IA</text>
+            <text x="360" y="82" textAnchor="middle" fill="rgba(255,255,255,0.45)" fontSize="10" fontFamily="Inter">Escribe · Optimiza · Publica</text>
+            <text x="360" y="100" textAnchor="middle" fill="rgba(255,255,255,0.3)" fontSize="9" fontFamily="Inter">24 artículos / mes automático</text>
+            {/* Node: Tu sitio */}
+            <rect x="540" y="35" width="200" height="80" rx="16" fill="#0C0B24" stroke="#EC4899" strokeWidth="2" filter="url(#gl)"/>
+            <text x="640" y="65" textAnchor="middle" fill="#F472B6" fontSize="14" fontWeight="800" fontFamily="Inter">Tu sitio web</text>
+            <text x="640" y="85" textAnchor="middle" fill="rgba(255,255,255,0.4)" fontSize="10" fontFamily="Inter">Blog con artículos SEO + Schemas</text>
+            {/* Output: Google */}
+            <rect x="425" y="170" width="130" height="45" rx="12" fill="rgba(16,185,129,0.08)" stroke="#10B981" strokeWidth="1.5"/>
+            <text x="490" y="191" textAnchor="middle" fill="#34D399" fontSize="11" fontWeight="700" fontFamily="Inter">Google</text>
+            <text x="490" y="206" textAnchor="middle" fill="rgba(255,255,255,0.3)" fontSize="9" fontFamily="Inter">Te posiciona</text>
+            {/* Output: Buscadores IA */}
+            <rect x="575" y="225" width="130" height="50" rx="12" fill="rgba(129,140,248,0.08)" stroke="#818CF8" strokeWidth="1.5"/>
+            <text x="640" y="248" textAnchor="middle" fill="#A5B4FC" fontSize="11" fontWeight="700" fontFamily="Inter">Buscadores IA</text>
+            <text x="640" y="264" textAnchor="middle" fill="rgba(255,255,255,0.3)" fontSize="9" fontFamily="Inter">Te citan</text>
+            {/* Output: Schemas */}
+            <rect x="715" y="170" width="100" height="45" rx="12" fill="rgba(99,102,241,0.08)" stroke="#6366F1" strokeWidth="1.5"/>
+            <text x="765" y="191" textAnchor="middle" fill="#818CF8" fontSize="11" fontWeight="700" fontFamily="Inter">Schemas</text>
+            <text x="765" y="206" textAnchor="middle" fill="rgba(255,255,255,0.3)" fontSize="9" fontFamily="Inter">La IA te entiende</text>
+            {/* Leads */}
+            <rect x="540" y="285" width="200" height="55" rx="16" fill="rgba(16,185,129,0.06)" stroke="#10B981" strokeWidth="2" filter="url(#gl)"/>
+            <text x="640" y="310" textAnchor="middle" fill="#34D399" fontSize="15" fontWeight="900" fontFamily="Inter">Leads orgánicos</text>
+            <text x="640" y="328" textAnchor="middle" fill="rgba(255,255,255,0.4)" fontSize="10" fontFamily="Inter">Sin pauta · 24/7 · Crecen cada mes</text>
           </svg>
         </div>
       </div>
