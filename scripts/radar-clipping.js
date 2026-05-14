@@ -132,6 +132,8 @@ var MODO = process.argv.includes('--semanal') ? 'semanal'
          : process.argv.includes('--mensual') ? 'mensual' : 'diario'
 var DRY_RUN = process.argv.includes('--dry-run')
 var VENTANA_HORAS = MODO === 'diario' ? 72 : MODO === 'semanal' ? 7 * 24 + 4 : 31 * 24
+// Para primer run o cuentas nuevas: ventana extendida a 60 días
+var VENTANA_PRIMER_RUN = 60 * 24
 var SOLO_ID = (process.argv.find(function(a) { return a.startsWith('--id=') }) || '').replace('--id=', '')
 var SOLO_EMAIL = (process.argv.find(function(a) { return a.startsWith('--email=') }) || '').replace('--email=', '')
 
@@ -221,7 +223,12 @@ async function main() {
     }
   }
 
-  var desde = new Date(Date.now() - VENTANA_HORAS * 60 * 60 * 1000)
+  // Check if there are previous posts — if not, use extended window
+  var { data: prevPosts } = await supabase.from('radar_posts').select('id').limit(1)
+  var esPrimerRun = !prevPosts || prevPosts.length === 0
+  var ventanaReal = esPrimerRun ? VENTANA_PRIMER_RUN : VENTANA_HORAS
+  if (esPrimerRun) console.log('⚡ Primer run detectado — ventana extendida a ' + (ventanaReal/24) + ' días')
+  var desde = new Date(Date.now() - ventanaReal * 60 * 60 * 1000)
   var allPosts = []
 
   // === INSTAGRAM (multi-actor) ===
@@ -478,14 +485,14 @@ async function main() {
 
     // === SISTEMA DE MEMORIA: cargar aprendizaje historico ===
     var memoria = null
-    if ((MODO === 'semanal' || MODO === 'mensual') && misPosts.length >= 2) {
+    if ((MODO === 'semanal' || MODO === 'mensual')) {
       try {
         memoria = await memoriaModule.cargarMemoria(supabase, sub.id)
       } catch (e) { console.log('   Memoria error (no bloqueante): ' + e.message) }
     }
 
     // Verificar/generar perfil empresa antes de contenido (semanal/mensual)
-    if ((MODO === 'semanal' || MODO === 'mensual') && misPosts.length >= 2) {
+    if ((MODO === 'semanal' || MODO === 'mensual')) {
       var perfilActual = sub.perfil_empresa || {}
       if (!perfilActual.rubro || !perfilActual.productos || !perfilActual.propuesta_valor) {
         console.log('   Perfil incompleto, generando automaticamente...')
@@ -527,7 +534,7 @@ async function main() {
     }
 
     // Generar/actualizar brief estratégico (solo si el motor decide)
-    if ((MODO === 'semanal' || MODO === 'mensual') && misPosts.length >= 2) {
+    if ((MODO === 'semanal' || MODO === 'mensual')) {
       var debeRegenerar = !decBrief || decBrief.regenerar
       if (debeRegenerar) {
         try {
