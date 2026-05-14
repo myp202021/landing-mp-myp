@@ -1,20 +1,24 @@
 name: "Copilot — Pipeline completo (scraping + agentes)"
 
 on:
+  schedule:
+    - cron: '30 10 * * 1-5'  # L-V 07:30 AM Chile (diario)
+    - cron: '0 12 * * 1'     # Lunes 09:00 AM Chile (semanal)
+    - cron: '0 12 1 * *'     # 1ro del mes 09:00 AM Chile (mensual)
   workflow_dispatch:
     inputs:
       modo:
-        description: 'Modo: semanal o mensual'
+        description: 'Modo: diario, semanal o mensual'
         required: true
-        default: 'mensual'
+        default: 'diario'
       id:
-        description: 'ID suscripción (vacío = todos los test)'
+        description: 'ID suscripción (vacío = todos activos)'
         required: false
         default: ''
       dry_run:
         description: 'Dry run (no envía emails)'
         required: false
-        default: 'true'
+        default: 'false'
 
 jobs:
   agentes:
@@ -27,16 +31,33 @@ jobs:
           node-version: '22'
       - run: npm install node-fetch@2 @supabase/supabase-js ws
 
-      - name: "Correr agentes Copilot (sin scraping)"
+      - name: "Detectar modo y correr Copilot"
         run: |
-          MODO="${{ github.event.inputs.modo }}"
-          ID="${{ github.event.inputs.id }}"
-          DRY="${{ github.event.inputs.dry_run }}"
+          # Si es dispatch manual, usar los inputs
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            MODO="${{ github.event.inputs.modo }}"
+            ID="${{ github.event.inputs.id }}"
+            DRY="${{ github.event.inputs.dry_run }}"
+          else
+            # Auto-detectar modo por día/fecha
+            DOW=$(date -u +%u)  # 1=lunes, 5=viernes
+            DOM=$(date -u +%d)  # día del mes
+            if [ "$DOM" = "01" ]; then
+              MODO="mensual"
+            elif [ "$DOW" = "1" ]; then
+              MODO="semanal"
+            else
+              MODO="diario"
+            fi
+            ID=""
+            DRY="false"
+          fi
 
           CMD="node scripts/radar-clipping.js --${MODO}"
           if [ "$DRY" = "true" ]; then CMD="$CMD --dry-run"; fi
           if [ -n "$ID" ]; then CMD="$CMD --id=$ID"; fi
 
+          echo "Modo: $MODO | Dispatch: ${{ github.event_name }}"
           echo "Ejecutando: $CMD"
           $CMD
         env:
