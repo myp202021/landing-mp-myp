@@ -17,7 +17,7 @@ function evaluarContexto(memoria, posts, postsCliente, sub) {
     // Datos disponibles
     tieneMemoria: !!memoria && memoria.copiesAprendizaje.totalCopiesHistoricos > 0,
     tieneBrief: !!brief && !!(brief.territorios_contenido) && brief.territorios_contenido.length >= 2,
-    tienePostsCompetencia: posts.length >= 3,
+    tienePostsCompetencia: posts.length >= 1,
     tienePostsCliente: postsCliente && postsCliente.length > 0,
     tienePerfil: !!(perfil.rubro),
     tieneIndustria: !!(perfil.rubro || perfil.descripcion),
@@ -148,10 +148,10 @@ function decidirCopies(ctx) {
     razones: [],
   }
 
-  // Si no hay suficientes posts → no generar
-  if (!ctx.tienePostsCompetencia) {
+  // Si no hay suficientes posts → no generar (only block on literally zero)
+  if (!ctx.tienePostsCompetencia && !ctx.tienePostsCliente) {
     decision.generar = false
-    decision.razones.push('Menos de 3 posts de competencia — no hay datos suficientes')
+    decision.razones.push('0 posts de competencia y 0 del cliente — no hay datos')
     return decision
   }
 

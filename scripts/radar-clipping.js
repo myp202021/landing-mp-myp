@@ -93,7 +93,7 @@ var ANTHROPIC_KEY = process.env.ANTHROPIC_API_KEY_GRILLAS
 var missingSecrets = []
 if (!process.env.SUPABASE_URL) missingSecrets.push('SUPABASE_URL')
 if (!process.env.SUPABASE_SERVICE_KEY) missingSecrets.push('SUPABASE_SERVICE_KEY')
-if (!APIFY_TOKEN) missingSecrets.push('APIFY_TOKEN')
+if (!APIFY_TOKEN && !process.argv.includes('--mock')) missingSecrets.push('APIFY_TOKEN')
 if (!RESEND_KEY) missingSecrets.push('RESEND')
 if (missingSecrets.length > 0) {
   console.error('FALTAN SECRETS CRÍTICOS: ' + missingSecrets.join(', '))
@@ -131,6 +131,7 @@ async function ejecutarConRetry(nombreAgente, fn, maxRetries) {
 var MODO = process.argv.includes('--semanal') ? 'semanal'
          : process.argv.includes('--mensual') ? 'mensual' : 'diario'
 var DRY_RUN = process.argv.includes('--dry-run')
+var MOCK_MODE = process.argv.includes('--mock')
 var VENTANA_HORAS = MODO === 'diario' ? 72 : MODO === 'semanal' ? 7 * 24 + 4 : 31 * 24
 // Para primer run o cuentas nuevas: ventana extendida a 60 días
 var VENTANA_PRIMER_RUN = 60 * 24
@@ -223,11 +224,10 @@ async function main() {
     }
   }
 
-  // Check if there are previous posts — if not, use extended window
-  var { data: prevPosts } = await supabase.from('radar_posts').select('id').limit(1)
-  var esPrimerRun = !prevPosts || prevPosts.length === 0
-  var ventanaReal = esPrimerRun ? VENTANA_PRIMER_RUN : VENTANA_HORAS
-  if (esPrimerRun) console.log('⚡ Primer run detectado — ventana extendida a ' + (ventanaReal/24) + ' días')
+  // ALWAYS use extended window (60 days) for scraping to catch older posts
+  // The per-subscriber filter handles relevance later
+  var ventanaReal = VENTANA_PRIMER_RUN  // Always 60 days for scraping
+  console.log('Ventana scraping: ' + (ventanaReal/24) + ' días')
   var desde = new Date(Date.now() - ventanaReal * 60 * 60 * 1000)
   var allPosts = []
 
@@ -239,6 +239,11 @@ async function main() {
 
     // Actor 1: apify~instagram-scraper (principal)
     var igRaw = []
+    if (MOCK_MODE) {
+      console.log('   🧪 MOCK MODE: generando datos ficticios para ' + igSet.size + ' cuentas')
+      igRaw = require('./radar-mock-data').getMockPosts(Array.from(igSet))
+      console.log('   Mock: ' + igRaw.length + ' posts generados')
+    } else {
     try {
       console.log('   Actor 1: apify~instagram-scraper')
       var r = await fetch('https://api.apify.com/v2/acts/apify~instagram-scraper/run-sync-get-dataset-items?token=' + APIFY_TOKEN + '&timeout=300',
@@ -265,6 +270,7 @@ async function main() {
         }
       } catch (e) { console.log('   Actor 2 error: ' + e.message) }
     }
+    } // end else !MOCK_MODE
 
     var igPosts = igRaw.filter(function(p) { return p.timestamp && new Date(p.timestamp) > desde })
       .map(function(p) { var h = (p.ownerUsername || '').toLowerCase(); return {
@@ -277,7 +283,7 @@ async function main() {
   }
 
   // === LINKEDIN (LinkdAPI primario — $0.01/llamada, sin cookies) ===
-  if (liSet.size > 0) {
+  if (liSet.size > 0 && !MOCK_MODE) {
     console.log('\n--- LINKEDIN: ' + liSet.size + ' empresas (LinkdAPI) ---')
     var liLimit = MODO === 'diario' ? 5 : 15
     var liTotal = 0
@@ -361,7 +367,7 @@ async function main() {
   }
 
   // === PRENSA ===
-  if (prensaKws.length > 0) {
+  if (prensaKws.length > 0 && !MOCK_MODE) {
     console.log('\n--- PRENSA: ' + MEDIOS_PRENSA.length + ' medios, keywords: [' + prensaKws.join(', ') + '] ---')
     try {
       var urls = MEDIOS_PRENSA.map(function(m) { return 'https://www.instagram.com/' + m.handle + '/' })
@@ -430,6 +436,12 @@ async function main() {
 
     if (handleCliente && !handles.includes(handleCliente)) {
       console.log('   Cuenta propia IG: @' + handleCliente)
+      if (MOCK_MODE) {
+        postsCliente = require('./radar-mock-data').getMockClientPosts(handleCliente).map(function(p) {
+          return { red: 'Instagram', handle: handleCliente, nombre: perfilEmpresa.nombre || sub.nombre, texto: (p.caption || '').substring(0,500), url: p.url, timestamp: p.timestamp, likes: p.likesCount || 0, comments: p.commentsCount || 0, type: p.type || 'Image', es_propio: true }
+        })
+        console.log('   🧪 Mock: ' + postsCliente.length + ' posts propios')
+      } else {
       try {
         var clienteUrl = 'https://www.instagram.com/' + handleCliente + '/'
         var clienteLimit = MODO === 'diario' ? 5 : 15
@@ -457,6 +469,7 @@ async function main() {
           console.log('   Cuenta propia: HTTP ' + cr.status)
         }
       } catch (e) { console.log('   Cuenta propia error: ' + e.message) }
+      } // end else !MOCK_MODE
     }
 
     console.log('\n' + sub.email + ': ' + misPosts.length + ' posts competencia' + (postsCliente.length > 0 ? ' + ' + postsCliente.length + ' propios' : ''))
@@ -598,7 +611,7 @@ async function main() {
 
     // Guiones de reels (semanal/mensual, solo business — si el motor decide)
     var guionesData = null
-    if ((MODO === 'semanal' || MODO === 'mensual') && (sub.plan === 'business' || sub.plan === 'test') && misPosts.length >= 2) {
+    if ((MODO === 'semanal' || MODO === 'mensual') && (sub.plan === 'business' || sub.plan === 'test') && misPosts.length >= 1) {
       if (!decGuiones || decGuiones.generar) {
         guionesData = await guionesModule.generarGuiones(misPosts, empresas, sub.perfil_empresa || {}, contenidoSugerido, supabase, sub.id, sub.brief_estrategico || null, memoria)
 
@@ -624,7 +637,7 @@ async function main() {
 
     // Benchmark competitivo mensual (solo mensual, usa Claude Sonnet para calidad máxima)
     var benchmarkData = null
-    if (MODO === 'mensual' && ANTHROPIC_KEY && misPosts.length >= 5) {
+    if (MODO === 'mensual' && ANTHROPIC_KEY && misPosts.length >= 1) {
       benchmarkData = await ejecutarConRetry('Benchmark', function() {
         return benchmarkModule.generarBenchmark(misPosts, empresas, sub.perfil_empresa || {}, supabase, sub.id, sub.brief_estrategico || null, memoria, postsCliente)
       })
@@ -653,7 +666,7 @@ async function main() {
 
     // Plan de campaña mensual (alimentado por el árbol de decisión)
     var planCampana = null
-    if (MODO === 'mensual' && ANTHROPIC_KEY && (sub.plan === 'business' || sub.plan === 'test') && misPosts.length >= 5) {
+    if (MODO === 'mensual' && ANTHROPIC_KEY && (sub.plan === 'business' || sub.plan === 'test') && misPosts.length >= 1) {
       planCampana = await ejecutarConRetry('Plan de campaña', function() {
         var industriaData = null
         try { var indMod = require('./radar-industria.js'); industriaData = indMod.detectarIndustria(sub.perfil_empresa || {}) } catch (e) {}
@@ -664,7 +677,7 @@ async function main() {
 
     // Ads Creative Generator (semanal/mensual, alimentado por árbol + campaña)
     var adsCreativos = null
-    if ((MODO === 'semanal' || MODO === 'mensual') && ANTHROPIC_KEY && (sub.plan === 'pro' || sub.plan === 'business' || sub.plan === 'test') && misPosts.length >= 3) {
+    if ((MODO === 'semanal' || MODO === 'mensual') && ANTHROPIC_KEY && (sub.plan === 'pro' || sub.plan === 'business' || sub.plan === 'test') && misPosts.length >= 1) {
       adsCreativos = await ejecutarConRetry('Ads Creative', function() {
         var industriaData2 = null
         try { var indMod2 = require('./radar-industria.js'); industriaData2 = indMod2.detectarIndustria(sub.perfil_empresa || {}) } catch (e) {}

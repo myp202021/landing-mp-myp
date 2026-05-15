@@ -696,7 +696,7 @@ async function generarContenidoSugerido(posts, empresas, modo, perfil, supabase,
     return []
   }
 
-  if (posts.length < 2) {
+  if (posts.length < 1) {
     console.log('   Pocos posts (' + posts.length + '), saltando pipeline')
     return []
   }
