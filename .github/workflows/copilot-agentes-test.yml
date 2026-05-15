@@ -19,6 +19,10 @@ on:
         description: 'Dry run (no envía emails)'
         required: false
         default: 'false'
+      mock:
+        description: 'Mock mode (no Apify, datos ficticios)'
+        required: false
+        default: 'false'
 
 jobs:
   agentes:
@@ -53,8 +57,10 @@ jobs:
             DRY="false"
           fi
 
+          MOCK="${{ github.event.inputs.mock }}"
           CMD="node scripts/radar-clipping.js --${MODO}"
           if [ "$DRY" = "true" ]; then CMD="$CMD --dry-run"; fi
+          if [ "$MOCK" = "true" ]; then CMD="$CMD --mock"; fi
           if [ -n "$ID" ]; then CMD="$CMD --id=$ID"; fi
 
           echo "Modo: $MODO | Dispatch: ${{ github.event_name }}"

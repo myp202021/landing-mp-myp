@@ -224,11 +224,7 @@ async function main() {
     }
   }
 
-  // ALWAYS use extended window (60 days) for scraping to catch older posts
-  // The per-subscriber filter handles relevance later
-  var ventanaReal = VENTANA_PRIMER_RUN  // Always 60 days for scraping
-  console.log('Ventana scraping: ' + (ventanaReal/24) + ' días')
-  var desde = new Date(Date.now() - ventanaReal * 60 * 60 * 1000)
+  var desde = new Date(Date.now() - VENTANA_HORAS * 60 * 60 * 1000)
   var allPosts = []
 
   // === INSTAGRAM (multi-actor) ===
