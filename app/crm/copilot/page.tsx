@@ -48,7 +48,18 @@ export default function CopilotAdminPage() {
 
   async function deleteSub(id: string) {
     await supabase.from('radar_posts').delete().eq('suscripcion_id', id)
+    await supabase.from('radar_contenido').delete().eq('suscripcion_id', id)
+    await supabase.from('copilot_guiones').delete().eq('suscripcion_id', id)
+    await supabase.from('copilot_auditorias').delete().eq('suscripcion_id', id)
+    await supabase.from('copilot_benchmarks').delete().eq('suscripcion_id', id)
+    await supabase.from('copilot_aprendizajes').delete().eq('suscripcion_id', id)
+    await supabase.from('copilot_ideas').delete().eq('suscripcion_id', id)
     await supabase.from('clipping_suscripciones').delete().eq('id', id)
+    loadData()
+  }
+
+  async function cambiarEstado(id: string, nuevoEstado: string) {
+    await supabase.from('clipping_suscripciones').update({ estado: nuevoEstado, updated_at: new Date().toISOString() }).eq('id', id)
     loadData()
   }
 
@@ -145,7 +156,22 @@ export default function CopilotAdminPage() {
                     <td className="px-4 py-3 text-gray-600">{formatDate(sub.trial_ends)}</td>
                     <td className="px-4 py-3 text-gray-600">{formatDate(sub.created_at)}</td>
                     <td className="px-4 py-3 text-center">
-                      <button onClick={function() { if (confirm('Eliminar ' + sub.email + '? Se detienen todos los envios.')) { deleteSub(sub.id) } }} className="text-xs text-red-500 hover:text-red-700 font-semibold">Eliminar</button>
+                      <div className="flex items-center gap-2 justify-center">
+                        {sub.estado === 'trial' && (
+                          <button onClick={function() { cambiarEstado(sub.id, 'activo') }} className="text-xs text-green-600 hover:text-green-800 font-semibold">Activar</button>
+                        )}
+                        {sub.estado === 'activo' && (
+                          <button onClick={function() { cambiarEstado(sub.id, 'suspendido') }} className="text-xs text-yellow-600 hover:text-yellow-800 font-semibold">Suspender</button>
+                        )}
+                        {sub.estado === 'suspendido' && (
+                          <button onClick={function() { cambiarEstado(sub.id, 'activo') }} className="text-xs text-green-600 hover:text-green-800 font-semibold">Reactivar</button>
+                        )}
+                        {sub.estado !== 'cancelado' && (
+                          <button onClick={function() { if (confirm('Cancelar ' + sub.email + '?')) { cambiarEstado(sub.id, 'cancelado') } }} className="text-xs text-orange-500 hover:text-orange-700 font-semibold">Cancelar</button>
+                        )}
+                        <button onClick={function() { if (confirm('ELIMINAR ' + sub.email + ' y TODOS sus datos?')) { deleteSub(sub.id) } }} className="text-xs text-red-500 hover:text-red-700 font-semibold">Eliminar</button>
+                        <a href={'/copilot/dashboard/' + sub.id} target="_blank" className="text-xs text-indigo-500 hover:text-indigo-700 font-semibold">Dashboard</a>
+                      </div>
                     </td>
                   </tr>
                 )
