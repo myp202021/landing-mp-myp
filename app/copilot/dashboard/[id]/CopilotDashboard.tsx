@@ -427,6 +427,81 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
   if (pipelineVacio && sub) {
     var nombreEmpresa = sub.empresa || sub.nombre || 'tu empresa'
     var tieneCuentas = (sub.cuentas || []).length > 0
+    var perfilEmpresa = sub.perfil_empresa || {}
+    var registroCompleto = perfilEmpresa.registro_completo === true
+
+    if (registroCompleto) {
+      // Enhanced onboarding: registro completo desde el wizard
+      var competidoresArr = (sub.cuentas || []).filter(function(c: any) { return c.red === 'instagram' })
+      return (
+        <div className="min-h-screen bg-[#0F0D2E] flex items-center justify-center p-8">
+          <div style={{ maxWidth: 540, width: '100%' }}>
+            <div style={{ textAlign: 'center', marginBottom: 32 }}>
+              <div style={{ fontSize: 64, marginBottom: 12 }}>{'\u{1F680}'}</div>
+              <h2 className="text-2xl font-bold text-white" style={{ marginBottom: 8 }}>Tu Copilot se está preparando</h2>
+              <p className="text-[#94a3b8] text-base">21 agentes de IA están trabajando con tu brief.</p>
+            </div>
+
+            {/* Brief summary card */}
+            <div style={{ background: 'rgba(99,102,241,0.08)', border: '1px solid rgba(99,102,241,0.25)', borderRadius: 16, padding: '20px 24px', marginBottom: 20 }}>
+              <p style={{ fontSize: 11, fontWeight: 700, color: '#818cf8', letterSpacing: 1.5, margin: '0 0 12px', textTransform: 'uppercase' as const }}>Tu brief</p>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                {perfilEmpresa.rubro && (
+                  <div style={{ background: 'rgba(255,255,255,0.04)', borderRadius: 10, padding: '10px 14px' }}>
+                    <div style={{ fontSize: 11, color: '#64748b', marginBottom: 2 }}>Rubro</div>
+                    <div style={{ fontSize: 14, color: '#e2e8f0', fontWeight: 600 }}>{(perfilEmpresa.rubro || '').charAt(0).toUpperCase() + (perfilEmpresa.rubro || '').slice(1)}</div>
+                  </div>
+                )}
+                <div style={{ background: 'rgba(255,255,255,0.04)', borderRadius: 10, padding: '10px 14px' }}>
+                  <div style={{ fontSize: 11, color: '#64748b', marginBottom: 2 }}>Tono</div>
+                  <div style={{ fontSize: 14, color: '#e2e8f0', fontWeight: 600 }}>{(perfilEmpresa.tono || 'profesional').charAt(0).toUpperCase() + (perfilEmpresa.tono || 'profesional').slice(1)}</div>
+                </div>
+                {competidoresArr.length > 0 && (
+                  <div style={{ background: 'rgba(255,255,255,0.04)', borderRadius: 10, padding: '10px 14px' }}>
+                    <div style={{ fontSize: 11, color: '#64748b', marginBottom: 2 }}>Competidores</div>
+                    <div style={{ fontSize: 14, color: '#e2e8f0', fontWeight: 600 }}>{competidoresArr.length} cuentas IG</div>
+                  </div>
+                )}
+                {perfilEmpresa.propuesta_valor && (
+                  <div style={{ background: 'rgba(255,255,255,0.04)', borderRadius: 10, padding: '10px 14px', gridColumn: 'span 2' }}>
+                    <div style={{ fontSize: 11, color: '#64748b', marginBottom: 2 }}>Propuesta de valor</div>
+                    <div style={{ fontSize: 13, color: '#cbd5e1', lineHeight: 1.5 }}>{perfilEmpresa.propuesta_valor}</div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Progress checklist */}
+            <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 16, padding: '20px 24px', marginBottom: 20 }}>
+              <p style={{ fontSize: 11, fontWeight: 700, color: '#818cf8', letterSpacing: 1.5, margin: '0 0 14px', textTransform: 'uppercase' as const }}>Progreso del pipeline</p>
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                <li style={{ padding: '8px 0', fontSize: 14, color: '#86efac', display: 'flex', alignItems: 'center', gap: 10, borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                  <span style={{ fontSize: 16 }}>{'\u2705'}</span> Brief estratégico completado
+                </li>
+                <li style={{ padding: '8px 0', fontSize: 14, color: '#86efac', display: 'flex', alignItems: 'center', gap: 10, borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                  <span style={{ fontSize: 16 }}>{'\u2705'}</span> Competidores configurados
+                </li>
+                <li style={{ padding: '8px 0', fontSize: 14, color: '#fbbf24', display: 'flex', alignItems: 'center', gap: 10, borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                  <span style={{ fontSize: 16 }}>{'\u23F3'}</span> Scraping de competencia (IG + LinkedIn)
+                </li>
+                <li style={{ padding: '8px 0', fontSize: 14, color: '#fbbf24', display: 'flex', alignItems: 'center', gap: 10, borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                  <span style={{ fontSize: 16 }}>{'\u23F3'}</span> Análisis y benchmark con IA
+                </li>
+                <li style={{ padding: '8px 0', fontSize: 14, color: '#fbbf24', display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <span style={{ fontSize: 16 }}>{'\u23F3'}</span> Generación de contenido y grilla
+                </li>
+              </ul>
+            </div>
+
+            <div style={{ background: 'rgba(251,191,36,0.1)', border: '1px solid rgba(251,191,36,0.25)', borderRadius: 12, padding: '14px 18px', marginBottom: 16, textAlign: 'center' }}>
+              <p style={{ fontSize: 14, fontWeight: 700, color: '#fbbf24', margin: '0 0 4px' }}>Recibirás tu primer informe por email</p>
+              <p style={{ fontSize: 12, color: '#fbbf24', margin: 0, opacity: 0.8 }}>El pipeline corre automáticamente. Vuelve mañana temprano.</p>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
     return (
       <div className="min-h-screen bg-[#0F0D2E] flex items-center justify-center p-8">
         <div className="max-w-lg text-center">

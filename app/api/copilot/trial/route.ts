@@ -65,6 +65,12 @@ export async function POST(req: NextRequest) {
     const descripcion = body.descripcion || ''
     const webCliente = body.web || ''
     const igCliente = (body.instagram || '').replace(/^@/, '').trim()
+    const rubro = body.rubro || ''
+    const productosServicios = body.productos_servicios || ''
+    const propuestaValor = body.propuesta_valor || ''
+    const valoresMarca = body.valores || ''
+    const diferenciador = body.diferenciador || ''
+    const tonoCliente = body.tono || 'profesional'
 
     // Aceptar tanto "competidores" (URLs del form) como "cuentas" (objetos directos)
     var cuentas: any[] = []
@@ -117,9 +123,15 @@ export async function POST(req: NextRequest) {
         perfil_empresa: {
           nombre: nombreEmpresa || email.split('@')[0],
           descripcion: descripcion || '',
-          tono: 'profesional',
+          tono: tonoCliente,
           web: webCliente || '',
           instagram: igCliente || '',
+          rubro: rubro,
+          productos_servicios: productosServicios,
+          propuesta_valor: propuestaValor,
+          valores: valoresMarca,
+          diferenciador: diferenciador,
+          registro_completo: !!(rubro || propuestaValor || valoresMarca),
         },
         password_hash: passwordHash,
         debe_cambiar_password: true,

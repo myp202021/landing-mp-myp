@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
+import RegistrationWizard from './components/RegistrationWizard'
 
 function fmt(n: number) {
   return '$' + n.toLocaleString('es-CL')
@@ -123,67 +124,24 @@ var deepDive = [
 
 /* ─── COMPONENT ─── */
 export default function CopilotClient() {
-  var [trialEmail, setTrialEmail] = useState('')
-  var [nombreEmpresa, setNombreEmpresa] = useState('')
-  var [descripcion, setDescripcion] = useState('')
-  var [webCliente, setWebCliente] = useState('')
-  var [igCliente, setIgCliente] = useState('')
-  var [url1, setUrl1] = useState('')
-  var [url2, setUrl2] = useState('')
-  var [url3, setUrl3] = useState('')
   var [enviado, setEnviado] = useState(false)
-  var [enviando, setEnviando] = useState(false)
   var [trialId, setTrialId] = useState('')
+  var [trialEmail] = useState('')
   var [tab, setTab] = useState('competencia')
   var [faqOpen, setFaqOpen] = useState(-1)
   var [modalOpen, setModalOpen] = useState(false)
-  var [formError, setFormError] = useState('')
   var [fallbackPassword, setFallbackPassword] = useState('')
 
   useScrollReveal()
 
-  function handleTrial(e: React.FormEvent) {
-    e.preventDefault()
-    setEnviando(true)
-    setFormError('')
-    fetch('/api/copilot/trial', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        email: trialEmail,
-        nombre_empresa: nombreEmpresa,
-        descripcion: descripcion,
-        web: webCliente,
-        instagram: igCliente,
-        competidores: [url1, url2, url3].filter(function(u) { return u.trim() !== '' }),
-      }),
-    })
-      .then(function(res) { return res.json().then(function(data) { return { status: res.status, data: data } }) })
-      .then(function(result) {
-        setEnviando(false)
-        var data = result.data
-        if (result.status === 409 && data.id) {
-          // Ya existe — llevar directo a configurar
-          setTrialId(data.id)
-          setEnviado(true)
-          return
-        }
-        if (data.error) {
-          setFormError(data.error)
-          return
-        }
-        if (!data.id) {
-          setFormError('Error creando la cuenta. Intenta de nuevo.')
-          return
-        }
-        setTrialId(data.id)
-        if (data.password) setFallbackPassword(data.password)
-        setEnviado(true)
-      })
-      .catch(function() {
-        setEnviando(false)
-        setFormError('Error de conexión. Intenta de nuevo.')
-      })
+  function handleTrialSuccess(data: { id: string; password?: string }) {
+    setTrialId(data.id)
+    if (data.password) setFallbackPassword(data.password)
+    setEnviado(true)
+    setTimeout(function() {
+      var el = document.getElementById('trial')
+      if (el) el.scrollIntoView({ behavior: 'smooth' })
+    }, 100)
   }
 
   function scrollTo(id: string) {
@@ -667,58 +625,26 @@ export default function CopilotClient() {
               )}
 
               <div style={{ background: 'linear-gradient(135deg, #EEF2FF, #F5F3FF)', borderRadius: 14, padding: '20px 24px', marginBottom: 20 }}>
-                <p style={{ fontSize: 13, fontWeight: 700, color: '#4338CA', margin: '0 0 8px', letterSpacing: 0.5 }}>SIGUIENTE PASO</p>
-                <p style={{ fontSize: 15, fontWeight: 600, color: '#111827', margin: '0 0 6px' }}>Configura tu empresa y competencia</p>
-                <p style={{ fontSize: 13, color: '#6B7280', margin: '0 0 16px', lineHeight: 1.6 }}>Agrega tus competidores de Instagram y LinkedIn, describe tu rubro y p{'u'}blico objetivo. Con esa informaci{'o'}n, 21 agentes de IA preparan tu primer an{'a'}lisis.</p>
-                <a href={'/copilot/configurar/' + trialId}
+                <p style={{ fontSize: 13, fontWeight: 700, color: '#4338CA', margin: '0 0 8px', letterSpacing: 0.5 }}>TU COPILOT SE ESTÁ PREPARANDO</p>
+                <p style={{ fontSize: 15, fontWeight: 600, color: '#111827', margin: '0 0 6px' }}>21 agentes de IA ya están trabajando en tu brief</p>
+                <p style={{ fontSize: 13, color: '#6B7280', margin: '0 0 16px', lineHeight: 1.6 }}>Con la información que nos diste, el pipeline está analizando a tu competencia, generando contenido y preparando tu benchmark.</p>
+                <a href={'/copilot/dashboard/' + trialId}
                   style={{ display: 'inline-block', background: 'linear-gradient(135deg, #4338CA, #7C3AED)', color: 'white', padding: '14px 32px', borderRadius: 12, fontSize: 16, fontWeight: 600, textDecoration: 'none' }}>
-                  Configurar mi empresa {'\u2192'}
+                  Ir a mi dashboard {'\u2192'}
                 </a>
               </div>
 
               <div style={{ background: '#FEF3C7', borderLeft: '4px solid #F59E0B', borderRadius: 8, padding: '14px 18px', marginBottom: 16 }}>
                 <p style={{ fontSize: 13, fontWeight: 700, color: '#92400E', margin: 0 }}>En 24 horas tu dashboard tendr{'a'} datos reales</p>
-                <p style={{ fontSize: 12, color: '#92400E', margin: '4px 0 0' }}>Despu{'e'}s de configurar, el pipeline corre autom{'a'}ticamente. Recibes tu primer informe por email + acceso al dashboard.</p>
+                <p style={{ fontSize: 12, color: '#92400E', margin: '4px 0 0' }}>El pipeline corre autom{'á'}ticamente. Recibes tu primer informe por email + acceso al dashboard.</p>
               </div>
 
               <p style={{ fontSize: 12, color: '#9CA3AF', textAlign: 'center' }}>Si no ves el email, revisa spam. Tu trial dura 7 d{'í'}as.</p>
             </div>
           ) : (
-            <form onSubmit={handleTrial} className="reveal" style={{ background: 'white', borderRadius: 20, padding: '40px 36px', border: '1px solid #E5E7EB', boxShadow: '0 8px 40px rgba(0,0,0,0.04)' }}>
-              <div style={{ marginBottom: 20 }}>
-                <label style={{ display: 'block', fontSize: 14, fontWeight: 600, color: '#374151', marginBottom: 6 }}>Email corporativo</label>
-                <input type="email" required className="input-field" placeholder="tu@empresa.cl" value={trialEmail} onChange={function(e) { setTrialEmail(e.target.value) }} />
-              </div>
-              <div style={{ marginBottom: 20 }}>
-                <label style={{ display: 'block', fontSize: 14, fontWeight: 600, color: '#374151', marginBottom: 6 }}>Nombre de tu empresa</label>
-                <input type="text" required className="input-field" placeholder="Mi Empresa SpA" value={nombreEmpresa} onChange={function(e) { setNombreEmpresa(e.target.value) }} />
-              </div>
-              <div style={{ marginBottom: 20 }}>
-                <label style={{ display: 'block', fontSize: 14, fontWeight: 600, color: '#374151', marginBottom: 6 }}>Describe tu empresa en 1 l{'í'}nea</label>
-                <input type="text" className="input-field" placeholder="Vendemos X a Y en Chile" value={descripcion} onChange={function(e) { setDescripcion(e.target.value) }} />
-              </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 20 }}>
-                <div>
-                  <label style={{ display: 'block', fontSize: 14, fontWeight: 600, color: '#374151', marginBottom: 6 }}>Sitio web</label>
-                  <input type="text" className="input-field" placeholder="www.tuempresa.cl" value={webCliente} onChange={function(e) { setWebCliente(e.target.value) }} />
-                </div>
-                <div>
-                  <label style={{ display: 'block', fontSize: 14, fontWeight: 600, color: '#374151', marginBottom: 6 }}>Tu Instagram</label>
-                  <input type="text" className="input-field" placeholder="@tuempresa" value={igCliente} onChange={function(e) { setIgCliente(e.target.value) }} />
-                </div>
-              </div>
-              {formError && (
-                <div style={{ background: '#FEF2F2', border: '1px solid #FECACA', borderRadius: 12, padding: '14px 18px', marginBottom: 16, textAlign: 'center' }}>
-                  <p style={{ fontSize: 14, fontWeight: 600, color: '#991B1B', margin: 0 }}>{formError}</p>
-                </div>
-              )}
-              <button type="submit" className="btn-primary" style={{ width: '100%', textAlign: 'center', fontSize: 17, padding: '16px 32px' }} disabled={enviando}>
-                {enviando ? 'Creando cuenta...' : 'Comenzar gratis'}
-              </button>
-              <p style={{ fontSize: 13, color: '#9CA3AF', textAlign: 'center', marginTop: 16, marginBottom: 0 }}>
-                Sin tarjeta de cr{'e'}dito · 7 d{'í'}as gratis · Cancela cuando quieras
-              </p>
-            </form>
+            <div className="reveal">
+              <RegistrationWizard onSuccess={handleTrialSuccess} />
+            </div>
           )}
         </div>
       </section>
