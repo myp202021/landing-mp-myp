@@ -266,6 +266,21 @@ async function main() {
         }
       } catch (e) { console.log('   Actor 2 error: ' + e.message) }
     }
+    // Stories scraping (separate call)
+    var igStories = []
+    try {
+      console.log('   Stories: apify~instagram-scraper (stories)')
+      var rStories = await fetch('https://api.apify.com/v2/acts/apify~instagram-scraper/run-sync-get-dataset-items?token=' + APIFY_TOKEN + '&timeout=180',
+        { method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ directUrls: igUrls, resultsType: 'stories', resultsLimit: 5, addParentData: true }) })
+      if (rStories.ok) {
+        igStories = await rStories.json()
+        console.log('   Stories: ' + igStories.length + ' raw items')
+        // Add stories to igRaw with type marker
+        igStories.forEach(function(s) { s.type = 'Story'; igRaw.push(s) })
+      }
+    } catch (e) { console.log('   Stories error (no bloqueante): ' + e.message) }
+
     } // end else !MOCK_MODE
 
     var igPosts = igRaw.filter(function(p) { return p.timestamp && new Date(p.timestamp) > desde })
