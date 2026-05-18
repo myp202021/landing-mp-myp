@@ -703,25 +703,29 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
           return <>
             {/* DATA ENTRY — Datos del negocio */}
             <div className="bg-[#1a1745] rounded-xl border border-white/[0.06] p-5 mb-4">
-              <h3 className="text-sm font-bold text-indigo-400 mb-3">Datos de tu negocio (alimentan el predictor y el {'\u00e1'}rbol de decisi{'ó'}n)</h3>
+              <h3 className="text-sm font-bold text-indigo-400 mb-1">Datos de tu negocio</h3>
+              <p className="text-[11px] text-[#64748b] mb-3">Con esta informaci{'ó'}n generamos proyecciones de inversi{'ó'}n y recomendaciones personalizadas para tu empresa.</p>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 <div>
                   <label className="text-[10px] text-[#64748b] block mb-1">Presupuesto mensual pauta</label>
                   <input type="number" defaultValue={perfil.presupuesto_mensual || ''} placeholder="ej: 500000"
                     onBlur={function(e) { if (e.target.value) guardarDataEntry('presupuesto_mensual', parseInt(e.target.value)) }}
                     className="w-full bg-[#0f0d2e] text-white text-sm px-3 py-2 rounded border border-white/10 focus:border-indigo-500 outline-none" />
+                  <p className="text-[9px] text-[#475569] mt-0.5">{'¿'}Cu{'á'}nto inviertes en Google/Meta al mes?</p>
                 </div>
                 <div>
                   <label className="text-[10px] text-[#64748b] block mb-1">Ticket promedio (CLP)</label>
                   <input type="number" defaultValue={perfil.ticket_promedio || ''} placeholder="ej: 500000"
                     onBlur={function(e) { if (e.target.value) guardarDataEntry('ticket_promedio', parseInt(e.target.value)) }}
                     className="w-full bg-[#0f0d2e] text-white text-sm px-3 py-2 rounded border border-white/10 focus:border-indigo-500 outline-none" />
+                  <p className="text-[9px] text-[#475569] mt-0.5">Valor promedio de cada venta o contrato</p>
                 </div>
                 <div>
                   <label className="text-[10px] text-[#64748b] block mb-1">Tasa cierre (%)</label>
                   <input type="number" defaultValue={perfil.tasa_cierre || ''} placeholder="ej: 5" step="0.5"
                     onBlur={function(e) { if (e.target.value) guardarDataEntry('tasa_cierre', parseFloat(e.target.value)) }}
                     className="w-full bg-[#0f0d2e] text-white text-sm px-3 py-2 rounded border border-white/10 focus:border-indigo-500 outline-none" />
+                  <p className="text-[9px] text-[#475569] mt-0.5">De 100 leads, {'¿'}cu{'á'}ntos cierras?</p>
                 </div>
                 <div>
                   <label className="text-[10px] text-[#64748b] block mb-1">Tipo cliente</label>
@@ -732,6 +736,7 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
                     <option value="B2B">B2B</option>
                     <option value="B2B2C">B2B2C</option>
                   </select>
+                  <p className="text-[9px] text-[#475569] mt-0.5">{'¿'}Vendes a empresas o consumidores?</p>
                 </div>
               </div>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-3">
@@ -745,6 +750,7 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
                     <option value="UNO_A_TRES_MESES">1 a 3 meses</option>
                     <option value="MAS_3_MESES">M{'á'}s de 3 meses</option>
                   </select>
+                  <p className="text-[9px] text-[#475569] mt-0.5">{'¿'}Cu{'á'}nto demora cerrar una venta?</p>
                 </div>
                 <div>
                   <label className="text-[10px] text-[#64748b] block mb-1">Foco geogr{'á'}fico</label>
@@ -755,12 +761,14 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
                     <option value="REGIONES">Regiones</option>
                     <option value="NACIONAL">Nacional</option>
                   </select>
+                  <p className="text-[9px] text-[#475569] mt-0.5">{'¿'}D{'ó'}nde est{'á'}n tus clientes?</p>
                 </div>
                 <div>
                   <label className="text-[10px] text-[#64748b] block mb-1">Competencia (1-10)</label>
                   <input type="number" min="1" max="10" defaultValue={perfil.competencia_percibida || 5}
                     onBlur={function(e) { guardarDataEntry('competencia_percibida', parseInt(e.target.value)) }}
                     className="w-full bg-[#0f0d2e] text-white text-sm px-3 py-2 rounded border border-white/10 focus:border-indigo-500 outline-none" />
+                  <p className="text-[9px] text-[#475569] mt-0.5">{'¿'}Qu{'é'} tan competido es tu mercado?</p>
                 </div>
                 <div>
                   <label className="text-[10px] text-[#64748b] block mb-1">Madurez digital</label>
@@ -771,9 +779,10 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
                     <option value="INTERMEDIO">Intermedio</option>
                     <option value="AVANZADO">Avanzado</option>
                   </select>
+                  <p className="text-[9px] text-[#475569] mt-0.5">{'¿'}Qu{'é'} tan avanzado est{'á'} tu marketing digital?</p>
                 </div>
               </div>
-              <p className="text-[10px] text-[#475569] mt-2">Estos datos se guardan autom{'á'}ticamente y alimentan el predictor, el {'á'}rbol de decisi{'ó'}n y el brief estrat{'é'}gico.</p>
+              <p className="text-[10px] text-[#475569] mt-2">Se guardan autom{'á'}ticamente.</p>
             </div>
 
             {/* Header */}

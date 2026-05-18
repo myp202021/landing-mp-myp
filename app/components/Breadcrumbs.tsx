@@ -17,8 +17,9 @@ interface BreadcrumbItem {
 export default function Breadcrumbs() {
   const pathname = usePathname()
 
-  // No mostrar breadcrumbs en la homepage
+  // No mostrar breadcrumbs en homepage ni en Copilot (tiene su propio header)
   if (!pathname || pathname === '/') return null
+  if (pathname.startsWith('/copilot/dashboard/') || pathname.startsWith('/copilot/configurar/')) return null
 
   // Generar breadcrumbs desde la URL
   const segments = pathname.split('/').filter(Boolean)
