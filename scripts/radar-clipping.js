@@ -1430,10 +1430,12 @@ function generarEmailHTML(posts, cuentas, fecha, modo, resumenIA, empresas, tren
     }
     h += '<table cellpadding="0" cellspacing="0" border="0" align="center"><tr>'
     h += '<td bgcolor="#4F46E5" style="padding:12px 28px;border-radius:8px;">'
-    var ctaUrl = estado === 'trial' ? 'https://www.mulleryperez.cl/copilot/contratar/' + subId : 'https://www.mulleryperez.cl/copilot/dashboard/' + subId
-    var ctaText = estado === 'trial' ? 'Contrata tu plan' : 'Ver dashboard'
-    h += '<a href="' + ctaUrl + '" style="color:#ffffff;font-size:14px;font-weight:700;text-decoration:none;">' + ctaText + '</a>'
+    var dashUrl = 'https://www.mulleryperez.cl/copilot/dashboard/' + subId
+    h += '<a href="' + dashUrl + '" style="color:#ffffff;font-size:14px;font-weight:700;text-decoration:none;">Ver mi dashboard</a>'
     h += '</td></tr></table>'
+    if (estado === 'trial') {
+      h += '<p style="text-align:center;margin:10px 0 0;font-size:12px;color:#94a3b8;">Prueba gratuita | <a href="https://www.mulleryperez.cl/copilot/contratar/' + subId + '" style="color:#a78bfa;">Contrata tu plan</a></p>'
+    }
     h += '</td></tr>'
   }
 
