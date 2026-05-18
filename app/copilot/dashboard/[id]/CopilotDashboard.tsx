@@ -2930,7 +2930,7 @@ export default function CopilotDashboard(props: { suscripcionId: string }) {
         <div className="text-center mt-8 text-xs text-[#64748b]">
           <a href={'/copilot/configurar/' + props.suscripcionId} className="text-indigo-600 font-semibold hover:underline">Configurar cuentas</a>
           <span className="mx-3">|</span>
-          <a href="/copilot" className="text-indigo-600 font-semibold hover:underline">Volver a Copilot</a>
+          <a href={'/copilot/dashboard/' + props.suscripcionId} className="text-indigo-600 font-semibold hover:underline">Volver a Copilot</a>
         </div>
       </div>
     </div>

@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react'
 
 // Data se carga via API route server-side (no expone keys de Supabase)
 
-var PLAN_LIMITS: Record<string, number> = { starter: 5, pro: 15, business: 30 }
+var PLAN_LIMITS: Record<string, number> = { starter: 3, pro: 5, business: 10, test: 10 }
 
 var PLACEHOLDERS: Record<string, string> = {
   instagram: '@competidor o instagram.com/competidor',
@@ -24,7 +24,10 @@ export default function ConfigClient(props: { suscripcionId: string }) {
   var [web, setWeb] = useState('')
   var [igPropio, setIgPropio] = useState('')
   var [liPropio, setLiPropio] = useState('')
-  var [kwStr, setKwStr] = useState('')
+  var generatedKws = [nombre].concat(
+    cuentas.filter(function(c) { return c.handle && c.handle.trim() !== '' })
+      .map(function(c) { return c.handle.trim().replace(/^@/, '').toLowerCase() })
+  ).filter(function(k) { return k !== '' }).map(function(k) { return k.toLowerCase() })
 
   useEffect(function() { loadData() }, [])
 
@@ -38,8 +41,6 @@ export default function ConfigClient(props: { suscripcionId: string }) {
       setSub(s)
       var c = (s.cuentas || []).filter(function(x: any) { return x.red !== 'prensa' })
       setCuentas(c)
-      var prensa = (s.cuentas || []).find(function(x: any) { return x.red === 'prensa' })
-      if (prensa && prensa.keywords) setKwStr(prensa.keywords.join(', '))
       var perfil = s.perfil_empresa || {}
       setNombre(perfil.nombre || s.nombre || '')
       setDescripcion(perfil.descripcion || '')
@@ -84,8 +85,8 @@ export default function ConfigClient(props: { suscripcionId: string }) {
       }
       return Object.assign({}, c, { handle: h })
     })
-    if (kwStr.trim()) {
-      allCuentas.push({ red: 'prensa', keywords: kwStr.split(',').map(function(k: string) { return k.trim().toLowerCase() }).filter(function(k: string) { return k !== '' }) })
+    if (generatedKws.length > 0) {
+      allCuentas.push({ red: 'prensa', keywords: generatedKws })
     }
     try {
       var r = await fetch('/api/copilot/subscription/' + props.suscripcionId, {
@@ -229,7 +230,7 @@ export default function ConfigClient(props: { suscripcionId: string }) {
           )}
           {used >= limit && (
             <div className="mt-3 flex items-center gap-3">
-              <p className="text-sm text-amber-600">Llegaste al limite de tu plan ({limit} cuentas).</p>
+              <p className="text-sm text-amber-600">M&aacute;ximo {limit} cuentas en plan {sub.plan}.</p>
               <a href={'/copilot/contratar/' + props.suscripcionId} className="text-sm font-bold text-indigo-600 hover:underline">Subir de plan</a>
             </div>
           )}
@@ -238,8 +239,13 @@ export default function ConfigClient(props: { suscripcionId: string }) {
         {/* KEYWORDS PRENSA */}
         <div className="bg-[#1a1745] rounded-xl border border-white/[0.06] p-6 mb-6">
           <h2 className="font-bold text-white mb-2">Keywords de prensa</h2>
-          <p className="text-sm text-[#94a3b8] mb-3">Palabras que buscaremos en 11 medios chilenos. Separadas por coma.</p>
-          <input type="text" value={kwStr} onChange={function(e: any) { setKwStr(e.target.value) }} placeholder="Ej: genera hr, control de asistencia, buk chile" className="w-full border border-white/10 rounded-lg px-4 py-2.5 text-sm bg-[#12102a] text-white focus:ring-2 focus:ring-indigo-500" />
+          <p className="text-sm text-[#94a3b8] mb-3">Se generan autom&aacute;ticamente a partir de tu empresa y competidores. Buscamos en 11 medios chilenos.</p>
+          <div className="flex flex-wrap gap-2">
+            {generatedKws.map(function(kw: string, i: number) {
+              return <span key={i} className="bg-indigo-600/20 text-indigo-300 px-3 py-1 rounded-full text-sm">{kw}</span>
+            })}
+            {generatedKws.length === 0 && <p className="text-sm text-[#64748b]">Agrega nombre de empresa y competidores.</p>}
+          </div>
         </div>
 
         {/* GUARDAR */}
@@ -255,7 +261,7 @@ export default function ConfigClient(props: { suscripcionId: string }) {
         <div className="mt-8 text-center text-sm text-[#64748b]">
           <a href={'/copilot/dashboard/' + props.suscripcionId} className="text-indigo-600 font-semibold hover:underline">Ver mi dashboard</a>
           <span className="mx-3">|</span>
-          <a href="/copilot" className="text-indigo-600 font-semibold hover:underline">Volver a Copilot</a>
+          <a href={'/copilot/dashboard/' + props.suscripcionId} className="text-indigo-600 font-semibold hover:underline">Volver a Copilot</a>
         </div>
       </div>
     </div>

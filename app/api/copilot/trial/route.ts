@@ -83,6 +83,15 @@ export async function POST(req: NextRequest) {
       cuentas = body.cuentas
     }
 
+    // Auto-generate prensa keywords from empresa name + competitor handles
+    const prensaKws = [nombreEmpresa.toLowerCase()].concat(
+      cuentas.map((c: any) => (c.handle || '').toLowerCase())
+    ).filter((k: string) => k.trim() !== '')
+
+    if (prensaKws.length > 0) {
+      cuentas.push({ red: 'prensa', keywords: prensaKws })
+    }
+
     if (!email) {
       return NextResponse.json({ error: 'Email requerido' }, { status: 400 })
     }
