@@ -152,20 +152,21 @@ function esPostRelevante(texto) {
 // ─── Main ────────────────────────────────────────────────────────────────────
 async function main() {
   const hoy = new Date().toISOString().split('T')[0]
-  // Ventana de 28h: captura posts del día + margen por si el cron corre unos minutos tarde
-  const hace24h = new Date(Date.now() - 28 * 60 * 60 * 1000)
+  // Ventana dinámica: L-V = 28h, Lunes = 76h (incluye viernes+sábado+domingo)
+  const dow = new Date().getDay() // 0=domingo, 1=lunes, 6=sábado
+  const horasVentana = dow === 1 ? 76 : 28 // lunes = 76h (vie+sab+dom), resto = 28h
+  const hace24h = new Date(Date.now() - horasVentana * 60 * 60 * 1000)
+  console.log(`📅 Generando reporte para ${hoy} (ventana: ${horasVentana}h, día semana: ${dow})...`)
 
-  console.log(`📅 Generando reporte para ${hoy}...`)
-
-  // ── Cargar URLs ya reportadas ayer para deduplicar ─────────────────────
-  const ayer = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString().split('T')[0]
-  const { data: reportesAyer } = await supabase
+  // ── Cargar URLs ya reportadas en los últimos 3 días para deduplicar ────
+  const hace3dias = new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+  const { data: reportesPrevios } = await supabase
     .from('reportes_competencia')
     .select('post_url')
-    .eq('fecha_reporte', ayer)
+    .gte('fecha_reporte', hace3dias)
     .not('post_url', 'is', null)
-  const urlsYaReportadas = new Set((reportesAyer || []).map(r => r.post_url).filter(Boolean))
-  console.log(`🔁 URLs ya reportadas ayer (${ayer}): ${urlsYaReportadas.size}`)
+  const urlsYaReportadas = new Set((reportesPrevios || []).map(r => r.post_url).filter(Boolean))
+  console.log(`🔁 URLs ya reportadas últimos 3 días (desde ${hace3dias}): ${urlsYaReportadas.size}`)
 
   await supabase.from('reportes_competencia').delete().eq('fecha_reporte', hoy)
 
