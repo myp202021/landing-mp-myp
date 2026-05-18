@@ -69,10 +69,12 @@ function mencionaCompetencia(texto) {
 
 async function main() {
   const hoy = new Date().toISOString().split('T')[0]
-  // Ventana 24h: clipping del día (el workflow corre a las 06:00 AM)
-  const desde = new Date(Date.now() - 24 * 60 * 60 * 1000)
+  // Ventana dinámica: L-V = 28h, Lunes = 76h (viernes+sábado+domingo)
+  const dow = new Date().getDay() // 0=domingo, 1=lunes
+  const horasVentana = dow === 1 ? 76 : 28
+  const desde = new Date(Date.now() - horasVentana * 60 * 60 * 1000)
 
-  console.log(`📅 Clipping Prensa Hualpen — ${hoy}`)
+  console.log(`📅 Clipping Prensa Hualpen — ${hoy} (ventana: ${horasVentana}h)`)
 
   // Limpiar reporte del día si ya existe (re-runs)
   await supabase.from('clipping_prensa').delete().eq('fecha_reporte', hoy)
@@ -152,7 +154,7 @@ async function enviarEmail({ hoy, postsIG }) {
   `
 
   if (postsIG.length === 0) {
-    bodyHtml += `<p style="color: #6b7280; font-style: italic;">Sin menciones de Hualpén ni competidores en las últimas 24 horas.</p>`
+    bodyHtml += `<p style="color: #6b7280; font-style: italic;">Sin menciones de Hualpén ni competidores en las últimas ${horasVentana} horas.</p>`
   } else {
     for (const [medio, posts] of porMedio) {
       bodyHtml += `<h3 style="margin: 20px 0 8px; font-size: 15px; color: #ff6b35; border-bottom: 2px solid #ff6b35; padding-bottom: 4px;">${medio}</h3><ul style="margin: 8px 0; padding-left: 20px;">`
