@@ -300,16 +300,34 @@ async function main() {
         pk: s.pk || s.id || s.shortCode || '',
       }
     })
-    // Dedup stories: filtrar las que ya se reportaron en días anteriores
+    // Dedup stories: 1) dentro del mismo batch por pk, 2) contra días anteriores
+    const seenPks = new Set()
     storiesIG = storiesMapped.filter(s => {
+      // Sin pk no podemos deduplicar, incluir igual
+      if (!s.pk) return true
+      // Dedup intra-batch: si ya vimos este pk en este run, omitir
+      if (seenPks.has(s.pk)) {
+        console.log(`   🔁 Dedup story intra-batch: ${s.handle}/${s.pk}`)
+        return false
+      }
+      seenPks.add(s.pk)
+      // Dedup contra días anteriores
       const storyUrl = `story:${s.handle}:${s.pk}`
       if (urlsYaReportadas.has(storyUrl)) {
-        console.log(`   🔁 Dedup story: omitiendo ${s.handle}/${s.pk} (ya reportada)`)
+        console.log(`   🔁 Dedup story vs ayer: ${s.handle}/${s.pk}`)
         return false
       }
       return true
     })
-    console.log(`✅ Stories: ${storiesIG.length} nuevas (${storiesMapped.length - storiesIG.length} duplicadas omitidas)`)
+    // Limitar a 3 stories por cuenta para evitar spam
+    const storiesPorCuenta = new Map()
+    storiesIG = storiesIG.filter(s => {
+      const count = storiesPorCuenta.get(s.handle) || 0
+      if (count >= 3) return false
+      storiesPorCuenta.set(s.handle, count + 1)
+      return true
+    })
+    console.log(`✅ Stories: ${storiesIG.length} únicas (${storiesMapped.length} raw, max 3/cuenta)`)
   } catch (err) {
     console.error('❌ Error Stories:', err.message)
   }
