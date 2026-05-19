@@ -287,7 +287,7 @@ async function main() {
       const s0 = allStories[0]
       console.log(`   Stories sample keys: ${Object.keys(s0).join(', ')}`)
     }
-    storiesIG = allStories.map(s => {
+    const storiesMapped = allStories.map(s => {
       const username = s.ownerUsername || s.user?.username || ''
       const comp = conIG.find(c => c.instagram?.toLowerCase() === username.toLowerCase())
       return {
@@ -300,7 +300,16 @@ async function main() {
         pk: s.pk || s.id || s.shortCode || '',
       }
     })
-    console.log(`✅ Stories: ${storiesIG.length} stories activas`)
+    // Dedup stories: filtrar las que ya se reportaron en días anteriores
+    storiesIG = storiesMapped.filter(s => {
+      const storyUrl = `story:${s.handle}:${s.pk}`
+      if (urlsYaReportadas.has(storyUrl)) {
+        console.log(`   🔁 Dedup story: omitiendo ${s.handle}/${s.pk} (ya reportada)`)
+        return false
+      }
+      return true
+    })
+    console.log(`✅ Stories: ${storiesIG.length} nuevas (${storiesMapped.length - storiesIG.length} duplicadas omitidas)`)
   } catch (err) {
     console.error('❌ Error Stories:', err.message)
   }
@@ -322,6 +331,18 @@ async function main() {
       fecha_post: post.timestamp || null, fecha_reporte: hoy, sin_actividad: false,
     })
   }
+
+  // Guardar stories en DB para dedup en días siguientes
+  for (const s of storiesIG) {
+    await supabase.from('reportes_competencia').insert({
+      competidor: s.competidor, instagram_handle: s.handle, red_social: 'Instagram-Story',
+      post_url: `story:${s.handle}:${s.pk}`,
+      post_texto: `Story ${s.type} de @${s.handle}`,
+      post_imagen: null, likes: null, comentarios: null,
+      fecha_post: s.timestamp || null, fecha_reporte: hoy, sin_actividad: false,
+    })
+  }
+  console.log(`💾 ${storiesIG.length} stories guardadas en DB para dedup`)
 
   // sin_actividad para los que no publicaron
   for (const comp of COMPETIDORES) {
