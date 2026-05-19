@@ -543,9 +543,16 @@ function scorePerformance(perf) {
   if (perf.cls != null) checks.push({ score: metricScore(perf.cls, th.cls, th.cls * 2.5), maxScore: 25 })
   if (perf.tbt != null) checks.push({ score: metricScore(perf.tbt, th.tbt, th.tbt * 3), maxScore: 25 })
 
+  // Usar el score real de Google PageSpeed como base (más confiable que cálculo propio)
+  const googleScore = perf.score || 0
+  const calculatedScore = checks.length > 0 ? config.normalizeCategory(checks) : 0
+  // Promedio ponderado: 70% Google, 30% cálculo propio
+  const finalScore = Math.round(googleScore * 0.7 + calculatedScore * 0.3)
+
   return {
-    score: checks.length > 0 ? config.normalizeCategory(checks) : 0,
+    score: finalScore,
     checks,
+    googleScore,
   }
 }
 
