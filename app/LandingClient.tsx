@@ -2526,6 +2526,7 @@ export default function LandingClient() {
                 <li><Link href="/servicios/meta-ads-chile" className="text-blue-200 hover:text-white transition-colors">Meta Ads</Link></li>
                 <li><Link href="/servicios/performance-marketing" className="text-blue-200 hover:text-white transition-colors">Performance</Link></li>
                 <li><Link href="/servicios/seo-chile" className="text-blue-200 hover:text-white transition-colors">SEO</Link></li>
+                <li><Link href="/agencia-marketing-digital-chile" className="text-blue-200 hover:text-white transition-colors">Marketing Digital Chile</Link></li>
                 <li className="pt-1"><Link href="/servicios" className="text-blue-400 hover:text-white transition-colors font-medium">Ver todos →</Link></li>
               </ul>
             </div>
