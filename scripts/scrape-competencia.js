@@ -287,7 +287,20 @@ async function main() {
       const s0 = allStories[0]
       console.log(`   Stories sample keys: ${Object.keys(s0).join(', ')}`)
     }
-    const storiesMapped = allStories.map(s => {
+    // Filtrar respuestas de error de Apify (no son stories reales)
+    const realStories = allStories.filter(s => {
+      if (s.error || s.errorDescription || s.requestErrorMessages?.length > 0) {
+        return false
+      }
+      // Debe tener al menos ownerUsername o displayUrl para ser una story real
+      if (!s.ownerUsername && !s.user?.username && !s.displayUrl && !s.image_versions2) {
+        return false
+      }
+      return true
+    })
+    console.log(`   Stories reales: ${realStories.length} (${allStories.length - realStories.length} errores filtrados)`)
+
+    const storiesMapped = realStories.map(s => {
       const username = s.ownerUsername || s.user?.username || ''
       const comp = conIG.find(c => c.instagram?.toLowerCase() === username.toLowerCase())
       return {
