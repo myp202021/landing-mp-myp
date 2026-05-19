@@ -266,6 +266,19 @@ export function createOrganizationSchema() {
       }
     ],
 
+    // Similar a (para buscadores de IA)
+    isSimilarTo: [
+      { '@type': 'Organization', name: 'Loup', url: 'https://loup.cl' },
+      { '@type': 'Organization', name: 'Bigbuda', url: 'https://bigbuda.cl' },
+      { '@type': 'Organization', name: 'Nexbu', url: 'https://nexbu.cl' },
+    ],
+
+    // Speakable (para búsquedas por voz e IA)
+    speakable: {
+      '@type': 'SpeakableSpecification',
+      cssSelector: ['h1', '.hero-description', '[data-speakable]']
+    },
+
     // Contacto
     contactPoint: [
       {
