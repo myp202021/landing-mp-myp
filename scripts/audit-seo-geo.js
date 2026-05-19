@@ -444,14 +444,25 @@ function runBuiltinGeoChecks(html, robotsTxt) {
   for (const bot of config.AI_BOTS) {
     let blocked = false
     if (robotsTxt) {
-      // Simple check: look for User-agent: bot with Disallow: /
-      const regex = new RegExp(`User-agent:\\s*${bot}[\\s\\S]*?Disallow:\\s*/`, 'i')
-      blocked = regex.test(robotsTxt)
+      // Parse the specific block for this bot
+      const blocks = robotsTxt.split(/\n\s*\n/)
+      for (const block of blocks) {
+        const lines = block.split('\n').map(l => l.trim())
+        const agents = lines.filter(l => /^user-agent:/i.test(l)).map(l => l.split(':').slice(1).join(':').trim())
+        if (agents.some(a => a === bot || a === '*')) {
+          const hasDisallowRoot = lines.some(l => /^disallow:\s*\/\s*$/i.test(l))
+          const hasAllowRoot = lines.some(l => /^allow:\s*\//i.test(l))
+          // Blocked only if Disallow: / (exact root) without Allow: /
+          if (hasDisallowRoot && !hasAllowRoot) {
+            blocked = true
+          }
+        }
+      }
     }
     botAccess.push({
       name: bot,
       allowed: !blocked,
-      note: blocked ? 'Bloqueado en robots.txt' : robotsTxt ? 'No bloqueado' : 'Sin robots.txt (acceso por defecto)',
+      note: blocked ? 'Bloqueado en robots.txt' : robotsTxt ? 'Permitido' : 'Sin robots.txt (acceso por defecto)',
     })
     results.push({
       name: `Bot IA: ${bot}`,
