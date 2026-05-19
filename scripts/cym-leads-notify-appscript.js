@@ -36,6 +36,8 @@ function checkNuevosLeads(hoja) {
   var colFinanciamiento = findCol(headers, 'financiamiento');
   var colPlazo = findCol(headers, 'plazo');
   var colComuna = findCol(headers, 'comuna');
+  var colAdName = findCol(headers, 'ad_name');
+  var colFormName = findCol(headers, 'form_name');
   var colNotificado = -1;
   for (var k = 0; k < headers.length; k++) {
     if (headers[k] === 'notificado') { colNotificado = k; break; }
@@ -67,6 +69,10 @@ function checkNuevosLeads(hoja) {
     if (colPlazo !== null) plazo = row[colPlazo] || '';
     var comuna = '';
     if (colComuna !== null) comuna = row[colComuna] || '';
+    var adName = '';
+    if (colAdName !== null) adName = row[colAdName] || '';
+    var formName = '';
+    if (colFormName !== null) formName = row[colFormName] || '';
     var zona = detectarZona(campaign, hoja.getName());
     var corredor = CORREDORES[zona];
     if (!corredor) {
@@ -90,6 +96,8 @@ function checkNuevosLeads(hoja) {
     if (financiamiento) body += '<tr><td style="padding:8px 0;color:#6b7280"><strong>Financiamiento</strong></td><td style="padding:8px 0">' + limpiarTexto(financiamiento) + '</td></tr>';
     if (plazo) body += '<tr><td style="padding:8px 0;color:#6b7280"><strong>Plazo</strong></td><td style="padding:8px 0">' + limpiarTexto(plazo) + '</td></tr>';
     if (comuna) body += '<tr><td style="padding:8px 0;color:#6b7280"><strong>Comuna</strong></td><td style="padding:8px 0">' + comuna + '</td></tr>';
+    if (adName) body += '<tr><td style="padding:8px 0;color:#6b7280"><strong>Aviso</strong></td><td style="padding:8px 0">' + adName + '</td></tr>';
+    if (formName) body += '<tr><td style="padding:8px 0;color:#6b7280"><strong>Formulario</strong></td><td style="padding:8px 0">' + formName + '</td></tr>';
     body += '<tr><td style="padding:8px 0;color:#6b7280"><strong>Campana</strong></td><td style="padding:8px 0">' + campaign + '</td></tr>'
       + '</table>'
       + '<div style="margin-top:16px;text-align:center">'
