@@ -26,8 +26,6 @@ export default function ResourceHints() {
       <link rel="dns-prefetch" href="https://www.youtube.com" />
       <link rel="dns-prefetch" href="https://static.doubleclick.net" />
       <link rel="dns-prefetch" href="https://static.cloudflareinsights.com" />
-      <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
-      <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
     </>
   )
 }

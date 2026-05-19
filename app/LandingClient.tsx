@@ -28,9 +28,14 @@ import {
   ArrowRight,
   Award,
 } from 'lucide-react'
+import dynamic from 'next/dynamic'
 import YouTubeLite from '@/components/YouTubeLite'
 import { ClientLogosGrid } from '@/components/ClientLogos'
-import PortfolioGrid from '@/components/PortfolioGrid'
+
+const PortfolioGrid = dynamic(() => import('@/components/PortfolioGrid'), {
+  ssr: false,
+  loading: () => <div className="py-20 text-center text-white/40">Cargando portfolio...</div>,
+})
 
 export default function LandingClient() {
   const router = useRouter()
@@ -542,6 +547,8 @@ export default function LandingClient() {
               height={45}
               className="h-11 w-auto"
               priority
+              sizes="140px"
+              fetchPriority="high"
             />
           </Link>
           <nav className="flex items-center gap-5" role="navigation" aria-label="Navegación principal">
@@ -2011,7 +2018,7 @@ export default function LandingClient() {
             <div className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all p-8 border border-gray-100 flex flex-col">
               <div className="flex items-center gap-4 mb-6">
                 <div className="w-14 h-14 rounded-full bg-gray-50 border border-gray-200 flex items-center justify-center overflow-hidden p-2">
-                  <img src="/clientes/distec.png" alt="Distec Chile" className="w-full h-full object-contain" />
+                  <Image src="/clientes/distec.png" alt="Distec Chile" width={40} height={40} className="w-full h-full object-contain" loading="lazy" />
                 </div>
                 <div>
                   <p className="font-bold text-gray-900 text-sm">Alex Matheu</p>
@@ -2028,7 +2035,7 @@ export default function LandingClient() {
             <div className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all p-8 border border-gray-100 flex flex-col">
               <div className="flex items-center gap-4 mb-6">
                 <div className="w-14 h-14 rounded-full bg-gray-50 border border-gray-200 flex items-center justify-center overflow-hidden p-2">
-                  <img src="/clientes/pregiata.png" alt="Pregiata" className="w-full h-full object-contain" />
+                  <Image src="/clientes/pregiata.png" alt="Pregiata" width={40} height={40} className="w-full h-full object-contain" loading="lazy" />
                 </div>
                 <div>
                   <p className="font-bold text-gray-900 text-sm">Cristian Pregiata</p>
@@ -2045,7 +2052,7 @@ export default function LandingClient() {
             <div className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all p-8 border border-gray-100 flex flex-col">
               <div className="flex items-center gap-4 mb-6">
                 <div className="w-14 h-14 rounded-full bg-gray-50 border border-gray-200 flex items-center justify-center overflow-hidden p-2">
-                  <img src="/clientes/fuxion-logistics.png" alt="Fuxion Logistics" className="w-full h-full object-contain" />
+                  <Image src="/clientes/fuxion-logistics.png" alt="Fuxion Logistics" width={40} height={40} className="w-full h-full object-contain" loading="lazy" />
                 </div>
                 <div>
                   <p className="font-bold text-gray-900 text-sm">Rodrigo Conejera</p>

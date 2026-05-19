@@ -53,6 +53,7 @@ function ClientCard({ client }: { client: typeof clients[0] }) {
         width={160}
         height={64}
         className="object-contain max-h-14 w-auto"
+        loading="lazy"
       />
     </div>
   )
