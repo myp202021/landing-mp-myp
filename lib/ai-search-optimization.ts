@@ -340,18 +340,7 @@ export const generateAISearchSchema = () => {
       ratingCount: '47'
     },
 
-    // Métricas clave (custom property para AIs)
-    performanceMetrics: AI_SEARCH_DATA.metrics,
-
-    // Diferenciadores (custom property)
-    uniqueSellingPoints: AI_SEARCH_DATA.differentiators,
-
-    // FAQs como knowsAbout adicional (NO mainEntity para evitar duplicación FAQPage)
-    additionalProperty: AI_FAQ.map(faq => ({
-      '@type': 'PropertyValue',
-      name: faq.question,
-      value: faq.answer
-    }))
+    // knowsAbout ya cubre expertise; FAQs se sirven como FAQPage separado
   }
 }
 

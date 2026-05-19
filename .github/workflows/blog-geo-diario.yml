@@ -1,0 +1,81 @@
+name: Blog GEO Diario — Respuesta Directa IA
+
+on:
+  schedule:
+    - cron: '0 12 * * 1-5'    # 08:00 AM Chile (UTC-4) — L-V
+    - cron: '30 12 * * 1-5'   # 08:30 AM Chile — respaldo
+  workflow_dispatch:
+
+jobs:
+  generar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verificar si ya se publicó hoy (evitar duplicado con blog-diario)
+        id: check
+        run: |
+          TODAY=$(date -u +%Y-%m-%d)
+          # Contar posts de hoy — si hay 2+ ya se publicó el geo
+          RESULT=$(curl -s -H "Authorization: Bearer ${{ secrets.SUPABASE_SERVICE_KEY }}" \
+            "${{ secrets.SUPABASE_URL }}/rest/v1/blog_posts?date_published=eq.${TODAY}&select=id&limit=5" \
+            -H "apikey: ${{ secrets.SUPABASE_SERVICE_KEY }}")
+          COUNT=$(echo "$RESULT" | python3 -c "import sys,json; print(len(json.load(sys.stdin)))" 2>/dev/null || echo "0")
+          if [ "$COUNT" -ge "2" ]; then
+            echo "already_ran=true" >> $GITHUB_OUTPUT
+            echo "✅ Ya hay $COUNT posts para $TODAY — saltando GEO"
+          else
+            echo "already_ran=false" >> $GITHUB_OUTPUT
+            echo "🔄 $COUNT posts para $TODAY — generando GEO"
+          fi
+
+      - uses: actions/checkout@v4
+        if: steps.check.outputs.already_ran == 'false'
+
+      - uses: actions/setup-node@v4
+        if: steps.check.outputs.already_ran == 'false'
+        with:
+          node-version: '22'
+
+      - name: Instalar dependencias
+        if: steps.check.outputs.already_ran == 'false'
+        run: npm install node-fetch@2 @supabase/supabase-js
+
+      - name: Generar y publicar artículo GEO
+        if: steps.check.outputs.already_ran == 'false'
+        id: blog
+        run: |
+          OUTPUT=$(node scripts/blog-geo-diario.js 2>&1)
+          echo "$OUTPUT"
+          TITLE=$(echo "$OUTPUT" | grep "📰 Artículo publicado:" | sed 's/📰 Artículo publicado: //')
+          URL=$(echo "$OUTPUT" | grep "🔗 URL:" | sed 's/🔗 URL: //')
+          CATEGORY=$(echo "$OUTPUT" | grep "📂 Categoría:" | sed 's/📂 Categoría: //')
+          echo "title=$TITLE" >> $GITHUB_OUTPUT
+          echo "url=$URL" >> $GITHUB_OUTPUT
+          echo "category=$CATEGORY" >> $GITHUB_OUTPUT
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+
+      - name: Notificar por email
+        if: success() && steps.check.outputs.already_ran == 'false' && steps.blog.outputs.url != ''
+        run: |
+          curl -s -X POST "https://api.resend.com/emails" \
+            -H "Authorization: Bearer ${{ secrets.RESEND }}" \
+            -H "Content-Type: application/json" \
+            -d "$(cat <<EMAILEOF
+          {
+            "from": "contacto@mulleryperez.cl",
+            "to": "contacto@mulleryperez.cl",
+            "subject": "🤖 Blog GEO publicado: ${{ steps.blog.outputs.title }}",
+            "html": "<div style='font-family:Arial,sans-serif;max-width:600px;margin:0 auto;'><div style='background:linear-gradient(135deg,#0A1628,#1E3A5F);color:white;padding:20px;border-radius:10px 10px 0 0;'><h2 style='margin:0;font-size:18px;'>🤖 Nuevo artículo GEO — Respuesta Directa IA</h2><p style='margin:6px 0 0;font-size:13px;color:#93C5FD;'>Optimizado para ChatGPT, Gemini, Perplexity</p></div><div style='padding:20px;border:1px solid #E5E7EB;border-top:none;border-radius:0 0 10px 10px;'><h3 style='color:#1E3A5F;margin:0 0 8px;'>${{ steps.blog.outputs.title }}</h3><p style='color:#6B7280;font-size:14px;margin:0 0 4px;'>Categoría: ${{ steps.blog.outputs.category }}</p><p style='color:#6B7280;font-size:14px;margin:0 0 16px;'>Fecha: $(date -u +%Y-%m-%d)</p><a href='${{ steps.blog.outputs.url }}' style='display:inline-block;background:#0055A4;color:white;padding:10px 24px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:14px;'>Ver artículo →</a></div><p style='color:#9CA3AF;font-size:12px;margin-top:12px;text-align:center;'>Blog GEO automático M&P — www.mulleryperez.cl/blog</p></div>"
+          }
+          EMAILEOF
+          )"
+
+      - name: Alerta si falla
+        if: failure() && steps.check.outputs.already_ran == 'false'
+        run: |
+          curl -s -X POST "https://api.resend.com/emails" \
+            -H "Authorization: Bearer ${{ secrets.RESEND }}" \
+            -H "Content-Type: application/json" \
+            -d "{\"from\":\"contacto@mulleryperez.cl\",\"to\":\"contacto@mulleryperez.cl\",\"subject\":\"⚠️ FALLO Blog GEO Diario — $(date -u +%Y-%m-%d)\",\"html\":\"<p>El generador GEO falló. <a href='https://github.com/myp202021/landing-mp-myp/actions'>Ver logs</a></p>\"}"

@@ -782,10 +782,10 @@ export default function LandingClient() {
               <span className="text-blue-200 text-sm font-medium">Performance Marketing con Datos Reales</span>
             </div>
 
-            <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-[1.1] tracking-tight text-white">
-              LA AGENCIA QUE VINCULA<br />Y COORDINA MARKETING<br />
+            <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-[1.1] tracking-tight text-white uppercase">
+              Agencia de Performance Marketing<br />que vincula Marketing<br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400">
-                CON COMERCIAL
+                con Comercial
               </span>
             </h1>
 
