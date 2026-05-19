@@ -37,7 +37,7 @@ export default function AgenciaMarketingDigitalSantiago2025() {
     '@type': 'Article',
     headline: 'Agencia Marketing Digital Santiago 2025-2026: Guía Completa',
     description: 'Guía completa para contratar agencia marketing digital en Santiago 2025. Comparativa de servicios, precios, métricas reales y checklist de selección.',
-    image: 'https://www.mulleryperez.cl/og-image.svg',
+    image: 'https://www.mulleryperez.cl/og-image.jpg',
     datePublished: '2025-01-16T00:00:00Z',
     dateModified: '2026-03-10T00:00:00.000Z',
     author: {

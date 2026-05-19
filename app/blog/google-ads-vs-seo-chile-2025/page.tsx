@@ -5,7 +5,7 @@
 
 import { Metadata } from 'next'
 import Link from 'next/link'
-import { createMetadata, createWebPageSchema, createBreadcrumbSchema } from '@/lib/metadata'
+import { createMetadata, createArticleSchema, createBreadcrumbSchema } from '@/lib/metadata'
 
 export const metadata: Metadata = createMetadata({
   title: 'Google Ads vs SEO: Qué Conviene para tu Empresa en Chile 2025',
@@ -22,11 +22,14 @@ export const metadata: Metadata = createMetadata({
 })
 
 export default function GoogleAdsVsSeoPage() {
-  const articleSchema = createWebPageSchema(
-    'Google Ads vs SEO: Qué Conviene para tu Empresa en Chile 2025',
-    'Comparativa completa entre Google Ads y SEO. Cuándo usar cada uno y cómo combinarlos.',
-    'https://www.mulleryperez.cl/blog/google-ads-vs-seo-chile-2025'
-  )
+  const articleSchema = createArticleSchema({
+    title: 'Google Ads vs SEO: Qué Conviene para tu Empresa en Chile 2025',
+    description: 'Comparativa completa entre Google Ads y SEO. Cuándo usar cada uno y cómo combinarlos.',
+    url: 'https://www.mulleryperez.cl/blog/google-ads-vs-seo-chile-2025',
+    publishedTime: '2025-01-15T00:00:00.000Z',
+    section: 'SEO vs SEM',
+    keywords: ['google ads vs seo', 'google ads vs seo chile']
+  })
 
   const breadcrumbSchema = createBreadcrumbSchema([
     { name: 'Inicio', url: 'https://www.mulleryperez.cl' },

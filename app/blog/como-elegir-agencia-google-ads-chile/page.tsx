@@ -5,7 +5,7 @@
 
 import { Metadata } from 'next'
 import Link from 'next/link'
-import { createMetadata, createWebPageSchema, createBreadcrumbSchema } from '@/lib/metadata'
+import { createMetadata, createArticleSchema, createBreadcrumbSchema } from '@/lib/metadata'
 
 export const metadata: Metadata = createMetadata({
   title: 'Cómo Elegir la Mejor Agencia de Google Ads en Chile 2025 | Guía Completa',
@@ -21,11 +21,14 @@ export const metadata: Metadata = createMetadata({
 })
 
 export default function ComoElegirAgenciaPage() {
-  const articleSchema = createWebPageSchema(
-    'Cómo Elegir la Mejor Agencia de Google Ads en Chile 2025',
-    'Guía paso a paso para elegir la mejor agencia de Google Ads. Qué preguntar y banderas rojas.',
-    'https://www.mulleryperez.cl/blog/como-elegir-agencia-google-ads-chile'
-  )
+  const articleSchema = createArticleSchema({
+    title: 'Cómo Elegir la Mejor Agencia de Google Ads en Chile 2025',
+    description: 'Guía paso a paso para elegir la mejor agencia de Google Ads. Qué preguntar y banderas rojas.',
+    url: 'https://www.mulleryperez.cl/blog/como-elegir-agencia-google-ads-chile',
+    publishedTime: '2025-01-15T00:00:00.000Z',
+    section: 'Google Ads',
+    keywords: ['como elegir agencia google ads', 'mejor agencia google ads chile']
+  })
 
   const breadcrumbSchema = createBreadcrumbSchema([
     { name: 'Inicio', url: 'https://www.mulleryperez.cl' },

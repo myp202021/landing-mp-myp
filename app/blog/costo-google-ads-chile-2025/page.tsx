@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     authors: ['Muller y Pérez'],
     images: [
       {
-        url: 'https://www.mulleryperez.cl/og-image.svg',
+        url: 'https://www.mulleryperez.cl/og-image.jpg',
         width: 1200,
         height: 630,
         alt: 'Costo Google Ads Chile 2025'
@@ -233,7 +233,7 @@ export default function ArticlePage() {
             '@type': 'Article',
             headline: 'Costo Real de Google Ads en Chile 2025-2026: Guía Completa por Industria',
             description: 'Descubre cuánto cuesta Google Ads en Chile 2025-2026: CPC promedio $250-$4.500, CPL $8.200-$67.900. Data real de +200 campañas por industria.',
-            image: 'https://www.mulleryperez.cl/og-image.svg',
+            image: 'https://www.mulleryperez.cl/og-image.jpg',
             author: {
               '@type': 'Person',
               name: 'Christopher Müller',

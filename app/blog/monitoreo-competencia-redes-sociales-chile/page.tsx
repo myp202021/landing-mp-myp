@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
 import SiteHeader from '@/components/SiteHeader'
+import { createArticleSchema } from '@/lib/metadata'
 
 export const metadata: Metadata = {
   title: 'Monitoreo de Competencia en Redes Sociales Chile 2026: Guia Completa + Herramientas | Muller y Perez',
@@ -16,8 +17,18 @@ export const metadata: Metadata = {
 }
 
 export default function BlogMonitoreoPage() {
+  const articleSchema = createArticleSchema({
+    title: 'Monitoreo de Competencia en Redes Sociales Chile 2026',
+    description: 'Cuánto cuesta monitorear a tu competencia en Instagram, LinkedIn y Facebook en Chile. Comparativa Brand24 vs Mention vs Meltwater vs Radar.',
+    url: 'https://www.mulleryperez.cl/blog/monitoreo-competencia-redes-sociales-chile',
+    publishedTime: '2026-04-01T00:00:00.000Z',
+    section: 'Redes Sociales',
+    keywords: ['monitoreo competencia redes sociales chile', 'social media monitoring chile']
+  })
+
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }} />
       <SiteHeader />
       <article className="max-w-3xl mx-auto px-6 pt-28 pb-16">
         <div className="mb-8">

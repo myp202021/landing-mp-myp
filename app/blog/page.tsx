@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     url: 'https://www.mulleryperez.cl/blog',
     images: [
       {
-        url: 'https://www.mulleryperez.cl/og-image.svg',
+        url: 'https://www.mulleryperez.cl/og-image.jpg',
         width: 1200,
         height: 630,
         alt: 'Blog Marketing Digital M&P'

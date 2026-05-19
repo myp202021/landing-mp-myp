@@ -5,7 +5,7 @@
 
 import { Metadata } from 'next'
 import Link from 'next/link'
-import { createMetadata, createWebPageSchema, createBreadcrumbSchema } from '@/lib/metadata'
+import { createMetadata, createArticleSchema, createBreadcrumbSchema } from '@/lib/metadata'
 
 export const metadata: Metadata = createMetadata({
   title: 'Cuánto Cuesta una Agencia de Marketing Digital en Chile 2025 | Precios Reales',
@@ -22,11 +22,14 @@ export const metadata: Metadata = createMetadata({
 })
 
 export default function CuantoCuestaAgenciaPage() {
-  const articleSchema = createWebPageSchema(
-    'Cuánto Cuesta una Agencia de Marketing Digital en Chile 2025',
-    'Guía completa de precios de agencias de marketing digital en Chile. Comparativa de costos, qué incluye cada plan y cómo elegir.',
-    'https://www.mulleryperez.cl/blog/cuanto-cuesta-agencia-marketing-digital-chile-2025'
-  )
+  const articleSchema = createArticleSchema({
+    title: 'Cuánto Cuesta una Agencia de Marketing Digital en Chile 2025',
+    description: 'Guía completa de precios de agencias de marketing digital en Chile. Comparativa de costos, qué incluye cada plan y cómo elegir.',
+    url: 'https://www.mulleryperez.cl/blog/cuanto-cuesta-agencia-marketing-digital-chile-2025',
+    publishedTime: '2025-01-15T00:00:00.000Z',
+    section: 'Precios Marketing Digital',
+    keywords: ['cuanto cuesta agencia marketing digital chile', 'precios agencia marketing digital']
+  })
 
   const breadcrumbSchema = createBreadcrumbSchema([
     { name: 'Inicio', url: 'https://www.mulleryperez.cl' },

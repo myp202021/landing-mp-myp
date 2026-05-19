@@ -2568,6 +2568,10 @@ export default function LandingClient() {
                 <li><Link href="/blog" className="text-blue-200 hover:text-white transition-colors">Blog</Link></li>
                 <li><Link href="/labs" className="text-blue-200 hover:text-white transition-colors">M&P Labs</Link></li>
                 <li><Link href="/utilidades" className="text-blue-200 hover:text-white transition-colors">Utilidades</Link></li>
+                <li><Link href="/indicadores" className="text-blue-200 hover:text-white transition-colors">Indicadores Marketing</Link></li>
+                <li><Link href="/agentes" className="text-blue-200 hover:text-white transition-colors">Agentes IA SEO</Link></li>
+                <li><Link href="/investigacion" className="text-blue-200 hover:text-white transition-colors">Investigación</Link></li>
+                <li><Link href="/casos-de-exito" className="text-blue-200 hover:text-white transition-colors">Casos de Éxito</Link></li>
                 <li><Link href="/comparativa/muller-perez-vs-agencias-chile" className="text-blue-200 hover:text-white transition-colors">M&P vs Agencias</Link></li>
                 <li className="pt-1"><Link href="/recursos" className="text-blue-400 hover:text-white transition-colors font-medium">Ver todos →</Link></li>
               </ul>

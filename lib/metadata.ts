@@ -465,6 +465,8 @@ export function createWebPageSchema(title: string, description: string, url: str
   }
 }
 
+
+
 export function createSoftwareAppSchema(name: string, description: string, url: string) {
   return {
     '@context': 'https://schema.org',

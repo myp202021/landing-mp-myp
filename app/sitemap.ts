@@ -77,6 +77,55 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'weekly' as const,
       priority: 0.9,
     },
+    // Nosotros
+    {
+      url: `${baseUrl}/nosotros`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    // Planes
+    {
+      url: `${baseUrl}/planes`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.95,
+    },
+    // Indicadores / Termómetro Marketing Digital
+    {
+      url: `${baseUrl}/indicadores`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: 0.85,
+    },
+    // Agentes IA SEO
+    {
+      url: `${baseUrl}/agentes`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.9,
+    },
+    // Investigación Hub
+    {
+      url: `${baseUrl}/investigacion`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.85,
+    },
+    // Equipo - Christopher Müller
+    {
+      url: `${baseUrl}/equipo/christopher-muller`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.7,
+    },
+    // Comparativa M&P vs Agencias
+    {
+      url: `${baseUrl}/comparativa/muller-perez-vs-agencias-chile`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.85,
+    },
     // Página Pilar SEO - Agencia Marketing Digital Chile
     {
       url: `${baseUrl}/agencia-marketing-digital-chile`,
