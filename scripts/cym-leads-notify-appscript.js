@@ -1,7 +1,7 @@
 // ===== CONFIGURACION DE CORREDORES POR ZONA =====
 var CORREDORES = {
   'la dehesa':  { nombre: 'Eugenia Olave',     email: 'eolave@cympropiedades.cl' },
-  'vitacura':   { nombre: 'Daniela Penafiel',  email: 'dpenafiel@cympropiedades.cl' },
+  'vitacura':   { nombre: 'Daniela Penafiel',  email: 'dpenafiel@cympropiedades.cl', cc: 'acy@cympropiedades.cl' },
   'las condes': { nombre: 'Anita Hernandez',   email: 'anamaria@cympropiedades.cl' },
   'la reina':   { nombre: 'James Robeson',     email: 'jrobeson@cympropiedades.cl' },
   'sca':        { nombre: 'Benjamin Ceballos', email: 'Bcf@cympropiedades.cl' },
@@ -110,7 +110,7 @@ function checkNuevosLeads(hoja) {
     try {
       GmailApp.sendEmail(corredor.email, subject, 'Nuevo lead: ' + nombreLead + ' - ' + telefono, {
         htmlBody: body,
-        cc: CC_MYP,
+        cc: corredor.cc ? CC_MYP + ',' + corredor.cc : CC_MYP,
         name: 'CyM Propiedades - Leads'
       });
       hoja.getRange(i + 1, colNotificado + 1).setValue('SI');
