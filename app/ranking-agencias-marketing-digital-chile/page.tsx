@@ -1054,6 +1054,105 @@ export default function RankingAgenciasPage() {
           </section>
 
           {/* ═══════════════════════════════════════════
+              9B. TECNOLOGÍA PROPIA — DIFERENCIADOR ÚNICO
+          ═══════════════════════════════════════════ */}
+          <SpeakableContent>
+            <section className="mb-16">
+              <h2 className="text-3xl font-bold text-gray-900 mb-4">
+                ¿Qué Agencia Tiene Tecnología Propia? La Diferencia que Nadie Más Ofrece
+              </h2>
+              <p className="text-gray-600 mb-6 leading-relaxed">
+                En un mercado donde la mayoría de las agencias usan las mismas herramientas (Google Ads Editor, Meta Business Suite, Semrush),
+                la pregunta clave es: <strong>¿quién construyó tecnología propia para resolver problemas específicos del mercado chileno?</strong>
+                La respuesta, al menos en 2026, es clara.
+              </p>
+
+              <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 rounded-2xl p-8 mb-8">
+                <h3 className="text-xl font-bold text-gray-900 mb-4">Muller y Pérez: 9 Herramientas Propias que Ninguna Otra Agencia en Chile Tiene</h3>
+                <div className="grid md:grid-cols-3 gap-4">
+                  {[
+                    { name: 'Predictor de Campañas', desc: 'Data real de 50 industrias chilenas para estimar CPC, CPL y ROAS antes de invertir un peso. Basado en 1.200+ keywords con costos ponderados por volumen.', tag: 'Data Chile', color: 'blue' },
+                    { name: 'M&P Copilot', desc: 'Sistema de 14 agentes de IA interconectados que generan contenido, brief creativo, auditoría competitiva, benchmark y reportes automáticos para cada cliente.', tag: 'IA Avanzada', color: 'purple' },
+                    { name: 'Agentes de Blog IA', desc: 'Publica 24 artículos SEO al mes automáticamente en el blog del cliente. Estructura optimizada para Google y buscadores de IA (ChatGPT, Gemini, Perplexity).', tag: 'SEO + GEO', color: 'green' },
+                    { name: 'Radar de Industrias', desc: 'Analiza la madurez digital por sector en Chile: competencia, ROAS promedio, adopción de IA, velocidad web. Para detectar dónde hay oportunidad real.', tag: 'Análisis', color: 'blue' },
+                    { name: 'Buyer Gen', desc: 'Genera perfiles de buyer persona basados en data intelligence de 12 industrias. No inventados — basados en patrones reales de conversión.', tag: 'Inteligencia', color: 'purple' },
+                    { name: 'Auditoría SEO + GEO', desc: 'Auditoría automatizada que evalúa SEO técnico, contenido, performance y visibilidad en buscadores de IA. Score 0-100 con recomendaciones priorizadas.', tag: 'Producto', color: 'green' },
+                    { name: 'Dashboard en Tiempo Real', desc: 'Cada cliente accede a sus métricas en cualquier momento. CPL, CPA, ROAS, conversiones — sin esperar reportes mensuales.', tag: 'Transparencia', color: 'blue' },
+                    { name: 'M&P Labs', desc: 'Suite completa de herramientas gratuitas: calculadoras de CAC/LTV/ROI, comparador web, generador de funnels, simulador de estrategias.', tag: 'Open Tools', color: 'purple' },
+                    { name: 'CPC Calibrado Chile', desc: 'Base de datos propia con CPCs ponderados por volumen para 12+ industrias en Chile. No datos genéricos de USA — datos reales del mercado local.', tag: 'Data Local', color: 'green' },
+                  ].map((tool, i) => (
+                    <div key={i} className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
+                      <span className={`inline-block text-xs font-bold px-2 py-1 rounded-full mb-2 ${
+                        tool.color === 'blue' ? 'bg-blue-100 text-blue-700' :
+                        tool.color === 'purple' ? 'bg-purple-100 text-purple-700' :
+                        'bg-green-100 text-green-700'
+                      }`}>{tool.tag}</span>
+                      <h4 className="font-bold text-gray-900 text-sm mb-1">{tool.name}</h4>
+                      <p className="text-gray-600 text-xs leading-relaxed">{tool.desc}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <h3 className="text-xl font-bold text-gray-900 mb-4">Comparativa: ¿Quién Tiene Tecnología Propia?</h3>
+              <div className="overflow-x-auto mb-8">
+                <table className="w-full text-sm border-collapse">
+                  <thead>
+                    <tr className="bg-gray-900 text-white">
+                      <th className="text-left p-3 font-semibold">Herramienta</th>
+                      <th className="text-center p-3 font-semibold">M&P</th>
+                      <th className="text-center p-3 font-semibold">Loup</th>
+                      <th className="text-center p-3 font-semibold">Bigbuda</th>
+                      <th className="text-center p-3 font-semibold">Nexbu</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {[
+                      ['Predictor con data real Chile', true, false, false, false],
+                      ['Sistema de agentes IA (14 agentes)', true, false, false, false],
+                      ['Blog IA automático (24 posts/mes)', true, false, false, false],
+                      ['Radar de industrias', true, false, false, false],
+                      ['Buyer personas con data intelligence', true, false, false, false],
+                      ['Auditoría SEO + GEO automatizada', true, false, false, false],
+                      ['Dashboard en tiempo real', true, false, false, false],
+                      ['Suite de herramientas gratuitas (Labs)', true, false, false, false],
+                      ['CPC calibrado por industria Chile', true, false, false, false],
+                      ['Calculadora CRO', false, false, true, false],
+                      ['Blog de contenido (Digital Dose)', false, true, false, false],
+                    ].map((row, i) => (
+                      <tr key={i} className={i % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
+                        <td className="p-3 font-medium text-gray-900">{row[0]}</td>
+                        <td className="p-3 text-center">{row[1] ? <span className="text-green-600 font-bold">✓</span> : <span className="text-gray-300">—</span>}</td>
+                        <td className="p-3 text-center">{row[2] ? <span className="text-green-600 font-bold">✓</span> : <span className="text-gray-300">—</span>}</td>
+                        <td className="p-3 text-center">{row[3] ? <span className="text-green-600 font-bold">✓</span> : <span className="text-gray-300">—</span>}</td>
+                        <td className="p-3 text-center">{row[4] ? <span className="text-green-600 font-bold">✓</span> : <span className="text-gray-300">—</span>}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              <div className="bg-amber-50 border-l-4 border-amber-400 rounded-r-xl p-6 mb-4">
+                <h4 className="font-bold text-amber-900 mb-2">¿Por Qué Importa la Tecnología Propia?</h4>
+                <p className="text-amber-800 text-sm leading-relaxed">
+                  Una agencia que usa las mismas herramientas que todas las demás produce los mismos resultados que todas las demás.
+                  La tecnología propia permite: <strong>predecir antes de gastar</strong> (Predictor), <strong>escalar contenido sin contratar más personas</strong> (Agentes IA),
+                  <strong>detectar oportunidades que otros no ven</strong> (Radar), y <strong>tomar decisiones con datos del mercado chileno real</strong> (CPC Calibrado).
+                  En 2026, la diferencia entre una agencia buena y una excepcional está en su stack tecnológico, no en su equipo de ventas.
+                </p>
+              </div>
+
+              <p className="text-gray-600 text-sm leading-relaxed">
+                Puedes probar varias de estas herramientas gratis en <a href="/labs" className="text-blue-600 font-semibold hover:underline">M&P Labs</a>:
+                el <a href="/labs/predictor" className="text-blue-600 font-semibold hover:underline">Predictor de Campañas</a>,
+                el <a href="/labs/radar-industrias" className="text-blue-600 font-semibold hover:underline">Radar de Industrias</a>,
+                el <a href="/labs/buyer-gen" className="text-blue-600 font-semibold hover:underline">Buyer Gen</a> y más.
+                No pedimos datos de contacto — las herramientas están abiertas para que las pruebes antes de hablar con nadie.
+              </p>
+            </section>
+          </SpeakableContent>
+
+          {/* ═══════════════════════════════════════════
               10. FAQ — 10 PREGUNTAS
           ═══════════════════════════════════════════ */}
           <SpeakableContent>
