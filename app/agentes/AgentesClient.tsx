@@ -310,6 +310,49 @@ export default function AgentesClient() {
         </div>
       </div>
 
+      {/* IA + EQUIPO HUMANO */}
+      <div style={{ background: '#07061A', padding: '56px 24px' }}>
+        <div style={{ maxWidth: 800, margin: '0 auto' }}>
+          <div style={{ background: '#0F0D2E', border: '1px solid rgba(99,102,241,0.15)', borderRadius: 20, padding: '36px 32px', position: 'relative', overflow: 'hidden' }}>
+            <div style={{ position: 'absolute', top: '-50%', right: '-20%', width: 300, height: 300, background: 'radial-gradient(circle, rgba(99,102,241,0.1), transparent)', pointerEvents: 'none' }} />
+            <div style={{ position: 'relative' }}>
+              <div style={{ display: 'flex', gap: 16, alignItems: 'center', marginBottom: 20 }}>
+                <div style={{ width: 48, height: 48, borderRadius: 14, background: 'linear-gradient(135deg, #2563EB, #7C3AED)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22 }}>🤖</div>
+                <div style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.2)', letterSpacing: 2 }}>+</div>
+                <div style={{ width: 48, height: 48, borderRadius: 14, background: 'linear-gradient(135deg, #10B981, #059669)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22 }}>👤</div>
+              </div>
+              <h3 style={{ fontSize: 24, fontWeight: 800, color: '#fff', marginBottom: 12 }}>IA que trabaja. <span style={{ background: 'linear-gradient(135deg, #34D399, #60A5FA)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}>Equipo humano que supervisa.</span></h3>
+              <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.55)', lineHeight: 1.7, marginBottom: 20 }}>
+                El agente escribe y publica automáticamente todos los días. Pero no es un bot suelto — hay un equipo de M&P detrás que calibra las keywords, revisa la calidad y optimiza el rendimiento.
+              </p>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+                <div style={{ background: 'rgba(0,0,0,0.3)', borderRadius: 14, padding: '18px 16px' }}>
+                  <div style={{ fontSize: 13, fontWeight: 700, color: '#A5B4FC', marginBottom: 8 }}>Lo que hace la IA</div>
+                  <ul style={{ listStyle: 'none', fontSize: 12, color: 'rgba(255,255,255,0.5)', lineHeight: 1.8 }}>
+                    <li>→ Escribe 24 artículos/mes</li>
+                    <li>→ Estructura SEO automática</li>
+                    <li>→ Publica directo en tu blog</li>
+                    <li>→ Te notifica por email cada publicación</li>
+                  </ul>
+                </div>
+                <div style={{ background: 'rgba(0,0,0,0.3)', borderRadius: 14, padding: '18px 16px' }}>
+                  <div style={{ fontSize: 13, fontWeight: 700, color: '#6EE7B7', marginBottom: 8 }}>Lo que hace el equipo M&P</div>
+                  <ul style={{ listStyle: 'none', fontSize: 12, color: 'rgba(255,255,255,0.5)', lineHeight: 1.8 }}>
+                    <li>→ Calibra keywords y tono de tu rubro</li>
+                    <li>→ Revisa calidad del contenido</li>
+                    <li>→ Ajusta enfoque según tus prioridades</li>
+                    <li>→ Reunión cuando necesites cambios</li>
+                  </ul>
+                </div>
+              </div>
+              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.35)', marginTop: 16, fontStyle: 'italic' }}>
+                ¿Quieres cambiar las keywords, agregar un tema específico o ajustar el tono? Agenda una reunión con nuestro equipo y lo configuramos juntos.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* CTA */}
       <div style={{ background: '#07061A', padding: '64px 24px', textAlign: 'center', position: 'relative' }}>
         <div style={{ position: 'absolute', width: 600, height: 600, top: '50%', left: '50%', transform: 'translate(-50%,-50%)', background: 'radial-gradient(circle, rgba(99,102,241,0.08) 0%, transparent 60%)', pointerEvents: 'none' }} />
