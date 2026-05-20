@@ -68,10 +68,10 @@ export default function AgentesClient() {
             Un agente de IA escribe, optimiza y publica artículos en tu blog automáticamente. Google te indexa. Los buscadores de IA te citan. Tu sitio crece mientras duermes.
           </p>
           <Link href="#planes" style={{ display: 'inline-block', background: 'linear-gradient(135deg, #2563EB, #7C3AED)', color: '#fff', padding: '18px 42px', borderRadius: 14, fontWeight: 700, fontSize: 16, textDecoration: 'none', boxShadow: '0 0 40px rgba(99,102,241,0.4)' }}>
-            Ver planes desde $49.990/mes →
+            Ver planes desde $69.990/mes →
           </Link>
           <div style={{ display: 'flex', justifyContent: 'center', gap: 48, marginTop: 36 }}>
-            {[{ n: '24', l: 'artículos / mes' }, { n: '100%', l: 'automático' }, { n: '$2.083', l: 'por artículo' }].map(function(s) {
+            {[{ n: '24', l: 'artículos / mes' }, { n: '100%', l: 'automático' }, { n: '$2.916', l: 'por artículo' }].map(function(s) {
               return <div key={s.n} style={{ textAlign: 'center' }}>
                 <div style={{ fontSize: 32, fontWeight: 900, background: 'linear-gradient(135deg, #60A5FA, #C084FC)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}>{s.n}</div>
                 <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)', marginTop: 4 }}>{s.l}</div>
@@ -140,6 +140,48 @@ export default function AgentesClient() {
             <text x="640" y="310" textAnchor="middle" fill="#34D399" fontSize="15" fontWeight="900" fontFamily="Inter">Leads orgánicos</text>
             <text x="640" y="328" textAnchor="middle" fill="rgba(255,255,255,0.4)" fontSize="10" fontFamily="Inter">Sin pauta · 24/7 · Crecen cada mes</text>
           </svg>
+        </div>
+      </div>
+
+      {/* SEO vs GEO */}
+      <div style={{ background: '#07061A', padding: '56px 24px' }}>
+        <h2 style={{ fontSize: 36, fontWeight: 800, textAlign: 'center', color: '#fff', letterSpacing: -1, marginBottom: 12 }}>
+          <span style={{ background: 'linear-gradient(135deg, #60A5FA, #C084FC)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}>SEO + GEO:</span> los dos motores que necesitas
+        </h2>
+        <p style={{ textAlign: 'center', color: 'rgba(255,255,255,0.4)', fontSize: 15, marginBottom: 40, maxWidth: 600, margin: '0 auto 40px' }}>Google sigue siendo el 85% del tráfico. Pero la IA ya responde el 30% de las consultas sin que el usuario haga clic. Necesitas ambos.</p>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24, maxWidth: 900, margin: '0 auto 40px' }}>
+          {/* SEO */}
+          <div style={{ background: '#0F0D2E', border: '1px solid rgba(16,185,129,0.2)', borderRadius: 20, padding: '32px 28px' }}>
+            <div style={{ fontSize: 32, marginBottom: 12 }}>🔍</div>
+            <div style={{ fontSize: 20, fontWeight: 800, color: '#34D399', marginBottom: 8 }}>SEO</div>
+            <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.35)', marginBottom: 16 }}>Posicionamiento en Google</div>
+            <ul style={{ listStyle: 'none', fontSize: 13, color: 'rgba(255,255,255,0.6)', lineHeight: 1.8 }}>
+              <li style={{ padding: '3px 0 3px 22px', position: 'relative' }}><span style={{ position: 'absolute', left: 0, color: '#34D399', fontWeight: 800 }}>✓</span>Meta descriptions, títulos, H1/H2 optimizados</li>
+              <li style={{ padding: '3px 0 3px 22px', position: 'relative' }}><span style={{ position: 'absolute', left: 0, color: '#34D399', fontWeight: 800 }}>✓</span>Sitemap XML + links internos</li>
+              <li style={{ padding: '3px 0 3px 22px', position: 'relative' }}><span style={{ position: 'absolute', left: 0, color: '#34D399', fontWeight: 800 }}>✓</span>Google indexa tu contenido y lo muestra en resultados</li>
+              <li style={{ padding: '3px 0 3px 22px', position: 'relative' }}><span style={{ position: 'absolute', left: 0, color: '#34D399', fontWeight: 800 }}>✓</span>Aparecer cuando alguien busca tu servicio en Google</li>
+            </ul>
+          </div>
+          {/* GEO */}
+          <div style={{ background: '#0F0D2E', border: '1px solid rgba(129,140,248,0.2)', borderRadius: 20, padding: '32px 28px' }}>
+            <div style={{ fontSize: 32, marginBottom: 12 }}>🤖</div>
+            <div style={{ fontSize: 20, fontWeight: 800, color: '#818CF8', marginBottom: 8 }}>GEO</div>
+            <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.35)', marginBottom: 16 }}>Posicionamiento en buscadores de IA</div>
+            <ul style={{ listStyle: 'none', fontSize: 13, color: 'rgba(255,255,255,0.6)', lineHeight: 1.8 }}>
+              <li style={{ padding: '3px 0 3px 22px', position: 'relative' }}><span style={{ position: 'absolute', left: 0, color: '#818CF8', fontWeight: 800 }}>✓</span>Schemas JSON-LD (knowsAbout, FAQPage, Speakable)</li>
+              <li style={{ padding: '3px 0 3px 22px', position: 'relative' }}><span style={{ position: 'absolute', left: 0, color: '#818CF8', fontWeight: 800 }}>✓</span>Contenido tipo "respuesta directa" que la IA puede citar</li>
+              <li style={{ padding: '3px 0 3px 22px', position: 'relative' }}><span style={{ position: 'absolute', left: 0, color: '#818CF8', fontWeight: 800 }}>✓</span>Datos estructurados que los LLMs entienden y referencian</li>
+              <li style={{ padding: '3px 0 3px 22px', position: 'relative' }}><span style={{ position: 'absolute', left: 0, color: '#818CF8', fontWeight: 800 }}>✓</span>Que ChatGPT, Gemini, Perplexity y Claude te mencionen</li>
+            </ul>
+          </div>
+        </div>
+        <div style={{ background: '#0F0D2E', border: '1px solid rgba(99,102,241,0.15)', borderRadius: 16, padding: '24px 32px', maxWidth: 900, margin: '0 auto' }}>
+          <div style={{ fontSize: 15, fontWeight: 700, color: '#fff', marginBottom: 8 }}>¿Por qué necesitas ambos?</div>
+          <ul style={{ listStyle: 'none', fontSize: 13, color: 'rgba(255,255,255,0.55)', lineHeight: 1.8 }}>
+            <li style={{ padding: '2px 0 2px 22px', position: 'relative' }}><span style={{ position: 'absolute', left: 0 }}>→</span>Si solo tienes SEO, Google te muestra pero la IA no te cita</li>
+            <li style={{ padding: '2px 0 2px 22px', position: 'relative' }}><span style={{ position: 'absolute', left: 0 }}>→</span>Si solo tienes GEO, la IA te cita pero Google no te posiciona</li>
+            <li style={{ padding: '2px 0 2px 22px', position: 'relative' }}><span style={{ position: 'absolute', left: 0 }}>→</span><strong style={{ color: '#C084FC' }}>El agente M&P hace ambas cosas:</strong> artículos SEO + schemas GEO en cada publicación</li>
+          </ul>
         </div>
       </div>
 
@@ -223,11 +265,47 @@ export default function AgentesClient() {
           <div style={{ position: 'absolute', top: '-60%', right: '-10%', width: 300, height: 300, background: 'rgba(255,255,255,0.06)', borderRadius: '50%' }} />
           <div style={{ position: 'relative' }}>
             <div style={{ fontSize: 24, fontWeight: 800, color: '#fff' }}>Blog IA Mensual</div>
-            <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.7)', marginTop: 4 }}>24 artículos/mes · Publicación automática · Sin permanencia</div>
+            <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.7)', marginTop: 4 }}>24 artículos/mes · Publicación automática · Email con link al post · Sin permanencia</div>
           </div>
           <div style={{ textAlign: 'right', position: 'relative' }}>
-            <div style={{ fontSize: 48, fontWeight: 900, color: '#fff', letterSpacing: -2 }}>$49.990</div>
+            <div style={{ fontSize: 48, fontWeight: 900, color: '#fff', letterSpacing: -2 }}>$69.990</div>
             <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.55)' }}>+ IVA /mes</div>
+          </div>
+        </div>
+      </div>
+
+      {/* COMPATIBILIDAD */}
+      <div style={{ background: '#07061A', padding: '56px 24px' }}>
+        <h2 style={{ fontSize: 36, fontWeight: 800, textAlign: 'center', color: '#fff', letterSpacing: -1, marginBottom: 12 }}>
+          ¿En qué casos <span style={{ background: 'linear-gradient(135deg, #60A5FA, #C084FC)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}>aplica</span>?
+        </h2>
+        <p style={{ textAlign: 'center', color: 'rgba(255,255,255,0.4)', fontSize: 15, marginBottom: 40 }}>Depende de tu plataforma y hosting actual.</p>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 20, maxWidth: 1000, margin: '0 auto' }}>
+          {/* Verde - Funciona */}
+          <div style={{ background: '#0F0D2E', border: '1px solid rgba(16,185,129,0.25)', borderRadius: 20, padding: '28px 24px' }}>
+            <div style={{ display: 'inline-block', padding: '5px 14px', borderRadius: 8, background: 'rgba(16,185,129,0.12)', color: '#34D399', fontSize: 12, fontWeight: 700, marginBottom: 16 }}>Funciona automático</div>
+            <ul style={{ listStyle: 'none', fontSize: 13, color: 'rgba(255,255,255,0.6)', lineHeight: 1.8 }}>
+              <li style={{ padding: '3px 0 3px 22px', position: 'relative' }}><span style={{ position: 'absolute', left: 0, color: '#34D399', fontWeight: 800 }}>✓</span>WordPress versión 5.0+</li>
+              <li style={{ padding: '3px 0 3px 22px', position: 'relative' }}><span style={{ position: 'absolute', left: 0, color: '#34D399', fontWeight: 800 }}>✓</span>Acceso admin o App Password</li>
+              <li style={{ padding: '3px 0 3px 22px', position: 'relative' }}><span style={{ position: 'absolute', left: 0, color: '#34D399', fontWeight: 800 }}>✓</span>Hosting permite requests externos (99% de los casos)</li>
+            </ul>
+          </div>
+          {/* Amarillo - Setup especial */}
+          <div style={{ background: '#0F0D2E', border: '1px solid rgba(245,158,11,0.25)', borderRadius: 20, padding: '28px 24px' }}>
+            <div style={{ display: 'inline-block', padding: '5px 14px', borderRadius: 8, background: 'rgba(245,158,11,0.12)', color: '#F59E0B', fontSize: 12, fontWeight: 700, marginBottom: 16 }}>Requiere setup especial</div>
+            <ul style={{ listStyle: 'none', fontSize: 13, color: 'rgba(255,255,255,0.6)', lineHeight: 1.8 }}>
+              <li style={{ padding: '3px 0 3px 22px', position: 'relative' }}><span style={{ position: 'absolute', left: 0, color: '#F59E0B', fontWeight: 800 }}>!</span>Wix, Shopify o Squarespace (se puede, config extra)</li>
+              <li style={{ padding: '3px 0 3px 22px', position: 'relative' }}><span style={{ position: 'absolute', left: 0, color: '#F59E0B', fontWeight: 800 }}>!</span>WordPress muy viejo (&lt; 5.0)</li>
+              <li style={{ padding: '3px 0 3px 22px', position: 'relative' }}><span style={{ position: 'absolute', left: 0, color: '#F59E0B', fontWeight: 800 }}>!</span>Hosting con Cloudflare WAF estricto</li>
+            </ul>
+          </div>
+          {/* Rojo - No aplica */}
+          <div style={{ background: '#0F0D2E', border: '1px solid rgba(239,68,68,0.25)', borderRadius: 20, padding: '28px 24px' }}>
+            <div style={{ display: 'inline-block', padding: '5px 14px', borderRadius: 8, background: 'rgba(239,68,68,0.12)', color: '#EF4444', fontSize: 12, fontWeight: 700, marginBottom: 16 }}>No aplica</div>
+            <ul style={{ listStyle: 'none', fontSize: 13, color: 'rgba(255,255,255,0.6)', lineHeight: 1.8 }}>
+              <li style={{ padding: '3px 0 3px 22px', position: 'relative' }}><span style={{ position: 'absolute', left: 0, color: '#EF4444', fontWeight: 800 }}>✗</span>Landing page sin blog</li>
+              <li style={{ padding: '3px 0 3px 22px', position: 'relative' }}><span style={{ position: 'absolute', left: 0, color: '#EF4444', fontWeight: 800 }}>✗</span>Sitio estático puro HTML sin CMS</li>
+            </ul>
           </div>
         </div>
       </div>
@@ -238,10 +316,10 @@ export default function AgentesClient() {
         <h2 style={{ fontSize: 36, fontWeight: 800, color: '#fff', marginBottom: 16, position: 'relative' }}>
           ¿Listo para que <span style={{ background: 'linear-gradient(135deg, #60A5FA, #C084FC)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}>tu sitio trabaje por ti</span>?
         </h2>
-        <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: 16, maxWidth: 480, margin: '0 auto 36px', position: 'relative' }}>Sin permanencia. Sin riesgo. El contenido es tuyo para siempre.</p>
-        <Link href="/#contacto" style={{ display: 'inline-block', background: 'linear-gradient(135deg, #2563EB, #7C3AED)', color: '#fff', padding: '18px 42px', borderRadius: 14, fontWeight: 700, fontSize: 16, textDecoration: 'none', boxShadow: '0 0 40px rgba(99,102,241,0.4)', position: 'relative' }}>
-          Empezar ahora →
-        </Link>
+        <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: 16, maxWidth: 480, margin: '0 auto 36px', position: 'relative' }}>Agenda una reunión de 30 minutos. Te mostramos cómo funciona con tu sitio.</p>
+        <a href="https://wa.me/56992258137?text=Hola%2C%20me%20interesa%20el%20agente%20de%20blog%20IA%20para%20mi%20sitio" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block', background: 'linear-gradient(135deg, #2563EB, #7C3AED)', color: '#fff', padding: '18px 42px', borderRadius: 14, fontWeight: 700, fontSize: 16, textDecoration: 'none', boxShadow: '0 0 40px rgba(99,102,241,0.4)', position: 'relative' }}>
+          Agendar reunión gratuita →
+        </a>
       </div>
 
       <footer style={{ textAlign: 'center', padding: 32, fontSize: 13, color: 'rgba(255,255,255,0.2)', borderTop: '1px solid rgba(255,255,255,0.05)', background: '#07061A' }}>
