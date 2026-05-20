@@ -874,12 +874,10 @@ export default function RankingAgenciasPage() {
               <div className="bg-green-50 rounded-xl p-6">
                 <h3 className="text-xl font-bold text-green-900 mb-3">Si eres una empresa B2B con ciclo de venta largo</h3>
                 <p className="text-gray-700 mb-2">
-                  <strong>Busca:</strong> Agencia con experiencia demostrada en B2B, que entienda LinkedIn Ads, lead nurturing y que mida
-                  más allá del CPL (Costo por Lead) — necesitas medir SQL (Sales Qualified Leads) y oportunidades reales.
+                  <strong>Busca:</strong> Una agencia que no solo genere leads, sino que entienda todo el funnel B2B: desde la captación hasta el cierre. Necesitas LinkedIn Ads segmentado por cargo, árbol de decisión para calificar leads, notificaciones en tiempo real al equipo comercial, y métricas que midan oportunidades reales — no solo CPL.
                 </p>
                 <p className="text-gray-700">
-                  <strong>Recomendación:</strong> Muller y Pérez (reducción de CAC del 38% en B2B), Loup (16 años de experiencia B2B),
-                  Cebra (HubSpot Elite Partner para inbound).
+                  <strong>Recomendación:</strong> Muller y Pérez construyó un sistema completo para B2B: Predictor que estima costos por industria antes de gastar, árbol de decisión de conversión, agentes de IA que generan contenido de autoridad, dashboard en tiempo real con métricas de SQL, y notificaciones instantáneas cuando llega un lead calificado. Es un ecosistema, no solo campañas. También destaca Loup por sus 16 años de experiencia en B2B.
                 </p>
               </div>
 
