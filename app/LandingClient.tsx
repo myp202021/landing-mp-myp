@@ -704,7 +704,7 @@ export default function LandingClient() {
                     <div className="text-xs text-gray-500 mt-0.5">Estudios y datos originales</div>
                   </Link>
                   <Link href="/benchmarks" className="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
-                    <div className="font-semibold">Benchmarks 2025</div>
+                    <div className="font-semibold">Benchmarks 2026</div>
                     <div className="text-xs text-gray-500 mt-0.5">Datos de industria Chile</div>
                   </Link>
                   <Link href="/ranking-agencias-marketing-digital-chile" className="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
