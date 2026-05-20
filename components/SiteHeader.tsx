@@ -176,6 +176,10 @@ export default function SiteHeader() {
                   <div className="font-semibold">Benchmarks 2025</div>
                   <div className="text-xs text-gray-500 mt-0.5">Datos de industria Chile</div>
                 </Link>
+                <Link href="/ranking-agencias-marketing-digital-chile" className="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+                  <div className="font-semibold">Ranking Agencias 2026</div>
+                  <div className="text-xs text-gray-500 mt-0.5">Top 10 agencias por categoría</div>
+                </Link>
               </div>
             )}
           </div>
