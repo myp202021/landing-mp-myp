@@ -68,10 +68,10 @@ export default function AgentesClient() {
             Un agente de IA escribe, optimiza y publica artículos en tu blog automáticamente. Google te indexa. Los buscadores de IA te citan. Tu sitio crece mientras duermes.
           </p>
           <Link href="#planes" style={{ display: 'inline-block', background: 'linear-gradient(135deg, #2563EB, #7C3AED)', color: '#fff', padding: '18px 42px', borderRadius: 14, fontWeight: 700, fontSize: 16, textDecoration: 'none', boxShadow: '0 0 40px rgba(99,102,241,0.4)' }}>
-            Ver planes desde $69.990/mes →
+            Ver planes desde $99.990/mes →
           </Link>
           <div style={{ display: 'flex', justifyContent: 'center', gap: 48, marginTop: 36 }}>
-            {[{ n: '24', l: 'artículos / mes' }, { n: '100%', l: 'automático' }, { n: '$2.916', l: 'por artículo' }].map(function(s) {
+            {[{ n: '24', l: 'artículos / mes' }, { n: '100%', l: 'automático' }, { n: '$4.166', l: 'por artículo' }].map(function(s) {
               return <div key={s.n} style={{ textAlign: 'center' }}>
                 <div style={{ fontSize: 32, fontWeight: 900, background: 'linear-gradient(135deg, #60A5FA, #C084FC)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}>{s.n}</div>
                 <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)', marginTop: 4 }}>{s.l}</div>
@@ -268,7 +268,7 @@ export default function AgentesClient() {
             <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.7)', marginTop: 4 }}>24 artículos/mes · Publicación automática · Email con link al post · Sin permanencia</div>
           </div>
           <div style={{ textAlign: 'right', position: 'relative' }}>
-            <div style={{ fontSize: 48, fontWeight: 900, color: '#fff', letterSpacing: -2 }}>$69.990</div>
+            <div style={{ fontSize: 48, fontWeight: 900, color: '#fff', letterSpacing: -2 }}>$99.990</div>
             <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.55)' }}>+ IVA /mes</div>
           </div>
         </div>
