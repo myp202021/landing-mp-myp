@@ -158,15 +158,16 @@ async function main() {
   const hace24h = new Date(Date.now() - horasVentana * 60 * 60 * 1000)
   console.log(`📅 Generando reporte para ${hoy} (ventana: ${horasVentana}h, día semana: ${dow})...`)
 
-  // ── Cargar URLs ya reportadas en los últimos 3 días para deduplicar ────
-  const hace3dias = new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+  // ── Cargar URLs ya reportadas en los últimos 14 días para deduplicar ────
+  // (14 días para evitar que stories highlights/pinned se repitan semana a semana)
+  const hace14dias = new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
   const { data: reportesPrevios } = await supabase
     .from('reportes_competencia')
     .select('post_url')
-    .gte('fecha_reporte', hace3dias)
+    .gte('fecha_reporte', hace14dias)
     .not('post_url', 'is', null)
   const urlsYaReportadas = new Set((reportesPrevios || []).map(r => r.post_url).filter(Boolean))
-  console.log(`🔁 URLs ya reportadas últimos 3 días (desde ${hace3dias}): ${urlsYaReportadas.size}`)
+  console.log(`🔁 URLs ya reportadas últimos 14 días (desde ${hace14dias}): ${urlsYaReportadas.size}`)
 
   await supabase.from('reportes_competencia').delete().eq('fecha_reporte', hoy)
 
@@ -197,11 +198,12 @@ async function main() {
     const recientesIG = all.filter(p => p.timestamp && new Date(p.timestamp) > hace24h)
     console.log(`   IG en ventana 28h: ${recientesIG.length}`)
 
-    // Dedup: excluir posts cuya URL ya apareció en el reporte de ayer
+    // Dedup: excluir posts cuya URL ya apareció en reportes anteriores
     const sinDuplicados = recientesIG.filter(p => {
-      const url = p.url || `https://www.instagram.com/p/${p.shortCode}/`
-      if (urlsYaReportadas.has(url)) {
-        console.log(`   🔁 Dedup: omitiendo ${url} (ya reportado ayer)`)
+      const url = p.url || (p.shortCode ? `https://www.instagram.com/p/${p.shortCode}/` : null)
+        || (p.id ? `ig:${p.ownerUsername}:${p.id}` : null)
+      if (url && urlsYaReportadas.has(url)) {
+        console.log(`   🔁 Dedup: omitiendo ${url} (ya reportado)`)
         return false
       }
       return true
@@ -313,9 +315,22 @@ async function main() {
         pk: s.pk || s.id || s.shortCode || '',
       }
     })
+    // Filtrar stories viejas: stories reales de IG duran 24h, si el timestamp es
+    // de hace más de 48h es un highlight/pinned y no debe aparecer en el reporte diario
+    const hace48h = new Date(Date.now() - 48 * 60 * 60 * 1000)
+    const storiesRecientes = storiesMapped.filter(s => {
+      if (!s.timestamp || isNaN(s.timestamp.getTime())) return false // sin fecha → no incluir
+      if (s.timestamp < hace48h) {
+        console.log(`   ⏳ Story vieja (highlight/pinned): ${s.handle}/${s.pk} — ${s.timestamp.toISOString()}`)
+        return false
+      }
+      return true
+    })
+    console.log(`   Stories recientes (<48h): ${storiesRecientes.length} (${storiesMapped.length - storiesRecientes.length} highlights descartados)`)
+
     // Dedup stories: 1) dentro del mismo batch por pk, 2) contra días anteriores
     const seenPks = new Set()
-    storiesIG = storiesMapped.filter(s => {
+    storiesIG = storiesRecientes.filter(s => {
       // Sin pk no podemos deduplicar, incluir igual
       if (!s.pk) return true
       // Dedup intra-batch: si ya vimos este pk en este run, omitir
@@ -353,9 +368,11 @@ async function main() {
     if (!comp) continue
     competidoresConPost.add(comp.nombre)
 
+    const postUrl = post.url || (post.shortCode ? `https://www.instagram.com/p/${post.shortCode}/` : null)
+      || (post.id ? `ig:${post.ownerUsername}:${post.id}` : null)
     await supabase.from('reportes_competencia').insert({
       competidor: comp.nombre, instagram_handle: comp.instagram, red_social: 'Instagram',
-      post_url: post.url || `https://www.instagram.com/p/${post.shortCode}/`,
+      post_url: postUrl,
       post_texto: (post.caption || '').substring(0, 600),
       post_imagen: post.displayUrl || null,
       likes: post.likesCount || 0, comentarios: post.commentsCount || 0,
