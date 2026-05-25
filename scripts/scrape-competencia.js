@@ -158,16 +158,15 @@ async function main() {
   const hace24h = new Date(Date.now() - horasVentana * 60 * 60 * 1000)
   console.log(`📅 Generando reporte para ${hoy} (ventana: ${horasVentana}h, día semana: ${dow})...`)
 
-  // ── Cargar URLs ya reportadas en los últimos 14 días para deduplicar ────
-  // (14 días para evitar que stories highlights/pinned se repitan semana a semana)
-  const hace14dias = new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+  // ── Cargar URLs ya reportadas en los últimos 3 días para deduplicar ────
+  const hace3dias = new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
   const { data: reportesPrevios } = await supabase
     .from('reportes_competencia')
     .select('post_url')
-    .gte('fecha_reporte', hace14dias)
+    .gte('fecha_reporte', hace3dias)
     .not('post_url', 'is', null)
   const urlsYaReportadas = new Set((reportesPrevios || []).map(r => r.post_url).filter(Boolean))
-  console.log(`🔁 URLs ya reportadas últimos 14 días (desde ${hace14dias}): ${urlsYaReportadas.size}`)
+  console.log(`🔁 URLs ya reportadas últimos 3 días (desde ${hace3dias}): ${urlsYaReportadas.size}`)
 
   await supabase.from('reportes_competencia').delete().eq('fecha_reporte', hoy)
 
@@ -315,18 +314,18 @@ async function main() {
         pk: s.pk || s.id || s.shortCode || '',
       }
     })
-    // Filtrar stories viejas: stories reales de IG duran 24h, si el timestamp es
-    // de hace más de 48h es un highlight/pinned y no debe aparecer en el reporte diario
-    const hace48h = new Date(Date.now() - 48 * 60 * 60 * 1000)
+    // Filtrar stories viejas: stories reales de IG duran 24h, cualquier cosa más vieja
+    // es un highlight/pinned y no debe aparecer en el reporte diario
+    const hace24hStories = new Date(Date.now() - 24 * 60 * 60 * 1000)
     const storiesRecientes = storiesMapped.filter(s => {
       if (!s.timestamp || isNaN(s.timestamp.getTime())) return false // sin fecha → no incluir
-      if (s.timestamp < hace48h) {
+      if (s.timestamp < hace24hStories) {
         console.log(`   ⏳ Story vieja (highlight/pinned): ${s.handle}/${s.pk} — ${s.timestamp.toISOString()}`)
         return false
       }
       return true
     })
-    console.log(`   Stories recientes (<48h): ${storiesRecientes.length} (${storiesMapped.length - storiesRecientes.length} highlights descartados)`)
+    console.log(`   Stories recientes (<24h): ${storiesRecientes.length} (${storiesMapped.length - storiesRecientes.length} highlights descartados)`)
 
     // Dedup stories: 1) dentro del mismo batch por pk, 2) contra días anteriores
     const seenPks = new Set()
@@ -851,7 +850,7 @@ async function enviarEmail({ hoy, postsIG, competidoresConPost, sinActividad, po
 
   const payload = {
     from: 'Muller y Perez <contacto@mulleryperez.cl>',
-    to: ['felipe.munoz@buseshualpen.cl', 'contacto@mulleryperez.cl'],
+    to: ['contacto@mulleryperez.cl'],
     subject: `🚌 Competencia Hualpén — ${fecha}${totalOfertas > 0 ? ` · ⚠️ ${totalOfertas} oferta${totalOfertas > 1 ? 's' : ''} laboral${totalOfertas > 1 ? 'es' : ''}` : ''} (${totalPosts} posts)`,
     html: `<div style="font-family:'Segoe UI',sans-serif;max-width:500px;margin:0 auto;padding:32px 16px;color:#1E293B;">
     <h2 style="font-size:18px;font-weight:800;margin:0 0 8px;">🚌 Reporte Diario — Competencia Hualpén</h2>
@@ -886,7 +885,7 @@ async function enviarEmail({ hoy, postsIG, competidoresConPost, sinActividad, po
   })
 
   if (res.ok) {
-    console.log('✉️  Email enviado a felipe.munoz@buseshualpen.cl y contacto@mulleryperez.cl')
+    console.log('✉️  Email enviado a contacto@mulleryperez.cl')
   } else {
     const err = await res.text()
     console.error('❌ Error enviando email:', err)
