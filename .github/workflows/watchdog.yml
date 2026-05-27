@@ -74,4 +74,51 @@ jobs:
           check_and_trigger "invas-blog-diario.yml" "Invas Blog Diario" 11 "weekdays"
           check_and_trigger "copilot-agentes-test.yml" "Copilot Pipeline" 11 "weekdays"
 
+          # Rankings semanales (jueves)
+          if [ "$DOW" = "4" ]; then
+            check_and_trigger "blog-rankings-semanal.yml" "Rankings M&P (Jueves)" 12 "weekdays"
+            check_and_trigger "invas-blog-rankings-semanal.yml" "Rankings Invas (Jueves)" 12 "weekdays"
+          fi
+
+          # Indicadores marketing (sabado)
+          if [ "$DOW" = "6" ]; then
+            check_and_trigger "indicadores-marketing.yml" "Indicadores Marketing (Sabado)" 12 "daily"
+          fi
+
+          # DevuelveMiPie SEO (repo aparte)
+          echo "--- DevuelveMiPie SEO ---"
+          DMP_REPO="myp202021/devuelvemipie-seo"
+          DMP_RAN=$(curl -s -H "Authorization: Bearer $GH_TOKEN" \
+            "https://api.github.com/repos/$DMP_REPO/actions/workflows/dmp-blog-diario.yml/runs?per_page=5&status=success&created=%3E=${TODAY}T00:00:00Z" \
+            | python3 -c "import json,sys; d=json.load(sys.stdin); print(len(d.get('workflow_runs',[])))")
+          if [ "$DMP_RAN" = "0" ]; then
+            echo "TRIGGER DMP Blog Diario — no corrio hoy, disparando..."
+            curl -s -X POST \
+              -H "Authorization: Bearer $GH_TOKEN" \
+              -H "Accept: application/vnd.github.v3+json" \
+              "https://api.github.com/repos/$DMP_REPO/actions/workflows/dmp-blog-diario.yml/dispatches" \
+              -d '{"ref":"main"}'
+            echo " -> Disparado!"
+          else
+            echo "OK DMP Blog Diario — ya corrio hoy ($DMP_RAN runs)"
+          fi
+
+          # Rankings DMP (viernes)
+          if [ "$DOW" = "5" ]; then
+            DMP_RANK=$(curl -s -H "Authorization: Bearer $GH_TOKEN" \
+              "https://api.github.com/repos/$DMP_REPO/actions/workflows/dmp-blog-rankings-semanal.yml/runs?per_page=5&status=success&created=%3E=${TODAY}T00:00:00Z" \
+              | python3 -c "import json,sys; d=json.load(sys.stdin); print(len(d.get('workflow_runs',[])))")
+            if [ "$DMP_RANK" = "0" ]; then
+              echo "TRIGGER DMP Rankings (Viernes) — disparando..."
+              curl -s -X POST \
+                -H "Authorization: Bearer $GH_TOKEN" \
+                -H "Accept: application/vnd.github.v3+json" \
+                "https://api.github.com/repos/$DMP_REPO/actions/workflows/dmp-blog-rankings-semanal.yml/dispatches" \
+                -d '{"ref":"main"}'
+              echo " -> Disparado!"
+            else
+              echo "OK DMP Rankings — ya corrio ($DMP_RANK runs)"
+            fi
+          fi
+
           echo "=== Watchdog completo ==="
