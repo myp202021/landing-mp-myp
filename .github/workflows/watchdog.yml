@@ -1,0 +1,77 @@
+name: Watchdog — Verificar y disparar workflows diarios
+
+on:
+  schedule:
+    # Corre cada hora de 08:00 a 14:00 UTC (05:00 a 11:00 AM Chile)
+    - cron: '0 8 * * *'
+    - cron: '0 9 * * *'
+    - cron: '0 10 * * *'
+    - cron: '0 11 * * *'
+    - cron: '0 12 * * *'
+    - cron: '0 13 * * *'
+    - cron: '0 14 * * *'
+  workflow_dispatch:
+
+jobs:
+  watchdog:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verificar y disparar workflows que no corrieron hoy
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TODAY=$(date -u +%Y-%m-%d)
+          HOUR_UTC=$(date -u +%H)
+          REPO="myp202021/landing-mp-myp"
+          DOW=$(date -u +%u)  # 1=lunes, 7=domingo
+
+          echo "=== Watchdog: $TODAY ${HOUR_UTC}:00 UTC (DOW=$DOW) ==="
+
+          check_and_trigger() {
+            local workflow_file=$1
+            local workflow_name=$2
+            local min_hour_utc=$3  # hora UTC minima para verificar
+            local days=$4          # "daily" o "weekdays"
+
+            # Si es fin de semana y el workflow es solo L-V, saltar
+            if [ "$days" = "weekdays" ] && [ "$DOW" -gt 5 ]; then
+              echo "SKIP $workflow_name (solo L-V, hoy es fin de semana)"
+              return
+            fi
+
+            # Solo verificar si ya paso la hora esperada
+            if [ "$HOUR_UTC" -lt "$min_hour_utc" ]; then
+              echo "SKIP $workflow_name (aun no es hora, espera ${min_hour_utc}:00 UTC)"
+              return
+            fi
+
+            # Buscar si hubo un run exitoso hoy
+            RAN=$(curl -s -H "Authorization: Bearer $GH_TOKEN" \
+              "https://api.github.com/repos/$REPO/actions/workflows/$workflow_file/runs?per_page=5&status=success&created=%3E=${TODAY}T00:00:00Z" \
+              | python3 -c "import json,sys; d=json.load(sys.stdin); print(len(d.get('workflow_runs',[])))")
+
+            if [ "$RAN" = "0" ]; then
+              echo "TRIGGER $workflow_name — no corrio hoy, disparando..."
+              curl -s -X POST \
+                -H "Authorization: Bearer $GH_TOKEN" \
+                -H "Accept: application/vnd.github.v3+json" \
+                "https://api.github.com/repos/$REPO/actions/workflows/$workflow_file/dispatches" \
+                -d '{"ref":"main"}'
+              echo " -> Disparado!"
+            else
+              echo "OK $workflow_name — ya corrio hoy ($RAN runs exitosos)"
+            fi
+          }
+
+          # Workflows diarios (L-D)
+          check_and_trigger "blog-diario.yml" "Blog Diario M&P" 10 "daily"
+          check_and_trigger "clipping-prensa-hualpen.yml" "Clipping Prensa Hualpen" 10 "daily"
+          check_and_trigger "backup-supabase.yml" "Backup Supabase" 9 "daily"
+          check_and_trigger "clipping-swing-artistas.yml" "Clipping Swing" 11 "daily"
+
+          # Workflows L-V
+          check_and_trigger "competencia-hualpen.yml" "Competencia Hualpen" 11 "weekdays"
+          check_and_trigger "invas-blog-diario.yml" "Invas Blog Diario" 11 "weekdays"
+          check_and_trigger "copilot-agentes-test.yml" "Copilot Pipeline" 11 "weekdays"
+
+          echo "=== Watchdog completo ==="
