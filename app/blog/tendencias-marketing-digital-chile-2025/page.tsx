@@ -3,15 +3,15 @@ import Link from 'next/link'
 import { ArrowLeft, TrendingUp, Zap, Brain, BarChart3, CheckCircle, Rocket } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Tendencias del Marketing Digital en Chile 2025: Paid Media, IA y Performance',
-  description: 'Conoce las principales tendencias del marketing digital en Chile 2025: paid media, inteligencia artificial, personalización y métricas de performance.',
-  keywords: 'tendencias marketing digital Chile, marketing digital Chile 2025, paid media Chile, IA marketing, KPI marketing digital',
+  title: 'Tendencias del Marketing Digital en Chile 2026: Paid Media, IA y Performance',
+  description: 'Conoce las principales tendencias del marketing digital en Chile 2026: paid media, inteligencia artificial, personalización y métricas de performance.',
+  keywords: 'tendencias marketing digital Chile, marketing digital Chile 2026, paid media Chile, IA marketing, KPI marketing digital',
   alternates: {
     canonical: 'https://www.mulleryperez.cl/blog/tendencias-marketing-digital-chile-2025'
   },
   openGraph: {
-    title: 'Tendencias del Marketing Digital en Chile 2025: Paid Media, IA y Performance',
-    description: 'Conoce las principales tendencias del marketing digital en Chile 2025: paid media, inteligencia artificial, personalización y métricas de performance.',
+    title: 'Tendencias del Marketing Digital en Chile 2026: Paid Media, IA y Performance',
+    description: 'Conoce las principales tendencias del marketing digital en Chile 2026: paid media, inteligencia artificial, personalización y métricas de performance.',
     type: 'article',
     url: 'https://www.mulleryperez.cl/blog/tendencias-marketing-digital-chile-2025',
     publishedTime: '2025-10-09T00:00:00.000Z'
@@ -23,8 +23,8 @@ export const metadata: Metadata = {
   const articleSchema = {
     '@context': 'https://schema.org',
     '@type': 'Article',
-    headline: 'Tendencias del Marketing Digital en Chile 2025: Paid Media, IA y Performance',
-    description: 'Conoce las principales tendencias del marketing digital en Chile 2025: paid media, inteligencia artificial, personalización y métricas de performance.',
+    headline: 'Tendencias del Marketing Digital en Chile 2026: Paid Media, IA y Performance',
+    description: 'Conoce las principales tendencias del marketing digital en Chile 2026: paid media, inteligencia artificial, personalización y métricas de performance.',
     url: 'https://www.mulleryperez.cl/blog/tendencias-marketing-digital-chile-2025',
     datePublished: '2025-10-09T00:00:00.000Z',
     dateModified: '2025-10-09T00:00:00.000Z',
@@ -82,16 +82,16 @@ export default function ArticlePage() {
       <article className="pt-32 pb-24 px-6">
         <div className="max-w-4xl mx-auto">
           <div className="mb-8">
-            <span className="px-4 py-2 bg-orange-100 text-orange-700 rounded-full text-sm font-bold">Tendencias 2025</span>
-            <p className="text-gray-500 mt-4">9 de octubre de 2025 · 18 min de lectura</p>
+            <span className="px-4 py-2 bg-orange-100 text-orange-700 rounded-full text-sm font-bold">Tendencias 2026</span>
+            <p className="text-gray-500 mt-4">9 de octubre de 2026 · 18 min de lectura</p>
           </div>
 
           <h1 className="text-4xl lg:text-5xl font-black text-gray-900 mb-6 leading-tight">
-            Tendencias del Marketing Digital en Chile 2025: Paid Media, IA y Performance
+            Tendencias del Marketing Digital en Chile 2026: Paid Media, IA y Performance
           </h1>
 
           <p className="text-xl text-gray-600 mb-12 leading-relaxed">
-            El 2025 no es un año más: es el momento en que las empresas chilenas deben decidir si continúan improvisando o si adoptan un modelo de marketing de performance data-driven.
+            El 2026 no es un año más: es el momento en que las empresas chilenas deben decidir si continúan improvisando o si adoptan un modelo de marketing de performance data-driven.
           </p>
 
           <div className="prose prose-lg max-w-none">
@@ -101,7 +101,7 @@ export default function ArticlePage() {
                 El marketing digital en Chile cambió radicalmente en los últimos tres años. El paid media ya representa más del 50% de la inversión publicitaria digital, la inteligencia artificial dejó de ser un experimento y se transformó en un aliado estratégico, y los indicadores de performance (CAC, LTV, ROI) pasaron a ser prioridad en directorios y gerencias.
               </p>
               <p className="text-gray-700 mb-4">
-                El 2025 no es un año más: es el momento en que las empresas chilenas deben decidir si continúan improvisando o si adoptan un modelo de marketing de performance data-driven que les permita competir con lógica ingenieril.
+                El 2026 no es un año más: es el momento en que las empresas chilenas deben decidir si continúan improvisando o si adoptan un modelo de marketing de performance data-driven que les permita competir con lógica ingenieril.
               </p>
               <p className="text-gray-700">
                 En M&P analizamos las tendencias clave que marcarán este año y cómo adaptarlas para maximizar el retorno de inversión.
@@ -118,7 +118,7 @@ export default function ArticlePage() {
             </p>
 
             <div className="bg-white border-2 border-blue-200 rounded-xl p-6 mb-8">
-              <h3 className="text-lg font-bold text-gray-900 mb-4">✅ Lo que vemos en 2025:</h3>
+              <h3 className="text-lg font-bold text-gray-900 mb-4">✅ Lo que vemos en 2026:</h3>
               <ul className="list-disc list-inside text-gray-700 space-y-2">
                 <li>Google Search y PMax concentran la mayor parte del presupuesto de performance.</li>
                 <li>Meta (Facebook e Instagram) lidera en volumen de leads en retail y servicios.</li>
@@ -191,7 +191,7 @@ export default function ArticlePage() {
 
             <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6 flex items-center gap-3">
               <BarChart3 className="w-8 h-8 text-green-600" />
-              Métricas clave en 2025
+              Métricas clave en 2026
             </h2>
 
             <p className="text-gray-700 mb-4">
@@ -234,7 +234,7 @@ export default function ArticlePage() {
             </h2>
 
             <p className="text-gray-700 mb-4">
-              Las tendencias de 2025 obligan a tener reportería clara, no PDFs mensuales.
+              Las tendencias de 2026 obligan a tener reportería clara, no PDFs mensuales.
             </p>
 
             <ul className="list-disc list-inside text-gray-700 space-y-2 mb-6">
@@ -283,7 +283,7 @@ export default function ArticlePage() {
             <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6">Conclusión</h2>
 
             <p className="text-gray-700 mb-4">
-              El 2025 en Chile será el año de la consolidación del marketing de performance. Las empresas que adopten paid media con inteligencia, integren IA en sus flujos y midan CAC y LTV estarán un paso adelante de la competencia.
+              El 2026 en Chile será el año de la consolidación del marketing de performance. Las empresas que adopten paid media con inteligencia, integren IA en sus flujos y midan CAC y LTV estarán un paso adelante de la competencia.
             </p>
 
             <p className="text-gray-700 mb-6">
@@ -311,7 +311,7 @@ export default function ArticlePage() {
       <footer className="bg-gray-900 text-white py-12 px-6">
         <div className="max-w-7xl mx-auto text-center">
           <Link href="/"><img src="/logo-blanco.png" alt="Muller y Pérez" className="h-10 w-auto mx-auto mb-6" /></Link>
-          <p className="text-gray-400">© 2025 Muller y Pérez. Marketing Digital Basado en Datos.</p>
+          <p className="text-gray-400">© 2026 Muller y Pérez. Marketing Digital Basado en Datos.</p>
         </div>
       </footer>
     </div>

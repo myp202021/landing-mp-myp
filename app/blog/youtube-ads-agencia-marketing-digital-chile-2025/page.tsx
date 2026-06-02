@@ -3,15 +3,15 @@ import Link from 'next/link'
 import { ArrowLeft, Youtube, Target, DollarSign, TrendingUp, CheckCircle, PlayCircle } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'YouTube Ads en Chile 2025-2026: Cómo una Agencia de Marketing Digital Usa Video Performance para Aumentar Conversiones',
-  description: 'Descubre cómo una agencia de marketing digital en Chile 2025 usa YouTube Ads y video performance para aumentar conversiones. Costos reales y estrategias.',
+  title: 'YouTube Ads en Chile 2026: Cómo una Agencia de Marketing Digital Usa Video Performance para Aumentar Conversiones',
+  description: 'Descubre cómo una agencia de marketing digital en Chile 2026 usa YouTube Ads y video performance para aumentar conversiones. Costos reales y estrategias.',
   keywords: 'agencia de marketing digital, YouTube Ads Chile, publicidad en video, costos YouTube Ads, agencia marketing digital video',
   alternates: {
     canonical: 'https://www.mulleryperez.cl/blog/youtube-ads-agencia-marketing-digital-chile-2025'
   },
   openGraph: {
-    title: 'YouTube Ads en Chile 2025-2026: Cómo una Agencia de Marketing Digital Usa Video Performance para Aumentar Conversiones',
-    description: 'Descubre cómo una agencia de marketing digital en Chile 2025 usa YouTube Ads y video performance para aumentar conversiones. Costos reales y estrategias.',
+    title: 'YouTube Ads en Chile 2026: Cómo una Agencia de Marketing Digital Usa Video Performance para Aumentar Conversiones',
+    description: 'Descubre cómo una agencia de marketing digital en Chile 2026 usa YouTube Ads y video performance para aumentar conversiones. Costos reales y estrategias.',
     type: 'article',
     url: 'https://www.mulleryperez.cl/blog/youtube-ads-agencia-marketing-digital-chile-2025',
     publishedTime: '2025-01-10T00:00:00.000Z'
@@ -23,8 +23,8 @@ export const metadata: Metadata = {
   const articleSchema = {
     '@context': 'https://schema.org',
     '@type': 'Article',
-    headline: 'YouTube Ads en Chile 2025-2026: Cómo una Agencia de Marketing Digital Usa Video Performance para Aumentar Conversiones',
-    description: 'Descubre cómo una agencia de marketing digital en Chile 2025 usa YouTube Ads y video performance para aumentar conversiones. Costos reales y estrategias.',
+    headline: 'YouTube Ads en Chile 2026: Cómo una Agencia de Marketing Digital Usa Video Performance para Aumentar Conversiones',
+    description: 'Descubre cómo una agencia de marketing digital en Chile 2026 usa YouTube Ads y video performance para aumentar conversiones. Costos reales y estrategias.',
     url: 'https://www.mulleryperez.cl/blog/youtube-ads-agencia-marketing-digital-chile-2025',
     datePublished: '2025-01-10T00:00:00.000Z',
     dateModified: '2026-03-10T00:00:00.000Z',
@@ -83,11 +83,11 @@ export default function ArticlePage() {
         <div className="max-w-4xl mx-auto">
           <div className="mb-8">
             <span className="px-4 py-2 bg-red-100 text-red-700 rounded-full text-sm font-bold">Performance</span>
-            <p className="text-gray-500 mt-4">10 de enero de 2025 · 11 min de lectura</p>
+            <p className="text-gray-500 mt-4">10 de enero de 2026 · 11 min de lectura</p>
           </div>
 
           <h1 className="text-4xl lg:text-5xl font-black text-gray-900 mb-6 leading-tight">
-            YouTube Ads en Chile 2025-2026: Cómo una Agencia de Marketing Digital Usa Video Performance para Aumentar Conversiones
+            YouTube Ads en Chile 2026: Cómo una Agencia de Marketing Digital Usa Video Performance para Aumentar Conversiones
           </h1>
 
           <div className="prose prose-lg max-w-none">
@@ -95,7 +95,7 @@ export default function ArticlePage() {
             <div className="bg-red-50 border-l-4 border-red-600 p-6 rounded-r-xl mb-12">
               <h3 className="text-xl font-bold text-gray-900 mb-4">Introducción</h3>
               <p className="text-gray-700 mb-4">
-                En Chile 2025, el consumo de video online alcanzó cifras históricas: más del 92% de los usuarios de internet ven YouTube al menos una vez al mes, y el tiempo promedio diario dedicado a la plataforma supera los 60 minutos.
+                En Chile 2026, el consumo de video online alcanzó cifras históricas: más del 92% de los usuarios de internet ven YouTube al menos una vez al mes, y el tiempo promedio diario dedicado a la plataforma supera los 60 minutos.
               </p>
               <p className="text-gray-700 mb-4">
                 Para las marcas, YouTube ya no es solo un canal de branding. Hoy, bien gestionado, se convierte en un motor de performance capaz de generar conversiones directas. Sin embargo, el éxito depende de la estrategia y de contar con una agencia de marketing digital especializada en performance y datos.
@@ -185,7 +185,7 @@ export default function ArticlePage() {
             {/* Costos reales */}
             <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6 flex items-center gap-3">
               <DollarSign className="w-8 h-8 text-green-600" />
-              Costos reales de YouTube Ads en Chile 2025
+              Costos reales de YouTube Ads en Chile 2026
             </h2>
 
             <div className="grid md:grid-cols-3 gap-6 mb-8">
@@ -331,7 +331,7 @@ export default function ArticlePage() {
             <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6">Conclusión</h2>
 
             <p className="text-gray-700 mb-4">
-              En 2025, YouTube Ads en Chile dejó de ser un canal exclusivo de branding. Bien trabajado por una agencia de marketing digital especializada en performance, puede transformarse en un motor de leads y ventas con costos competitivos y resultados medibles en tiempo real.
+              En 2026, YouTube Ads en Chile dejó de ser un canal exclusivo de branding. Bien trabajado por una agencia de marketing digital especializada en performance, puede transformarse en un motor de leads y ventas con costos competitivos y resultados medibles en tiempo real.
             </p>
 
             <p className="text-gray-700 mb-6">
@@ -379,7 +379,7 @@ export default function ArticlePage() {
       {/* Footer */}
       <footer className="border-t border-gray-200 py-12 px-6">
         <div className="max-w-7xl mx-auto text-center text-gray-600 text-sm">
-          <p>© 2025 Muller y Pérez · Agencia de Marketing Digital</p>
+          <p>© 2026 Muller y Pérez · Agencia de Marketing Digital</p>
         </div>
       </footer>
     </div>

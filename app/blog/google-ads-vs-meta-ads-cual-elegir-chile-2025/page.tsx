@@ -3,15 +3,15 @@ import Link from 'next/link'
 import { ArrowLeft, Target, TrendingUp, DollarSign, Users, CheckCircle, Zap } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Google Ads vs Meta Ads: Cuál Elegir en Chile 2025 (Comparativa Completa)',
-  description: 'Comparativa completa Google Ads vs Meta Ads en Chile 2025. CPL, ROAS, industrias ideales y cuándo usar cada plataforma. Datos reales de +200 campañas.',
+  title: 'Google Ads vs Meta Ads: Cuál Elegir en Chile 2026 (Comparativa Completa)',
+  description: 'Comparativa completa Google Ads vs Meta Ads en Chile 2026. CPL, ROAS, industrias ideales y cuándo usar cada plataforma. Datos reales de +200 campañas.',
   keywords: 'google ads vs meta ads, google ads vs facebook ads chile, comparacion plataformas publicidad digital, cpc google ads chile, cpl meta ads chile',
   alternates: {
     canonical: 'https://www.mulleryperez.cl/blog/google-ads-vs-meta-ads-cual-elegir-chile-2025'
   },
   openGraph: {
-    title: 'Google Ads vs Meta Ads: Cuál Elegir en Chile 2025 (Comparativa Completa)',
-    description: 'Comparativa completa Google Ads vs Meta Ads en Chile 2025. CPL, ROAS, industrias ideales y cuándo usar cada plataforma. Datos reales de +200 campañas.',
+    title: 'Google Ads vs Meta Ads: Cuál Elegir en Chile 2026 (Comparativa Completa)',
+    description: 'Comparativa completa Google Ads vs Meta Ads en Chile 2026. CPL, ROAS, industrias ideales y cuándo usar cada plataforma. Datos reales de +200 campañas.',
     type: 'article',
     url: 'https://www.mulleryperez.cl/blog/google-ads-vs-meta-ads-cual-elegir-chile-2025',
     publishedTime: '2025-10-09T00:00:00.000Z'
@@ -23,8 +23,8 @@ export const metadata: Metadata = {
   const articleSchema = {
     '@context': 'https://schema.org',
     '@type': 'Article',
-    headline: 'Google Ads vs Meta Ads: Cuál Elegir en Chile 2025 (Comparativa Completa)',
-    description: 'Comparativa completa Google Ads vs Meta Ads en Chile 2025. CPL, ROAS, industrias ideales y cuándo usar cada plataforma. Datos reales de +200 campañas.',
+    headline: 'Google Ads vs Meta Ads: Cuál Elegir en Chile 2026 (Comparativa Completa)',
+    description: 'Comparativa completa Google Ads vs Meta Ads en Chile 2026. CPL, ROAS, industrias ideales y cuándo usar cada plataforma. Datos reales de +200 campañas.',
     url: 'https://www.mulleryperez.cl/blog/google-ads-vs-meta-ads-cual-elegir-chile-2025',
     datePublished: '2025-10-09T00:00:00.000Z',
     dateModified: '2025-10-09T00:00:00.000Z',
@@ -83,11 +83,11 @@ export default function ArticlePage() {
         <div className="max-w-4xl mx-auto">
           <div className="mb-8">
             <span className="px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-bold">Comparativa</span>
-            <p className="text-gray-500 mt-4">9 de octubre de 2025 · 16 min de lectura</p>
+            <p className="text-gray-500 mt-4">9 de octubre de 2026 · 16 min de lectura</p>
           </div>
 
           <h1 className="text-4xl lg:text-5xl font-black text-gray-900 mb-6 leading-tight">
-            Google Ads vs Meta Ads: Cuál Elegir en Chile 2025
+            Google Ads vs Meta Ads: Cuál Elegir en Chile 2026
           </h1>
 
           <p className="text-xl text-gray-600 mb-12 leading-relaxed">
@@ -101,7 +101,7 @@ export default function ArticlePage() {
                 Una de las preguntas más frecuentes que recibimos en M&P es: "¿Dónde invierto primero: Google Ads o Meta Ads?". La respuesta, como en todo lo que tiene que ver con marketing data-driven, es: depende de tu industria, ticket promedio, ciclo de venta y objetivos.
               </p>
               <p className="text-gray-700 mb-4">
-                En este artículo hacemos una comparativa completa entre Google Ads y Meta Ads en Chile 2025, con datos reales de más de 200 campañas que hemos gestionado. Te mostraremos CPL promedio, ROAS esperado, industrias donde cada plataforma funciona mejor, y cómo combinarlas para maximizar resultados.
+                En este artículo hacemos una comparativa completa entre Google Ads y Meta Ads en Chile 2026, con datos reales de más de 200 campañas que hemos gestionado. Te mostraremos CPL promedio, ROAS esperado, industrias donde cada plataforma funciona mejor, y cómo combinarlas para maximizar resultados.
               </p>
               <p className="text-gray-700">
                 Si estás buscando una respuesta rápida y datos concretos para tomar decisiones, este artículo es para ti.
@@ -158,11 +158,11 @@ export default function ArticlePage() {
 
             <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6 flex items-center gap-3">
               <DollarSign className="w-8 h-8 text-green-600" />
-              Comparativa de costos: CPL y CPC en Chile 2025
+              Comparativa de costos: CPL y CPC en Chile 2026
             </h2>
 
             <p className="text-gray-700 mb-4">
-              Basado en nuestros datos de más de 200 campañas activas en Chile durante 2025:
+              Basado en nuestros datos de más de 200 campañas activas en Chile durante 2026:
             </p>
 
             <div className="overflow-x-auto mb-8">
@@ -399,7 +399,7 @@ export default function ArticlePage() {
       <footer className="bg-gray-900 text-white py-12 px-6">
         <div className="max-w-7xl mx-auto text-center">
           <Link href="/"><img src="/logo-blanco.png" alt="Muller y Pérez" className="h-10 w-auto mx-auto mb-6" /></Link>
-          <p className="text-gray-400">© 2025 Muller y Pérez. Marketing Digital Basado en Datos.</p>
+          <p className="text-gray-400">© 2026 Muller y Pérez. Marketing Digital Basado en Datos.</p>
         </div>
       </footer>
     </div>

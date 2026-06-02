@@ -3,15 +3,15 @@ import Link from 'next/link'
 import { ArrowLeft, TrendingUp, Target, DollarSign, CheckCircle, Zap, Users, BarChart3, PlayCircle } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Dashboards de Marketing en Chile 2025-2026: Cómo una Agencia de Marketing Digital Convierte Datos en Decisiones',
-  description: 'Descubre cómo una agencia de marketing digital en Chile 2025 diseña dashboards con KPIs financieros para transformar datos en decisiones estratégicas.',
-  keywords: 'agencia de marketing digital, dashboards marketing Chile, reportería digital 2025, KPIs marketing digital, agencia marketing digital datos',
+  title: 'Dashboards de Marketing en Chile 2026: Cómo una Agencia de Marketing Digital Convierte Datos en Decisiones',
+  description: 'Descubre cómo una agencia de marketing digital en Chile 2026 diseña dashboards con KPIs financieros para transformar datos en decisiones estratégicas.',
+  keywords: 'agencia de marketing digital, dashboards marketing Chile, reportería digital 2026, KPIs marketing digital, agencia marketing digital datos',
   alternates: {
     canonical: 'https://www.mulleryperez.cl/blog/dashboards-agencia-marketing-digital-chile-2025'
   },
   openGraph: {
-    title: 'Dashboards de Marketing en Chile 2025-2026: Cómo una Agencia de Marketing Digital Convierte Datos en Decisiones',
-    description: 'Descubre cómo una agencia de marketing digital en Chile 2025 diseña dashboards con KPIs financieros para transformar datos en decisiones estratégicas.',
+    title: 'Dashboards de Marketing en Chile 2026: Cómo una Agencia de Marketing Digital Convierte Datos en Decisiones',
+    description: 'Descubre cómo una agencia de marketing digital en Chile 2026 diseña dashboards con KPIs financieros para transformar datos en decisiones estratégicas.',
     type: 'article',
     url: 'https://www.mulleryperez.cl/blog/dashboards-agencia-marketing-digital-chile-2025',
     publishedTime: '2025-01-19T00:00:00.000Z'
@@ -23,8 +23,8 @@ export const metadata: Metadata = {
   const articleSchema = {
     '@context': 'https://schema.org',
     '@type': 'Article',
-    headline: 'Dashboards de Marketing en Chile 2025-2026: Cómo una Agencia de Marketing Digital Convierte Datos en Decisiones',
-    description: 'Descubre cómo una agencia de marketing digital en Chile 2025 diseña dashboards con KPIs financieros para transformar datos en decisiones estratégicas.',
+    headline: 'Dashboards de Marketing en Chile 2026: Cómo una Agencia de Marketing Digital Convierte Datos en Decisiones',
+    description: 'Descubre cómo una agencia de marketing digital en Chile 2026 diseña dashboards con KPIs financieros para transformar datos en decisiones estratégicas.',
     url: 'https://www.mulleryperez.cl/blog/dashboards-agencia-marketing-digital-chile-2025',
     datePublished: '2025-01-19T00:00:00.000Z',
     dateModified: '2026-03-10T00:00:00.000Z',
@@ -83,11 +83,11 @@ export default function ArticlePage() {
         <div className="max-w-4xl mx-auto">
           <div className="mb-8">
             <span className="px-4 py-2 bg-red-100 text-red-700 rounded-full text-sm font-bold">Performance</span>
-            <p className="text-gray-500 mt-4">19 de enero de 2025 · 10 min de lectura</p>
+            <p className="text-gray-500 mt-4">19 de enero de 2026 · 10 min de lectura</p>
           </div>
 
           <h1 className="text-4xl lg:text-5xl font-black text-gray-900 mb-6 leading-tight">
-            Dashboards de Marketing en Chile 2025-2026: Cómo una Agencia de Marketing Digital Convierte Datos en Decisiones
+            Dashboards de Marketing en Chile 2026: Cómo una Agencia de Marketing Digital Convierte Datos en Decisiones
           </h1>
 
           <div className="prose prose-lg max-w-none">
@@ -95,7 +95,7 @@ export default function ArticlePage() {
             <div className="bg-red-50 border-l-4 border-red-600 p-6 rounded-r-xl mb-12">
               <h3 className="text-xl font-bold text-gray-900 mb-4">Introducción</h3>
               <p className="text-gray-700 mb-4">
-                En Chile 2025, las gerencias ya no aceptan reportes de marketing llenos de impresiones, likes o clics sin contexto. Hoy, los directorios quieren ver marketing como si fueran estados financieros: ingresos, costos, margen y retorno.
+                En Chile 2026, las gerencias ya no aceptan reportes de marketing llenos de impresiones, likes o clics sin contexto. Hoy, los directorios quieren ver marketing como si fueran estados financieros: ingresos, costos, margen y retorno.
               </p>
               <p className="text-gray-700 mb-4">
                 El desafío es que muchas empresas acumulan datos dispersos en Google Ads, Meta Ads, LinkedIn, CRM, email marketing y WhatsApp, pero no los consolidan. El resultado: decisiones lentas y basadas en intuición.
@@ -114,10 +114,10 @@ export default function ArticlePage() {
               </p>
             </div>
 
-            {/* Por qué los dashboards son clave en Chile 2025 */}
+            {/* Por qué los dashboards son clave en Chile 2026 */}
             <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6 flex items-center gap-3">
               <TrendingUp className="w-8 h-8 text-blue-600" />
-              Por qué los dashboards son clave en Chile 2025
+              Por qué los dashboards son clave en Chile 2026
             </h2>
 
             <div className="bg-white border-2 border-blue-200 rounded-xl p-6 mb-8">
@@ -305,10 +305,10 @@ export default function ArticlePage() {
               <p className="text-lg font-bold">👉 El cliente pudo decidir mes a mes dónde recortar y dónde escalar inversión.</p>
             </div>
 
-            {/* Costos de dashboards en Chile 2025 */}
+            {/* Costos de dashboards en Chile 2026 */}
             <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6 flex items-center gap-3">
               <DollarSign className="w-8 h-8 text-green-600" />
-              Costos de dashboards en Chile 2025
+              Costos de dashboards en Chile 2026
             </h2>
 
             <div className="bg-white border-2 border-green-200 rounded-xl p-6 mb-8">
@@ -415,7 +415,7 @@ export default function ArticlePage() {
       {/* Footer */}
       <footer className="border-t border-gray-200 py-12 px-6">
         <div className="max-w-7xl mx-auto text-center text-gray-600 text-sm">
-          <p>© 2025 Muller y Pérez · Agencia de Marketing Digital</p>
+          <p>© 2026 Muller y Pérez · Agencia de Marketing Digital</p>
         </div>
       </footer>
     </div>

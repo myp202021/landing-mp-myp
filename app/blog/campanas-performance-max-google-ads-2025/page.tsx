@@ -3,14 +3,14 @@ import Link from 'next/link'
 import { ArrowLeft, Zap, TrendingUp, Target, AlertCircle, CheckCircle, BarChart3, DollarSign } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Campañas Performance Max: Guía Completa Chile 2025',
-  description: 'Todo sobre Performance Max (PMax): cómo funcionan, cuándo usarlas, configuración paso a paso, casos de éxito Chile y errores comunes. Guía actualizada 2025.',
-  keywords: 'performance max google ads, pmax chile, campañas pmax, performance max tutorial, google ads 2025',
+  title: 'Campañas Performance Max: Guía Completa Chile 2026',
+  description: 'Todo sobre Performance Max (PMax): cómo funcionan, cuándo usarlas, configuración paso a paso, casos de éxito Chile y errores comunes. Guía actualizada 2026.',
+  keywords: 'performance max google ads, pmax chile, campañas pmax, performance max tutorial, google ads 2026',
   alternates: {
     canonical: 'https://www.mulleryperez.cl/blog/campanas-performance-max-google-ads-2025'
   },
   openGraph: {
-    title: 'Campañas Performance Max: Guía Completa Chile 2025',
+    title: 'Campañas Performance Max: Guía Completa Chile 2026',
     description: 'Guía completa de Performance Max: configuración, estrategias y casos reales Chile.',
     type: 'article',
     url: 'https://www.mulleryperez.cl/blog/campanas-performance-max-google-ads-2025',
@@ -23,8 +23,8 @@ export const metadata: Metadata = {
   const articleSchema = {
     '@context': 'https://schema.org',
     '@type': 'Article',
-    headline: 'Campañas Performance Max: Guía Completa Chile 2025',
-    description: 'Todo sobre Performance Max (PMax): cómo funcionan, cuándo usarlas, configuración paso a paso, casos de éxito Chile y errores comunes. Guía actualizada 2025.',
+    headline: 'Campañas Performance Max: Guía Completa Chile 2026',
+    description: 'Todo sobre Performance Max (PMax): cómo funcionan, cuándo usarlas, configuración paso a paso, casos de éxito Chile y errores comunes. Guía actualizada 2026.',
     url: 'https://www.mulleryperez.cl/blog/campanas-performance-max-google-ads-2025',
     datePublished: '2025-10-08T19:00:00Z',
     dateModified: '2025-10-08T19:00:00Z',
@@ -83,15 +83,15 @@ export default function ArticlePage() {
         <div className="max-w-4xl mx-auto">
           <div className="mb-8">
             <span className="px-4 py-2 bg-purple-100 text-purple-700 rounded-full text-sm font-bold">Google Ads</span>
-            <p className="text-gray-500 mt-4">8 de octubre, 2025 · 18 min de lectura</p>
+            <p className="text-gray-500 mt-4">8 de octubre, 2026 · 18 min de lectura</p>
           </div>
 
           <h1 className="text-4xl lg:text-5xl font-black text-gray-900 mb-6 leading-tight">
-            Campañas Performance Max: Guía Completa Chile 2025
+            Campañas Performance Max: Guía Completa Chile 2026
           </h1>
 
           <p className="text-xl text-gray-600 mb-12 leading-relaxed">
-            Performance Max es el tipo de campaña más potente (y controversial) de Google Ads. Aprende cuándo usarla, cómo configurarla correctamente y los errores que debes evitar, con casos reales de Chile 2025.
+            Performance Max es el tipo de campaña más potente (y controversial) de Google Ads. Aprende cuándo usarla, cómo configurarla correctamente y los errores que debes evitar, con casos reales de Chile 2026.
           </p>
 
           <div className="prose prose-lg max-w-none">
@@ -250,7 +250,7 @@ export default function ArticlePage() {
 
             <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6 flex items-center gap-3">
               <DollarSign className="w-8 h-8 text-green-600" />
-              Casos Reales Chile 2025
+              Casos Reales Chile 2026
             </h2>
 
             <div className="space-y-8 mb-12">
@@ -419,7 +419,7 @@ export default function ArticlePage() {
       <footer className="bg-gray-900 text-white py-12 px-6">
         <div className="max-w-7xl mx-auto text-center">
           <Link href="/"><img src="/logo-white.png" alt="Muller y Pérez" className="h-10 w-auto mx-auto mb-6" /></Link>
-          <p className="text-gray-400">© 2025 Muller y Pérez. Marketing Digital Basado en Datos.</p>
+          <p className="text-gray-400">© 2026 Muller y Pérez. Marketing Digital Basado en Datos.</p>
         </div>
       </footer>
     </div>

@@ -3,14 +3,14 @@ import Link from 'next/link'
 import { ArrowLeft, Shield, Cookie, Eye, Lock, CheckCircle, AlertTriangle, Database, Users, Target } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Marketing sin Cookies Chile 2025: Guía para el Mundo Cookieless',
+  title: 'Marketing sin Cookies Chile 2026: Guía para el Mundo Cookieless',
   description: 'Prepara tu estrategia de marketing digital para un mundo sin cookies de terceros. First-party data, server-side tracking y alternativas en Chile.',
   keywords: 'marketing sin cookies Chile, cookieless marketing, first party data Chile, privacidad marketing digital, server side tracking',
   alternates: {
     canonical: 'https://www.mulleryperez.cl/blog/marketing-sin-cookies-chile-2025'
   },
   openGraph: {
-    title: 'Marketing sin Cookies Chile 2025: Guía para el Mundo Cookieless',
+    title: 'Marketing sin Cookies Chile 2026: Guía para el Mundo Cookieless',
     description: 'Prepara tu estrategia de marketing digital para un mundo sin cookies de terceros.',
     type: 'article',
     url: 'https://www.mulleryperez.cl/blog/marketing-sin-cookies-chile-2025',
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
 const articleSchema = {
   '@context': 'https://schema.org',
   '@type': 'Article',
-  headline: 'Marketing sin Cookies Chile 2025: Guía para el Mundo Cookieless',
+  headline: 'Marketing sin Cookies Chile 2026: Guía para el Mundo Cookieless',
   description: 'Prepara tu estrategia de marketing digital para un mundo sin cookies de terceros. First-party data, server-side tracking y alternativas en Chile.',
   url: 'https://www.mulleryperez.cl/blog/marketing-sin-cookies-chile-2025',
   datePublished: '2025-01-15T00:00:00.000Z',
@@ -80,11 +80,11 @@ export default function ArticlePage() {
         <div className="max-w-4xl mx-auto">
           <div className="mb-8">
             <span className="px-4 py-2 bg-green-100 text-green-700 rounded-full text-sm font-bold">Privacidad & Data</span>
-            <p className="text-gray-500 mt-4">15 de enero de 2025 · 12 min de lectura</p>
+            <p className="text-gray-500 mt-4">15 de enero de 2026 · 12 min de lectura</p>
           </div>
 
           <h1 className="text-4xl lg:text-5xl font-black text-gray-900 mb-6 leading-tight">
-            Marketing sin Cookies Chile 2025: Guía Completa para el Mundo Cookieless
+            Marketing sin Cookies Chile 2026: Guía Completa para el Mundo Cookieless
           </h1>
 
           <p className="text-xl text-gray-600 mb-12 leading-relaxed">
@@ -98,7 +98,7 @@ export default function ArticlePage() {
                 <Shield className="w-6 h-6 text-green-600" /> El Fin de una Era
               </h3>
               <p className="text-gray-700 mb-4">
-                Google Chrome, que representa el 65% del mercado de navegadores, eliminará las cookies de terceros en 2025. Safari y Firefox ya lo hicieron. Esto significa que el remarketing tradicional, la atribución cross-site y la segmentación por comportamiento como los conocemos, cambiarán radicalmente.
+                Google Chrome, que representa el 65% del mercado de navegadores, eliminará las cookies de terceros en 2026. Safari y Firefox ya lo hicieron. Esto significa que el remarketing tradicional, la atribución cross-site y la segmentación por comportamiento como los conocemos, cambiarán radicalmente.
               </p>
               <p className="text-gray-700">
                 En Chile, donde el 78% de los usuarios navegan en Chrome, el impacto será significativo. Pero también es una oportunidad para quienes se preparen.
@@ -357,7 +357,7 @@ export default function ArticlePage() {
       {/* CTA Final */}
       <section className="py-16 px-6 bg-gray-900 text-white">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl font-bold mb-4">¿Tu tracking está preparado para 2025?</h2>
+          <h2 className="text-3xl font-bold mb-4">¿Tu tracking está preparado para 2026?</h2>
           <p className="text-gray-300 mb-8">
             El 80% de las empresas en Chile aún no han implementado server-side tracking. No seas parte de ese grupo.
           </p>
@@ -372,7 +372,7 @@ export default function ArticlePage() {
 
       <footer className="border-t border-gray-200 py-8 px-6 bg-white">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-gray-500 text-sm">© 2025 Muller y Pérez</p>
+          <p className="text-gray-500 text-sm">© 2026 Muller y Pérez</p>
           <div className="flex gap-6 text-sm">
             <Link href="/blog" className="text-gray-500 hover:text-blue-600 transition-colors">Blog</Link>
             <Link href="/labs" className="text-gray-500 hover:text-blue-600 transition-colors">M&P Labs</Link>

@@ -1,5 +1,5 @@
 /**
- * Blog: Guía de Marketing Digital para Pymes Chile 2025
+ * Blog: Guía de Marketing Digital para Pymes Chile 2026
  * Long-tail keyword: marketing digital pymes chile
  */
 
@@ -8,7 +8,7 @@ import Link from 'next/link'
 import { createMetadata, createArticleSchema, createBreadcrumbSchema } from '@/lib/metadata'
 
 export const metadata: Metadata = createMetadata({
-  title: 'Guía de Marketing Digital para Pymes en Chile 2025 | Estrategias y Presupuestos',
+  title: 'Guía de Marketing Digital para Pymes en Chile 2026 | Estrategias y Presupuestos',
   description: 'Guía completa de marketing digital para pymes chilenas. Estrategias efectivas con bajo presupuesto, canales recomendados y errores comunes a evitar.',
   keywords: [
     'marketing digital pymes chile',
@@ -17,12 +17,12 @@ export const metadata: Metadata = createMetadata({
     'estrategia marketing digital pyme',
     'marketing digital pequeñas empresas chile'
   ],
-  path: '/blog/guia-marketing-digital-pymes-chile-2025'
+  path: '/blog/guia-marketing-digital-pymes-chile-2026'
 })
 
 export default function MarketingDigitalPymesPage() {
   const articleSchema = createArticleSchema({
-    title: 'Guía de Marketing Digital para Pymes en Chile 2025',
+    title: 'Guía de Marketing Digital para Pymes en Chile 2026',
     description: 'Estrategias efectivas de marketing digital para pymes chilenas con presupuestos ajustados.',
     url: 'https://www.mulleryperez.cl/blog/guia-marketing-digital-pymes-chile-2025',
     publishedTime: '2025-01-15T00:00:00.000Z',
@@ -53,11 +53,11 @@ export default function MarketingDigitalPymesPage() {
             </nav>
 
             <div className="inline-block px-3 py-1 bg-purple-500/30 rounded-full text-purple-200 text-sm mb-4">
-              Guía para Pymes 2025
+              Guía para Pymes 2026
             </div>
 
             <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
-              Guía de Marketing Digital para Pymes en Chile 2025
+              Guía de Marketing Digital para Pymes en Chile 2026
             </h1>
 
             <p className="text-xl text-purple-100 mb-6">

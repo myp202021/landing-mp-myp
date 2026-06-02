@@ -3,15 +3,15 @@ import Link from 'next/link'
 import { ArrowLeft, MessageCircle, Bot, Zap, TrendingDown, CheckCircle, Target } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'WhatsApp Business + IA en Chile 2025-2026: Cómo Reducir el CAC con Flujos de Lead Scoring y Nurturing Automatizado',
-  description: 'Aprende cómo usar WhatsApp Business + IA en Chile 2025 para reducir CAC con flujos de lead scoring y nurturing automatizado. Casos y playbook.',
+  title: 'WhatsApp Business + IA en Chile 2026: Cómo Reducir el CAC con Flujos de Lead Scoring y Nurturing Automatizado',
+  description: 'Aprende cómo usar WhatsApp Business + IA en Chile 2026 para reducir CAC con flujos de lead scoring y nurturing automatizado. Casos y playbook.',
   keywords: 'WhatsApp Business IA Chile, reducir CAC WhatsApp, lead scoring automatizado, nurturing digital Chile, WhatsApp marketing B2B',
   alternates: {
     canonical: 'https://www.mulleryperez.cl/blog/whatsapp-business-ia-chile-2025'
   },
   openGraph: {
-    title: 'WhatsApp Business + IA en Chile 2025-2026: Cómo Reducir el CAC con Flujos de Lead Scoring y Nurturing Automatizado',
-    description: 'Aprende cómo usar WhatsApp Business + IA en Chile 2025 para reducir CAC con flujos de lead scoring y nurturing automatizado. Casos y playbook.',
+    title: 'WhatsApp Business + IA en Chile 2026: Cómo Reducir el CAC con Flujos de Lead Scoring y Nurturing Automatizado',
+    description: 'Aprende cómo usar WhatsApp Business + IA en Chile 2026 para reducir CAC con flujos de lead scoring y nurturing automatizado. Casos y playbook.',
     type: 'article',
     url: 'https://www.mulleryperez.cl/blog/whatsapp-business-ia-chile-2025',
     publishedTime: '2025-10-09T00:00:00.000Z'
@@ -23,8 +23,8 @@ export const metadata: Metadata = {
   const articleSchema = {
     '@context': 'https://schema.org',
     '@type': 'Article',
-    headline: 'WhatsApp Business + IA en Chile 2025-2026: Cómo Reducir el CAC con Flujos de Lead Scoring y Nurturing Automatizado',
-    description: 'Aprende cómo usar WhatsApp Business + IA en Chile 2025 para reducir CAC con flujos de lead scoring y nurturing automatizado. Casos y playbook.',
+    headline: 'WhatsApp Business + IA en Chile 2026: Cómo Reducir el CAC con Flujos de Lead Scoring y Nurturing Automatizado',
+    description: 'Aprende cómo usar WhatsApp Business + IA en Chile 2026 para reducir CAC con flujos de lead scoring y nurturing automatizado. Casos y playbook.',
     url: 'https://www.mulleryperez.cl/blog/whatsapp-business-ia-chile-2025',
     datePublished: '2025-10-09T00:00:00.000Z',
     dateModified: '2026-03-10T00:00:00.000Z',
@@ -83,11 +83,11 @@ export default function ArticlePage() {
         <div className="max-w-4xl mx-auto">
           <div className="mb-8">
             <span className="px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-bold">Automatización</span>
-            <p className="text-gray-500 mt-4">9 de octubre de 2025 · 16 min de lectura</p>
+            <p className="text-gray-500 mt-4">9 de octubre de 2026 · 16 min de lectura</p>
           </div>
 
           <h1 className="text-4xl lg:text-5xl font-black text-gray-900 mb-6 leading-tight">
-            WhatsApp Business + IA en Chile 2025-2026: Cómo Reducir el CAC con Flujos de Lead Scoring y Nurturing Automatizado
+            WhatsApp Business + IA en Chile 2026: Cómo Reducir el CAC con Flujos de Lead Scoring y Nurturing Automatizado
           </h1>
 
           <p className="text-xl text-gray-600 mb-12 leading-relaxed">
@@ -98,7 +98,7 @@ export default function ArticlePage() {
             <div className="bg-blue-50 border-l-4 border-blue-600 p-6 rounded-r-xl mb-12">
               <h3 className="text-xl font-bold text-gray-900 mb-4">Introducción</h3>
               <p className="text-gray-700 mb-4">
-                En Chile 2025, WhatsApp ya no es solo una aplicación de mensajería: se transformó en el principal canal de comunicación entre empresas y clientes. Más del 90% de los usuarios móviles en Chile usan WhatsApp diariamente, y su adopción en ventas y servicio al cliente creció de forma exponencial.
+                En Chile 2026, WhatsApp ya no es solo una aplicación de mensajería: se transformó en el principal canal de comunicación entre empresas y clientes. Más del 90% de los usuarios móviles en Chile usan WhatsApp diariamente, y su adopción en ventas y servicio al cliente creció de forma exponencial.
               </p>
               <p className="text-gray-700 mb-4">
                 La llegada de WhatsApp Business API y su integración con inteligencia artificial abrió una oportunidad única: reducir el CAC (Costo de Adquisición de Cliente) mediante flujos de lead scoring y nurturing automatizado.
@@ -110,7 +110,7 @@ export default function ArticlePage() {
 
             <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6 flex items-center gap-3">
               <MessageCircle className="w-8 h-8 text-green-600" />
-              ¿Por qué WhatsApp es clave en 2025?
+              ¿Por qué WhatsApp es clave en 2026?
             </h2>
 
             <div className="bg-white border-2 border-green-200 rounded-xl p-6 mb-8">
@@ -383,7 +383,7 @@ export default function ArticlePage() {
             <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6">Conclusión</h2>
 
             <p className="text-gray-700 mb-4">
-              WhatsApp Business + IA es, en 2025, la herramienta más poderosa para reducir el CAC en Chile. Permite atender leads al instante, filtrarlos con lógica de negocio y mantenerlos activos hasta la conversión.
+              WhatsApp Business + IA es, en 2026, la herramienta más poderosa para reducir el CAC en Chile. Permite atender leads al instante, filtrarlos con lógica de negocio y mantenerlos activos hasta la conversión.
             </p>
 
             <p className="text-gray-700 mb-6">
@@ -430,7 +430,7 @@ export default function ArticlePage() {
       <footer className="bg-gray-900 text-white py-12 px-6">
         <div className="max-w-7xl mx-auto text-center">
           <Link href="/"><img src="/logo-blanco.png" alt="Muller y Pérez" className="h-10 w-auto mx-auto mb-6" /></Link>
-          <p className="text-gray-400">© 2025 Muller y Pérez. Marketing Digital Basado en Datos.</p>
+          <p className="text-gray-400">© 2026 Muller y Pérez. Marketing Digital Basado en Datos.</p>
         </div>
       </footer>
     </div>

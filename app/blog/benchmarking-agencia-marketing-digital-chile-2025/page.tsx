@@ -3,15 +3,15 @@ import Link from 'next/link'
 import { ArrowLeft, TrendingUp, Target, DollarSign, CheckCircle, Zap, Users, BarChart3, PlayCircle } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Benchmarking en Chile 2025: Cómo una Agencia de Marketing Digital Compara Industrias y Optimiza Inversión',
-  description: 'Descubre cómo una agencia de marketing digital en Chile 2025 usa benchmarking de CPC, CPL, CAC y ROAS para optimizar inversión y reducir costos.',
-  keywords: 'agencia de marketing digital, benchmarking marketing digital Chile, métricas digitales 2025, agencia marketing digital benchmarks, inversión publicidad Chile',
+  title: 'Benchmarking en Chile 2026: Cómo una Agencia de Marketing Digital Compara Industrias y Optimiza Inversión',
+  description: 'Descubre cómo una agencia de marketing digital en Chile 2026 usa benchmarking de CPC, CPL, CAC y ROAS para optimizar inversión y reducir costos.',
+  keywords: 'agencia de marketing digital, benchmarking marketing digital Chile, métricas digitales 2026, agencia marketing digital benchmarks, inversión publicidad Chile',
   alternates: {
     canonical: 'https://www.mulleryperez.cl/blog/benchmarking-agencia-marketing-digital-chile-2025'
   },
   openGraph: {
-    title: 'Benchmarking en Chile 2025: Cómo una Agencia de Marketing Digital Compara Industrias y Optimiza Inversión',
-    description: 'Descubre cómo una agencia de marketing digital en Chile 2025 usa benchmarking de CPC, CPL, CAC y ROAS para optimizar inversión y reducir costos.',
+    title: 'Benchmarking en Chile 2026: Cómo una Agencia de Marketing Digital Compara Industrias y Optimiza Inversión',
+    description: 'Descubre cómo una agencia de marketing digital en Chile 2026 usa benchmarking de CPC, CPL, CAC y ROAS para optimizar inversión y reducir costos.',
     type: 'article',
     url: 'https://www.mulleryperez.cl/blog/benchmarking-agencia-marketing-digital-chile-2025',
     publishedTime: '2025-01-20T00:00:00.000Z'
@@ -23,8 +23,8 @@ export const metadata: Metadata = {
   const articleSchema = {
     '@context': 'https://schema.org',
     '@type': 'Article',
-    headline: 'Benchmarking en Chile 2025: Cómo una Agencia de Marketing Digital Compara Industrias y Optimiza Inversión',
-    description: 'Descubre cómo una agencia de marketing digital en Chile 2025 usa benchmarking de CPC, CPL, CAC y ROAS para optimizar inversión y reducir costos.',
+    headline: 'Benchmarking en Chile 2026: Cómo una Agencia de Marketing Digital Compara Industrias y Optimiza Inversión',
+    description: 'Descubre cómo una agencia de marketing digital en Chile 2026 usa benchmarking de CPC, CPL, CAC y ROAS para optimizar inversión y reducir costos.',
     url: 'https://www.mulleryperez.cl/blog/benchmarking-agencia-marketing-digital-chile-2025',
     datePublished: '2025-01-20T00:00:00.000Z',
     dateModified: '2025-01-20T00:00:00.000Z',
@@ -83,11 +83,11 @@ export default function ArticlePage() {
         <div className="max-w-4xl mx-auto">
           <div className="mb-8">
             <span className="px-4 py-2 bg-red-100 text-red-700 rounded-full text-sm font-bold">Performance</span>
-            <p className="text-gray-500 mt-4">20 de enero de 2025 · 10 min de lectura</p>
+            <p className="text-gray-500 mt-4">20 de enero de 2026 · 10 min de lectura</p>
           </div>
 
           <h1 className="text-4xl lg:text-5xl font-black text-gray-900 mb-6 leading-tight">
-            Benchmarking en Chile 2025: Cómo una Agencia de Marketing Digital Compara Industrias y Optimiza Inversión
+            Benchmarking en Chile 2026: Cómo una Agencia de Marketing Digital Compara Industrias y Optimiza Inversión
           </h1>
 
           <div className="prose prose-lg max-w-none">
@@ -95,7 +95,7 @@ export default function ArticlePage() {
             <div className="bg-red-50 border-l-4 border-red-600 p-6 rounded-r-xl mb-12">
               <h3 className="text-xl font-bold text-gray-900 mb-4">Introducción</h3>
               <p className="text-gray-700 mb-4">
-                En marketing digital, no basta con mirar solo tus propias métricas. En Chile 2025, las empresas más competitivas son aquellas que comparan su rendimiento con benchmarks reales de la industria: CPC, CPL, CAC, LTV y ROAS en distintos sectores.
+                En marketing digital, no basta con mirar solo tus propias métricas. En Chile 2026, las empresas más competitivas son aquellas que comparan su rendimiento con benchmarks reales de la industria: CPC, CPL, CAC, LTV y ROAS en distintos sectores.
               </p>
               <p className="text-gray-700 mb-4">
                 El problema es que la mayoría de las compañías carecen de puntos de referencia confiables. Se guían por percepciones internas o datos aislados, y terminan invirtiendo más de lo necesario o desaprovechando oportunidades.
@@ -114,10 +114,10 @@ export default function ArticlePage() {
               </p>
             </div>
 
-            {/* Por qué el benchmarking es clave en Chile 2025 */}
+            {/* Por qué el benchmarking es clave en Chile 2026 */}
             <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6 flex items-center gap-3">
               <TrendingUp className="w-8 h-8 text-blue-600" />
-              Por qué el benchmarking es clave en Chile 2025
+              Por qué el benchmarking es clave en Chile 2026
             </h2>
 
             <div className="bg-white border-2 border-blue-200 rounded-xl p-6 mb-8">
@@ -384,7 +384,7 @@ export default function ArticlePage() {
       {/* Footer */}
       <footer className="border-t border-gray-200 py-12 px-6">
         <div className="max-w-7xl mx-auto text-center text-gray-600 text-sm">
-          <p>© 2025 Muller y Pérez · Agencia de Marketing Digital</p>
+          <p>© 2026 Muller y Pérez · Agencia de Marketing Digital</p>
         </div>
       </footer>
     </div>

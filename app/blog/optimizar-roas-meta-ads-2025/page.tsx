@@ -3,15 +3,15 @@ import Link from 'next/link'
 import { ArrowLeft, Zap, Target, TrendingUp, CheckCircle2 } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Cómo Optimizar ROAS en Meta Ads 2025: 7 Estrategias Probadas',
-  description: 'Aumenta tu ROAS en Meta Ads con 7 estrategias validadas. Casos reales: ROAS 6.8x en e-commerce, 4.2x en B2B Chile 2025. Guía paso a paso con data real.',
-  keywords: 'optimizar roas meta ads, roas facebook ads chile, estrategias meta ads 2025, aumentar roi facebook, meta ads performance, instagram ads roi chile',
+  title: 'Cómo Optimizar ROAS en Meta Ads 2026: 7 Estrategias Probadas',
+  description: 'Aumenta tu ROAS en Meta Ads con 7 estrategias validadas. Casos reales: ROAS 6.8x en e-commerce, 4.2x en B2B Chile 2026. Guía paso a paso con data real.',
+  keywords: 'optimizar roas meta ads, roas facebook ads chile, estrategias meta ads 2026, aumentar roi facebook, meta ads performance, instagram ads roi chile',
   alternates: {
     canonical: 'https://www.mulleryperez.cl/blog/optimizar-roas-meta-ads-2025'
   },
   openGraph: {
-    title: 'Cómo Optimizar ROAS en Meta Ads 2025: 7 Estrategias Probadas',
-    description: 'Aumenta tu ROAS en Meta Ads con 7 estrategias validadas. Casos reales: ROAS 6.8x en e-commerce, 4.2x en B2B Chile 2025.',
+    title: 'Cómo Optimizar ROAS en Meta Ads 2026: 7 Estrategias Probadas',
+    description: 'Aumenta tu ROAS en Meta Ads con 7 estrategias validadas. Casos reales: ROAS 6.8x en e-commerce, 4.2x en B2B Chile 2026.',
     type: 'article',
     url: 'https://www.mulleryperez.cl/blog/optimizar-roas-meta-ads-2025',
     publishedTime: '2025-01-10T10:00:00Z',
@@ -35,11 +35,11 @@ export default function ArticlePage() {
         <div className="max-w-4xl mx-auto">
           <div className="mb-8">
             <span className="px-4 py-2 bg-purple-100 text-purple-700 rounded-full text-sm font-bold">Meta Ads</span>
-            <p className="text-gray-500 mt-4">10 de enero, 2025 · 15 min de lectura</p>
+            <p className="text-gray-500 mt-4">10 de enero, 2026 · 15 min de lectura</p>
           </div>
 
           <h1 className="text-4xl lg:text-5xl font-black text-gray-900 mb-6 leading-tight">
-            Cómo Optimizar ROAS en Meta Ads 2025: 7 Estrategias Probadas
+            Cómo Optimizar ROAS en Meta Ads 2026: 7 Estrategias Probadas
           </h1>
 
           <p className="text-xl text-gray-600 mb-12 leading-relaxed">
@@ -161,7 +161,7 @@ export default function ArticlePage() {
             </p>
 
             <div className="bg-gradient-to-br from-purple-600 to-pink-600 rounded-2xl p-8 text-white mb-12">
-              <h3 className="text-xl font-bold mb-4">🔥 Fórmula Ganadora 2025</h3>
+              <h3 className="text-xl font-bold mb-4">🔥 Fórmula Ganadora 2026</h3>
               <ul className="space-y-2">
                 <li><strong>Hook (3 seg):</strong> Problema específico + número</li>
                 <li><strong>Promesa (5 seg):</strong> Solución + beneficio claro</li>
@@ -179,7 +179,7 @@ export default function ArticlePage() {
             <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6">7. Broad Targeting + Advantage+ Audiences</h2>
 
             <p className="text-gray-700 leading-relaxed mb-6">
-              En 2025, el targeting manual está muerto. Meta sabe más que tú sobre quién comprará.
+              En 2026, el targeting manual está muerto. Meta sabe más que tú sobre quién comprará.
             </p>
 
             <div className="bg-white border-2 border-green-200 rounded-xl p-6 mb-12">
@@ -216,7 +216,7 @@ export default function ArticlePage() {
 
       <footer className="border-t border-gray-200 py-12 px-6">
         <div className="max-w-7xl mx-auto text-center text-gray-600">
-          <p className="mb-4">© 2025 Muller y Pérez - Agencia de Marketing Digital y Performance</p>
+          <p className="mb-4">© 2026 Muller y Pérez - Agencia de Marketing Digital y Performance</p>
           <div className="flex justify-center gap-6">
             <Link href="/" className="hover:text-blue-600 transition-colors">Inicio</Link>
             <Link href="/blog" className="hover:text-blue-600 transition-colors">Blog</Link>
@@ -227,7 +227,7 @@ export default function ArticlePage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
         '@context': 'https://schema.org',
         '@type': 'Article',
-        headline: 'Cómo Optimizar ROAS en Meta Ads 2025: 7 Estrategias Probadas',
+        headline: 'Cómo Optimizar ROAS en Meta Ads 2026: 7 Estrategias Probadas',
         datePublished: '2025-01-10T10:00:00Z',
         author: {
           '@type': 'Person',

@@ -3,14 +3,14 @@ import Link from 'next/link'
 import { ArrowLeft, Brain, Sparkles, Zap, Target, CheckCircle, AlertTriangle, Lightbulb, BarChart3 } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'IA Generativa para Google Ads Chile 2025: Guía Completa para Optimizar Campañas',
-  description: 'Aprende a usar ChatGPT, Claude y Gemini para crear mejores campañas de Google Ads. Prompts, estrategias y casos reales en Chile 2025.',
+  title: 'IA Generativa para Google Ads Chile 2026: Guía Completa para Optimizar Campañas',
+  description: 'Aprende a usar ChatGPT, Claude y Gemini para crear mejores campañas de Google Ads. Prompts, estrategias y casos reales en Chile 2026.',
   keywords: 'IA generativa Google Ads, ChatGPT Google Ads, Claude Ads, inteligencia artificial publicidad Chile, automatización campañas Google',
   alternates: {
     canonical: 'https://www.mulleryperez.cl/blog/ia-generativa-google-ads-chile-2025'
   },
   openGraph: {
-    title: 'IA Generativa para Google Ads Chile 2025: Guía Completa',
+    title: 'IA Generativa para Google Ads Chile 2026: Guía Completa',
     description: 'Aprende a usar ChatGPT, Claude y Gemini para crear mejores campañas de Google Ads en Chile.',
     type: 'article',
     url: 'https://www.mulleryperez.cl/blog/ia-generativa-google-ads-chile-2025',
@@ -21,8 +21,8 @@ export const metadata: Metadata = {
 const articleSchema = {
   '@context': 'https://schema.org',
   '@type': 'Article',
-  headline: 'IA Generativa para Google Ads Chile 2025: Guía Completa para Optimizar Campañas',
-  description: 'Aprende a usar ChatGPT, Claude y Gemini para crear mejores campañas de Google Ads. Prompts, estrategias y casos reales en Chile 2025.',
+  headline: 'IA Generativa para Google Ads Chile 2026: Guía Completa para Optimizar Campañas',
+  description: 'Aprende a usar ChatGPT, Claude y Gemini para crear mejores campañas de Google Ads. Prompts, estrategias y casos reales en Chile 2026.',
   url: 'https://www.mulleryperez.cl/blog/ia-generativa-google-ads-chile-2025',
   datePublished: '2025-01-15T00:00:00.000Z',
   dateModified: '2025-01-15T00:00:00.000Z',
@@ -80,11 +80,11 @@ export default function ArticlePage() {
         <div className="max-w-4xl mx-auto">
           <div className="mb-8">
             <span className="px-4 py-2 bg-purple-100 text-purple-700 rounded-full text-sm font-bold">IA & Automatización</span>
-            <p className="text-gray-500 mt-4">15 de enero de 2025 · 15 min de lectura</p>
+            <p className="text-gray-500 mt-4">15 de enero de 2026 · 15 min de lectura</p>
           </div>
 
           <h1 className="text-4xl lg:text-5xl font-black text-gray-900 mb-6 leading-tight">
-            IA Generativa para Google Ads Chile 2025: Guía Completa para Optimizar Campañas
+            IA Generativa para Google Ads Chile 2026: Guía Completa para Optimizar Campañas
           </h1>
 
           <p className="text-xl text-gray-600 mb-12 leading-relaxed">
@@ -98,7 +98,7 @@ export default function ArticlePage() {
                 <Brain className="w-6 h-6 text-purple-600" /> ¿Por qué IA Generativa en Google Ads?
               </h3>
               <p className="text-gray-700 mb-4">
-                En 2025, el 73% de los marketers en Latinoamérica ya usan alguna forma de IA para sus campañas. En Chile, las agencias que adoptaron IA generativa reportan un <strong>35% de reducción en tiempo de creación de anuncios</strong> y un <strong>22% de mejora en CTR</strong>.
+                En 2026, el 73% de los marketers en Latinoamérica ya usan alguna forma de IA para sus campañas. En Chile, las agencias que adoptaron IA generativa reportan un <strong>35% de reducción en tiempo de creación de anuncios</strong> y un <strong>22% de mejora en CTR</strong>.
               </p>
               <p className="text-gray-700">
                 La IA no reemplaza al estratega, pero sí acelera la ejecución. Quien no la use, quedará en desventaja competitiva.
@@ -349,7 +349,7 @@ export default function ArticlePage() {
 
       <footer className="border-t border-gray-200 py-8 px-6 bg-white">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-gray-500 text-sm">© 2025 Muller y Pérez</p>
+          <p className="text-gray-500 text-sm">© 2026 Muller y Pérez</p>
           <div className="flex gap-6 text-sm">
             <Link href="/blog" className="text-gray-500 hover:text-blue-600 transition-colors">Blog</Link>
             <Link href="/labs" className="text-gray-500 hover:text-blue-600 transition-colors">M&P Labs</Link>

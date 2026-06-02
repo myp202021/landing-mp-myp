@@ -3,15 +3,15 @@ import Link from 'next/link'
 import { ArrowLeft, TrendingUp, DollarSign, Target, CheckCircle2 } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Costo Real de Google Ads en Chile 2025-2026: Guía Completa por Industria',
-  description: 'Descubre cuánto cuesta Google Ads en Chile 2025-2026: CPC promedio $250-$4.500, CPL $8.200-$67.900. Data real de +200 campañas por industria. Calculadora gratis incluida.',
-  keywords: 'costo google ads chile, precio google ads chile 2025, cpc chile, cpl google ads, cuanto cuesta google ads, presupuesto google ads chile, google ads precio',
+  title: 'Costo Real de Google Ads en Chile 2026: Guía Completa por Industria',
+  description: 'Descubre cuánto cuesta Google Ads en Chile 2026: CPC promedio $250-$4.500, CPL $8.200-$67.900. Data real de +200 campañas por industria. Calculadora gratis incluida.',
+  keywords: 'costo google ads chile, precio google ads chile 2026, cpc chile, cpl google ads, cuanto cuesta google ads, presupuesto google ads chile, google ads precio',
   alternates: {
     canonical: 'https://www.mulleryperez.cl/blog/costo-google-ads-chile-2025'
   },
   openGraph: {
-    title: 'Costo Real de Google Ads en Chile 2025-2026: Guía Completa por Industria',
-    description: 'Descubre cuánto cuesta Google Ads en Chile 2025-2026: CPC promedio $250-$4.500, CPL $8.200-$67.900. Data real de +200 campañas por industria.',
+    title: 'Costo Real de Google Ads en Chile 2026: Guía Completa por Industria',
+    description: 'Descubre cuánto cuesta Google Ads en Chile 2026: CPC promedio $250-$4.500, CPL $8.200-$67.900. Data real de +200 campañas por industria.',
     type: 'article',
     url: 'https://www.mulleryperez.cl/blog/costo-google-ads-chile-2025',
     publishedTime: '2025-01-15T10:00:00Z',
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
         url: 'https://www.mulleryperez.cl/og-image.jpg',
         width: 1200,
         height: 630,
-        alt: 'Costo Google Ads Chile 2025'
+        alt: 'Costo Google Ads Chile 2026'
       }
     ]
   }
@@ -48,12 +48,12 @@ export default function ArticlePage() {
           {/* Meta */}
           <div className="mb-8">
             <span className="px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-bold">Google Ads</span>
-            <p className="text-gray-500 mt-4">15 de enero, 2025 · 12 min de lectura</p>
+            <p className="text-gray-500 mt-4">15 de enero, 2026 · 12 min de lectura</p>
           </div>
 
           {/* Title */}
           <h1 className="text-4xl lg:text-5xl font-black text-gray-900 mb-6 leading-tight">
-            Costo Real de Google Ads en Chile 2025-2026: Guía Completa por Industria
+            Costo Real de Google Ads en Chile 2026: Guía Completa por Industria
           </h1>
 
           {/* Excerpt */}
@@ -65,7 +65,7 @@ export default function ArticlePage() {
           <div className="prose prose-lg max-w-none">
             <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6 flex items-center gap-3">
               <DollarSign className="w-8 h-8 text-blue-600" />
-              ¿Cuánto cuesta Google Ads en Chile en 2025?
+              ¿Cuánto cuesta Google Ads en Chile en 2026?
             </h2>
 
             <p className="text-gray-700 leading-relaxed mb-6">
@@ -73,7 +73,7 @@ export default function ArticlePage() {
             </p>
 
             <div className="bg-blue-50 border-l-4 border-blue-600 p-6 rounded-r-xl mb-8">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">📊 Promedios Chile 2025 (Data Real)</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-4">📊 Promedios Chile 2026 (Data Real)</h3>
               <ul className="space-y-2 text-gray-700">
                 <li><strong>CPC promedio:</strong> $250 - $4.500 por clic</li>
                 <li><strong>CPL promedio:</strong> $8.200 - $67.900 por lead</li>
@@ -215,7 +215,7 @@ export default function ArticlePage() {
       {/* Footer */}
       <footer className="border-t border-gray-200 py-12 px-6">
         <div className="max-w-7xl mx-auto text-center text-gray-600">
-          <p className="mb-4">© 2025 Muller y Pérez - Agencia de Marketing Digital y Performance</p>
+          <p className="mb-4">© 2026 Muller y Pérez - Agencia de Marketing Digital y Performance</p>
           <div className="flex justify-center gap-6">
             <Link href="/" className="hover:text-blue-600 transition-colors">Inicio</Link>
             <Link href="/blog" className="hover:text-blue-600 transition-colors">Blog</Link>
@@ -231,8 +231,8 @@ export default function ArticlePage() {
           __html: JSON.stringify({
             '@context': 'https://schema.org',
             '@type': 'Article',
-            headline: 'Costo Real de Google Ads en Chile 2025-2026: Guía Completa por Industria',
-            description: 'Descubre cuánto cuesta Google Ads en Chile 2025-2026: CPC promedio $250-$4.500, CPL $8.200-$67.900. Data real de +200 campañas por industria.',
+            headline: 'Costo Real de Google Ads en Chile 2026: Guía Completa por Industria',
+            description: 'Descubre cuánto cuesta Google Ads en Chile 2026: CPC promedio $250-$4.500, CPL $8.200-$67.900. Data real de +200 campañas por industria.',
             image: 'https://www.mulleryperez.cl/og-image.jpg',
             author: {
               '@type': 'Person',

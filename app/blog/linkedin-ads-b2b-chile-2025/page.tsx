@@ -4,14 +4,14 @@ import { ArrowLeft, Linkedin, Target, DollarSign, Users, CheckCircle, Briefcase 
 
 export const metadata: Metadata = {
   title: 'LinkedIn Ads para B2B de Alto Ticket en Chile: Segmentaciones, Costos y Playbooks',
-  description: 'Aprende a usar LinkedIn Ads en Chile 2025 para negocios B2B de alto ticket. Segmentaciones, costos reales y playbooks de campañas exitosas.',
+  description: 'Aprende a usar LinkedIn Ads en Chile 2026 para negocios B2B de alto ticket. Segmentaciones, costos reales y playbooks de campañas exitosas.',
   keywords: 'LinkedIn Ads B2B Chile, publicidad LinkedIn Chile, segmentación LinkedIn Ads, CPL LinkedIn Chile, marketing B2B Chile',
   alternates: {
     canonical: 'https://www.mulleryperez.cl/blog/linkedin-ads-b2b-chile-2025'
   },
   openGraph: {
     title: 'LinkedIn Ads para B2B de Alto Ticket en Chile: Segmentaciones, Costos y Playbooks',
-    description: 'Aprende a usar LinkedIn Ads en Chile 2025 para negocios B2B de alto ticket. Segmentaciones, costos reales y playbooks de campañas exitosas.',
+    description: 'Aprende a usar LinkedIn Ads en Chile 2026 para negocios B2B de alto ticket. Segmentaciones, costos reales y playbooks de campañas exitosas.',
     type: 'article',
     url: 'https://www.mulleryperez.cl/blog/linkedin-ads-b2b-chile-2025',
     publishedTime: '2025-10-09T00:00:00.000Z'
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     '@context': 'https://schema.org',
     '@type': 'Article',
     headline: 'LinkedIn Ads para B2B de Alto Ticket en Chile: Segmentaciones, Costos y Playbooks',
-    description: 'Aprende a usar LinkedIn Ads en Chile 2025 para negocios B2B de alto ticket. Segmentaciones, costos reales y playbooks de campañas exitosas.',
+    description: 'Aprende a usar LinkedIn Ads en Chile 2026 para negocios B2B de alto ticket. Segmentaciones, costos reales y playbooks de campañas exitosas.',
     url: 'https://www.mulleryperez.cl/blog/linkedin-ads-b2b-chile-2025',
     datePublished: '2025-10-09T00:00:00.000Z',
     dateModified: '2025-10-09T00:00:00.000Z',
@@ -83,7 +83,7 @@ export default function ArticlePage() {
         <div className="max-w-4xl mx-auto">
           <div className="mb-8">
             <span className="px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-bold">LinkedIn Ads</span>
-            <p className="text-gray-500 mt-4">9 de octubre de 2025 · 19 min de lectura</p>
+            <p className="text-gray-500 mt-4">9 de octubre de 2026 · 19 min de lectura</p>
           </div>
 
           <h1 className="text-4xl lg:text-5xl font-black text-gray-900 mb-6 leading-tight">
@@ -91,20 +91,20 @@ export default function ArticlePage() {
           </h1>
 
           <p className="text-xl text-gray-600 mb-12 leading-relaxed">
-            La plataforma clave para captar decisores B2B de alto ticket en Chile. Segmentaciones, costos reales 2025 y playbooks de campañas ganadoras.
+            La plataforma clave para captar decisores B2B de alto ticket en Chile. Segmentaciones, costos reales 2026 y playbooks de campañas ganadoras.
           </p>
 
           <div className="prose prose-lg max-w-none">
             <div className="bg-blue-50 border-l-4 border-blue-600 p-6 rounded-r-xl mb-12">
               <h3 className="text-xl font-bold text-gray-900 mb-4">Introducción</h3>
               <p className="text-gray-700 mb-4">
-                En Chile 2025, LinkedIn Ads dejó de ser "el canal caro" para transformarse en la plataforma clave para negocios B2B de alto ticket.
+                En Chile 2026, LinkedIn Ads dejó de ser "el canal caro" para transformarse en la plataforma clave para negocios B2B de alto ticket.
               </p>
               <p className="text-gray-700 mb-4">
                 Cuando hablamos de ventas corporativas —software SaaS, consultorías, servicios financieros, maquinaria industrial, educación ejecutiva—, el valor de un cliente puede superar fácilmente los $2.000.000 CLP anuales, y en algunos casos bordear millones de dólares. En ese escenario, un CPL de $30.000 CLP o incluso $50.000 CLP puede ser totalmente rentable.
               </p>
               <p className="text-gray-700">
-                Este artículo explica cómo usar LinkedIn Ads en Chile para captar decisores B2B de alto ticket, cuáles son los costos reales en 2025, qué segmentaciones funcionan, y cómo diseñar playbooks de campañas ganadoras con lógica ingenieril.
+                Este artículo explica cómo usar LinkedIn Ads en Chile para captar decisores B2B de alto ticket, cuáles son los costos reales en 2026, qué segmentaciones funcionan, y cómo diseñar playbooks de campañas ganadoras con lógica ingenieril.
               </p>
             </div>
 
@@ -151,7 +151,7 @@ export default function ArticlePage() {
 
             <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6 flex items-center gap-3">
               <DollarSign className="w-8 h-8 text-green-600" />
-              Costos reales de LinkedIn Ads en Chile 2025
+              Costos reales de LinkedIn Ads en Chile 2026
             </h2>
 
             <div className="grid md:grid-cols-2 gap-6 mb-12">
@@ -357,7 +357,7 @@ export default function ArticlePage() {
             <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6">Conclusión</h2>
 
             <p className="text-gray-700 mb-4">
-              LinkedIn Ads en Chile 2025 no es un lujo: es una necesidad estratégica para empresas B2B de alto ticket.
+              LinkedIn Ads en Chile 2026 no es un lujo: es una necesidad estratégica para empresas B2B de alto ticket.
             </p>
 
             <p className="text-gray-700 mb-6">
@@ -389,7 +389,7 @@ export default function ArticlePage() {
       <footer className="bg-gray-900 text-white py-12 px-6">
         <div className="max-w-7xl mx-auto text-center">
           <Link href="/"><img src="/logo-blanco.png" alt="Muller y Pérez" className="h-10 w-auto mx-auto mb-6" /></Link>
-          <p className="text-gray-400">© 2025 Muller y Pérez. Marketing Digital Basado en Datos.</p>
+          <p className="text-gray-400">© 2026 Muller y Pérez. Marketing Digital Basado en Datos.</p>
         </div>
       </footer>
     </div>

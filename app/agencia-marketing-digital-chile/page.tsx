@@ -75,6 +75,26 @@ const faqs = [
   {
     question: '¿Muller y Pérez trabaja con empresas fuera de Santiago?',
     answer: 'Sí. Aunque nuestras oficinas están en Las Condes, Santiago, atendemos empresas de todo Chile de forma remota. Tenemos clientes en Concepción, Valparaíso, Antofagasta, Temuco, Puerto Montt y otras ciudades. Las reuniones se realizan por videollamada y toda nuestra plataforma de reportería y dashboards es 100% online.'
+  },
+  {
+    question: '¿Cuánto cobra una agencia de marketing digital en Chile?',
+    answer: 'Los honorarios varían según el alcance del servicio. Agencias freelance o unipersonales cobran entre $200.000 y $500.000 mensuales, pero suelen manejar decenas de cuentas simultáneamente. Agencias medianas cobran entre $600.000 y $1.500.000 mensuales. Agencias premium con equipo dedicado, como Muller y Pérez, tienen planes desde $950.000 hasta $2.200.000 mensuales + IVA. A esto se suma la inversión en pauta publicitaria, que el cliente paga directamente a las plataformas (Google, Meta, LinkedIn).'
+  },
+  {
+    question: '¿Qué diferencia hay entre una agencia de marketing y una agencia de publicidad?',
+    answer: 'Una agencia de publicidad tradicional se enfoca en creatividad, branding y producción de piezas (spots de TV, radio, vía pública). Una agencia de marketing digital se especializa en canales online: Google Ads, Meta Ads, LinkedIn Ads, SEO, email marketing y analítica. Dentro del marketing digital, las agencias de performance marketing como Muller y Pérez van un paso más allá: cada acción se mide por su impacto en ventas reales, no solo en métricas de visibilidad.'
+  },
+  {
+    question: '¿Cuánto tiempo dura un contrato con una agencia de marketing digital?',
+    answer: 'Depende de la agencia. Muchas exigen contratos de 6 a 12 meses con penalización por salida anticipada. En Muller y Pérez no tenemos contrato de permanencia: trabajamos mes a mes y los resultados hablan por sí solos. Recomendamos un mínimo de 3 meses para que la optimización de campañas alcance su potencial completo, pero la continuidad es decisión del cliente.'
+  },
+  {
+    question: '¿Cómo medir si mi agencia de marketing digital está haciendo un buen trabajo?',
+    answer: 'Deberías evaluar: 1) Evolución del CPA (costo por adquisición) mes a mes, 2) Calidad de los leads o ventas generadas, no solo cantidad, 3) ROAS (retorno sobre inversión publicitaria), 4) Transparencia en el acceso a cuentas y datos, 5) Proactividad en proponer mejoras y nuevas estrategias. Si tu agencia solo te envía un PDF mensual con impresiones y clicks sin conectarlo a resultados de negocio, es una señal de alerta.'
+  },
+  {
+    question: '¿Una agencia de marketing digital puede ayudar a mi empresa si recién empiezo?',
+    answer: 'Sí, pero es importante tener expectativas realistas. Para empresas que recién comienzan, recomendamos una inversión mínima en pauta de $500.000 mensuales y un plan de al menos 3 meses para recopilar datos suficientes. En Muller y Pérez, nuestro Predictor de Campañas te permite estimar costos y resultados antes de invertir, lo que reduce el riesgo significativamente. El Plan Silver está diseñado específicamente para PYMEs que dan sus primeros pasos en publicidad digital.'
   }
 ]
 
@@ -591,7 +611,329 @@ export default function AgenciaMarketingDigitalChilePage() {
           </section>
 
           {/* ============================================================ */}
-          {/* 8. FAQ */}
+          {/* 8. METODOLOGIA */}
+          {/* ============================================================ */}
+          <section className="mb-16">
+            <h2 className="text-3xl font-bold text-gray-900 mb-6">
+              Metodologia M&P: Como Trabajamos
+            </h2>
+            <p className="text-lg text-gray-700 mb-8 leading-relaxed">
+              Cada proyecto sigue un proceso estructurado de 4 etapas que nos permite entregar resultados
+              consistentes independientemente de la industria o el tamaño de la empresa. Asi es como una
+              <strong> agencia de marketing digital</strong> profesional deberia funcionar:
+            </p>
+
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="bg-blue-50 rounded-xl p-6 relative">
+                <span className="absolute -top-3 -left-3 bg-blue-600 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg">1</span>
+                <h3 className="text-xl font-semibold text-gray-900 mb-3 ml-4">Diagnostico</h3>
+                <p className="text-gray-700 leading-relaxed">
+                  Auditamos tu situacion actual: cuentas publicitarias, tracking, landing pages, competencia
+                  y mercado. Usamos nuestro <Link href="/labs/predictor" className="text-blue-600 hover:underline">Predictor de Campanas</Link> para
+                  estimar CPC y CPA reales de tu industria en Chile antes de invertir un peso.
+                </p>
+              </div>
+
+              <div className="bg-blue-50 rounded-xl p-6 relative">
+                <span className="absolute -top-3 -left-3 bg-blue-600 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg">2</span>
+                <h3 className="text-xl font-semibold text-gray-900 mb-3 ml-4">Estrategia</h3>
+                <p className="text-gray-700 leading-relaxed">
+                  Definimos canales, presupuesto, audiencias y KPIs con base en datos reales del mercado chileno.
+                  No usamos plantillas genericas: cada estrategia se construye desde cero para tu negocio,
+                  usando benchmarks de mas de 50 industrias locales.
+                </p>
+              </div>
+
+              <div className="bg-blue-50 rounded-xl p-6 relative">
+                <span className="absolute -top-3 -left-3 bg-blue-600 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg">3</span>
+                <h3 className="text-xl font-semibold text-gray-900 mb-3 ml-4">Ejecucion</h3>
+                <p className="text-gray-700 leading-relaxed">
+                  Tu equipo dedicado de 3 profesionales (Paid Media Planner, Publicista y Disenador) lanza las
+                  campanas en <Link href="/servicios/google-ads-chile" className="text-blue-600 hover:underline">Google Ads</Link>,{' '}
+                  <Link href="/servicios/meta-ads-chile" className="text-blue-600 hover:underline">Meta Ads</Link> y/o LinkedIn Ads.
+                  Configuramos tracking avanzado con GA4 y Tag Manager para medir cada conversion.
+                </p>
+              </div>
+
+              <div className="bg-blue-50 rounded-xl p-6 relative">
+                <span className="absolute -top-3 -left-3 bg-blue-600 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg">4</span>
+                <h3 className="text-xl font-semibold text-gray-900 mb-3 ml-4">Optimizacion Continua</h3>
+                <p className="text-gray-700 leading-relaxed">
+                  Cada semana analizamos resultados, ajustamos pujas, rotamos creatividades y refinamos
+                  audiencias. Recibes reportes semanales con metricas de negocio reales (no vanidad),
+                  y reuniones estrategicas para alinear la campana con tus objetivos comerciales.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          {/* ============================================================ */}
+          {/* 9. CASOS DE EXITO POR INDUSTRIA */}
+          {/* ============================================================ */}
+          <section className="mb-16 bg-gray-50 rounded-2xl p-8">
+            <h2 className="text-3xl font-bold text-gray-900 mb-6">
+              Casos de Exito por Industria
+            </h2>
+            <p className="text-lg text-gray-700 mb-8 leading-relaxed">
+              Trabajamos con empresas de multiples sectores en Chile. Estos son resultados representativos
+              por industria, medidos directamente en las plataformas publicitarias de nuestros clientes:
+            </p>
+
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="bg-blue-900 text-white">
+                    <th className="px-4 py-3 rounded-tl-lg font-semibold">Industria</th>
+                    <th className="px-4 py-3 font-semibold">Canal Principal</th>
+                    <th className="px-4 py-3 font-semibold">Resultado Clave</th>
+                    <th className="px-4 py-3 rounded-tr-lg font-semibold">Periodo</th>
+                  </tr>
+                </thead>
+                <tbody className="text-gray-700">
+                  <tr className="border-b border-gray-200 bg-white">
+                    <td className="px-4 py-3 font-medium">
+                      <Link href="/marketing-digital-inmobiliario-chile" className="text-blue-600 hover:underline">Inmobiliario</Link>
+                    </td>
+                    <td className="px-4 py-3">Meta Ads + Google Search</td>
+                    <td className="px-4 py-3">Reduccion CPA 40% vs benchmark</td>
+                    <td className="px-4 py-3">4 meses</td>
+                  </tr>
+                  <tr className="border-b border-gray-200 bg-gray-50">
+                    <td className="px-4 py-3 font-medium">
+                      <Link href="/marketing-digital-salud-chile" className="text-blue-600 hover:underline">Salud</Link>
+                    </td>
+                    <td className="px-4 py-3">Google Ads + Landing</td>
+                    <td className="px-4 py-3">ROAS 4.2x en captacion de pacientes</td>
+                    <td className="px-4 py-3">6 meses</td>
+                  </tr>
+                  <tr className="border-b border-gray-200 bg-white">
+                    <td className="px-4 py-3 font-medium">
+                      <Link href="/marketing-digital-saas-chile" className="text-blue-600 hover:underline">SaaS</Link>
+                    </td>
+                    <td className="px-4 py-3">Google + LinkedIn Ads</td>
+                    <td className="px-4 py-3">+340% leads calificados MoM</td>
+                    <td className="px-4 py-3">3 meses</td>
+                  </tr>
+                  <tr className="border-b border-gray-200 bg-gray-50">
+                    <td className="px-4 py-3 font-medium">Transporte</td>
+                    <td className="px-4 py-3">Meta Ads + Google Display</td>
+                    <td className="px-4 py-3">CPL bajo $3.500 en zona centro-sur</td>
+                    <td className="px-4 py-3">5 meses</td>
+                  </tr>
+                  <tr className="bg-white">
+                    <td className="px-4 py-3 font-medium">
+                      <Link href="/marketing-digital-educacion-chile" className="text-blue-600 hover:underline">Educacion</Link>
+                    </td>
+                    <td className="px-4 py-3">Meta Ads + Performance Max</td>
+                    <td className="px-4 py-3">ROAS 3.8x en matriculas online</td>
+                    <td className="px-4 py-3">4 meses</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <p className="text-sm text-gray-500 mt-4">
+              Los resultados varian segun industria, presupuesto y condiciones de mercado. Cifras basadas en datos
+              reales de campanas gestionadas por M&P entre 2024 y 2026.
+            </p>
+          </section>
+
+          {/* ============================================================ */}
+          {/* 10. COMPARATIVA M&P VS OTRAS AGENCIAS */}
+          {/* ============================================================ */}
+          <section className="mb-16">
+            <h2 className="text-3xl font-bold text-gray-900 mb-6">
+              Comparativa: M&P vs Otras Agencias de Marketing Digital en Chile
+            </h2>
+            <p className="text-lg text-gray-700 mb-8 leading-relaxed">
+              No todas las agencias de marketing digital entregan el mismo nivel de servicio.
+              Esta comparativa te ayuda a evaluar que esperar al contratar una agencia profesional
+              versus lo que ofrece el promedio del mercado chileno:
+            </p>
+
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="bg-blue-900 text-white">
+                    <th className="px-4 py-3 rounded-tl-lg font-semibold">Criterio</th>
+                    <th className="px-4 py-3 font-semibold text-center">Muller y Perez</th>
+                    <th className="px-4 py-3 rounded-tr-lg font-semibold text-center">Agencia Promedio</th>
+                  </tr>
+                </thead>
+                <tbody className="text-gray-700">
+                  <tr className="border-b border-gray-200 bg-white">
+                    <td className="px-4 py-3 font-medium">Equipo dedicado por cliente</td>
+                    <td className="px-4 py-3 text-center text-green-600 font-semibold">3 profesionales exclusivos</td>
+                    <td className="px-4 py-3 text-center text-gray-500">1 ejecutivo compartido (10+ cuentas)</td>
+                  </tr>
+                  <tr className="border-b border-gray-200 bg-gray-50">
+                    <td className="px-4 py-3 font-medium">Acceso a cuentas publicitarias</td>
+                    <td className="px-4 py-3 text-center text-green-600 font-semibold">100% del cliente</td>
+                    <td className="px-4 py-3 text-center text-gray-500">Cuentas de la agencia</td>
+                  </tr>
+                  <tr className="border-b border-gray-200 bg-white">
+                    <td className="px-4 py-3 font-medium">Modelo de cobro</td>
+                    <td className="px-4 py-3 text-center text-green-600 font-semibold">Fee fijo, sin markup</td>
+                    <td className="px-4 py-3 text-center text-gray-500">15-25% sobre pauta</td>
+                  </tr>
+                  <tr className="border-b border-gray-200 bg-gray-50">
+                    <td className="px-4 py-3 font-medium">Herramientas propias</td>
+                    <td className="px-4 py-3 text-center text-green-600 font-semibold">6 herramientas propietarias</td>
+                    <td className="px-4 py-3 text-center text-gray-500">Solo herramientas de terceros</td>
+                  </tr>
+                  <tr className="border-b border-gray-200 bg-white">
+                    <td className="px-4 py-3 font-medium">Frecuencia de reporteria</td>
+                    <td className="px-4 py-3 text-center text-green-600 font-semibold">Semanal + dashboard 24/7</td>
+                    <td className="px-4 py-3 text-center text-gray-500">Mensual (PDF basico)</td>
+                  </tr>
+                  <tr className="border-b border-gray-200 bg-gray-50">
+                    <td className="px-4 py-3 font-medium">Contrato de permanencia</td>
+                    <td className="px-4 py-3 text-center text-green-600 font-semibold">Sin contrato, mes a mes</td>
+                    <td className="px-4 py-3 text-center text-gray-500">6-12 meses obligatorio</td>
+                  </tr>
+                  <tr className="bg-white">
+                    <td className="px-4 py-3 font-medium">Benchmarks por industria</td>
+                    <td className="px-4 py-3 text-center text-green-600 font-semibold">Datos propios de 50+ industrias</td>
+                    <td className="px-4 py-3 text-center text-gray-500">Estimaciones genericas</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <p className="text-center mt-6">
+              <Link href="/comparativa/muller-perez-vs-agencias-chile" className="text-blue-600 hover:underline font-semibold">
+                Ver comparativa detallada completa
+              </Link>
+            </p>
+          </section>
+
+          {/* ============================================================ */}
+          {/* 11. HERRAMIENTAS PROPIAS */}
+          {/* ============================================================ */}
+          <section className="mb-16 bg-blue-50 rounded-2xl p-8">
+            <h2 className="text-3xl font-bold text-gray-900 mb-6">
+              Herramientas Propias que Nos Diferencian
+            </h2>
+            <p className="text-lg text-gray-700 mb-8 leading-relaxed">
+              Mientras la mayoria de las agencias de marketing digital en Chile depende de herramientas
+              de terceros, en Muller y Perez desarrollamos tecnologia propia que nos da una ventaja
+              competitiva real sobre el mercado:
+            </p>
+
+            <div className="space-y-6">
+              <div className="bg-white rounded-xl p-6 shadow-sm">
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                  <Link href="/labs/predictor" className="hover:text-blue-600 transition">Predictor de Campanas</Link>
+                </h3>
+                <p className="text-gray-700 leading-relaxed">
+                  Estima tu CPC, CPA y presupuesto optimo antes de invertir, usando datos reales de mas de 1.200 keywords
+                  del mercado chileno. Permite tomar decisiones informadas y reducir el riesgo de campanas nuevas.
+                </p>
+              </div>
+
+              <div className="bg-white rounded-xl p-6 shadow-sm">
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                  <Link href="/indicadores" className="hover:text-blue-600 transition">Termometro Marketing Digital Chile</Link>
+                </h3>
+                <p className="text-gray-700 leading-relaxed">
+                  Indicadores semanales del mercado digital chileno: tipo de cambio USD/CLP, CPC promedio por industria
+                  y CPA estimado. Se actualiza automaticamente cada semana con datos del mercado en tiempo real.
+                </p>
+              </div>
+
+              <div className="bg-white rounded-xl p-6 shadow-sm">
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">Buyer Gen</h3>
+                <p className="text-gray-700 leading-relaxed">
+                  Motor de inteligencia artificial que genera segmentaciones de audiencia optimizadas para cada industria,
+                  combinando datos demograficos, intereses y comportamiento de compra del mercado chileno.
+                </p>
+              </div>
+
+              <div className="bg-white rounded-xl p-6 shadow-sm">
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                  <Link href="/utilidades" className="hover:text-blue-600 transition">Radar de Industrias</Link>
+                </h3>
+                <p className="text-gray-700 leading-relaxed">
+                  Base de datos propia con benchmarks de CPC, CVR, CPA y ROAS para mas de 50 industrias en Chile.
+                  Permite calibrar expectativas y configurar campanas con metas realistas desde el primer dia.
+                </p>
+              </div>
+
+              <div className="bg-white rounded-xl p-6 shadow-sm">
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">MP Intelligence</h3>
+                <p className="text-gray-700 leading-relaxed">
+                  Sistema de monitoreo automatico de competidores en Instagram, LinkedIn y Facebook. Detecta
+                  publicaciones, ofertas laborales y movimientos estrategicos de la competencia de cada cliente,
+                  entregando alertas diarias por email con analisis consolidado.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          {/* ============================================================ */}
+          {/* 12. COBERTURA NACIONAL */}
+          {/* ============================================================ */}
+          <section className="mb-16">
+            <h2 className="text-3xl font-bold text-gray-900 mb-6">
+              Cobertura Nacional: Servicios de Marketing Digital en Todo Chile
+            </h2>
+            <p className="text-lg text-gray-700 mb-6 leading-relaxed">
+              Nuestras oficinas centrales estan en <Link href="/agencia-marketing-digital-las-condes" className="text-blue-600 hover:underline">Las Condes, Santiago</Link>,
+              pero atendemos empresas de todo Chile con el mismo nivel de servicio. Toda nuestra operacion
+              es 100% digital: dashboards en tiempo real, reuniones por videollamada y reporteria online.
+              No importa donde estes, tu equipo dedicado trabaja como si estuviera en la oficina de al lado.
+            </p>
+
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+              <Link href="/agencia-marketing-digital-santiago" className="bg-gray-50 hover:bg-blue-50 rounded-lg p-3 text-center transition group">
+                <p className="text-gray-900 font-medium group-hover:text-blue-600 text-sm">Santiago</p>
+              </Link>
+              <Link href="/agencia-marketing-digital-valparaiso" className="bg-gray-50 hover:bg-blue-50 rounded-lg p-3 text-center transition group">
+                <p className="text-gray-900 font-medium group-hover:text-blue-600 text-sm">Valparaiso</p>
+              </Link>
+              <Link href="/agencia-marketing-digital-concepcion" className="bg-gray-50 hover:bg-blue-50 rounded-lg p-3 text-center transition group">
+                <p className="text-gray-900 font-medium group-hover:text-blue-600 text-sm">Concepcion</p>
+              </Link>
+              <Link href="/agencia-marketing-digital-antofagasta" className="bg-gray-50 hover:bg-blue-50 rounded-lg p-3 text-center transition group">
+                <p className="text-gray-900 font-medium group-hover:text-blue-600 text-sm">Antofagasta</p>
+              </Link>
+              <Link href="/agencia-marketing-digital-temuco" className="bg-gray-50 hover:bg-blue-50 rounded-lg p-3 text-center transition group">
+                <p className="text-gray-900 font-medium group-hover:text-blue-600 text-sm">Temuco</p>
+              </Link>
+              <Link href="/agencia-marketing-digital-la-serena" className="bg-gray-50 hover:bg-blue-50 rounded-lg p-3 text-center transition group">
+                <p className="text-gray-900 font-medium group-hover:text-blue-600 text-sm">La Serena</p>
+              </Link>
+              <Link href="/agencia-marketing-digital-puerto-montt" className="bg-gray-50 hover:bg-blue-50 rounded-lg p-3 text-center transition group">
+                <p className="text-gray-900 font-medium group-hover:text-blue-600 text-sm">Puerto Montt</p>
+              </Link>
+              <Link href="/agencia-marketing-digital-vina-del-mar" className="bg-gray-50 hover:bg-blue-50 rounded-lg p-3 text-center transition group">
+                <p className="text-gray-900 font-medium group-hover:text-blue-600 text-sm">Vina del Mar</p>
+              </Link>
+              <Link href="/agencia-marketing-digital-rancagua" className="bg-gray-50 hover:bg-blue-50 rounded-lg p-3 text-center transition group">
+                <p className="text-gray-900 font-medium group-hover:text-blue-600 text-sm">Rancagua</p>
+              </Link>
+              <Link href="/agencia-marketing-digital-talca" className="bg-gray-50 hover:bg-blue-50 rounded-lg p-3 text-center transition group">
+                <p className="text-gray-900 font-medium group-hover:text-blue-600 text-sm">Talca</p>
+              </Link>
+              <Link href="/agencia-marketing-digital-iquique" className="bg-gray-50 hover:bg-blue-50 rounded-lg p-3 text-center transition group">
+                <p className="text-gray-900 font-medium group-hover:text-blue-600 text-sm">Iquique</p>
+              </Link>
+              <Link href="/agencia-marketing-digital-vitacura" className="bg-gray-50 hover:bg-blue-50 rounded-lg p-3 text-center transition group">
+                <p className="text-gray-900 font-medium group-hover:text-blue-600 text-sm">Vitacura</p>
+              </Link>
+            </div>
+
+            <div className="bg-green-50 border-l-4 border-green-500 p-6 rounded-lg">
+              <p className="text-gray-800 leading-relaxed">
+                <strong>Atencion regional con estandar Santiago:</strong> cada cliente regional recibe el mismo equipo
+                dedicado de 3 profesionales, acceso al dashboard en tiempo real y reporteria semanal que nuestros
+                clientes de la capital. La distancia no afecta la calidad del servicio.
+              </p>
+            </div>
+          </section>
+
+          {/* ============================================================ */}
+          {/* 13. FAQ */}
           {/* ============================================================ */}
           <section className="mb-16">
             <h2 className="text-3xl font-bold text-gray-900 mb-8">
@@ -609,7 +951,7 @@ export default function AgenciaMarketingDigitalChilePage() {
           </section>
 
           {/* ============================================================ */}
-          {/* 9. CTA FINAL */}
+          {/* 14. CTA FINAL */}
           {/* ============================================================ */}
           <section className="bg-gradient-to-r from-blue-900 to-purple-900 rounded-2xl p-12 text-center text-white mb-16">
             <h2 className="text-3xl font-bold mb-4">

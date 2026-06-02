@@ -3,15 +3,15 @@ import Link from 'next/link'
 import { ArrowLeft, TrendingUp, Target, DollarSign, CheckCircle, Zap, Users, BarChart3, PlayCircle } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Customer Journey en Chile 2025: Cómo una Agencia de Marketing Digital Diseña Mapas de Decisión para Aumentar Conversiones',
-  description: 'Descubre cómo una agencia de marketing digital en Chile 2025 diseña customer journeys con IA y CRM para aumentar conversiones y reducir CAC.',
+  title: 'Customer Journey en Chile 2026: Cómo una Agencia de Marketing Digital Diseña Mapas de Decisión para Aumentar Conversiones',
+  description: 'Descubre cómo una agencia de marketing digital en Chile 2026 diseña customer journeys con IA y CRM para aumentar conversiones y reducir CAC.',
   keywords: 'agencia de marketing digital, customer journey Chile, mapa de decisión clientes, agencia marketing digital customer journey, performance marketing Chile',
   alternates: {
     canonical: 'https://www.mulleryperez.cl/blog/customer-journey-agencia-marketing-digital-chile-2025'
   },
   openGraph: {
-    title: 'Customer Journey en Chile 2025: Cómo una Agencia de Marketing Digital Diseña Mapas de Decisión para Aumentar Conversiones',
-    description: 'Descubre cómo una agencia de marketing digital en Chile 2025 diseña customer journeys con IA y CRM para aumentar conversiones y reducir CAC.',
+    title: 'Customer Journey en Chile 2026: Cómo una Agencia de Marketing Digital Diseña Mapas de Decisión para Aumentar Conversiones',
+    description: 'Descubre cómo una agencia de marketing digital en Chile 2026 diseña customer journeys con IA y CRM para aumentar conversiones y reducir CAC.',
     type: 'article',
     url: 'https://www.mulleryperez.cl/blog/customer-journey-agencia-marketing-digital-chile-2025',
     publishedTime: '2025-01-18T00:00:00.000Z'
@@ -23,8 +23,8 @@ export const metadata: Metadata = {
   const articleSchema = {
     '@context': 'https://schema.org',
     '@type': 'Article',
-    headline: 'Customer Journey en Chile 2025: Cómo una Agencia de Marketing Digital Diseña Mapas de Decisión para Aumentar Conversiones',
-    description: 'Descubre cómo una agencia de marketing digital en Chile 2025 diseña customer journeys con IA y CRM para aumentar conversiones y reducir CAC.',
+    headline: 'Customer Journey en Chile 2026: Cómo una Agencia de Marketing Digital Diseña Mapas de Decisión para Aumentar Conversiones',
+    description: 'Descubre cómo una agencia de marketing digital en Chile 2026 diseña customer journeys con IA y CRM para aumentar conversiones y reducir CAC.',
     url: 'https://www.mulleryperez.cl/blog/customer-journey-agencia-marketing-digital-chile-2025',
     datePublished: '2025-01-18T00:00:00.000Z',
     dateModified: '2025-01-18T00:00:00.000Z',
@@ -83,11 +83,11 @@ export default function ArticlePage() {
         <div className="max-w-4xl mx-auto">
           <div className="mb-8">
             <span className="px-4 py-2 bg-red-100 text-red-700 rounded-full text-sm font-bold">Performance</span>
-            <p className="text-gray-500 mt-4">18 de enero de 2025 · 10 min de lectura</p>
+            <p className="text-gray-500 mt-4">18 de enero de 2026 · 10 min de lectura</p>
           </div>
 
           <h1 className="text-4xl lg:text-5xl font-black text-gray-900 mb-6 leading-tight">
-            Customer Journey en Chile 2025: Cómo una Agencia de Marketing Digital Diseña Mapas de Decisión para Aumentar Conversiones
+            Customer Journey en Chile 2026: Cómo una Agencia de Marketing Digital Diseña Mapas de Decisión para Aumentar Conversiones
           </h1>
 
           <div className="prose prose-lg max-w-none">
@@ -95,7 +95,7 @@ export default function ArticlePage() {
             <div className="bg-red-50 border-l-4 border-red-600 p-6 rounded-r-xl mb-12">
               <h3 className="text-xl font-bold text-gray-900 mb-4">Introducción</h3>
               <p className="text-gray-700 mb-4">
-                En 2025, el marketing digital en Chile dejó de centrarse en “atraer clics” y evolucionó hacia algo más profundo: entender cómo deciden los clientes. Hoy, las empresas que no tienen claridad sobre el journey de sus consumidores pierden oportunidades, gastan de más en Ads y no logran fidelización.
+                En 2026, el marketing digital en Chile dejó de centrarse en “atraer clics” y evolucionó hacia algo más profundo: entender cómo deciden los clientes. Hoy, las empresas que no tienen claridad sobre el journey de sus consumidores pierden oportunidades, gastan de más en Ads y no logran fidelización.
               </p>
               <p className="text-gray-700 mb-4">
                 El Customer Journey es el mapa que muestra todos los puntos de contacto entre un cliente y una marca: desde el primer anuncio visto hasta la recompra o recomendación. Pero no basta con dibujar un esquema bonito: se requiere análisis de datos, integración de plataformas y reportería financiera.
@@ -125,7 +125,7 @@ export default function ArticlePage() {
                 👉 El objetivo es entender dónde impactar, con qué mensaje y a través de qué canal.
               </p>
               <p className="text-gray-700 mb-4">
-                Por qué es clave en Chile 2025
+                Por qué es clave en Chile 2026
               </p>
             </div>
 
@@ -388,7 +388,7 @@ export default function ArticlePage() {
       {/* Footer */}
       <footer className="border-t border-gray-200 py-12 px-6">
         <div className="max-w-7xl mx-auto text-center text-gray-600 text-sm">
-          <p>© 2025 Muller y Pérez · Agencia de Marketing Digital</p>
+          <p>© 2026 Muller y Pérez · Agencia de Marketing Digital</p>
         </div>
       </footer>
     </div>

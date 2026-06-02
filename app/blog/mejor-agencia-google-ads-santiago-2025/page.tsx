@@ -3,15 +3,15 @@ import Link from 'next/link'
 import { CheckCircle2, TrendingUp, Award, Users, Target, BarChart3, Clock, DollarSign } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Mejor Agencia Google Ads Santiago 2025: Top 10 Comparativa Real | Muller y Pérez',
-  description: 'Ranking objetivo de las 10 mejores agencias Google Ads en Santiago 2025. Comparamos precios, ROI, transparencia y retención de clientes con data verificable.',
+  title: 'Mejor Agencia Google Ads Santiago 2026: Top 10 Comparativa Real | Muller y Pérez',
+  description: 'Ranking objetivo de las 10 mejores agencias Google Ads en Santiago 2026. Comparamos precios, ROI, transparencia y retención de clientes con data verificable.',
   keywords: 'mejor agencia google ads santiago, agencias google ads chile, comparativa agencias google ads, ranking agencias google ads santiago, mejor agencia sem santiago',
   alternates: {
     canonical: 'https://www.mulleryperez.cl/blog/mejor-agencia-google-ads-santiago-2025'
   },
   openGraph: {
-    title: 'Mejor Agencia Google Ads Santiago 2025: Top 10 Comparativa Real',
-    description: 'Ranking objetivo de las 10 mejores agencias Google Ads en Santiago 2025. Comparamos precios, ROI, transparencia y retención de clientes con data verificable.',
+    title: 'Mejor Agencia Google Ads Santiago 2026: Top 10 Comparativa Real',
+    description: 'Ranking objetivo de las 10 mejores agencias Google Ads en Santiago 2026. Comparamos precios, ROI, transparencia y retención de clientes con data verificable.',
     url: 'https://www.mulleryperez.cl/blog/mejor-agencia-google-ads-santiago-2025',
     type: 'article',
     images: [
@@ -19,22 +19,22 @@ export const metadata: Metadata = {
         url: 'https://www.mulleryperez.cl/og-blog-mejor-agencia-google-ads.jpg',
         width: 1200,
         height: 630,
-        alt: 'Mejor Agencia Google Ads Santiago 2025'
+        alt: 'Mejor Agencia Google Ads Santiago 2026'
       }
     ]
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Mejor Agencia Google Ads Santiago 2025: Top 10 Comparativa Real',
-    description: 'Ranking objetivo de las 10 mejores agencias Google Ads en Santiago 2025. Comparamos precios, ROI, transparencia y retención de clientes.',
+    title: 'Mejor Agencia Google Ads Santiago 2026: Top 10 Comparativa Real',
+    description: 'Ranking objetivo de las 10 mejores agencias Google Ads en Santiago 2026. Comparamos precios, ROI, transparencia y retención de clientes.',
   }
 }
 
 const articleSchema = {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "Mejor Agencia Google Ads Santiago 2025: Top 10 Comparativa Real",
-  "description": "Ranking objetivo de las 10 mejores agencias Google Ads en Santiago 2025 basado en precios, ROI, transparencia y retención de clientes.",
+  "headline": "Mejor Agencia Google Ads Santiago 2026: Top 10 Comparativa Real",
+  "description": "Ranking objetivo de las 10 mejores agencias Google Ads en Santiago 2026 basado en precios, ROI, transparencia y retención de clientes.",
   "image": "https://www.mulleryperez.cl/og-blog-mejor-agencia-google-ads.jpg",
   "author": {
     "@type": "Organization",
@@ -59,10 +59,10 @@ const faqSchema = {
   "mainEntity": [
     {
       "@type": "Question",
-      "name": "¿Cuál es la mejor agencia Google Ads en Santiago 2025?",
+      "name": "¿Cuál es la mejor agencia Google Ads en Santiago 2026?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Muller y Pérez lidera el ranking 2025 con 95% de retención de clientes, ROI promedio de +380%, y transparencia total con acceso directo a cuentas. Precio desde $950k CLP/mes con fee fijo (no porcentual), ideal para empresas B2B y e-commerce que buscan resultados medibles."
+        "text": "Muller y Pérez lidera el ranking 2026 con 95% de retención de clientes, ROI promedio de +380%, y transparencia total con acceso directo a cuentas. Precio desde $950k CLP/mes con fee fijo (no porcentual), ideal para empresas B2B y e-commerce que buscan resultados medibles."
       }
     },
     {
@@ -78,7 +78,7 @@ const faqSchema = {
       "name": "¿Cuánto cuesta una buena agencia Google Ads en Santiago?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Rango de precios Santiago 2025: Agencias low-cost $200k-$400k/mes (servicio básico), Mid-tier $400k-$800k/mes (servicio profesional), Premium $800k-$2M+/mes (servicio enterprise). El fee puede ser fijo o porcentual (10-20% del presupuesto publicitario). Las mejores agencias usan fee fijo para alinear incentivos con el cliente."
+        "text": "Rango de precios Santiago 2026: Agencias low-cost $200k-$400k/mes (servicio básico), Mid-tier $400k-$800k/mes (servicio profesional), Premium $800k-$2M+/mes (servicio enterprise). El fee puede ser fijo o porcentual (10-20% del presupuesto publicitario). Las mejores agencias usan fee fijo para alinear incentivos con el cliente."
       }
     },
     {
@@ -94,13 +94,13 @@ const faqSchema = {
       "name": "¿Cuál es el ROI promedio que puedo esperar de una agencia Google Ads profesional?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "ROI realista según industria en Chile 2025: E-commerce 250-450% (ROAS 3.5x-5.5x), B2B SaaS 180-320% (CPL $18k-$45k), Servicios Profesionales 200-380% (CPL $35k-$67k), Retail 150-280% (ROAS 2.5x-3.8x). Desconfía de agencias que prometen ROI garantizado sin analizar tu negocio primero. El ROI depende de múltiples factores: margen, ticket promedio, tasa de conversión web, y competencia en tu industria."
+        "text": "ROI realista según industria en Chile 2026: E-commerce 250-450% (ROAS 3.5x-5.5x), B2B SaaS 180-320% (CPL $18k-$45k), Servicios Profesionales 200-380% (CPL $35k-$67k), Retail 150-280% (ROAS 2.5x-3.8x). Desconfía de agencias que prometen ROI garantizado sin analizar tu negocio primero. El ROI depende de múltiples factores: margen, ticket promedio, tasa de conversión web, y competencia en tu industria."
       }
     }
   ]
 }
 
-export default function MejorAgenciaGoogleAdsSantiago2025() {
+export default function MejorAgenciaGoogleAdsSantiago2026() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-white">
       {/* JSON-LD Schemas */}
@@ -127,10 +127,10 @@ export default function MejorAgenciaGoogleAdsSantiago2025() {
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 bg-blue-100 text-blue-700 px-4 py-2 rounded-full text-sm font-medium mb-6">
             <Award className="w-4 h-4" />
-            Ranking 2025 - Data Verificable
+            Ranking 2026 - Data Verificable
           </div>
           <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-6">
-            Mejor Agencia Google Ads Santiago 2025: Top 10 Comparativa Real
+            Mejor Agencia Google Ads Santiago 2026: Top 10 Comparativa Real
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
             Ranking objetivo de las 10 mejores agencias Google Ads en Santiago basado en <strong>retención de clientes, ROI verificable, transparencia y modelo de fees</strong>. Comparativa con precios reales y criterios medibles.
@@ -140,7 +140,7 @@ export default function MejorAgenciaGoogleAdsSantiago2025() {
         {/* Intro */}
         <div className="prose prose-lg max-w-none mb-12">
           <p className="text-gray-700 leading-relaxed">
-            Elegir la mejor agencia Google Ads en Santiago no es fácil cuando hay más de 150 agencias compitiendo por tu presupuesto. Esta guía compara las <strong>10 mejores agencias Google Ads en Santiago 2025</strong> usando criterios objetivos y verificables: retención de clientes, ROI promedio, transparencia en reporting, modelo de fees, y especialización por industria.
+            Elegir la mejor agencia Google Ads en Santiago no es fácil cuando hay más de 150 agencias compitiendo por tu presupuesto. Esta guía compara las <strong>10 mejores agencias Google Ads en Santiago 2026</strong> usando criterios objetivos y verificables: retención de clientes, ROI promedio, transparencia en reporting, modelo de fees, y especialización por industria.
           </p>
           <p className="text-gray-700 leading-relaxed">
             Si buscas la mejor agencia Google Ads en Santiago, esta comparativa te ayudará a tomar una decisión informada basada en data real, no en promesas de marketing.
@@ -197,7 +197,7 @@ export default function MejorAgenciaGoogleAdsSantiago2025() {
 
         {/* Top 10 Ranking */}
         <div className="mb-12">
-          <h2 className="text-3xl font-bold text-gray-900 mb-8">Top 10 Mejores Agencias Google Ads Santiago 2025</h2>
+          <h2 className="text-3xl font-bold text-gray-900 mb-8">Top 10 Mejores Agencias Google Ads Santiago 2026</h2>
 
           {/* #1 Muller y Pérez */}
           <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border-4 border-blue-600 rounded-xl p-8 mb-6 relative">
@@ -619,9 +619,9 @@ export default function MejorAgenciaGoogleAdsSantiago2025() {
           <h2 className="text-3xl font-bold text-gray-900 mb-8">Preguntas Frecuentes: Mejor Agencia Google Ads Santiago</h2>
           <div className="space-y-6">
             <div className="bg-white border-2 border-gray-200 rounded-lg p-6">
-              <h3 className="text-xl font-bold text-gray-900 mb-3">¿Cuál es la mejor agencia Google Ads en Santiago 2025?</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-3">¿Cuál es la mejor agencia Google Ads en Santiago 2026?</h3>
               <p className="text-gray-700">
-                <strong>Muller y Pérez</strong> lidera el ranking 2025 con 95% de retención de clientes, ROI promedio de +380%, y transparencia total con acceso directo a cuentas. Precio desde $950k CLP/mes con fee fijo (no porcentual), ideal para empresas B2B y e-commerce que buscan resultados medibles.
+                <strong>Muller y Pérez</strong> lidera el ranking 2026 con 95% de retención de clientes, ROI promedio de +380%, y transparencia total con acceso directo a cuentas. Precio desde $950k CLP/mes con fee fijo (no porcentual), ideal para empresas B2B y e-commerce que buscan resultados medibles.
               </p>
             </div>
 
@@ -635,7 +635,7 @@ export default function MejorAgenciaGoogleAdsSantiago2025() {
             <div className="bg-white border-2 border-gray-200 rounded-lg p-6">
               <h3 className="text-xl font-bold text-gray-900 mb-3">¿Cuánto cuesta una buena agencia Google Ads en Santiago?</h3>
               <p className="text-gray-700">
-                Rango de precios Santiago 2025: <strong>Agencias low-cost</strong> $200k-$400k/mes (servicio básico), <strong>Mid-tier</strong> $400k-$800k/mes (servicio profesional), <strong>Premium</strong> $800k-$2M+/mes (servicio enterprise). El fee puede ser fijo o porcentual (10-20% del presupuesto publicitario). Las mejores agencias usan fee fijo para alinear incentivos con el cliente.
+                Rango de precios Santiago 2026: <strong>Agencias low-cost</strong> $200k-$400k/mes (servicio básico), <strong>Mid-tier</strong> $400k-$800k/mes (servicio profesional), <strong>Premium</strong> $800k-$2M+/mes (servicio enterprise). El fee puede ser fijo o porcentual (10-20% del presupuesto publicitario). Las mejores agencias usan fee fijo para alinear incentivos con el cliente.
               </p>
             </div>
 
@@ -649,7 +649,7 @@ export default function MejorAgenciaGoogleAdsSantiago2025() {
             <div className="bg-white border-2 border-gray-200 rounded-lg p-6">
               <h3 className="text-xl font-bold text-gray-900 mb-3">¿Cuál es el ROI promedio que puedo esperar de una agencia Google Ads profesional?</h3>
               <p className="text-gray-700">
-                ROI realista según industria en Chile 2025: <strong>E-commerce</strong> 250-450% (ROAS 3.5x-5.5x), <strong>B2B SaaS</strong> 180-320% (CPL $18k-$45k), <strong>Servicios Profesionales</strong> 200-380% (CPL $35k-$67k), <strong>Retail</strong> 150-280% (ROAS 2.5x-3.8x). Desconfía de agencias que prometen ROI garantizado sin analizar tu negocio primero. El ROI depende de múltiples factores: margen, ticket promedio, tasa de conversión web, y competencia en tu industria.
+                ROI realista según industria en Chile 2026: <strong>E-commerce</strong> 250-450% (ROAS 3.5x-5.5x), <strong>B2B SaaS</strong> 180-320% (CPL $18k-$45k), <strong>Servicios Profesionales</strong> 200-380% (CPL $35k-$67k), <strong>Retail</strong> 150-280% (ROAS 2.5x-3.8x). Desconfía de agencias que prometen ROI garantizado sin analizar tu negocio primero. El ROI depende de múltiples factores: margen, ticket promedio, tasa de conversión web, y competencia en tu industria.
               </p>
             </div>
           </div>
@@ -684,8 +684,8 @@ export default function MejorAgenciaGoogleAdsSantiago2025() {
           <h2 className="text-2xl font-bold text-gray-900 mb-6">Artículos Relacionados</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <Link href="/blog/agencia-marketing-digital-santiago-2025" className="bg-white border-2 border-gray-200 rounded-lg p-6 hover:border-blue-400 transition-colors">
-              <h3 className="text-lg font-bold text-gray-900 mb-2">Agencia Marketing Digital Santiago 2025: Guía Completa</h3>
-              <p className="text-gray-600 text-sm">Todo lo que necesitas saber sobre agencias de marketing digital en Santiago 2025.</p>
+              <h3 className="text-lg font-bold text-gray-900 mb-2">Agencia Marketing Digital Santiago 2026: Guía Completa</h3>
+              <p className="text-gray-600 text-sm">Todo lo que necesitas saber sobre agencias de marketing digital en Santiago 2026.</p>
             </Link>
             <Link href="/labs/predictor" className="bg-white border-2 border-gray-200 rounded-lg p-6 hover:border-blue-400 transition-colors">
               <h3 className="text-lg font-bold text-gray-900 mb-2">Predictor de ROI Google Ads</h3>
@@ -698,7 +698,7 @@ export default function MejorAgenciaGoogleAdsSantiago2025() {
       {/* Footer */}
       <footer className="bg-white/80 backdrop-blur-sm border-t border-gray-200 mt-12 py-8">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-gray-600">
-          <p className="mb-2">© 2025 Muller y Pérez - Agencia de Performance Marketing</p>
+          <p className="mb-2">© 2026 Muller y Pérez - Agencia de Performance Marketing</p>
           <p className="text-sm">
             <Link href="/" className="text-blue-600 hover:text-blue-700">Inicio</Link>
             {' • '}

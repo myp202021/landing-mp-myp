@@ -1,5 +1,5 @@
 /**
- * Blog: Cuánto Invertir en Publicidad Digital en Chile 2025
+ * Blog: Cuánto Invertir en Publicidad Digital en Chile 2026
  * Long-tail keyword: cuanto invertir publicidad digital chile
  */
 
@@ -8,7 +8,7 @@ import Link from 'next/link'
 import { createMetadata, createArticleSchema, createBreadcrumbSchema } from '@/lib/metadata'
 
 export const metadata: Metadata = createMetadata({
-  title: 'Cuánto Invertir en Publicidad Digital en Chile 2025 | Guía de Presupuestos',
+  title: 'Cuánto Invertir en Publicidad Digital en Chile 2026 | Guía de Presupuestos',
   description: 'Guía completa de presupuestos para publicidad digital en Chile. Cuánto invertir en Google Ads, Meta Ads y otros canales según tu industria y objetivos.',
   keywords: [
     'cuanto invertir publicidad digital chile',
@@ -17,12 +17,12 @@ export const metadata: Metadata = createMetadata({
     'presupuesto marketing digital chile',
     'inversion publicidad online chile'
   ],
-  path: '/blog/cuanto-invertir-publicidad-digital-chile-2025'
+  path: '/blog/cuanto-invertir-publicidad-digital-chile-2026'
 })
 
 export default function CuantoInvertirPublicidadPage() {
   const articleSchema = createArticleSchema({
-    title: 'Cuánto Invertir en Publicidad Digital en Chile 2025',
+    title: 'Cuánto Invertir en Publicidad Digital en Chile 2026',
     description: 'Guía de presupuestos para publicidad digital. Google Ads, Meta Ads y más según tu industria.',
     url: 'https://www.mulleryperez.cl/blog/cuanto-invertir-publicidad-digital-chile-2025',
     publishedTime: '2025-01-15T00:00:00.000Z',
@@ -53,11 +53,11 @@ export default function CuantoInvertirPublicidadPage() {
             </nav>
 
             <div className="inline-block px-3 py-1 bg-teal-500/30 rounded-full text-teal-200 text-sm mb-4">
-              Guía de Inversión 2025
+              Guía de Inversión 2026
             </div>
 
             <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
-              Cuánto Invertir en Publicidad Digital en Chile 2025
+              Cuánto Invertir en Publicidad Digital en Chile 2026
             </h1>
 
             <p className="text-xl text-teal-100 mb-6">

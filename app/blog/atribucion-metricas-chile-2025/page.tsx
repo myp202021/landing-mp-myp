@@ -3,15 +3,15 @@ import Link from 'next/link'
 import { ArrowLeft, Activity, DollarSign, TrendingUp, BarChart3, CheckCircle, Eye } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Atribución y Métricas en Chile 2025-2026: del CAC y LTV al Payback con Dashboards en Tiempo Real',
-  description: 'Aprende cómo medir CAC, LTV y Payback en Chile 2025 con dashboards en tiempo real y modelos de atribución data-driven. Casos reales y benchmarks locales.',
+  title: 'Atribución y Métricas en Chile 2026: del CAC y LTV al Payback con Dashboards en Tiempo Real',
+  description: 'Aprende cómo medir CAC, LTV y Payback en Chile 2026 con dashboards en tiempo real y modelos de atribución data-driven. Casos reales y benchmarks locales.',
   keywords: 'atribución marketing digital Chile, CAC marketing digital, LTV clientes Chile, payback campañas digitales, dashboards marketing Chile',
   alternates: {
     canonical: 'https://www.mulleryperez.cl/blog/atribucion-metricas-chile-2025'
   },
   openGraph: {
-    title: 'Atribución y Métricas en Chile 2025-2026: del CAC y LTV al Payback con Dashboards en Tiempo Real',
-    description: 'Aprende cómo medir CAC, LTV y Payback en Chile 2025 con dashboards en tiempo real y modelos de atribución data-driven. Casos reales y benchmarks locales.',
+    title: 'Atribución y Métricas en Chile 2026: del CAC y LTV al Payback con Dashboards en Tiempo Real',
+    description: 'Aprende cómo medir CAC, LTV y Payback en Chile 2026 con dashboards en tiempo real y modelos de atribución data-driven. Casos reales y benchmarks locales.',
     type: 'article',
     url: 'https://www.mulleryperez.cl/blog/atribucion-metricas-chile-2025',
     publishedTime: '2025-10-09T00:00:00.000Z'
@@ -23,8 +23,8 @@ export const metadata: Metadata = {
   const articleSchema = {
     '@context': 'https://schema.org',
     '@type': 'Article',
-    headline: 'Atribución y Métricas en Chile 2025-2026: del CAC y LTV al Payback con Dashboards en Tiempo Real',
-    description: 'Aprende cómo medir CAC, LTV y Payback en Chile 2025 con dashboards en tiempo real y modelos de atribución data-driven. Casos reales y benchmarks locales.',
+    headline: 'Atribución y Métricas en Chile 2026: del CAC y LTV al Payback con Dashboards en Tiempo Real',
+    description: 'Aprende cómo medir CAC, LTV y Payback en Chile 2026 con dashboards en tiempo real y modelos de atribución data-driven. Casos reales y benchmarks locales.',
     url: 'https://www.mulleryperez.cl/blog/atribucion-metricas-chile-2025',
     datePublished: '2025-10-09T00:00:00.000Z',
     dateModified: '2026-03-10T00:00:00.000Z',
@@ -83,11 +83,11 @@ export default function ArticlePage() {
         <div className="max-w-4xl mx-auto">
           <div className="mb-8">
             <span className="px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-bold">Métricas</span>
-            <p className="text-gray-500 mt-4">9 de octubre de 2025 · 17 min de lectura</p>
+            <p className="text-gray-500 mt-4">9 de octubre de 2026 · 17 min de lectura</p>
           </div>
 
           <h1 className="text-4xl lg:text-5xl font-black text-gray-900 mb-6 leading-tight">
-            Atribución y Métricas en Chile 2025-2026: del CAC y LTV al Payback con Dashboards en Tiempo Real
+            Atribución y Métricas en Chile 2026: del CAC y LTV al Payback con Dashboards en Tiempo Real
           </h1>
 
           <p className="text-xl text-gray-600 mb-12 leading-relaxed">
@@ -98,7 +98,7 @@ export default function ArticlePage() {
             <div className="bg-blue-50 border-l-4 border-blue-600 p-6 rounded-r-xl mb-12">
               <h3 className="text-xl font-bold text-gray-900 mb-4">Introducción</h3>
               <p className="text-gray-700 mb-4">
-                En Chile 2025, el marketing digital ya no se mide por likes ni impresiones. Las gerencias y directorios quieren saber con claridad:
+                En Chile 2026, el marketing digital ya no se mide por likes ni impresiones. Las gerencias y directorios quieren saber con claridad:
               </p>
               <ul className="list-disc list-inside text-gray-700 space-y-2 mb-4">
                 <li>¿Cuánto cuesta realmente conseguir un cliente?</li>
@@ -115,7 +115,7 @@ export default function ArticlePage() {
 
             <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6 flex items-center gap-3">
               <Activity className="w-8 h-8 text-blue-600" />
-              Las métricas que importan en 2025
+              Las métricas que importan en 2026
             </h2>
 
             <div className="grid md:grid-cols-3 gap-6 mb-12">
@@ -196,7 +196,7 @@ export default function ArticlePage() {
             </h2>
 
             <p className="text-gray-700 mb-4">
-              En 2025, los modelos más usados en Chile son:
+              En 2026, los modelos más usados en Chile son:
             </p>
 
             <div className="overflow-x-auto mb-8">
@@ -390,7 +390,7 @@ export default function ArticlePage() {
             <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6">Conclusión</h2>
 
             <p className="text-gray-700 mb-4">
-              El marketing digital en Chile 2025 exige hablar el idioma de las finanzas, no de la vanidad.
+              El marketing digital en Chile 2026 exige hablar el idioma de las finanzas, no de la vanidad.
             </p>
 
             <p className="text-gray-700 mb-4">
@@ -441,7 +441,7 @@ export default function ArticlePage() {
       <footer className="bg-gray-900 text-white py-12 px-6">
         <div className="max-w-7xl mx-auto text-center">
           <Link href="/"><img src="/logo-blanco.png" alt="Muller y Pérez" className="h-10 w-auto mx-auto mb-6" /></Link>
-          <p className="text-gray-400">© 2025 Muller y Pérez. Marketing Digital Basado en Datos.</p>
+          <p className="text-gray-400">© 2026 Muller y Pérez. Marketing Digital Basado en Datos.</p>
         </div>
       </footer>
     </div>

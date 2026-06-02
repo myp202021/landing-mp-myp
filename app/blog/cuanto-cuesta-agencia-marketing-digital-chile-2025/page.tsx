@@ -1,5 +1,5 @@
 /**
- * Blog: Cuánto Cuesta una Agencia de Marketing Digital en Chile 2025
+ * Blog: Cuánto Cuesta una Agencia de Marketing Digital en Chile 2026
  * Long-tail keyword: precios agencia marketing digital chile
  */
 
@@ -8,22 +8,22 @@ import Link from 'next/link'
 import { createMetadata, createArticleSchema, createBreadcrumbSchema } from '@/lib/metadata'
 
 export const metadata: Metadata = createMetadata({
-  title: 'Cuánto Cuesta una Agencia de Marketing Digital en Chile 2025 | Precios Reales',
-  description: 'Guía completa de precios de agencias de marketing digital en Chile 2025. Comparativa de costos por servicio, qué incluye cada plan y cómo elegir según tu presupuesto.',
+  title: 'Cuánto Cuesta una Agencia de Marketing Digital en Chile 2026 | Precios Reales',
+  description: 'Guía completa de precios de agencias de marketing digital en Chile 2026. Comparativa de costos por servicio, qué incluye cada plan y cómo elegir según tu presupuesto.',
   keywords: [
     'cuanto cuesta agencia marketing digital chile',
     'precios agencia marketing digital chile',
     'costo agencia marketing digital',
     'tarifas agencia marketing digital chile',
     'presupuesto agencia marketing digital',
-    'agencia marketing digital precios chile 2025'
+    'agencia marketing digital precios chile 2026'
   ],
-  path: '/blog/cuanto-cuesta-agencia-marketing-digital-chile-2025'
+  path: '/blog/cuanto-cuesta-agencia-marketing-digital-chile-2026'
 })
 
 export default function CuantoCuestaAgenciaPage() {
   const articleSchema = createArticleSchema({
-    title: 'Cuánto Cuesta una Agencia de Marketing Digital en Chile 2025',
+    title: 'Cuánto Cuesta una Agencia de Marketing Digital en Chile 2026',
     description: 'Guía completa de precios de agencias de marketing digital en Chile. Comparativa de costos, qué incluye cada plan y cómo elegir.',
     url: 'https://www.mulleryperez.cl/blog/cuanto-cuesta-agencia-marketing-digital-chile-2025',
     publishedTime: '2025-01-15T00:00:00.000Z',
@@ -55,11 +55,11 @@ export default function CuantoCuestaAgenciaPage() {
             </nav>
 
             <div className="inline-block px-3 py-1 bg-blue-500/30 rounded-full text-blue-200 text-sm mb-4">
-              Guía de Precios 2025
+              Guía de Precios 2026
             </div>
 
             <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
-              Cuánto Cuesta una Agencia de Marketing Digital en Chile 2025
+              Cuánto Cuesta una Agencia de Marketing Digital en Chile 2026
             </h1>
 
             <p className="text-xl text-blue-100 mb-6">
@@ -71,7 +71,7 @@ export default function CuantoCuestaAgenciaPage() {
               <span>•</span>
               <span>15 min lectura</span>
               <span>•</span>
-              <span>Actualizado Enero 2025</span>
+              <span>Actualizado Enero 2026</span>
             </div>
           </div>
         </header>
@@ -84,7 +84,7 @@ export default function CuantoCuestaAgenciaPage() {
               Si estás buscando contratar una agencia de marketing digital en Chile, probablemente te
               preguntas <strong>cuánto deberías pagar</strong> y <strong>qué deberías recibir</strong> por
               ese precio. En esta guía te explicamos los rangos de precios reales del mercado chileno
-              en 2025, qué incluye cada nivel de servicio y cómo elegir la mejor opción para tu empresa.
+              en 2026, qué incluye cada nivel de servicio y cómo elegir la mejor opción para tu empresa.
             </p>
 
             <div className="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-r-lg mb-8">

@@ -3,15 +3,15 @@ import Link from 'next/link'
 import { ArrowLeft, TrendingUp, Target, DollarSign, CheckCircle, Zap, Users, BarChart3, PlayCircle } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Marketing Inmobiliario en Chile 2025-2026: Cómo una Agencia de Marketing Digital Convierte Leads en Ventas de Alto Ticket',
-  description: 'Descubre cómo una agencia de marketing digital en Chile 2025 convierte leads en ventas inmobiliarias de alto ticket con estrategias multicanal y reportería financiera.',
-  keywords: 'agencia de marketing digital, marketing inmobiliario Chile, leads inmobiliarios 2025, agencia marketing digital inmobiliaria, performance inmobiliario Chile',
+  title: 'Marketing Inmobiliario en Chile 2026: Cómo una Agencia de Marketing Digital Convierte Leads en Ventas de Alto Ticket',
+  description: 'Descubre cómo una agencia de marketing digital en Chile 2026 convierte leads en ventas inmobiliarias de alto ticket con estrategias multicanal y reportería financiera.',
+  keywords: 'agencia de marketing digital, marketing inmobiliario Chile, leads inmobiliarios 2026, agencia marketing digital inmobiliaria, performance inmobiliario Chile',
   alternates: {
     canonical: 'https://www.mulleryperez.cl/blog/marketing-inmobiliario-agencia-marketing-digital-chile-2025'
   },
   openGraph: {
-    title: 'Marketing Inmobiliario en Chile 2025-2026: Cómo una Agencia de Marketing Digital Convierte Leads en Ventas de Alto Ticket',
-    description: 'Descubre cómo una agencia de marketing digital en Chile 2025 convierte leads en ventas inmobiliarias de alto ticket con estrategias multicanal y reportería financiera.',
+    title: 'Marketing Inmobiliario en Chile 2026: Cómo una Agencia de Marketing Digital Convierte Leads en Ventas de Alto Ticket',
+    description: 'Descubre cómo una agencia de marketing digital en Chile 2026 convierte leads en ventas inmobiliarias de alto ticket con estrategias multicanal y reportería financiera.',
     type: 'article',
     url: 'https://www.mulleryperez.cl/blog/marketing-inmobiliario-agencia-marketing-digital-chile-2025',
     publishedTime: '2025-01-26T00:00:00.000Z'
@@ -23,8 +23,8 @@ export const metadata: Metadata = {
   const articleSchema = {
     '@context': 'https://schema.org',
     '@type': 'Article',
-    headline: 'Marketing Inmobiliario en Chile 2025-2026: Cómo una Agencia de Marketing Digital Convierte Leads en Ventas de Alto Ticket',
-    description: 'Descubre cómo una agencia de marketing digital en Chile 2025 convierte leads en ventas inmobiliarias de alto ticket con estrategias multicanal y reportería financiera.',
+    headline: 'Marketing Inmobiliario en Chile 2026: Cómo una Agencia de Marketing Digital Convierte Leads en Ventas de Alto Ticket',
+    description: 'Descubre cómo una agencia de marketing digital en Chile 2026 convierte leads en ventas inmobiliarias de alto ticket con estrategias multicanal y reportería financiera.',
     url: 'https://www.mulleryperez.cl/blog/marketing-inmobiliario-agencia-marketing-digital-chile-2025',
     datePublished: '2025-01-26T00:00:00.000Z',
     dateModified: '2026-03-10T00:00:00.000Z',
@@ -83,11 +83,11 @@ export default function ArticlePage() {
         <div className="max-w-4xl mx-auto">
           <div className="mb-8">
             <span className="px-4 py-2 bg-red-100 text-red-700 rounded-full text-sm font-bold">Performance</span>
-            <p className="text-gray-500 mt-4">26 de enero de 2025 · 10 min de lectura</p>
+            <p className="text-gray-500 mt-4">26 de enero de 2026 · 10 min de lectura</p>
           </div>
 
           <h1 className="text-4xl lg:text-5xl font-black text-gray-900 mb-6 leading-tight">
-            Marketing Inmobiliario en Chile 2025-2026: Cómo una Agencia de Marketing Digital Convierte Leads en Ventas de Alto Ticket
+            Marketing Inmobiliario en Chile 2026: Cómo una Agencia de Marketing Digital Convierte Leads en Ventas de Alto Ticket
           </h1>
 
           <div className="prose prose-lg max-w-none">
@@ -95,7 +95,7 @@ export default function ArticlePage() {
             <div className="bg-red-50 border-l-4 border-red-600 p-6 rounded-r-xl mb-12">
               <h3 className="text-xl font-bold text-gray-900 mb-4">Introducción</h3>
               <p className="text-gray-700 mb-4">
-                En Chile 2025, el sector inmobiliario sigue siendo uno de los más competitivos y dinámicos del país. Con proyectos en Santiago, regiones emergentes como Temuco y Concepción, y polos turísticos como Pucón o La Serena, la competencia por captar compradores e inversionistas es feroz.
+                En Chile 2026, el sector inmobiliario sigue siendo uno de los más competitivos y dinámicos del país. Con proyectos en Santiago, regiones emergentes como Temuco y Concepción, y polos turísticos como Pucón o La Serena, la competencia por captar compradores e inversionistas es feroz.
               </p>
               <p className="text-gray-700 mb-4">
                 El gran desafío: el alto ticket promedio. Vender un departamento, oficina o casa no es lo mismo que vender un par de zapatos. El journey de decisión es largo, intervienen múltiples actores y la inversión es millonaria.
@@ -224,7 +224,7 @@ export default function ArticlePage() {
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="text-yellow-600 font-bold text-xl">•</span>
-                  <span>Google Search con keywords “departamentos en Temuco 2025”.</span>
+                  <span>Google Search con keywords “departamentos en Temuco 2026”.</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="text-yellow-600 font-bold text-xl">•</span>
@@ -257,10 +257,10 @@ export default function ArticlePage() {
               </ul>
             </div>
 
-            {/* Benchmarks de marketing inmobiliario en Chile 2025 */}
+            {/* Benchmarks de marketing inmobiliario en Chile 2026 */}
             <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6 flex items-center gap-3">
               <TrendingUp className="w-8 h-8 text-blue-600" />
-              Benchmarks de marketing inmobiliario en Chile 2025
+              Benchmarks de marketing inmobiliario en Chile 2026
             </h2>
 
             <div className="bg-white border-2 border-blue-200 rounded-xl p-6 mb-8">
@@ -390,7 +390,7 @@ export default function ArticlePage() {
       {/* Footer */}
       <footer className="border-t border-gray-200 py-12 px-6">
         <div className="max-w-7xl mx-auto text-center text-gray-600 text-sm">
-          <p>© 2025 Muller y Pérez · Agencia de Marketing Digital</p>
+          <p>© 2026 Muller y Pérez · Agencia de Marketing Digital</p>
         </div>
       </footer>
     </div>

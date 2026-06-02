@@ -3,15 +3,15 @@ import Link from 'next/link'
 import { ArrowLeft, TrendingUp, Target, DollarSign, CheckCircle, Zap, Users, BarChart3, PlayCircle } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Estrategias de Retargeting en Chile 2025: Cómo una Agencia de Marketing Digital Maximiza Conversiones',
-  description: 'Descubre cómo una agencia de marketing digital en Chile 2025 usa estrategias de retargeting para maximizar conversiones. Casos, costos y checklist práctico.',
-  keywords: 'agencia de marketing digital, retargeting Chile, remarketing digital 2025, agencia marketing digital performance, conversiones marketing Chile',
+  title: 'Estrategias de Retargeting en Chile 2026: Cómo una Agencia de Marketing Digital Maximiza Conversiones',
+  description: 'Descubre cómo una agencia de marketing digital en Chile 2026 usa estrategias de retargeting para maximizar conversiones. Casos, costos y checklist práctico.',
+  keywords: 'agencia de marketing digital, retargeting Chile, remarketing digital 2026, agencia marketing digital performance, conversiones marketing Chile',
   alternates: {
     canonical: 'https://www.mulleryperez.cl/blog/retargeting-agencia-marketing-digital-chile-2025'
   },
   openGraph: {
-    title: 'Estrategias de Retargeting en Chile 2025: Cómo una Agencia de Marketing Digital Maximiza Conversiones',
-    description: 'Descubre cómo una agencia de marketing digital en Chile 2025 usa estrategias de retargeting para maximizar conversiones. Casos, costos y checklist práctico.',
+    title: 'Estrategias de Retargeting en Chile 2026: Cómo una Agencia de Marketing Digital Maximiza Conversiones',
+    description: 'Descubre cómo una agencia de marketing digital en Chile 2026 usa estrategias de retargeting para maximizar conversiones. Casos, costos y checklist práctico.',
     type: 'article',
     url: 'https://www.mulleryperez.cl/blog/retargeting-agencia-marketing-digital-chile-2025',
     publishedTime: '2025-01-16T00:00:00.000Z'
@@ -23,8 +23,8 @@ export const metadata: Metadata = {
   const articleSchema = {
     '@context': 'https://schema.org',
     '@type': 'Article',
-    headline: 'Estrategias de Retargeting en Chile 2025: Cómo una Agencia de Marketing Digital Maximiza Conversiones',
-    description: 'Descubre cómo una agencia de marketing digital en Chile 2025 usa estrategias de retargeting para maximizar conversiones. Casos, costos y checklist práctico.',
+    headline: 'Estrategias de Retargeting en Chile 2026: Cómo una Agencia de Marketing Digital Maximiza Conversiones',
+    description: 'Descubre cómo una agencia de marketing digital en Chile 2026 usa estrategias de retargeting para maximizar conversiones. Casos, costos y checklist práctico.',
     url: 'https://www.mulleryperez.cl/blog/retargeting-agencia-marketing-digital-chile-2025',
     datePublished: '2025-01-16T00:00:00.000Z',
     dateModified: '2025-01-16T00:00:00.000Z',
@@ -83,11 +83,11 @@ export default function ArticlePage() {
         <div className="max-w-4xl mx-auto">
           <div className="mb-8">
             <span className="px-4 py-2 bg-red-100 text-red-700 rounded-full text-sm font-bold">Performance</span>
-            <p className="text-gray-500 mt-4">16 de enero de 2025 · 10 min de lectura</p>
+            <p className="text-gray-500 mt-4">16 de enero de 2026 · 10 min de lectura</p>
           </div>
 
           <h1 className="text-4xl lg:text-5xl font-black text-gray-900 mb-6 leading-tight">
-            Estrategias de Retargeting en Chile 2025: Cómo una Agencia de Marketing Digital Maximiza Conversiones
+            Estrategias de Retargeting en Chile 2026: Cómo una Agencia de Marketing Digital Maximiza Conversiones
           </h1>
 
           <div className="prose prose-lg max-w-none">
@@ -95,7 +95,7 @@ export default function ArticlePage() {
             <div className="bg-red-50 border-l-4 border-red-600 p-6 rounded-r-xl mb-12">
               <h3 className="text-xl font-bold text-gray-900 mb-4">Introducción</h3>
               <p className="text-gray-700 mb-4">
-                En Chile 2025, conseguir tráfico ya no es el problema. Las empresas invierten millones en Google Ads, Meta Ads y TikTok Ads para atraer visitantes, pero el 95% de los usuarios abandona un sitio sin comprar ni dejar sus datos.
+                En Chile 2026, conseguir tráfico ya no es el problema. Las empresas invierten millones en Google Ads, Meta Ads y TikTok Ads para atraer visitantes, pero el 95% de los usuarios abandona un sitio sin comprar ni dejar sus datos.
               </p>
               <p className="text-gray-700 mb-4">
                 Aquí es donde entra el retargeting, la técnica de volver a impactar a esas audiencias que ya mostraron interés. Y aunque parece simple, la diferencia entre un retargeting amateur y el diseñado por una agencia de marketing digital puede significar duplicar o triplicar las conversiones.
@@ -108,10 +108,10 @@ export default function ArticlePage() {
               </p>
             </div>
 
-            {/* Por qué el retargeting es clave en 2025 */}
+            {/* Por qué el retargeting es clave en 2026 */}
             <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6 flex items-center gap-3">
               <TrendingUp className="w-8 h-8 text-blue-600" />
-              Por qué el retargeting es clave en 2025
+              Por qué el retargeting es clave en 2026
             </h2>
 
             <div className="bg-white border-2 border-blue-200 rounded-xl p-6 mb-8">
@@ -238,10 +238,10 @@ export default function ArticlePage() {
               </ul>
             </div>
 
-            {/* Costos de retargeting en Chile 2025 */}
+            {/* Costos de retargeting en Chile 2026 */}
             <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6 flex items-center gap-3">
               <Target className="w-8 h-8 text-orange-600" />
-              Costos de retargeting en Chile 2025
+              Costos de retargeting en Chile 2026
             </h2>
 
             <div className="bg-white border-2 border-orange-200 rounded-xl p-6 mb-8">
@@ -341,10 +341,10 @@ export default function ArticlePage() {
               </ul>
             </div>
 
-            {/* El retargeting en Chile 2025 es más que “seguir” al usuario con un anuncio genérico. Cuando lo diseña una agencia de marketing digital, se transforma en un motor de conversiones con costos bajos y resultados comprobables. */}
+            {/* El retargeting en Chile 2026 es más que “seguir” al usuario con un anuncio genérico. Cuando lo diseña una agencia de marketing digital, se transforma en un motor de conversiones con costos bajos y resultados comprobables. */}
             <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6 flex items-center gap-3">
               <Zap className="w-8 h-8 text-yellow-600" />
-              El retargeting en Chile 2025 es más que “seguir” al usuario con un anuncio genérico. Cuando lo diseña una agencia de marketing digital, se transforma en un motor de conversiones con costos bajos y resultados comprobables.
+              El retargeting en Chile 2026 es más que “seguir” al usuario con un anuncio genérico. Cuando lo diseña una agencia de marketing digital, se transforma en un motor de conversiones con costos bajos y resultados comprobables.
             </h2>
 
             <div className="bg-white border-2 border-yellow-200 rounded-xl p-6 mb-8">
@@ -378,7 +378,7 @@ export default function ArticlePage() {
       {/* Footer */}
       <footer className="border-t border-gray-200 py-12 px-6">
         <div className="max-w-7xl mx-auto text-center text-gray-600 text-sm">
-          <p>© 2025 Muller y Pérez · Agencia de Marketing Digital</p>
+          <p>© 2026 Muller y Pérez · Agencia de Marketing Digital</p>
         </div>
       </footer>
     </div>

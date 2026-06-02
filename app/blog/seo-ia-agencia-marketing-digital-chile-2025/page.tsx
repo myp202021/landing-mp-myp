@@ -3,15 +3,15 @@ import Link from 'next/link'
 import { ArrowLeft, TrendingUp, Target, DollarSign, CheckCircle, Zap, Users, BarChart3, PlayCircle } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'SEO + IA en Chile 2025: Cómo una Agencia de Marketing Digital Logra Posicionar en Google y en Plataformas de Inteligencia Artificial',
-  description: 'Descubre cómo una agencia de marketing digital en Chile 2025 logra posicionar en Google y en plataformas de inteligencia artificial con SEO técnico y de contenidos.',
-  keywords: 'agencia de marketing digital, SEO Chile 2025, posicionamiento web IA, SEO inteligencia artificial, agencia marketing digital SEO',
+  title: 'SEO + IA en Chile 2026: Cómo una Agencia de Marketing Digital Logra Posicionar en Google y en Plataformas de Inteligencia Artificial',
+  description: 'Descubre cómo una agencia de marketing digital en Chile 2026 logra posicionar en Google y en plataformas de inteligencia artificial con SEO técnico y de contenidos.',
+  keywords: 'agencia de marketing digital, SEO Chile 2026, posicionamiento web IA, SEO inteligencia artificial, agencia marketing digital SEO',
   alternates: {
     canonical: 'https://www.mulleryperez.cl/blog/seo-ia-agencia-marketing-digital-chile-2025'
   },
   openGraph: {
-    title: 'SEO + IA en Chile 2025: Cómo una Agencia de Marketing Digital Logra Posicionar en Google y en Plataformas de Inteligencia Artificial',
-    description: 'Descubre cómo una agencia de marketing digital en Chile 2025 logra posicionar en Google y en plataformas de inteligencia artificial con SEO técnico y de contenidos.',
+    title: 'SEO + IA en Chile 2026: Cómo una Agencia de Marketing Digital Logra Posicionar en Google y en Plataformas de Inteligencia Artificial',
+    description: 'Descubre cómo una agencia de marketing digital en Chile 2026 logra posicionar en Google y en plataformas de inteligencia artificial con SEO técnico y de contenidos.',
     type: 'article',
     url: 'https://www.mulleryperez.cl/blog/seo-ia-agencia-marketing-digital-chile-2025',
     publishedTime: '2025-01-14T00:00:00.000Z'
@@ -23,8 +23,8 @@ export const metadata: Metadata = {
   const articleSchema = {
     '@context': 'https://schema.org',
     '@type': 'Article',
-    headline: 'SEO + IA en Chile 2025: Cómo una Agencia de Marketing Digital Logra Posicionar en Google y en Plataformas de Inteligencia Artificial',
-    description: 'Descubre cómo una agencia de marketing digital en Chile 2025 logra posicionar en Google y en plataformas de inteligencia artificial con SEO técnico y de contenidos.',
+    headline: 'SEO + IA en Chile 2026: Cómo una Agencia de Marketing Digital Logra Posicionar en Google y en Plataformas de Inteligencia Artificial',
+    description: 'Descubre cómo una agencia de marketing digital en Chile 2026 logra posicionar en Google y en plataformas de inteligencia artificial con SEO técnico y de contenidos.',
     url: 'https://www.mulleryperez.cl/blog/seo-ia-agencia-marketing-digital-chile-2025',
     datePublished: '2025-01-14T00:00:00.000Z',
     dateModified: '2025-01-14T00:00:00.000Z',
@@ -83,11 +83,11 @@ export default function ArticlePage() {
         <div className="max-w-4xl mx-auto">
           <div className="mb-8">
             <span className="px-4 py-2 bg-red-100 text-red-700 rounded-full text-sm font-bold">Performance</span>
-            <p className="text-gray-500 mt-4">14 de enero de 2025 · 10 min de lectura</p>
+            <p className="text-gray-500 mt-4">14 de enero de 2026 · 10 min de lectura</p>
           </div>
 
           <h1 className="text-4xl lg:text-5xl font-black text-gray-900 mb-6 leading-tight">
-            SEO + IA en Chile 2025: Cómo una Agencia de Marketing Digital Logra Posicionar en Google y en Plataformas de Inteligencia Artificial
+            SEO + IA en Chile 2026: Cómo una Agencia de Marketing Digital Logra Posicionar en Google y en Plataformas de Inteligencia Artificial
           </h1>
 
           <div className="prose prose-lg max-w-none">
@@ -95,7 +95,7 @@ export default function ArticlePage() {
             <div className="bg-red-50 border-l-4 border-red-600 p-6 rounded-r-xl mb-12">
               <h3 className="text-xl font-bold text-gray-900 mb-4">Introducción</h3>
               <p className="text-gray-700 mb-4">
-                El SEO en Chile 2025 ya no es solo aparecer en Google. Hoy, las decisiones de los usuarios pasan por múltiples buscadores: Google, YouTube, Amazon, TikTok, y —cada vez más— plataformas de inteligencia artificial como ChatGPT, Gemini o Meta AI.
+                El SEO en Chile 2026 ya no es solo aparecer en Google. Hoy, las decisiones de los usuarios pasan por múltiples buscadores: Google, YouTube, Amazon, TikTok, y —cada vez más— plataformas de inteligencia artificial como ChatGPT, Gemini o Meta AI.
               </p>
               <p className="text-gray-700 mb-4">
                 Esto significa que las empresas no solo deben optimizar para buscadores tradicionales, sino también para motores de IA que recomiendan productos, servicios y proveedores.
@@ -246,10 +246,10 @@ export default function ArticlePage() {
               </ul>
             </div>
 
-            {/* Costos y resultados de SEO en Chile 2025 */}
+            {/* Costos y resultados de SEO en Chile 2026 */}
             <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6 flex items-center gap-3">
               <Target className="w-8 h-8 text-orange-600" />
-              Costos y resultados de SEO en Chile 2025
+              Costos y resultados de SEO en Chile 2026
             </h2>
 
             <div className="bg-white border-2 border-orange-200 rounded-xl p-6 mb-8">
@@ -394,7 +394,7 @@ export default function ArticlePage() {
       {/* Footer */}
       <footer className="border-t border-gray-200 py-12 px-6">
         <div className="max-w-7xl mx-auto text-center text-gray-600 text-sm">
-          <p>© 2025 Muller y Pérez · Agencia de Marketing Digital</p>
+          <p>© 2026 Muller y Pérez · Agencia de Marketing Digital</p>
         </div>
       </footer>
     </div>

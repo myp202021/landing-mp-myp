@@ -3,15 +3,15 @@ import Link from 'next/link'
 import { ArrowLeft, TrendingUp, Target, DollarSign, CheckCircle, Zap, Users, BarChart3, PlayCircle } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Estrategias de SEO en Chile 2025-2026: Cómo una Agencia de Marketing Digital Combina Ads y Contenido para Dominar Búsquedas',
-  description: 'Descubre cómo una agencia de marketing digital en Chile 2025 combina SEO, Ads y contenido evergreen para dominar búsquedas y reducir CAC.',
-  keywords: 'agencia de marketing digital, SEO Chile 2025, agencia marketing digital SEO, estrategias híbridas Ads SEO, contenido evergreen Chile',
+  title: 'Estrategias de SEO en Chile 2026: Cómo una Agencia de Marketing Digital Combina Ads y Contenido para Dominar Búsquedas',
+  description: 'Descubre cómo una agencia de marketing digital en Chile 2026 combina SEO, Ads y contenido evergreen para dominar búsquedas y reducir CAC.',
+  keywords: 'agencia de marketing digital, SEO Chile 2026, agencia marketing digital SEO, estrategias híbridas Ads SEO, contenido evergreen Chile',
   alternates: {
     canonical: 'https://www.mulleryperez.cl/blog/seo-agencia-marketing-digital-chile-2025'
   },
   openGraph: {
-    title: 'Estrategias de SEO en Chile 2025-2026: Cómo una Agencia de Marketing Digital Combina Ads y Contenido para Dominar Búsquedas',
-    description: 'Descubre cómo una agencia de marketing digital en Chile 2025 combina SEO, Ads y contenido evergreen para dominar búsquedas y reducir CAC.',
+    title: 'Estrategias de SEO en Chile 2026: Cómo una Agencia de Marketing Digital Combina Ads y Contenido para Dominar Búsquedas',
+    description: 'Descubre cómo una agencia de marketing digital en Chile 2026 combina SEO, Ads y contenido evergreen para dominar búsquedas y reducir CAC.',
     type: 'article',
     url: 'https://www.mulleryperez.cl/blog/seo-agencia-marketing-digital-chile-2025',
     publishedTime: '2025-01-23T00:00:00.000Z'
@@ -23,8 +23,8 @@ export const metadata: Metadata = {
   const articleSchema = {
     '@context': 'https://schema.org',
     '@type': 'Article',
-    headline: 'Estrategias de SEO en Chile 2025-2026: Cómo una Agencia de Marketing Digital Combina Ads y Contenido para Dominar Búsquedas',
-    description: 'Descubre cómo una agencia de marketing digital en Chile 2025 combina SEO, Ads y contenido evergreen para dominar búsquedas y reducir CAC.',
+    headline: 'Estrategias de SEO en Chile 2026: Cómo una Agencia de Marketing Digital Combina Ads y Contenido para Dominar Búsquedas',
+    description: 'Descubre cómo una agencia de marketing digital en Chile 2026 combina SEO, Ads y contenido evergreen para dominar búsquedas y reducir CAC.',
     url: 'https://www.mulleryperez.cl/blog/seo-agencia-marketing-digital-chile-2025',
     datePublished: '2025-01-23T00:00:00.000Z',
     dateModified: '2026-03-10T00:00:00.000Z',
@@ -83,11 +83,11 @@ export default function ArticlePage() {
         <div className="max-w-4xl mx-auto">
           <div className="mb-8">
             <span className="px-4 py-2 bg-red-100 text-red-700 rounded-full text-sm font-bold">Performance</span>
-            <p className="text-gray-500 mt-4">23 de enero de 2025 · 10 min de lectura</p>
+            <p className="text-gray-500 mt-4">23 de enero de 2026 · 10 min de lectura</p>
           </div>
 
           <h1 className="text-4xl lg:text-5xl font-black text-gray-900 mb-6 leading-tight">
-            Estrategias de SEO en Chile 2025-2026: Cómo una Agencia de Marketing Digital Combina Ads y Contenido para Dominar Búsquedas
+            Estrategias de SEO en Chile 2026: Cómo una Agencia de Marketing Digital Combina Ads y Contenido para Dominar Búsquedas
           </h1>
 
           <div className="prose prose-lg max-w-none">
@@ -95,7 +95,7 @@ export default function ArticlePage() {
             <div className="bg-red-50 border-l-4 border-red-600 p-6 rounded-r-xl mb-12">
               <h3 className="text-xl font-bold text-gray-900 mb-4">Introducción</h3>
               <p className="text-gray-700 mb-4">
-                En Chile 2025, las búsquedas en Google y en plataformas de inteligencia artificial (ChatGPT, Gemini, Meta AI) se han convertido en el principal canal de descubrimiento de marcas y servicios. Sin embargo, la mayoría de las empresas sigue viendo SEO y Paid Media como estrategias separadas, cuando en realidad deben funcionar de manera integrada.
+                En Chile 2026, las búsquedas en Google y en plataformas de inteligencia artificial (ChatGPT, Gemini, Meta AI) se han convertido en el principal canal de descubrimiento de marcas y servicios. Sin embargo, la mayoría de las empresas sigue viendo SEO y Paid Media como estrategias separadas, cuando en realidad deben funcionar de manera integrada.
               </p>
               <p className="text-gray-700 mb-4">
                 El error más común es pensar que con pagar anuncios basta, o que con publicar artículos de blog se logrará aparecer en la primera página de Google. La realidad es que en un mercado competitivo como el chileno, se necesita un enfoque híbrido: SEO estratégico + campañas de Ads + contenido evergreen.
@@ -104,7 +104,7 @@ export default function ArticlePage() {
                 Aquí es donde una agencia de marketing digital aporta valor real: diseñando estrategias de SEO que no solo posicionan en Google, sino que también refuerzan la conversión desde Ads y mejoran la autoridad de marca en el largo plazo.
               </p>
               <p className="text-gray-700 mb-4">
-                ¿Por qué el SEO sigue siendo clave en Chile 2025?
+                ¿Por qué el SEO sigue siendo clave en Chile 2026?
               </p>
             </div>
 
@@ -122,7 +122,7 @@ export default function ArticlePage() {
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="text-blue-600 font-bold text-xl">•</span>
-                  <span>Keywords long-tail (ej: “mejor agencia de marketing digital en Chile 2025”).</span>
+                  <span>Keywords long-tail (ej: “mejor agencia de marketing digital en Chile 2026”).</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="text-blue-600 font-bold text-xl">•</span>
@@ -272,10 +272,10 @@ export default function ArticlePage() {
               </ul>
             </div>
 
-            {/* Costos de una estrategia SEO en Chile 2025 */}
+            {/* Costos de una estrategia SEO en Chile 2026 */}
             <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6 flex items-center gap-3">
               <Target className="w-8 h-8 text-orange-600" />
-              Costos de una estrategia SEO en Chile 2025
+              Costos de una estrategia SEO en Chile 2026
             </h2>
 
             <div className="bg-white border-2 border-orange-200 rounded-xl p-6 mb-8">
@@ -294,15 +294,15 @@ export default function ArticlePage() {
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="text-orange-600 font-bold text-xl">•</span>
-                  <span>Aunque SEO requiere paciencia, en Chile 2025 es una inversión estratégica que reduce la dependencia de Ads.</span>
+                  <span>Aunque SEO requiere paciencia, en Chile 2026 es una inversión estratégica que reduce la dependencia de Ads.</span>
                 </li>
               </ul>
             </div>
 
-            {/* Checklist M&P para SEO 2025 */}
+            {/* Checklist M&P para SEO 2026 */}
             <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6 flex items-center gap-3">
               <CheckCircle className="w-8 h-8 text-green-600" />
-              Checklist M&P para SEO 2025
+              Checklist M&P para SEO 2026
             </h2>
 
             <div className="bg-green-50 border-2 border-green-200 rounded-xl p-6 mb-8">
@@ -386,7 +386,7 @@ export default function ArticlePage() {
       {/* Footer */}
       <footer className="border-t border-gray-200 py-12 px-6">
         <div className="max-w-7xl mx-auto text-center text-gray-600 text-sm">
-          <p>© 2025 Muller y Pérez · Agencia de Marketing Digital</p>
+          <p>© 2026 Muller y Pérez · Agencia de Marketing Digital</p>
         </div>
       </footer>
     </div>

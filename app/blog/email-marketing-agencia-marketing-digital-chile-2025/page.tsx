@@ -3,15 +3,15 @@ import Link from 'next/link'
 import { ArrowLeft, TrendingUp, Target, DollarSign, CheckCircle, Zap, Users, BarChart3, PlayCircle } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Email Marketing en Chile 2025: Cómo una Agencia de Marketing Digital Convierte Contactos en Ventas Recurrentes',
-  description: 'Descubre cómo una agencia de marketing digital en Chile 2025 usa email marketing con IA y automatización para generar ventas recurrentes y fidelizar clientes.',
-  keywords: 'agencia de marketing digital, email marketing Chile 2025, agencia marketing digital email, automatización email Chile, performance marketing email',
+  title: 'Email Marketing en Chile 2026: Cómo una Agencia de Marketing Digital Convierte Contactos en Ventas Recurrentes',
+  description: 'Descubre cómo una agencia de marketing digital en Chile 2026 usa email marketing con IA y automatización para generar ventas recurrentes y fidelizar clientes.',
+  keywords: 'agencia de marketing digital, email marketing Chile 2026, agencia marketing digital email, automatización email Chile, performance marketing email',
   alternates: {
     canonical: 'https://www.mulleryperez.cl/blog/email-marketing-agencia-marketing-digital-chile-2025'
   },
   openGraph: {
-    title: 'Email Marketing en Chile 2025: Cómo una Agencia de Marketing Digital Convierte Contactos en Ventas Recurrentes',
-    description: 'Descubre cómo una agencia de marketing digital en Chile 2025 usa email marketing con IA y automatización para generar ventas recurrentes y fidelizar clientes.',
+    title: 'Email Marketing en Chile 2026: Cómo una Agencia de Marketing Digital Convierte Contactos en Ventas Recurrentes',
+    description: 'Descubre cómo una agencia de marketing digital en Chile 2026 usa email marketing con IA y automatización para generar ventas recurrentes y fidelizar clientes.',
     type: 'article',
     url: 'https://www.mulleryperez.cl/blog/email-marketing-agencia-marketing-digital-chile-2025',
     publishedTime: '2025-01-25T00:00:00.000Z'
@@ -23,8 +23,8 @@ export const metadata: Metadata = {
   const articleSchema = {
     '@context': 'https://schema.org',
     '@type': 'Article',
-    headline: 'Email Marketing en Chile 2025: Cómo una Agencia de Marketing Digital Convierte Contactos en Ventas Recurrentes',
-    description: 'Descubre cómo una agencia de marketing digital en Chile 2025 usa email marketing con IA y automatización para generar ventas recurrentes y fidelizar clientes.',
+    headline: 'Email Marketing en Chile 2026: Cómo una Agencia de Marketing Digital Convierte Contactos en Ventas Recurrentes',
+    description: 'Descubre cómo una agencia de marketing digital en Chile 2026 usa email marketing con IA y automatización para generar ventas recurrentes y fidelizar clientes.',
     url: 'https://www.mulleryperez.cl/blog/email-marketing-agencia-marketing-digital-chile-2025',
     datePublished: '2025-01-25T00:00:00.000Z',
     dateModified: '2025-01-25T00:00:00.000Z',
@@ -83,11 +83,11 @@ export default function ArticlePage() {
         <div className="max-w-4xl mx-auto">
           <div className="mb-8">
             <span className="px-4 py-2 bg-red-100 text-red-700 rounded-full text-sm font-bold">Performance</span>
-            <p className="text-gray-500 mt-4">25 de enero de 2025 · 10 min de lectura</p>
+            <p className="text-gray-500 mt-4">25 de enero de 2026 · 10 min de lectura</p>
           </div>
 
           <h1 className="text-4xl lg:text-5xl font-black text-gray-900 mb-6 leading-tight">
-            Email Marketing en Chile 2025: Cómo una Agencia de Marketing Digital Convierte Contactos en Ventas Recurrentes
+            Email Marketing en Chile 2026: Cómo una Agencia de Marketing Digital Convierte Contactos en Ventas Recurrentes
           </h1>
 
           <div className="prose prose-lg max-w-none">
@@ -95,7 +95,7 @@ export default function ArticlePage() {
             <div className="bg-red-50 border-l-4 border-red-600 p-6 rounded-r-xl mb-12">
               <h3 className="text-xl font-bold text-gray-900 mb-4">Introducción</h3>
               <p className="text-gray-700 mb-4">
-                En Chile 2025, muchos piensan que el email marketing está “pasado de moda”. Nada más lejos de la realidad. Los datos muestran que el email sigue siendo el canal con mayor ROI en marketing digital, superando incluso a Google y Meta Ads en retorno por peso invertido.
+                En Chile 2026, muchos piensan que el email marketing está “pasado de moda”. Nada más lejos de la realidad. Los datos muestran que el email sigue siendo el canal con mayor ROI en marketing digital, superando incluso a Google y Meta Ads en retorno por peso invertido.
               </p>
               <p className="text-gray-700 mb-4">
                 El problema es que la mayoría de las empresas en Chile aún lo usan de forma básica: envían correos masivos sin segmentación, sin personalización y sin reportería. El resultado: bajas tasas de apertura y correos en la carpeta de spam.
@@ -104,7 +104,7 @@ export default function ArticlePage() {
                 Aquí es donde una agencia de marketing digital con foco en performance transforma el email en un motor de ventas recurrentes, integrándolo con CRM, automatización e inteligencia artificial.
               </p>
               <p className="text-gray-700 mb-4">
-                ¿Por qué el email marketing es clave en Chile 2025?
+                ¿Por qué el email marketing es clave en Chile 2026?
               </p>
             </div>
 
@@ -247,7 +247,7 @@ export default function ArticlePage() {
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="text-blue-600 font-bold text-xl">•</span>
-                  <span>Captación vía ebook “Tendencias FinTech 2025”.</span>
+                  <span>Captación vía ebook “Tendencias FinTech 2026”.</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="text-blue-600 font-bold text-xl">•</span>
@@ -276,10 +276,10 @@ export default function ArticlePage() {
               </ul>
             </div>
 
-            {/* Benchmarks de email marketing en Chile 2025 */}
+            {/* Benchmarks de email marketing en Chile 2026 */}
             <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6 flex items-center gap-3">
               <Target className="w-8 h-8 text-orange-600" />
-              Benchmarks de email marketing en Chile 2025
+              Benchmarks de email marketing en Chile 2026
             </h2>
 
             <div className="bg-white border-2 border-orange-200 rounded-xl p-6 mb-8">
@@ -394,7 +394,7 @@ export default function ArticlePage() {
       {/* Footer */}
       <footer className="border-t border-gray-200 py-12 px-6">
         <div className="max-w-7xl mx-auto text-center text-gray-600 text-sm">
-          <p>© 2025 Muller y Pérez · Agencia de Marketing Digital</p>
+          <p>© 2026 Muller y Pérez · Agencia de Marketing Digital</p>
         </div>
       </footer>
     </div>

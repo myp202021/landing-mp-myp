@@ -3,14 +3,14 @@ import Link from 'next/link'
 import { ArrowLeft, Play, Instagram, Music2, Users, DollarSign, Target, TrendingUp, BarChart3, CheckCircle, XCircle } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'TikTok Ads vs Instagram Reels Chile 2025: ¿Cuál Elegir para tu Marca?',
+  title: 'TikTok Ads vs Instagram Reels Chile 2026: ¿Cuál Elegir para tu Marca?',
   description: 'Comparativa completa entre TikTok Ads e Instagram Reels para el mercado chileno. CPM, audiencias, formatos y cuándo usar cada plataforma.',
-  keywords: 'TikTok Ads Chile, Instagram Reels Chile, publicidad TikTok, publicidad Instagram, video marketing Chile 2025',
+  keywords: 'TikTok Ads Chile, Instagram Reels Chile, publicidad TikTok, publicidad Instagram, video marketing Chile 2026',
   alternates: {
     canonical: 'https://www.mulleryperez.cl/blog/tiktok-ads-vs-instagram-reels-chile-2025'
   },
   openGraph: {
-    title: 'TikTok Ads vs Instagram Reels Chile 2025: ¿Cuál Elegir?',
+    title: 'TikTok Ads vs Instagram Reels Chile 2026: ¿Cuál Elegir?',
     description: 'Comparativa completa entre TikTok Ads e Instagram Reels para el mercado chileno.',
     type: 'article',
     url: 'https://www.mulleryperez.cl/blog/tiktok-ads-vs-instagram-reels-chile-2025',
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
 const articleSchema = {
   '@context': 'https://schema.org',
   '@type': 'Article',
-  headline: 'TikTok Ads vs Instagram Reels Chile 2025: ¿Cuál Elegir para tu Marca?',
+  headline: 'TikTok Ads vs Instagram Reels Chile 2026: ¿Cuál Elegir para tu Marca?',
   description: 'Comparativa completa entre TikTok Ads e Instagram Reels para el mercado chileno. CPM, audiencias, formatos y cuándo usar cada plataforma.',
   url: 'https://www.mulleryperez.cl/blog/tiktok-ads-vs-instagram-reels-chile-2025',
   datePublished: '2025-01-15T00:00:00.000Z',
@@ -80,11 +80,11 @@ export default function ArticlePage() {
         <div className="max-w-4xl mx-auto">
           <div className="mb-8">
             <span className="px-4 py-2 bg-pink-100 text-pink-700 rounded-full text-sm font-bold">Video Marketing</span>
-            <p className="text-gray-500 mt-4">15 de enero de 2025 · 14 min de lectura</p>
+            <p className="text-gray-500 mt-4">15 de enero de 2026 · 14 min de lectura</p>
           </div>
 
           <h1 className="text-4xl lg:text-5xl font-black text-gray-900 mb-6 leading-tight">
-            TikTok Ads vs Instagram Reels Chile 2025: ¿Cuál Elegir para tu Marca?
+            TikTok Ads vs Instagram Reels Chile 2026: ¿Cuál Elegir para tu Marca?
           </h1>
 
           <p className="text-xl text-gray-600 mb-12 leading-relaxed">
@@ -98,7 +98,7 @@ export default function ArticlePage() {
                 <Play className="w-6 h-6 text-pink-600" /> El Boom del Video Corto en Chile
               </h3>
               <p className="text-gray-700 mb-4">
-                En 2025, el 67% de los chilenos consume contenido de video corto diariamente. TikTok llegó a <strong>8 millones de usuarios</strong> en Chile, mientras que Instagram mantiene <strong>12 millones de usuarios activos</strong>.
+                En 2026, el 67% de los chilenos consume contenido de video corto diariamente. TikTok llegó a <strong>8 millones de usuarios</strong> en Chile, mientras que Instagram mantiene <strong>12 millones de usuarios activos</strong>.
               </p>
               <p className="text-gray-700">
                 Ambas plataformas son relevantes, pero tienen audiencias, costos y comportamientos muy diferentes. La elección correcta puede significar un 40% de diferencia en tu ROI.
@@ -108,7 +108,7 @@ export default function ArticlePage() {
             {/* Tabla Comparativa */}
             <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6 flex items-center gap-3">
               <BarChart3 className="w-8 h-8 text-blue-600" />
-              Comparativa: Números Reales Chile 2025
+              Comparativa: Números Reales Chile 2026
             </h2>
 
             <div className="overflow-x-auto my-8">
@@ -470,7 +470,7 @@ export default function ArticlePage() {
 
       <footer className="border-t border-gray-200 py-8 px-6 bg-white">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-gray-500 text-sm">© 2025 Muller y Pérez</p>
+          <p className="text-gray-500 text-sm">© 2026 Muller y Pérez</p>
           <div className="flex gap-6 text-sm">
             <Link href="/blog" className="text-gray-500 hover:text-blue-600 transition-colors">Blog</Link>
             <Link href="/labs" className="text-gray-500 hover:text-blue-600 transition-colors">M&P Labs</Link>

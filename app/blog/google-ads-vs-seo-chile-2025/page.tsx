@@ -1,5 +1,5 @@
 /**
- * Blog: Google Ads vs SEO - Qué Conviene en Chile 2025
+ * Blog: Google Ads vs SEO - Qué Conviene en Chile 2026
  * Long-tail keyword: google ads vs seo chile
  */
 
@@ -8,7 +8,7 @@ import Link from 'next/link'
 import { createMetadata, createArticleSchema, createBreadcrumbSchema } from '@/lib/metadata'
 
 export const metadata: Metadata = createMetadata({
-  title: 'Google Ads vs SEO: Qué Conviene para tu Empresa en Chile 2025',
+  title: 'Google Ads vs SEO: Qué Conviene para tu Empresa en Chile 2026',
   description: 'Comparativa completa entre Google Ads y SEO para empresas chilenas. Cuándo usar cada uno, costos, tiempos de resultados y cómo combinarlos para máximo ROI.',
   keywords: [
     'google ads vs seo',
@@ -18,12 +18,12 @@ export const metadata: Metadata = createMetadata({
     'diferencia entre seo y google ads',
     'seo vs sem chile'
   ],
-  path: '/blog/google-ads-vs-seo-chile-2025'
+  path: '/blog/google-ads-vs-seo-chile-2026'
 })
 
 export default function GoogleAdsVsSeoPage() {
   const articleSchema = createArticleSchema({
-    title: 'Google Ads vs SEO: Qué Conviene para tu Empresa en Chile 2025',
+    title: 'Google Ads vs SEO: Qué Conviene para tu Empresa en Chile 2026',
     description: 'Comparativa completa entre Google Ads y SEO. Cuándo usar cada uno y cómo combinarlos.',
     url: 'https://www.mulleryperez.cl/blog/google-ads-vs-seo-chile-2025',
     publishedTime: '2025-01-15T00:00:00.000Z',
@@ -54,11 +54,11 @@ export default function GoogleAdsVsSeoPage() {
             </nav>
 
             <div className="inline-block px-3 py-1 bg-emerald-500/30 rounded-full text-emerald-200 text-sm mb-4">
-              Guía Comparativa 2025
+              Guía Comparativa 2026
             </div>
 
             <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
-              Google Ads vs SEO: Qué Conviene para tu Empresa en Chile 2025
+              Google Ads vs SEO: Qué Conviene para tu Empresa en Chile 2026
             </h1>
 
             <p className="text-xl text-emerald-100 mb-6">
@@ -167,7 +167,7 @@ export default function GoogleAdsVsSeoPage() {
             </div>
 
             <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6">
-              Costos Reales en Chile 2025
+              Costos Reales en Chile 2026
             </h2>
 
             <h3 className="text-2xl font-semibold text-gray-900 mt-8 mb-4">

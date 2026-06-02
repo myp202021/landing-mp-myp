@@ -3,15 +3,15 @@ import Link from 'next/link'
 import { ArrowLeft, TrendingUp, Building2, Users, Target, CheckCircle } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Tendencias de Búsqueda en Marketing Digital en Chile 2025: Agencias vs. Equipos Internos',
-  description: 'Descubre cómo en Chile 2025 crecen las búsquedas sobre agencias, equipos internos e híbridos en marketing digital, y cuál modelo conviene más.',
+  title: 'Tendencias de Búsqueda en Marketing Digital en Chile 2026: Agencias vs. Equipos Internos',
+  description: 'Descubre cómo en Chile 2026 crecen las búsquedas sobre agencias, equipos internos e híbridos en marketing digital, y cuál modelo conviene más.',
   keywords: 'tendencias de búsqueda marketing digital Chile, agencias marketing digital Chile, equipo in-house marketing, modelo híbrido marketing',
   alternates: {
     canonical: 'https://www.mulleryperez.cl/blog/tendencias-busqueda-marketing-digital-chile-2025'
   },
   openGraph: {
-    title: 'Tendencias de Búsqueda en Marketing Digital en Chile 2025: Agencias vs. Equipos Internos',
-    description: 'Descubre cómo en Chile 2025 crecen las búsquedas sobre agencias, equipos internos e híbridos en marketing digital, y cuál modelo conviene más.',
+    title: 'Tendencias de Búsqueda en Marketing Digital en Chile 2026: Agencias vs. Equipos Internos',
+    description: 'Descubre cómo en Chile 2026 crecen las búsquedas sobre agencias, equipos internos e híbridos en marketing digital, y cuál modelo conviene más.',
     type: 'article',
     url: 'https://www.mulleryperez.cl/blog/tendencias-busqueda-marketing-digital-chile-2025',
     publishedTime: '2025-10-09T00:00:00.000Z'
@@ -23,8 +23,8 @@ export const metadata: Metadata = {
   const articleSchema = {
     '@context': 'https://schema.org',
     '@type': 'Article',
-    headline: 'Tendencias de Búsqueda en Marketing Digital en Chile 2025: Agencias vs. Equipos Internos',
-    description: 'Descubre cómo en Chile 2025 crecen las búsquedas sobre agencias, equipos internos e híbridos en marketing digital, y cuál modelo conviene más.',
+    headline: 'Tendencias de Búsqueda en Marketing Digital en Chile 2026: Agencias vs. Equipos Internos',
+    description: 'Descubre cómo en Chile 2026 crecen las búsquedas sobre agencias, equipos internos e híbridos en marketing digital, y cuál modelo conviene más.',
     url: 'https://www.mulleryperez.cl/blog/tendencias-busqueda-marketing-digital-chile-2025',
     datePublished: '2025-10-09T00:00:00.000Z',
     dateModified: '2025-10-09T00:00:00.000Z',
@@ -83,22 +83,22 @@ export default function ArticlePage() {
         <div className="max-w-4xl mx-auto">
           <div className="mb-8">
             <span className="px-4 py-2 bg-purple-100 text-purple-700 rounded-full text-sm font-bold">Tendencias</span>
-            <p className="text-gray-500 mt-4">9 de octubre de 2025 · 14 min de lectura</p>
+            <p className="text-gray-500 mt-4">9 de octubre de 2026 · 14 min de lectura</p>
           </div>
 
           <h1 className="text-4xl lg:text-5xl font-black text-gray-900 mb-6 leading-tight">
-            Tendencias de Búsqueda en Marketing Digital en Chile 2025: Agencias vs. Equipos Internos
+            Tendencias de Búsqueda en Marketing Digital en Chile 2026: Agencias vs. Equipos Internos
           </h1>
 
           <p className="text-xl text-gray-600 mb-12 leading-relaxed">
-            El 2025 marcó un cambio en cómo las empresas chilenas entienden el marketing digital. Análisis de las tendencias de búsqueda y comparación de modelos.
+            El 2026 marcó un cambio en cómo las empresas chilenas entienden el marketing digital. Análisis de las tendencias de búsqueda y comparación de modelos.
           </p>
 
           <div className="prose prose-lg max-w-none">
             <div className="bg-blue-50 border-l-4 border-blue-600 p-6 rounded-r-xl mb-12">
               <h3 className="text-xl font-bold text-gray-900 mb-4">Introducción</h3>
               <p className="text-gray-700 mb-4">
-                El 2025 marcó un cambio en cómo las empresas chilenas entienden el marketing digital. Cada vez más gerentes y directores de marketing buscan en Google y LinkedIn comparaciones concretas:
+                El 2026 marcó un cambio en cómo las empresas chilenas entienden el marketing digital. Cada vez más gerentes y directores de marketing buscan en Google y LinkedIn comparaciones concretas:
               </p>
               <ul className="list-disc list-inside text-gray-700 space-y-2 mb-4">
                 <li>¿Conviene contratar una agencia externa?</li>
@@ -116,7 +116,7 @@ export default function ArticlePage() {
             </h2>
 
             <p className="text-gray-700 mb-4">
-              Las queries que más han crecido en Google y foros profesionales en Chile durante 2025 incluyen:
+              Las queries que más han crecido en Google y foros profesionales en Chile durante 2026 incluyen:
             </p>
 
             <ul className="list-disc list-inside text-gray-700 space-y-2 mb-6">
@@ -202,7 +202,7 @@ export default function ArticlePage() {
             </div>
 
             <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6">
-              Factores decisivos en Chile 2025
+              Factores decisivos en Chile 2026
             </h2>
 
             <p className="text-gray-700 mb-4">
@@ -260,7 +260,7 @@ export default function ArticlePage() {
             <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6">Conclusión</h2>
 
             <p className="text-gray-700 mb-4">
-              El 2025 muestra un mercado chileno más consciente: ya no basta con "hacer campañas", ahora la pregunta es cómo estructurar el modelo de marketing digital que maximice retorno y reduzca riesgo.
+              El 2026 muestra un mercado chileno más consciente: ya no basta con "hacer campañas", ahora la pregunta es cómo estructurar el modelo de marketing digital que maximice retorno y reduzca riesgo.
             </p>
 
             <p className="text-gray-700 mb-6">
@@ -288,7 +288,7 @@ export default function ArticlePage() {
       <footer className="bg-gray-900 text-white py-12 px-6">
         <div className="max-w-7xl mx-auto text-center">
           <Link href="/"><img src="/logo-blanco.png" alt="Muller y Pérez" className="h-10 w-auto mx-auto mb-6" /></Link>
-          <p className="text-gray-400">© 2025 Muller y Pérez. Marketing Digital Basado en Datos.</p>
+          <p className="text-gray-400">© 2026 Muller y Pérez. Marketing Digital Basado en Datos.</p>
         </div>
       </footer>
     </div>

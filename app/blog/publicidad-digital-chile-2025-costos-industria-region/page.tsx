@@ -3,15 +3,15 @@ import Link from 'next/link'
 import { ArrowLeft, DollarSign, TrendingUp, MapPin, BarChart3, CheckCircle, Target } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Publicidad Digital en Chile 2025: Costos Reales por Industria y Región (Google & Meta)',
-  description: 'Descubre los costos reales de la publicidad digital en Chile 2025. Benchmarks de Google y Meta Ads por industria y región, con ejemplos locales y proyecciones.',
-  keywords: 'publicidad digital Chile 2025, costos publicidad digital Chile, CPL Google Meta Chile, benchmark campañas digitales Chile, marketing digital por industria Chile',
+  title: 'Publicidad Digital en Chile 2026: Costos Reales por Industria y Región (Google & Meta)',
+  description: 'Descubre los costos reales de la publicidad digital en Chile 2026. Benchmarks de Google y Meta Ads por industria y región, con ejemplos locales y proyecciones.',
+  keywords: 'publicidad digital Chile 2026, costos publicidad digital Chile, CPL Google Meta Chile, benchmark campañas digitales Chile, marketing digital por industria Chile',
   alternates: {
     canonical: 'https://www.mulleryperez.cl/blog/publicidad-digital-chile-2025-costos-industria-region'
   },
   openGraph: {
-    title: 'Publicidad Digital en Chile 2025: Costos Reales por Industria y Región (Google & Meta)',
-    description: 'Descubre los costos reales de la publicidad digital en Chile 2025. Benchmarks de Google y Meta Ads por industria y región, con ejemplos locales y proyecciones.',
+    title: 'Publicidad Digital en Chile 2026: Costos Reales por Industria y Región (Google & Meta)',
+    description: 'Descubre los costos reales de la publicidad digital en Chile 2026. Benchmarks de Google y Meta Ads por industria y región, con ejemplos locales y proyecciones.',
     type: 'article',
     url: 'https://www.mulleryperez.cl/blog/publicidad-digital-chile-2025-costos-industria-region',
     publishedTime: '2025-10-09T00:00:00.000Z'
@@ -23,8 +23,8 @@ export const metadata: Metadata = {
   const articleSchema = {
     '@context': 'https://schema.org',
     '@type': 'Article',
-    headline: 'Publicidad Digital en Chile 2025: Costos Reales por Industria y Región (Google & Meta)',
-    description: 'Descubre los costos reales de la publicidad digital en Chile 2025. Benchmarks de Google y Meta Ads por industria y región, con ejemplos locales y proyecciones.',
+    headline: 'Publicidad Digital en Chile 2026: Costos Reales por Industria y Región (Google & Meta)',
+    description: 'Descubre los costos reales de la publicidad digital en Chile 2026. Benchmarks de Google y Meta Ads por industria y región, con ejemplos locales y proyecciones.',
     url: 'https://www.mulleryperez.cl/blog/publicidad-digital-chile-2025-costos-industria-region',
     datePublished: '2025-10-09T00:00:00.000Z',
     dateModified: '2025-10-09T00:00:00.000Z',
@@ -83,11 +83,11 @@ export default function ArticlePage() {
         <div className="max-w-4xl mx-auto">
           <div className="mb-8">
             <span className="px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-bold">Costos</span>
-            <p className="text-gray-500 mt-4">9 de octubre de 2025 · 16 min de lectura</p>
+            <p className="text-gray-500 mt-4">9 de octubre de 2026 · 16 min de lectura</p>
           </div>
 
           <h1 className="text-4xl lg:text-5xl font-black text-gray-900 mb-6 leading-tight">
-            Publicidad Digital en Chile 2025: Costos Reales por Industria y Región (Google &amp; Meta)
+            Publicidad Digital en Chile 2026: Costos Reales por Industria y Región (Google &amp; Meta)
           </h1>
 
           <p className="text-xl text-gray-600 mb-12 leading-relaxed">
@@ -98,7 +98,7 @@ export default function ArticlePage() {
             <div className="bg-blue-50 border-l-4 border-blue-600 p-6 rounded-r-xl mb-12">
               <h3 className="text-xl font-bold text-gray-900 mb-4">Introducción</h3>
               <p className="text-gray-700 mb-4">
-                En 2025, la publicidad digital en Chile se ha vuelto más competitiva que nunca. Cada clic en Google Ads y Meta Ads representa no solo un costo, sino también una oportunidad de negocio que puede definir el éxito de una empresa.
+                En 2026, la publicidad digital en Chile se ha vuelto más competitiva que nunca. Cada clic en Google Ads y Meta Ads representa no solo un costo, sino también una oportunidad de negocio que puede definir el éxito de una empresa.
               </p>
               <p className="text-gray-700 mb-4">
                 El error más común es seguir usando "promedios globales" o benchmarks de otros países que no reflejan la realidad chilena. En M&amp;P hemos recopilado, analizado y modelado cientos de campañas en distintas industrias y regiones de Chile, y podemos afirmar con certeza: los costos reales de la publicidad digital varían enormemente según el rubro, la ciudad y la etapa del funnel.
@@ -179,7 +179,7 @@ export default function ArticlePage() {
 
             <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6 flex items-center gap-3">
               <DollarSign className="w-8 h-8 text-green-600" />
-              Benchmarks de Google Ads en Chile 2025
+              Benchmarks de Google Ads en Chile 2026
             </h2>
 
             <p className="text-gray-700 mb-4 font-semibold">
@@ -239,7 +239,7 @@ export default function ArticlePage() {
 
             <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6 flex items-center gap-3">
               <TrendingUp className="w-8 h-8 text-purple-600" />
-              Benchmarks de Meta Ads en Chile 2025
+              Benchmarks de Meta Ads en Chile 2026
             </h2>
 
             <p className="text-gray-700 mb-4 font-semibold">
@@ -418,7 +418,7 @@ export default function ArticlePage() {
             <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6">Conclusión</h2>
 
             <p className="text-gray-700 mb-4">
-              En Chile 2025, hablar de "cuánto cuesta un lead en Google o Meta" sin contexto es un error. Los costos varían por industria, región y ticket promedio.
+              En Chile 2026, hablar de "cuánto cuesta un lead en Google o Meta" sin contexto es un error. Los costos varían por industria, región y ticket promedio.
             </p>
 
             <p className="text-gray-700 mb-4">
@@ -454,7 +454,7 @@ export default function ArticlePage() {
       <footer className="bg-gray-900 text-white py-12 px-6">
         <div className="max-w-7xl mx-auto text-center">
           <Link href="/"><img src="/logo-blanco.png" alt="Muller y Pérez" className="h-10 w-auto mx-auto mb-6" /></Link>
-          <p className="text-gray-400">© 2025 Muller y Pérez. Marketing Digital Basado en Datos.</p>
+          <p className="text-gray-400">© 2026 Muller y Pérez. Marketing Digital Basado en Datos.</p>
         </div>
       </footer>
     </div>

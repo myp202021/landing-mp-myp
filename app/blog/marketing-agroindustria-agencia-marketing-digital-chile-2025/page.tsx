@@ -3,15 +3,15 @@ import Link from 'next/link'
 import { ArrowLeft, TrendingUp, Target, DollarSign, CheckCircle, Zap, Users, BarChart3, PlayCircle } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Marketing en Agroindustria en Chile 2025-2026: Cómo una Agencia de Marketing Digital Potencia Exportaciones y Ventas Locales',
-  description: 'Descubre cómo una agencia de marketing digital en Chile 2025 potencia exportaciones y ventas locales de agroindustria con estrategias multicanal y reportería ROI.',
-  keywords: 'agencia de marketing digital, agroindustria Chile 2025, agencia marketing digital agroindustria, exportaciones Chile marketing, leads agroindustria',
+  title: 'Marketing en Agroindustria en Chile 2026: Cómo una Agencia de Marketing Digital Potencia Exportaciones y Ventas Locales',
+  description: 'Descubre cómo una agencia de marketing digital en Chile 2026 potencia exportaciones y ventas locales de agroindustria con estrategias multicanal y reportería ROI.',
+  keywords: 'agencia de marketing digital, agroindustria Chile 2026, agencia marketing digital agroindustria, exportaciones Chile marketing, leads agroindustria',
   alternates: {
     canonical: 'https://www.mulleryperez.cl/blog/marketing-agroindustria-agencia-marketing-digital-chile-2025'
   },
   openGraph: {
-    title: 'Marketing en Agroindustria en Chile 2025-2026: Cómo una Agencia de Marketing Digital Potencia Exportaciones y Ventas Locales',
-    description: 'Descubre cómo una agencia de marketing digital en Chile 2025 potencia exportaciones y ventas locales de agroindustria con estrategias multicanal y reportería ROI.',
+    title: 'Marketing en Agroindustria en Chile 2026: Cómo una Agencia de Marketing Digital Potencia Exportaciones y Ventas Locales',
+    description: 'Descubre cómo una agencia de marketing digital en Chile 2026 potencia exportaciones y ventas locales de agroindustria con estrategias multicanal y reportería ROI.',
     type: 'article',
     url: 'https://www.mulleryperez.cl/blog/marketing-agroindustria-agencia-marketing-digital-chile-2025',
     publishedTime: '2025-02-03T00:00:00.000Z'
@@ -23,8 +23,8 @@ export const metadata: Metadata = {
   const articleSchema = {
     '@context': 'https://schema.org',
     '@type': 'Article',
-    headline: 'Marketing en Agroindustria en Chile 2025-2026: Cómo una Agencia de Marketing Digital Potencia Exportaciones y Ventas Locales',
-    description: 'Descubre cómo una agencia de marketing digital en Chile 2025 potencia exportaciones y ventas locales de agroindustria con estrategias multicanal y reportería ROI.',
+    headline: 'Marketing en Agroindustria en Chile 2026: Cómo una Agencia de Marketing Digital Potencia Exportaciones y Ventas Locales',
+    description: 'Descubre cómo una agencia de marketing digital en Chile 2026 potencia exportaciones y ventas locales de agroindustria con estrategias multicanal y reportería ROI.',
     url: 'https://www.mulleryperez.cl/blog/marketing-agroindustria-agencia-marketing-digital-chile-2025',
     datePublished: '2025-02-03T00:00:00.000Z',
     dateModified: '2026-03-10T00:00:00.000Z',
@@ -83,11 +83,11 @@ export default function ArticlePage() {
         <div className="max-w-4xl mx-auto">
           <div className="mb-8">
             <span className="px-4 py-2 bg-red-100 text-red-700 rounded-full text-sm font-bold">Performance</span>
-            <p className="text-gray-500 mt-4">3 de febrero de 2025 · 10 min de lectura</p>
+            <p className="text-gray-500 mt-4">3 de febrero de 2026 · 10 min de lectura</p>
           </div>
 
           <h1 className="text-4xl lg:text-5xl font-black text-gray-900 mb-6 leading-tight">
-            Marketing en Agroindustria en Chile 2025-2026: Cómo una Agencia de Marketing Digital Potencia Exportaciones y Ventas Locales
+            Marketing en Agroindustria en Chile 2026: Cómo una Agencia de Marketing Digital Potencia Exportaciones y Ventas Locales
           </h1>
 
           <div className="prose prose-lg max-w-none">
@@ -95,7 +95,7 @@ export default function ArticlePage() {
             <div className="bg-red-50 border-l-4 border-red-600 p-6 rounded-r-xl mb-12">
               <h3 className="text-xl font-bold text-gray-900 mb-4">Introducción</h3>
               <p className="text-gray-700 mb-4">
-                La agroindustria chilena es un motor clave de la economía: desde la fruta fresca hasta el vino, pasando por berries, frutos secos, salmonicultura y agroprocesados. En 2025, este sector enfrenta grandes oportunidades —como el crecimiento de exportaciones a Asia— pero también desafíos: mayores exigencias de trazabilidad, competencia internacional feroz y márgenes ajustados por costos logísticos.
+                La agroindustria chilena es un motor clave de la economía: desde la fruta fresca hasta el vino, pasando por berries, frutos secos, salmonicultura y agroprocesados. En 2026, este sector enfrenta grandes oportunidades —como el crecimiento de exportaciones a Asia— pero también desafíos: mayores exigencias de trazabilidad, competencia internacional feroz y márgenes ajustados por costos logísticos.
               </p>
               <p className="text-gray-700 mb-4">
                 Muchas empresas del rubro siguen apostando a ferias internacionales y brokers, pero dejan de lado el potencial de los canales digitales para posicionar su marca en mercados de alto valor y aumentar sus ventas locales. Aquí es donde una agencia de marketing digital juega un rol estratégico, ayudando a convertir la inversión en leads calificados, contratos de exportación y ventas B2B/B2C más rentables.
@@ -246,10 +246,10 @@ export default function ArticlePage() {
               </ul>
             </div>
 
-            {/* Benchmarks en agroindustria en Chile 2025 */}
+            {/* Benchmarks en agroindustria en Chile 2026 */}
             <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6 flex items-center gap-3">
               <TrendingUp className="w-8 h-8 text-blue-600" />
-              Benchmarks en agroindustria en Chile 2025
+              Benchmarks en agroindustria en Chile 2026
             </h2>
 
             <div className="bg-white border-2 border-blue-200 rounded-xl p-6 mb-8">
@@ -383,7 +383,7 @@ export default function ArticlePage() {
       {/* Footer */}
       <footer className="border-t border-gray-200 py-12 px-6">
         <div className="max-w-7xl mx-auto text-center text-gray-600 text-sm">
-          <p>© 2025 Muller y Pérez · Agencia de Marketing Digital</p>
+          <p>© 2026 Muller y Pérez · Agencia de Marketing Digital</p>
         </div>
       </footer>
     </div>

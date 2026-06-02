@@ -3,15 +3,15 @@ import Link from 'next/link'
 import { ArrowLeft, TrendingUp, Target, DollarSign, Zap, CheckCircle, PlayCircle } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'TikTok Ads en Chile 2025-2026: Cómo una Agencia de Marketing Digital Transforma Creatividad en Performance',
-  description: 'Descubre cómo una agencia de marketing digital en Chile 2025 transforma TikTok Ads en performance real. Costos, formatos, estrategias y casos locales.',
+  title: 'TikTok Ads en Chile 2026: Cómo una Agencia de Marketing Digital Transforma Creatividad en Performance',
+  description: 'Descubre cómo una agencia de marketing digital en Chile 2026 transforma TikTok Ads en performance real. Costos, formatos, estrategias y casos locales.',
   keywords: 'agencia de marketing digital, TikTok Ads Chile, publicidad en TikTok, costos TikTok Ads, agencia marketing digital performance',
   alternates: {
     canonical: 'https://www.mulleryperez.cl/blog/tiktok-ads-agencia-marketing-digital-chile-2025'
   },
   openGraph: {
-    title: 'TikTok Ads en Chile 2025-2026: Cómo una Agencia de Marketing Digital Transforma Creatividad en Performance',
-    description: 'Descubre cómo una agencia de marketing digital en Chile 2025 transforma TikTok Ads en performance real. Costos, formatos, estrategias y casos locales.',
+    title: 'TikTok Ads en Chile 2026: Cómo una Agencia de Marketing Digital Transforma Creatividad en Performance',
+    description: 'Descubre cómo una agencia de marketing digital en Chile 2026 transforma TikTok Ads en performance real. Costos, formatos, estrategias y casos locales.',
     type: 'article',
     url: 'https://www.mulleryperez.cl/blog/tiktok-ads-agencia-marketing-digital-chile-2025',
     publishedTime: '2025-01-11T00:00:00.000Z'
@@ -23,8 +23,8 @@ export const metadata: Metadata = {
   const articleSchema = {
     '@context': 'https://schema.org',
     '@type': 'Article',
-    headline: 'TikTok Ads en Chile 2025-2026: Cómo una Agencia de Marketing Digital Transforma Creatividad en Performance',
-    description: 'Descubre cómo una agencia de marketing digital en Chile 2025 transforma TikTok Ads en performance real. Costos, formatos, estrategias y casos locales.',
+    headline: 'TikTok Ads en Chile 2026: Cómo una Agencia de Marketing Digital Transforma Creatividad en Performance',
+    description: 'Descubre cómo una agencia de marketing digital en Chile 2026 transforma TikTok Ads en performance real. Costos, formatos, estrategias y casos locales.',
     url: 'https://www.mulleryperez.cl/blog/tiktok-ads-agencia-marketing-digital-chile-2025',
     datePublished: '2025-01-11T00:00:00.000Z',
     dateModified: '2026-03-10T00:00:00.000Z',
@@ -83,11 +83,11 @@ export default function ArticlePage() {
         <div className="max-w-4xl mx-auto">
           <div className="mb-8">
             <span className="px-4 py-2 bg-red-100 text-red-700 rounded-full text-sm font-bold">Performance</span>
-            <p className="text-gray-500 mt-4">11 de enero de 2025 · 9 min de lectura</p>
+            <p className="text-gray-500 mt-4">11 de enero de 2026 · 9 min de lectura</p>
           </div>
 
           <h1 className="text-4xl lg:text-5xl font-black text-gray-900 mb-6 leading-tight">
-            TikTok Ads en Chile 2025-2026: Cómo una Agencia de Marketing Digital Transforma Creatividad en Performance
+            TikTok Ads en Chile 2026: Cómo una Agencia de Marketing Digital Transforma Creatividad en Performance
           </h1>
 
           <div className="prose prose-lg max-w-none">
@@ -95,7 +95,7 @@ export default function ArticlePage() {
             <div className="bg-red-50 border-l-4 border-red-600 p-6 rounded-r-xl mb-12">
               <h3 className="text-xl font-bold text-gray-900 mb-4">Introducción</h3>
               <p className="text-gray-700 mb-4">
-                TikTok pasó de ser una red de entretenimiento juvenil a convertirse en la plataforma con mayor crecimiento en inversión publicitaria en Chile 2025. Su algoritmo basado en intereses y comportamiento de consumo lo hace ideal no solo para awareness, sino también para performance.
+                TikTok pasó de ser una red de entretenimiento juvenil a convertirse en la plataforma con mayor crecimiento en inversión publicitaria en Chile 2026. Su algoritmo basado en intereses y comportamiento de consumo lo hace ideal no solo para awareness, sino también para performance.
               </p>
               <p className="text-gray-700 mb-4">
                 El gran error de muchas empresas es pensar que TikTok es solo "baile y humor". En realidad, bien gestionado, puede generar ventas con costos por lead más bajos que Meta o Google en ciertos rubros. Eso sí, requiere estrategia, data y la mano experta de una agencia de marketing digital que sepa convertir creatividad en ROI.
@@ -108,7 +108,7 @@ export default function ArticlePage() {
             {/* Por qué TikTok Ads es clave */}
             <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6 flex items-center gap-3">
               <TrendingUp className="w-8 h-8 text-pink-600" />
-              Por qué TikTok Ads es clave en Chile 2025
+              Por qué TikTok Ads es clave en Chile 2026
             </h2>
 
             <div className="bg-white border-2 border-pink-200 rounded-xl p-6 mb-6">
@@ -142,7 +142,7 @@ export default function ArticlePage() {
             {/* Costos reales */}
             <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6 flex items-center gap-3">
               <DollarSign className="w-8 h-8 text-green-600" />
-              Costos reales de TikTok Ads en Chile 2025
+              Costos reales de TikTok Ads en Chile 2026
             </h2>
 
             <div className="grid md:grid-cols-3 gap-6 mb-8">
@@ -314,7 +314,7 @@ export default function ArticlePage() {
             <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6">Conclusión</h2>
 
             <p className="text-gray-700 mb-4">
-              TikTok Ads en Chile 2025 dejó de ser una moda para transformarse en un canal estratégico de performance. Su bajo costo por lead y su capacidad de generar awareness masivo lo convierten en pieza clave para las marcas que buscan resultados medibles.
+              TikTok Ads en Chile 2026 dejó de ser una moda para transformarse en un canal estratégico de performance. Su bajo costo por lead y su capacidad de generar awareness masivo lo convierten en pieza clave para las marcas que buscan resultados medibles.
             </p>
 
             <p className="text-gray-700 mb-4">
@@ -366,7 +366,7 @@ export default function ArticlePage() {
       {/* Footer */}
       <footer className="border-t border-gray-200 py-12 px-6">
         <div className="max-w-7xl mx-auto text-center text-gray-600 text-sm">
-          <p>© 2025 Muller y Pérez · Agencia de Marketing Digital</p>
+          <p>© 2026 Muller y Pérez · Agencia de Marketing Digital</p>
         </div>
       </footer>
     </div>
