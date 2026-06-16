@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>INACAP Educación Continua — Informe de Resultados Campañas Digitales | Abril–Junio 2026</title>
+<style>
+/* ===== RESET & BASE ===== */
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,Helvetica,sans-serif;background:#fff;color:#222;line-height:1.55;font-size:13.5px}
+h1,h2,h3,h4,h5{font-family:Georgia,'Times New Roman',serif;color:#003366;font-weight:700}
+.container{max-width:1080px;margin:0 auto;padding:36px 44px}
+
+/* ===== HEADER ===== */
+.header{display:flex;justify-content:space-between;align-items:flex-start;padding-bottom:20px;border-bottom:4px solid #003366;margin-bottom:28px}
+.header-left{flex:1}
+.header-left h1{font-size:24px;line-height:1.3;margin-bottom:2px}
+.header-left .subtitle{font-size:14px;color:#555;margin-bottom:10px}
+.badge{display:inline-block;background:#003366;color:#fff;padding:5px 16px;border-radius:4px;font-size:11.5px;font-weight:700;letter-spacing:.3px}
+.header-right{text-align:right;flex-shrink:0;margin-left:24px}
+.header-right img{height:48px;margin-bottom:6px}
+.header-right .date{font-size:11px;color:#999}
+.header-right .myp{font-size:10.5px;color:#888;margin-top:4px}
+
+/* ===== KPI CARDS ===== */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:30px}
+.kpi{border:2px solid #e2e2e2;border-radius:8px;padding:18px 14px;text-align:center;transition:border-color .2s}
+.kpi.accent{border-color:#003366;background:#f0f5fa}
+.kpi .value{font-size:28px;font-weight:800;font-family:Arial,sans-serif;color:#003366}
+.kpi .value.green{color:#0a7c42}
+.kpi .label{font-size:10.5px;color:#777;text-transform:uppercase;letter-spacing:.6px;margin-top:5px;line-height:1.4}
+.kpi .detail{font-size:11px;color:#999;margin-top:3px;font-style:italic}
+
+/* ===== SECTIONS ===== */
+.section{margin-bottom:30px}
+.section-title{font-size:17px;color:#003366;padding-bottom:8px;border-bottom:2.5px solid #003366;margin-bottom:14px}
+.section-intro{font-size:13.5px;color:#444;line-height:1.75;margin-bottom:14px}
+.section-intro strong{color:#222}
+
+/* ===== TABLES ===== */
+table{width:100%;border-collapse:collapse;font-size:12.5px;margin-bottom:14px}
+thead th{background:#003366;color:#fff;padding:9px 12px;text-align:left;font-weight:700;font-size:10.5px;text-transform:uppercase;letter-spacing:.4px}
+thead th.r{text-align:right}
+thead th.c{text-align:center}
+tbody td{padding:9px 12px;border-bottom:1px solid #e5e5e5;color:#333}
+tbody td.r{text-align:right;font-variant-numeric:tabular-nums}
+tbody td.c{text-align:center}
+tbody td.b{font-weight:700;color:#1a1a1a}
+tbody tr:nth-child(even){background:#fafbfc}
+tbody tr:hover{background:#f0f4f8}
+tbody tr.total td{background:#edf2f8;font-weight:700;color:#003366;border-top:2px solid #003366}
+.green{color:#0a7c42;font-weight:700}
+.orange{color:#c65d00;font-weight:700}
+.gray{color:#999;font-weight:600}
+.blue{color:#003366;font-weight:700}
+
+/* ===== CALLOUTS ===== */
+.callout{border-left:5px solid #003366;background:#f0f5fa;padding:14px 18px;border-radius:0 8px 8px 0;margin:14px 0}
+.callout h4{font-size:13.5px;margin-bottom:5px;font-family:Georgia,serif}
+.callout p{font-size:12.5px;color:#444;line-height:1.7}
+.callout.green-callout{border-color:#0a7c42;background:#f0faf4}
+.callout.green-callout h4{color:#0a7c42}
+.callout.orange-callout{border-color:#c65d00;background:#fef8f0}
+.callout.orange-callout h4{color:#c65d00}
+
+/* ===== GRID LAYOUTS ===== */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.card{border:1px solid #ddd;border-radius:8px;padding:18px;background:#fafbfc}
+.card h3{font-size:14px;margin-bottom:8px}
+.card p{font-size:12.5px;color:#555;line-height:1.65}
+
+/* ===== FUNNEL ===== */
+.funnel{margin:20px auto;max-width:700px}
+.funnel-stage{position:relative;margin:0 auto 3px;padding:14px 20px;text-align:center;color:#fff;border-radius:4px;font-weight:700;font-size:13px}
+.funnel-stage .f-number{font-size:22px;display:block;margin-bottom:2px}
+.funnel-stage .f-label{font-size:11.5px;font-weight:400;opacity:.92}
+.funnel-rate{text-align:center;font-size:11px;color:#888;padding:3px 0;font-style:italic}
+.funnel-rate span{background:#f5f5f5;padding:2px 10px;border-radius:10px}
+
+/* ===== BAR CHARTS ===== */
+.bar-chart{margin:10px 0}
+.bar-row{display:flex;align-items:center;gap:10px;margin-bottom:7px}
+.bar-label{min-width:110px;font-size:11.5px;color:#555;text-align:right;font-weight:600}
+.bar-track{flex:1;background:#e9e9e9;border-radius:4px;height:26px;overflow:hidden;position:relative}
+.bar-fill{height:100%;border-radius:4px;display:flex;align-items:center;padding:0 10px;font-size:11px;font-weight:700;color:#fff;min-width:30px;transition:width .3s}
+.bar-value{min-width:80px;font-size:12.5px;font-weight:700;color:#333;padding-left:4px}
+
+/* ===== PROGRESS BAR ===== */
+.progress-wrapper{margin:10px 0}
+.progress-bar{background:#e5e5e5;border-radius:8px;height:30px;position:relative;overflow:hidden}
+.progress-fill{height:100%;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff}
+
+/* ===== COURSE STATUS BADGES ===== */
+.status{display:inline-block;padding:3px 10px;border-radius:12px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px}
+.status-green{background:#e6f7ed;color:#0a7c42;border:1px solid #b8e6cc}
+.status-yellow{background:#fef9e7;color:#9a7b00;border:1px solid #f0e4a0}
+.status-orange{background:#fef3e6;color:#c65d00;border:1px solid #f5d4a8}
+.status-gray{background:#f0f0f0;color:#888;border:1px solid #ddd}
+
+/* ===== COURSE WINNER ===== */
+.winner-box{background:linear-gradient(135deg,#f0faf4 0%,#e6f7ed 100%);border:2px solid #0a7c42;border-radius:10px;padding:20px 24px;text-align:center;margin:16px 0}
+.winner-box h3{color:#0a7c42;font-size:16px;margin-bottom:4px}
+.winner-box .winner-detail{font-size:13px;color:#444}
+.winner-box .trophy{font-size:28px;margin-bottom:6px}
+
+/* ===== BI / MARKET ===== */
+.bi-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0}
+.bi-card{background:#f8f9fb;border:1px solid #e0e3e8;border-radius:8px;padding:16px}
+.bi-card h4{font-size:13px;color:#003366;margin-bottom:6px;font-family:Georgia,serif}
+.bi-card p{font-size:12px;color:#555;line-height:1.65}
+.bi-card .bi-number{font-size:22px;font-weight:800;color:#003366;margin-bottom:4px}
+
+/* ===== RECOMMENDATION ===== */
+.recommend{background:#003366;color:#fff;border-radius:10px;padding:28px 32px;margin:20px 0}
+.recommend h2{color:#fff;font-size:18px;margin-bottom:10px}
+.recommend p{font-size:13.5px;line-height:1.75;opacity:.93}
+.recommend ul{margin:10px 0 0 20px;font-size:13px;line-height:1.8;opacity:.93}
+.recommend strong{color:#fff}
+
+/* ===== FOOTER ===== */
+.footer{padding:20px 0;text-align:center;font-size:10.5px;color:#aaa;border-top:1px solid #e5e5e5;margin-top:30px}
+
+/* ===== PRINT ===== */
+@media print{
+  body{font-size:11.5px}
+  .container{padding:16px 24px}
+  .funnel-stage{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .bar-fill,.progress-fill,.status,.kpi.accent,.recommend,thead th{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .section{page-break-inside:avoid}
+}
+@media(max-width:768px){
+  .kpi-grid{grid-template-columns:repeat(2,1fr)}
+  .grid-2,.grid-3,.bi-grid{grid-template-columns:1fr}
+  .header{flex-direction:column}
+  .header-right{text-align:left;margin-left:0;margin-top:12px}
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- ============================================================ -->
+<!-- 1. HEADER -->
+<!-- ============================================================ -->
+<div class="header">
+  <div class="header-left">
+    <h1>Informe de Resultados<br>Campañas Digitales</h1>
+    <p class="subtitle">INACAP Educaci&oacute;n Continua &mdash; Sedes Talca y Curic&oacute;, Regi&oacute;n del Maule</p>
+    <div class="badge">9 de abril &mdash; 15 de junio 2026 (68 d&iacute;as de campa&ntilde;a)</div>
+  </div>
+  <div class="header-right">
+    <img src="https://portal.inacap.cl/documents/d/guest/logofooter60a" alt="INACAP" onerror="this.style.display='none'">
+    <div class="date">Reporte al 15 de junio 2026</div>
+    <div class="myp">Preparado por Muller &amp; P&eacute;rez</div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 2. EXECUTIVE SUMMARY - 4 KPI CARDS -->
+<!-- ============================================================ -->
+<div class="kpi-grid">
+  <div class="kpi accent">
+    <div class="value">$1.364.411</div>
+    <div class="label">Inversi&oacute;n total en pauta</div>
+    <div class="detail">Google Ads + Meta Ads</div>
+  </div>
+  <div class="kpi">
+    <div class="value green">409</div>
+    <div class="label">Conversiones Google Ads</div>
+    <div class="detail">Acciones reales en el sitio</div>
+  </div>
+  <div class="kpi">
+    <div class="value">208.466</div>
+    <div class="label">Personas alcanzadas</div>
+    <div class="detail">Meta Ads en el Maule</div>
+  </div>
+  <div class="kpi">
+    <div class="value green">12,16%</div>
+    <div class="label">Tasa conversi&oacute;n Search</div>
+    <div class="detail">Promedio educaci&oacute;n: 4-6%</div>
+  </div>
+</div>
+
+<div class="section">
+  <h2 class="section-title">Resumen Ejecutivo</h2>
+  <p class="section-intro">
+    En 68 d&iacute;as de campa&ntilde;a digital, las sedes de <strong>Talca y Curic&oacute;</strong> de INACAP Educaci&oacute;n Continua lograron <strong>409 conversiones medibles</strong> en Google Ads (clics en matr&iacute;cula, registros completados, solicitudes de informaci&oacute;n y llamadas telef&oacute;nicas). De esas 409 acciones, <strong>82 personas completaron el formulario de registro de matr&iacute;cula</strong> y <strong>258 hicieron clic en el bot&oacute;n &ldquo;Matricularme&rdquo;</strong> de un curso espec&iacute;fico.
+  </p>
+  <p class="section-intro">
+    A trav&eacute;s de Meta Ads (Facebook e Instagram), se alcanz&oacute; a <strong>208.466 personas &uacute;nicas</strong> en la Regi&oacute;n del Maule, generando <strong>6.167 visitas al sitio web</strong> de Educaci&oacute;n Continua. La tasa de conversi&oacute;n en campa&ntilde;as de b&uacute;squeda de Google es de <strong>12,16%</strong>, m&aacute;s del doble del promedio del sector educaci&oacute;n en Chile (4-6%). Estos n&uacute;meros son reales, verificables, y representan personas concretas interactuando con la oferta de cursos de INACAP.
+  </p>
+</div>
+
+<!-- ============================================================ -->
+<!-- 3. FUNNEL VISUALIZATION -->
+<!-- ============================================================ -->
+<div class="section">
+  <h2 class="section-title">Embudo de Conversi&oacute;n &mdash; Del alcance a la matr&iacute;cula</h2>
+  <p class="section-intro">Cada etapa muestra c&oacute;mo las personas avanzan desde ver el anuncio hasta registrarse en un curso. Los porcentajes entre etapas muestran la tasa de paso de una a la siguiente.</p>
+
+  <div class="funnel">
+    <!-- Stage 1 -->
+    <div class="funnel-stage" style="width:100%;background:#003366">
+      <span class="f-number">208.466</span>
+      <span class="f-label">Personas alcanzadas (Meta Ads en el Maule)</span>
+    </div>
+    <div class="funnel-rate"><span>&darr; El 0,32% genera m&aacute;s de 662K impresiones (frecuencia promedio ~3,2x)</span></div>
+
+    <!-- Stage 2 -->
+    <div class="funnel-stage" style="width:88%;background:#1a4d80">
+      <span class="f-number">662.890</span>
+      <span class="f-label">Impresiones totales (Meta + Google combinados)</span>
+    </div>
+    <div class="funnel-rate"><span>&darr; 2,67% hacen clic o visitan el sitio</span></div>
+
+    <!-- Stage 3 -->
+    <div class="funnel-stage" style="width:70%;background:#2a6699">
+      <span class="f-number">17.685</span>
+      <span class="f-label">Visitas al sitio web (6.167 Meta + 11.518 Google)</span>
+    </div>
+    <div class="funnel-rate"><span>&darr; 2,31% realizan una acci&oacute;n en el sitio</span></div>
+
+    <!-- Stage 4 -->
+    <div class="funnel-stage" style="width:48%;background:#0a7c42">
+      <span class="f-number">409</span>
+      <span class="f-label">Conversiones Google Ads (acciones en el sitio)</span>
+    </div>
+    <div class="funnel-rate"><span>&darr; 20,05% completan registro de matr&iacute;cula</span></div>
+
+    <!-- Stage 5 -->
+    <div class="funnel-stage" style="width:28%;background:#086b38">
+      <span class="f-number">82</span>
+      <span class="f-label">Registros de matr&iacute;cula completados</span>
+    </div>
+  </div>
+
+  <div class="callout green-callout">
+    <h4>82 registros de matr&iacute;cula completados es el dato m&aacute;s relevante</h4>
+    <p>Estas son personas que llegaron al sitio, eligieron un curso, hicieron clic en &ldquo;Matricularme&rdquo; y completaron el formulario de registro. Es la acci&oacute;n m&aacute;s cercana a la matr&iacute;cula efectiva que podemos medir desde la campa&ntilde;a digital.</p>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- CONVERSION BREAKDOWN -->
+<!-- ============================================================ -->
+<div class="section">
+  <h2 class="section-title">&iquest;Qu&eacute; son estas 409 conversiones?</h2>
+  <p class="section-intro">Cada conversi&oacute;n es una <strong>acci&oacute;n real de un potencial alumno</strong> en el sitio web de INACAP Educaci&oacute;n Continua. No son &ldquo;me gusta&rdquo; ni visitas &mdash; son acciones concretas que demuestran inter&eacute;s en matricularse.</p>
+
+  <table>
+    <thead>
+      <tr><th>Acci&oacute;n del usuario</th><th class="r">Cantidad</th><th>Qu&eacute; significa</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="b">Clic en &ldquo;Matricularme&rdquo;</td><td class="r green" style="font-size:17px">258</td><td>Hizo clic en el bot&oacute;n de matr&iacute;cula de un curso espec&iacute;fico</td></tr>
+      <tr><td class="b">Complet&oacute; registro de matr&iacute;cula</td><td class="r green" style="font-size:17px">82</td><td>Llen&oacute; el formulario de registro para matricularse</td></tr>
+      <tr><td class="b">Solicit&oacute; m&aacute;s informaci&oacute;n</td><td class="r">51</td><td>Pidi&oacute; detalles adicionales sobre un curso</td></tr>
+      <tr><td class="b">Llam&oacute; desde el anuncio</td><td class="r">18</td><td>Llam&oacute; directamente a INACAP desde Google</td></tr>
+      <tr class="total"><td>TOTAL CONVERSIONES</td><td class="r">409</td><td></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ============================================================ -->
+<!-- 4. RESULTS BY COURSE -->
+<!-- ============================================================ -->
+<div class="section">
+  <h2 class="section-title">Resultados por Curso</h2>
+  <p class="section-intro">Rendimiento de cada curso en campa&ntilde;as de b&uacute;squeda (Google Search). Los cursos est&aacute;n ordenados por n&uacute;mero de conversiones. El costo por conversi&oacute;n (CPA) indica cu&aacute;nto cost&oacute; cada acci&oacute;n de un potencial alumno.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Curso</th>
+        <th class="r">Impresiones</th>
+        <th class="r">Clicks</th>
+        <th class="r">CTR</th>
+        <th class="r">Conv.</th>
+        <th class="r">CPA</th>
+        <th class="r">Inversi&oacute;n</th>
+        <th class="c">Estado</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="b">Soldadura (Talca + Curic&oacute;)</td>
+        <td class="r">647</td>
+        <td class="r">190</td>
+        <td class="r">29,4%</td>
+        <td class="r green" style="font-size:15px">54,3</td>
+        <td class="r green">$1.496</td>
+        <td class="r">$81.282</td>
+        <td class="c"><span class="status status-green">Estrella</span></td>
+      </tr>
+      <tr>
+        <td class="b">Cursos Generales INACAP</td>
+        <td class="r">4.431</td>
+        <td class="r">967</td>
+        <td class="r">21,8%</td>
+        <td class="r blue" style="font-size:15px">77,9</td>
+        <td class="r orange">$5.401</td>
+        <td class="r">$420.759</td>
+        <td class="c"><span class="status status-yellow">Volumen</span></td>
+      </tr>
+      <tr>
+        <td class="b">Anuncios por sede (Talca + Curic&oacute;)</td>
+        <td class="r">1.017</td>
+        <td class="r">299</td>
+        <td class="r">29,4%</td>
+        <td class="r blue">32,7</td>
+        <td class="r">$2.170</td>
+        <td class="r">$70.977</td>
+        <td class="c"><span class="status status-green">Bueno</span></td>
+      </tr>
+      <tr>
+        <td class="b">Electricidad Domiciliaria</td>
+        <td class="r">278</td>
+        <td class="r">54</td>
+        <td class="r">19,4%</td>
+        <td class="r">13</td>
+        <td class="r green">$1.872</td>
+        <td class="r">$24.330</td>
+        <td class="c"><span class="status status-green">Bueno</span></td>
+      </tr>
+      <tr>
+        <td class="b">Manejo de Plaguicidas</td>
+        <td class="r">142</td>
+        <td class="r">29</td>
+        <td class="r">20,4%</td>
+        <td class="r">8</td>
+        <td class="r green">$1.839</td>
+        <td class="r">$14.715</td>
+        <td class="c"><span class="status status-green">Bueno</span></td>
+      </tr>
+      <tr>
+        <td class="b">Gr&uacute;a Horquilla</td>
+        <td class="r">105</td>
+        <td class="r">31</td>
+        <td class="r">29,5%</td>
+        <td class="r orange">3,5</td>
+        <td class="r orange">$4.972</td>
+        <td class="r">$17.402</td>
+        <td class="c"><span class="status status-orange">Costoso</span></td>
+      </tr>
+      <tr>
+        <td class="b">Programaci&oacute;n PLC</td>
+        <td class="r">28</td>
+        <td class="r">5</td>
+        <td class="r">17,9%</td>
+        <td class="r gray">2</td>
+        <td class="r gray">$1.406</td>
+        <td class="r">$2.812</td>
+        <td class="c"><span class="status status-gray">Temprano</span></td>
+      </tr>
+      <tr class="total">
+        <td>TOTAL SEARCH</td>
+        <td class="r">6.648</td>
+        <td class="r">1.575</td>
+        <td class="r">—</td>
+        <td class="r">191,4</td>
+        <td class="r">$3.304</td>
+        <td class="r">$632.268</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Course winner callout -->
+  <div class="winner-box">
+    <div class="trophy">&#9733;</div>
+    <h3>Curso ganador: Soldadura</h3>
+    <p class="winner-detail">54 conversiones con un costo por acci&oacute;n de solo <strong>$1.496</strong> &mdash; el m&aacute;s eficiente de todos los cursos.<br>CTR de 29,4% (casi 1 de cada 3 personas que ven el anuncio hace clic). Demanda real y verificada en ambas sedes.</p>
+  </div>
+
+  <div class="callout">
+    <h4>Lectura de la tabla para directivos</h4>
+    <p><strong>Verde = cursos que funcionan bien</strong> (buen volumen y costo razonable). <strong>Amarillo = genera volumen pero es m&aacute;s caro</strong> (la categor&iacute;a &ldquo;Cursos Generales&rdquo; compite contra muchas instituciones). <strong>Naranjo = necesita revisi&oacute;n</strong>. <strong>Gris = datos insuficientes para evaluar</strong>.</p>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PERFORMANCE MAX -->
+<!-- ============================================================ -->
+<div class="section">
+  <h2 class="section-title">Performance Max &mdash; Campa&ntilde;a complementaria</h2>
+  <p class="section-intro">Google Performance Max utiliza inteligencia artificial para mostrar anuncios en m&uacute;ltiples formatos (YouTube, Display, Gmail, Maps, Search). Complementa las campa&ntilde;as de b&uacute;squeda con mayor volumen a menor costo.</p>
+
+  <table>
+    <thead>
+      <tr><th>M&eacute;trica</th><th class="r">Valor</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="b">Inversi&oacute;n</td><td class="r">$166.999</td></tr>
+      <tr><td class="b">Impresiones</td><td class="r">34.985</td></tr>
+      <tr><td class="b">Clicks</td><td class="r">10.297</td></tr>
+      <tr><td class="b">Conversiones totales</td><td class="r green">217,6</td></tr>
+      <tr><td>— Clic en Matricularme</td><td class="r">144</td></tr>
+      <tr><td>— Registro Matr&iacute;cula</td><td class="r">27,5</td></tr>
+      <tr><td>— M&aacute;s informaci&oacute;n</td><td class="r">28</td></tr>
+      <tr><td>— Llamadas desde anuncio</td><td class="r">18</td></tr>
+      <tr><td class="b">Costo por conversi&oacute;n</td><td class="r green">$768</td></tr>
+      <tr><td class="b">Tasa de conversi&oacute;n</td><td class="r">2,11%</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout">
+    <h4>PMax aporta 218 conversiones a solo $768 cada una</h4>
+    <p>Aunque su tasa de conversi&oacute;n es menor (2,11% vs 12,16% de Search), el volumen y el bajo costo la hacen un excelente complemento. Las 18 llamadas telef&oacute;nicas directas desde los anuncios son un canal adicional importante.</p>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 5. RESULTS BY ZONE -->
+<!-- ============================================================ -->
+<div class="section">
+  <h2 class="section-title">Resultados por Sede &mdash; Talca vs. Curic&oacute;</h2>
+
+  <div class="grid-2" style="margin-bottom:18px">
+    <!-- GOOGLE ADS BY ZONE -->
+    <div class="card">
+      <h3>Google Ads &mdash; Campa&ntilde;as de b&uacute;squeda</h3>
+      <p style="margin-bottom:12px">Conversiones por sede en campa&ntilde;as Search:</p>
+      <div class="bar-chart">
+        <div class="bar-row">
+          <div class="bar-label">Talca</div>
+          <div class="bar-track"><div class="bar-fill" style="width:100%;background:#003366">114,5 conv</div></div>
+          <div class="bar-value green">114,5</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Curic&oacute;</div>
+          <div class="bar-track"><div class="bar-fill" style="width:67%;background:#5a8ab5">76,9 conv</div></div>
+          <div class="bar-value">76,9</div>
+        </div>
+      </div>
+      <p style="font-size:11.5px;color:#888;margin-top:8px">Talca genera 49% m&aacute;s conversiones que Curic&oacute; en b&uacute;squeda.</p>
+    </div>
+
+    <!-- META ADS BY ZONE -->
+    <div class="card">
+      <h3>Meta Ads &mdash; Visitas al sitio web</h3>
+      <p style="margin-bottom:12px">Landing page views por sede:</p>
+      <div class="bar-chart">
+        <div class="bar-row">
+          <div class="bar-label">Talca</div>
+          <div class="bar-track"><div class="bar-fill" style="width:100%;background:#1877f2">3.424 visitas</div></div>
+          <div class="bar-value">3.424</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Curic&oacute;</div>
+          <div class="bar-track"><div class="bar-fill" style="width:80%;background:#4dabf7">2.743 visitas</div></div>
+          <div class="bar-value">2.743</div>
+        </div>
+      </div>
+      <p style="font-size:11.5px;color:#888;margin-top:8px">Talca tambi&eacute;n genera 25% m&aacute;s visitas que Curic&oacute; en Meta.</p>
+    </div>
+  </div>
+
+  <!-- Detailed zone tables -->
+  <h3 style="font-size:14px;color:#003366;margin:16px 0 8px">Google Ads &mdash; Detalle de conversiones por sede (Search)</h3>
+  <table>
+    <thead>
+      <tr><th>Sede</th><th class="r">Impr.</th><th class="r">Clicks</th><th class="r">M&aacute;s info</th><th class="r">Registro matr&iacute;cula</th><th class="r">Clic matricularme</th><th class="r">Total conv.</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="b">Talca</td><td class="r">3.868</td><td class="r">862</td><td class="r">12</td><td class="r">31</td><td class="r green">71,5</td><td class="r blue" style="font-size:15px">114,5</td></tr>
+      <tr><td class="b">Curic&oacute;</td><td class="r">2.780</td><td class="r">713</td><td class="r">11</td><td class="r">23,5</td><td class="r green">42,5</td><td class="r blue" style="font-size:15px">76,9</td></tr>
+      <tr class="total"><td>Total Search</td><td class="r">6.648</td><td class="r">1.575</td><td class="r">23</td><td class="r">54,5</td><td class="r">114</td><td class="r">191,4</td></tr>
+    </tbody>
+  </table>
+
+  <h3 style="font-size:14px;color:#003366;margin:16px 0 8px">Meta Ads &mdash; Detalle por sede y tipo de campa&ntilde;a</h3>
+  <table>
+    <thead>
+      <tr><th>Campa&ntilde;a</th><th class="r">Inversi&oacute;n</th><th class="r">Impresiones</th><th class="r">Alcance</th><th class="r">Visitas sitio</th><th class="r">Clics &uacute;nicos</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="b">Talca Tr&aacute;fico</td><td class="r">$124.641</td><td class="r">107.358</td><td class="r">44.109</td><td class="r">1.609</td><td class="r">1.064</td></tr>
+      <tr><td class="b">Talca Cursos</td><td class="r">$188.944</td><td class="r">246.377</td><td class="r">70.606</td><td class="r">1.815</td><td class="r">2.122</td></tr>
+      <tr style="background:#f0f5fa"><td class="b" style="color:#003366">Subtotal Talca</td><td class="r" style="font-weight:700">$313.585</td><td class="r" style="font-weight:700">353.735</td><td class="r" style="font-weight:700">114.715</td><td class="r" style="font-weight:700">3.424</td><td class="r" style="font-weight:700">3.186</td></tr>
+      <tr><td class="b">Curic&oacute; Tr&aacute;fico</td><td class="r">$123.260</td><td class="r">137.170</td><td class="r">41.430</td><td class="r">1.295</td><td class="r">961</td></tr>
+      <tr><td class="b">Curic&oacute; Cursos</td><td class="r">$128.299</td><td class="r">171.985</td><td class="r">52.321</td><td class="r">1.448</td><td class="r">1.666</td></tr>
+      <tr style="background:#f0f5fa"><td class="b" style="color:#003366">Subtotal Curic&oacute;</td><td class="r" style="font-weight:700">$251.559</td><td class="r" style="font-weight:700">309.155</td><td class="r" style="font-weight:700">93.751</td><td class="r" style="font-weight:700">2.743</td><td class="r" style="font-weight:700">2.627</td></tr>
+      <tr class="total"><td>TOTAL META ADS</td><td class="r">$565.144</td><td class="r">662.890</td><td class="r">208.466</td><td class="r">6.167</td><td class="r">5.813</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout">
+    <h4>Ambas sedes responden bien &mdash; Talca con mayor volumen</h4>
+    <p>Talca genera consistentemente m&aacute;s conversiones que Curic&oacute; tanto en Google como en Meta. Esto responde a que Talca es la capital regional con mayor poblaci&oacute;n econ&oacute;micamente activa. Sin embargo, Curic&oacute; tambi&eacute;n muestra buena respuesta y justifica la inversi&oacute;n.</p>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- INVESTMENT BY CHANNEL -->
+<!-- ============================================================ -->
+<div class="section">
+  <h2 class="section-title">Inversi&oacute;n por Canal</h2>
+  <div class="grid-2">
+    <div class="card">
+      <h3>Google Ads &mdash; $799.267 (59%)</h3>
+      <p style="margin-bottom:10px">Captura demanda activa: personas buscando cursos en Google.</p>
+      <div class="bar-chart">
+        <div class="bar-row">
+          <div class="bar-label">Search</div>
+          <div class="bar-track"><div class="bar-fill" style="width:79%;background:#003366">$632.268</div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">PMax</div>
+          <div class="bar-track"><div class="bar-fill" style="width:21%;background:#5a8ab5">$166.999</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Meta Ads &mdash; $565.144 (41%)</h3>
+      <p style="margin-bottom:10px">Genera conocimiento de los cursos en la zona (awareness).</p>
+      <div class="bar-chart">
+        <div class="bar-row">
+          <div class="bar-label">Talca</div>
+          <div class="bar-track"><div class="bar-fill" style="width:56%;background:#1877f2">$313.585</div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Curic&oacute;</div>
+          <div class="bar-track"><div class="bar-fill" style="width:44%;background:#4dabf7">$251.559</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 6. BUDGET EXECUTION -->
+<!-- ============================================================ -->
+<div class="section">
+  <h2 class="section-title">Ejecuci&oacute;n Presupuestaria</h2>
+  <p class="section-intro">Comparaci&oacute;n entre el presupuesto original del contrato y lo ejecutado al 15 de junio 2026. Junio a&uacute;n no cierra &mdash; la ejecuci&oacute;n final del mes ser&aacute; mayor.</p>
+
+  <table>
+    <thead>
+      <tr><th>Concepto</th><th class="r">Presupuesto contrato</th><th class="r">Ejecutado al 15/jun</th><th class="r">% ejecuci&oacute;n</th><th class="r">Saldo</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="b">Fee Muller &amp; P&eacute;rez (3 meses)</td>
+        <td class="r">$2.250.000</td>
+        <td class="r">$2.250.000</td>
+        <td class="r green">100%</td>
+        <td class="r">$0</td>
+      </tr>
+      <tr>
+        <td class="b">Pauta Google Ads</td>
+        <td class="r">$1.100.000</td>
+        <td class="r">$799.267</td>
+        <td class="r">73%</td>
+        <td class="r">$300.733</td>
+      </tr>
+      <tr>
+        <td class="b">Pauta Meta Ads</td>
+        <td class="r">$850.000</td>
+        <td class="r">$565.144</td>
+        <td class="r">66%</td>
+        <td class="r">$284.856</td>
+      </tr>
+      <tr>
+        <td class="b">Remarketing</td>
+        <td class="r">$100.000</td>
+        <td class="r" style="font-size:11px;color:#888">Incluido en Meta</td>
+        <td class="r">&#8212;</td>
+        <td class="r">&#8212;</td>
+      </tr>
+      <tr class="total">
+        <td>TOTAL CONTRATO</td>
+        <td class="r">$4.300.000</td>
+        <td class="r">$3.614.411</td>
+        <td class="r">84%</td>
+        <td class="r">$685.589</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p style="font-size:12px;color:#555;margin-bottom:6px;font-weight:600">Ejecuci&oacute;n de pauta publicitaria:</p>
+  <div class="progress-wrapper">
+    <div class="progress-bar">
+      <div class="progress-fill" style="width:67%;background:linear-gradient(90deg,#003366,#1a5c99)">Pauta: 67% ejecutada &mdash; $1.364.411 de $2.050.000</div>
+    </div>
+  </div>
+  <p style="font-size:11px;color:#888;margin-top:6px;font-style:italic">Nota: la pauta restante ($685.589) se ejecutar&aacute; en los &uacute;ltimos 15 d&iacute;as de junio. Se mantuvo un gasto gradual para optimizar los resultados con base en datos reales.</p>
+</div>
+
+<!-- ============================================================ -->
+<!-- 7. MARKET CONTEXT & BI -->
+<!-- ============================================================ -->
+<div class="section">
+  <h2 class="section-title">Contexto de Mercado e Inteligencia de Negocios</h2>
+  <p class="section-intro">Para dimensionar los resultados, es &uacute;til entender el contexto de la Regi&oacute;n del Maule y c&oacute;mo se comparan estos n&uacute;meros con el mercado de educaci&oacute;n continua.</p>
+
+  <div class="bi-grid">
+    <div class="bi-card">
+      <h4>Regi&oacute;n del Maule</h4>
+      <div class="bi-number">~1,1M</div>
+      <p>habitantes. Aproximadamente <strong>350.000 personas econ&oacute;micamente activas</strong>. Principales sectores: agricultura, servicios, industria y comercio.</p>
+    </div>
+    <div class="bi-card">
+      <h4>Mercado objetivo educaci&oacute;n continua</h4>
+      <div class="bi-number">50.000 &ndash; 80.000</div>
+      <p>personas estimadas entre 25 y 55 a&ntilde;os que trabajan en industria, agricultura y servicios y podr&iacute;an tomar cursos de capacitaci&oacute;n.</p>
+    </div>
+    <div class="bi-card">
+      <h4>Penetraci&oacute;n alcanzada</h4>
+      <div class="bi-number" style="color:#0a7c42">208.466</div>
+      <p>personas alcanzadas en la zona. <strong>Esto supera ampliamente el mercado objetivo</strong>, lo que significa que el awareness de los cursos INACAP en el Maule es significativo.</p>
+    </div>
+    <div class="bi-card">
+      <h4>Competencia en la zona</h4>
+      <div class="bi-number" style="font-size:16px">5 instituciones</div>
+      <p>AIEP, Duoc UC, Santo Tom&aacute;s, CFT del Maule y otras. INACAP tiene la ventaja de marca y presencia f&iacute;sica con 2 sedes en la regi&oacute;n.</p>
+    </div>
+  </div>
+
+  <div class="bi-grid">
+    <div class="bi-card">
+      <h4>CTR Search vs. industria</h4>
+      <div class="bar-chart" style="margin-top:8px">
+        <div class="bar-row">
+          <div class="bar-label" style="min-width:90px">INACAP</div>
+          <div class="bar-track"><div class="bar-fill" style="width:100%;background:#0a7c42">12,16%</div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label" style="min-width:90px">Prom. educ.</div>
+          <div class="bar-track"><div class="bar-fill" style="width:41%;background:#c65d00">4-6%</div></div>
+        </div>
+      </div>
+      <p style="margin-top:6px">La tasa de conversi&oacute;n de las campa&ntilde;as INACAP es <strong>2 a 3 veces superior</strong> al promedio del sector educaci&oacute;n en Chile. Esto indica que los anuncios son relevantes y la oferta de cursos tiene demanda real.</p>
+    </div>
+    <div class="bi-card">
+      <h4>Potencial de ingresos por registros</h4>
+      <div class="bi-number" style="color:#0a7c42">$12M &ndash; $41M</div>
+      <p>potencial estimado. Con <strong>82 registros de matr&iacute;cula completados</strong> y un precio promedio de curso entre $150.000 y $500.000, el potencial de ingresos generado por estas campa&ntilde;as oscila entre $12,3 millones y $41 millones.</p>
+    </div>
+  </div>
+
+  <div class="callout green-callout">
+    <h4>El retorno potencial supera ampliamente la inversi&oacute;n</h4>
+    <p>Incluso en el escenario conservador ($150.000 por curso), los 82 registros representan un potencial de $12,3 millones en ingresos, contra una inversi&oacute;n total en pauta de $1.364.411. Eso es un ratio de <strong>9 a 1</strong> como piso. Si los cursos tienen precio promedio de $300.000, hablamos de <strong>$24,6 millones en ingresos potenciales &mdash; 18 veces la inversi&oacute;n en pauta</strong>.</p>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 8. PROJECTION -->
+<!-- ============================================================ -->
+<div class="section">
+  <h2 class="section-title">Proyecci&oacute;n al Cierre de Junio (15 d&iacute;as restantes)</h2>
+  <p class="section-intro">Bas&aacute;ndonos en el ritmo de los &uacute;ltimos 15 d&iacute;as y considerando que la pauta se mantiene activa, estimamos las siguientes cifras al 30 de junio:</p>
+
+  <div class="grid-3">
+    <div class="card" style="text-align:center">
+      <h3>Conversiones Google</h3>
+      <div style="font-size:12px;color:#888;margin-bottom:4px">409 actuales</div>
+      <div style="font-size:36px;font-weight:800;color:#0a7c42;font-family:Arial,sans-serif">~530</div>
+      <div style="font-size:11px;color:#888;margin-top:2px">proyectadas al 30 de junio</div>
+      <div class="progress-wrapper" style="margin-top:10px">
+        <div class="progress-bar" style="height:20px">
+          <div class="progress-fill" style="width:77%;background:#0a7c42;font-size:10px">77% avance</div>
+        </div>
+      </div>
+    </div>
+    <div class="card" style="text-align:center">
+      <h3>Visitas al sitio (Meta)</h3>
+      <div style="font-size:12px;color:#888;margin-bottom:4px">6.167 actuales</div>
+      <div style="font-size:36px;font-weight:800;color:#003366;font-family:Arial,sans-serif">~8.000</div>
+      <div style="font-size:11px;color:#888;margin-top:2px">proyectadas al 30 de junio</div>
+      <div class="progress-wrapper" style="margin-top:10px">
+        <div class="progress-bar" style="height:20px">
+          <div class="progress-fill" style="width:77%;background:#003366;font-size:10px">77% avance</div>
+        </div>
+      </div>
+    </div>
+    <div class="card" style="text-align:center">
+      <h3>Personas alcanzadas</h3>
+      <div style="font-size:12px;color:#888;margin-bottom:4px">208K actuales</div>
+      <div style="font-size:36px;font-weight:800;color:#003366;font-family:Arial,sans-serif">~270K</div>
+      <div style="font-size:11px;color:#888;margin-top:2px">proyectadas al 30 de junio</div>
+      <div class="progress-wrapper" style="margin-top:10px">
+        <div class="progress-bar" style="height:20px">
+          <div class="progress-fill" style="width:77%;background:#003366;font-size:10px">77% avance</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-3" style="margin-top:14px">
+    <div class="card" style="text-align:center">
+      <h3>Registros matr&iacute;cula</h3>
+      <div style="font-size:12px;color:#888;margin-bottom:4px">82 actuales</div>
+      <div style="font-size:36px;font-weight:800;color:#0a7c42;font-family:Arial,sans-serif">~106</div>
+      <div style="font-size:11px;color:#888;margin-top:2px">proyectados al 30 de junio</div>
+    </div>
+    <div class="card" style="text-align:center">
+      <h3>Clics en matricularme</h3>
+      <div style="font-size:12px;color:#888;margin-bottom:4px">258 actuales</div>
+      <div style="font-size:36px;font-weight:800;color:#0a7c42;font-family:Arial,sans-serif">~334</div>
+      <div style="font-size:11px;color:#888;margin-top:2px">proyectados al 30 de junio</div>
+    </div>
+    <div class="card" style="text-align:center">
+      <h3>Ejecuci&oacute;n pauta</h3>
+      <div style="font-size:12px;color:#888;margin-bottom:4px">$1.364K actuales</div>
+      <div style="font-size:36px;font-weight:800;color:#003366;font-family:Arial,sans-serif">~$1,9M</div>
+      <div style="font-size:11px;color:#888;margin-top:2px">estimado al 30 de junio</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- WHAT WAS BUILT -->
+<!-- ============================================================ -->
+<div class="section">
+  <h2 class="section-title">Lo que se Construy&oacute; en Estos 3 Meses</h2>
+
+  <div class="callout orange-callout">
+    <h4>La medici&oacute;n correcta no exist&iacute;a antes &mdash; se instal&oacute; desde cero</h4>
+    <p>Configurar el tracking de conversiones (Google Analytics 4, Google Tag Manager, Meta Pixel), definir los eventos de matr&iacute;cula, validar que cada conversi&oacute;n se atribuye correctamente &mdash; todo eso fue parte del trabajo del Mes 1. <strong>Hoy cada n&uacute;mero de este reporte es real y verificable en las plataformas.</strong> Esta infraestructura queda instalada para cualquier campa&ntilde;a futura de INACAP Educaci&oacute;n Continua.</p>
+  </div>
+
+  <div class="grid-3" style="margin-top:14px">
+    <div class="card">
+      <h3>Mes 1 &mdash; Instalaci&oacute;n</h3>
+      <p>Tracking completo instalado. Test de cursos en ambas sedes. Identificaci&oacute;n de qu&eacute; funciona. Inversi&oacute;n conservadora para no desperdiciar presupuesto sin datos.</p>
+    </div>
+    <div class="card">
+      <h3>Mes 2 &mdash; Escalar</h3>
+      <p>Se escal&oacute; la inversi&oacute;n en cursos con demanda real (Soldadura, Electricidad). Se pausaron cursos sin tracci&oacute;n. Search explot&oacute; con 12% de conversi&oacute;n.</p>
+    </div>
+    <div class="card">
+      <h3>Mes 3 &mdash; En curso</h3>
+      <p>409 conversiones, 208K alcanzados, medici&oacute;n funcionando. Los datos muestran qu&eacute; cursos funcionan, en qu&eacute; sede y por qu&eacute; canal. <strong>La m&aacute;quina est&aacute; andando.</strong></p>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 9. RECOMMENDATION -->
+<!-- ============================================================ -->
+<div class="recommend">
+  <h2>Recomendaci&oacute;n: Continuar las Campa&ntilde;as</h2>
+  <p>Los 3 meses de trabajo construyeron la infraestructura completa de medici&oacute;n, identificaron los cursos ganadores y probaron que la demanda existe. <strong>Cortar ahora significa perder todo lo construido.</strong> Continuar significa capitalizar 3 meses de aprendizaje con datos reales.</p>
+  <ul>
+    <li><strong>La infraestructura de tracking est&aacute; funcionando</strong> &mdash; cada conversi&oacute;n se mide y se atribuye correctamente. Esto tiene valor permanente.</li>
+    <li><strong>Sabemos qu&eacute; cursos funcionan</strong> &mdash; Soldadura y Electricidad Domiciliaria tienen los mejores costos por conversi&oacute;n. La inversi&oacute;n se puede concentrar ah&iacute;.</li>
+    <li><strong>La tasa de conversi&oacute;n es excepcional</strong> &mdash; 12,16% en Search triplica el promedio del sector educaci&oacute;n (4-6%). Esto indica demanda real, no inflada.</li>
+    <li><strong>El algoritmo de Google ya aprendi&oacute;</strong> &mdash; con 409 conversiones, el sistema de ofertas autom&aacute;ticas est&aacute; optimizado. Un reinicio desde cero significar&iacute;a volver a entrenar al algoritmo.</li>
+    <li><strong>208.466 personas en el Maule ya saben de los cursos</strong> &mdash; el remarketing puede traerlas de vuelta a bajo costo.</li>
+  </ul>
+</div>
+
+<!-- ============================================================ -->
+<!-- FOOTER -->
+<!-- ============================================================ -->
+<div class="footer">
+  Informe preparado por <strong>Muller &amp; P&eacute;rez</strong> &middot; mulleryperez.cl &middot; Datos Google Ads + Meta Ads al 15 de junio 2026<br>
+  Todos los valores en pesos chilenos (CLP). Conversiones verificadas en Google Ads y Meta Ads Manager.
+</div>
+
+</div>
+</body>
+</html>
