@@ -13,47 +13,60 @@ const RESEND_KEY = process.env.RESEND
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY)
 
 const COLUMNAS = [
-  // Visión de agencia
-  { tema: 'Lo que nadie te dice cuando contratas una agencia de marketing digital en Chile', tag: 'Opinión' },
-  { tema: 'Por qué dejamos de ofrecer SEO orgánico y nos enfocamos solo en performance', tag: 'Opinión' },
-  { tema: 'El mito del ROAS 10x: qué significa realmente un buen retorno en Chile', tag: 'Opinión' },
-  { tema: 'Clientes que crecen vs clientes que se estancan: los patrones que veo después de 5 años', tag: 'Opinión' },
-  { tema: 'La agencia del futuro no tiene 50 personas: tiene 5 y usa IA para todo lo demás', tag: 'Opinión' },
+  // IA y Marketing — posicionamiento como referente
+  { tema: 'Construí 12 agentes de IA que corren mi agencia: esto es lo que hacen y lo que aprendí', tag: 'IA' },
+  { tema: 'Cómo uso Claude, GPT-4 y agentes autónomos para generar contenido, reportes y dashboards sin intervención humana', tag: 'IA' },
+  { tema: 'El blog que se escribe solo: cómo automaticé 4 agentes que publican 15 artículos por semana', tag: 'IA' },
+  { tema: 'IA generativa en marketing digital: lo que realmente funciona y lo que es puro humo', tag: 'IA' },
+  { tema: 'Por qué una agencia de 5 personas con IA le gana a una de 30 sin ella', tag: 'IA' },
+  { tema: 'Los agentes de IA que monitorean competencia, generan grillas y envían reportes mientras duermo', tag: 'IA' },
+  { tema: 'Cómo entrené una IA para que escriba como yo y por qué decidí que no debía hacerlo', tag: 'IA' },
+  { tema: 'De copiar prompts a construir pipelines: la curva de aprendizaje real de la IA en una agencia', tag: 'IA' },
 
-  // Tendencias y mercado
-  { tema: 'El presupuesto digital de las PYMEs chilenas en 2026: dónde se está yendo la plata', tag: 'Mercado' },
-  { tema: 'Google vs Meta en Chile: dónde conviene invertir según lo que veo en las campañas reales', tag: 'Mercado' },
-  { tema: 'La IA ya cambió el marketing digital: esto es lo que estoy usando todos los días', tag: 'Tendencias' },
-  { tema: 'LinkedIn Ads en Chile: por qué el B2B sigue subestimando esta plataforma', tag: 'Mercado' },
-  { tema: 'El mercado inmobiliario digital en Chile: lo que aprendí manejando campañas para corredoras', tag: 'Mercado' },
+  // Dashboards y datos en tiempo real
+  { tema: 'Por qué cada cliente nuestro tiene un dashboard en tiempo real y cómo eso cambió todo', tag: 'Datos' },
+  { tema: 'El dashboard que le mostré a un cliente y que hizo que duplicara su inversión al día siguiente', tag: 'Datos' },
+  { tema: 'Qué medir y qué no: la diferencia entre datos que sirven y métricas de vanidad', tag: 'Datos' },
+  { tema: 'Construí un sistema de alertas automáticas con Google Sheets y Vercel: así funciona', tag: 'Datos' },
+  { tema: 'La reunión mensual de resultados murió: cómo los dashboards live la reemplazaron', tag: 'Datos' },
+  { tema: 'Cuando el dashboard te muestra que la campaña no funciona: la conversación difícil con el cliente', tag: 'Datos' },
 
-  // Lecciones y errores
-  { tema: 'Los 3 errores más caros que he visto en campañas de Google Ads en Chile', tag: 'Lecciones' },
-  { tema: 'Cuando un cliente quiere resultados en 2 semanas: cómo manejar expectativas sin mentir', tag: 'Lecciones' },
-  { tema: 'Lo que aprendí perdiendo un cliente grande: la honestidad brutal como estrategia', tag: 'Lecciones' },
-  { tema: 'Por qué los dashboards en tiempo real cambiaron la relación con nuestros clientes', tag: 'Lecciones' },
-  { tema: 'El día que automaticé el 80% del trabajo de la agencia y qué pasó después', tag: 'Lecciones' },
+  // Casos reales — lo bueno y lo malo
+  { tema: 'El cliente que gastó $50 millones en Meta Ads y no vendió nada: qué salió mal', tag: 'Casos' },
+  { tema: 'Cómo llevamos una corredora de propiedades de 0 a 400 leads en 30 días con Meta Ads', tag: 'Casos' },
+  { tema: 'El sorteo que vendió $111 millones: qué hicimos diferente y qué haría distinto', tag: 'Casos' },
+  { tema: 'La empresa que me pidió "hacerme rico con digital" y lo que le dije', tag: 'Casos' },
+  { tema: 'Un cliente que facturaba $2M y hoy factura $15M: lo que hicimos juntos en 2 años', tag: 'Casos' },
+  { tema: 'El caso del CPA imposible: cómo bajamos de $12.000 a $890 por lead en La Reina', tag: 'Casos' },
+  { tema: 'Cuando las campañas funcionan pero el equipo comercial no cierra: el cuello de botella que nadie quiere ver', tag: 'Casos' },
+  { tema: 'La campaña que funcionaba por un error de segmentación: la suerte no es estrategia', tag: 'Casos' },
 
-  // Estrategia real
+  // La ilusión del digital — desmitificar
+  { tema: 'No, el marketing digital no te va a hacer rico: las expectativas vs la realidad en Chile', tag: 'Realidad' },
+  { tema: 'Tener una agencia no es magia: la diferencia entre invertir bien e invertir por invertir', tag: 'Realidad' },
+  { tema: 'El cliente que quería ROAS 10x con $500.000 de inversión: por qué los números no mienten', tag: 'Realidad' },
+  { tema: 'Por qué la mayoría de las campañas digitales en Chile fracasan y nadie habla de eso', tag: 'Realidad' },
+  { tema: '"Mi sobrino sabe de redes sociales": las consecuencias de no tomar en serio el marketing digital', tag: 'Realidad' },
+
+  // Equipos de alto rendimiento
+  { tema: 'Formar un equipo de marketing digital de alto rendimiento es casi imposible: así lo intenté', tag: 'Equipos' },
+  { tema: 'Por qué es tan difícil encontrar talento en marketing digital en Chile y qué estoy haciendo al respecto', tag: 'Equipos' },
+  { tema: 'La rotación en agencias digitales es brutal: cómo la IA me ayudó a depender menos de las personas', tag: 'Equipos' },
+  { tema: 'El día que decidí que mi equipo serían 5 personas y 20 agentes de IA', tag: 'Equipos' },
+  { tema: 'Lo que busco cuando contrato a alguien para la agencia: no es lo que la mayoría piensa', tag: 'Equipos' },
+
+  // Herramientas propias y filosofía técnica
+  { tema: 'Por qué construimos nuestras propias herramientas en vez de pagar por SaaS', tag: 'Herramientas' },
+  { tema: 'El CRM que le hicimos a cada cliente: por qué un Supabase propio le gana a HubSpot para PYMEs', tag: 'Herramientas' },
+  { tema: 'Cómo construí un sistema de prospección automática con Apify, Supabase y Resend', tag: 'Herramientas' },
+  { tema: 'Del Excel al dashboard inteligente: la evolución de cómo reportamos a nuestros clientes', tag: 'Herramientas' },
+
+  // Estrategia y visión de negocio
   { tema: 'Cómo decidir entre invertir más en Google o en Meta: el framework que uso con cada cliente', tag: 'Estrategia' },
   { tema: 'La obsesión con el CPL está matando las campañas: lo que realmente importa medir', tag: 'Estrategia' },
-  { tema: 'Campañas que funcionan solas vs campañas que necesitan optimización diaria: cuándo usar cada una', tag: 'Estrategia' },
-  { tema: 'Por qué le digo a mis clientes que no todo se puede medir (y por qué eso está bien)', tag: 'Estrategia' },
-  { tema: 'El embudo de conversión está roto: cómo estamos repensando el journey del cliente en 2026', tag: 'Estrategia' },
-
-  // Industrias desde la experiencia
-  { tema: 'Lo que aprendí haciendo campañas para clínicas: el sector salud tiene reglas distintas', tag: 'Industrias' },
-  { tema: 'E-commerce en Chile: por qué el Cyber no es la estrategia y qué hacer el resto del año', tag: 'Industrias' },
-  { tema: 'Campañas para educación superior: cómo llenar matrículas cuando todos compiten por lo mismo', tag: 'Industrias' },
-  { tema: 'SaaS chileno y marketing digital: el desafío de vender software con presupuesto de PYME', tag: 'Industrias' },
-  { tema: 'Sorteos online como modelo de negocio: lo que los datos me enseñaron sobre conversión y recompra', tag: 'Industrias' },
-
-  // Futuro y filosofía
-  { tema: 'Las agencias que sobrevivan los próximos 3 años van a ser muy distintas a las de hoy', tag: 'Futuro' },
-  { tema: 'El marketing digital dejó de ser digital: es simplemente marketing con mejores herramientas', tag: 'Futuro' },
-  { tema: 'Por qué construimos nuestras propias herramientas en vez de pagar por SaaS', tag: 'Futuro' },
-  { tema: 'La automatización no reemplaza al estratega: reemplaza al ejecutor', tag: 'Futuro' },
-  { tema: 'Lo que le diría a alguien que está partiendo una agencia de marketing digital hoy en Chile', tag: 'Futuro' },
+  { tema: 'Las agencias que sobrevivan los próximos 3 años van a ser muy distintas a las de hoy', tag: 'Estrategia' },
+  { tema: 'Lo que le diría a alguien que está partiendo una agencia de marketing digital hoy en Chile', tag: 'Estrategia' },
+  { tema: 'El modelo de agencia cambió: de vender horas a vender resultados y herramientas', tag: 'Estrategia' },
 ]
 
 function slugify(text) {
@@ -109,15 +122,26 @@ async function generarColumna(tema) {
 TEMA: ${tema.tema}
 FECHA: ${hoy}
 
-INSTRUCCIONES:
+QUIÉN ERES (usa esto como contexto, no lo copies textual):
+- Diriges una agencia boutique en Chile con ~35 clientes activos
+- Construiste 12+ agentes de IA que automatizan contenido, reportes, monitoreo de competencia, grillas de contenido y dashboards
+- Cada cliente tiene un dashboard en tiempo real (construido con Vercel, Supabase, Google Sheets)
+- Manejas campañas de Meta Ads, Google Ads y LinkedIn Ads. Ves los datos todos los días
+- Has trabajado con inmobiliarias, clínicas, e-commerce, SaaS, sorteos online, educación, transporte
+- Tu equipo es chico (5 personas) pero la IA multiplica la capacidad. Tienes agentes que publican 15 artículos/semana, monitorean competencia, generan informes automáticos
+- Has visto clientes crecer de $2M a $15M y también clientes que quemaron presupuesto sin entender qué hacían
+- Crees que el dato manda: si no se mide, no existe. Pero también que no todo se puede medir
+- Has construido herramientas propias: CRM, sistema de alertas de leads, benchmarks competitivos, paneles de inversión, SEO automatizado con agentes
+- Usas Claude Code, GPT-4, Apify, Supabase, Vercel, GitHub Actions como stack diario
 
 VOZ Y TONO:
-- Escribe en PRIMERA PERSONA. Tú eres Christopher, estás hablando directamente.
-- Tono: directo, honesto, sin rodeos. Como si hablaras con un colega tomando café.
-- Puedes decir "en mi experiencia", "lo que he visto", "con nuestros clientes", "en la agencia".
-- NO uses tono de artículo corporativo ni de ChatGPT genérico.
-- Sé polémico si el tema lo amerita. Opina con convicción.
-- Usa datos reales de Chile cuando puedas (CPC, CPL, inversión, tendencias).
+- PRIMERA PERSONA siempre. Tú eres Christopher, hablas desde la experiencia
+- Tono: directo, crudo, sin filtro. Como si estuvieras en un asado contándole a un amigo empresario
+- Cuenta CASOS REALES (anónimos si es necesario). Lo bueno Y lo malo. Errores propios también
+- Sé polémico. Opina con convicción. No seas tibio
+- Usa números concretos cuando puedas (CPC $120, CPL $3.500, ROAS 2.3x, inversión $800K/mes)
+- NO uses frases de ChatGPT genérico ("en el vertiginoso mundo", "sin lugar a dudas", "en la era digital")
+- Escribe como hablas. Frases cortas. Párrafos cortos. Golpes directos
 
 ESTRUCTURA HTML (clases Tailwind):
 - Dentro de <div class="prose prose-lg max-w-none">
@@ -125,17 +149,19 @@ ESTRUCTURA HTML (clases Tailwind):
 - H3: <h3 class="text-2xl font-bold text-gray-900 mt-8 mb-4">
 - Párrafos: <p class="text-gray-700 mb-4">
 - Listas: <ul class="space-y-3 text-gray-700 mb-8"> con <li class="flex items-start gap-3"><span class="text-blue-600 font-bold">•</span><span>...</span></li>
-- Callout opinión: <div class="bg-gray-900 text-white p-6 rounded-xl mb-8"><p class="text-gray-100 font-medium italic text-lg">"Frase destacada o reflexión fuerte"</p></div>
+- Callout opinión fuerte: <div class="bg-gray-900 text-white p-6 rounded-xl mb-8"><p class="text-gray-100 font-medium italic text-lg">"Frase destacada"</p></div>
 - Callout dato: <div class="bg-emerald-50 border-l-4 border-emerald-600 p-6 rounded-r-xl mb-8"><p class="text-gray-700">...</p></div>
 
 CONTENIDO:
-- Mínimo 1500 palabras
-- Al menos 4 H2
-- Arranca con un gancho fuerte — una afirmación, una pregunta, algo que pasó
-- Incluye al menos 1 anécdota o caso real (puede ser anónimo)
-- Termina con tu opinión clara y un pensamiento final
-- NO incluyas CTA comercial explícito — esto es contenido de liderazgo, no venta
-- Menciona a M&P solo si es natural al contexto
+- Mínimo 1800 palabras
+- Al menos 5 H2
+- Arranca con un gancho brutal — algo que pasó, un error, una verdad incómoda
+- Mínimo 2 anécdotas o casos reales (pueden ser anónimos: "un cliente del rubro inmobiliario", "una clínica en zona oriente")
+- Incluye datos duros: CPC, CPL, ROAS, inversión mensual, cantidad de leads, % de conversión
+- Si hablas de IA, menciona herramientas específicas (Claude, GPT-4, Apify, GitHub Actions, Supabase)
+- Si hablas de dashboards, describe qué muestran y por qué importan
+- Cierra con tu opinión clara y sin disculpas
+- NO incluyas CTA comercial. Esto es thought leadership puro
 
 NO incluir: H1, header, footer, imágenes, metadata.
 RESPONDE SOLO con el HTML del contenido.`
