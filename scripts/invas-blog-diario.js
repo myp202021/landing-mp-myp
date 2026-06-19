@@ -343,7 +343,7 @@ async function notificarEmail(articulo, postUrl) {
       headers: { 'Authorization': 'Bearer ' + RESEND_KEY, 'Content-Type': 'application/json' },
       body: JSON.stringify({
         from: 'M&P SEO <contacto@mulleryperez.cl>',
-        to: ['contacto@mulleryperez.cl', 'jvio@impruvex.com'],
+        to: ['contacto@mulleryperez.cl', 'jvio@impruvex.com', 'cvilo@impruvex.com'],
         subject: '📝 Blog invasWMS: ' + articulo.titulo_seo,
         html: '<div style="font-family:sans-serif;max-width:500px">'
           + '<h2 style="color:#1a1a2e">Nuevo artículo publicado en invasWMS</h2>'
