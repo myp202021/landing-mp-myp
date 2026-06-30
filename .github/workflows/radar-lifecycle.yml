@@ -13,7 +13,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - run: npm install node-fetch@2 @supabase/supabase-js ws
+      - run: npm install node-fetch@2 @supabase/supabase-js@2 ws
       - name: "Enviar emails de ciclo de vida"
         run: node scripts/radar-lifecycle.js
         env:
