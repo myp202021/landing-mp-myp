@@ -12,7 +12,7 @@
 // - Alimenta a: Dashboard (muestra ads sugeridos), Email (incluye en reporte)
 // - Memoria lee: qué headlines funcionaron antes (si hay data de performance)
 
-var fetch = require('node-fetch')
+var fetch = globalThis.fetch || require('node-fetch')
 var apiHelper = require('./radar-api-helper.js')
 
 var ANTHROPIC_KEY = process.env.ANTHROPIC_API_KEY_GRILLAS

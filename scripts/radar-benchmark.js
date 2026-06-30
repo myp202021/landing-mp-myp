@@ -6,7 +6,7 @@
 //
 // Export: generarBenchmark(posts, empresas, perfil, supabase, suscripcionId, brief, memoria, postsCliente)
 
-var fetch = require('node-fetch')
+var fetch = globalThis.fetch || require('node-fetch')
 var path = require('path')
 var industriaModule = require('./radar-industria.js')
 

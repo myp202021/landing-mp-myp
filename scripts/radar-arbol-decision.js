@@ -14,7 +14,7 @@
 //
 // Costo: ~$0.03/run (1 call Claude Sonnet) + $0 predictor (API interna)
 
-var fetch = require('node-fetch')
+var fetch = globalThis.fetch || require('node-fetch')
 var fs = require('fs')
 var path = require('path')
 

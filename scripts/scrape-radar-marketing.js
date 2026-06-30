@@ -3,7 +3,7 @@
 // Scrappea 8 cuentas de marketing en Instagram → calcula engagement por formato
 // → guarda en Supabase tabla radar_marketing → envía email a Christopher
 
-const fetch = require('node-fetch')
+const fetch = globalThis.fetch || require('node-fetch')
 const { createClient } = require('@supabase/supabase-js')
 
 const APIFY_TOKEN  = process.env.APIFY_TOKEN

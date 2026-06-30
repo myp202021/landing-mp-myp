@@ -14,7 +14,7 @@
  * Env vars: APIFY_TOKEN, SUPABASE_URL, SUPABASE_SERVICE_KEY, GOOGLE_PAGESPEED_API_KEY (opcional)
  */
 
-const fetch = require('node-fetch')
+const fetch = globalThis.fetch || require('node-fetch')
 const { createClient } = require('@supabase/supabase-js')
 
 const APIFY_TOKEN = process.env.APIFY_TOKEN

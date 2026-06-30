@@ -3,7 +3,7 @@
  * Tabla: client_profiles (nueva) o actualiza clientes existentes
  */
 
-const fetch = require('node-fetch')
+const fetch = globalThis.fetch || require('node-fetch')
 const { createClient } = require('@supabase/supabase-js')
 
 const supabase = createClient(

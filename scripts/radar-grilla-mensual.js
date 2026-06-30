@@ -4,7 +4,7 @@
 // Pipeline: OpenAI brief → Claude copies → OpenAI QA
 // Se llama desde radar-clipping.js en modo mensual
 
-var fetch = require('node-fetch')
+var fetch = globalThis.fetch || require('node-fetch')
 
 var OPENAI_KEY = process.env.OPENAI_API_KEY
 var ANTHROPIC_KEY = process.env.ANTHROPIC_API_KEY_GRILLAS

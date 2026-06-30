@@ -7,7 +7,7 @@
 //   var liModule = require('./radar-linkedin-api.js')
 //   var posts = await liModule.obtenerPostsLinkedIn(handles, limite)
 
-var fetch = require('node-fetch')
+var fetch = globalThis.fetch || require('node-fetch')
 
 var LINKDAPI_KEY = process.env.LINKDAPI_KEY || ''
 

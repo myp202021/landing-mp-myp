@@ -5,7 +5,7 @@
 // Detecta ofertas laborales y promociones comerciales
 // Envía reporte semanal como HTML en el cuerpo del email
 
-const fetch = require('node-fetch')
+const fetch = globalThis.fetch || require('node-fetch')
 const { createClient } = require('@supabase/supabase-js')
 const fs = require('fs')
 

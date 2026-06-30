@@ -8,7 +8,7 @@
 
 var fs = require('fs')
 var path = require('path')
-var fetch = require('node-fetch')
+var fetch = globalThis.fetch || require('node-fetch')
 
 var OPENAI_KEY = process.env.OPENAI_API_KEY
 

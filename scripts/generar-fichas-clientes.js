@@ -19,7 +19,7 @@
  * Env vars: OPENAI_API_KEY, SUPABASE_URL, SUPABASE_SERVICE_KEY
  */
 
-const fetch = require('node-fetch')
+const fetch = globalThis.fetch || require('node-fetch')
 const { createClient } = require('@supabase/supabase-js')
 
 const OPENAI_KEY = process.env.OPENAI_API_KEY

@@ -15,7 +15,7 @@
 // - META_AD_LIBRARY_TOKEN en env (token de app o usuario con permiso ads_read)
 // - Los competidores deben ser páginas de Facebook (page name o page ID)
 
-var fetch = require('node-fetch')
+var fetch = globalThis.fetch || require('node-fetch')
 
 var META_TOKEN = process.env.META_AD_LIBRARY_TOKEN
 

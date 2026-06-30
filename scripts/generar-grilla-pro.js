@@ -19,7 +19,7 @@
  * DURACIÓN: ~6-8 min por cliente, ~3-4 horas para 30 clientes
  */
 
-const fetch = require('node-fetch')
+const fetch = globalThis.fetch || require('node-fetch')
 
 const OPENAI_KEY = process.env.OPENAI_API_KEY
 const ANTHROPIC_KEY = process.env.ANTHROPIC_API_KEY_GRILLAS || process.env.ANTHROPIC_API_KEY

@@ -5,7 +5,7 @@
 // Uso: node scripts/copilot-setup-auth.js --email=x@y.com --password=abc123
 // Si se ejecuta sin args, solo verifica el estado
 
-var fetch = require('node-fetch')
+var fetch = globalThis.fetch || require('node-fetch')
 var supabaseLib = require('@supabase/supabase-js')
 var crypto = require('crypto')
 

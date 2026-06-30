@@ -11,7 +11,7 @@
  * 6. Manda email a contacto@ con HTML + link Reportei
  */
 
-const fetch = require('node-fetch')
+const fetch = globalThis.fetch || require('node-fetch')
 const path = require('path')
 const config = require('./config-reportes.json')
 

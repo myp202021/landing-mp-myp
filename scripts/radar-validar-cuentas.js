@@ -5,7 +5,7 @@
 // Actualiza: clipping_suscripciones.cuentas con campo "validada" true/false
 // Requiere: SUPABASE_URL, SUPABASE_SERVICE_KEY
 
-var fetch = require('node-fetch')
+var fetch = globalThis.fetch || require('node-fetch')
 var supabaseLib = require('@supabase/supabase-js')
 
 var supabase = supabaseLib.createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY)

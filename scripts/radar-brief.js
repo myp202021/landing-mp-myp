@@ -5,7 +5,7 @@
 // Se corre: al crear trial + mensual para actualizar
 // Requiere: OPENAI_API_KEY, SUPABASE_URL, SUPABASE_SERVICE_KEY
 
-var fetch = require('node-fetch')
+var fetch = globalThis.fetch || require('node-fetch')
 
 var OPENAI_KEY = process.env.OPENAI_API_KEY
 

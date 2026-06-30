@@ -2,7 +2,7 @@
  * Test: Scraper Portal Inmobiliario — casas usadas >15.000 UF en 4 comunas
  * Usa Apify Web Scraper (Puppeteer) para renderizar la página
  */
-const fetch = require('node-fetch')
+const fetch = globalThis.fetch || require('node-fetch')
 const APIFY_TOKEN = process.env.APIFY_TOKEN
 
 const SEARCHES = [

@@ -4,7 +4,7 @@
 // NO usa APIs de IA — pura logica
 // Requiere: SUPABASE_URL, SUPABASE_SERVICE_KEY
 
-var fetch = require('node-fetch')
+var fetch = globalThis.fetch || require('node-fetch')
 var supabaseLib = require('@supabase/supabase-js')
 
 var SUPABASE_URL = process.env.SUPABASE_URL

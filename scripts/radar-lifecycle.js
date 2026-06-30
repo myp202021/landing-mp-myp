@@ -4,7 +4,7 @@
 // Dia 0: bienvenida | Dia 3: primer valor | Dia 5: engagement | Dia 6: fin trial
 // Post-trial sin pago: desactivacion | Pago fallido: aviso
 
-var fetch = require('node-fetch')
+var fetch = globalThis.fetch || require('node-fetch')
 var { createClient } = require('@supabase/supabase-js')
 
 var supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY)

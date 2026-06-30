@@ -3,7 +3,7 @@
 // Scrape Instagram + LinkedIn + Facebook de competidores de Buses Hualpén
 // Detecta ofertas laborales y envía reporte como PDF adjunto
 
-const fetch = require('node-fetch')
+const fetch = globalThis.fetch || require('node-fetch')
 const { createClient } = require('@supabase/supabase-js')
 const { execSync } = require('child_process')
 const fs = require('fs')

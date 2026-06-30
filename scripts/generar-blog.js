@@ -4,7 +4,7 @@
  * Genera contenido con OpenAI → guarda en Supabase → el sitio lo muestra
  */
 
-const fetch = require('node-fetch')
+const fetch = globalThis.fetch || require('node-fetch')
 const { createClient } = require('@supabase/supabase-js')
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY

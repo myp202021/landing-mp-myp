@@ -5,7 +5,7 @@
 // Los agentes leen estas correcciones en el próximo run
 // Costo: ~$0.04/run (1 call Claude Sonnet)
 
-var fetch = require('node-fetch')
+var fetch = globalThis.fetch || require('node-fetch')
 
 var ANTHROPIC_KEY = process.env.ANTHROPIC_API_KEY_GRILLAS
 

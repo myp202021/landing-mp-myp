@@ -4,7 +4,7 @@
 // Cron: miércoles 8:00 AM Chile (11:00 UTC)
 // Requiere: OPENAI_API_KEY, ANTHROPIC_API_KEY_GRILLAS, SUPABASE_URL, SUPABASE_SERVICE_KEY
 
-var fetch = require('node-fetch')
+var fetch = globalThis.fetch || require('node-fetch')
 var supabaseLib = require('@supabase/supabase-js')
 
 var OPENAI_KEY = process.env.OPENAI_API_KEY

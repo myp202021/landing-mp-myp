@@ -9,7 +9,7 @@
  * Env vars: SUPABASE_URL, SUPABASE_SERVICE_KEY, RESEND (o RESEND_API_KEY)
  */
 
-const fetch = require('node-fetch')
+const fetch = globalThis.fetch || require('node-fetch')
 const { createClient } = require('@supabase/supabase-js')
 
 const RESEND_API_KEY = process.env.RESEND || process.env.RESEND_API_KEY

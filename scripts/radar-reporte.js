@@ -6,7 +6,7 @@
 // Costo: ~$0.04/run (1 call Claude Sonnet)
 // Se llama desde radar-clipping.js al FINAL del pipeline (después de todos los agentes)
 
-var fetch = require('node-fetch')
+var fetch = globalThis.fetch || require('node-fetch')
 
 var ANTHROPIC_KEY = process.env.ANTHROPIC_API_KEY_GRILLAS
 

@@ -7,7 +7,7 @@
  * Guarda en Supabase blog_posts (misma tabla que el blog normal)
  */
 
-const fetch = require('node-fetch')
+const fetch = globalThis.fetch || require('node-fetch')
 const { createClient } = require('@supabase/supabase-js')
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY

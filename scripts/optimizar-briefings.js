@@ -14,7 +14,7 @@
  * Env vars: OPENAI_API_KEY, SUPABASE_URL, SUPABASE_SERVICE_KEY
  */
 
-const fetch = require('node-fetch')
+const fetch = globalThis.fetch || require('node-fetch')
 
 const OPENAI_KEY = process.env.OPENAI_API_KEY
 const SUPABASE_URL = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL

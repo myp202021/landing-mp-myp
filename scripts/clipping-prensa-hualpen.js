@@ -3,7 +3,7 @@
 // Scrapea Instagram de medios chilenos, filtra posts sobre transporte y envía links.
 // Piloto: email solo a contacto@mulleryperez.cl (antes de sumar a Felipe).
 
-const fetch = require('node-fetch')
+const fetch = globalThis.fetch || require('node-fetch')
 const { createClient } = require('@supabase/supabase-js')
 
 const APIFY_TOKEN = process.env.APIFY_TOKEN

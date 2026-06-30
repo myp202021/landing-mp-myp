@@ -11,7 +11,7 @@
  * Paso 6: Guarda el briefing como JSON
  */
 
-const fetch = require('node-fetch')
+const fetch = globalThis.fetch || require('node-fetch')
 const fs = require('fs')
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY

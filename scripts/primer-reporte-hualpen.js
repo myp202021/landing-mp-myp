@@ -2,7 +2,7 @@
 // Script ONE-TIME: obtiene el último post de cada competidor (sin filtro de 24h)
 // y manda un email completo con el resumen inicial a Buses Hualpén
 
-const fetch = require('node-fetch')
+const fetch = globalThis.fetch || require('node-fetch')
 
 const APIFY_TOKEN = process.env.APIFY_TOKEN
 const RESEND_KEY  = process.env.RESEND || process.env.RESEND_API_KEY

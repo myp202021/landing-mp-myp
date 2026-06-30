@@ -62,7 +62,7 @@
 //   - Impacto: expansión LATAM
 // ═══════════════════════════════════════════════════════════════════
 
-var fetch = require('node-fetch')
+var fetch = globalThis.fetch || require('node-fetch')
 var supabaseLib = require('@supabase/supabase-js')
 var fs = require('fs')
 var childProcess = require('child_process')

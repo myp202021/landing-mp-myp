@@ -6,7 +6,7 @@
 // Cambia cada mes porque se alimenta de data nueva
 // Costo: ~$0.03/run (1 call OpenAI GPT-4o)
 
-var fetch = require('node-fetch')
+var fetch = globalThis.fetch || require('node-fetch')
 
 var OPENAI_KEY = process.env.OPENAI_API_KEY
 

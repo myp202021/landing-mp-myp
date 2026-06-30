@@ -1,4 +1,4 @@
-const fetch = require('node-fetch')
+const fetch = globalThis.fetch || require('node-fetch')
 const fs = require('fs')
 
 // Lo Barnechea incluye La Dehesa como barrio

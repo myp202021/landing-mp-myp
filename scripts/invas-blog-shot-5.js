@@ -1,4 +1,4 @@
-var fetch = require('node-fetch')
+var fetch = globalThis.fetch || require('node-fetch')
 var WP_URL = process.env.INVAS_WP_URL || 'https://www.invaswms.com'
 var WP_USER = process.env.INVAS_WP_USER || 'Ad-invas-miN'
 var WP_PASS = process.env.INVAS_WP_APP_PASSWORD || 'bkvL jJTW H4Z0 ron3 5iZD xEzg'

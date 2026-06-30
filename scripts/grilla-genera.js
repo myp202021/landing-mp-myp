@@ -11,7 +11,7 @@
  * Cron: 15 de cada mes via GitHub Actions
  */
 
-const fetch = require('node-fetch')
+const fetch = globalThis.fetch || require('node-fetch')
 const fs = require('fs')
 const { google } = require('googleapis')
 

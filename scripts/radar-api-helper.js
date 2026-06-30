@@ -2,7 +2,7 @@
 // Helper para llamadas API con retry, backoff y verificación de truncamiento
 // Usado por todos los agentes de Copilot
 
-var fetch = require('node-fetch')
+var fetch = globalThis.fetch || require('node-fetch')
 
 // ═══════════════════════════════════════════════
 // FETCH CON RETRY Y BACKOFF

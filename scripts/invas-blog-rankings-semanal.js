@@ -3,7 +3,7 @@
 // Corre cada jueves via GitHub Actions
 // Temas rotativos de mayor autoridad SEO (3000+ palabras)
 
-var fetch = require('node-fetch')
+var fetch = globalThis.fetch || require('node-fetch')
 
 var WP_URL = process.env.INVAS_WP_URL || 'https://www.invaswms.com'
 var WP_USER = process.env.INVAS_WP_USER || 'Ad-invas-miN'

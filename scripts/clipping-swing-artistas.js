@@ -2,7 +2,7 @@
 // Scrapea Instagram de artistas Swing Producciones, envía email diario con últimos posts.
 // Cron: 07:00 AM Chile (10:00 UTC) via GitHub Actions
 
-const fetch = require('node-fetch')
+const fetch = globalThis.fetch || require('node-fetch')
 
 const APIFY_TOKEN = process.env.APIFY_TOKEN
 const RESEND_KEY = process.env.RESEND

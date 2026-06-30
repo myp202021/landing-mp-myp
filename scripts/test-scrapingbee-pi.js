@@ -6,7 +6,7 @@
  * (opcionalmente SUPABASE_URL + SUPABASE_SERVICE_KEY para comparar)
  */
 
-const fetch = require('node-fetch')
+const fetch = globalThis.fetch || require('node-fetch')
 
 const SCRAPINGBEE_KEY = process.env.SCRAPINGBEE_API_KEY
 if (!SCRAPINGBEE_KEY) {

@@ -1,4 +1,4 @@
-const fetch = require('node-fetch')
+const fetch = globalThis.fetch || require('node-fetch')
 const APIFY_TOKEN = process.env.APIFY_TOKEN
 const RESEND = process.env.RESEND
 

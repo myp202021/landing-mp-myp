@@ -7,7 +7,7 @@
 //
 // Requiere: OPENAI_API_KEY, APIFY_TOKEN
 
-var fetch = require('node-fetch')
+var fetch = globalThis.fetch || require('node-fetch')
 
 var OPENAI_KEY = process.env.OPENAI_API_KEY
 var APIFY_TOKEN = process.env.APIFY_TOKEN

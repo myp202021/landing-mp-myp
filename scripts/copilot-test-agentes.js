@@ -3,7 +3,7 @@
 // Verifica que cada agente produce output de calidad
 // Requiere: OPENAI_API_KEY, ANTHROPIC_API_KEY_GRILLAS, SUPABASE_URL, SUPABASE_SERVICE_KEY
 
-var fetch = require('node-fetch')
+var fetch = globalThis.fetch || require('node-fetch')
 var supabaseLib = require('@supabase/supabase-js')
 
 var SUPABASE_URL = process.env.SUPABASE_URL
