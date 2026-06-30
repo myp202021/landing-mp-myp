@@ -41,8 +41,15 @@ jobs:
         if: steps.check.outputs.already_ran == 'false'
         id: blog
         run: |
+          set +e
           OUTPUT=$(node scripts/generar-blog.js 2>&1)
+          EXIT_CODE=$?
+          set -e
           echo "$OUTPUT"
+          if [ $EXIT_CODE -ne 0 ]; then
+            echo "::error::Script falló con exit code $EXIT_CODE"
+            exit $EXIT_CODE
+          fi
           TITLE=$(echo "$OUTPUT" | grep "📰 Artículo publicado:" | sed 's/📰 Artículo publicado: //')
           URL=$(echo "$OUTPUT" | grep "🔗 URL:" | sed 's/🔗 URL: //')
           CATEGORY=$(echo "$OUTPUT" | grep "📂 Categoría:" | sed 's/📂 Categoría: //')
