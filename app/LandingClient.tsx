@@ -781,60 +781,67 @@ export default function LandingClient() {
         </div>
       </header>
 
-      {/* Hero */}
-      <section className="pt-36 pb-28 px-6 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-white relative overflow-hidden" role="main" aria-label="Sección principal">
-        <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-5" aria-hidden="true"></div>
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/50 to-transparent" aria-hidden="true"></div>
+      {/* Hero — Premium Dark */}
+      <section className="relative min-h-[100vh] flex items-center justify-center px-6 text-white overflow-hidden" role="main" aria-label="Sección principal" style={{ background: '#0A0A14' }}>
+        {/* Radial gradient blobs */}
+        <div className="absolute inset-0" aria-hidden="true">
+          <div className="absolute top-[10%] left-[15%] w-[500px] h-[500px] rounded-full" style={{ background: 'radial-gradient(circle, rgba(37,99,235,0.25) 0%, transparent 60%)', filter: 'blur(60px)' }} />
+          <div className="absolute bottom-[10%] right-[10%] w-[600px] h-[600px] rounded-full" style={{ background: 'radial-gradient(circle, rgba(147,51,234,0.2) 0%, transparent 60%)', filter: 'blur(60px)' }} />
+          <div className="absolute top-[50%] left-[50%] w-[400px] h-[400px] rounded-full -translate-x-1/2 -translate-y-1/2" style={{ background: 'radial-gradient(circle, rgba(99,102,241,0.15) 0%, transparent 55%)', filter: 'blur(40px)' }} />
+        </div>
+        {/* Subtle grid overlay */}
+        <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)', backgroundSize: '60px 60px' }} aria-hidden="true" />
 
-        <div className="max-w-6xl mx-auto relative z-10">
-          <div className="text-center mb-16">
-            <div className="inline-flex items-center gap-2 mb-8 px-5 py-2.5 rounded-full bg-blue-500/10 border border-blue-400/20 backdrop-blur-sm" role="status" aria-label="Especialización en Performance Marketing">
-              <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse" aria-hidden="true"></div>
-              <span className="text-blue-200 text-sm font-medium">Performance Marketing con Datos Reales</span>
-            </div>
-
-            <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-[1.1] tracking-tight text-white uppercase">
-              Agencia de Performance Marketing<br />que vincula Marketing<br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400">
-                con Comercial
-              </span>
-            </h1>
-
-            <p className="text-lg md:text-xl text-blue-200 max-w-3xl mx-auto mb-6 font-medium">
-              Agencia de marketing digital y performance que convierte tu inversión en clientes reales
-            </p>
-
-            <p className="text-lg md:text-xl text-blue-200 max-w-3xl mx-auto leading-relaxed mb-12 font-medium">
-              El primer paso es tener un número: <span className="text-white font-bold">el costo de adquisición por tipo de campaña.</span>
-              <br />Con ese dato puedes proyectar ventas y corregir errores.
-            </p>
-
-            <div className="flex flex-col sm:flex-row gap-5 justify-center items-center">
-              <button
-                onClick={() => document.getElementById('contacto')?.scrollIntoView({ behavior: 'smooth' })}
-                className="inline-flex items-center gap-2.5 bg-white text-gray-900 hover:bg-blue-50 font-semibold text-base px-8 py-6 rounded-xl shadow-2xl shadow-blue-500/20 hover:shadow-blue-500/40 transform hover:scale-[1.02] transition-all duration-300"
-                aria-label="Agendar reunión para conocer servicios de marketing digital"
-              >
-                <Calendar className="w-5 h-5" aria-hidden="true" />
-                Agenda tu reunión con M&P
-              </button>
-
-              <a
-                href="https://wa.me/56992258137?text=Hola%2C%20quiero%20información%20sobre%20servicios%20M%26P"
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => trackWhatsAppClick({ page: 'hero', servicio: 'general' })}
-                className="inline-flex items-center gap-3 px-8 py-4 bg-emerald-500 hover:bg-emerald-600 text-white font-semibold text-base rounded-full shadow-lg shadow-emerald-500/30 hover:shadow-xl hover:shadow-emerald-500/40 transition-all duration-300"
-                aria-label="Contactar por WhatsApp para información sobre servicios"
-              >
-                <MessageSquare className="w-5 h-5" aria-hidden="true" />
-                Conversemos
-              </a>
-            </div>
+        <div className="max-w-5xl mx-auto relative z-10 text-center pt-28 pb-20">
+          <div className="inline-flex items-center gap-2.5 mb-10 px-6 py-3 rounded-full border border-white/10 backdrop-blur-md" style={{ background: 'rgba(99,102,241,0.08)' }} role="status" aria-label="Especialización en Performance Marketing">
+            <div className="w-2 h-2 bg-indigo-400 rounded-full animate-pulse" aria-hidden="true"></div>
+            <span className="text-indigo-300 text-sm font-medium tracking-wide">Performance Marketing con Datos Reales</span>
           </div>
 
-          {/* Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 mt-24 max-w-6xl mx-auto">
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-black mb-8 leading-[1.05] tracking-[-0.03em]">
+            Marketing que vincula{' '}
+            <br className="hidden md:block" />
+            inversión{' '}
+            <span className="text-transparent bg-clip-text" style={{ backgroundImage: 'linear-gradient(135deg, #60A5FA 0%, #A78BFA 50%, #C084FC 100%)' }}>
+              con resultados
+            </span>
+          </h1>
+
+          <p className="text-xl md:text-2xl text-white/60 max-w-3xl mx-auto mb-6 font-light leading-relaxed">
+            Agencia de marketing digital que convierte tu inversión en clientes reales con métricas de negocio, no vanity metrics.
+          </p>
+
+          <p className="text-lg text-white/40 max-w-2xl mx-auto leading-relaxed mb-14">
+            El primer paso es tener un número: <span className="text-white/80 font-semibold">el costo de adquisición por tipo de campaña.</span>
+            {' '}Con ese dato puedes proyectar ventas y corregir errores.
+          </p>
+
+          <div className="flex flex-col sm:flex-row gap-5 justify-center items-center mb-20">
+            <button
+              onClick={() => document.getElementById('contacto')?.scrollIntoView({ behavior: 'smooth' })}
+              className="inline-flex items-center gap-3 font-semibold text-base px-10 py-5 rounded-2xl shadow-2xl transform hover:scale-[1.02] transition-all duration-300"
+              style={{ background: 'linear-gradient(135deg, #2563EB 0%, #6366F1 50%, #9333EA 100%)', boxShadow: '0 20px 60px rgba(99,102,241,0.3)' }}
+              aria-label="Agendar reunión para conocer servicios de marketing digital"
+            >
+              <Calendar className="w-5 h-5" aria-hidden="true" />
+              Agenda tu reunión con M&P
+            </button>
+
+            <a
+              href="https://wa.me/56992258137?text=Hola%2C%20quiero%20información%20sobre%20servicios%20M%26P"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => trackWhatsAppClick({ page: 'hero', servicio: 'general' })}
+              className="inline-flex items-center gap-3 px-10 py-5 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-white font-semibold text-base rounded-2xl backdrop-blur-sm transition-all duration-300"
+              aria-label="Contactar por WhatsApp para información sobre servicios"
+            >
+              <MessageSquare className="w-5 h-5" aria-hidden="true" />
+              Conversemos
+            </a>
+          </div>
+
+          {/* Stats — glass cards */}
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 max-w-5xl mx-auto">
             {[
               { value: '6+', label: 'Años en el mercado' },
               { value: '100%', label: 'Transparencia de datos' },
@@ -843,13 +850,16 @@ export default function LandingClient() {
               { value: '95%', label: 'Retención de clientes' },
               { value: '4.9★', label: 'Valoración promedio' }
             ].map((stat, idx) => (
-              <div key={idx} className="text-center">
-                <div className="text-3xl md:text-4xl font-bold text-blue-400 mb-2">{stat.value}</div>
-                <div className="text-xs md:text-sm text-blue-200/80 font-medium">{stat.label}</div>
+              <div key={idx} className="text-center p-5 rounded-2xl border border-white/[0.06] backdrop-blur-sm" style={{ background: 'rgba(255,255,255,0.03)' }}>
+                <div className="text-2xl md:text-3xl font-black mb-1.5 text-transparent bg-clip-text" style={{ backgroundImage: 'linear-gradient(135deg, #60A5FA 0%, #A78BFA 100%)' }}>{stat.value}</div>
+                <div className="text-[11px] text-white/40 font-medium tracking-wide">{stat.label}</div>
               </div>
             ))}
           </div>
         </div>
+
+        {/* Bottom fade to white */}
+        <div className="absolute bottom-0 left-0 right-0 h-32" style={{ background: 'linear-gradient(to bottom, transparent, white)' }} aria-hidden="true" />
       </section>
 
       {/* La Verdad Sobre Promesas */}
