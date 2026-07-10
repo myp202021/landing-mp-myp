@@ -71,6 +71,49 @@ function slugify(text) {
     .substring(0, 80)
 }
 
+async function generarImagen(titulo, categoria) {
+  try {
+    console.log('🎨 Generando imagen con DALL-E...')
+    const prompt = `Professional, modern blog header image about: ${titulo}. Digital marketing, performance marketing and business context. Clean minimalist design, blue and purple gradient tones, tech and data visualization elements. NO text, NO words, NO letters, NO numbers in the image.`
+    const r = await fetch('https://api.openai.com/v1/images/generations', {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${OPENAI_API_KEY}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model: 'dall-e-3', prompt, n: 1, size: '1792x1024', quality: 'standard' })
+    })
+    const data = await r.json()
+    if (!data.data?.[0]?.url) {
+      console.log('⚠️ DALL-E no retornó imagen:', JSON.stringify(data).substring(0, 200))
+      return null
+    }
+
+    // Download image
+    console.log('📤 Subiendo imagen a Supabase Storage...')
+    const imgRes = await fetch(data.data[0].url)
+    const imgBuffer = Buffer.from(await imgRes.arrayBuffer())
+    const filename = `${slugify(titulo).substring(0, 50)}-${Date.now()}.png`
+
+    const { data: uploadData, error: uploadError } = await supabase.storage
+      .from('blog-images')
+      .upload(filename, imgBuffer, { contentType: 'image/png', upsert: true })
+
+    if (uploadError) {
+      console.log('⚠️ Error subiendo a Storage (no crítico):', uploadError.message)
+      // If bucket doesn't exist, log instructions
+      if (uploadError.message.includes('not found') || uploadError.message.includes('does not exist')) {
+        console.log('📦 Crea el bucket "blog-images" en Supabase Dashboard → Storage → New bucket (público)')
+      }
+      return null
+    }
+
+    const { data: urlData } = supabase.storage.from('blog-images').getPublicUrl(filename)
+    console.log('✅ Imagen subida:', urlData.publicUrl)
+    return urlData.publicUrl
+  } catch(e) {
+    console.log('⚠️ Error generando imagen (no crítico):', e.message)
+    return null
+  }
+}
+
 async function elegirTema() {
   // Obtener slugs ya publicados
   const { data: existentes } = await supabase
@@ -242,6 +285,9 @@ Genera un JSON con estos campos exactos (solo el JSON, nada más):
     }
   }
 
+  // Generate featured image
+  const imageUrl = await generarImagen(tema.tema, tema.categoria)
+
   return {
     slug,
     title: tema.tema,
@@ -253,6 +299,7 @@ Genera un JSON con estos campos exactos (solo el JSON, nada más):
     tag: tema.tag,
     read_time: meta.readTime,
     content_html: contenidoHtml,
+    image_url: imageUrl,
     date_published: hoy,
     author: 'Christopher Müller'
   }
@@ -293,6 +340,7 @@ CREATE TABLE blog_posts (
   tag TEXT,
   read_time TEXT,
   content_html TEXT NOT NULL,
+  image_url TEXT,
   date_published DATE NOT NULL DEFAULT CURRENT_DATE,
   author TEXT DEFAULT 'Christopher Müller',
   created_at TIMESTAMPTZ DEFAULT NOW()

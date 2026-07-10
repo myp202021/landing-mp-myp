@@ -289,6 +289,57 @@ async function validarYReintentar(articulo, rawContent, sysPrompt, usrPrompt, ty
   return currentArticulo
 }
 
+async function generarImagen(titulo) {
+  try {
+    console.log('  🎨 Generando imagen con DALL-E...')
+    var prompt = 'Professional, modern blog header image about: ' + titulo + '. Warehouse management, logistics and supply chain context. Clean minimalist design, industrial blue tones, warehouse and technology elements. NO text, NO words, NO letters, NO numbers in the image.'
+    var r = await fetch('https://api.openai.com/v1/images/generations', {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + OPENAI_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model: 'dall-e-3', prompt: prompt, n: 1, size: '1792x1024', quality: 'standard' })
+    })
+    var data = await r.json()
+    if (!data.data || !data.data[0] || !data.data[0].url) {
+      console.log('  ⚠️ DALL-E no retornó imagen:', JSON.stringify(data).substring(0, 200))
+      return null
+    }
+    console.log('  ✅ Imagen generada')
+    return data.data[0].url
+  } catch(e) {
+    console.log('  ⚠️ Error generando imagen (no crítico): ' + e.message)
+    return null
+  }
+}
+
+async function subirImagenWP(dalleUrl, titulo) {
+  try {
+    console.log('  📤 Subiendo imagen a WordPress...')
+    var imgRes = await fetch(dalleUrl)
+    var imgBuffer = await imgRes.buffer()
+    var slug = (titulo || 'blog').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').substring(0, 50)
+    var filename = slug + '-' + Date.now() + '.png'
+    var uploadRes = await fetch(WP_URL + '/wp-json/wp/v2/media', {
+      method: 'POST',
+      headers: {
+        'Authorization': AUTH,
+        'Content-Disposition': 'attachment; filename="' + filename + '"',
+        'Content-Type': 'image/png'
+      },
+      body: imgBuffer
+    })
+    var media = await uploadRes.json()
+    if (media.id) {
+      console.log('  ✅ Imagen subida, media ID: ' + media.id)
+      return media.id
+    }
+    console.log('  ⚠️ Error subiendo imagen:', JSON.stringify(media).substring(0, 200))
+    return null
+  } catch(e) {
+    console.log('  ⚠️ Error subiendo imagen (no crítico): ' + e.message)
+    return null
+  }
+}
+
 async function obtenerOCrearCategoria(nombre) {
   // Buscar categoría existente
   var res = await fetch(WP_URL + '/wp-json/wp/v2/categories?search=' + encodeURIComponent(nombre), {
@@ -307,28 +358,31 @@ async function obtenerOCrearCategoria(nombre) {
   return cat.id
 }
 
-async function publicarEnWordPress(articulo) {
+async function publicarEnWordPress(articulo, mediaId) {
   // Categoría 57 = "Documentos Técnicos" — aparece en la página de blog de Elementor
   var catId = 57
   // También agregar categoría específica si existe
   var catExtra = await obtenerOCrearCategoria(articulo.categoria)
 
+  var postBody = {
+    title: articulo.titulo_seo,
+    slug: articulo.slug,
+    content: articulo.contenido_html,
+    excerpt: articulo.extracto,
+    status: 'publish',
+    categories: [catId, catExtra].filter(function(v,i,a) { return a.indexOf(v) === i }),
+    meta: {
+      rank_math_title: articulo.titulo_seo + ' | invasWMS Blog',
+      rank_math_description: articulo.meta_description,
+      rank_math_focus_keyword: articulo.tags ? articulo.tags[0] : '',
+    }
+  }
+  if (mediaId) postBody.featured_media = mediaId
+
   var res = await fetch(WP_URL + '/wp-json/wp/v2/posts', {
     method: 'POST',
     headers: { 'Authorization': AUTH, 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      title: articulo.titulo_seo,
-      slug: articulo.slug,
-      content: articulo.contenido_html,
-      excerpt: articulo.extracto,
-      status: 'publish',
-      categories: [catId, catExtra].filter(function(v,i,a) { return a.indexOf(v) === i }),
-      meta: {
-        rank_math_title: articulo.titulo_seo + ' | invasWMS Blog',
-        rank_math_description: articulo.meta_description,
-        rank_math_focus_keyword: articulo.tags ? articulo.tags[0] : '',
-      }
-    })
+    body: JSON.stringify(postBody)
   })
 
   var post = await res.json()
@@ -390,9 +444,16 @@ async function main() {
   console.log('Slug: ' + articulo.slug)
   console.log('Largo HTML: ' + (articulo.contenido_html || '').length + ' chars')
 
-  // 5. Publicar en WordPress
+  // 5. Generar imagen con DALL-E
+  var mediaId = null
+  var dalleUrl = await generarImagen(tema.titulo)
+  if (dalleUrl) {
+    mediaId = await subirImagenWP(dalleUrl, articulo.titulo_seo || tema.titulo)
+  }
+
+  // 6. Publicar en WordPress
   console.log('\nPublicando en WordPress...')
-  var post = await publicarEnWordPress(articulo)
+  var post = await publicarEnWordPress(articulo, mediaId)
 
   if (post.id) {
     var postUrl = post.link || (WP_URL + '/' + articulo.slug + '/')
@@ -402,7 +463,7 @@ async function main() {
     console.log('   Título: ' + articulo.titulo_seo)
     console.log('   Categoría: ' + articulo.categoria)
 
-    // 6. Notificar
+    // 7. Notificar
     await notificarEmail(articulo, postUrl)
     console.log('   Email: enviado a contacto@mulleryperez.cl')
 
