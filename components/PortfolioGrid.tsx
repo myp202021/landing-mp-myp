@@ -86,16 +86,6 @@ const portfolioItems = [
     height: 1000,
   },
   {
-    src: '/portfolio/tecnomat-siding.png',
-    alt: 'Diseño campaña Tecnomat siding PVC revestimiento construcción Chile - Muller y Pérez marketing digital',
-    client: 'Tecnomat',
-    type: 'Campaña de producto',
-    description: 'Siding PVC · Revestimiento duradero',
-    category: 'Industria',
-    width: 800,
-    height: 1000,
-  },
-  {
     src: '/portfolio/jp-procesos.png',
     alt: 'Diseño campaña JP Procesos agroindustria respaldo operativo Chile - Muller y Pérez agencia performance',
     client: 'JP Procesos',
@@ -208,7 +198,7 @@ export default function PortfolioGrid() {
               Diseño de campañas, anuncios y contenido para más de 20 industrias. Cada pieza está pensada para convertir, no solo para verse bien.
             </p>
             <p className="text-sm text-blue-200/40 max-w-3xl mx-auto leading-relaxed">
-              Campañas para eventos masivos como Marco Antonio Solís e Il Volo, plataformas SaaS como Genera, productos premium como Zero Water y PineApple Store, inmobiliarias como Rilay, soluciones industriales para Forcmin Mining y Tecnomat, y agroindustria con JP Procesos. Diseño y performance marketing medible para empresas en Chile y Latinoamérica.
+              Campañas para eventos masivos como Marco Antonio Solís e Il Volo, plataformas SaaS como Genera, productos premium como Zero Water y PineApple Store, inmobiliarias como Rilay, soluciones industriales para Forcmin Mining, y agroindustria con JP Procesos. Diseño y performance marketing medible para empresas en Chile y Latinoamérica.
             </p>
           </header>
 

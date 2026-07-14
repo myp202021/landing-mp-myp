@@ -23,7 +23,6 @@ const clients = [
   { name: 'Pregiata', industry: 'Retail', logo: '/clientes/pregiata.png' },
   { name: 'Genera', industry: 'Recursos Humanos', logo: '/clientes/genera.png' },
   { name: 'JP Procesos', industry: 'Agroindustria', logo: '/clientes/jp-procesos.png' },
-  { name: 'Tecnomat', industry: 'Construcción', logo: '/clientes/tecnomat.png' },
   { name: 'Forcmin', industry: 'Minería', logo: '/clientes/logo-forcmin-c.png' },
   { name: 'Distec', industry: 'Distribución Tecnológica', logo: '/clientes/distec.png' },
   { name: 'Pineapple Store', industry: 'Accesorios Apple', logo: '/clientes/pineapple-store.png' },
