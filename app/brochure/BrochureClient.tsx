@@ -340,10 +340,10 @@ export default function BrochureClient() {
         <video
           src="/brochure/hero-bg.mp4"
           poster={posterFor('reel-swing-6.mp4')}
-          className="absolute inset-0 w-full h-full object-cover opacity-25"
+          className="absolute inset-0 w-full h-full object-cover opacity-40"
           autoPlay muted loop playsInline
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#050510] via-[#050510]/80 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#050510] via-[#050510]/60 to-transparent" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#050510] via-transparent to-[#050510]/50" />
 
         <div className="max-w-7xl mx-auto px-6 py-20 relative w-full">
