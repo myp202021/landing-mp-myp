@@ -35,10 +35,17 @@ const clients = [
   { name: 'Atacama Experience', industry: 'Turismo', logo: '/clientes/atacama-experience.png' },
   { name: 'Homar', industry: 'Importadora', logo: '/clientes/homar.png' },
   { name: 'Faretto', industry: 'Iluminación', logo: '/clientes/faretto.png' },
+  { name: 'Halterlift', industry: 'Grúas Horquilla', logo: '/clientes/halterlift.webp' },
+  { name: 'Premios Increíbles', industry: 'Sorteos Online', logo: '/clientes/premios-increibles.png' },
+  { name: 'CyM Propiedades', industry: 'Corretaje Inmobiliario', logo: '/clientes/cym.png' },
+  { name: 'INACAP', industry: 'Educación Continua', logo: '/clientes/inacap.png' },
+  { name: 'DevuelveMiPie', industry: 'Legal Inmobiliario', logo: '/clientes/dmp.png' },
+  { name: 'SGO', industry: 'Libro de Obras Digital', logo: '/clientes/sgo.png' },
+  { name: 'Voxa', industry: 'Tecnología', logo: '/clientes/voxa.png' },
 ]
 
-const row1 = clients.slice(0, 17)
-const row2 = clients.slice(17)
+const row1 = clients.slice(0, 19)
+const row2 = clients.slice(19)
 
 function ClientCard({ client }: { client: typeof clients[0] }) {
   return (
