@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import { useState } from 'react'
 import Image from 'next/image'
 
 type Category = 'all' | 'eventos' | 'tech' | 'industria' | 'inmobiliaria' | 'retail' | 'educacion' | 'transporte' | 'alimentos' | 'variados'
@@ -213,47 +213,35 @@ const categories: { key: Category; label: string }[] = [
   { key: 'variados', label: 'Otros' },
 ]
 
-// Video component that handles autoplay properly
+function posterFor(src: string) {
+  return `/brochure/${src.replace('.mp4', '-poster.jpg')}`
+}
+
+// Video component with poster thumbnail
 function ReelCard({ src, client, onOpen }: { src: string; client: string; onOpen: () => void }) {
-  const ref = useRef<HTMLVideoElement>(null)
-  const [loaded, setLoaded] = useState(false)
-
-  useEffect(() => {
-    const v = ref.current
-    if (!v) return
-    v.preload = 'metadata'
-    const handleLoaded = () => setLoaded(true)
-    v.addEventListener('loadeddata', handleLoaded)
-    return () => v.removeEventListener('loadeddata', handleLoaded)
-  }, [])
-
   return (
     <div
       className="group cursor-pointer relative rounded-xl overflow-hidden bg-white/[0.03] border border-white/[0.04] hover:border-white/[0.15] transition-all duration-500 hover:shadow-2xl hover:shadow-blue-500/5"
       onClick={onOpen}
     >
       <div className="relative aspect-[9/16]">
-        {!loaded && (
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-900/30 to-purple-900/30 flex items-center justify-center">
-            <div className="w-12 h-12 rounded-full bg-white/10 backdrop-blur flex items-center justify-center">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><polygon points="8,5 19,12 8,19"/></svg>
-            </div>
-          </div>
-        )}
         <video
-          ref={ref}
           src={`/brochure/${src}`}
-          className={`w-full h-full object-cover transition-opacity duration-300 ${loaded ? 'opacity-100' : 'opacity-0'}`}
-          muted
-          loop
-          playsInline
-          preload="metadata"
+          poster={posterFor(src)}
+          className="w-full h-full object-cover"
+          muted loop playsInline
           onMouseEnter={(e) => e.currentTarget.play().catch(() => {})}
           onMouseLeave={(e) => { e.currentTarget.pause(); e.currentTarget.currentTime = 0 }}
         />
         <div className="absolute top-3 right-3 bg-black/40 backdrop-blur-md rounded-full px-2.5 py-1 flex items-center gap-1.5">
           <svg width="8" height="8" viewBox="0 0 24 24" fill="white"><polygon points="8,5 19,12 8,19"/></svg>
           <span className="text-[10px] font-semibold tracking-wide uppercase">Reel</span>
+        </div>
+        {/* Play icon center */}
+        <div className="absolute inset-0 flex items-center justify-center opacity-60 group-hover:opacity-0 transition-opacity duration-300">
+          <div className="w-12 h-12 rounded-full bg-black/30 backdrop-blur flex items-center justify-center">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><polygon points="8,5 19,12 8,19"/></svg>
+          </div>
         </div>
       </div>
       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-end p-3">
@@ -265,51 +253,29 @@ function ReelCard({ src, client, onOpen }: { src: string; client: string; onOpen
   )
 }
 
-// Featured reel — larger with description
+// Featured reel — larger with poster thumbnail
 function FeaturedReelCard({ reel, onOpen }: { reel: typeof featuredReels[0]; onOpen: () => void }) {
-  const ref = useRef<HTMLVideoElement>(null)
-  const [loaded, setLoaded] = useState(false)
-
-  useEffect(() => {
-    const v = ref.current
-    if (!v) return
-    v.preload = 'metadata'
-    const handleLoaded = () => setLoaded(true)
-    v.addEventListener('loadeddata', handleLoaded)
-    return () => v.removeEventListener('loadeddata', handleLoaded)
-  }, [])
-
   return (
     <div
       className="flex-shrink-0 w-[220px] md:w-[260px] cursor-pointer group"
       onClick={onOpen}
     >
-      <div className="relative aspect-[9/16] rounded-2xl overflow-hidden bg-gradient-to-br from-blue-900/20 to-purple-900/20 border border-white/[0.06] group-hover:border-white/[0.2] transition-all duration-500 group-hover:shadow-2xl group-hover:shadow-blue-500/10">
-        {!loaded && (
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="w-16 h-16 rounded-full bg-white/10 backdrop-blur-xl flex items-center justify-center group-hover:bg-white/20 transition-all">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><polygon points="8,5 19,12 8,19"/></svg>
-            </div>
-          </div>
-        )}
+      <div className="relative aspect-[9/16] rounded-2xl overflow-hidden border border-white/[0.06] group-hover:border-white/[0.2] transition-all duration-500 group-hover:shadow-2xl group-hover:shadow-blue-500/10">
         <video
-          ref={ref}
           src={`/brochure/${reel.src}`}
-          className={`w-full h-full object-cover transition-all duration-500 group-hover:scale-[1.03] ${loaded ? 'opacity-100' : 'opacity-0'}`}
-          muted
-          loop
-          playsInline
-          preload="metadata"
+          poster={posterFor(reel.src)}
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+          muted loop playsInline
           onMouseEnter={(e) => e.currentTarget.play().catch(() => {})}
           onMouseLeave={(e) => { e.currentTarget.pause(); e.currentTarget.currentTime = 0 }}
         />
-        {loaded && (
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-            <div className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-xl flex items-center justify-center">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><polygon points="8,5 19,12 8,19"/></svg>
-            </div>
+        {/* Play button overlay */}
+        <div className="absolute inset-0 flex items-center justify-center opacity-70 group-hover:opacity-0 transition-opacity duration-300">
+          <div className="w-14 h-14 rounded-full bg-black/30 backdrop-blur-xl flex items-center justify-center border border-white/20">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><polygon points="8,5 19,12 8,19"/></svg>
           </div>
-        )}
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
       </div>
       <p className="text-sm font-semibold mt-3 text-white/80 group-hover:text-white transition-colors">{reel.client}</p>
       <p className="text-xs text-white/30">{reel.desc}</p>
@@ -369,31 +335,48 @@ export default function BrochureClient() {
       )}
 
       {/* ═══════════ HERO ═══════════ */}
-      <header className="relative pt-12 pb-8 px-6">
-        <div className="max-w-7xl mx-auto relative">
-          <div className="flex items-center gap-3 mb-16">
+      <header className="relative min-h-[85vh] flex items-center overflow-hidden">
+        {/* Video background */}
+        <video
+          src="/brochure/hero-bg.mp4"
+          poster={posterFor('reel-swing-6.mp4')}
+          className="absolute inset-0 w-full h-full object-cover opacity-25"
+          autoPlay muted loop playsInline
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#050510] via-[#050510]/80 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#050510] via-transparent to-[#050510]/50" />
+
+        <div className="max-w-7xl mx-auto px-6 py-20 relative w-full">
+          <div className="flex items-center gap-3 mb-12">
             <Image src="/logo-blanco.png" alt="Muller y Pérez" width={180} height={45} className="h-9 w-auto opacity-90" />
             <div className="h-6 w-px bg-white/20" />
             <span className="text-sm text-white/30 tracking-wider uppercase">Brochure creativo</span>
           </div>
 
-          <div className="max-w-3xl">
+          <div className="max-w-2xl">
             <p className="text-sm font-semibold text-blue-400 uppercase tracking-widest mb-4">
               Más que performance
             </p>
-            <h1 className="text-5xl md:text-7xl font-bold tracking-tight leading-[0.95] mb-6">
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight leading-[0.9] mb-8">
               Publicistas,<br />
               diseñadores y<br />
               <span className="bg-gradient-to-r from-blue-400 via-cyan-300 to-purple-400 bg-clip-text text-transparent">
                 filmmakers.
               </span>
             </h1>
-            <p className="text-lg text-white/40 leading-relaxed max-w-xl mb-4">
+            <p className="text-lg md:text-xl text-white/50 leading-relaxed max-w-xl mb-4">
               En Muller y Pérez no solo optimizamos campañas y medimos conversiones. Detrás de cada anuncio hay un equipo creativo que diseña, produce y filma contenido pensado para que tu marca destaque.
             </p>
-            <p className="text-base text-white/25 leading-relaxed max-w-xl">
+            <p className="text-base text-white/30 leading-relaxed max-w-xl mb-10">
               Tres diseñadores especializados. Producción de reels y aftermovies. Grillas de contenido. Campañas completas de principio a fin — desde la idea hasta el resultado.
             </p>
+            <a
+              href="#gallery"
+              className="inline-flex items-center gap-2 bg-white/[0.08] hover:bg-white/[0.15] backdrop-blur text-white font-medium px-6 py-3 rounded-full border border-white/[0.1] transition-all duration-200 text-sm"
+            >
+              Ver portfolio completo
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M7 13l5 5 5-5M12 18V6"/></svg>
+            </a>
           </div>
         </div>
       </header>
