@@ -409,6 +409,46 @@ Genera un JSON con estos campos exactos (solo el JSON, nada más):
   }
 }
 
+function slugify(text) {
+  return text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').substring(0, 80)
+}
+
+async function generarImagenGeo(titulo) {
+  try {
+    console.log('🎨 Generando imagen...')
+    const prompt = `Professional, modern blog header image about: ${titulo}. Digital marketing, performance marketing and business context. Clean minimalist design, blue and purple gradient tones, tech and data visualization elements. NO text, NO words, NO letters.`
+    const r = await fetch('https://api.openai.com/v1/images/generations', {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${OPENAI_API_KEY}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model: 'gpt-image-1', prompt, n: 1, size: '1536x1024', quality: 'low' })
+    })
+    const data = await r.json()
+    if (!data.data?.[0]) return null
+
+    let imgBuffer
+    if (data.data[0].b64_json) {
+      imgBuffer = Buffer.from(data.data[0].b64_json, 'base64')
+    } else if (data.data[0].url) {
+      imgBuffer = Buffer.from(await (await fetch(data.data[0].url)).arrayBuffer())
+    } else return null
+
+    const filename = `geo-${slugify(titulo).substring(0, 50)}-${Date.now()}.png`
+    const { data: uploadData, error } = await supabase.storage
+      .from('blog-images')
+      .upload(filename, imgBuffer, { contentType: 'image/png', upsert: true })
+
+    if (error) { console.log('⚠️ Upload error:', error.message); return null }
+
+    const { data: urlData } = supabase.storage.from('blog-images').getPublicUrl(filename)
+    console.log('✅ Imagen subida:', urlData.publicUrl)
+    return urlData.publicUrl
+  } catch (e) {
+    console.log('⚠️ Error imagen:', e.message)
+    return null
+  }
+}
+
 async function guardarEnSupabase(articulo) {
   console.log(`💾 Guardando en Supabase: ${articulo.slug}`)
 
@@ -431,6 +471,11 @@ async function main() {
   console.log(`🎯 Tema seleccionado: ${tema.pregunta}`)
 
   const articulo = await generarArticulo(tema)
+
+  // Generate image
+  const imageUrl = await generarImagenGeo(articulo.title)
+  if (imageUrl) articulo.image_url = imageUrl
+
   await guardarEnSupabase(articulo)
 
   console.log('')

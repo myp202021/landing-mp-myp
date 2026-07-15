@@ -39,7 +39,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
       publishedTime: `${post.date_published}T00:00:00.000Z`,
       images: [
         {
-          url: 'https://www.mulleryperez.cl/og-image.jpg',
+          url: post.image_url || 'https://www.mulleryperez.cl/og-image.jpg',
           width: 1200,
           height: 630,
           alt: post.title
@@ -91,7 +91,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
         url: 'https://www.mulleryperez.cl/logo-color.png'
       }
     },
-    image: 'https://www.mulleryperez.cl/og-image.jpg',
+    image: post.image_url || 'https://www.mulleryperez.cl/og-image.jpg',
     mainEntityOfPage: {
       '@type': 'WebPage',
       '@id': `https://www.mulleryperez.cl/blog/${post.slug}`
@@ -100,6 +100,24 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
     keywords: post.keywords,
     inLanguage: 'es-CL'
   }
+
+  // Extract FAQ from content if present (h2/h3 with ? followed by content)
+  const faqMatches = (post.content_html || '').match(/<h[23][^>]*>\s*(.*?\?)\s*<\/h[23]>\s*<p>([\s\S]*?)<\/p>/gi) || []
+  const faqItems = faqMatches.slice(0, 10).map((match: string) => {
+    const qMatch = match.match(/<h[23][^>]*>\s*(.*?)\s*<\/h[23]>/i)
+    const aMatch = match.match(/<\/h[23]>\s*<p>([\s\S]*?)<\/p>/i)
+    return qMatch && aMatch ? {
+      '@type': 'Question' as const,
+      name: qMatch[1].replace(/<[^>]+>/g, ''),
+      acceptedAnswer: { '@type': 'Answer' as const, text: aMatch[1].replace(/<[^>]+>/g, '').substring(0, 300) }
+    } : null
+  }).filter(Boolean)
+
+  const faqSchema = faqItems.length >= 3 ? {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqItems
+  } : null
 
   const breadcrumbSchema = {
     '@context': 'https://schema.org',
@@ -121,6 +139,12 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
+      {faqSchema && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+        />
+      )}
 
       <SiteHeader />
 
@@ -135,9 +159,20 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
             {post.title}
           </h1>
 
-          <p className="text-xl text-gray-600 mb-12 leading-relaxed">
+          <p className="text-xl text-gray-600 mb-8 leading-relaxed">
             {post.excerpt}
           </p>
+
+          {post.image_url && (
+            <div className="mb-12 rounded-2xl overflow-hidden shadow-lg">
+              <img
+                src={post.image_url}
+                alt={post.title}
+                className="w-full h-auto object-cover"
+                loading="eager"
+              />
+            </div>
+          )}
 
           <div
             className="prose prose-lg max-w-none"

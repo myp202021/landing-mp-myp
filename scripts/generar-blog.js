@@ -78,18 +78,26 @@ async function generarImagen(titulo, categoria) {
     const r = await fetch('https://api.openai.com/v1/images/generations', {
       method: 'POST',
       headers: { 'Authorization': `Bearer ${OPENAI_API_KEY}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ model: 'dall-e-3', prompt, n: 1, size: '1792x1024', quality: 'standard' })
+      body: JSON.stringify({ model: 'gpt-image-1', prompt, n: 1, size: '1536x1024', quality: 'low' })
     })
     const data = await r.json()
-    if (!data.data?.[0]?.url) {
-      console.log('⚠️ DALL-E no retornó imagen:', JSON.stringify(data).substring(0, 200))
+    if (!data.data?.[0]) {
+      console.log('⚠️ Image API no retornó imagen:', JSON.stringify(data).substring(0, 200))
       return null
     }
 
-    // Download image
+    // Download or decode image (gpt-image-1 returns b64_json)
     console.log('📤 Subiendo imagen a Supabase Storage...')
-    const imgRes = await fetch(data.data[0].url)
-    const imgBuffer = Buffer.from(await imgRes.arrayBuffer())
+    let imgBuffer
+    if (data.data[0].b64_json) {
+      imgBuffer = Buffer.from(data.data[0].b64_json, 'base64')
+    } else if (data.data[0].url) {
+      const imgRes = await fetch(data.data[0].url)
+      imgBuffer = Buffer.from(await imgRes.arrayBuffer())
+    } else {
+      console.log('⚠️ No image data in response')
+      return null
+    }
     const filename = `${slugify(titulo).substring(0, 50)}-${Date.now()}.png`
 
     const { data: uploadData, error: uploadError } = await supabase.storage
