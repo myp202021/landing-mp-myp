@@ -1,9 +1,9 @@
-name: Blog — Add image_url column + generate images
+name: Blog — Backfill images
 on:
   workflow_dispatch:
 
 jobs:
-  migrate-and-images:
+  backfill:
     runs-on: ubuntu-latest
     timeout-minutes: 90
     steps:
@@ -12,66 +12,9 @@ jobs:
         with:
           node-version: '20'
       - run: npm install @supabase/supabase-js
-      - name: Add image_url column and generate images
+      - name: Generate and upload images
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        run: |
-          node -e '
-          const { createClient } = require("@supabase/supabase-js");
-          const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
-          const OPENAI = process.env.OPENAI_API_KEY;
-
-          async function main() {
-            // Add column via RPC workaround — try insert with image_url, if fails column doesnt exist
-            // First test if column exists
-            const { data: test } = await supabase.from("blog_posts").select("image_url").limit(1);
-            if (test === null) {
-              console.log("Column image_url does not exist yet. Creating via raw SQL...");
-              // Use supabase-js sql method
-              const { error: sqlErr } = await supabase.rpc("exec", { sql: "ALTER TABLE public.blog_posts ADD COLUMN IF NOT EXISTS image_url TEXT" });
-              if (sqlErr) {
-                console.log("RPC failed, trying direct approach...");
-                // Fallback: try to add via the REST API by patching
-                console.log("ERROR: Cannot add column without DB access. Please add image_url TEXT column via Supabase Dashboard SQL Editor.");
-                console.log("SQL: ALTER TABLE public.blog_posts ADD COLUMN IF NOT EXISTS image_url TEXT;");
-                process.exit(1);
-              }
-            }
-            console.log("Column exists, proceeding with images...");
-
-            // Get posts without images
-            const { data: posts } = await supabase.from("blog_posts").select("id, slug, title, image_url").order("date_published", { ascending: false });
-            const sinImagen = posts.filter(p => !p.image_url);
-            console.log("Total:", posts.length, "Sin imagen:", sinImagen.length);
-
-            let ok = 0, fail = 0;
-            for (let i = 0; i < sinImagen.length; i++) {
-              const post = sinImagen[i];
-              console.log("[" + (i+1) + "/" + sinImagen.length + "] " + post.slug.substring(0,50));
-              try {
-                const prompt = "Professional blog header about: " + (post.title||post.slug).substring(0,80) + ". Digital marketing, performance, business. Clean minimalist, blue-purple tones. NO text, NO words.";
-                const imgRes = await fetch("https://api.openai.com/v1/images/generations", {
-                  method: "POST",
-                  headers: { "Authorization": "Bearer " + OPENAI, "Content-Type": "application/json" },
-                  body: JSON.stringify({ model: "gpt-image-1", prompt, n: 1, size: "1536x1024", quality: "low" })
-                });
-                const imgData = await imgRes.json();
-                if (!imgData.data?.[0]) { fail++; continue; }
-                const buffer = imgData.data[0].b64_json ? Buffer.from(imgData.data[0].b64_json, "base64") : Buffer.from(await (await fetch(imgData.data[0].url)).arrayBuffer());
-                const filename = post.slug.substring(0,50) + "-" + Date.now() + ".png";
-                const { error: upErr } = await supabase.storage.from("blog-images").upload(filename, buffer, { contentType: "image/png", upsert: true });
-                if (upErr) { console.log("  upload err:", upErr.message); fail++; continue; }
-                const { data: urlData } = supabase.storage.from("blog-images").getPublicUrl(filename);
-                const { error: updErr } = await supabase.from("blog_posts").update({ image_url: urlData.publicUrl }).eq("id", post.id);
-                if (updErr) { fail++; continue; }
-                console.log("  ✅");
-                ok++;
-                await new Promise(r => setTimeout(r, 2000));
-              } catch(e) { console.log("  ❌", e.message); fail++; }
-            }
-            console.log("DONE:", ok, "ok,", fail, "fail");
-          }
-          main().catch(e => { console.error(e); process.exit(1); });
-          '
+        run: node scripts/backfill-blog-images.js
