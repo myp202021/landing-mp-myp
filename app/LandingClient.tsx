@@ -783,8 +783,14 @@ export default function LandingClient() {
 
       {/* Hero */}
       <section className="pt-36 pb-28 px-6 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-white relative overflow-hidden" role="main" aria-label="Sección principal">
-        <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-5" aria-hidden="true"></div>
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/50 to-transparent" aria-hidden="true"></div>
+        <video
+          src="/hero-bg.mp4"
+          className="absolute inset-0 w-full h-full object-cover opacity-30"
+          autoPlay muted loop playsInline
+          aria-hidden="true"
+        />
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-900/70 via-blue-900/50 to-slate-900/70" aria-hidden="true"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent" aria-hidden="true"></div>
 
         <div className="max-w-6xl mx-auto relative z-10">
           <div className="text-center mb-16">
