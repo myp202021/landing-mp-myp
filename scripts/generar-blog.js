@@ -60,6 +60,52 @@ const TEMAS = [
   { categoria: 'Estrategia', tag: 'Estrategia', tema: 'Landing pages que convierten: anatomía de una landing de alto rendimiento en Chile' },
   { categoria: 'Estrategia', tag: 'Estrategia', tema: 'Errores que matan las campañas digitales: los 10 más comunes en empresas chilenas' },
   { categoria: 'Estrategia', tag: 'Estrategia', tema: 'De leads a clientes: cómo cerrar la brecha entre marketing y ventas en Chile' },
+
+  // Growth & Conversión
+  { categoria: 'Growth', tag: 'Growth', tema: 'Growth marketing para empresas B2B en Chile: playbook completo de adquisición y retención' },
+  { categoria: 'Growth', tag: 'Growth', tema: 'Cómo reducir el CAC un 40%: tácticas probadas de growth para PYMES chilenas' },
+  { categoria: 'Growth', tag: 'Growth', tema: 'Product-led growth vs sales-led growth: cuál funciona mejor en Latinoamérica' },
+  { categoria: 'Growth', tag: 'Growth', tema: 'Loops de crecimiento: cómo crear sistemas de adquisición que se auto-alimentan' },
+  { categoria: 'Growth', tag: 'CRO', tema: 'CRO para Chile: cómo optimizar la tasa de conversión sin aumentar el presupuesto publicitario' },
+  { categoria: 'Growth', tag: 'CRO', tema: 'A/B testing en campañas digitales: metodología, herramientas y errores comunes en Chile' },
+  { categoria: 'Growth', tag: 'Growth', tema: 'Unit economics para startups y PYMES: cómo saber si tu marketing es rentable' },
+  { categoria: 'Growth', tag: 'Growth', tema: 'Flywheel vs funnel: por qué el embudo de ventas tradicional ya no funciona' },
+
+  // Revenue & Datos
+  { categoria: 'Revenue', tag: 'Revenue', tema: 'Revenue operations (RevOps): cómo alinear marketing, ventas y CS con datos en Chile' },
+  { categoria: 'Revenue', tag: 'Revenue', tema: 'Dashboards de marketing que realmente sirven: métricas, frecuencia y herramientas para Chile' },
+  { categoria: 'Revenue', tag: 'Datos', tema: 'First-party data en Chile: cómo construir tu propia base de datos sin depender de cookies' },
+  { categoria: 'Revenue', tag: 'Datos', tema: 'Marketing attribution en 2026: qué modelos funcionan después del fin de las cookies' },
+  { categoria: 'Revenue', tag: 'Revenue', tema: 'Cómo calcular el LTV real de un cliente en Chile y usarlo para escalar campañas' },
+
+  // Canales emergentes
+  { categoria: 'Canales', tag: 'TikTok', tema: 'TikTok Ads para empresas en Chile: costos reales, formatos y casos de conversión' },
+  { categoria: 'Canales', tag: 'YouTube', tema: 'YouTube Ads para generación de demanda en Chile: formatos, costos y métricas clave' },
+  { categoria: 'Canales', tag: 'Email', tema: 'Email marketing que convierte en Chile: secuencias, automaciones y benchmarks por industria' },
+  { categoria: 'Canales', tag: 'WhatsApp', tema: 'WhatsApp marketing en Chile 2026: bots, broadcasts y estrategias de nurturing' },
+  { categoria: 'Canales', tag: 'Programática', tema: 'Publicidad programática en Chile: qué es, costos y cuándo tiene sentido para tu empresa' },
+
+  // Industrias nuevas
+  { categoria: 'Industrias', tag: 'Fintech', tema: 'Marketing digital para fintech en Chile: regulación, confianza y captación de usuarios' },
+  { categoria: 'Industrias', tag: 'Logística', tema: 'Marketing digital para empresas de logística y transporte en Chile: leads B2B de alto valor' },
+  { categoria: 'Industrias', tag: 'Minería', tema: 'Marketing digital para proveedores mineros en Chile: cómo llegar a los tomadores de decisión' },
+  { categoria: 'Industrias', tag: 'Retail', tema: 'Omnicanalidad en retail Chile: cómo integrar campañas digitales con la experiencia en tienda' },
+  { categoria: 'Industrias', tag: 'Construcción', tema: 'Marketing digital para constructoras e inmobiliarias en Chile: Google Ads, portales y CRM' },
+  { categoria: 'Industrias', tag: 'Alimentación', tema: 'Marketing digital para empresas de alimentos y bebidas en Chile: D2C, distribución y marca' },
+
+  // Tendencias 2026
+  { categoria: 'Tendencias', tag: 'IA', tema: 'IA generativa en marketing: cómo están usando GPT, Claude y Midjourney las agencias en Chile' },
+  { categoria: 'Tendencias', tag: 'IA', tema: 'Agentes de IA para marketing: automatización inteligente más allá de los chatbots' },
+  { categoria: 'Tendencias', tag: 'Tendencias', tema: 'GEO: qué es la Generative Engine Optimization y por qué importa en 2026' },
+  { categoria: 'Tendencias', tag: 'Tendencias', tema: 'El futuro de Google Ads: campañas AI-first, Performance Max y qué viene después' },
+  { categoria: 'Tendencias', tag: 'Tendencias', tema: 'Social commerce en Chile: vender directo desde Instagram, TikTok y WhatsApp' },
+
+  // Scaling & Operaciones
+  { categoria: 'Scaling', tag: 'Scaling', tema: 'Cómo escalar campañas de Google Ads sin que suba el CPA: guía para Chile' },
+  { categoria: 'Scaling', tag: 'Scaling', tema: 'Cuándo y cómo contratar una agencia vs equipo in-house: análisis de costos Chile 2026' },
+  { categoria: 'Scaling', tag: 'Scaling', tema: 'Internacionalización digital: cómo llevar campañas de Chile a LATAM con performance marketing' },
+  { categoria: 'Scaling', tag: 'Operaciones', tema: 'Procesos de una agencia de performance: cómo gestionamos +200 campañas simultáneas' },
+  { categoria: 'Scaling', tag: 'Operaciones', tema: 'Reporting para clientes: cómo crear informes que generen valor y retengan cuentas' },
 ]
 
 function slugify(text) {

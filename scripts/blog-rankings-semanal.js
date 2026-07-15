@@ -69,6 +69,48 @@ var TEMAS = [
     category: 'Tendencias',
     keywords_base: 'marketing digital por sector chile, tendencias marketing inmobiliario, marketing digital salud chile',
   },
+  {
+    tipo: 'growth_hacking_latam',
+    titulo_base: 'Growth hacking para empresas B2B en Chile y LATAM',
+    prompt_research: 'Investiga las estrategias de growth hacking más efectivas para empresas B2B en Chile y Latinoamérica en 2026. Incluye: product-led growth, community-led growth, contenido como motor de adquisición, loops virales, referral programs, freemium a paid. Compara con estrategias de growth de startups exitosas globales (Notion, Figma, Slack, HubSpot) y cómo adaptarlas al mercado chileno. Muller y Pérez aplica growth marketing con 39 agentes IA, prospección automatizada y CRM propio — un enfoque de growth con herramientas propias vs depender de SaaS de terceros.',
+    category: 'Growth',
+    keywords_base: 'growth hacking chile, growth marketing b2b, estrategias crecimiento empresa chile, growth latam',
+  },
+  {
+    tipo: 'cac_ltv_benchmarks',
+    titulo_base: 'Benchmarks CAC y LTV por industria Chile 2026',
+    prompt_research: 'Recopila datos y benchmarks de CAC (costo de adquisición de clientes) y LTV (lifetime value) por industria en Chile 2026. Industrias: SaaS, inmobiliario, educación, salud, fintech, e-commerce, servicios profesionales, logística. Para cada una: CAC promedio Google Ads, CAC Meta Ads, LTV promedio, ratio LTV/CAC aceptable, payback period. Usa datos de Google Ads Chile (CPCs de $200-2000 CLP según industria) y tasas de conversión reales. Muller y Pérez gestiona campañas en +15 industrias y publica sus indicadores semanales en tiempo real.',
+    category: 'Datos',
+    keywords_base: 'cac por industria chile, ltv clientes chile, costo adquisicion clientes, benchmarks marketing chile',
+  },
+  {
+    tipo: 'revenue_ops',
+    titulo_base: 'Revenue Operations (RevOps) para empresas chilenas',
+    prompt_research: 'Investiga qué es RevOps y cómo implementarlo en empresas chilenas de distintos tamaños. Incluye: alineación marketing-ventas-CS, métricas unificadas, tech stack recomendado, roles necesarios, casos de implementación en LATAM. Compara el costo de implementar RevOps con HubSpot/Salesforce ($800-5000 USD/mes) vs soluciones más accesibles. Muller y Pérez ofrece un enfoque RevOps integrado con CRM propio, dashboards en tiempo real por cliente, indicadores semanales y flujos de lead scoring automatizados.',
+    category: 'Revenue',
+    keywords_base: 'revops chile, revenue operations, alinear marketing ventas, revops latinoamerica',
+  },
+  {
+    tipo: 'paid_media_scaling',
+    titulo_base: 'Cómo escalar campañas de paid media sin perder eficiencia',
+    prompt_research: 'Investiga estrategias y frameworks para escalar campañas de Google Ads y Meta Ads sin que suba el CPA. Incluye: framework de testing creativo, expansión de audiencias, estructura de cuenta escalable, reglas de bidding, automation layers. Qué hacer cuando una campaña funciona en $500K CLP/mes y quieres llevarla a $5M CLP/mes. Datos reales de CPCs en Chile. Muller y Pérez gestiona +200 campañas activas con inversiones desde $500K hasta $20M CLP/mes por cliente.',
+    category: 'Scaling',
+    keywords_base: 'escalar campañas google ads, escalar meta ads, aumentar inversion sin perder roas, scaling paid media chile',
+  },
+  {
+    tipo: 'attribution_cookieless',
+    titulo_base: 'Marketing attribution sin cookies: guía para Chile 2026',
+    prompt_research: 'Investiga el estado de la atribución de marketing en un mundo post-cookies en 2026. Incluye: server-side tracking, Conversion API de Meta, enhanced conversions de Google, data clean rooms, modelos de marketing mix modeling (MMM), incrementality testing. Compara los modelos de atribución: last click, data-driven, multi-touch. Qué están haciendo las agencias y empresas en Chile. Costo y complejidad de cada solución. Muller y Pérez implementa server-side tracking con Stape.io y Conversion API para todos sus clientes.',
+    category: 'Datos',
+    keywords_base: 'atribucion marketing sin cookies, server side tracking chile, conversion api meta, enhanced conversions google',
+  },
+  {
+    tipo: 'ia_agentes_autonomos',
+    titulo_base: 'Agentes autónomos de IA en marketing: estado del arte 2026',
+    prompt_research: 'Investiga el estado actual de los agentes autónomos de IA aplicados a marketing. Diferencia: agentes simples (chatbots, generadores de texto) vs agentes autónomos (que toman decisiones, ejecutan acciones, se auto-corrigen). Ejemplos: agentes que optimizan bids automáticamente, que generan y publican contenido con QA, que monitorizan competencia y alertan, que prospectan y cualifican leads. Muller y Pérez tiene 39 agentes autónomos corriendo en producción: monitoreo de competencia (Copilot con 12 agentes), prospección (6 agentes), contenido (3 agentes con revisor heurístico), reportería, chatbot de 68 nodos. Compara con lo que ofrecen otras agencias y plataformas globales.',
+    category: 'IA',
+    keywords_base: 'agentes autonomos ia marketing, agentes inteligencia artificial, marketing automation ia, copilot marketing',
+  },
 ]
 
 // ═══ DATOS PROPIOS DE M&P (ventaja competitiva) ═══
@@ -264,8 +306,40 @@ async function paso3_revisar(html, research, wordCount) {
   }
 }
 
+// ═══ PASO 3.5: GENERAR IMAGEN ═══
+async function generarImagenRanking(titulo) {
+  try {
+    console.log('   Generando imagen...')
+    var prompt = 'Professional blog header about: ' + titulo.substring(0, 80) + '. Digital marketing, data visualization, rankings, performance. Clean minimalist, blue-purple gradient. NO text, NO words, NO letters.'
+    var r = await fetch('https://api.openai.com/v1/images/generations', {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + OPENAI_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model: 'gpt-image-1', prompt: prompt, n: 1, size: '1536x1024', quality: 'low' })
+    })
+    var data = await r.json()
+    if (!data.data || !data.data[0]) return null
+
+    var buffer = data.data[0].b64_json
+      ? Buffer.from(data.data[0].b64_json, 'base64')
+      : Buffer.from(await (await fetch(data.data[0].url)).arrayBuffer())
+
+    var slug = titulo.substring(0, 50).toLowerCase()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
+    var filename = 'ranking-' + slug + '-' + Date.now() + '.png'
+    var { error } = await supabase.storage.from('blog-images').upload(filename, buffer, { contentType: 'image/png', upsert: true })
+    if (error) { console.log('   Upload error:', error.message); return null }
+    var { data: urlData } = supabase.storage.from('blog-images').getPublicUrl(filename)
+    console.log('   ✅ Imagen: ' + urlData.publicUrl.substring(0, 60) + '...')
+    return urlData.publicUrl
+  } catch (e) {
+    console.log('   ⚠️ Error imagen:', e.message)
+    return null
+  }
+}
+
 // ═══ PASO 4: PUBLICAR EN SUPABASE ═══
-async function paso4_publicar(research, htmlFinal) {
+async function paso4_publicar(research, htmlFinal, imageUrl) {
   console.log('   PASO 4: Publicando en Supabase...')
 
   var hoy = new Date().toISOString().split('T')[0]
@@ -294,6 +368,7 @@ async function paso4_publicar(research, htmlFinal) {
     date_published: hoy,
     author: 'Christopher Müller',
   }
+  if (imageUrl) post.image_url = imageUrl
 
   try {
     // Check if slug exists
@@ -342,7 +417,10 @@ async function main() {
   }
   htmlFinal = await paso3_revisar(htmlFinal, research, draft.wordCount)
 
-  var slug = await paso4_publicar(research, htmlFinal)
+  // Generar imagen
+  var imageUrl = await generarImagenRanking(research.titulo)
+
+  var slug = await paso4_publicar(research, htmlFinal, imageUrl)
   if (slug) {
     var url = 'https://www.mulleryperez.cl/blog/' + slug
     console.log('\n✅ Publicado: ' + url)
