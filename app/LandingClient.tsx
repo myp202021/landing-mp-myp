@@ -32,9 +32,9 @@ import dynamic from 'next/dynamic'
 import YouTubeLite from '@/components/YouTubeLite'
 import { ClientLogosGrid } from '@/components/ClientLogos'
 
-const PortfolioGrid = dynamic(() => import('@/components/PortfolioGrid'), {
+const PortfolioBrochure = dynamic(() => import('@/components/PortfolioBrochure'), {
   ssr: false,
-  loading: () => <div className="py-20 text-center text-white/40">Cargando portfolio...</div>,
+  loading: () => <div className="py-20 text-center text-white/40 bg-[#050510]">Cargando portfolio...</div>,
 })
 
 export default function LandingClient() {
@@ -2009,7 +2009,7 @@ export default function LandingClient() {
       <ClientLogosGrid />
 
       {/* Portfolio — debajo de clientes */}
-      <PortfolioGrid />
+      <PortfolioBrochure />
 
       {/* Testimonios — después de portfolio, antes de contacto */}
       <section id="testimonios" className="py-20 px-6 bg-gradient-to-b from-gray-50 to-white" aria-labelledby="testimonios-titulo">
