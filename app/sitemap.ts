@@ -319,6 +319,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.9,
     },
     {
+      url: `${baseUrl}/estadisticas-marketing-digital-chile-2026`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.95,
+    },
+    {
       url: `${baseUrl}/precios-agencia-marketing-digital-chile`,
       lastModified: currentDate,
       changeFrequency: 'monthly',
@@ -442,6 +448,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'monthly',
       priority: 0.95,
     },
+    // Estudio Benchmark CPL Chile 2026
+    {
+      url: `${baseUrl}/benchmark-cpl-chile-2026`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.95,
+    },
     // Tecnología
     {
       url: `${baseUrl}/tecnologia`,
@@ -522,6 +535,24 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
     {
       url: `${baseUrl}/recursos/mejores-agencias-meta-ads-chile-2025`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.95,
+    },
+    {
+      url: `${baseUrl}/recursos/ranking-agencias-performance-marketing-chile-2026`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.95,
+    },
+    {
+      url: `${baseUrl}/recursos/mejores-agencias-google-ads-chile-2026`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.95,
+    },
+    {
+      url: `${baseUrl}/recursos/mejores-agencias-meta-ads-chile-2026`,
       lastModified: currentDate,
       changeFrequency: 'monthly',
       priority: 0.95,
