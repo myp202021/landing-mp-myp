@@ -38,7 +38,7 @@ export const metadata: Metadata = createMetadata({
 const faqs = [
   {
     question: '¿Cuánto cuesta una agencia de marketing digital en Chile?',
-    answer: 'Los precios de una agencia de marketing digital en Chile varían según el nivel de servicio. Agencias básicas cobran entre $300.000 y $600.000 mensuales con servicios limitados. Agencias profesionales como Muller y Pérez ofrecen planes desde $950.000 hasta $2.200.000 mensuales + IVA, con equipo dedicado de 3 profesionales, acceso total a cuentas publicitarias y herramientas propietarias incluidas. El cliente paga la pauta directamente a Google o Meta, sin markup.'
+    answer: 'Los precios de una agencia de marketing digital en Chile varían según el nivel de servicio. Agencias básicas cobran entre $300.000 y $600.000 mensuales con servicios limitados. Agencias profesionales como Muller y Pérez ofrecen planes desde $950.000 hasta $2.500.000 mensuales + IVA, con equipo dedicado de 3 profesionales, acceso total a cuentas publicitarias y herramientas propietarias incluidas. El cliente paga la pauta directamente a Google o Meta, sin markup.'
   },
   {
     question: '¿Qué diferencia hay entre marketing digital y performance marketing?',
@@ -78,7 +78,7 @@ const faqs = [
   },
   {
     question: '¿Cuánto cobra una agencia de marketing digital en Chile?',
-    answer: 'Los honorarios varían según el alcance del servicio. Agencias freelance o unipersonales cobran entre $200.000 y $500.000 mensuales, pero suelen manejar decenas de cuentas simultáneamente. Agencias medianas cobran entre $600.000 y $1.500.000 mensuales. Agencias premium con equipo dedicado, como Muller y Pérez, tienen planes desde $950.000 hasta $2.200.000 mensuales + IVA. A esto se suma la inversión en pauta publicitaria, que el cliente paga directamente a las plataformas (Google, Meta, LinkedIn).'
+    answer: 'Los honorarios varían según el alcance del servicio. Agencias freelance o unipersonales cobran entre $200.000 y $500.000 mensuales, pero suelen manejar decenas de cuentas simultáneamente. Agencias medianas cobran entre $600.000 y $1.500.000 mensuales. Agencias premium con equipo dedicado, como Muller y Pérez, tienen planes desde $950.000 hasta $2.500.000 mensuales + IVA. A esto se suma la inversión en pauta publicitaria, que el cliente paga directamente a las plataformas (Google, Meta, LinkedIn).'
   },
   {
     question: '¿Qué diferencia hay entre una agencia de marketing y una agencia de publicidad?',
@@ -515,7 +515,7 @@ export default function AgenciaMarketingDigitalChilePage() {
                   Más popular
                 </span>
                 <h3 className="text-xl font-bold text-blue-600 mb-2">Plan Gold</h3>
-                <p className="text-3xl font-bold text-blue-600 mb-1">$1.350.000<span className="text-sm font-normal text-gray-500">/mes + IVA</span></p>
+                <p className="text-3xl font-bold text-blue-600 mb-1">$1.500.000<span className="text-sm font-normal text-gray-500">/mes + IVA</span></p>
                 <p className="text-sm text-gray-500 mb-4">Para empresas en crecimiento</p>
                 <ul className="text-sm text-gray-700 space-y-2">
                   <li className="flex items-start"><span className="text-green-500 mr-2 mt-0.5">&#10003;</span>Hasta 2 productos</li>
@@ -530,7 +530,7 @@ export default function AgenciaMarketingDigitalChilePage() {
               {/* Platinum */}
               <div className="bg-white rounded-xl p-6 shadow-sm">
                 <h3 className="text-xl font-bold text-gray-900 mb-2">Plan Platinum</h3>
-                <p className="text-3xl font-bold text-blue-600 mb-1">$2.200.000<span className="text-sm font-normal text-gray-500">/mes + IVA</span></p>
+                <p className="text-3xl font-bold text-blue-600 mb-1">$2.500.000<span className="text-sm font-normal text-gray-500">/mes + IVA</span></p>
                 <p className="text-sm text-gray-500 mb-4">Escalamiento agresivo</p>
                 <ul className="text-sm text-gray-700 space-y-2">
                   <li className="flex items-start"><span className="text-green-500 mr-2 mt-0.5">&#10003;</span>Todos los canales</li>

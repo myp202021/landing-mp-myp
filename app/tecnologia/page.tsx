@@ -585,8 +585,8 @@ export default function TecnologiaPage() {
           <div className="grid md:grid-cols-3 gap-6 mb-16">
             {[
               { name: 'Silver', price: '$950.000', color: 'border-slate-500/30', tc: 'text-slate-400', desc: 'Empresa que parte de cero. Instalar medición, primeras campañas, validar mercado.' },
-              { name: 'Gold', price: '$1.350.000', color: 'border-amber-500/30', tc: 'text-amber-400', desc: 'Escalar campañas. Multicanal, remarketing, contenido, monitor de competencia.' },
-              { name: 'Platinum', price: '$2.200.000', color: 'border-blue-500/30', tc: 'text-blue-400', desc: 'Operación completa: SEO + Paid + Social + CRM + Monitor + Dashboard dedicado.' },
+              { name: 'Gold', price: '$1.500.000', color: 'border-amber-500/30', tc: 'text-amber-400', desc: 'Escalar campañas. Multicanal, remarketing, contenido, monitor de competencia.' },
+              { name: 'Platinum', price: '$2.500.000', color: 'border-blue-500/30', tc: 'text-blue-400', desc: 'Operación completa: SEO + Paid + Social + CRM + Monitor + Dashboard dedicado.' },
             ].map(p => (
               <div key={p.name} className={`bg-white/[0.03] border ${p.color} rounded-2xl p-8`}>
                 <div className={`text-lg font-bold ${p.tc}`}>{p.name}</div>

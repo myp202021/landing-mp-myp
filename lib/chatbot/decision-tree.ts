@@ -2663,11 +2663,9 @@ Todos incluyen 7 dias gratis. Sin tarjeta. Se cancela solo.`,
 
 | Plan | Precio/mes | Campanas | Contenidos |
 |------|------------|----------|------------|
-| Campanas | $490.000 | 2 | - |
-| Contenidos | $650.000 | - | 20 |
 | **Silver** | **$950.000** | **2** | **20** |
-| Gold | $1.350.000 | 4 | 28 |
-| Platinum | $2.200.000 | 6 | 44 |
+| Gold | $1.500.000 | 4 | 28 |
+| Platinum | $2.500.000 | 6 | 44 |
 
 *Precios + IVA | Sin contratos | Inversion en ads adicional*`,
     options: [
@@ -2728,7 +2726,7 @@ El mas popular. Campanas + contenido organico.
   'plan_gold': {
     id: 'plan_gold',
     type: 'menu',
-    text: `**Plan Gold - $1.350.000 + IVA/mes** 🥇
+    text: `**Plan Gold - $1.500.000 + IVA/mes** 🥇
 
 Mas volumen + email marketing.
 
@@ -2773,7 +2771,7 @@ Mas volumen + email marketing.
   'plan_platinum': {
     id: 'plan_platinum',
     type: 'menu',
-    text: `**Plan Platinum - $2.200.000 + IVA/mes** 💎
+    text: `**Plan Platinum - $2.500.000 + IVA/mes** 💎
 
 Todo incluido. Presencia digital intensiva.
 
@@ -2815,16 +2813,16 @@ Todo incluido. Presencia digital intensiva.
     type: 'menu',
     text: `**Comparacion de Planes M&P**
 
-| | Campanas | Silver | Gold | Platinum |
-|---|:---:|:---:|:---:|:---:|
-| **Precio** | $490K | $950K | $1.35M | $2.2M |
-| **Campanas ads** | 2 | 2 | 4 | 6 |
-| **Piezas graficas** | 6 | 6 | 6 | 10 |
-| **Contenidos** | - | 20 | 28 | 44 |
-| **Grabacion** | - | 1/2 dia | 1/2 dia | 1 dia |
-| **Email marketing** | - | - | 2/mes | 4/mes |
-| **Influencers** | - | - | - | ✓ |
-| **Reuniones** | Mensual | Mensual | Quincenal | Quincenal |
+| | Silver | Gold | Platinum |
+|---|:---:|:---:|:---:|
+| **Precio** | $950K | $1.5M | $2.5M |
+| **Campanas ads** | 2 | 4 | 6 |
+| **Piezas graficas** | 6 | 6 | 10 |
+| **Contenidos** | 20 | 28 | 44 |
+| **Grabacion** | 1/2 dia | 1/2 dia | 1 dia |
+| **Email marketing** | - | 2/mes | 4/mes |
+| **Influencers** | - | - | ✓ |
+| **Reuniones** | Mensual | Quincenal | Quincenal |
 
 **TODOS incluyen:**
 ✅ Diagnostico inicial

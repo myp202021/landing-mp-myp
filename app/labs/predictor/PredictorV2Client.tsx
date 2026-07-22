@@ -2081,7 +2081,7 @@ Generado en: https://www.mulleryperez.cl/labs/predictor
                     <Star className="w-6 h-6" />
                   </div>
                   <span className="font-bold">Ver Planes</span>
-                  <span className="text-xs text-purple-100">Desde $490k/mes</span>
+                  <span className="text-xs text-purple-100">Desde $950k/mes</span>
                 </a>
               </div>
 

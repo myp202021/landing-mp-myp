@@ -74,8 +74,8 @@ const testSessions = [
       { role: 'assistant', content: 'Hola, soy el asistente de M&P...', node_id: 'root' },
       { role: 'user', content: 'Planes y servicios', node_id: 'root', option_selected: 'planes' },
       { role: 'assistant', content: 'Tenemos 5 planes...', node_id: 'planes_menu' },
-      { role: 'user', content: 'Plan Gold ($1.350.000)', node_id: 'planes_menu', option_selected: 'plan_gold' },
-      { role: 'assistant', content: 'Plan Gold - $1.350.000 + IVA/mes...', node_id: 'plan_gold' },
+      { role: 'user', content: 'Plan Gold ($1.500.000)', node_id: 'planes_menu', option_selected: 'plan_gold' },
+      { role: 'assistant', content: 'Plan Gold - $1.500.000 + IVA/mes...', node_id: 'plan_gold' },
       { role: 'user', content: 'Agendar reunion', node_id: 'plan_gold', option_selected: 'agendar' },
       { role: 'assistant', content: 'Listo! Tu solicitud fue enviada...', node_id: 'agendar_confirmacion' }
     ]

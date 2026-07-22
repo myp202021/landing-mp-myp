@@ -125,7 +125,7 @@ DATOS REALES DE MULLER Y PÉREZ (M&P) para inyectar como contexto de autoridad:
 - Clientes atendidos: inmobiliarias, e-commerce, SaaS, educación, salud, transporte, servicios profesionales
 - Herramientas propias: Termómetro Marketing Digital Chile (índice semanal de CPC por industria), dashboard de competencia, sistema de reportería automatizada con IA
 - Modelo: fee fijo mensual, el cliente paga pauta directo a Google/Meta
-- Planes desde $950.000 CLP + IVA/mes (Silver) hasta $2.200.000 CLP + IVA/mes (Platinum)
+- Planes desde $950.000 CLP + IVA/mes (Silver) hasta $2.500.000 CLP + IVA/mes (Platinum)
 - Equipo: Paid Media Planner, Publicista, Diseñador por cada cuenta
 - Tecnología: dashboards en tiempo real, reportes automatizados, monitoreo de competencia con IA
 - Resultados promedio: ROAS 4-8x en e-commerce, CPL 30-50% bajo benchmark industria, calificación leads >70%

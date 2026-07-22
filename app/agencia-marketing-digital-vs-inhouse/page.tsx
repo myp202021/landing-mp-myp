@@ -36,7 +36,7 @@ const jsonLd = {
           name: '¿Es más barato contratar una agencia o un equipo in-house?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'Depende del tamaño. Un equipo mínimo in-house (2 personas) cuesta ~$3.5M CLP/mes en sueldos + herramientas. Una agencia parte desde $750K-1.5M CLP/mes. Para presupuestos bajo $5M/mes en ads, generalmente la agencia es más costo-efectiva.',
+            text: 'Depende del tamaño. Un equipo mínimo in-house (2 personas) cuesta ~$3.5M CLP/mes en sueldos + herramientas. Una agencia parte desde $950K-2.5M CLP/mes. Para presupuestos bajo $5M/mes en ads, generalmente la agencia es más costo-efectiva.',
           },
         },
         {
@@ -152,7 +152,7 @@ export default function AgenciaVsInhousePage() {
                       <Building2 className="w-8 h-8 text-blue-600" />
                       <h3 className="text-lg font-bold text-gray-900">Agencia Externa</h3>
                     </div>
-                    <div className="text-2xl font-bold text-blue-600 mb-2">$750K - $2M/mes</div>
+                    <div className="text-2xl font-bold text-blue-600 mb-2">$950K - $2.5M/mes</div>
                     <p className="text-sm text-gray-600 mb-4">Fee de gestión típico</p>
                     <ul className="space-y-2 text-sm text-gray-700">
                       <li className="flex items-start gap-2">
@@ -255,7 +255,7 @@ export default function AgenciaVsInhousePage() {
                     </tr>
                     <tr className="bg-blue-50 font-bold">
                       <td className="px-6 py-4">TOTAL MENSUAL</td>
-                      <td className="px-6 py-4 text-center text-blue-600">$750K - $2M</td>
+                      <td className="px-6 py-4 text-center text-blue-600">$950K - $2.5M</td>
                       <td className="px-6 py-4 text-center text-green-600">$3.4M</td>
                       <td className="px-6 py-4 text-center text-green-600">$7.2M</td>
                     </tr>
@@ -468,7 +468,7 @@ export default function AgenciaVsInhousePage() {
                 <div className="bg-white p-6 rounded-xl shadow-sm">
                   <h3 className="font-bold text-gray-900 mb-2">¿Es más barato agencia o in-house?</h3>
                   <p className="text-gray-600 text-sm">
-                    Depende del tamaño. Equipo mínimo in-house cuesta ~$3.5M/mes. Agencia parte desde $750K-1.5M/mes.
+                    Depende del tamaño. Equipo mínimo in-house cuesta ~$3.5M/mes. Agencia parte desde $950K-2.5M/mes.
                     <strong> Para presupuestos bajo $5M/mes en ads, la agencia es más costo-efectiva.</strong>
                   </p>
                 </div>

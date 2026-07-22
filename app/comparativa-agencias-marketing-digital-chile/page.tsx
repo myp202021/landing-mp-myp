@@ -109,7 +109,7 @@ export default function ComparativaAgenciasPage() {
                         <span className="font-bold text-blue-900">Muller y Pérez</span>
                       </div>
                     </td>
-                    <td className="p-4 text-center font-semibold">$950k - $2.2M</td>
+                    <td className="p-4 text-center font-semibold">$950k - $2.5M</td>
                     <td className="p-4 text-center"><span className="text-green-600 font-semibold">3 dedicados</span></td>
                     <td className="p-4 text-center"><span className="text-green-600">✓ Full</span></td>
                     <td className="p-4 text-center"><span className="text-green-600">Semanal</span></td>
@@ -192,7 +192,7 @@ export default function ComparativaAgenciasPage() {
                     <span className="font-bold text-blue-600">Muller y Pérez</span>
                     <p className="text-sm text-gray-600">Performance Marketing con equipo dedicado</p>
                   </div>
-                  <span className="text-xl font-bold">$950k - $2.2M</span>
+                  <span className="text-xl font-bold">$950k - $2.5M</span>
                 </div>
                 <div className="bg-white rounded-xl p-4 flex items-center justify-between">
                   <div>

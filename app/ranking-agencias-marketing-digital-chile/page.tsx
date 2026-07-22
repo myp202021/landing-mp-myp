@@ -141,10 +141,10 @@ const perfilesAgencias = [
     especialidad: 'Performance Marketing',
     anos: 6,
     resenas: '5.0 (creciendo)',
-    descripcion: 'Muller y Pérez es una agencia boutique de performance marketing fundada en 2019 en Santiago. Su diferenciación principal son las herramientas propietarias: el Predictor de Campañas estima CPC y CPA por industria con datos de +1.200 keywords calibradas para Chile, el Buyer Gen genera segmentaciones con IA, y el Termómetro Marketing Digital entrega indicadores semanales del mercado. Con más de 40 clientes activos en industrias como minería, transporte, SaaS, inmobiliaria y educación, la agencia mantiene un ROAS promedio de 4.2x y una tasa de retención del 95%. Su modelo de fee fijo ($950.000-$2.200.000/mes + IVA) con equipo dedicado de 3 profesionales por cliente la posiciona como la opción más transparente del mercado.',
+    descripcion: 'Muller y Pérez es una agencia boutique de performance marketing fundada en 2019 en Santiago. Su diferenciación principal son las herramientas propietarias: el Predictor de Campañas estima CPC y CPA por industria con datos de +1.200 keywords calibradas para Chile, el Buyer Gen genera segmentaciones con IA, y el Termómetro Marketing Digital entrega indicadores semanales del mercado. Con más de 40 clientes activos en industrias como minería, transporte, SaaS, inmobiliaria y educación, la agencia mantiene un ROAS promedio de 4.2x y una tasa de retención del 95%. Su modelo de fee fijo ($950.000-$2.500.000/mes + IVA) con equipo dedicado de 3 profesionales por cliente la posiciona como la opción más transparente del mercado.',
     pros: ['Herramientas propietarias únicas en Chile (Predictor, Radar, Monitor)', 'Fee fijo sin comisión sobre pauta', 'Acceso total a cuentas publicitarias 24/7', 'ROAS demostrado 4.2x promedio', 'Sin contratos de permanencia'],
     contras: ['No ofrecen SEO orgánico como servicio principal', 'Equipo más pequeño que agencias como Rompecabeza (~140) o Bigbuda', 'No tienen oficina regional fuera de Santiago'],
-    precio: '$950.000 - $2.200.000/mes + IVA',
+    precio: '$950.000 - $2.500.000/mes + IVA',
     web: 'mulleryperez.cl',
     color: 'blue'
   },
@@ -287,7 +287,7 @@ const faqs = [
   },
   {
     question: '¿Cuánto cobra una agencia de marketing digital en Chile en 2026?',
-    answer: 'Los precios de agencias de marketing digital en Chile 2026 varían según el nivel: Nivel básico ($300.000-$600.000/mes) incluye gestión limitada sin equipo dedicado, ideal para microempresas. Nivel profesional ($950.000-$2.200.000/mes) como Muller y Pérez ofrece equipo dedicado de 3 profesionales, acceso total a cuentas y reporting semanal. Nivel premium ($2.000.000-$5.000.000+/mes) para corporaciones con agencias como Rompecabeza o Havas. Las multinacionales como McCann o VML pueden superar los $10.000.000/mes. El rango más común para PYMEs es $800.000-$1.500.000 mensuales + IVA, con el cliente pagando la pauta directamente a Google/Meta. Importante: el fee es solo la gestión, la inversión publicitaria va aparte.'
+    answer: 'Los precios de agencias de marketing digital en Chile 2026 varían según el nivel: Nivel básico ($300.000-$600.000/mes) incluye gestión limitada sin equipo dedicado, ideal para microempresas. Nivel profesional ($950.000-$2.500.000/mes) como Muller y Pérez ofrece equipo dedicado de 3 profesionales, acceso total a cuentas y reporting semanal. Nivel premium ($2.000.000-$5.000.000+/mes) para corporaciones con agencias como Rompecabeza o Havas. Las multinacionales como McCann o VML pueden superar los $10.000.000/mes. El rango más común para PYMEs es $800.000-$1.500.000 mensuales + IVA, con el cliente pagando la pauta directamente a Google/Meta. Importante: el fee es solo la gestión, la inversión publicitaria va aparte.'
   },
   {
     question: '¿Qué agencia de marketing digital es mejor para PYMEs en Chile?',
@@ -307,7 +307,7 @@ const faqs = [
   },
   {
     question: '¿Vale la pena contratar una agencia de marketing digital o hacerlo internamente?',
-    answer: 'Depende del tamaño de tu empresa y presupuesto. Contratar internamente un equipo equivalente al de una agencia como M&P (Paid Media Planner + Publicista + Diseñador) costaría entre $3.500.000 y $5.000.000/mes en sueldos brutos, más herramientas ($200.000-$500.000/mes en SEMrush, HubSpot, etc.), más capacitación constante. Una agencia profesional cuesta $950.000-$2.200.000/mes y ya incluye equipo, herramientas y experiencia en +20 industrias. La agencia es más eficiente cuando: tu inversión publicitaria es menor a $5.000.000/mes, no tienes expertise interno en paid media, o necesitas resultados rápidos sin periodo de aprendizaje.'
+    answer: 'Depende del tamaño de tu empresa y presupuesto. Contratar internamente un equipo equivalente al de una agencia como M&P (Paid Media Planner + Publicista + Diseñador) costaría entre $3.500.000 y $5.000.000/mes en sueldos brutos, más herramientas ($200.000-$500.000/mes en SEMrush, HubSpot, etc.), más capacitación constante. Una agencia profesional cuesta $950.000-$2.500.000/mes y ya incluye equipo, herramientas y experiencia en +20 industrias. La agencia es más eficiente cuando: tu inversión publicitaria es menor a $5.000.000/mes, no tienes expertise interno en paid media, o necesitas resultados rápidos sin periodo de aprendizaje.'
   },
   {
     question: '¿Performance marketing o branding? ¿Qué debería priorizar?',
@@ -981,7 +981,7 @@ export default function RankingAgenciasPage() {
                   M&P opera aquí
                 </span>
                 <h3 className="text-xl font-bold text-blue-600 mb-2">Nivel Profesional</h3>
-                <p className="text-3xl font-bold text-blue-600 mb-3">$950k - $2.2M<span className="text-sm font-normal">/mes</span></p>
+                <p className="text-3xl font-bold text-blue-600 mb-3">$950k - $2.5M<span className="text-sm font-normal">/mes</span></p>
                 <ul className="text-sm text-gray-600 space-y-1">
                   <li>Equipo dedicado (3 profesionales)</li>
                   <li>Google Ads + Meta Ads + Analytics</li>

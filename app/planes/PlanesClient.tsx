@@ -35,7 +35,7 @@ const planes = [
   {
     id: 'gold',
     nombre: 'Plan Gold',
-    precio: 'Desde $1.350.000',
+    precio: 'Desde $1.500.000',
     descripcion: 'Estrategia completa con email marketing y gestión web',
     icon: Star,
     color: 'yellow',
@@ -61,7 +61,7 @@ const planes = [
   {
     id: 'platinum',
     nombre: 'Plan Platinum',
-    precio: 'Contactar',
+    precio: 'Desde $2.500.000',
     descripcion: 'Máximo rendimiento con gestión de influencers y soporte premium',
     icon: Crown,
     color: 'gradient',
@@ -196,7 +196,7 @@ export default function PlanesClient() {
                     {/* Precio */}
                     <div className="mb-6">
                       <div className="text-3xl font-black text-gray-900">{plan.precio}</div>
-                      {!isPlatinum && <p className="text-sm text-gray-500 mt-1">+ IVA · por mes</p>}
+                      <p className="text-sm text-gray-500 mt-1">+ IVA · por mes</p>
                     </div>
 
                     {/* CTA Button */}
@@ -209,7 +209,7 @@ export default function PlanesClient() {
                       rel="noopener noreferrer"
                       className={`block w-full text-center ${getColorClasses(plan.color, 'bg')} ${getColorClasses(plan.color, 'hover')} text-white font-bold py-4 rounded-xl transition-all hover:scale-105 shadow-lg mb-6`}
                     >
-                      {isPlatinum ? 'Contactar' : 'Solicitar Información'}
+                      Solicitar Información
                     </a>
 
                     {/* Lo que incluye */}
@@ -326,8 +326,8 @@ export default function PlanesClient() {
                 <tr className="bg-gray-100">
                   <td className="px-6 py-4 font-bold">Precio Mensual</td>
                   <td className="px-6 py-4 text-center font-bold text-cyan-600">Desde $950K</td>
-                  <td className="px-6 py-4 text-center font-bold text-yellow-600 bg-yellow-100">Desde $1.35M</td>
-                  <td className="px-6 py-4 text-center font-bold text-purple-600">Contactar</td>
+                  <td className="px-6 py-4 text-center font-bold text-yellow-600 bg-yellow-100">Desde $1.5M</td>
+                  <td className="px-6 py-4 text-center font-bold text-purple-600">Desde $2.5M</td>
                 </tr>
               </tbody>
             </table>

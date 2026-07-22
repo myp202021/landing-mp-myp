@@ -78,7 +78,7 @@ export default function AgenciaMarketingDigitalSantiago2026() {
         name: '¿Cuánto cuesta una agencia de marketing digital en Santiago 2026?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'En Santiago 2026, una agencia de marketing digital profesional cobra entre $950.000 CLP y $2.000.000 CLP mensuales + IVA por el fee de gestión (sin incluir inversión publicitaria). Agencias low-cost cobran $200k-$400k pero con servicios limitados. Muller y Pérez ofrece 3 planes: Silver ($950k), Gold ($1.350.000), Platinum ($2.2M), todos con equipo dedicado de 3 profesionales.'
+          text: 'En Santiago 2026, una agencia de marketing digital profesional cobra entre $950.000 CLP y $2.000.000 CLP mensuales + IVA por el fee de gestión (sin incluir inversión publicitaria). Agencias low-cost cobran $200k-$400k pero con servicios limitados. Muller y Pérez ofrece 3 planes: Silver ($950k), Gold ($1.500.000), Platinum ($2.5M), todos con equipo dedicado de 3 profesionales.'
         }
       },
       {
@@ -325,8 +325,8 @@ export default function AgenciaMarketingDigitalSantiago2026() {
               <p className="text-blue-900 font-bold text-lg mb-3">💰 Precios Muller y Pérez 2026:</p>
               <ul className="space-y-3 text-gray-700">
                 <li><strong>Plan Silver:</strong> $950.000 CLP + IVA/mes - 2 campañas, 16 contenidos orgánicos, equipo dedicado 3 profesionales</li>
-                <li><strong>Plan Gold:</strong> $1.350.000 CLP + IVA/mes - 4 campañas, 28 contenidos orgánicos, email marketing incluido</li>
-                <li><strong>Plan Platinum:</strong> $2.200.000 CLP + IVA/mes - 6 campañas, 44 contenidos orgánicos, gestión de influencers</li>
+                <li><strong>Plan Gold:</strong> $1.500.000 CLP + IVA/mes - 4 campañas, 28 contenidos orgánicos, email marketing incluido</li>
+                <li><strong>Plan Platinum:</strong> $2.500.000 CLP + IVA/mes - 6 campañas, 44 contenidos orgánicos, gestión de influencers</li>
               </ul>
               <p className="text-gray-600 text-sm mt-4 italic">
                 Nota: La inversión publicitaria (presupuesto en Google Ads, Meta Ads) va aparte y la maneja directamente el cliente. Sin contratos de permanencia.
