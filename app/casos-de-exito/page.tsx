@@ -5,7 +5,7 @@ import SiteHeader from '@/components/SiteHeader'
 export const metadata: Metadata = {
   title: 'Casos de Éxito Marketing Digital Chile 2026 | Muller y Pérez',
   description:
-    'Resultados reales de clientes de Muller y Pérez. CPL reducido 65%, ROAS de 9x, +300 leads/mes. Casos verificables en Google Ads y Meta Ads.',
+    'Resultados reales de clientes de Muller y Pérez. 5 casos de éxito: CPL -65%, CPA -95%, SEO #1, dashboards en tiempo real y automatización IA. Casos verificables.',
   keywords: [
     'casos de exito marketing digital chile',
     'resultados agencia marketing',
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Casos de Éxito Marketing Digital Chile 2026 | Muller y Pérez',
     description:
-      'Resultados reales de clientes de Muller y Pérez. CPL reducido 65%, ROAS de 9x, +300 leads/mes.',
+      'Resultados reales de clientes de Muller y Pérez. 5 casos de éxito: CPL -65%, CPA -95%, SEO #1, dashboards en tiempo real y automatización IA.',
     url: 'https://www.mulleryperez.cl/casos-de-exito',
     siteName: 'Muller y Pérez',
     locale: 'es_CL',
@@ -94,8 +94,8 @@ export default function CasosDeExitoPage() {
             </span>
           </h1>
           <p className="text-lg md:text-xl text-blue-200/80 max-w-3xl mx-auto mb-8">
-            Datos reales extraídos directamente de Google Ads y Meta Ads.
-            Sin maquillaje, sin promedios inflados.
+            5 casos reales: pauta digital, SEO, dashboards y automatización IA.
+            Datos extraídos directamente de las plataformas. Sin maquillaje.
           </p>
           <p className="text-sm text-blue-300/50 max-w-2xl mx-auto italic">
             Por confidencialidad no compartimos nombres, pero los datos son verificables
@@ -304,6 +304,285 @@ export default function CasosDeExitoPage() {
         </div>
       </section>
 
+      {/* Case Study 3 — WMS para Latinoamérica */}
+      <section className="pb-20 px-6">
+        <div className="max-w-6xl mx-auto">
+          <div className="bg-gradient-to-br from-slate-800/80 to-slate-900/80 border border-slate-700/50 rounded-2xl overflow-hidden">
+            {/* Header */}
+            <div className="bg-gradient-to-r from-emerald-600/20 to-green-600/20 border-b border-slate-700/50 px-8 py-6">
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <div>
+                  <p className="text-emerald-400 text-sm font-bold uppercase tracking-wider mb-1">
+                    Cliente C
+                  </p>
+                  <h2 className="text-2xl md:text-3xl font-bold text-white">
+                    WMS para Latinoamérica
+                  </h2>
+                  <p className="text-emerald-200/60 text-sm mt-1">
+                    Software logístico — WMS para almacenes y centros de distribución
+                  </p>
+                </div>
+                <div className="flex gap-4 text-sm">
+                  <div className="bg-slate-800 rounded-lg px-4 py-2 border border-slate-700">
+                    <p className="text-emerald-300/60">Duración</p>
+                    <p className="text-white font-bold">8 meses</p>
+                  </div>
+                  <div className="bg-slate-800 rounded-lg px-4 py-2 border border-slate-700">
+                    <p className="text-emerald-300/60">Tipo</p>
+                    <p className="text-white font-bold">SEO + Blog IA</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Key Metrics */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-px bg-slate-700/30">
+              <div className="bg-slate-900 p-6 md:p-8 text-center">
+                <p className="text-4xl md:text-5xl font-black text-emerald-400 mb-1">
+                  113
+                </p>
+                <p className="text-emerald-200/60 text-sm">Posts por agente IA</p>
+                <p className="text-white/40 text-xs mt-1">Daily automated</p>
+              </div>
+              <div className="bg-slate-900 p-6 md:p-8 text-center">
+                <p className="text-4xl md:text-5xl font-black text-green-400 mb-1">
+                  #1
+                </p>
+                <p className="text-emerald-200/60 text-sm">Posición Google</p>
+                <p className="text-white/40 text-xs mt-1">&quot;mejor WMS Chile 2026&quot;</p>
+              </div>
+              <div className="bg-slate-900 p-6 md:p-8 text-center">
+                <p className="text-4xl md:text-5xl font-black text-white mb-1">
+                  4
+                </p>
+                <p className="text-emerald-200/60 text-sm">Schemas JSON-LD</p>
+                <p className="text-white/40 text-xs mt-1">Org, Software, FAQ, Web</p>
+              </div>
+              <div className="bg-slate-900 p-6 md:p-8 text-center">
+                <p className="text-4xl md:text-5xl font-black text-white mb-1">
+                  7
+                </p>
+                <p className="text-emerald-200/60 text-sm">Snippets SEO</p>
+                <p className="text-white/40 text-xs mt-1">Personalizados</p>
+              </div>
+            </div>
+
+            {/* Detail */}
+            <div className="px-8 py-8 space-y-6">
+              <h3 className="text-lg font-semibold text-white">Resultados destacados</h3>
+              <div className="grid md:grid-cols-2 gap-4">
+                <div className="bg-slate-800/50 rounded-xl p-5 border border-slate-700/50">
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="w-2 h-2 rounded-full bg-emerald-500" />
+                    <p className="text-emerald-400 text-sm font-semibold">SEO / Agentes IA</p>
+                  </div>
+                  <p className="text-white font-bold mb-1">Blog diario automatizado</p>
+                  <p className="text-emerald-200/60 text-sm">
+                    Blog automatizado L-V 7AM + ranking semanal con imagen. 113 artículos publicados sin intervención manual.
+                  </p>
+                </div>
+                <div className="bg-slate-800/50 rounded-xl p-5 border border-slate-700/50">
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="w-2 h-2 rounded-full bg-green-500" />
+                    <p className="text-green-400 text-sm font-semibold">Posicionamiento IA</p>
+                  </div>
+                  <p className="text-white font-bold mb-1">#1 en Google y motores IA</p>
+                  <p className="text-emerald-200/60 text-sm">
+                    #1 en &quot;mejor WMS Chile 2026&quot;, &quot;WMS para retail omnicanal&quot;, &quot;WMS para 3PL Chile&quot; en Google y motores de IA.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Case Study 4 — Inmobiliaria Sector Oriente */}
+      <section className="pb-20 px-6">
+        <div className="max-w-6xl mx-auto">
+          <div className="bg-gradient-to-br from-slate-800/80 to-slate-900/80 border border-slate-700/50 rounded-2xl overflow-hidden">
+            {/* Header */}
+            <div className="bg-gradient-to-r from-violet-600/20 to-purple-600/20 border-b border-slate-700/50 px-8 py-6">
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <div>
+                  <p className="text-violet-400 text-sm font-bold uppercase tracking-wider mb-1">
+                    Cliente D
+                  </p>
+                  <h2 className="text-2xl md:text-3xl font-bold text-white">
+                    Inmobiliaria Sector Oriente
+                  </h2>
+                  <p className="text-violet-200/60 text-sm mt-1">
+                    Corredora de propiedades — leads por zona/comuna en Santiago
+                  </p>
+                </div>
+                <div className="flex gap-4 text-sm">
+                  <div className="bg-slate-800 rounded-lg px-4 py-2 border border-slate-700">
+                    <p className="text-violet-300/60">Duración</p>
+                    <p className="text-white font-bold">3 meses</p>
+                  </div>
+                  <div className="bg-slate-800 rounded-lg px-4 py-2 border border-slate-700">
+                    <p className="text-violet-300/60">Tipo</p>
+                    <p className="text-white font-bold">Meta Ads + Auto</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Key Metrics */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-px bg-slate-700/30">
+              <div className="bg-slate-900 p-6 md:p-8 text-center">
+                <p className="text-4xl md:text-5xl font-black text-violet-400 mb-1">
+                  6
+                </p>
+                <p className="text-violet-200/60 text-sm">Comunas segmentadas</p>
+                <p className="text-white/40 text-xs mt-1">Las Condes, Vitacura, +4</p>
+              </div>
+              <div className="bg-slate-900 p-6 md:p-8 text-center">
+                <p className="text-4xl md:text-5xl font-black text-green-400 mb-1">
+                  95%
+                </p>
+                <p className="text-violet-200/60 text-sm">Leads incrementales</p>
+                <p className="text-white/40 text-xs mt-1">Solo 5% duplicados</p>
+              </div>
+              <div className="bg-slate-900 p-6 md:p-8 text-center">
+                <p className="text-4xl md:text-5xl font-black text-white mb-1">
+                  24h
+                </p>
+                <p className="text-violet-200/60 text-sm">Fiscalización auto</p>
+                <p className="text-white/40 text-xs mt-1">WhatsApp post-lead</p>
+              </div>
+              <div className="bg-slate-900 p-6 md:p-8 text-center">
+                <p className="text-4xl md:text-5xl font-black text-purple-400 mb-1">
+                  Real-time
+                </p>
+                <p className="text-violet-200/60 text-sm">Dashboard por zona</p>
+                <p className="text-white/40 text-xs mt-1">Inversión vs leads</p>
+              </div>
+            </div>
+
+            {/* Detail */}
+            <div className="px-8 py-8 space-y-6">
+              <h3 className="text-lg font-semibold text-white">Resultados destacados</h3>
+              <div className="grid md:grid-cols-2 gap-4">
+                <div className="bg-slate-800/50 rounded-xl p-5 border border-slate-700/50">
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="w-2 h-2 rounded-full bg-violet-500" />
+                    <p className="text-violet-400 text-sm font-semibold">Dashboard por comuna</p>
+                  </div>
+                  <p className="text-white font-bold mb-1">Inversión y leads en tiempo real</p>
+                  <p className="text-violet-200/60 text-sm">
+                    Panel conectado a Google Sheets con data consolidada de Meta Ads. Inversión y leads por zona geográfica en tiempo real.
+                  </p>
+                </div>
+                <div className="bg-slate-800/50 rounded-xl p-5 border border-slate-700/50">
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="w-2 h-2 rounded-full bg-purple-500" />
+                    <p className="text-purple-400 text-sm font-semibold">Fiscalización WhatsApp</p>
+                  </div>
+                  <p className="text-white font-bold mb-1">Seguimiento automático 24h</p>
+                  <p className="text-violet-200/60 text-sm">
+                    24 horas después de cada lead, mensaje automático al corredor preguntando si contactó. Twilio API + cron L-V 9-17h.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Case Study 5 — Legal — Recuperación de Propiedades */}
+      <section className="pb-20 px-6">
+        <div className="max-w-6xl mx-auto">
+          <div className="bg-gradient-to-br from-slate-800/80 to-slate-900/80 border border-slate-700/50 rounded-2xl overflow-hidden">
+            {/* Header */}
+            <div className="bg-gradient-to-r from-cyan-600/20 to-teal-600/20 border-b border-slate-700/50 px-8 py-6">
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <div>
+                  <p className="text-cyan-400 text-sm font-bold uppercase tracking-wider mb-1">
+                    Cliente E
+                  </p>
+                  <h2 className="text-2xl md:text-3xl font-bold text-white">
+                    Legal — Recuperación de Propiedades
+                  </h2>
+                  <p className="text-cyan-200/60 text-sm mt-1">
+                    Legal — servicio de recuperación de pie de propiedad
+                  </p>
+                </div>
+                <div className="flex gap-4 text-sm">
+                  <div className="bg-slate-800 rounded-lg px-4 py-2 border border-slate-700">
+                    <p className="text-cyan-300/60">Duración</p>
+                    <p className="text-white font-bold">5 meses</p>
+                  </div>
+                  <div className="bg-slate-800 rounded-lg px-4 py-2 border border-slate-700">
+                    <p className="text-cyan-300/60">Tipo</p>
+                    <p className="text-white font-bold">Dashboard + SEO</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Key Metrics */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-px bg-slate-700/30">
+              <div className="bg-slate-900 p-6 md:p-8 text-center">
+                <p className="text-4xl md:text-5xl font-black text-cyan-400 mb-1">
+                  22
+                </p>
+                <p className="text-cyan-200/60 text-sm">Stages del embudo</p>
+                <p className="text-white/40 text-xs mt-1">Data real de 1000+ contactos</p>
+              </div>
+              <div className="bg-slate-900 p-6 md:p-8 text-center">
+                <p className="text-4xl md:text-5xl font-black text-green-400 mb-1">
+                  CAC real
+                </p>
+                <p className="text-cyan-200/60 text-sm">Unit economics</p>
+                <p className="text-white/40 text-xs mt-1">Costo por carta enviada</p>
+              </div>
+              <div className="bg-slate-900 p-6 md:p-8 text-center">
+                <p className="text-4xl md:text-5xl font-black text-white mb-1">
+                  9
+                </p>
+                <p className="text-cyan-200/60 text-sm">Posts SEO publicados</p>
+                <p className="text-white/40 text-xs mt-1">Desde cero + schemas</p>
+              </div>
+              <div className="bg-slate-900 p-6 md:p-8 text-center">
+                <p className="text-4xl md:text-5xl font-black text-teal-400 mb-1">
+                  Embudo
+                </p>
+                <p className="text-cyan-200/60 text-sm">Funnel 5 pasos visual</p>
+                <p className="text-white/40 text-xs mt-1">Perfilamiento por caso</p>
+              </div>
+            </div>
+
+            {/* Detail */}
+            <div className="px-8 py-8 space-y-6">
+              <h3 className="text-lg font-semibold text-white">Resultados destacados</h3>
+              <div className="grid md:grid-cols-2 gap-4">
+                <div className="bg-slate-800/50 rounded-xl p-5 border border-slate-700/50">
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="w-2 h-2 rounded-full bg-cyan-500" />
+                    <p className="text-cyan-400 text-sm font-semibold">Dashboard embudo real</p>
+                  </div>
+                  <p className="text-white font-bold mb-1">22 stages inferidos de data CRM</p>
+                  <p className="text-cyan-200/60 text-sm">
+                    Conversión = confección de carta (no el lead). CAC calculado sobre la métrica que importa al negocio.
+                  </p>
+                </div>
+                <div className="bg-slate-800/50 rounded-xl p-5 border border-slate-700/50">
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="w-2 h-2 rounded-full bg-teal-500" />
+                    <p className="text-teal-400 text-sm font-semibold">Blog SEO desde cero</p>
+                  </div>
+                  <p className="text-white font-bold mb-1">Sitio sin contenido → 9 artículos</p>
+                  <p className="text-cyan-200/60 text-sm">
+                    Schemas Organization + FAQPage + GSC verificado. Blog diario automatizado configurado.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Key Takeaways */}
       <section className="pb-20 px-6">
         <div className="max-w-5xl mx-auto">
@@ -312,7 +591,7 @@ export default function CasosDeExitoPage() {
               Metodología que genera resultados
             </h2>
             <p className="text-blue-200/60 text-lg">
-              El mismo proceso aplicado en ambos casos
+              El mismo proceso aplicado en los 5 casos
             </p>
           </div>
 
