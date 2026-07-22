@@ -1,23 +1,48 @@
 import { MetadataRoute } from 'next'
 import fs from 'fs'
 import path from 'path'
+import { createClient } from '@supabase/supabase-js'
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://www.mulleryperez.cl'
   const currentDate = new Date().toISOString()
 
-  // Leer automáticamente todas las carpetas de blog
+  // Leer carpetas estáticas de blog
   const blogDir = path.join(process.cwd(), 'app', 'blog')
-  let blogPosts: string[] = []
+  let staticBlogPosts: string[] = []
 
   try {
     const entries = fs.readdirSync(blogDir, { withFileTypes: true })
-    blogPosts = entries
+    staticBlogPosts = entries
       .filter(entry => entry.isDirectory() && !entry.name.startsWith('_') && !entry.name.startsWith('['))
       .map(entry => entry.name)
   } catch (error) {
     console.warn('No se pudo leer el directorio de blog:', error)
   }
+
+  // Leer posts dinámicos de Supabase
+  let supabasePosts: { slug: string; date_published: string }[] = []
+  try {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+    if (supabaseUrl && supabaseKey) {
+      const supabase = createClient(supabaseUrl, supabaseKey)
+      const { data } = await supabase
+        .from('blog_posts')
+        .select('slug, date_published')
+        .order('date_published', { ascending: false })
+      if (data) supabasePosts = data
+    }
+  } catch (error) {
+    console.warn('No se pudo leer blog_posts de Supabase:', error)
+  }
+
+  // Combinar slugs de blog (estáticos + Supabase, sin duplicados)
+  const allBlogSlugs = new Set([
+    ...staticBlogPosts,
+    ...supabasePosts.map(p => p.slug)
+  ])
+  const blogPosts = Array.from(allBlogSlugs)
 
   // Leer automáticamente todas las herramientas de labs
   const labsDir = path.join(process.cwd(), 'app', 'labs')
