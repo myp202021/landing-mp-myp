@@ -736,9 +736,9 @@ export default function LandingClient() {
                     <div className="font-semibold">Casos de Éxito</div>
                     <div className="text-xs text-gray-500 mt-0.5">Resultados reales con datos</div>
                   </Link>
-                  <Link href="/portfolio" className="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
-                    <div className="font-semibold">Portfolio</div>
-                    <div className="text-xs text-gray-500 mt-0.5">Trabajos y piezas gráficas</div>
+                  <Link href="/brochure" className="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+                    <div className="font-semibold">Brochure</div>
+                    <div className="text-xs text-gray-500 mt-0.5">Quiénes somos y qué hacemos</div>
                   </Link>
                   <Link href="/servicios" className="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
                     <div className="font-semibold">Servicios</div>

@@ -649,10 +649,10 @@ export default function CasosDeExitoPage() {
                 Agendar Reunión Gratis
               </Link>
               <Link
-                href="/portfolio"
+                href="/brochure"
                 className="px-8 py-4 bg-white/10 backdrop-blur border border-white/20 text-white rounded-lg hover:bg-white/20 transition font-semibold"
               >
-                Ver Portfolio
+                Ver Brochure
               </Link>
             </div>
           </div>
