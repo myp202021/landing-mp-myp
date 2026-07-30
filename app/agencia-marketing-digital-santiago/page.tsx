@@ -58,7 +58,7 @@ export default function AgenciaMarketingDigitalSantiagoPage() {
   const faqSchema = createFAQPageSchema([
     {
       question: '¿Dónde está ubicada su agencia de marketing digital en Santiago?',
-      answer: 'Muller y Pérez tiene oficinas en Las Condes, Santiago. Estamos ubicados en Av Santa María 9300, Las Condes. Atendemos clientes en toda la Región Metropolitana incluyendo Las Condes, Providencia, Santiago Centro, Vitacura, Lo Barnechea, Ñuñoa y todas las comunas de Santiago.'
+      answer: 'Muller y Pérez tiene oficinas en Las Condes, Santiago. Estamos ubicados en Badajoz 100, Of 523, Las Condes. Atendemos clientes en toda la Región Metropolitana incluyendo Las Condes, Providencia, Santiago Centro, Vitacura, Lo Barnechea, Ñuñoa y todas las comunas de Santiago.'
     },
     {
       question: '¿Por qué elegir una agencia de marketing digital en Santiago vs una agencia remota?',
@@ -183,7 +183,7 @@ export default function AgenciaMarketingDigitalSantiagoPage() {
                 Oficinas en Las Condes
               </h3>
               <p className="text-gray-700 mb-4 leading-relaxed">
-                Nuestras oficinas de <strong>agencia de marketing digital</strong> están ubicadas en <strong>Av Santa María 9300, Las Condes</strong>,
+                Nuestras oficinas de <strong>agencia de marketing digital</strong> están ubicadas en <strong>Badajoz 100, Of 523, Las Condes</strong>,
                 una de las zonas más dinámicas y empresariales de Santiago. Esto nos permite:
               </p>
               <ul className="list-disc list-inside text-gray-700 space-y-2 ml-4">
@@ -523,7 +523,7 @@ export default function AgenciaMarketingDigitalSantiagoPage() {
               {[
                 {
                   q: '¿Dónde está ubicada su agencia de marketing digital en Santiago?',
-                  a: 'Muller y Pérez tiene oficinas en Las Condes, Santiago. Estamos ubicados en Av Santa María 9300, Las Condes. Atendemos clientes en toda la Región Metropolitana incluyendo Las Condes, Providencia, Santiago Centro, Vitacura, Lo Barnechea, Ñuñoa y todas las comunas de Santiago.'
+                  a: 'Muller y Pérez tiene oficinas en Las Condes, Santiago. Estamos ubicados en Badajoz 100, Of 523, Las Condes. Atendemos clientes en toda la Región Metropolitana incluyendo Las Condes, Providencia, Santiago Centro, Vitacura, Lo Barnechea, Ñuñoa y todas las comunas de Santiago.'
                 },
                 {
                   q: '¿Por qué elegir una agencia de marketing digital en Santiago vs una agencia remota?',

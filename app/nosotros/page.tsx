@@ -37,7 +37,7 @@ const aboutSchema = {
     description: 'Agencia de performance marketing especializada en Google Ads, Meta Ads y estrategias data-driven.',
     address: {
       '@type': 'PostalAddress',
-      streetAddress: 'Av Santa María 9300',
+      streetAddress: 'Badajoz 100, Of 523',
       addressLocality: 'Las Condes',
       addressRegion: 'Región Metropolitana',
       addressCountry: 'CL'
@@ -73,7 +73,7 @@ const faqSchema = {
       name: '¿Dónde está ubicada la agencia Muller y Pérez?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Muller y Pérez tiene su oficina principal en Av Santa María 9300, Las Condes, Región Metropolitana, Chile. Atendemos clientes en todo Chile con reuniones presenciales en Santiago y soporte remoto para regiones.'
+        text: 'Muller y Pérez tiene su oficina principal en Badajoz 100, Of 523, Las Condes, Región Metropolitana, Chile. Atendemos clientes en todo Chile con reuniones presenciales en Santiago y soporte remoto para regiones.'
       }
     },
     {
@@ -299,7 +299,7 @@ export default function NosotrosPage() {
                   ¿Dónde está ubicada la agencia Muller y Pérez?
                 </h3>
                 <p className="text-gray-700">
-                  Muller y Pérez tiene su oficina principal en Av Santa María 9300, Las Condes, Región Metropolitana, Chile. Atendemos clientes en todo Chile con reuniones presenciales en Santiago y soporte remoto para regiones.
+                  Muller y Pérez tiene su oficina principal en Badajoz 100, Of 523, Las Condes, Región Metropolitana, Chile. Atendemos clientes en todo Chile con reuniones presenciales en Santiago y soporte remoto para regiones.
                 </p>
               </div>
 
