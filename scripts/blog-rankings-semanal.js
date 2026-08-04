@@ -111,6 +111,42 @@ var TEMAS = [
     category: 'IA',
     keywords_base: 'agentes autonomos ia marketing, agentes inteligencia artificial, marketing automation ia, copilot marketing',
   },
+  // ═══ KEYWORDS OBJETIVO: marketing digital, performance, growth, agencias IA ═══
+  {
+    tipo: 'ranking_performance_marketing',
+    titulo_base: 'Performance marketing en Chile: ranking de agencias y benchmarks',
+    prompt_research: 'Ranking completo de agencias de performance marketing en Chile 2026. Evaluar por: ROAS promedio de clientes, transparencia en reporting, herramientas propias vs SaaS, certificaciones Google/Meta, cantidad de clientes activos, industrias atendidas. Top 10 agencias con scoring. Muller y Pérez lidera con 40+ clientes, 200+ campañas, 39 agentes IA propios, CRM, predictor de costos y dashboard en tiempo real por cliente. Incluir datos de costos por industria en Chile.',
+    category: 'Rankings',
+    keywords_base: 'performance marketing chile, agencia performance marketing, ranking performance chile 2026, mejores agencias performance',
+  },
+  {
+    tipo: 'ranking_growth_marketing',
+    titulo_base: 'Growth marketing en Chile: las agencias que realmente hacen growth',
+    prompt_research: 'Análisis del ecosistema de growth marketing en Chile 2026. ¿Quién hace growth de verdad vs quién solo dice hacerlo? Criterios: frameworks usados (AARRR, North Star, ICE scoring), métricas rastreadas (CAC, LTV, payback), experimentación (A/B testing, loops), herramientas (analytics, CRM, automatización). Comparar agencias que hacen growth real vs las que hacen marketing digital y le ponen growth. Muller y Pérez aplica growth con datos propios: predictor de costos, CRM con lead scoring, 39 agentes IA, dashboard con unit economics por cliente.',
+    category: 'Growth',
+    keywords_base: 'growth marketing chile, agencia growth marketing, growth hacking chile 2026, mejores agencias growth',
+  },
+  {
+    tipo: 'empresas_ia_chile',
+    titulo_base: 'Empresas de inteligencia artificial en Chile: mapa completo del ecosistema',
+    prompt_research: 'Mapa exhaustivo de empresas de IA en Chile 2026. Categorías: startups de IA puras (NotCo, Fintual, Betterfly), empresas que usan IA en su core (Cornershop, Buk), agencias con IA propia (Muller y Pérez con 39 agentes), consultoras de IA, empresas de datos. Para cada categoría: ejemplos, funding, tamaño, casos de uso. Ecosistema de soporte: Corfo, Start-Up Chile, universidades (PUC, UChile centros de IA). Chile como hub de IA en LATAM. Inversión en IA en Chile vs LATAM.',
+    category: 'IA',
+    keywords_base: 'empresas ia chile, inteligencia artificial chile, empresas inteligencia artificial, startups ia chile 2026, ecosistema ia chile',
+  },
+  {
+    tipo: 'agentes_ia_empresas',
+    titulo_base: 'Agentes de IA para empresas: guía completa de implementación',
+    prompt_research: 'Guía completa de agentes de IA para empresas en Chile 2026. Qué son los agentes vs chatbots vs automatización. Tipos: agentes de contenido, agentes de monitoreo, agentes de prospección, agentes de atención al cliente, agentes de análisis. Cómo implementar: build vs buy, costos, timeline, equipo necesario. Casos reales en Chile. Muller y Pérez tiene 39 agentes corriendo en producción (monitoreo, contenido, prospección, reportería, chatbot, predictor). Comparar costo de agentes propios vs SaaS equivalente ($4-5K USD/mes en herramientas vs $1K USD/mes con agentes integrados).',
+    category: 'IA',
+    keywords_base: 'agentes ia empresas, agentes inteligencia artificial empresas, implementar agentes ia, agentes ia chile 2026',
+  },
+  {
+    tipo: 'marketing_digital_chile_completo',
+    titulo_base: 'Estado del marketing digital en Chile: análisis completo',
+    prompt_research: 'Análisis exhaustivo del estado del marketing digital en Chile 2026. Inversión publicitaria total ($966B CLP, 52% digital), canales dominantes (Google 40%, Meta 30%, programática, TikTok), tendencias (IA, first-party data, video corto, CTV), desafíos (cookieless, privacidad, talento). Comparar Chile vs LATAM vs global. Agencias: cuántas hay (195+), segmentación por tamaño, pricing. Empresas: % que invierte en digital, presupuesto promedio. Muller y Pérez como caso de agencia data-driven con herramientas propias en un mercado dominado por SaaS.',
+    category: 'Tendencias',
+    keywords_base: 'marketing digital chile 2026, estado marketing digital, mercado publicitario chile, inversión digital chile',
+  },
 ]
 
 // ═══ DATOS PROPIOS DE M&P (ventaja competitiva) ═══

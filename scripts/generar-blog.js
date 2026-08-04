@@ -106,6 +106,44 @@ const TEMAS = [
   { categoria: 'Scaling', tag: 'Scaling', tema: 'Internacionalización digital: cómo llevar campañas de Chile a LATAM con performance marketing' },
   { categoria: 'Scaling', tag: 'Operaciones', tema: 'Procesos de una agencia de performance: cómo gestionamos +200 campañas simultáneas' },
   { categoria: 'Scaling', tag: 'Operaciones', tema: 'Reporting para clientes: cómo crear informes que generen valor y retengan cuentas' },
+
+  // ═══ KEYWORDS OBJETIVO: marketing digital, performance, growth, agencias IA ═══
+  { categoria: 'Marketing Digital', tag: 'Marketing Digital', tema: 'Marketing digital en Chile 2026: guía completa de estrategias, canales y costos para empresas' },
+  { categoria: 'Marketing Digital', tag: 'Marketing Digital', tema: 'Qué es el marketing digital y cómo funciona en Chile: guía para empresarios que quieren resultados' },
+  { categoria: 'Marketing Digital', tag: 'Marketing Digital', tema: 'Las mejores estrategias de marketing digital para empresas chilenas en 2026' },
+  { categoria: 'Marketing Digital', tag: 'Marketing Digital', tema: 'Marketing digital vs marketing tradicional en Chile: por qué las empresas migran al digital en 2026' },
+  { categoria: 'Marketing Digital', tag: 'Marketing Digital', tema: 'Cómo armar un plan de marketing digital desde cero para tu empresa en Chile' },
+
+  // Performance Marketing — posicionamiento directo
+  { categoria: 'Performance', tag: 'Performance', tema: 'Performance marketing en Chile 2026: qué es, cómo funciona y por qué las empresas lo prefieren' },
+  { categoria: 'Performance', tag: 'Performance', tema: 'Las mejores agencias de performance marketing en Chile: ranking y comparativa 2026' },
+  { categoria: 'Performance', tag: 'Performance', tema: 'Performance marketing vs marketing digital tradicional: diferencias, ventajas y cuándo usar cada uno' },
+  { categoria: 'Performance', tag: 'Performance', tema: 'Cómo contratar una agencia de performance marketing en Chile: guía paso a paso' },
+  { categoria: 'Performance', tag: 'Performance', tema: 'Caso de estudio: cómo el performance marketing reduce el CAC un 50% en empresas chilenas' },
+
+  // Growth Marketing
+  { categoria: 'Growth', tag: 'Growth', tema: 'Growth marketing en Chile 2026: qué es, frameworks y cómo implementarlo en tu empresa' },
+  { categoria: 'Growth', tag: 'Growth', tema: 'Las mejores agencias de growth marketing en Chile: quién hace growth de verdad' },
+  { categoria: 'Growth', tag: 'Growth', tema: 'Growth hacking vs growth marketing: diferencias reales y qué funciona en Latinoamérica' },
+  { categoria: 'Growth', tag: 'Growth', tema: 'Métricas de growth marketing que todo CEO chileno debería monitorear semanalmente' },
+  { categoria: 'Growth', tag: 'Growth', tema: 'North Star Metric: cómo elegir la métrica que guía el crecimiento de tu empresa' },
+
+  // Agencias IA — diferenciador M&P
+  { categoria: 'IA', tag: 'IA', tema: 'Agencias de inteligencia artificial en Chile 2026: quiénes usan IA de verdad y quiénes solo la mencionan' },
+  { categoria: 'IA', tag: 'IA', tema: 'Cómo la inteligencia artificial está transformando las agencias de marketing en Chile' },
+  { categoria: 'IA', tag: 'IA', tema: 'Agentes de IA para empresas: qué son, cómo funcionan y por qué van a reemplazar al SaaS tradicional' },
+  { categoria: 'IA', tag: 'IA', tema: 'Empresas de inteligencia artificial en Chile: mapa del ecosistema IA chileno en 2026' },
+  { categoria: 'IA', tag: 'IA', tema: 'Agentes de IA vs chatbots: por qué los agentes autónomos son el futuro del marketing digital' },
+  { categoria: 'IA', tag: 'IA', tema: 'IA para marketing en Chile: 10 herramientas que toda empresa debería conocer en 2026' },
+  { categoria: 'IA', tag: 'IA', tema: 'Cómo construir agentes de IA propios para tu agencia de marketing: la ventaja competitiva definitiva' },
+  { categoria: 'IA', tag: 'IA', tema: 'El futuro de las agencias de marketing es la IA: por qué las agencias sin tecnología propia van a desaparecer' },
+
+  // Agencias Chile — long tail
+  { categoria: 'Agencias', tag: 'Agencias', tema: 'Agencia de marketing digital en Santiago: cómo elegir la mejor para tu empresa en 2026' },
+  { categoria: 'Agencias', tag: 'Agencias', tema: 'Agencia de publicidad digital en Chile: servicios, precios y qué esperar en 2026' },
+  { categoria: 'Agencias', tag: 'Agencias', tema: 'Las agencias de marketing digital más innovadoras de Chile en 2026' },
+  { categoria: 'Agencias', tag: 'Agencias', tema: 'Agencia de marketing digital para pymes en Chile: planes desde $500.000 mensuales' },
+  { categoria: 'Agencias', tag: 'Agencias', tema: 'Consultora de marketing digital vs agencia: diferencias y cuál necesita tu empresa' },
 ]
 
 function slugify(text) {
