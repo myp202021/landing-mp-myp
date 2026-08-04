@@ -170,7 +170,7 @@ async function paso1_research(tema, datosPropios) {
   prompt += '  "fuentes": ["fuente1", "fuente2", ...],\n'
   prompt += '  "datos_clave": ["dato1", "dato2", ...]\n'
   prompt += '}\n'
-  prompt += '\nIMPORTANTE: mínimo 6 secciones. Contenido largo y detallado (1500+ palabras total). Datos reales, no inventados. Si no tienes un dato, di "según estimaciones del mercado". Incluir al menos 1 tabla con ranking o comparativa.'
+  prompt += '\nIMPORTANTE: mínimo 8 secciones. Contenido largo y detallado (4000+ palabras total). Datos reales, no inventados. Si no tienes un dato, di "según estimaciones del mercado". Incluir al menos 2 tablas con ranking o comparativa. OBLIGATORIO: sección final "Preguntas frecuentes" con 6+ preguntas (H3 terminando en ?) cada una seguida de <p> con respuesta de 50+ palabras. Incluir mínimo 4 links internos a páginas de M&P: /servicios, /contacto, /ranking-agencias-marketing-digital-chile, /labs/predictor, /blog, /indicadores, /casos-de-exito.'
 
   try {
     var r = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -229,7 +229,7 @@ async function paso2_redactar(research, tema) {
   prompt += '- Párrafos con class="text-gray-700 mb-4"\n'
   prompt += '- Tablas con bordes y hover como el ejemplo\n'
   prompt += '- Usa callout boxes (bg-indigo-50) para datos destacados\n'
-  prompt += '- Mínimo 1500 palabras, 6+ secciones\n'
+  prompt += '- Mínimo 4000 palabras, 8+ secciones\n'
   prompt += '- Links internos: <a href="/indicadores" class="text-indigo-600 hover:text-indigo-800 font-medium">Termómetro Marketing</a>\n'
   prompt += '- Links internos sugeridos: /indicadores, /copilot, /predictor\n'
   prompt += '- NO usar frases de IA: "en el vertiginoso", "es fundamental", "sin lugar a dudas", "paradigma"\n'
@@ -247,7 +247,7 @@ async function paso2_redactar(research, tema) {
           { role: 'user', content: prompt }
         ],
         temperature: 0.3,
-        max_tokens: 6000,
+        max_tokens: 16000,
       })
     })
     var data = await r.json()
@@ -272,7 +272,7 @@ async function paso3_revisar(html, research, wordCount) {
   prompt += 'Título: ' + research.titulo + '\n'
   prompt += 'Palabras actuales: ' + wordCount + '\n\n'
   prompt += 'CHECKLIST DE REVISIÓN:\n'
-  prompt += '1. ¿Tiene mínimo 1500 palabras? Si no, EXPANDIR secciones con más datos y análisis\n'
+  prompt += '1. ¿Tiene mínimo 4000 palabras? Si no, EXPANDIR secciones con más datos y análisis\n'
   prompt += '2. ¿Suena a IA genérica? Eliminar frases como "en el vertiginoso", "es importante destacar", "paradigma"\n'
   prompt += '3. ¿Tiene datos concretos en cada sección? Si faltan, agregar estimaciones realistas del mercado chileno\n'
   prompt += '4. ¿La tabla del ranking está bien formateada? Verificar HTML de tabla\n'
@@ -290,7 +290,7 @@ async function paso3_revisar(html, research, wordCount) {
       headers: { 'x-api-key': ANTHROPIC_KEY, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' },
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
-        max_tokens: 8000,
+        max_tokens: 16000,
         messages: [{ role: 'user', content: prompt }]
       })
     })

@@ -254,17 +254,39 @@ INSTRUCCIONES ESTRICTAS:
 - Callout importante: <div class="bg-blue-50 border-l-4 border-blue-600 p-6 rounded-r-xl mb-8"><h3 class="text-xl font-bold text-gray-900 mb-4">Título</h3><p class="text-gray-700">...</p></div>
 - Callout dato: <div class="bg-emerald-50 border-l-4 border-emerald-600 p-6 rounded-r-xl mb-8"><p class="text-gray-700">...</p></div>
 - Callout advertencia: <div class="bg-amber-50 border-l-4 border-amber-600 p-6 rounded-r-xl mb-8"><p class="text-gray-700">...</p></div>
+- Tablas: <div class="overflow-x-auto mb-8"><table class="min-w-full border-collapse"><thead><tr class="bg-gray-900 text-white"><th class="px-4 py-3 text-left text-sm font-semibold">...</th></tr></thead><tbody><tr class="border-b border-gray-200 hover:bg-gray-50"><td class="px-4 py-3 text-sm text-gray-700">...</td></tr></tbody></table></div>
 
 2. CONTENIDO:
-- Mínimo 2000 palabras
-- Al menos 5 H2 y varios H3
-- Datos reales o benchmarks de Chile cuando sea posible (CPC, CPL, ROAS por industria)
+- Mínimo 4000 palabras — extenso y profundo
+- Al menos 8 H2 y varios H3
+- AL MENOS 1 tabla HTML con datos reales de Chile (benchmarks CPC, CPL, ROAS, costos por industria, comparativas)
+- Datos reales o benchmarks de Chile cuando sea posible
 - Tono profesional pero directo, sin relleno
 - Mencionar a Muller y Pérez naturalmente 1-2 veces como referencia, sin ser spam
 - Incluir ejemplos prácticos aplicables a empresas chilenas
-- Terminar con una sección de conclusión y un CTA sutil hacia M&P
 
-3. NO incluir:
+3. SECCIÓN FAQ OBLIGATORIA AL FINAL:
+- H2: "Preguntas frecuentes"
+- Mínimo 6 preguntas como H3 (cada H3 DEBE terminar con ?)
+- Cada pregunta seguida de un párrafo <p> con respuesta completa (min 50 palabras)
+- Esto es CRÍTICO para el schema FAQ automático
+
+4. LINKS INTERNOS OBLIGATORIOS (mínimo 4):
+Incluir naturalmente en el texto estos enlaces:
+- <a href="/servicios" class="text-blue-600 hover:underline">servicios de marketing digital</a>
+- <a href="/contacto" class="text-blue-600 hover:underline">contactar a nuestro equipo</a>
+- <a href="/blog" class="text-blue-600 hover:underline">blog de marketing digital</a>
+- <a href="/labs/predictor" class="text-blue-600 hover:underline">predictor de inversión</a>
+- <a href="/ranking-agencias-marketing-digital-chile" class="text-blue-600 hover:underline">ranking de agencias</a>
+- <a href="/indicadores" class="text-blue-600 hover:underline">indicadores de marketing</a>
+- <a href="/casos-de-exito" class="text-blue-600 hover:underline">casos de éxito</a>
+Usar al menos 4 de estos links distribuidos naturalmente en el contenido.
+
+5. CTA FINAL:
+- Después del FAQ, incluir un div CTA:
+<div class="bg-gradient-to-r from-blue-900 to-purple-900 rounded-2xl p-8 text-center mt-12 mb-8"><h2 class="text-2xl font-bold text-white mb-4">¿Necesitas resultados reales en marketing digital?</h2><p class="text-blue-100 mb-6">En Muller y Pérez trabajamos con datos, no con suposiciones. Agenda una reunión estratégica sin costo.</p><a href="/contacto" class="inline-block bg-white text-blue-900 font-bold px-8 py-3 rounded-lg hover:bg-blue-50 transition">Solicitar propuesta →</a></div>
+
+6. NO incluir:
 - El H1 (se genera aparte)
 - Header ni footer
 - Imágenes
@@ -282,7 +304,7 @@ RESPONDE SOLO CON EL HTML DEL CONTENIDO (desde el primer <div class="prose..."> 
     body: JSON.stringify({
       model: 'gpt-4o',
       messages: [{ role: 'user', content: prompt }],
-      max_tokens: 4096,
+      max_tokens: 16000,
       temperature: 0.7
     })
   })
