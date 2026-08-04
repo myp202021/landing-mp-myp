@@ -379,6 +379,37 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'monthly',
       priority: 0.95,
     },
+    // ── Páginas nicho agosto 2026 ──
+    {
+      url: `${baseUrl}/agencias-tiktok-ads-chile-2026`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.90,
+    },
+    {
+      url: `${baseUrl}/agencias-ecommerce-chile-2026`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.90,
+    },
+    {
+      url: `${baseUrl}/marketing-digital-para-pymes-chile-2026`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.90,
+    },
+    {
+      url: `${baseUrl}/agencias-marketing-startups-chile-2026`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.90,
+    },
+    {
+      url: `${baseUrl}/estudio-ia-marketing-digital-chile-2026`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.95,
+    },
     {
       url: `${baseUrl}/cuanto-cuesta-agencia-marketing-digital-chile`,
       lastModified: currentDate,
