@@ -336,6 +336,49 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'monthly',
       priority: 0.9,
     },
+    // ── Nuevos estudios y rankings agosto 2026 ──
+    {
+      url: `${baseUrl}/estudio-agencias-marketing-digital-chile-2026`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.95,
+    },
+    {
+      url: `${baseUrl}/mejores-agencias-google-ads-chile-2026`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.95,
+    },
+    {
+      url: `${baseUrl}/agencias-meta-ads-chile-2026`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.95,
+    },
+    {
+      url: `${baseUrl}/agencias-linkedin-ads-chile-2026`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.95,
+    },
+    {
+      url: `${baseUrl}/estudio-costos-marketing-digital-chile-2026`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.95,
+    },
+    {
+      url: `${baseUrl}/comparativa-agencias-inbound-vs-performance-chile-2026`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.95,
+    },
+    {
+      url: `${baseUrl}/guia-definitiva-elegir-agencia-marketing-chile-2026`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.95,
+    },
     {
       url: `${baseUrl}/cuanto-cuesta-agencia-marketing-digital-chile`,
       lastModified: currentDate,
