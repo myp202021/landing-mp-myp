@@ -408,6 +408,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       url: `${baseUrl}/estudio-ia-marketing-digital-chile-2026`,
       lastModified: currentDate,
       changeFrequency: 'monthly',
+      priority: 0.90,
+    },
+    {
+      url: `${baseUrl}/estudio-benchmark-marketing-digital-chile-2026`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
       priority: 0.95,
     },
     {
