@@ -192,6 +192,110 @@ const nextConfig = {
         destination: '/marketing-digital-saas-chile',
         permanent: true,
       },
+      {
+        source: '/industrias/b2b-servicios',
+        destination: '/marketing-digital-b2b-chile',
+        permanent: true,
+      },
+      // ========================================
+      // Blog -2026 → -2025 redirects — GSC agosto 2026
+      // (posts generados con año incorrecto, redirigir a versión real)
+      // ========================================
+      {
+        source: '/blog/inbound-marketing-agencia-marketing-digital-chile-2026',
+        destination: '/blog/inbound-marketing-agencia-marketing-digital-chile-2025',
+        permanent: true,
+      },
+      {
+        source: '/blog/marketing-inmobiliario-agencia-marketing-digital-chile-2026',
+        destination: '/blog/marketing-inmobiliario-agencia-marketing-digital-chile-2025',
+        permanent: true,
+      },
+      {
+        source: '/blog/retargeting-agencia-marketing-digital-chile-2026',
+        destination: '/blog/retargeting-agencia-marketing-digital-chile-2025',
+        permanent: true,
+      },
+      {
+        source: '/blog/email-marketing-agencia-marketing-digital-chile-2026',
+        destination: '/blog/email-marketing-agencia-marketing-digital-chile-2025',
+        permanent: true,
+      },
+      {
+        source: '/blog/tiktok-ads-agencia-marketing-digital-chile-2026',
+        destination: '/blog/tiktok-ads-agencia-marketing-digital-chile-2025',
+        permanent: true,
+      },
+      {
+        source: '/blog/seo-ia-agencia-marketing-digital-chile-2026',
+        destination: '/blog/seo-ia-agencia-marketing-digital-chile-2025',
+        permanent: true,
+      },
+      {
+        source: '/blog/roi-roas-agencia-marketing-digital-chile-2026',
+        destination: '/blog/roi-roas-agencia-marketing-digital-chile-2025',
+        permanent: true,
+      },
+      {
+        source: '/blog/marketing-contenidos-agencia-marketing-digital-chile-2026',
+        destination: '/blog/marketing-contenidos-agencia-marketing-digital-chile-2025',
+        permanent: true,
+      },
+      {
+        source: '/blog/seo-agencia-marketing-digital-chile-2026',
+        destination: '/blog/seo-agencia-marketing-digital-chile-2025',
+        permanent: true,
+      },
+      {
+        source: '/blog/marketing-automation-agencia-marketing-digital-chile-2026',
+        destination: '/blog/marketing-automation-agencia-marketing-digital-chile-2025',
+        permanent: true,
+      },
+      {
+        source: '/blog/marketing-salud-agencia-marketing-digital-chile-2026',
+        destination: '/blog/marketing-salud-agencia-marketing-digital-chile-2025',
+        permanent: true,
+      },
+      {
+        source: '/blog/marketing-b2b-agencia-marketing-digital-chile-2026',
+        destination: '/blog/marketing-b2b-agencia-marketing-digital-chile-2025',
+        permanent: true,
+      },
+      {
+        source: '/blog/youtube-ads-agencia-marketing-digital-chile-2026',
+        destination: '/blog/youtube-ads-agencia-marketing-digital-chile-2025',
+        permanent: true,
+      },
+      {
+        source: '/blog/customer-journey-agencia-marketing-digital-chile-2026',
+        destination: '/blog/customer-journey-agencia-marketing-digital-chile-2025',
+        permanent: true,
+      },
+      {
+        source: '/blog/email-marketing-ia-agencia-marketing-digital-chile-2026',
+        destination: '/blog/email-marketing-ia-agencia-marketing-digital-chile-2025',
+        permanent: true,
+      },
+      {
+        source: '/blog/dashboards-agencia-marketing-digital-chile-2026',
+        destination: '/blog/dashboards-agencia-marketing-digital-chile-2025',
+        permanent: true,
+      },
+      {
+        source: '/blog/marketing-saas-agencia-marketing-digital-chile-2026',
+        destination: '/blog/marketing-saas-agencia-marketing-digital-chile-2025',
+        permanent: true,
+      },
+      {
+        source: '/blog/benchmarking-agencia-marketing-digital-chile-2026',
+        destination: '/blog/benchmarking-agencia-marketing-digital-chile-2025',
+        permanent: true,
+      },
+      {
+        source: '/blog/google-ads-vs-seo-chile-2026',
+        destination: '/blog/google-ads-vs-seo-chile-2025',
+        permanent: true,
+      },
       // ========================================
       // Radar/Clipping → Copilot (abril 2026)
       // ========================================

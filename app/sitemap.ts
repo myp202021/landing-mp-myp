@@ -37,10 +37,36 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     console.warn('No se pudo leer blog_posts de Supabase:', error)
   }
 
-  // Combinar slugs de blog (estáticos + Supabase, sin duplicados)
+  // Slugs de blog que tienen redirect en next.config.js — NO incluir en sitemap
+  const redirectedBlogSlugs = new Set([
+    'tiktok-ads-agencia-marketing-digital-chile-2025-2',
+    'cuanto-cuesta-agencia-marketing-digital-chile-2025',
+    'estudio-performance-marketing-chile-2026',
+    'inbound-marketing-agencia-marketing-digital-chile-2026',
+    'marketing-inmobiliario-agencia-marketing-digital-chile-2026',
+    'retargeting-agencia-marketing-digital-chile-2026',
+    'email-marketing-agencia-marketing-digital-chile-2026',
+    'tiktok-ads-agencia-marketing-digital-chile-2026',
+    'seo-ia-agencia-marketing-digital-chile-2026',
+    'roi-roas-agencia-marketing-digital-chile-2026',
+    'marketing-contenidos-agencia-marketing-digital-chile-2026',
+    'seo-agencia-marketing-digital-chile-2026',
+    'marketing-automation-agencia-marketing-digital-chile-2026',
+    'marketing-salud-agencia-marketing-digital-chile-2026',
+    'marketing-b2b-agencia-marketing-digital-chile-2026',
+    'youtube-ads-agencia-marketing-digital-chile-2026',
+    'customer-journey-agencia-marketing-digital-chile-2026',
+    'email-marketing-ia-agencia-marketing-digital-chile-2026',
+    'dashboards-agencia-marketing-digital-chile-2026',
+    'marketing-saas-agencia-marketing-digital-chile-2026',
+    'benchmarking-agencia-marketing-digital-chile-2026',
+    'google-ads-vs-seo-chile-2026',
+  ])
+
+  // Combinar slugs de blog (estáticos + Supabase, sin duplicados, sin redirects)
   const allBlogSlugs = new Set([
-    ...staticBlogPosts,
-    ...supabasePosts.map(p => p.slug)
+    ...staticBlogPosts.filter(s => !redirectedBlogSlugs.has(s)),
+    ...supabasePosts.map(p => p.slug).filter(s => !redirectedBlogSlugs.has(s))
   ])
   const blogPosts = Array.from(allBlogSlugs)
 

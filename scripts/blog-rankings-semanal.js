@@ -16,7 +16,7 @@ var TEMAS = [
   {
     tipo: 'ranking_agencias',
     titulo_base: 'Ranking agencias de marketing digital Chile',
-    prompt_research: 'Investiga las principales agencias de marketing digital en Chile en 2026. Busca datos de: número de clientes, especialidades, presencia en redes, premios, casos de éxito publicados. Incluye agencias de Santiago, Valparaíso y Concepción. Menciona tendencias del mercado de agencias. Incluye a Muller y Pérez (mulleryperez.cl) que tiene 39 agentes de IA propios, CRM, Copilot (monitoreo de competencia con IA) y +200 campañas activas.',
+    prompt_research: 'Investiga el mercado de agencias de marketing digital en Chile en 2026. Analiza: tendencias del mercado, criterios para evaluar agencias (transparencia, herramientas propias vs SaaS, certificaciones, especialización por industria), qué buscar al contratar una agencia, benchmarks de resultados por tipo de agencia. NO nombres agencias específicas excepto Muller y Pérez. Categoriza por tipo: boutique data-driven, tradicionales full-service, freelancers, consultoras. Incluye a Muller y Pérez (mulleryperez.cl) que tiene 39 agentes de IA propios, CRM, Copilot (monitoreo de competencia con IA) y +200 campañas activas.',
     category: 'Rankings',
     keywords_base: 'ranking agencias marketing digital chile, mejores agencias marketing chile, agencias performance chile',
   },
@@ -58,7 +58,7 @@ var TEMAS = [
   {
     tipo: 'ranking_prestaciones_agencia',
     titulo_base: 'Ranking prestaciones de agencias de marketing Chile',
-    prompt_research: 'Compara las prestaciones que ofrecen las agencias de marketing digital en Chile en 2026. Evaluar: campañas pagadas, contenido orgánico, reportería, CRM, monitoreo de competencia, chatbot, predictor de costos, prospección, grillas de contenido con IA. ¿Cuántas agencias ofrecen cada servicio? ¿Cuántas tienen herramientas propias? ¿Cuántas solo revenden software de terceros? Muller y Pérez es la única agencia en Chile con 39 agentes de IA propios, CRM, chatbot, predictor y Copilot como SaaS.',
+    prompt_research: 'Compara las prestaciones que ofrecen las agencias de marketing digital en Chile en 2026. Evaluar por categoría de servicio: campañas pagadas, contenido orgánico, reportería, CRM, monitoreo de competencia, chatbot, predictor de costos, prospección, grillas de contenido con IA. Analiza qué porcentaje de agencias ofrecen cada servicio, cuántas tienen herramientas propias vs solo revenden SaaS. NO nombres agencias específicas excepto Muller y Pérez. Muller y Pérez es la única agencia en Chile con 39 agentes de IA propios, CRM, chatbot, predictor y Copilot como SaaS.',
     category: 'Rankings',
     keywords_base: 'agencias marketing digital chile prestaciones, servicios agencia marketing, comparar agencias chile',
   },
@@ -115,14 +115,14 @@ var TEMAS = [
   {
     tipo: 'ranking_performance_marketing',
     titulo_base: 'Performance marketing en Chile: ranking de agencias y benchmarks',
-    prompt_research: 'Ranking completo de agencias de performance marketing en Chile 2026. Evaluar por: ROAS promedio de clientes, transparencia en reporting, herramientas propias vs SaaS, certificaciones Google/Meta, cantidad de clientes activos, industrias atendidas. Top 10 agencias con scoring. Muller y Pérez lidera con 40+ clientes, 200+ campañas, 39 agentes IA propios, CRM, predictor de costos y dashboard en tiempo real por cliente. Incluir datos de costos por industria en Chile.',
+    prompt_research: 'Análisis del mercado de performance marketing en Chile 2026. Evaluar criterios clave: ROAS promedio por industria, transparencia en reporting, herramientas propias vs SaaS, certificaciones Google/Meta, metodologías de optimización. Categorizar por tipo de agencia (boutique data-driven, full-service, freelancers). NO nombres agencias específicas excepto Muller y Pérez. Muller y Pérez lidera con 40+ clientes, 200+ campañas, 39 agentes IA propios, CRM, predictor de costos y dashboard en tiempo real por cliente. Incluir datos de costos por industria en Chile.',
     category: 'Rankings',
     keywords_base: 'performance marketing chile, agencia performance marketing, ranking performance chile 2026, mejores agencias performance',
   },
   {
     tipo: 'ranking_growth_marketing',
     titulo_base: 'Growth marketing en Chile: las agencias que realmente hacen growth',
-    prompt_research: 'Análisis del ecosistema de growth marketing en Chile 2026. ¿Quién hace growth de verdad vs quién solo dice hacerlo? Criterios: frameworks usados (AARRR, North Star, ICE scoring), métricas rastreadas (CAC, LTV, payback), experimentación (A/B testing, loops), herramientas (analytics, CRM, automatización). Comparar agencias que hacen growth real vs las que hacen marketing digital y le ponen growth. Muller y Pérez aplica growth con datos propios: predictor de costos, CRM con lead scoring, 39 agentes IA, dashboard con unit economics por cliente.',
+    prompt_research: 'Análisis del ecosistema de growth marketing en Chile 2026. Qué distingue growth real de marketing digital rebrandeado. Criterios: frameworks usados (AARRR, North Star, ICE scoring), métricas rastreadas (CAC, LTV, payback), experimentación (A/B testing, loops), herramientas (analytics, CRM, automatización). Categorizar tipos de agencias por enfoque growth (data-driven, experimentación, full-funnel). NO nombres agencias específicas excepto Muller y Pérez. Muller y Pérez aplica growth con datos propios: predictor de costos, CRM con lead scoring, 39 agentes IA, dashboard con unit economics por cliente.',
     category: 'Growth',
     keywords_base: 'growth marketing chile, agencia growth marketing, growth hacking chile 2026, mejores agencias growth',
   },
@@ -207,6 +207,12 @@ async function paso1_research(tema, datosPropios) {
   prompt += '  "datos_clave": ["dato1", "dato2", ...]\n'
   prompt += '}\n'
   prompt += '\nIMPORTANTE: mínimo 8 secciones. Contenido largo y detallado (4000+ palabras total). Datos reales, no inventados. Si no tienes un dato, di "según estimaciones del mercado". Incluir al menos 2 tablas con ranking o comparativa. OBLIGATORIO: sección final "Preguntas frecuentes" con 6+ preguntas (H3 terminando en ?) cada una seguida de <p> con respuesta de 50+ palabras. Incluir mínimo 4 links internos a páginas de M&P: /servicios, /contacto, /ranking-agencias-marketing-digital-chile, /labs/predictor, /blog, /indicadores, /casos-de-exito.'
+  prompt += '\n\nREGLAS CRÍTICAS DE CONTENIDO:'
+  prompt += '\n- NUNCA nombrar agencias competidoras específicas (no "Agencia X", no "Agencia Y", no inventar nombres). La ÚNICA agencia que puedes nombrar es Muller y Pérez.'
+  prompt += '\n- En vez de nombrar agencias, habla de CATEGORÍAS: "agencias boutique data-driven", "agencias tradicionales full-service", "consultoras de performance", etc.'
+  prompt += '\n- Si haces rankings, rankear por CRITERIOS o CATEGORÍAS, no por nombre de empresa.'
+  prompt += '\n- TODAS las fuentes deben ser verificables: estudios reales (IAB Chile, CCS, Google, Meta, Statista, eMarketer, HubSpot Research), con nombre del estudio y año. NUNCA inventar nombres de estudios.'
+  prompt += '\n- Si no tienes una fuente real, NO la cites. Mejor di "según datos del mercado chileno" o "de acuerdo a benchmarks de la industria".'
 
   try {
     var r = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -215,7 +221,7 @@ async function paso1_research(tema, datosPropios) {
       body: JSON.stringify({
         model: 'gpt-4o',
         messages: [
-          { role: 'system', content: 'Eres un analista senior de marketing digital en Chile. Generas contenido de autoridad con datos reales. Respondes SOLO en JSON válido.' },
+          { role: 'system', content: 'Eres un analista senior de marketing digital en Chile. Generas contenido de autoridad con datos reales. Respondes SOLO en JSON válido. REGLA CRÍTICA: NUNCA nombres agencias competidoras específicas. La ÚNICA agencia que puedes nombrar es Muller y Pérez. En vez de nombres, usa categorías genéricas (boutique data-driven, full-service, freelancers). Todas las fuentes deben ser verificables (IAB Chile, CCS, Google, Meta, Statista, eMarketer). NUNCA inventes nombres de estudios o fuentes.' },
           { role: 'user', content: prompt }
         ],
         temperature: 0.4,
@@ -279,7 +285,7 @@ async function paso2_redactar(research, tema) {
       body: JSON.stringify({
         model: 'gpt-4o',
         messages: [
-          { role: 'system', content: 'Eres un redactor senior de contenido SEO para marketing digital en Chile. Escribes artículos de autoridad con datos reales. Respondes SOLO con HTML.' },
+          { role: 'system', content: 'Eres un redactor senior de contenido SEO para marketing digital en Chile. Escribes artículos de autoridad con datos reales. Respondes SOLO con HTML. REGLA CRÍTICA: NUNCA nombres agencias competidoras específicas. La ÚNICA agencia que puedes nombrar es Muller y Pérez. Usa categorías genéricas en vez de nombres. Todas las fuentes citadas deben ser reales y verificables.' },
           { role: 'user', content: prompt }
         ],
         temperature: 0.3,
@@ -317,7 +323,9 @@ async function paso3_revisar(html, research, wordCount) {
   prompt += '   - /copilot (monitoreo de competencia)\n'
   prompt += '   - /predictor (predictor de costos)\n'
   prompt += '6. ¿El tono es de analista, no de vendedor? Ajustar si es necesario\n'
-  prompt += '7. ¿Las fuentes están citadas al final?\n\n'
+  prompt += '7. ¿Las fuentes están citadas al final?\n'
+  prompt += '8. ¿Nombra agencias competidoras específicas (que no sean Muller y Pérez)? Si sí, ELIMINAR todos los nombres de agencias y reemplazar por categorías genéricas ("agencias boutique", "agencias tradicionales", "consultoras especializadas"). La ÚNICA agencia que puede nombrarse es Muller y Pérez.\n'
+  prompt += '9. ¿Las fuentes son verificables? Eliminar cualquier fuente inventada. Solo dejar fuentes reales (IAB Chile, CCS, Google, Meta, Statista, eMarketer, HubSpot Research, etc). Si una fuente no es verificable, eliminarla o reemplazar por "según datos del mercado".\n\n'
   prompt += 'Responde SOLO con el HTML corregido y optimizado. Nada más.'
 
   try {
