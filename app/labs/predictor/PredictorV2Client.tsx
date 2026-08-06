@@ -1667,12 +1667,12 @@ Generado en: https://www.mulleryperez.cl/labs/predictor
                 {loading ? (
                   <>
                     <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2" />
-                    Analizando...
+                    Analizando con data 2026...
                   </>
                 ) : (
                   <>
                     <Sparkles className="w-5 h-5 mr-2" />
-                    Generar Diagnóstico
+                    Predecir Resultados
                   </>
                 )}
               </Button>
@@ -1723,6 +1723,41 @@ Generado en: https://www.mulleryperez.cl/labs/predictor
                 <ViabilityGauge score={result.diagnostico.score_viabilidad} />
               </div>
             </Card>
+
+            {/* Data Source Badge + País */}
+            <div className="flex flex-wrap gap-3">
+              {result.fuentes_datos?.attribution && (
+                <div className="px-4 py-2 bg-gray-50 border border-gray-200 rounded-full flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                  <span className="text-xs text-gray-600">Datos verificados: <strong className="text-gray-900">{result.fuentes_datos.attribution}</strong></span>
+                </div>
+              )}
+              {result.contexto_analizado?.pais_info && (
+                <div className="px-4 py-2 bg-indigo-50 border border-indigo-200 rounded-full flex items-center gap-2">
+                  <span className="text-lg">{result.contexto_analizado.pais_info.flag}</span>
+                  <span className="text-xs text-indigo-700 font-semibold">{result.contexto_analizado.pais_info.name} · {result.contexto_analizado.pais_info.currency}</span>
+                </div>
+              )}
+              <div className="px-4 py-2 bg-purple-50 border border-purple-200 rounded-full">
+                <span className="text-xs text-purple-700 font-semibold">Motor v{result.motor_v2_info?.version || '3.0.0'} · Benchmarks {result.fuentes_datos?.benchmark_year || 2026}</span>
+              </div>
+            </div>
+
+            {/* Contexto LATAM (solo si no es Chile) */}
+            {result.contexto_analizado?.pais && result.contexto_analizado.pais !== 'CL' && (
+              <Card className="p-4 border-2 border-indigo-200 bg-gradient-to-r from-indigo-50 to-purple-50">
+                <div className="flex items-center gap-3">
+                  <span className="text-2xl">{result.contexto_analizado.pais_info?.flag}</span>
+                  <div>
+                    <p className="font-bold text-gray-900">Predicción ajustada para {result.contexto_analizado.pais_info?.name}</p>
+                    <p className="text-sm text-gray-600">
+                      CPCs en {result.contexto_analizado.pais_info?.name} son ~{Math.round((1 - (result.contexto_analizado.pais_info?.google_cpc_factor || 1)) * 100)}% más bajos que en Chile.
+                      Tu presupuesto rinde más en este mercado.
+                    </p>
+                  </div>
+                </div>
+              </Card>
+            )}
 
             {/* Recomendación de Plataforma */}
             <PlatformRecommendation
@@ -2085,6 +2120,18 @@ Generado en: https://www.mulleryperez.cl/labs/predictor
                   <Share2 className="w-4 h-4 mr-2" />
                   Compartir
                 </Button>
+
+                <a
+                  href={`https://wa.me/?text=${encodeURIComponent(
+                    `Predictor M&P 2026: Mi análisis de ${result?.contexto_analizado?.industria || 'marketing digital'} para ${result?.contexto_analizado?.pais_info?.name || 'Chile'}. Score: ${result?.diagnostico?.score_viabilidad}/100. Plataforma recomendada: ${result?.diagnostico?.recomendacion_plataforma?.plataforma}. Pruébalo gratis → mulleryperez.cl/labs/predictor`
+                  )}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 h-11 px-4 border-2 border-gray-200 rounded-xl text-sm font-semibold text-gray-700 hover:bg-emerald-50 hover:border-emerald-300 transition"
+                >
+                  <MessageSquare className="w-4 h-4 text-emerald-500" />
+                  WhatsApp
+                </a>
               </div>
             </Card>
 
