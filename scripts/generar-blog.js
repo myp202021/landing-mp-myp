@@ -355,6 +355,19 @@ RESPONDE SOLO CON EL HTML DEL CONTENIDO (desde el primer <div class="prose..."> 
   const data = await res.json()
   const contenidoHtml = data.choices[0].message.content
 
+  // QA Gate: rechazar si OpenAI devolvió una negativa o contenido vacío
+  const REFUSAL_PHRASES = [
+    "i'm sorry", "i can't assist", "i cannot assist", "i'm unable to",
+    "i cannot help", "i can't help", "as an ai", "i'm not able to",
+    "lo siento, no puedo", "no puedo ayudar con", "no puedo generar"
+  ]
+  const lowerContent = contenidoHtml.toLowerCase()
+  const isRefusal = REFUSAL_PHRASES.some(p => lowerContent.includes(p))
+  if (isRefusal || contenidoHtml.length < 2000) {
+    throw new Error(`OpenAI devolvió contenido inválido (${contenidoHtml.length} chars, refusal: ${isRefusal}). Primeros 200: ${contenidoHtml.substring(0, 200)}`)
+  }
+  console.log(`✓ QA Gate: contenido OK (${contenidoHtml.length} chars, sin refusal)`)
+
   // Generar metadata
   const metaPrompt = `Para este artículo de blog de marketing digital en Chile:
 TÍTULO: ${tema.tema}
