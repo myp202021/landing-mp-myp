@@ -363,10 +363,14 @@ RESPONDE SOLO CON EL HTML DEL CONTENIDO (desde el primer <div class="prose..."> 
   ]
   const lowerContent = contenidoHtml.toLowerCase()
   const isRefusal = REFUSAL_PHRASES.some(p => lowerContent.includes(p))
-  if (isRefusal || contenidoHtml.length < 2000) {
-    throw new Error(`OpenAI devolvió contenido inválido (${contenidoHtml.length} chars, refusal: ${isRefusal}). Primeros 200: ${contenidoHtml.substring(0, 200)}`)
+  if (isRefusal || contenidoHtml.length < 15000) {
+    throw new Error(`OpenAI devolvió contenido inválido (${contenidoHtml.length} chars, mínimo 15000, refusal: ${isRefusal}). Primeros 200: ${contenidoHtml.substring(0, 200)}`)
   }
-  console.log(`✓ QA Gate: contenido OK (${contenidoHtml.length} chars, sin refusal)`)
+  const h2Count = (contenidoHtml.match(/<h2/g) || []).length
+  if (h2Count < 5) {
+    throw new Error(`OpenAI devolvió contenido con pocas secciones (${h2Count} H2s, mínimo 5). No se publica.`)
+  }
+  console.log(`✓ QA Gate: contenido OK (${contenidoHtml.length} chars, ${h2Count} H2s, sin refusal)`)
 
   // Generar metadata
   const metaPrompt = `Para este artículo de blog de marketing digital en Chile:

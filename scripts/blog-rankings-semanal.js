@@ -225,7 +225,7 @@ async function paso1_research(tema, datosPropios) {
           { role: 'user', content: prompt }
         ],
         temperature: 0.4,
-        max_tokens: 4000,
+        max_tokens: 12000,
         response_format: { type: 'json_object' },
       })
     })
@@ -460,6 +460,21 @@ async function main() {
     console.log('   Artículo corto (' + draft.wordCount + ' palabras) — Claude va a expandir')
   }
   htmlFinal = await paso3_revisar(htmlFinal, research, draft.wordCount)
+
+  // QA Gate: rechazar artículos demasiado cortos o genéricos
+  var finalWordCount = htmlFinal.replace(/<[^>]*>/g, ' ').split(/\s+/).filter(function(w) { return w.length > 0 }).length
+  if (finalWordCount < 2500) {
+    throw new Error('QA RECHAZADO: artículo demasiado corto (' + finalWordCount + ' palabras, mínimo 2500). No se publica.')
+  }
+  var h2Count = (htmlFinal.match(/<h2/g) || []).length
+  if (h2Count < 5) {
+    throw new Error('QA RECHAZADO: artículo con pocas secciones (' + h2Count + ' H2s, mínimo 5). No se publica.')
+  }
+  var tableCount = (htmlFinal.match(/<table/g) || []).length
+  if (tableCount < 1) {
+    throw new Error('QA RECHAZADO: artículo sin tablas (' + tableCount + ', mínimo 1). No se publica.')
+  }
+  console.log('   QA Gate OK: ' + finalWordCount + ' palabras, ' + h2Count + ' H2s, ' + tableCount + ' tablas')
 
   // Generar imagen
   var imageUrl = await generarImagenRanking(research.titulo)
