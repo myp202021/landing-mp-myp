@@ -13,6 +13,7 @@
  */
 
 import React, { useState, useEffect } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -1310,6 +1311,33 @@ Generado en: https://www.mulleryperez.cl/labs/predictor
     }
   }
 
+  const handleDownloadPDF = async () => {
+    try {
+      const html2canvas = (await import('html2canvas')).default
+      const { jsPDF } = await import('jspdf')
+      const el = document.getElementById('predictor-results')
+      if (!el) return
+      const canvas = await html2canvas(el, { scale: 2, useCORS: true, backgroundColor: '#ffffff' })
+      const imgData = canvas.toDataURL('image/png')
+      const pdf = new jsPDF('p', 'mm', 'a4')
+      const imgWidth = 210
+      const imgHeight = (canvas.height * imgWidth) / canvas.width
+      let heightLeft = imgHeight
+      let position = 0
+      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight)
+      heightLeft -= 297
+      while (heightLeft > 0) {
+        position = heightLeft - imgHeight
+        pdf.addPage()
+        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight)
+        heightLeft -= 297
+      }
+      pdf.save(`predictor-myp-${formData.industria}-${formData.pais}-${new Date().toISOString().split('T')[0]}.pdf`)
+    } catch (e) {
+      console.error('PDF error:', e)
+    }
+  }
+
   // Mostrar modal de email después de 3 segundos en resultados
   useEffect(() => {
     if (step === 2 && result) {
@@ -1361,8 +1389,16 @@ Generado en: https://www.mulleryperez.cl/labs/predictor
         </div>
 
         {/* Step 1: Form */}
+        <AnimatePresence mode="wait">
         {step === 1 && (
-          <div className="space-y-8">
+          <motion.div
+            key="step1"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.4 }}
+            className="space-y-8"
+          >
 
             {/* Sección 0: País */}
             <Card className="p-6 border-2 border-indigo-200 bg-gradient-to-r from-indigo-50/50 to-purple-50/50">
@@ -1690,12 +1726,19 @@ Generado en: https://www.mulleryperez.cl/labs/predictor
                 </p>
               )}
             </div>
-          </div>
+          </motion.div>
         )}
 
         {/* Step 2: Resultados */}
         {step === 2 && result && (
-          <div className="space-y-8">
+          <motion.div
+            key="step2"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, staggerChildren: 0.1 }}
+            className="space-y-8"
+            id="predictor-results"
+          >
 
             {/* Score de Viabilidad */}
             <Card className="p-8 border-2 border-gray-200">
@@ -1894,6 +1937,138 @@ Generado en: https://www.mulleryperez.cl/labs/predictor
                     </p>
                   </div>
                 </div>
+              </Card>
+            )}
+
+            {/* Comparación con Industria */}
+            {result.prediccion && result.fuentes_datos && (
+              <Card className="p-6 border-2 border-gray-200">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="p-2 bg-amber-100 rounded-lg">
+                    <BarChart3 className="w-5 h-5 text-amber-600" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-gray-900">Tu predicción vs Promedio de la industria</h3>
+                    <p className="text-sm text-gray-500">Benchmarks {result.fuentes_datos.benchmark_year} · {result.fuentes_datos.attribution}</p>
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  {/* CPA comparison */}
+                  {(() => {
+                    const userCPA = result.prediccion.metricas.cpa_promedio
+                    const industryBench = result.industry_insights?.benchmarks?.cpl
+                    if (!industryBench) return null
+                    const avgCPA = industryBench.promedio
+                    const pct = ((userCPA / avgCPA - 1) * 100).toFixed(0)
+                    const isGood = userCPA <= avgCPA
+                    return (
+                      <div>
+                        <div className="flex justify-between text-sm mb-1">
+                          <span className="font-semibold text-gray-700">CPA (Costo por Adquisición)</span>
+                          <span className={`font-bold ${isGood ? 'text-emerald-600' : 'text-red-600'}`}>
+                            {isGood ? `${Math.abs(+pct)}% menor` : `${pct}% mayor`} que el promedio
+                          </span>
+                        </div>
+                        <div className="h-3 bg-gray-100 rounded-full overflow-hidden relative">
+                          <div
+                            className={`h-full rounded-full ${isGood ? 'bg-emerald-500' : 'bg-red-400'}`}
+                            style={{ width: `${Math.min(Math.max((userCPA / (avgCPA * 2)) * 100, 5), 100)}%` }}
+                          />
+                          <div
+                            className="absolute top-0 h-full w-0.5 bg-gray-800"
+                            style={{ left: '50%' }}
+                            title="Promedio industria"
+                          />
+                        </div>
+                        <div className="flex justify-between text-xs text-gray-400 mt-1">
+                          <span>Tu CPA: ${(userCPA/1000).toFixed(0)}k</span>
+                          <span>Promedio: ${(avgCPA/1000).toFixed(0)}k</span>
+                        </div>
+                      </div>
+                    )
+                  })()}
+
+                  {/* ROAS comparison */}
+                  {(() => {
+                    const userROAS = result.prediccion.metricas.roas_esperado
+                    const roasBench = result.industry_insights?.benchmarks?.roas
+                    if (!roasBench) return null
+                    const avgROAS = roasBench.promedio
+                    const isGood = userROAS >= avgROAS
+                    return (
+                      <div>
+                        <div className="flex justify-between text-sm mb-1">
+                          <span className="font-semibold text-gray-700">ROAS (Retorno por peso invertido)</span>
+                          <span className={`font-bold ${isGood ? 'text-emerald-600' : 'text-amber-600'}`}>
+                            {isGood ? `${((userROAS/avgROAS-1)*100).toFixed(0)}% sobre` : `${((1-userROAS/avgROAS)*100).toFixed(0)}% bajo`} el promedio
+                          </span>
+                        </div>
+                        <div className="h-3 bg-gray-100 rounded-full overflow-hidden relative">
+                          <div
+                            className={`h-full rounded-full ${isGood ? 'bg-emerald-500' : 'bg-amber-400'}`}
+                            style={{ width: `${Math.min(Math.max((userROAS / (roasBench.top * 1.2)) * 100, 5), 100)}%` }}
+                          />
+                          <div
+                            className="absolute top-0 h-full w-0.5 bg-gray-800"
+                            style={{ left: `${(avgROAS / (roasBench.top * 1.2)) * 100}%` }}
+                            title="Promedio industria"
+                          />
+                        </div>
+                        <div className="flex justify-between text-xs text-gray-400 mt-1">
+                          <span>Tu ROAS: {userROAS.toFixed(1)}x</span>
+                          <span>Promedio: {avgROAS}x | Top: {roasBench.top}x</span>
+                        </div>
+                      </div>
+                    )
+                  })()}
+                </div>
+              </Card>
+            )}
+
+            {/* Panel CPM / Reach Meta */}
+            {result.prediccion && result.contexto_analizado?.pais_info && (
+              <Card className="p-6 border-2 border-indigo-200 bg-gradient-to-r from-indigo-50/50 to-blue-50/50">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="p-2 bg-blue-100 rounded-lg">
+                    <Users className="w-5 h-5 text-blue-600" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-bold text-gray-900">Alcance estimado en Meta Ads</h3>
+                    <p className="text-sm text-gray-500">Basado en CPM promedio de {result.contexto_analizado.pais_info.name}</p>
+                  </div>
+                </div>
+                {(() => {
+                  const presupuesto = result.contexto_analizado.presupuesto_mensual
+                  const presupuestoUSD = presupuesto / (result.contexto_analizado.pais_info.usd_exchange_rate || 935)
+                  const metaBudget = presupuestoUSD * 0.3  // ~30% a Meta típicamente
+                  const cpmUSD = result.contexto_analizado.pais_info.meta_cpm_usd || 5.20
+                  const impressions = Math.round((metaBudget / cpmUSD) * 1000)
+                  const reach = Math.round(impressions / 3.5)  // Frequency ~3.5
+                  return (
+                    <div className="grid grid-cols-3 gap-4">
+                      <div className="p-4 bg-white rounded-xl text-center border border-blue-100">
+                        <p className="text-xs text-gray-500 mb-1">Impresiones Meta/mes</p>
+                        <p className="text-2xl font-bold text-blue-600">
+                          {impressions > 1000000 ? `${(impressions/1000000).toFixed(1)}M` : `${(impressions/1000).toFixed(0)}K`}
+                        </p>
+                      </div>
+                      <div className="p-4 bg-white rounded-xl text-center border border-blue-100">
+                        <p className="text-xs text-gray-500 mb-1">Personas alcanzadas</p>
+                        <p className="text-2xl font-bold text-indigo-600">
+                          {reach > 1000000 ? `${(reach/1000000).toFixed(1)}M` : `${(reach/1000).toFixed(0)}K`}
+                        </p>
+                      </div>
+                      <div className="p-4 bg-white rounded-xl text-center border border-blue-100">
+                        <p className="text-xs text-gray-500 mb-1">CPM promedio</p>
+                        <p className="text-2xl font-bold text-gray-900">
+                          ${cpmUSD.toFixed(2)}
+                        </p>
+                        <p className="text-xs text-gray-400">USD</p>
+                      </div>
+                    </div>
+                  )
+                })()}
               </Card>
             )}
 
@@ -2121,6 +2296,15 @@ Generado en: https://www.mulleryperez.cl/labs/predictor
                   Compartir
                 </Button>
 
+                <Button
+                  onClick={handleDownloadPDF}
+                  variant="outline"
+                  className="h-11 rounded-xl"
+                >
+                  <Download className="w-4 h-4 mr-2" />
+                  Descargar PDF
+                </Button>
+
                 <a
                   href={`https://wa.me/?text=${encodeURIComponent(
                     `Predictor M&P 2026: Mi análisis de ${result?.contexto_analizado?.industria || 'marketing digital'} para ${result?.contexto_analizado?.pais_info?.name || 'Chile'}. Score: ${result?.diagnostico?.score_viabilidad}/100. Plataforma recomendada: ${result?.diagnostico?.recomendacion_plataforma?.plataforma}. Pruébalo gratis → mulleryperez.cl/labs/predictor`
@@ -2191,8 +2375,9 @@ Generado en: https://www.mulleryperez.cl/labs/predictor
                 </Button>
               </div>
             </Card>
-          </div>
+          </motion.div>
         )}
+        </AnimatePresence>
 
         {/* Email Modal */}
         <EmailCaptureModal
@@ -2208,7 +2393,7 @@ Generado en: https://www.mulleryperez.cl/labs/predictor
       <section className="border-t border-gray-200 mt-16 bg-gradient-to-br from-gray-50 to-indigo-50/30">
         <div className="max-w-5xl mx-auto px-6 py-12">
           <div className="text-center mb-8">
-            <Badge className="bg-gray-100 text-gray-700 mb-3">Metodología M&P 2025</Badge>
+            <Badge className="bg-gray-100 text-gray-700 mb-3">Metodología M&P 2026</Badge>
             <h2 className="text-2xl font-bold text-gray-900 mb-2">¿Cómo calculamos las proyecciones?</h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
               Nuestro motor combina datos reales del mercado chileno con modelos predictivos validados.
