@@ -5,8 +5,8 @@ import PredictorV2Client from './PredictorV2Client'
 const predictorSchema = {
   '@context': 'https://schema.org',
   '@type': 'WebApplication',
-  name: 'Predictor de Marketing Digital Chile 2025',
-  description: 'Herramienta gratuita de diagnóstico consultivo para campañas de Google Ads y Meta Ads. Analiza viabilidad, recomienda plataformas y proyecta ROI para 12 industrias en Chile.',
+  name: 'Predictor de Campañas Digitales Chile y LATAM 2026',
+  description: 'Herramienta gratuita para predecir resultados de campañas de Google Ads y Meta Ads con data verificada 2026. 22 industrias, 6 países LATAM. CPC, CTR, CVR, CPA y ROAS por industria.',
   url: 'https://www.mulleryperez.cl/labs/predictor',
   applicationCategory: 'BusinessApplication',
   operatingSystem: 'Web Browser',
@@ -21,12 +21,14 @@ const predictorSchema = {
     url: 'https://www.mulleryperez.cl'
   },
   featureList: [
-    'Diagnóstico de viabilidad para paid media',
+    'Predicción de resultados Google Ads y Meta Ads',
+    'Data verificada 2026 (WordStream, Get-Ryze, Ubersuggest Chile)',
     'Recomendación de plataforma (Google vs Meta vs LinkedIn)',
-    'Proyección de ROAS, conversiones y revenue',
-    'Análisis de 12 industrias con data real de Chile',
-    'Distribución óptima de presupuesto',
-    'Alertas de riesgo económico'
+    'Proyección de ROAS, conversiones y revenue en 3 escenarios',
+    '22 industrias con benchmarks CPC, CTR, CVR, CPA',
+    '6 países LATAM (Chile, México, Colombia, Argentina, Brasil, Perú)',
+    'Distribución óptima de presupuesto por plataforma',
+    'Simulador What-If interactivo'
   ]
 }
 
@@ -118,15 +120,15 @@ const faqSchema = {
 }
 
 export const metadata: Metadata = {
-  title: 'Predictor Marketing Digital Chile 2025 - Diagnóstico Gratis | M&P Labs',
-  description: 'Herramienta gratuita: analiza tu negocio y descubre si Google Ads o Meta Ads es mejor para ti. Proyección de ROAS, conversiones y recomendaciones para 12 industrias en Chile.',
-  keywords: 'predictor google ads chile, calculadora meta ads, roas estimado, diagnóstico marketing digital, herramienta gratuita publicidad, simulador campañas chile',
+  title: 'Predictor de Campañas Google Ads y Meta Ads Chile 2026 — Data Real por Industria | M&P Labs',
+  description: 'Predice resultados de Google Ads y Meta Ads gratis con data verificada 2026. CPC, CTR, CVR, CPA y ROAS por industria. 22 industrias, 6 países LATAM. Simulador interactivo.',
+  keywords: 'predictor google ads chile, calculadora meta ads, predictor campañas 2026, benchmarks cpc chile, roas estimado por industria, simulador campañas latam, costo google ads chile 2026, cpc por industria chile',
   alternates: {
     canonical: 'https://www.mulleryperez.cl/labs/predictor'
   },
   openGraph: {
-    title: 'Predictor Marketing Digital Chile 2025 - Diagnóstico Gratuito',
-    description: 'Analiza tu negocio en 2 minutos. Descubre si vale la pena invertir en Google Ads o Meta Ads y cuánto podrías ganar. 12 industrias, data real de Chile.',
+    title: 'Predictor de Campañas Digitales Chile y LATAM 2026 — Data Verificada',
+    description: 'Predice CPC, conversiones, ROAS y CPA de tus campañas con data real 2026 de WordStream, Get-Ryze y Ubersuggest. 22 industrias, 6 países LATAM.',
     url: 'https://www.mulleryperez.cl/labs/predictor',
     siteName: 'Muller y Pérez',
     images: [
@@ -134,7 +136,7 @@ export const metadata: Metadata = {
         url: 'https://www.mulleryperez.cl/og-predictor.svg',
         width: 1200,
         height: 630,
-        alt: 'Predictor Marketing Digital Chile 2025'
+        alt: 'Predictor Campañas Digitales Chile 2026'
       }
     ],
     locale: 'es_CL',
@@ -142,8 +144,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Predictor Marketing Digital Chile 2025 - Diagnóstico Gratis',
-    description: 'Analiza tu negocio y descubre qué plataforma te conviene. Google Ads vs Meta Ads vs LinkedIn. Proyección de ROAS para 12 industrias.',
+    title: 'Predictor de Campañas Digitales Chile y LATAM 2026',
+    description: 'Predice resultados de Google Ads y Meta Ads con data verificada 2026. 22 industrias, 6 países LATAM. CPC, CTR, CVR, ROAS por industria.',
     images: ['https://www.mulleryperez.cl/og-predictor.svg']
   },
   robots: {

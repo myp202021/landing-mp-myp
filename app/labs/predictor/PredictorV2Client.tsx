@@ -1150,6 +1150,9 @@ export default function PredictorV2Client() {
   const [copied, setCopied] = useState(false)
 
   const [formData, setFormData] = useState({
+    // País LATAM (NUEVO 2026)
+    pais: 'CL',
+
     // Datos del negocio
     industria: 'ECOMMERCE',
     tipo_cliente: 'B2C',
@@ -1172,6 +1175,15 @@ export default function PredictorV2Client() {
     ciclo_venta_dias: 30,
     tasa_cierre: 5
   })
+
+  const PAISES_LATAM = [
+    { code: 'CL', name: 'Chile', flag: '🇨🇱' },
+    { code: 'MX', name: 'México', flag: '🇲🇽' },
+    { code: 'CO', name: 'Colombia', flag: '🇨🇴' },
+    { code: 'AR', name: 'Argentina', flag: '🇦🇷' },
+    { code: 'BR', name: 'Brasil', flag: '🇧🇷' },
+    { code: 'PE', name: 'Perú', flag: '🇵🇪' }
+  ]
 
   const isFormValid = formData.ticket_promedio && formData.presupuesto_mensual
 
@@ -1339,18 +1351,48 @@ Generado en: https://www.mulleryperez.cl/labs/predictor
 
         {/* Header */}
         <div className="text-center mb-10">
-          <Badge className="bg-indigo-100 text-indigo-700 font-semibold mb-4">Sistema Consultivo M&P 2025</Badge>
+          <Badge className="bg-indigo-100 text-indigo-700 font-semibold mb-4">Predictor de Campañas 2026 · Data verificada · 22 industrias · 6 países LATAM</Badge>
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            Diagnóstico de Marketing Digital
+            Predictor de Campañas Digitales
           </h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Analiza tu negocio y recibe recomendaciones personalizadas de plataformas, campañas y presupuesto.
+            Predice resultados de Google Ads y Meta Ads con data real 2026 de WordStream, Get-Ryze y Ubersuggest. 22 industrias, 6 países LATAM.
           </p>
         </div>
 
         {/* Step 1: Form */}
         {step === 1 && (
           <div className="space-y-8">
+
+            {/* Sección 0: País */}
+            <Card className="p-6 border-2 border-indigo-200 bg-gradient-to-r from-indigo-50/50 to-purple-50/50">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="p-2 bg-indigo-100 rounded-lg">
+                  <Target className="w-5 h-5 text-indigo-600" />
+                </div>
+                <div>
+                  <h2 className="text-xl font-bold text-gray-900">País de operación</h2>
+                  <p className="text-sm text-gray-500">Los benchmarks se ajustan automáticamente al mercado seleccionado</p>
+                </div>
+              </div>
+              <div className="flex flex-wrap gap-3">
+                {PAISES_LATAM.map(p => (
+                  <button
+                    key={p.code}
+                    onClick={() => setFormData({ ...formData, pais: p.code })}
+                    className={`flex items-center gap-2 px-4 py-3 rounded-xl border-2 transition-all ${
+                      formData.pais === p.code
+                        ? 'border-indigo-500 bg-indigo-50 shadow-md shadow-indigo-100'
+                        : 'border-gray-200 bg-white hover:border-gray-300'
+                    }`}
+                  >
+                    <span className="text-2xl">{p.flag}</span>
+                    <span className={`font-semibold text-sm ${formData.pais === p.code ? 'text-indigo-700' : 'text-gray-700'}`}>{p.name}</span>
+                  </button>
+                ))}
+              </div>
+              <p className="text-xs text-gray-400 mt-3">Datos: WordStream 2026, Get-Ryze 2026, Adamigo 2026, Ubersuggest Chile</p>
+            </Card>
 
             {/* Sección 1: Datos del Negocio */}
             <Card className="p-6 border-2 border-gray-200">
@@ -1373,12 +1415,22 @@ Generado en: https://www.mulleryperez.cl/labs/predictor
                     { value: 'INMOBILIARIA', label: 'Inmobiliaria / Corredoras' },
                     { value: 'SALUD_MEDICINA', label: 'Salud / Clínicas / Medicina' },
                     { value: 'EDUCACION', label: 'Educación / Capacitación' },
-                    { value: 'SERVICIOS_LEGALES', label: 'Servicios Legales / Profesionales' },
-                    { value: 'AUTOMOTRIZ', label: 'Automotriz / Concesionarias' },
+                    { value: 'SERVICIOS_LEGALES', label: 'Servicios Legales' },
+                    { value: 'AUTOMOTRIZ', label: 'Automotriz' },
                     { value: 'TURISMO', label: 'Turismo / Hotelería' },
                     { value: 'GASTRONOMIA', label: 'Gastronomía / Restaurantes' },
-                    { value: 'MODA_RETAIL', label: 'Moda / Retail Físico' },
-                    { value: 'BELLEZA_PERSONAL', label: 'Belleza / Cuidado Personal' }
+                    { value: 'MODA_RETAIL', label: 'Moda / Retail' },
+                    { value: 'BELLEZA_PERSONAL', label: 'Belleza / Cuidado Personal' },
+                    { value: 'CONSTRUCCION_REMODELACION', label: 'Construcción / Remodelación' },
+                    { value: 'DEPORTES_FITNESS', label: 'Deportes / Fitness' },
+                    { value: 'VETERINARIA_MASCOTAS', label: 'Veterinaria / Mascotas' },
+                    { value: 'MANUFACTURA_INDUSTRIAL', label: 'Manufactura / Industrial' },
+                    { value: 'LOGISTICA_TRANSPORTE', label: 'Logística / Transporte' },
+                    { value: 'SEGUROS', label: 'Seguros' },
+                    { value: 'AGRICULTURA_AGROINDUSTRIA', label: 'Agricultura / Agroindustria' },
+                    { value: 'SERVICIOS_PROFESIONALES', label: 'Servicios Profesionales B2B' },
+                    { value: 'ENERGIA_UTILITIES', label: 'Energía / Utilities' },
+                    { value: 'HOGAR_DECORACION', label: 'Hogar / Decoración' }
                   ]}
                 />
 

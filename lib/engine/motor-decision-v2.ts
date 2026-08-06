@@ -13,6 +13,8 @@
 
 import { CPC_CALIBRADO_CHILE } from '../config/cpc-calibrado-chile'
 import { getBenchmarkIndustria } from './benchmarks-2024-verificados'
+import { getBenchmark2026 } from './benchmarks-2026-verificados'
+import { getCountry } from '../config/latam-countries-2026'
 
 // ============================================================================
 // TIPOS E INTERFACES
@@ -44,6 +46,7 @@ export interface InputConsultivo {
   tiene_ecommerce?: boolean
   tiene_equipo_ventas?: boolean
   ciclo_venta_dias?: number
+  pais?: string // Default 'CL'
 }
 
 export interface DiagnosticoConsultivo {
@@ -120,9 +123,11 @@ export class MotorDecisionV2 {
    */
   static diagnosticar(input: InputConsultivo): DiagnosticoConsultivo {
 
-    // 1. Obtener datos de referencia
-    const benchmark = getBenchmarkIndustria(input.industria)
-    const cpc_industria = CPC_CALIBRADO_CHILE[input.industria]?.cpc_promedio || 300
+    // 1. Obtener datos de referencia (2026 con fallback 2024)
+    const benchmark = getBenchmark2026(input.industria) || getBenchmarkIndustria(input.industria)
+    const pais = input.pais || 'CL'
+    const countryFactor = pais === 'CL' ? 1.0 : getCountry(pais).google_cpc_factor
+    const cpc_industria = (CPC_CALIBRADO_CHILE[input.industria]?.cpc_promedio || 300) * countryFactor
 
     // 2. Calcular métricas de viabilidad
     const ratio_ticket_cpc = input.ticket_promedio / cpc_industria

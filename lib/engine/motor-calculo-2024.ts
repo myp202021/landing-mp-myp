@@ -20,7 +20,10 @@
 
 import { InputCliente2024 } from './interfaces-cliente-2024'
 import { BENCHMARKS_INDUSTRIAS_2024, getBenchmarkIndustria } from './benchmarks-2024-verificados'
+import { BENCHMARKS_INDUSTRIAS_2026, getBenchmark2026 } from './benchmarks-2026-verificados'
 import { calcularTodosLosPonderadores } from './ponderadores-sistema-2024'
+import { getCountry, getCountryFactor } from '../config/latam-countries-2026'
+import { getCPCForCountry } from '../config/cpc-calibrado-2026'
 import {
   aplicarLimitesIndustria,
   validarCoherenciaMatematica,
@@ -117,11 +120,15 @@ export class MotorCalculo2024 {
 
   static calcular(input: InputCliente2024): ResultadoCalculoCompleto2024 {
 
-    // 1. Obtener benchmarks de la industria
-    const benchmark = getBenchmarkIndustria(input.industria)
+    // 1. Obtener benchmarks de la industria (2026 con fallback a 2024)
+    const benchmark = getBenchmark2026(input.industria) || getBenchmarkIndustria(input.industria)
     if (!benchmark) {
       throw new Error(`Industria '${input.industria}' no soportada`)
     }
+
+    // País (default Chile)
+    const pais = (input as any).pais || 'CL'
+    const countryConfig = getCountry(pais)
 
     // 2. Calcular todos los ponderadores
     const ponderadores = calcularTodosLosPonderadores(input)
@@ -178,9 +185,11 @@ export class MotorCalculo2024 {
 
       metadata: {
         industria_utilizada: input.industria,
+        pais_utilizado: (input as any).pais || 'CL',
         benchmarks_aplicados: benchmark,
         fecha_calculo: new Date().toISOString(),
-        version_motor: "2024.1.0"
+        version_motor: "2026.1.0",
+        data_source_year: (benchmark as any).source_year || 2024
       }
     }
   }
@@ -192,14 +201,19 @@ export class MotorCalculo2024 {
     ponderadores: any
   ) {
 
-    // === NUEVA FÓRMULA ===
+    // === FÓRMULA v2026 ===
     // X = presupuesto_mensual (variable cliente)
     // Y = tasa_cierre (variable cliente)
     // Z = ticket_promedio (variable cliente)
 
-    // Calcular CPC real con factores
-    const cpc_google = benchmark.google_search.cpc_base * benchmark.chile_factor * ponderadores.factor_cpc_total
-    const cpc_meta = benchmark.meta_ads.cpc_base * benchmark.chile_factor * ponderadores.factor_cpc_total
+    // País del cliente (default Chile)
+    const pais = (input as any).pais || 'CL'
+    const countryFactor = pais === 'CL' ? 1.0 : getCountryFactor(pais, 'google')
+    const countryFactorMeta = pais === 'CL' ? 1.0 : getCountryFactor(pais, 'meta')
+
+    // Calcular CPC real con factores + ajuste por país
+    const cpc_google = benchmark.google_search.cpc_base * benchmark.chile_factor * ponderadores.factor_cpc_total * countryFactor
+    const cpc_meta = benchmark.meta_ads.cpc_base * benchmark.chile_factor * ponderadores.factor_cpc_total * countryFactorMeta
 
     // CPC promedio ponderado (70% Google, 30% Meta por defecto)
     const cpc_promedio_ponderado = (cpc_google * 0.7) + (cpc_meta * 0.3)

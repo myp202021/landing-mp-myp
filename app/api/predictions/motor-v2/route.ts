@@ -4,6 +4,9 @@ import { MotorDecisionV2, InputConsultivo } from '../../../../lib/engine/motor-d
 import { MotorCalculo2024 } from '../../../../lib/engine/motor-calculo-2024'
 import { InputCliente2024 } from '../../../../lib/engine/interfaces-cliente-2024'
 import { getIndustryInsight } from '../../../../lib/config/industry-insights'
+import { getCountry } from '../../../../lib/config/latam-countries-2026'
+import { getSourceAttribution } from '../../../../lib/config/data-sources-2026'
+import { getBenchmark2026 } from '../../../../lib/engine/benchmarks-2026-verificados'
 
 /**
  * API MOTOR V2 - SISTEMA CONSULTIVO + PREDICCIÓN
@@ -40,7 +43,8 @@ export async function POST(request: NextRequest) {
       competencia_percibida: body.competencia_percibida || 5,
       tiene_ecommerce: body.tiene_ecommerce || false,
       tiene_equipo_ventas: body.tiene_equipo_ventas || true,
-      ciclo_venta_dias: body.ciclo_venta_dias || 30
+      ciclo_venta_dias: body.ciclo_venta_dias || 30,
+      pais: body.pais || 'CL'
     }
 
     console.log('🔧 Input consultivo procesado:', inputConsultivo)
@@ -59,7 +63,7 @@ export async function POST(request: NextRequest) {
     if (diagnostico.viable || diagnostico.score_viabilidad >= 30) {
       console.log('📊 Ejecutando predicción numérica...')
 
-      const inputMotor2024: InputCliente2024 = {
+      const inputMotor2024: any = {
         X_presupuesto_mensual: inputConsultivo.presupuesto_mensual,
         Y_tasa_cierre: body.tasa_cierre || 5,
         Z_ticket_promedio: inputConsultivo.ticket_promedio,
@@ -71,7 +75,8 @@ export async function POST(request: NextRequest) {
         estacionalidad: 1.0,
         geo_objetivo: 'NACIONAL',
         decision_maker: 'GERENTE',
-        objetivo_negocio: inputConsultivo.objetivo_marketing === 'VENTAS_DIRECTAS' ? 'CONVERSION' : 'LEAD_GEN'
+        objetivo_negocio: inputConsultivo.objetivo_marketing === 'VENTAS_DIRECTAS' ? 'CONVERSION' : 'LEAD_GEN',
+        pais: body.pais || 'CL'
       }
 
       const resultadoMotor = MotorCalculo2024.calcular(inputMotor2024)
@@ -187,7 +192,9 @@ export async function POST(request: NextRequest) {
         presupuesto_mensual: inputConsultivo.presupuesto_mensual,
         etapa_negocio: inputConsultivo.etapa_negocio,
         objetivo_marketing: inputConsultivo.objetivo_marketing,
-        nivel_assets: inputConsultivo.nivel_assets
+        nivel_assets: inputConsultivo.nivel_assets,
+        pais: body.pais || 'CL',
+        pais_info: getCountry(body.pais || 'CL')
       },
 
       // Sección 4: Insights de la industria (NUEVO)
@@ -206,12 +213,19 @@ export async function POST(request: NextRequest) {
         kpis_clave: industryInsight.kpis_clave
       } : null,
 
+      // Sección 5: Fuentes de datos (transparencia)
+      fuentes_datos: {
+        benchmark_year: 2026,
+        sources: getBenchmark2026(inputConsultivo.industria)?.fuentes_2026 || [],
+        attribution: getSourceAttribution(getBenchmark2026(inputConsultivo.industria)?.fuentes_2026 || [])
+      },
+
       // Metadata
       motor_v2_info: {
-        version: '2.1.0',
+        version: '3.0.0',
         fecha_analisis: new Date().toISOString(),
-        modulos_utilizados: ['motor-decision-v2', 'motor-calculo-2024', 'industry-insights'],
-        metodologia: 'M&P Consultivo 2025'
+        modulos_utilizados: ['motor-decision-v2', 'motor-calculo-2024', 'benchmarks-2026', 'latam-countries-2026', 'industry-insights'],
+        metodologia: 'M&P Consultivo 2026 LATAM'
       }
     }
 
