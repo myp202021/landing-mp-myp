@@ -241,63 +241,95 @@ async function paso1_research(tema, datosPropios) {
 }
 
 // ═══ PASO 2: REDACCIÓN HTML (OpenAI) ═══
-async function paso2_redactar(research, tema) {
-  console.log('   PASO 2: OpenAI redacta HTML...')
-
-  var prompt = 'Convierte este research en un artículo HTML para un blog de marketing digital.\n\n'
-  prompt += 'Research:\n' + JSON.stringify(research, null, 2) + '\n\n'
-  prompt += 'USA EXACTAMENTE ESTE FORMATO HTML (clases Tailwind obligatorias):\n\n'
-  prompt += '<div class="prose prose-lg max-w-none">\n'
-  prompt += '  <h2 class="text-3xl font-bold text-gray-900 mt-12 mb-6">Título sección</h2>\n'
-  prompt += '  <p class="text-gray-700 mb-4">Párrafo con datos...</p>\n'
-  prompt += '  <h3 class="text-2xl font-semibold text-gray-800 mt-8 mb-4">Subsección</h3>\n'
-  prompt += '  <p class="text-gray-700 mb-4">Más contenido...</p>\n'
-  prompt += '  <ul class="list-disc pl-6 mb-6 space-y-2">\n'
-  prompt += '    <li class="text-gray-700">Item con dato concreto</li>\n'
-  prompt += '  </ul>\n'
-  prompt += '  <div class="overflow-x-auto mb-8">\n'
-  prompt += '    <table class="min-w-full border-collapse border border-gray-200">\n'
-  prompt += '      <thead><tr class="bg-gray-50"><th class="border border-gray-200 px-4 py-3 text-left font-semibold text-gray-900">Col</th></tr></thead>\n'
-  prompt += '      <tbody><tr class="hover:bg-gray-50"><td class="border border-gray-200 px-4 py-3 text-gray-700">Val</td></tr></tbody>\n'
-  prompt += '    </table>\n'
-  prompt += '  </div>\n'
-  prompt += '  <div class="bg-indigo-50 border-l-4 border-indigo-500 p-6 my-8 rounded-r-lg">\n'
-  prompt += '    <p class="text-indigo-900 font-medium">Dato destacado o insight clave</p>\n'
-  prompt += '  </div>\n'
-  prompt += '</div>\n\n'
+// Genera una sección individual con OpenAI
+async function generarSeccion(seccion, index, total, tema, linksInternos) {
+  var isLast = index === total - 1
+  var isFAQ = seccion.h2.toLowerCase().includes('pregunta') || seccion.h2.toLowerCase().includes('faq')
+  var prompt = 'Escribe una sección completa de un artículo de blog sobre marketing digital en Chile.\n\n'
+  prompt += 'SECCIÓN ' + (index + 1) + ' de ' + total + ': ' + seccion.h2 + '\n'
+  prompt += 'CONTENIDO BASE: ' + seccion.contenido + '\n\n'
+  prompt += 'FORMATO HTML obligatorio:\n'
+  prompt += '- H2: <h2 class="text-3xl font-bold text-gray-900 mt-12 mb-6">\n'
+  prompt += '- H3: <h3 class="text-2xl font-semibold text-gray-800 mt-8 mb-4">\n'
+  prompt += '- Párrafos: <p class="text-gray-700 mb-4">\n'
+  prompt += '- Listas: <ul class="list-disc pl-6 mb-6 space-y-2"><li class="text-gray-700">...</li></ul>\n'
+  prompt += '- Tablas: <div class="overflow-x-auto mb-8"><table class="min-w-full border-collapse border border-gray-200"><thead><tr class="bg-gray-50"><th class="border border-gray-200 px-4 py-3 text-left font-semibold text-gray-900">Col</th></tr></thead><tbody><tr class="hover:bg-gray-50"><td class="border border-gray-200 px-4 py-3 text-gray-700">Val</td></tr></tbody></table></div>\n'
+  prompt += '- Callouts: <div class="bg-indigo-50 border-l-4 border-indigo-500 p-6 my-8 rounded-r-lg"><p class="text-indigo-900 font-medium">Insight</p></div>\n\n'
   prompt += 'REGLAS:\n'
-  prompt += '- Envuelve TODO en <div class="prose prose-lg max-w-none">\n'
-  prompt += '- NUNCA uses <h1> — solo <h2> y <h3> con las clases exactas de arriba\n'
-  prompt += '- Párrafos con class="text-gray-700 mb-4"\n'
-  prompt += '- Tablas con bordes y hover como el ejemplo\n'
-  prompt += '- Usa callout boxes (bg-indigo-50) para datos destacados\n'
-  prompt += '- Mínimo 4000 palabras, 8+ secciones\n'
-  prompt += '- Links internos: <a href="/indicadores" class="text-indigo-600 hover:text-indigo-800 font-medium">Termómetro Marketing</a>\n'
-  prompt += '- Links internos sugeridos: /indicadores, /copilot, /predictor\n'
+  prompt += '- Escribe MÍNIMO 400 palabras para esta sección (500+ preferible)\n'
+  prompt += '- Incluye al menos 2-3 subsecciones con H3\n'
+  prompt += '- Incluye datos concretos, porcentajes, costos en CLP\n'
+  if (isFAQ) {
+    prompt += '- Esta es la sección FAQ: incluye MÍNIMO 6 preguntas como H3 (terminando en ?), cada una con respuesta de 50+ palabras en <p>\n'
+  }
+  if (index === 0 || index === Math.floor(total / 2)) {
+    prompt += '- Incluye una tabla HTML con datos comparativos o rankings\n'
+  }
+  if (linksInternos && index < 4) {
+    prompt += '- Incluye 1-2 links internos naturales: ' + linksInternos[index % linksInternos.length] + '\n'
+  }
   prompt += '- NO usar frases de IA: "en el vertiginoso", "es fundamental", "sin lugar a dudas", "paradigma"\n'
-  prompt += '- Al final: sección de fuentes con <p class="text-sm text-gray-500">\n'
-  prompt += '- Responde SOLO con el HTML, sin markdown, sin code blocks\n'
+  prompt += '- NUNCA nombres agencias competidoras. La ÚNICA agencia que puedes nombrar es Muller y Pérez.\n'
+  prompt += '- Responde SOLO con el HTML de esta sección (desde el <h2> hasta antes del siguiente <h2>). Sin wrappers.\n'
+
+  var r = await fetch('https://api.openai.com/v1/chat/completions', {
+    method: 'POST',
+    headers: { 'Authorization': 'Bearer ' + OPENAI_KEY, 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: 'gpt-4o',
+      messages: [
+        { role: 'system', content: 'Eres un redactor senior de contenido SEO para marketing digital en Chile. Escribes secciones extensas y detalladas con datos reales. Respondes SOLO con HTML. NUNCA nombres agencias competidoras excepto Muller y Pérez.' },
+        { role: 'user', content: prompt }
+      ],
+      temperature: 0.3,
+      max_tokens: 4000,
+    })
+  })
+  var data = await r.json()
+  var html = data.choices[0].message.content
+  html = html.replace(/^```html\n?/, '').replace(/\n?```$/, '').trim()
+  var wc = html.replace(/<[^>]*>/g, ' ').split(/\s+/).filter(function(w) { return w.length > 0 }).length
+  console.log('     Sección ' + (index + 1) + ': ' + seccion.h2.substring(0, 40) + '... → ' + wc + ' palabras')
+  return html
+}
+
+async function paso2_redactar(research, tema) {
+  console.log('   PASO 2: OpenAI redacta HTML (sección por sección)...')
+
+  var linksInternos = [
+    '<a href="/indicadores" class="text-indigo-600 hover:text-indigo-800 font-medium">indicadores de marketing</a> y <a href="/servicios" class="text-indigo-600 hover:text-indigo-800 font-medium">servicios</a>',
+    '<a href="/ranking-agencias-marketing-digital-chile" class="text-indigo-600 hover:text-indigo-800 font-medium">ranking de agencias</a>',
+    '<a href="/labs/predictor" class="text-indigo-600 hover:text-indigo-800 font-medium">predictor de inversión</a> y <a href="/contacto" class="text-indigo-600 hover:text-indigo-800 font-medium">contacto</a>',
+    '<a href="/blog" class="text-indigo-600 hover:text-indigo-800 font-medium">blog</a> y <a href="/casos-de-exito" class="text-indigo-600 hover:text-indigo-800 font-medium">casos de éxito</a>',
+  ]
 
   try {
-    var r = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: { 'Authorization': 'Bearer ' + OPENAI_KEY, 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'gpt-4o',
-        messages: [
-          { role: 'system', content: 'Eres un redactor senior de contenido SEO para marketing digital en Chile. Escribes artículos de autoridad con datos reales. Respondes SOLO con HTML. REGLA CRÍTICA: NUNCA nombres agencias competidoras específicas. La ÚNICA agencia que puedes nombrar es Muller y Pérez. Usa categorías genéricas en vez de nombres. Todas las fuentes citadas deben ser reales y verificables.' },
-          { role: 'user', content: prompt }
-        ],
-        temperature: 0.3,
-        max_tokens: 16000,
-      })
-    })
-    var data = await r.json()
-    var html = data.choices[0].message.content
-    // Limpiar markdown code blocks si los hay
-    html = html.replace(/^```html\n?/, '').replace(/\n?```$/, '')
+    var secciones = research.secciones || []
+    if (secciones.length < 5) {
+      console.error('   Research tiene pocas secciones: ' + secciones.length)
+      return null
+    }
+
+    var partes = []
+    for (var i = 0; i < secciones.length; i++) {
+      var secHtml = await generarSeccion(secciones[i], i, secciones.length, tema, linksInternos)
+      partes.push(secHtml)
+    }
+
+    // Agregar CTA final
+    partes.push('<div class="bg-gradient-to-r from-blue-900 to-purple-900 rounded-2xl p-8 text-center mt-12 mb-8"><h2 class="text-2xl font-bold text-white mb-4">¿Necesitas resultados reales en marketing digital?</h2><p class="text-blue-100 mb-6">En Muller y Pérez trabajamos con datos, no con suposiciones. Agenda una reunión estratégica sin costo.</p><a href="/contacto" class="inline-block bg-white text-blue-900 font-bold px-8 py-3 rounded-lg hover:bg-blue-50 transition">Solicitar propuesta →</a></div>')
+
+    // Agregar fuentes si existen
+    if (research.fuentes && research.fuentes.length > 0) {
+      var fuentesHtml = '<div class="mt-12 pt-8 border-t border-gray-200"><h3 class="text-lg font-semibold text-gray-900 mb-4">Fuentes</h3>'
+      research.fuentes.forEach(function(f) { fuentesHtml += '<p class="text-sm text-gray-500 mb-1">' + f + '</p>' })
+      fuentesHtml += '</div>'
+      partes.push(fuentesHtml)
+    }
+
+    var html = '<div class="prose prose-lg max-w-none">\n' + partes.join('\n\n') + '\n</div>'
     var wordCount = html.replace(/<[^>]*>/g, ' ').split(/\s+/).filter(function(w) { return w.length > 0 }).length
-    console.log('   Redacción: ' + wordCount + ' palabras')
+    console.log('   Redacción total: ' + wordCount + ' palabras (' + secciones.length + ' secciones)')
     return { html: html, wordCount: wordCount }
   } catch (e) {
     console.error('   Redacción error:', e.message)
@@ -339,6 +371,10 @@ async function paso3_revisar(html, research, wordCount) {
       })
     })
     var data = await r.json()
+    if (!data.content || !data.content[0] || !data.content[0].text) {
+      console.error('   Claude no devolvió contenido:', JSON.stringify(data).substring(0, 300))
+      return html // Devolver original
+    }
     var revisado = data.content[0].text
     revisado = revisado.replace(/^```html\n?/, '').replace(/\n?```$/, '')
     var newWordCount = revisado.replace(/<[^>]*>/g, ' ').split(/\s+/).filter(function(w) { return w.length > 0 }).length
