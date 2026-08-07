@@ -1,5 +1,5 @@
 import { Metadata } from 'next'
-import PredictorV2Client from './PredictorV2Client'
+import PredictorV4Client from './PredictorV4Client'
 
 // Schema estructurado para SEO y AI Search
 const predictorSchema = {
@@ -28,7 +28,8 @@ const predictorSchema = {
     '22 industrias con benchmarks CPC, CTR, CVR, CPA',
     '6 países LATAM (Chile, México, Colombia, Argentina, Brasil, Perú)',
     'Distribución óptima de presupuesto por plataforma',
-    'Simulador What-If interactivo'
+    'Simulación Monte Carlo con 10,000 iteraciones',
+    'Percentiles P25/P50/P75 con intervalos de confianza'
   ]
 }
 
@@ -165,7 +166,7 @@ export default function PredictorPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
-      <PredictorV2Client />
+      <PredictorV4Client />
     </>
   )
 }
