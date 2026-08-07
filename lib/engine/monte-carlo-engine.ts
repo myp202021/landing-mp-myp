@@ -483,16 +483,19 @@ export function runMonteCarlo(input: MCInput): MCResult {
   }))
 
   // Arrays totales
-  const totalConversiones = new Float64Array(N_ITERATIONS)
+  const totalLeads = new Float64Array(N_ITERATIONS)        // LEADS = clicks × CVR (métrica principal)
+  const totalConversiones = new Float64Array(N_ITERATIONS)  // VENTAS = leads × tasa_cierre
   const totalRevenue = new Float64Array(N_ITERATIONS)
   const totalRoas = new Float64Array(N_ITERATIONS)
   const totalCpa = new Float64Array(N_ITERATIONS)
+  const totalCpl = new Float64Array(N_ITERATIONS)           // Costo por lead
 
   // ═══════════════════════════════════════════════════════
   // SIMULACIÓN: 10,000 iteraciones
   // ═══════════════════════════════════════════════════════
 
   for (let i = 0; i < N_ITERATIONS; i++) {
+    let sumLeads = 0
     let sumConv = 0
     let sumRev = 0
 
@@ -526,14 +529,17 @@ export function runMonteCarlo(input: MCInput): MCResult {
       res.cpa[i] = ventas > 0 ? cfg.budget / ventas : cfg.budget
       res.roas[i] = cfg.budget > 0 ? revenue / cfg.budget : 0
 
+      sumLeads += leads
       sumConv += ventas
       sumRev += revenue
     }
 
+    totalLeads[i] = sumLeads
     totalConversiones[i] = sumConv
     totalRevenue[i] = sumRev
     totalRoas[i] = input.presupuesto_mensual > 0 ? sumRev / input.presupuesto_mensual : 0
     totalCpa[i] = sumConv > 0 ? input.presupuesto_mensual / sumConv : input.presupuesto_mensual
+    totalCpl[i] = sumLeads > 0 ? input.presupuesto_mensual / sumLeads : input.presupuesto_mensual
   }
 
   // ═══════════════════════════════════════════════════════
@@ -576,10 +582,12 @@ export function runMonteCarlo(input: MCInput): MCResult {
 
   // Totales
   const total = {
-    conversiones: toPercentileSet(totalConversiones),
+    leads: toPercentileSet(totalLeads),             // LEADS = clicks × CVR (Google Ads "conversiones")
+    conversiones: toPercentileSet(totalConversiones), // VENTAS = leads × tasa_cierre
     revenue: toPercentileSet(totalRevenue),
     roas: toPercentileSet(totalRoas),
-    cpa: toPercentileSet(totalCpa),
+    cpa: toPercentileSet(totalCpa),                  // Costo por venta
+    cpl: toPercentileSet(totalCpl),                  // Costo por lead
   }
 
   // Métricas de confianza
