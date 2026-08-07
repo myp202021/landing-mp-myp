@@ -27,12 +27,13 @@ export interface MCInput {
   industria: string
   pais: string
   presupuesto_mensual: number
-  ticket_promedio: number
-  tasa_cierre: number           // % (1-50)
+  ticket_promedio?: number        // opcional — usa default industria
+  tasa_cierre?: number            // % (1-50) — opcional, usa matrix industria×B2B×tamaño
   objetivo: 'LEADS' | 'VENTAS_DIRECTAS' | 'AWARENESS'
 
   // Opcionales (con defaults)
   tipo_cliente?: 'B2B' | 'B2C' | 'MIXTO'
+  tamano_empresa?: 'MICRO' | 'PYME' | 'MEDIANA' | 'GRANDE'  // nuevo
   competencia_percibida?: number  // 1-10, default 5
   madurez_digital?: 'PRINCIPIANTE' | 'INTERMEDIO' | 'AVANZADO'
   ciclo_venta_dias?: number       // default por industria
@@ -143,16 +144,48 @@ const SATURATION_THRESHOLDS: Record<string, number> = {
   HOGAR_DECORACION: 4_000_000,
 }
 
-// Defaults de tasa de cierre por industria (%)
-const TASA_CIERRE_DEFAULTS: Record<string, number> = {
-  ECOMMERCE: 8, INMOBILIARIA: 3, TURISMO: 12, GASTRONOMIA: 15,
-  AUTOMOTRIZ: 5, SALUD_MEDICINA: 10, EDUCACION: 8, MODA_RETAIL: 10,
-  FINTECH: 5, SERVICIOS_LEGALES: 8, BELLEZA_PERSONAL: 12,
-  TECNOLOGIA_SAAS: 3, CONSTRUCCION_REMODELACION: 5, DEPORTES_FITNESS: 10,
-  VETERINARIA_MASCOTAS: 15, MANUFACTURA_INDUSTRIAL: 3, LOGISTICA_TRANSPORTE: 5,
-  SEGUROS: 5, AGRICULTURA_AGROINDUSTRIA: 5, SERVICIOS_PROFESIONALES: 5,
-  ENERGIA_UTILITIES: 3, HOGAR_DECORACION: 10
+// Tasa de cierre matrix: industria × tipo_cliente × tamaño
+// Formato: { B2C: { MICRO, PYME, MEDIANA, GRANDE }, B2B: idem }
+const TASA_CIERRE_MATRIX: Record<string, Record<string, Record<string, number>>> = {
+  ECOMMERCE:                { B2C: { MICRO: 6, PYME: 8, MEDIANA: 10, GRANDE: 12 },  B2B: { MICRO: 3, PYME: 5, MEDIANA: 6, GRANDE: 8 } },
+  INMOBILIARIA:             { B2C: { MICRO: 2, PYME: 3, MEDIANA: 4, GRANDE: 5 },    B2B: { MICRO: 2, PYME: 3, MEDIANA: 4, GRANDE: 5 } },
+  TURISMO:                  { B2C: { MICRO: 8, PYME: 12, MEDIANA: 15, GRANDE: 18 }, B2B: { MICRO: 5, PYME: 8, MEDIANA: 10, GRANDE: 12 } },
+  GASTRONOMIA:              { B2C: { MICRO: 12, PYME: 15, MEDIANA: 18, GRANDE: 20 },B2B: { MICRO: 8, PYME: 10, MEDIANA: 12, GRANDE: 15 } },
+  AUTOMOTRIZ:               { B2C: { MICRO: 3, PYME: 5, MEDIANA: 6, GRANDE: 8 },   B2B: { MICRO: 2, PYME: 3, MEDIANA: 5, GRANDE: 6 } },
+  SALUD_MEDICINA:           { B2C: { MICRO: 8, PYME: 10, MEDIANA: 12, GRANDE: 15 }, B2B: { MICRO: 5, PYME: 8, MEDIANA: 10, GRANDE: 12 } },
+  EDUCACION:                { B2C: { MICRO: 5, PYME: 8, MEDIANA: 10, GRANDE: 12 },  B2B: { MICRO: 3, PYME: 5, MEDIANA: 8, GRANDE: 10 } },
+  MODA_RETAIL:              { B2C: { MICRO: 8, PYME: 10, MEDIANA: 12, GRANDE: 15 }, B2B: { MICRO: 5, PYME: 8, MEDIANA: 10, GRANDE: 12 } },
+  FINTECH:                  { B2C: { MICRO: 3, PYME: 5, MEDIANA: 6, GRANDE: 8 },   B2B: { MICRO: 2, PYME: 3, MEDIANA: 5, GRANDE: 6 } },
+  SERVICIOS_LEGALES:        { B2C: { MICRO: 5, PYME: 8, MEDIANA: 10, GRANDE: 12 }, B2B: { MICRO: 3, PYME: 5, MEDIANA: 8, GRANDE: 10 } },
+  BELLEZA_PERSONAL:         { B2C: { MICRO: 10, PYME: 12, MEDIANA: 15, GRANDE: 18 },B2B: { MICRO: 5, PYME: 8, MEDIANA: 10, GRANDE: 12 } },
+  TECNOLOGIA_SAAS:          { B2C: { MICRO: 3, PYME: 5, MEDIANA: 6, GRANDE: 8 },   B2B: { MICRO: 2, PYME: 3, MEDIANA: 4, GRANDE: 5 } },
+  CONSTRUCCION_REMODELACION:{ B2C: { MICRO: 3, PYME: 5, MEDIANA: 6, GRANDE: 8 },   B2B: { MICRO: 2, PYME: 3, MEDIANA: 5, GRANDE: 6 } },
+  DEPORTES_FITNESS:         { B2C: { MICRO: 8, PYME: 10, MEDIANA: 12, GRANDE: 15 }, B2B: { MICRO: 5, PYME: 8, MEDIANA: 10, GRANDE: 12 } },
+  VETERINARIA_MASCOTAS:     { B2C: { MICRO: 12, PYME: 15, MEDIANA: 18, GRANDE: 20 },B2B: { MICRO: 8, PYME: 10, MEDIANA: 12, GRANDE: 15 } },
+  MANUFACTURA_INDUSTRIAL:   { B2C: { MICRO: 2, PYME: 3, MEDIANA: 4, GRANDE: 5 },   B2B: { MICRO: 2, PYME: 3, MEDIANA: 4, GRANDE: 5 } },
+  LOGISTICA_TRANSPORTE:     { B2C: { MICRO: 3, PYME: 5, MEDIANA: 6, GRANDE: 8 },   B2B: { MICRO: 2, PYME: 3, MEDIANA: 5, GRANDE: 6 } },
+  SEGUROS:                  { B2C: { MICRO: 3, PYME: 5, MEDIANA: 6, GRANDE: 8 },   B2B: { MICRO: 2, PYME: 3, MEDIANA: 5, GRANDE: 6 } },
+  AGRICULTURA_AGROINDUSTRIA:{ B2C: { MICRO: 3, PYME: 5, MEDIANA: 6, GRANDE: 8 },   B2B: { MICRO: 2, PYME: 3, MEDIANA: 5, GRANDE: 6 } },
+  SERVICIOS_PROFESIONALES:  { B2C: { MICRO: 3, PYME: 5, MEDIANA: 6, GRANDE: 8 },   B2B: { MICRO: 2, PYME: 3, MEDIANA: 5, GRANDE: 6 } },
+  ENERGIA_UTILITIES:        { B2C: { MICRO: 2, PYME: 3, MEDIANA: 4, GRANDE: 5 },   B2B: { MICRO: 2, PYME: 3, MEDIANA: 4, GRANDE: 5 } },
+  HOGAR_DECORACION:         { B2C: { MICRO: 8, PYME: 10, MEDIANA: 12, GRANDE: 15 }, B2B: { MICRO: 5, PYME: 8, MEDIANA: 10, GRANDE: 12 } },
 }
+
+/** Obtiene tasa de cierre de referencia según industria, tipo cliente y tamaño */
+export function getTasaCierreRef(
+  industria: string,
+  tipo_cliente: string = 'B2C',
+  tamano: string = 'PYME'
+): number {
+  const tipo = tipo_cliente === 'B2B' ? 'B2B' : 'B2C'
+  const tam = ['MICRO', 'PYME', 'MEDIANA', 'GRANDE'].includes(tamano) ? tamano : 'PYME'
+  return TASA_CIERRE_MATRIX[industria]?.[tipo]?.[tam] ?? 5
+}
+
+// Legacy export para compatibilidad
+const TASA_CIERRE_DEFAULTS: Record<string, number> = Object.fromEntries(
+  Object.entries(TASA_CIERRE_MATRIX).map(([k, v]) => [k, v.B2C.PYME])
+)
 
 // Ticket de referencia por industria (CLP)
 const TICKET_DEFAULTS: Record<string, { min: number, medio: number, max: number }> = {
@@ -301,8 +334,14 @@ function calcularFactores(input: MCInput) {
     competencia <= 5 ? 1.0 :
     competencia <= 7 ? 0.9 : 0.8
 
-  // Sigma extra por competencia alta (más incertidumbre)
-  const sigma_multiplier = competencia >= 8 ? 1.15 : 1.0
+  // Sigma: competencia alta → más dispersión (absorbe factor_performance)
+  // competencia 1-3: sigma normal, resultados más predecibles
+  // competencia 4-7: sigma normal
+  // competencia 8-10: sigma +20%, más incertidumbre en la subasta
+  const sigma_multiplier =
+    competencia <= 3 ? 0.90 :
+    competencia <= 7 ? 1.0 :
+    1.20
 
   // Factor ciclo venta (afecta revenue realizado)
   const ciclo = input.ciclo_venta_dias ?? 30
@@ -315,7 +354,6 @@ function calcularFactores(input: MCInput) {
   return {
     factor_cpc_total: factor_cpc_competencia * factor_cpc_madurez * factor_cpc_geo,
     factor_cvr,
-    factor_performance: factor_performance_competencia,
     factor_revenue_realizado,
     sigma_multiplier
   }
@@ -363,6 +401,17 @@ export function runMonteCarlo(input: MCInput): MCResult {
   const margen_bruto = input.margen_bruto ?? 40
   const roas_breakeven = 1 / (margen_bruto / 100)
 
+  // Tasa de cierre: usar input del usuario o referencia de mercado
+  const tamano = input.tamano_empresa ?? 'PYME'
+  const tasa_cierre_ref = getTasaCierreRef(input.industria, tipo_cliente, tamano)
+  const tasa_cierre = input.tasa_cierre ?? tasa_cierre_ref
+  const tasa_cierre_es_default = !input.tasa_cierre
+
+  // Ticket: usar input del usuario o default industria
+  const ticket_ref = TICKET_DEFAULTS[input.industria]?.medio ?? 100000
+  const ticket_promedio = input.ticket_promedio ?? ticket_ref
+  const ticket_es_default = !input.ticket_promedio
+
   // Seed basado en inputs para reproducibilidad
   const seed = hashInputs(input)
   const rng = new SeededRNG(seed)
@@ -378,16 +427,18 @@ export function runMonteCarlo(input: MCInput): MCResult {
     let sigma_cpc: number
     let cpa_usd_bench: number
 
+    // getCPCForCountry ya retorna CPC ajustado al país (Ubersuggest para CL, USD×rate para otros)
+    // NO multiplicar por chile_factor — eso sería doble ajuste
     if (p === 'google_search') {
       cpc_median = getCPCForCountry(input.industria, input.pais, 'google_search')
-        * benchmark.chile_factor * factores.factor_cpc_total
+        * factores.factor_cpc_total
       ctr_mean = benchmark.google_search.ctr_base / 100
       cvr_mean = benchmark.google_search.cvr_web / 100 * factores.factor_cvr
       sigma_cpc = SIGMA_CPC_SEARCH * factores.sigma_multiplier
       cpa_usd_bench = benchmark.google_search.cpa_usd
     } else if (p === 'google_display') {
       cpc_median = getCPCForCountry(input.industria, input.pais, 'google_display')
-        * benchmark.chile_factor * factores.factor_cpc_total
+        * factores.factor_cpc_total
       ctr_mean = benchmark.google_display.ctr_base / 100
       cvr_mean = benchmark.google_display.cvr_web / 100 * factores.factor_cvr
       sigma_cpc = SIGMA_CPC_DISPLAY * factores.sigma_multiplier
@@ -395,7 +446,7 @@ export function runMonteCarlo(input: MCInput): MCResult {
     } else {
       // meta_ads
       cpc_median = getCPCForCountry(input.industria, input.pais, 'meta')
-        * benchmark.chile_factor * factores.factor_cpc_total
+        * factores.factor_cpc_total
       ctr_mean = benchmark.meta_ads.ctr_base / 100
       cvr_mean = benchmark.meta_ads.cvr_web / 100 * factores.factor_cvr
       sigma_cpc = SIGMA_CPC_META * factores.sigma_multiplier
@@ -413,7 +464,7 @@ export function runMonteCarlo(input: MCInput): MCResult {
       cpc_params: logNormalFromMedian(cpc_median, sigma_cpc),
       ctr_params: betaFromMeanCV(ctr_mean, CV_CTR),
       cvr_params: betaFromMeanCV(cvr_mean, CV_CVR),
-      benchmark_cpc: cpc_median / (benchmark.chile_factor * factores.factor_cpc_total), // CPC sin ajustes = benchmark puro
+      benchmark_cpc: cpc_median / factores.factor_cpc_total, // CPC sin ajustes usuario = benchmark puro
       benchmark_ctr: ctr_mean * 100,
       benchmark_cvr: cvr_mean / factores.factor_cvr * 100,
       cpa_usd_bench
@@ -455,16 +506,16 @@ export function runMonteCarlo(input: MCInput): MCResult {
       const cvr = sampleBeta(rng, cfg.cvr_params)
 
       // 2. Calcular embudo
+      // factor_performance se absorbe en sigma (más competencia → más dispersión, no menos clicks)
       let clicks = cfg.budget / cpc
       clicks = aplicarRendimientosDecrecientes(clicks, cfg.budget, input.industria)
-      clicks *= factores.factor_performance
 
       const impressions = clicks / Math.max(ctr, 0.0001)
       const leads = clicks * cvr
       // Cap por max_conversiones_mes de la industria (proporcionado por plataforma)
       const maxConvPlatform = (benchmark.max_conversiones_mes || 200) * (cfg.pct / 100)
-      const ventas = Math.min(leads * (input.tasa_cierre / 100), maxConvPlatform)
-      const revenue = ventas * input.ticket_promedio * factores.factor_revenue_realizado
+      const ventas = Math.min(leads * (tasa_cierre / 100), maxConvPlatform)
+      const revenue = ventas * ticket_promedio * factores.factor_revenue_realizado
 
       // 3. Guardar
       res.impressions[i] = impressions
@@ -566,8 +617,17 @@ export function runMonteCarlo(input: MCInput): MCResult {
       iterations: N_ITERATIONS,
       seed,
       industria: benchmark.nombre,
+      industria_codigo: input.industria,
       pais: input.pais || 'CL',
       presupuesto: input.presupuesto_mensual,
+      ticket_promedio: ticket_promedio,
+      ticket_es_default: ticket_es_default,
+      ticket_ref: ticket_ref,
+      tasa_cierre: tasa_cierre,
+      tasa_cierre_es_default: tasa_cierre_es_default,
+      tasa_cierre_ref: tasa_cierre_ref,
+      tipo_cliente: tipo_cliente,
+      tamano_empresa: tamano,
       fuentes,
       benchmark_year: 2026,
     }
@@ -617,4 +677,4 @@ function hashInputs(input: MCInput): number {
 }
 
 // Exports para uso externo
-export { TASA_CIERRE_DEFAULTS, TICKET_DEFAULTS, TIPO_CLIENTE_DEFAULTS }
+export { TASA_CIERRE_DEFAULTS, TASA_CIERRE_MATRIX, TICKET_DEFAULTS, TIPO_CLIENTE_DEFAULTS }
