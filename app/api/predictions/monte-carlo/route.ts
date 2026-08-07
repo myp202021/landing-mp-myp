@@ -1,9 +1,10 @@
 // @ts-nocheck
 import { NextRequest, NextResponse } from 'next/server'
-import { runMonteCarlo, TASA_CIERRE_DEFAULTS, TICKET_DEFAULTS } from '../../../../lib/engine/monte-carlo-engine'
+import { runMonteCarlo, TASA_CIERRE_DEFAULTS, TICKET_DEFAULTS, getTasaCierreRef } from '../../../../lib/engine/monte-carlo-engine'
 import { getBenchmark2026 } from '../../../../lib/engine/benchmarks-2026-verificados'
 import { getCountry } from '../../../../lib/config/latam-countries-2026'
 import { getSourceAttribution } from '../../../../lib/config/data-sources-2026'
+import { getIndustryOptimal } from '../../../../lib/engine/industry-optimals'
 
 /**
  * API PREDICTOR v4 — Motor Monte Carlo
@@ -28,15 +29,18 @@ export async function POST(request: NextRequest) {
     const ticketDefault = TICKET_DEFAULTS[industria]?.medio || 100000
     const tasaCierreDefault = TASA_CIERRE_DEFAULTS[industria] || 5
 
+    const tipo_cliente = body.tipo_cliente || undefined
+    const tamano_empresa = body.tamano_empresa || 'PYME'
+
     const input = {
       industria,
       pais: body.pais || 'CL',
       presupuesto_mensual: body.presupuesto_mensual,
-      ticket_promedio: body.ticket_promedio || ticketDefault,
-      tasa_cierre: body.tasa_cierre || tasaCierreDefault,
+      ticket_promedio: body.ticket_promedio || undefined,
+      tasa_cierre: body.tasa_cierre || undefined,
       objetivo: body.objetivo || 'LEADS',
-      // Opcionales
-      tipo_cliente: body.tipo_cliente,
+      tipo_cliente,
+      tamano_empresa,
       competencia_percibida: body.competencia_percibida,
       madurez_digital: body.madurez_digital,
       ciclo_venta_dias: body.ciclo_venta_dias,
@@ -50,6 +54,14 @@ export async function POST(request: NextRequest) {
     // Benchmark data para comparación
     const benchmark = getBenchmark2026(industria)
     const country = getCountry(input.pais)
+
+    // Óptimos de industria (benchmarks puros sin factores usuario)
+    const optimal = getIndustryOptimal(
+      industria,
+      input.pais,
+      tipo_cliente || result.meta.tipo_cliente,
+      tamano_empresa
+    )
 
     // Respuesta
     return NextResponse.json({
@@ -111,8 +123,11 @@ export async function POST(request: NextRequest) {
         attribution: getSourceAttribution(benchmark?.fuentes_2026 || []),
       },
 
+      // Óptimos de industria (referencia de mercado)
+      optimal,
+
       // Meta
-      version: '4.0.0',
+      version: '4.1.0',
       motor: 'Monte Carlo 10K iteraciones',
       timestamp: new Date().toISOString(),
     })
