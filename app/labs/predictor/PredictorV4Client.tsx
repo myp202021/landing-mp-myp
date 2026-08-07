@@ -512,9 +512,12 @@ function ResultsView({ data, onReset }: { data: any; onReset: () => void }) {
       {/* ═══ SECCIÓN A: Resumen ═══ */}
       <div className="bg-white/80 backdrop-blur-sm rounded-xl border border-slate-200/60 p-6 shadow-sm">
         <div className="text-center mb-5">
-          <p className="text-4xl font-bold text-slate-900">{Math.round(t.conversiones.p50)}</p>
-          <p className="text-slate-500 text-sm">conversiones/mes estimadas</p>
-          <p className="text-slate-400 text-xs mt-1">IC 90%: {Math.round(mc.confidence.ic_90_conversiones[0])} — {Math.round(mc.confidence.ic_90_conversiones[1])}</p>
+          <p className="text-4xl font-bold text-slate-900">{Math.round(t.leads.p50)}</p>
+          <p className="text-slate-500 text-sm">leads/mes estimados <span className="text-slate-300">(conversiones Google Ads)</span></p>
+          <p className="text-slate-400 text-xs mt-1">
+            Ventas estimadas: {Math.round(t.conversiones.p50)}/mes (con {meta.tasa_cierre}% tasa de cierre)
+          </p>
+          <p className="text-slate-300 text-[10px] mt-0.5">CPL: {fmt(t.cpl.p50)}</p>
           <div className="flex items-center justify-center gap-3 mt-2 text-sm">
             <span className="font-bold text-slate-700">{fmt(t.revenue.p50)} revenue</span>
             <span className="text-slate-300">·</span>
@@ -528,18 +531,18 @@ function ResultsView({ data, onReset }: { data: any; onReset: () => void }) {
         {/* 3 escenarios */}
         <div className="grid grid-cols-3 gap-3">
           {[
-            { label: 'Conservador', sub: 'P25', conv: t.conversiones.p25, rev: t.revenue.p25, roas: t.roas.p25, cpa: t.cpa.p75, color: 'border-amber-200 bg-amber-50/50', accent: 'text-amber-600' },
-            { label: 'Base', sub: 'P50', conv: t.conversiones.p50, rev: t.revenue.p50, roas: t.roas.p50, cpa: t.cpa.p50, color: 'border-indigo-200 bg-indigo-50/50', accent: 'text-indigo-600' },
-            { label: 'Favorable', sub: 'P75', conv: t.conversiones.p75, rev: t.revenue.p75, roas: t.roas.p75, cpa: t.cpa.p25, color: 'border-emerald-200 bg-emerald-50/50', accent: 'text-emerald-600' },
+            { label: 'Conservador', sub: 'P25', leads: t.leads.p25, conv: t.conversiones.p25, rev: t.revenue.p25, roas: t.roas.p25, cpl: t.cpl.p75, color: 'border-amber-200 bg-amber-50/50', accent: 'text-amber-600' },
+            { label: 'Base', sub: 'P50', leads: t.leads.p50, conv: t.conversiones.p50, rev: t.revenue.p50, roas: t.roas.p50, cpl: t.cpl.p50, color: 'border-indigo-200 bg-indigo-50/50', accent: 'text-indigo-600' },
+            { label: 'Favorable', sub: 'P75', leads: t.leads.p75, conv: t.conversiones.p75, rev: t.revenue.p75, roas: t.roas.p75, cpl: t.cpl.p25, color: 'border-emerald-200 bg-emerald-50/50', accent: 'text-emerald-600' },
           ].map(s => (
             <div key={s.label} className={`rounded-xl p-4 border ${s.color} text-center`}>
               <p className={`text-xs font-bold ${s.accent}`}>{s.label} <span className="font-normal text-slate-400">({s.sub})</span></p>
-              <p className="text-2xl font-bold text-slate-900 mt-1">{Math.round(s.conv)}</p>
-              <p className="text-[10px] text-slate-400">conversiones</p>
+              <p className="text-2xl font-bold text-slate-900 mt-1">{Math.round(s.leads)}</p>
+              <p className="text-[10px] text-slate-400">leads</p>
               <div className="mt-2 space-y-0.5 text-xs text-slate-500">
-                <p>{fmt(s.rev)}</p>
+                <p>{Math.round(s.conv)} ventas · {fmt(s.rev)}</p>
                 <p className={s.roas >= 1 ? 'text-emerald-600 font-semibold' : 'text-red-500'}>{s.roas.toFixed(1)}x ROAS</p>
-                <p>{fmt(s.cpa)} CPA</p>
+                <p>{fmt(s.cpl)} CPL</p>
               </div>
             </div>
           ))}
@@ -574,7 +577,7 @@ function ResultsView({ data, onReset }: { data: any; onReset: () => void }) {
       <div className="bg-white/80 backdrop-blur-sm rounded-xl border border-slate-200/60 p-6 shadow-sm">
         <h2 className="text-base font-bold text-slate-800 mb-1">Distribución de resultados</h2>
         <p className="text-xs text-slate-400 mb-4">10,000 simulaciones — cada barra es un rango de conversiones posibles</p>
-        <HistogramChart data={mc.histogram.conversiones} p25={t.conversiones.p25} p50={t.conversiones.p50} p75={t.conversiones.p75} />
+        <HistogramChart data={mc.histogram.conversiones} p25={t.leads.p25} p50={t.leads.p50} p75={t.leads.p75} />
       </div>
 
       {/* ═══ SECCIÓN E: Budget split ═══ */}
