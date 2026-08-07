@@ -2,43 +2,45 @@
 'use client'
 
 /**
- * PREDICTOR v4.1 — Monte Carlo · Light Theme · Glassmorphism
+ * PREDICTOR v4.2 — Stripe/Linear Style
  *
- * - Formulario 2 columnas: inputs + panel referencia industria en vivo
- * - Tasa de cierre y ticket pre-llenados con referencia de mercado
- * - Resultados: escenarios P25/P50/P75, embudos por plataforma, óptimos industria
- * - Diseño light con glassmorphism, tooltips, hints
+ * UX:
+ * - Dropdown con búsqueda para industria
+ * - E-commerce: conversión = compra (sin tasa de cierre)
+ * - Servicios: conversión = lead, tasa de cierre separada
+ * - Estadística visible: IC 90%, P(ROAS>1), histograma MC
+ * - Diseño Stripe/Linear: limpio, Inter, whitespace, datos precisos
  */
 
-import React, { useState, useMemo } from 'react'
+import React, { useState, useMemo, useRef, useEffect } from 'react'
 
 // ═══════════════════════════════════════════════════════════════════
-// DATOS ESTÁTICOS
+// DATA
 // ═══════════════════════════════════════════════════════════════════
 
 const INDUSTRIAS = [
-  { value: 'ECOMMERCE', label: 'E-commerce', icon: '🛒' },
-  { value: 'INMOBILIARIA', label: 'Inmobiliaria', icon: '🏠' },
-  { value: 'SALUD_MEDICINA', label: 'Salud / Clínicas', icon: '🏥' },
-  { value: 'EDUCACION', label: 'Educación', icon: '🎓' },
-  { value: 'TECNOLOGIA_SAAS', label: 'SaaS / Tech', icon: '💻' },
-  { value: 'FINTECH', label: 'Fintech', icon: '💳' },
-  { value: 'AUTOMOTRIZ', label: 'Automotriz', icon: '🚗' },
-  { value: 'TURISMO', label: 'Turismo', icon: '✈️' },
-  { value: 'GASTRONOMIA', label: 'Gastronomía', icon: '🍽️' },
-  { value: 'MODA_RETAIL', label: 'Moda / Retail', icon: '👗' },
-  { value: 'BELLEZA_PERSONAL', label: 'Belleza', icon: '💄' },
-  { value: 'SERVICIOS_LEGALES', label: 'Legales', icon: '⚖️' },
-  { value: 'CONSTRUCCION_REMODELACION', label: 'Construcción', icon: '🔨' },
-  { value: 'DEPORTES_FITNESS', label: 'Fitness', icon: '🏋️' },
-  { value: 'VETERINARIA_MASCOTAS', label: 'Veterinaria', icon: '🐾' },
-  { value: 'MANUFACTURA_INDUSTRIAL', label: 'Manufactura', icon: '🏭' },
-  { value: 'LOGISTICA_TRANSPORTE', label: 'Logística', icon: '🚛' },
-  { value: 'SEGUROS', label: 'Seguros', icon: '🛡️' },
-  { value: 'AGRICULTURA_AGROINDUSTRIA', label: 'Agricultura', icon: '🌾' },
-  { value: 'SERVICIOS_PROFESIONALES', label: 'Serv. Profesionales', icon: '💼' },
-  { value: 'ENERGIA_UTILITIES', label: 'Energía', icon: '⚡' },
-  { value: 'HOGAR_DECORACION', label: 'Hogar / Deco', icon: '🏡' },
+  { value: 'ECOMMERCE', label: 'E-commerce / Retail Online', type: 'ecommerce' },
+  { value: 'MODA_RETAIL', label: 'Moda / Retail', type: 'ecommerce' },
+  { value: 'HOGAR_DECORACION', label: 'Hogar / Decoración', type: 'ecommerce' },
+  { value: 'INMOBILIARIA', label: 'Inmobiliaria / Corredoras', type: 'servicios' },
+  { value: 'SALUD_MEDICINA', label: 'Salud / Clínicas / Medicina', type: 'servicios' },
+  { value: 'EDUCACION', label: 'Educación / Capacitación', type: 'servicios' },
+  { value: 'TECNOLOGIA_SAAS', label: 'Tecnología / SaaS', type: 'servicios' },
+  { value: 'FINTECH', label: 'Fintech / Servicios Financieros', type: 'servicios' },
+  { value: 'AUTOMOTRIZ', label: 'Automotriz', type: 'servicios' },
+  { value: 'TURISMO', label: 'Turismo / Hotelería', type: 'servicios' },
+  { value: 'GASTRONOMIA', label: 'Gastronomía / Restaurantes', type: 'servicios' },
+  { value: 'BELLEZA_PERSONAL', label: 'Belleza / Cuidado Personal', type: 'servicios' },
+  { value: 'SERVICIOS_LEGALES', label: 'Servicios Legales', type: 'servicios' },
+  { value: 'CONSTRUCCION_REMODELACION', label: 'Construcción / Remodelación', type: 'servicios' },
+  { value: 'DEPORTES_FITNESS', label: 'Deportes / Fitness', type: 'servicios' },
+  { value: 'VETERINARIA_MASCOTAS', label: 'Veterinaria / Mascotas', type: 'servicios' },
+  { value: 'MANUFACTURA_INDUSTRIAL', label: 'Manufactura / Industrial', type: 'servicios' },
+  { value: 'LOGISTICA_TRANSPORTE', label: 'Logística / Transporte', type: 'servicios' },
+  { value: 'SEGUROS', label: 'Seguros', type: 'servicios' },
+  { value: 'AGRICULTURA_AGROINDUSTRIA', label: 'Agricultura / Agroindustria', type: 'servicios' },
+  { value: 'SERVICIOS_PROFESIONALES', label: 'Servicios Profesionales B2B', type: 'servicios' },
+  { value: 'ENERGIA_UTILITIES', label: 'Energía / Utilities', type: 'servicios' },
 ]
 
 const PAISES = [
@@ -50,43 +52,113 @@ const PAISES = [
   { code: 'PE', name: 'Perú', flag: '🇵🇪' },
 ]
 
-const PLATFORM_NAMES: Record<string, string> = {
-  google_search: 'Google Search', google_display: 'Google Display', meta_ads: 'Meta Ads',
-}
-const PLATFORM_COLORS: Record<string, string> = {
-  google_search: 'bg-blue-500', google_display: 'bg-amber-500', meta_ads: 'bg-purple-500',
-}
+const PLAT: Record<string, string> = { google_search: 'Google Search', google_display: 'Google Display', meta_ads: 'Meta Ads' }
 
 // ═══════════════════════════════════════════════════════════════════
 // HELPERS
 // ═══════════════════════════════════════════════════════════════════
 
 const fmt = (n: number) => {
-  if (n >= 1e9) return `$${(n / 1e9).toFixed(1)}B`
-  if (n >= 1e6) return `$${(n / 1e6).toFixed(1)}M`
-  if (n >= 1e3) return `$${(n / 1e3).toFixed(0)}K`
+  if (Math.abs(n) >= 1e9) return `$${(n / 1e9).toFixed(1)}B`
+  if (Math.abs(n) >= 1e6) return `$${(n / 1e6).toFixed(1)}M`
+  if (Math.abs(n) >= 1e3) return `$${(n / 1e3).toFixed(0)}K`
   return `$${Math.round(n)}`
 }
 const fmtN = (n: number) => {
   if (n >= 1e6) return `${(n / 1e6).toFixed(1)}M`
-  if (n >= 1e3) return `${(n / 1e3).toFixed(0)}K`
+  if (n >= 1e3) return `${(n / 1e3).toFixed(1)}K`
   return Math.round(n).toString()
 }
 
-// Tooltip component
-const Hint = ({ text }: { text: string }) => {
+// ═══════════════════════════════════════════════════════════════════
+// SEARCHABLE DROPDOWN
+// ═══════════════════════════════════════════════════════════════════
+
+function SearchDropdown({ value, onChange, options, placeholder }: {
+  value: string
+  onChange: (v: string) => void
+  options: { value: string; label: string }[]
+  placeholder: string
+}) {
+  const [open, setOpen] = useState(false)
+  const [search, setSearch] = useState('')
+  const ref = useRef<HTMLDivElement>(null)
+
+  const filtered = options.filter(o =>
+    o.label.toLowerCase().includes(search.toLowerCase())
+  )
+
+  const selected = options.find(o => o.value === value)
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
+    }
+    document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [])
+
+  return (
+    <div ref={ref} className="relative">
+      <button
+        onClick={() => { setOpen(!open); setSearch('') }}
+        className="w-full h-11 px-4 bg-white border border-gray-200 rounded-lg text-left text-[14px] text-gray-900 hover:border-gray-300 transition flex items-center justify-between"
+      >
+        <span className={selected ? 'text-gray-900' : 'text-gray-400'}>{selected?.label || placeholder}</span>
+        <svg className="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+      </button>
+
+      {open && (
+        <div className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden">
+          <div className="p-2 border-b border-gray-100">
+            <input
+              autoFocus
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              placeholder="Buscar industria..."
+              className="w-full h-9 px-3 bg-gray-50 border border-gray-200 rounded-md text-[13px] text-gray-900 placeholder-gray-400 outline-none focus:border-indigo-400"
+            />
+          </div>
+          <div className="max-h-60 overflow-y-auto">
+            {filtered.map(o => (
+              <button
+                key={o.value}
+                onClick={() => { onChange(o.value); setOpen(false) }}
+                className={`w-full text-left px-4 py-2.5 text-[13px] transition ${
+                  o.value === value
+                    ? 'bg-indigo-50 text-indigo-700 font-medium'
+                    : 'text-gray-700 hover:bg-gray-50'
+                }`}
+              >
+                {o.label}
+              </button>
+            ))}
+            {filtered.length === 0 && (
+              <p className="px-4 py-3 text-[13px] text-gray-400">Sin resultados</p>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// TOOLTIP
+// ═══════════════════════════════════════════════════════════════════
+
+function Tip({ text }: { text: string }) {
   const [show, setShow] = useState(false)
   return (
-    <span className="relative inline-block ml-1">
+    <span className="relative inline-block ml-1.5 align-middle">
       <span
-        className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-slate-200 text-slate-500 text-[9px] font-bold cursor-help hover:bg-indigo-100 hover:text-indigo-600 transition"
-        onMouseEnter={() => setShow(true)}
-        onMouseLeave={() => setShow(false)}
+        onMouseEnter={() => setShow(true)} onMouseLeave={() => setShow(false)}
+        className="inline-flex items-center justify-center w-[15px] h-[15px] rounded-full border border-gray-300 text-gray-400 text-[9px] font-bold cursor-help hover:border-indigo-400 hover:text-indigo-500 transition"
       >?</span>
       {show && (
-        <span className="absolute z-50 bottom-6 left-1/2 -translate-x-1/2 w-56 p-2.5 bg-slate-900 text-white text-[11px] leading-snug rounded-lg shadow-xl">
+        <span className="absolute z-50 bottom-7 left-1/2 -translate-x-1/2 w-60 px-3 py-2 bg-gray-900 text-white text-[11px] leading-[1.5] rounded-lg shadow-xl">
           {text}
-          <span className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-900" />
+          <span className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900" />
         </span>
       )}
     </span>
@@ -94,322 +166,227 @@ const Hint = ({ text }: { text: string }) => {
 }
 
 // ═══════════════════════════════════════════════════════════════════
-// COMPONENTE PRINCIPAL
+// MAIN COMPONENT
 // ═══════════════════════════════════════════════════════════════════
 
 export default function PredictorV4Client() {
   const [step, setStep] = useState<'input' | 'loading' | 'results'>('input')
   const [result, setResult] = useState<any>(null)
   const [error, setError] = useState<string | null>(null)
-  const [showAdvanced, setShowAdvanced] = useState(false)
 
   const [form, setForm] = useState({
-    industria: '', pais: 'CL',
-    presupuesto_mensual: 1500000,
+    industria: '', pais: 'CL', presupuesto_mensual: 1500000,
     ticket_promedio: '', tasa_cierre: '',
-    objetivo: 'LEADS',
-    tipo_cliente: 'B2C', tamano_empresa: 'PYME',
-    competencia_percibida: 5,
-    madurez_digital: 'INTERMEDIO',
-    margen_bruto: 40, geo_objetivo: 'NACIONAL',
+    objetivo: 'LEADS', tipo_cliente: 'B2C', tamano_empresa: 'PYME',
+    competencia_percibida: 5, madurez_digital: 'INTERMEDIO',
+    margen_bruto: 40,
   })
 
+  const industriaData = INDUSTRIAS.find(i => i.value === form.industria)
+  const isEcommerce = industriaData?.type === 'ecommerce'
   const isValid = form.industria && form.presupuesto_mensual >= 300000
-  const selectedIndustria = INDUSTRIAS.find(i => i.value === form.industria)
 
   const handleSubmit = async () => {
-    setStep('loading')
-    setError(null)
+    setStep('loading'); setError(null)
     try {
       const body: any = {
         industria: form.industria, pais: form.pais,
         presupuesto_mensual: form.presupuesto_mensual,
-        objetivo: form.objetivo,
-        tipo_cliente: form.tipo_cliente,
-        tamano_empresa: form.tamano_empresa,
+        objetivo: isEcommerce ? 'VENTAS_DIRECTAS' : form.objetivo,
+        tipo_cliente: form.tipo_cliente, tamano_empresa: form.tamano_empresa,
       }
       if (form.ticket_promedio) body.ticket_promedio = parseInt(form.ticket_promedio)
-      if (form.tasa_cierre) body.tasa_cierre = parseInt(form.tasa_cierre)
+      // E-commerce: no enviar tasa de cierre (la conversión ES la compra)
+      if (!isEcommerce && form.tasa_cierre) body.tasa_cierre = parseInt(form.tasa_cierre)
+      if (isEcommerce) body.tasa_cierre = 100 // CVR ya incluye la compra
       if (form.competencia_percibida !== 5) body.competencia_percibida = form.competencia_percibida
       if (form.madurez_digital !== 'INTERMEDIO') body.madurez_digital = form.madurez_digital
       if (form.margen_bruto !== 40) body.margen_bruto = form.margen_bruto
-      if (form.geo_objetivo !== 'NACIONAL') body.geo_objetivo = form.geo_objetivo
 
       const res = await fetch('/api/predictions/monte-carlo', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
       })
       if (!res.ok) throw new Error((await res.json()).message || 'Error')
       setResult(await res.json())
       setStep('results')
       window.scrollTo({ top: 0, behavior: 'smooth' })
-    } catch (e: any) {
-      setError(e.message)
-      setStep('input')
-    }
+    } catch (e: any) { setError(e.message); setStep('input') }
   }
 
-  const handleReset = () => {
-    setResult(null); setStep('input')
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-  }
-
-  // ═══════════════════════════════════════════════════════════════
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-indigo-50/30">
-
-      {/* Nav */}
-      <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-slate-200/60">
-        <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
+    <div className="min-h-screen bg-white">
+      {/* Nav — Stripe style */}
+      <nav className="border-b border-gray-100">
+        <div className="max-w-[720px] mx-auto px-6 h-14 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <a href="/"><img src="/logo-myp.png" alt="M&P" className="h-8" /></a>
-            <span className="text-slate-300">|</span>
-            <span className="text-sm font-semibold text-slate-600">Predictor v4</span>
-            <span className="text-[10px] font-bold bg-indigo-100 text-indigo-600 px-2 py-0.5 rounded-full">Monte Carlo</span>
+            <a href="/"><img src="/logo-myp.png" alt="M&P" className="h-7" /></a>
+            <span className="text-gray-200">/</span>
+            <span className="text-[13px] font-medium text-gray-500">Predictor</span>
           </div>
           {step === 'results' && (
-            <button onClick={handleReset} className="text-sm text-slate-400 hover:text-slate-700 transition font-medium">
+            <button onClick={() => { setResult(null); setStep('input'); window.scrollTo({ top: 0 }) }}
+              className="text-[13px] text-indigo-600 hover:text-indigo-700 font-medium transition">
               Nuevo análisis
             </button>
           )}
         </div>
       </nav>
 
-      <main className="max-w-6xl mx-auto px-6 py-8">
+      <main className="max-w-[720px] mx-auto px-6">
 
         {/* ═══ INPUT ═══ */}
         {step === 'input' && (
-          <div className="space-y-8">
+          <div className="py-12 space-y-10">
             {/* Header */}
-            <div className="text-center space-y-2">
-              <p className="text-xs font-semibold tracking-widest text-indigo-500 uppercase">Simulación Monte Carlo · 10,000 iteraciones · Data 2026</p>
-              <h1 className="text-3xl font-bold text-slate-900">Predictor de Campañas Digitales</h1>
-              <p className="text-slate-500 text-sm max-w-lg mx-auto">
-                Predice resultados de Google Ads y Meta Ads con benchmarks verificados. 22 industrias, 6 países LATAM.
+            <div>
+              <h1 className="text-[28px] font-semibold text-gray-900 tracking-tight">Predictor de campañas</h1>
+              <p className="text-[15px] text-gray-500 mt-1">
+                Simulación Monte Carlo con 10,000 iteraciones. Data verificada 2026.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              {/* Columna izquierda: Form */}
-              <div className="lg:col-span-2 space-y-6">
+            {/* Industria */}
+            <Field label="Industria" tip="Los benchmarks (CPC, CTR, CVR) se ajustan automáticamente según la industria seleccionada.">
+              <SearchDropdown
+                value={form.industria}
+                onChange={v => setForm({ ...form, industria: v })}
+                options={INDUSTRIAS}
+                placeholder="Seleccionar industria..."
+              />
+              {isEcommerce && (
+                <p className="text-[12px] text-indigo-600 mt-2 font-medium">
+                  E-commerce: la conversión es la compra. No se aplica tasa de cierre adicional.
+                </p>
+              )}
+              {industriaData && !isEcommerce && (
+                <p className="text-[12px] text-gray-400 mt-2">
+                  Servicios: la conversión es un lead (formulario, llamada, WhatsApp). Se aplica tasa de cierre para estimar ventas.
+                </p>
+              )}
+            </Field>
 
-                {/* Industria */}
-                <div className="bg-white/80 backdrop-blur-sm rounded-xl border border-slate-200/60 p-5 shadow-sm">
-                  <label className="text-sm font-semibold text-slate-700 mb-3 block">
-                    Industria <Hint text="Selecciona la industria de tu negocio. Los benchmarks (CPC, CTR, CVR) se ajustan automáticamente." />
-                  </label>
-                  <div className="grid grid-cols-3 sm:grid-cols-4 gap-1.5">
-                    {INDUSTRIAS.map(ind => (
-                      <button key={ind.value} onClick={() => setForm({ ...form, industria: ind.value })}
-                        className={`flex items-center gap-1.5 px-2.5 py-2 rounded-lg text-xs transition-all ${
-                          form.industria === ind.value
-                            ? 'bg-indigo-50 border-2 border-indigo-400 text-indigo-700 font-semibold shadow-sm'
-                            : 'bg-slate-50 border border-slate-200 text-slate-600 hover:bg-slate-100 hover:border-slate-300'
-                        }`}
-                      >
-                        <span>{ind.icon}</span>
-                        <span className="truncate">{ind.label}</span>
-                      </button>
-                    ))}
-                  </div>
+            {/* País + Presupuesto */}
+            <div className="grid grid-cols-2 gap-6">
+              <Field label="País">
+                <div className="flex gap-1.5">
+                  {PAISES.map(p => (
+                    <button key={p.code} onClick={() => setForm({ ...form, pais: p.code })}
+                      className={`flex-1 py-2 rounded-md text-[12px] font-medium transition border ${
+                        form.pais === p.code
+                          ? 'bg-indigo-50 border-indigo-300 text-indigo-700'
+                          : 'bg-white border-gray-200 text-gray-500 hover:border-gray-300'
+                      }`}>{p.flag} {p.code}</button>
+                  ))}
                 </div>
+              </Field>
 
-                {/* País + Presupuesto */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="bg-white/80 backdrop-blur-sm rounded-xl border border-slate-200/60 p-5 shadow-sm">
-                    <label className="text-sm font-semibold text-slate-700 mb-3 block">País</label>
-                    <div className="flex flex-wrap gap-1.5">
-                      {PAISES.map(p => (
-                        <button key={p.code} onClick={() => setForm({ ...form, pais: p.code })}
-                          className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm transition ${
-                            form.pais === p.code
-                              ? 'bg-indigo-50 border-2 border-indigo-400 text-indigo-700 font-semibold'
-                              : 'bg-slate-50 border border-slate-200 text-slate-500 hover:bg-slate-100'
-                          }`}
-                        >
-                          <span>{p.flag}</span><span className="text-xs">{p.name}</span>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="bg-white/80 backdrop-blur-sm rounded-xl border border-slate-200/60 p-5 shadow-sm">
-                    <label className="text-sm font-semibold text-slate-700 mb-2 block">
-                      Presupuesto mensual <Hint text="Inversión mensual en pauta publicitaria (Google + Meta). No incluye fee de gestión." />
-                    </label>
-                    <p className="text-2xl font-bold text-indigo-600 mb-2">{fmt(form.presupuesto_mensual)}</p>
-                    <input type="range" min={300000} max={20000000} step={100000}
-                      value={form.presupuesto_mensual}
-                      onChange={e => setForm({ ...form, presupuesto_mensual: parseInt(e.target.value) })}
-                      className="w-full h-1.5 bg-slate-200 rounded-full appearance-none cursor-pointer accent-indigo-500"
-                    />
-                    <div className="flex gap-1.5 mt-2">
-                      {[500000, 1000000, 2000000, 5000000].map(p => (
-                        <button key={p} onClick={() => setForm({ ...form, presupuesto_mensual: p })}
-                          className={`text-[10px] px-2 py-1 rounded transition ${
-                            form.presupuesto_mensual === p ? 'bg-indigo-100 text-indigo-700 font-semibold' : 'bg-slate-100 text-slate-400 hover:bg-slate-200'
-                          }`}>{fmt(p)}</button>
-                      ))}
-                    </div>
-                  </div>
+              <Field label="Presupuesto mensual" tip="Inversión en pauta (Google + Meta). No incluye fee de gestión.">
+                <div className="flex items-center gap-3">
+                  <span className="text-[18px] font-semibold text-gray-900 tabular-nums">{fmt(form.presupuesto_mensual)}</span>
                 </div>
+                <input type="range" min={300000} max={20000000} step={100000}
+                  value={form.presupuesto_mensual}
+                  onChange={e => setForm({ ...form, presupuesto_mensual: parseInt(e.target.value) })}
+                  className="w-full h-1 bg-gray-200 rounded-full appearance-none cursor-pointer accent-indigo-600 mt-2"
+                />
+              </Field>
+            </div>
 
-                {/* Ticket + Tasa cierre + Objetivo */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  <div className="bg-white/80 backdrop-blur-sm rounded-xl border border-slate-200/60 p-5 shadow-sm">
-                    <label className="text-sm font-semibold text-slate-700 mb-2 block">
-                      Ticket promedio <Hint text="Valor promedio de cada venta o contrato. Si no lo sabes, usamos el promedio de tu industria." />
-                    </label>
-                    <input type="number" value={form.ticket_promedio}
-                      onChange={e => setForm({ ...form, ticket_promedio: e.target.value })}
-                      placeholder="Ref. industria"
-                      className="w-full h-10 px-3 bg-white border border-slate-200 rounded-lg text-slate-800 text-sm placeholder-slate-300 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 outline-none"
-                    />
-                    <p className="text-[10px] text-slate-400 mt-1">Si vacío, se usa referencia de la industria</p>
-                  </div>
+            {/* Ticket */}
+            <Field label={isEcommerce ? 'Ticket promedio (valor de compra)' : 'Ticket promedio'} tip="Valor promedio de cada venta o contrato. Si lo dejas vacío, se usa la referencia de tu industria.">
+              <input type="number" value={form.ticket_promedio}
+                onChange={e => setForm({ ...form, ticket_promedio: e.target.value })}
+                placeholder="Referencia de la industria"
+                className="w-full h-11 px-4 bg-white border border-gray-200 rounded-lg text-[14px] text-gray-900 placeholder-gray-400 outline-none focus:border-indigo-400 transition"
+              />
+            </Field>
 
-                  <div className="bg-white/80 backdrop-blur-sm rounded-xl border border-slate-200/60 p-5 shadow-sm">
-                    <label className="text-sm font-semibold text-slate-700 mb-2 block">
-                      Tasa de cierre (%) <Hint text="% de leads que se convierten en venta. Depende de tu industria, tipo de cliente y tamaño. Si no lo sabes, usamos la referencia de mercado." />
-                    </label>
-                    <input type="number" value={form.tasa_cierre}
-                      onChange={e => setForm({ ...form, tasa_cierre: e.target.value })}
-                      placeholder="Ref. mercado"
-                      className="w-full h-10 px-3 bg-white border border-slate-200 rounded-lg text-slate-800 text-sm placeholder-slate-300 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 outline-none"
-                    />
-                    <p className="text-[10px] text-slate-400 mt-1">Si vacío, se usa referencia según industria + B2B/B2C + tamaño</p>
-                  </div>
+            {/* Tasa de cierre — SOLO para servicios */}
+            {!isEcommerce && form.industria && (
+              <Field label="Tasa de cierre (%)" tip="% de leads que se convierten en venta cerrada. Si no la conoces, usamos la referencia de mercado según tu industria, tipo de cliente y tamaño.">
+                <input type="number" value={form.tasa_cierre}
+                  onChange={e => setForm({ ...form, tasa_cierre: e.target.value })}
+                  placeholder="Referencia de mercado"
+                  className="w-full h-11 px-4 bg-white border border-gray-200 rounded-lg text-[14px] text-gray-900 placeholder-gray-400 outline-none focus:border-indigo-400 transition"
+                />
+              </Field>
+            )}
 
-                  <div className="bg-white/80 backdrop-blur-sm rounded-xl border border-slate-200/60 p-5 shadow-sm">
-                    <label className="text-sm font-semibold text-slate-700 mb-2 block">Objetivo</label>
-                    <div className="space-y-1.5">
-                      {[
-                        { value: 'LEADS', label: 'Leads' },
-                        { value: 'VENTAS_DIRECTAS', label: 'Ventas directas' },
-                        { value: 'AWARENESS', label: 'Awareness' },
-                      ].map(o => (
-                        <button key={o.value} onClick={() => setForm({ ...form, objetivo: o.value })}
-                          className={`w-full text-left px-3 py-1.5 rounded-lg text-xs transition ${
-                            form.objetivo === o.value
-                              ? 'bg-indigo-50 border border-indigo-300 text-indigo-700 font-semibold'
-                              : 'bg-slate-50 border border-slate-200 text-slate-500 hover:bg-slate-100'
-                          }`}>{o.label}</button>
-                      ))}
-                    </div>
-                  </div>
+            {/* Objetivo — SOLO para servicios */}
+            {!isEcommerce && form.industria && (
+              <Field label="Objetivo">
+                <div className="flex gap-2">
+                  {[
+                    { v: 'LEADS', l: 'Generación de leads' },
+                    { v: 'VENTAS_DIRECTAS', l: 'Ventas directas' },
+                    { v: 'AWARENESS', l: 'Awareness' },
+                  ].map(o => (
+                    <button key={o.v} onClick={() => setForm({ ...form, objetivo: o.v })}
+                      className={`flex-1 py-2.5 rounded-md text-[12px] font-medium transition border ${
+                        form.objetivo === o.v
+                          ? 'bg-indigo-50 border-indigo-300 text-indigo-700'
+                          : 'bg-white border-gray-200 text-gray-500 hover:border-gray-300'
+                      }`}>{o.l}</button>
+                  ))}
                 </div>
+              </Field>
+            )}
 
-                {/* Tipo cliente + Tamaño */}
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-white/80 backdrop-blur-sm rounded-xl border border-slate-200/60 p-4 shadow-sm">
-                    <label className="text-xs font-semibold text-slate-600 mb-2 block">Tipo cliente</label>
-                    <div className="flex gap-2">
-                      {['B2C', 'B2B'].map(t => (
-                        <button key={t} onClick={() => setForm({ ...form, tipo_cliente: t })}
-                          className={`flex-1 py-2 rounded-lg text-xs font-semibold transition ${
-                            form.tipo_cliente === t
-                              ? 'bg-indigo-100 text-indigo-700 border border-indigo-300'
-                              : 'bg-slate-50 text-slate-400 border border-slate-200 hover:bg-slate-100'
-                          }`}>{t}</button>
-                      ))}
-                    </div>
-                  </div>
-                  <div className="bg-white/80 backdrop-blur-sm rounded-xl border border-slate-200/60 p-4 shadow-sm">
-                    <label className="text-xs font-semibold text-slate-600 mb-2 block">
-                      Tamaño empresa <Hint text="Afecta la tasa de cierre de referencia. Empresas grandes suelen tener mejor tasa." />
-                    </label>
-                    <div className="flex gap-1">
-                      {[
-                        { v: 'MICRO', l: '<10' }, { v: 'PYME', l: '10-50' },
-                        { v: 'MEDIANA', l: '50-200' }, { v: 'GRANDE', l: '>200' },
-                      ].map(t => (
-                        <button key={t.v} onClick={() => setForm({ ...form, tamano_empresa: t.v })}
-                          className={`flex-1 py-1.5 rounded text-[10px] font-semibold transition ${
-                            form.tamano_empresa === t.v
-                              ? 'bg-indigo-100 text-indigo-700 border border-indigo-300'
-                              : 'bg-slate-50 text-slate-400 border border-slate-200 hover:bg-slate-100'
-                          }`}>{t.l}</button>
-                      ))}
-                    </div>
-                  </div>
+            {/* Tipo + Tamaño */}
+            <div className="grid grid-cols-2 gap-6">
+              <Field label="Tipo de cliente">
+                <div className="flex gap-2">
+                  {['B2C', 'B2B'].map(t => (
+                    <button key={t} onClick={() => setForm({ ...form, tipo_cliente: t })}
+                      className={`flex-1 py-2.5 rounded-md text-[13px] font-medium transition border ${
+                        form.tipo_cliente === t ? 'bg-indigo-50 border-indigo-300 text-indigo-700' : 'bg-white border-gray-200 text-gray-500 hover:border-gray-300'
+                      }`}>{t}</button>
+                  ))}
                 </div>
-
-                {/* Advanced */}
-                <button onClick={() => setShowAdvanced(!showAdvanced)}
-                  className="text-xs text-slate-400 hover:text-slate-600 transition font-medium">
-                  {showAdvanced ? '▾' : '▸'} Ajustes avanzados
-                </button>
-                {showAdvanced && (
-                  <div className="grid grid-cols-3 gap-3 p-4 bg-white/60 rounded-xl border border-slate-200/60">
-                    <div>
-                      <label className="text-[10px] font-semibold text-slate-500 block mb-1">Competencia ({form.competencia_percibida})</label>
-                      <input type="range" min={1} max={10} value={form.competencia_percibida}
-                        onChange={e => setForm({ ...form, competencia_percibida: parseInt(e.target.value) })}
-                        className="w-full h-1 bg-slate-200 rounded-full appearance-none cursor-pointer accent-indigo-500" />
-                    </div>
-                    <div>
-                      <label className="text-[10px] font-semibold text-slate-500 block mb-1">Madurez digital</label>
-                      <select value={form.madurez_digital} onChange={e => setForm({ ...form, madurez_digital: e.target.value })}
-                        className="w-full h-8 px-2 bg-white border border-slate-200 rounded text-xs text-slate-700">
-                        <option value="PRINCIPIANTE">Principiante</option>
-                        <option value="INTERMEDIO">Intermedio</option>
-                        <option value="AVANZADO">Avanzado</option>
-                      </select>
-                    </div>
-                    <div>
-                      <label className="text-[10px] font-semibold text-slate-500 block mb-1">Margen bruto ({form.margen_bruto}%)</label>
-                      <input type="range" min={10} max={80} value={form.margen_bruto}
-                        onChange={e => setForm({ ...form, margen_bruto: parseInt(e.target.value) })}
-                        className="w-full h-1 bg-slate-200 rounded-full appearance-none cursor-pointer accent-indigo-500" />
-                    </div>
-                  </div>
-                )}
-
-                {/* CTA */}
-                <button onClick={handleSubmit} disabled={!isValid}
-                  className="w-full h-12 bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-200 disabled:text-slate-400 text-white font-bold rounded-xl transition text-sm shadow-lg shadow-indigo-200 disabled:shadow-none">
-                  Generar predicción
-                </button>
-                {error && <p className="text-red-500 text-sm text-center">{error}</p>}
-              </div>
-
-              {/* Columna derecha: Panel referencia industria (en vivo) */}
-              <div className="lg:col-span-1">
-                <div className="sticky top-20 bg-white/80 backdrop-blur-sm rounded-xl border border-slate-200/60 p-5 shadow-sm">
-                  <h3 className="text-sm font-bold text-slate-700 mb-3">
-                    {selectedIndustria ? `${selectedIndustria.icon} ${selectedIndustria.label}` : 'Selecciona industria'}
-                  </h3>
-                  {form.industria ? (
-                    <IndustryRefPanel industria={form.industria} pais={form.pais} tipo={form.tipo_cliente} tamano={form.tamano_empresa} />
-                  ) : (
-                    <p className="text-xs text-slate-400">Los benchmarks de CPC, CTR, CVR y tasa de cierre aparecerán aquí al seleccionar una industria.</p>
-                  )}
+              </Field>
+              <Field label="Tamaño empresa" tip="Afecta la tasa de cierre de referencia. Empresas más grandes suelen cerrar mejor.">
+                <div className="flex gap-1.5">
+                  {[{ v: 'MICRO', l: '<10' }, { v: 'PYME', l: '10-50' }, { v: 'MEDIANA', l: '50-200' }, { v: 'GRANDE', l: '>200' }].map(t => (
+                    <button key={t.v} onClick={() => setForm({ ...form, tamano_empresa: t.v })}
+                      className={`flex-1 py-2 rounded-md text-[11px] font-medium transition border ${
+                        form.tamano_empresa === t.v ? 'bg-indigo-50 border-indigo-300 text-indigo-700' : 'bg-white border-gray-200 text-gray-500 hover:border-gray-300'
+                      }`}>{t.l}</button>
+                  ))}
                 </div>
-              </div>
+              </Field>
+            </div>
+
+            {/* Submit */}
+            <div>
+              <button onClick={handleSubmit} disabled={!isValid}
+                className="w-full h-11 bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-100 disabled:text-gray-400 text-white text-[14px] font-medium rounded-lg transition">
+                Generar predicción
+              </button>
+              {error && <p className="text-red-500 text-[13px] mt-2">{error}</p>}
             </div>
           </div>
         )}
 
         {/* ═══ LOADING ═══ */}
         {step === 'loading' && (
-          <div className="text-center py-20 space-y-4">
-            <div className="w-10 h-10 border-2 border-indigo-200 border-t-indigo-600 rounded-full animate-spin mx-auto" />
-            <p className="text-slate-500 text-sm">Ejecutando 10,000 simulaciones...</p>
+          <div className="py-32 text-center">
+            <div className="w-8 h-8 border-2 border-gray-200 border-t-indigo-600 rounded-full animate-spin mx-auto" />
+            <p className="text-[13px] text-gray-400 mt-4">Ejecutando 10,000 simulaciones...</p>
           </div>
         )}
 
         {/* ═══ RESULTS ═══ */}
-        {step === 'results' && result && <ResultsView data={result} onReset={handleReset} />}
+        {step === 'results' && result && <Results data={result} isEcommerce={INDUSTRIAS.find(i => i.value === result.montecarlo.meta.industria_codigo)?.type === 'ecommerce'} />}
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-slate-200 mt-16 bg-white/50">
-        <div className="max-w-6xl mx-auto px-6 py-5 flex items-center justify-between text-xs text-slate-400">
-          <span>Motor Monte Carlo v4.1 · Benchmarks 2026 · M&P Labs</span>
+      <footer className="border-t border-gray-100 mt-20">
+        <div className="max-w-[720px] mx-auto px-6 py-5 flex items-center justify-between text-[12px] text-gray-400">
+          <span>Motor Monte Carlo v4.2 · Benchmarks 2026 · {new Date().getFullYear()}</span>
           <div className="flex gap-4">
-            <a href="/labs" className="hover:text-slate-600 transition">Labs</a>
-            <a href="/" className="hover:text-slate-600 transition">Inicio</a>
+            <a href="/labs" className="hover:text-gray-600 transition">Labs</a>
+            <a href="/" className="hover:text-gray-600 transition">Inicio</a>
           </div>
         </div>
       </footer>
@@ -418,198 +395,148 @@ export default function PredictorV4Client() {
 }
 
 // ═══════════════════════════════════════════════════════════════════
-// PANEL REFERENCIA INDUSTRIA (dinámico, side panel)
+// FIELD WRAPPER
 // ═══════════════════════════════════════════════════════════════════
 
-function IndustryRefPanel({ industria, pais, tipo, tamano }: { industria: string; pais: string; tipo: string; tamano: string }) {
-  const [data, setData] = useState<any>(null)
-  const [loading, setLoading] = useState(false)
-
-  React.useEffect(() => {
-    setLoading(true)
-    fetch(`/api/predictions/monte-carlo?industria=${industria}&pais=${pais}&tipo_cliente=${tipo}&tamano=${tamano}`)
-      .catch(() => null)
-
-    // Fetch optimal via POST with minimal data
-    fetch('/api/predictions/monte-carlo', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ industria, pais, presupuesto_mensual: 1500000, objetivo: 'LEADS', tipo_cliente: tipo, tamano_empresa: tamano }),
-    })
-      .then(r => r.json())
-      .then(d => { setData(d); setLoading(false) })
-      .catch(() => setLoading(false))
-  }, [industria, pais, tipo, tamano])
-
-  if (loading || !data?.optimal) {
-    return <div className="text-xs text-slate-400 animate-pulse">Cargando benchmarks...</div>
-  }
-
-  const opt = data.optimal
-  const meta = data.montecarlo?.meta
-
+function Field({ label, tip, children }: { label: string; tip?: string; children: React.ReactNode }) {
   return (
-    <div className="space-y-3 text-xs">
-      <div className="grid grid-cols-2 gap-2">
-        <RefStat label="CPC Google" value={fmt(opt.google_search.cpc)} />
-        <RefStat label="CPC Meta" value={fmt(opt.meta_ads.cpc)} />
-        <RefStat label="CTR Search" value={`${opt.google_search.ctr}%`} />
-        <RefStat label="CVR Search" value={`${opt.google_search.cvr}%`} />
-      </div>
-      <div className="border-t border-slate-100 pt-2 space-y-1.5">
-        <RefStat label={`Tasa cierre ref. (${tipo} ${tamano})`} value={`${opt.tasa_cierre_ref}%`} highlight />
-        <RefStat label="Ticket ref." value={fmt(opt.ticket_ref.medio)} />
-        <RefStat label="CPA estimado" value={fmt(opt.cpa_estimado)} />
-        <RefStat label="ROAS típico" value={`${opt.roas_tipico}x`} />
-      </div>
-      <div className="border-t border-slate-100 pt-2">
-        <p className="text-[10px] text-slate-400 font-semibold mb-1">Presupuesto recomendado</p>
-        <p className="text-slate-600">{fmt(opt.presupuesto_optimo.min)} — {fmt(opt.presupuesto_optimo.recomendado)}</p>
-      </div>
-      <p className="text-[9px] text-slate-300 leading-snug">
-        Fuentes: WordStream 2026, Get-Ryze 2026, Ubersuggest Chile · {opt.benchmark_year}
-      </p>
-    </div>
-  )
-}
-
-function RefStat({ label, value, highlight }: { label: string; value: string; highlight?: boolean }) {
-  return (
-    <div className={`${highlight ? 'bg-indigo-50 border border-indigo-200' : 'bg-slate-50'} rounded-lg px-2.5 py-1.5`}>
-      <p className="text-[10px] text-slate-400">{label}</p>
-      <p className={`text-sm font-bold ${highlight ? 'text-indigo-600' : 'text-slate-700'}`}>{value}</p>
+    <div>
+      <label className="block text-[13px] font-medium text-gray-700 mb-2">
+        {label}{tip && <Tip text={tip} />}
+      </label>
+      {children}
     </div>
   )
 }
 
 // ═══════════════════════════════════════════════════════════════════
-// RESULTS VIEW
+// RESULTS
 // ═══════════════════════════════════════════════════════════════════
 
-function ResultsView({ data, onReset }: { data: any; onReset: () => void }) {
+function Results({ data, isEcommerce }: { data: any; isEcommerce: boolean }) {
   const mc = data.montecarlo
   const t = mc.total
+  const m = mc.meta
   const opt = data.optimal
-  const meta = mc.meta
+  const mainMetric = isEcommerce ? t.leads : t.leads // leads = conversiones Google Ads en ambos casos
+  const mainLabel = isEcommerce ? 'compras' : 'leads'
 
   return (
-    <div className="space-y-6">
+    <div className="py-12 space-y-12">
 
-      {/* Context badges */}
-      <div className="flex flex-wrap gap-2 text-[10px]">
-        <span className="bg-slate-100 text-slate-600 px-2.5 py-1 rounded-full font-medium">{meta.industria}</span>
-        <span className="bg-slate-100 text-slate-600 px-2.5 py-1 rounded-full">{PAISES.find(p => p.code === meta.pais)?.flag} {PAISES.find(p => p.code === meta.pais)?.name}</span>
-        <span className="bg-slate-100 text-slate-600 px-2.5 py-1 rounded-full">{fmt(meta.presupuesto)}/mes</span>
-        <span className="bg-indigo-100 text-indigo-600 px-2.5 py-1 rounded-full font-semibold">{fmtN(meta.iterations)} simulaciones</span>
-        {meta.tasa_cierre_es_default && (
-          <span className="bg-amber-50 text-amber-600 px-2.5 py-1 rounded-full">Tasa cierre: {meta.tasa_cierre}% (ref. mercado)</span>
+      {/* Context line */}
+      <div className="text-[12px] text-gray-400 flex flex-wrap gap-x-3 gap-y-1">
+        <span>{m.industria}</span>
+        <span className="text-gray-200">·</span>
+        <span>{PAISES.find(p => p.code === m.pais)?.flag} {PAISES.find(p => p.code === m.pais)?.name}</span>
+        <span className="text-gray-200">·</span>
+        <span>{fmt(m.presupuesto)}/mes</span>
+        <span className="text-gray-200">·</span>
+        <span>{fmtN(m.iterations)} simulaciones</span>
+        {m.tasa_cierre_es_default && !isEcommerce && (
+          <><span className="text-gray-200">·</span><span className="text-amber-500">Tasa cierre {m.tasa_cierre}% (ref. mercado)</span></>
         )}
-        {meta.ticket_es_default && (
-          <span className="bg-amber-50 text-amber-600 px-2.5 py-1 rounded-full">Ticket: {fmt(meta.ticket_promedio)} (ref. industria)</span>
+        {m.ticket_es_default && (
+          <><span className="text-gray-200">·</span><span className="text-amber-500">Ticket {fmt(m.ticket_promedio)} (ref. industria)</span></>
         )}
       </div>
 
-      {/* ═══ SECCIÓN A: Resumen ═══ */}
-      <div className="bg-white/80 backdrop-blur-sm rounded-xl border border-slate-200/60 p-6 shadow-sm">
-        <div className="text-center mb-5">
-          <p className="text-4xl font-bold text-slate-900">{Math.round(t.leads.p50)}</p>
-          <p className="text-slate-500 text-sm">leads/mes estimados <span className="text-slate-300">(conversiones Google Ads)</span></p>
-          <p className="text-slate-400 text-xs mt-1">
-            Ventas estimadas: {Math.round(t.conversiones.p50)}/mes (con {meta.tasa_cierre}% tasa de cierre)
+      {/* ═══ HEADLINE ═══ */}
+      <div>
+        <p className="text-[48px] font-semibold text-gray-900 tracking-tight leading-none tabular-nums">
+          {Math.round(mainMetric.p50)}
+        </p>
+        <p className="text-[15px] text-gray-500 mt-1">{mainLabel} estimados por mes</p>
+        {!isEcommerce && (
+          <p className="text-[13px] text-gray-400 mt-0.5">
+            {Math.round(t.conversiones.p50)} ventas estimadas (tasa de cierre {m.tasa_cierre}%)
           </p>
-          <p className="text-slate-300 text-[10px] mt-0.5">CPL: {fmt(t.cpl.p50)}</p>
-          <div className="flex items-center justify-center gap-3 mt-2 text-sm">
-            <span className="font-bold text-slate-700">{fmt(t.revenue.p50)} revenue</span>
-            <span className="text-slate-300">·</span>
-            <span className={`font-bold ${t.roas.p50 >= 1 ? 'text-emerald-600' : 'text-red-500'}`}>{t.roas.p50.toFixed(1)}x ROAS</span>
-          </div>
-          <p className={`text-xs font-semibold mt-1.5 ${mc.confidence.prob_roas_gt_1 >= 70 ? 'text-emerald-600' : mc.confidence.prob_roas_gt_1 >= 40 ? 'text-amber-600' : 'text-red-500'}`}>
-            {mc.confidence.prob_roas_gt_1}% probabilidad de recuperar la inversión
-          </p>
-        </div>
+        )}
+      </div>
 
-        {/* 3 escenarios */}
-        <div className="grid grid-cols-3 gap-3">
+      {/* ═══ STATISTICAL CONFIDENCE ═══ */}
+      <div className="grid grid-cols-4 gap-px bg-gray-100 rounded-lg overflow-hidden border border-gray-100">
+        <Stat label="IC 90%" value={`${Math.round(mainMetric.p5)} — ${Math.round(mainMetric.p95)}`} sub={mainLabel} />
+        <Stat label="P(ROAS > 1)" value={`${mc.confidence.prob_roas_gt_1}%`}
+          sub={mc.confidence.prob_roas_gt_1 >= 70 ? 'Alta prob.' : mc.confidence.prob_roas_gt_1 >= 40 ? 'Media' : 'Baja'}
+          color={mc.confidence.prob_roas_gt_1 >= 70 ? 'text-emerald-600' : mc.confidence.prob_roas_gt_1 >= 40 ? 'text-amber-600' : 'text-red-500'} />
+        <Stat label="ROAS mediana" value={`${t.roas.p50.toFixed(1)}x`} sub={`IC: ${t.roas.p5.toFixed(1)}x — ${t.roas.p95.toFixed(1)}x`}
+          color={t.roas.p50 >= 1 ? 'text-emerald-600' : 'text-red-500'} />
+        <Stat label={isEcommerce ? 'CPA mediana' : 'CPL mediana'} value={fmt(isEcommerce ? t.cpa.p50 : t.cpl.p50)} sub={`IC: ${fmt(isEcommerce ? t.cpa.p5 : t.cpl.p5)} — ${fmt(isEcommerce ? t.cpa.p95 : t.cpl.p95)}`} />
+      </div>
+
+      {/* ═══ 3 ESCENARIOS ═══ */}
+      <div>
+        <h2 className="text-[13px] font-medium text-gray-500 uppercase tracking-wide mb-4">Escenarios</h2>
+        <div className="grid grid-cols-3 gap-px bg-gray-100 rounded-lg overflow-hidden border border-gray-100">
           {[
-            { label: 'Conservador', sub: 'P25', leads: t.leads.p25, conv: t.conversiones.p25, rev: t.revenue.p25, roas: t.roas.p25, cpl: t.cpl.p75, color: 'border-amber-200 bg-amber-50/50', accent: 'text-amber-600' },
-            { label: 'Base', sub: 'P50', leads: t.leads.p50, conv: t.conversiones.p50, rev: t.revenue.p50, roas: t.roas.p50, cpl: t.cpl.p50, color: 'border-indigo-200 bg-indigo-50/50', accent: 'text-indigo-600' },
-            { label: 'Favorable', sub: 'P75', leads: t.leads.p75, conv: t.conversiones.p75, rev: t.revenue.p75, roas: t.roas.p75, cpl: t.cpl.p25, color: 'border-emerald-200 bg-emerald-50/50', accent: 'text-emerald-600' },
+            { label: 'Conservador', sub: 'Percentil 25 — 75% prob. de alcanzar o superar', leads: mainMetric.p25, conv: t.conversiones.p25, rev: t.revenue.p25, roas: t.roas.p25, cpl: t.cpl.p75 },
+            { label: 'Base', sub: 'Percentil 50 — resultado más probable', leads: mainMetric.p50, conv: t.conversiones.p50, rev: t.revenue.p50, roas: t.roas.p50, cpl: t.cpl.p50 },
+            { label: 'Favorable', sub: 'Percentil 75 — 25% prob.', leads: mainMetric.p75, conv: t.conversiones.p75, rev: t.revenue.p75, roas: t.roas.p75, cpl: t.cpl.p25 },
           ].map(s => (
-            <div key={s.label} className={`rounded-xl p-4 border ${s.color} text-center`}>
-              <p className={`text-xs font-bold ${s.accent}`}>{s.label} <span className="font-normal text-slate-400">({s.sub})</span></p>
-              <p className="text-2xl font-bold text-slate-900 mt-1">{Math.round(s.leads)}</p>
-              <p className="text-[10px] text-slate-400">leads</p>
-              <div className="mt-2 space-y-0.5 text-xs text-slate-500">
-                <p>{Math.round(s.conv)} ventas · {fmt(s.rev)}</p>
-                <p className={s.roas >= 1 ? 'text-emerald-600 font-semibold' : 'text-red-500'}>{s.roas.toFixed(1)}x ROAS</p>
-                <p>{fmt(s.cpl)} CPL</p>
+            <div key={s.label} className="bg-white p-5">
+              <p className="text-[11px] font-medium text-gray-400 uppercase tracking-wide">{s.label}</p>
+              <p className="text-[11px] text-gray-300 mb-3">{s.sub}</p>
+              <p className="text-[28px] font-semibold text-gray-900 tabular-nums">{Math.round(s.leads)}</p>
+              <p className="text-[12px] text-gray-400 mb-3">{mainLabel}</p>
+              <div className="space-y-1 text-[12px]">
+                {!isEcommerce && <Row label="Ventas" value={Math.round(s.conv).toString()} />}
+                <Row label="Revenue" value={fmt(s.rev)} />
+                <Row label="ROAS" value={`${s.roas.toFixed(1)}x`} color={s.roas >= 1 ? 'text-emerald-600' : 'text-red-500'} />
+                <Row label={isEcommerce ? 'CPA' : 'CPL'} value={fmt(s.cpl)} />
               </div>
             </div>
           ))}
         </div>
       </div>
 
-      {/* ═══ SECCIÓN B: Embudos por plataforma ═══ */}
+      {/* ═══ HISTOGRAMA MC ═══ */}
       <div>
-        <h2 className="text-base font-bold text-slate-800 mb-3">Embudo predictivo por plataforma</h2>
+        <h2 className="text-[13px] font-medium text-gray-500 uppercase tracking-wide mb-1">Distribución Monte Carlo</h2>
+        <p className="text-[12px] text-gray-400 mb-4">10,000 simulaciones. Cada barra es un rango de {mainLabel} posibles.</p>
+        <Histogram data={mc.histogram.conversiones} p25={mainMetric.p25} p50={mainMetric.p50} p75={mainMetric.p75} />
+      </div>
+
+      {/* ═══ EMBUDOS POR PLATAFORMA ═══ */}
+      <div>
+        <h2 className="text-[13px] font-medium text-gray-500 uppercase tracking-wide mb-4">Embudo por plataforma</h2>
         <div className="space-y-3">
           {mc.funnels.map((f: any) => (
-            <FunnelCard key={f.platform} funnel={f} />
+            <Funnel key={f.platform} f={f} isEcommerce={isEcommerce} tasaCierre={m.tasa_cierre} />
           ))}
         </div>
       </div>
 
-      {/* ═══ SECCIÓN C: Tu predicción vs Óptimo industria ═══ */}
+      {/* ═══ ÓPTIMOS INDUSTRIA ═══ */}
       {opt && (
-        <div className="bg-white/80 backdrop-blur-sm rounded-xl border border-slate-200/60 p-6 shadow-sm">
-          <h2 className="text-base font-bold text-slate-800 mb-1">Tu predicción vs referencia de la industria</h2>
-          <p className="text-xs text-slate-400 mb-4">{opt.industria} · {opt.tipo_cliente} · {opt.tamano}</p>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <CompareCard label="CPA" yours={fmt(t.cpa.p50)} ref_val={fmt(opt.cpa_estimado)} better={t.cpa.p50 < opt.cpa_estimado} />
-            <CompareCard label="ROAS" yours={`${t.roas.p50.toFixed(1)}x`} ref_val={`${opt.roas_tipico}x`} better={t.roas.p50 > opt.roas_tipico} />
-            <CompareCard label="Tasa cierre" yours={`${meta.tasa_cierre}%`} ref_val={`${opt.tasa_cierre_ref}%`} better={meta.tasa_cierre >= opt.tasa_cierre_ref} />
-            <CompareCard label="Presup. óptimo" yours={fmt(meta.presupuesto)} ref_val={fmt(opt.presupuesto_optimo.recomendado)} />
+        <div>
+          <h2 className="text-[13px] font-medium text-gray-500 uppercase tracking-wide mb-1">Referencia de mercado</h2>
+          <p className="text-[12px] text-gray-400 mb-4">{opt.industria} · {opt.tipo_cliente} · {opt.tamano} · Fuentes: WordStream, Get-Ryze, Ubersuggest {opt.benchmark_year}</p>
+          <div className="grid grid-cols-4 gap-px bg-gray-100 rounded-lg overflow-hidden border border-gray-100">
+            <Stat label="CPC Search" value={fmt(opt.google_search.cpc)} sub={`${opt.google_search.ctr}% CTR · ${opt.google_search.cvr}% CVR`} />
+            <Stat label="CPA estimado" value={fmt(opt.cpa_estimado)} />
+            <Stat label="ROAS típico" value={`${opt.roas_tipico}x`} />
+            <Stat label="Presup. recomendado" value={fmt(opt.presupuesto_optimo.recomendado)} sub={`Min: ${fmt(opt.presupuesto_optimo.min)}`} />
           </div>
         </div>
       )}
 
-      {/* ═══ SECCIÓN D: Histograma ═══ */}
-      <div className="bg-white/80 backdrop-blur-sm rounded-xl border border-slate-200/60 p-6 shadow-sm">
-        <h2 className="text-base font-bold text-slate-800 mb-1">Distribución de resultados</h2>
-        <p className="text-xs text-slate-400 mb-4">10,000 simulaciones — cada barra es un rango de conversiones posibles</p>
-        <HistogramChart data={mc.histogram.conversiones} p25={t.leads.p25} p50={t.leads.p50} p75={t.leads.p75} />
-      </div>
-
-      {/* ═══ SECCIÓN E: Budget split ═══ */}
-      <div className="bg-white/80 backdrop-blur-sm rounded-xl border border-slate-200/60 p-5 shadow-sm">
-        <h2 className="text-sm font-bold text-slate-800 mb-3">Distribución de presupuesto</h2>
-        {mc.funnels.map((f: any) => (
-          <div key={f.platform} className="flex items-center gap-3 mb-2">
-            <div className={`w-2 h-2 rounded-full ${PLATFORM_COLORS[f.platform]}`} />
-            <span className="text-xs text-slate-600 w-28">{PLATFORM_NAMES[f.platform]}</span>
-            <div className="flex-1 h-1.5 bg-slate-100 rounded-full overflow-hidden">
-              <div className={`h-full rounded-full ${PLATFORM_COLORS[f.platform]}`} style={{ width: `${f.allocation_pct}%` }} />
-            </div>
-            <span className="text-xs text-slate-400 w-20 text-right">{f.allocation_pct}% · {fmt(f.budget_allocated)}</span>
-          </div>
-        ))}
-      </div>
-
-      {/* ═══ SECCIÓN F: Disclaimer ═══ */}
-      <div className="text-[11px] text-slate-400 leading-relaxed bg-slate-50 rounded-xl p-4 border border-slate-200/60">
+      {/* ═══ DISCLAIMER ═══ */}
+      <div className="text-[12px] text-gray-400 leading-relaxed border-t border-gray-100 pt-6">
         Esta predicción es una referencia de mercado basada en benchmarks 2026 (WordStream, Get-Ryze, Ubersuggest)
-        y simulación Monte Carlo con {fmtN(mc.meta.iterations)} iteraciones. No constituye una garantía de resultados.
-        El rendimiento real depende de la calidad de los anuncios, landing pages, velocidad de respuesta a leads,
+        y simulación Monte Carlo con {fmtN(m.iterations)} iteraciones. No constituye una garantía de resultados.
+        El rendimiento real depende de la calidad de los anuncios, landing pages, velocidad de respuesta,
         estacionalidad y condiciones del mercado.
       </div>
 
-      <div className="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl border border-indigo-200/50 p-5 text-center">
-        <p className="font-bold text-slate-800 text-sm">Predicción personalizada con data de tu negocio</p>
-        <p className="text-slate-500 text-xs mb-3">Te ayudamos a ejecutar la estrategia con resultados reales</p>
-        <a href="https://wa.me/56992258137?text=Hola%2C%20hice%20una%20predicción%20en%20el%20Predictor%20v4%20y%20me%20gustaría%20una%20asesoría"
+      {/* CTA */}
+      <div className="border border-gray-200 rounded-lg p-6 text-center">
+        <p className="text-[15px] font-medium text-gray-900">Predicción personalizada con data de tu negocio</p>
+        <p className="text-[13px] text-gray-500 mt-1 mb-4">Te ayudamos a ejecutar la estrategia</p>
+        <a href="https://wa.me/56992258137?text=Hola%2C%20us%C3%A9%20el%20Predictor%20y%20me%20gustar%C3%ADa%20una%20asesor%C3%ADa"
           target="_blank" rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white font-bold px-5 py-2 rounded-lg transition text-sm shadow-md shadow-emerald-200">
-          WhatsApp M&P
+          className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white text-[13px] font-medium px-5 py-2.5 rounded-lg transition">
+          Contactar M&P
         </a>
       </div>
     </div>
@@ -617,102 +544,88 @@ function ResultsView({ data, onReset }: { data: any; onReset: () => void }) {
 }
 
 // ═══════════════════════════════════════════════════════════════════
-// SUBCOMPONENTS
+// SUB-COMPONENTS
 // ═══════════════════════════════════════════════════════════════════
 
-function FunnelCard({ funnel: f }: { funnel: any }) {
-  const stages = [
-    { label: 'Impresiones', p25: f.impressions.p25, p50: f.impressions.p50, p75: f.impressions.p75, fmt: fmtN },
-    { label: 'Clicks', p25: f.clicks.p25, p50: f.clicks.p50, p75: f.clicks.p75, fmt: fmtN, rate: f.benchmark.ctr, rateLabel: 'CTR' },
-    { label: 'Leads', p25: f.leads.p25, p50: f.leads.p50, p75: f.leads.p75, fmt: (n: number) => Math.round(n).toString(), rate: f.benchmark.cvr, rateLabel: 'CVR' },
-    { label: 'Ventas', p25: f.ventas.p25, p50: f.ventas.p50, p75: f.ventas.p75, fmt: (n: number) => n.toFixed(1) },
-  ]
-
+function Stat({ label, value, sub, color }: { label: string; value: string; sub?: string; color?: string }) {
   return (
-    <div className="bg-white/80 backdrop-blur-sm rounded-xl border border-slate-200/60 p-4 shadow-sm">
-      <div className="flex items-center justify-between mb-3">
+    <div className="bg-white p-4">
+      <p className="text-[11px] text-gray-400 font-medium">{label}</p>
+      <p className={`text-[18px] font-semibold tabular-nums ${color || 'text-gray-900'}`}>{value}</p>
+      {sub && <p className="text-[11px] text-gray-300 mt-0.5">{sub}</p>}
+    </div>
+  )
+}
+
+function Row({ label, value, color }: { label: string; value: string; color?: string }) {
+  return (
+    <div className="flex justify-between">
+      <span className="text-gray-400">{label}</span>
+      <span className={`font-medium tabular-nums ${color || 'text-gray-700'}`}>{value}</span>
+    </div>
+  )
+}
+
+function Funnel({ f, isEcommerce, tasaCierre }: { f: any; isEcommerce: boolean; tasaCierre: number }) {
+  return (
+    <div className="border border-gray-100 rounded-lg overflow-hidden">
+      <div className="flex items-center justify-between px-4 py-3 bg-gray-50 border-b border-gray-100">
         <div className="flex items-center gap-2">
-          <div className={`w-2.5 h-2.5 rounded-full ${PLATFORM_COLORS[f.platform]}`} />
-          <span className="text-sm font-bold text-slate-700">{PLATFORM_NAMES[f.platform]}</span>
-          <span className="text-[10px] text-slate-400">{f.allocation_pct}% · {fmt(f.budget_allocated)}</span>
+          <span className="text-[13px] font-medium text-gray-700">{PLAT[f.platform]}</span>
+          <span className="text-[11px] text-gray-400">{f.allocation_pct}% · {fmt(f.budget_allocated)}</span>
         </div>
-        <div className="text-right">
-          <span className={`text-xs font-bold ${f.roas.p50 >= 1 ? 'text-emerald-600' : 'text-red-500'}`}>{f.roas.p50.toFixed(1)}x</span>
-          <span className="text-[10px] text-slate-400 ml-1">ROAS</span>
-        </div>
+        <span className={`text-[13px] font-semibold tabular-nums ${f.roas.p50 >= 1 ? 'text-emerald-600' : 'text-red-500'}`}>
+          {f.roas.p50.toFixed(1)}x ROAS
+        </span>
       </div>
-      <table className="w-full text-[11px]">
+      <table className="w-full text-[12px]">
         <thead>
-          <tr className="text-slate-400 border-b border-slate-100">
-            <th className="text-left py-1.5 font-medium">Etapa</th>
-            <th className="text-center py-1.5 font-medium text-amber-500">P25</th>
-            <th className="text-center py-1.5 font-medium text-indigo-500">P50</th>
-            <th className="text-center py-1.5 font-medium text-emerald-500">P75</th>
-            <th className="text-right py-1.5 font-medium">Bench.</th>
+          <tr className="text-[11px] text-gray-400 border-b border-gray-50">
+            <th className="text-left py-2 px-4 font-medium">Etapa</th>
+            <th className="text-right py-2 px-4 font-medium">P25</th>
+            <th className="text-right py-2 px-4 font-medium text-indigo-500">P50</th>
+            <th className="text-right py-2 px-4 font-medium">P75</th>
+            <th className="text-right py-2 px-4 font-medium">Bench.</th>
           </tr>
         </thead>
-        <tbody>
-          {stages.map((s, i) => (
-            <tr key={s.label} className="border-b border-slate-50">
-              <td className="py-1.5 text-slate-600">
-                {i > 0 && <span className="text-slate-300 mr-0.5 text-[9px]">↓</span>}
-                {s.label}
-                {s.rate !== undefined && <span className="text-slate-300 ml-0.5">({s.rateLabel} {s.rate}%)</span>}
-              </td>
-              <td className="text-center text-amber-600/70">{s.fmt(s.p25)}</td>
-              <td className="text-center text-indigo-600 font-semibold">{s.fmt(s.p50)}</td>
-              <td className="text-center text-emerald-600/70">{s.fmt(s.p75)}</td>
-              <td className="text-right text-slate-300">{s.label === 'Clicks' ? `CPC ${fmt(f.benchmark.cpc)}` : ''}</td>
-            </tr>
-          ))}
-          <tr className="border-t border-slate-200">
-            <td className="py-1.5 text-slate-700 font-semibold">Revenue</td>
-            <td className="text-center text-amber-600/70">{fmt(f.revenue.p25)}</td>
-            <td className="text-center text-indigo-600 font-semibold">{fmt(f.revenue.p50)}</td>
-            <td className="text-center text-emerald-600/70">{fmt(f.revenue.p75)}</td>
-            <td></td>
-          </tr>
+        <tbody className="text-gray-600">
+          <tr className="border-b border-gray-50"><td className="py-2 px-4 text-gray-500">Impresiones</td><td className="text-right px-4 text-gray-400">{fmtN(f.impressions.p25)}</td><td className="text-right px-4 font-medium text-gray-700">{fmtN(f.impressions.p50)}</td><td className="text-right px-4 text-gray-400">{fmtN(f.impressions.p75)}</td><td className="text-right px-4 text-gray-300"></td></tr>
+          <tr className="border-b border-gray-50"><td className="py-2 px-4 text-gray-500">Clicks <span className="text-gray-300">CTR {f.benchmark.ctr}%</span></td><td className="text-right px-4 text-gray-400">{fmtN(f.clicks.p25)}</td><td className="text-right px-4 font-medium text-gray-700">{fmtN(f.clicks.p50)}</td><td className="text-right px-4 text-gray-400">{fmtN(f.clicks.p75)}</td><td className="text-right px-4 text-gray-300">CPC {fmt(f.benchmark.cpc)}</td></tr>
+          <tr className="border-b border-gray-50"><td className="py-2 px-4 text-gray-500">{isEcommerce ? 'Compras' : 'Leads'} <span className="text-gray-300">CVR {f.benchmark.cvr}%</span></td><td className="text-right px-4 text-gray-400">{Math.round(f.leads.p25)}</td><td className="text-right px-4 font-medium text-gray-700">{Math.round(f.leads.p50)}</td><td className="text-right px-4 text-gray-400">{Math.round(f.leads.p75)}</td><td className="text-right px-4 text-gray-300"></td></tr>
+          {!isEcommerce && (
+            <tr className="border-b border-gray-50"><td className="py-2 px-4 text-gray-500">Ventas <span className="text-gray-300">cierre {tasaCierre}%</span></td><td className="text-right px-4 text-gray-400">{f.ventas.p25.toFixed(1)}</td><td className="text-right px-4 font-medium text-gray-700">{f.ventas.p50.toFixed(1)}</td><td className="text-right px-4 text-gray-400">{f.ventas.p75.toFixed(1)}</td><td className="text-right px-4 text-gray-300"></td></tr>
+          )}
+          <tr><td className="py-2 px-4 font-medium text-gray-700">Revenue</td><td className="text-right px-4 text-gray-400">{fmt(f.revenue.p25)}</td><td className="text-right px-4 font-medium text-gray-700">{fmt(f.revenue.p50)}</td><td className="text-right px-4 text-gray-400">{fmt(f.revenue.p75)}</td><td className="text-right px-4 text-gray-300"></td></tr>
         </tbody>
       </table>
     </div>
   )
 }
 
-function CompareCard({ label, yours, ref_val, better }: { label: string; yours: string; ref_val: string; better?: boolean }) {
-  return (
-    <div className="bg-slate-50 rounded-lg p-3 text-center">
-      <p className="text-[10px] text-slate-400 mb-1">{label}</p>
-      <p className="text-sm font-bold text-slate-800">{yours}</p>
-      <p className={`text-[10px] mt-0.5 ${better === true ? 'text-emerald-500' : better === false ? 'text-red-400' : 'text-slate-400'}`}>
-        vs {ref_val} {better === true ? '(mejor)' : better === false ? '(peor)' : '(ref.)'}
-      </p>
-    </div>
-  )
-}
-
-function HistogramChart({ data, p25, p50, p75 }: { data: any[]; p25: number; p50: number; p75: number }) {
+function Histogram({ data, p25, p50, p75 }: { data: any[]; p25: number; p50: number; p75: number }) {
   if (!data?.length) return null
-  const maxCount = Math.max(...data.map((d: any) => d.count))
-  const w = 800, h = 160, pad = { t: 22, b: 20, l: 8, r: 8 }
+  const max = Math.max(...data.map((d: any) => d.count))
+  const w = 720, h = 120, pad = { t: 18, b: 16, l: 0, r: 0 }
   const cw = w - pad.l - pad.r, ch = h - pad.t - pad.b
   const minB = data[0].bin, maxB = data[data.length - 1].bin, range = maxB - minB || 1
-  const bw = cw / data.length - 1
+  const bw = cw / data.length - 0.5
   const getX = (v: number) => pad.l + ((v - minB) / range) * cw
 
   return (
-    <svg viewBox={`0 0 ${w} ${h}`} className="w-full" style={{ height: 160 }}>
+    <svg viewBox={`0 0 ${w} ${h}`} className="w-full" style={{ height: 120 }}>
       {data.map((d: any, i: number) => (
-        <rect key={i} x={pad.l + (i / data.length) * cw} y={pad.t + ch - (d.count / maxCount) * ch}
-          width={bw} height={(d.count / maxCount) * ch} fill="#6366f1" opacity={0.5} rx={1} />
+        <rect key={i} x={pad.l + (i / data.length) * cw} y={pad.t + ch - (d.count / max) * ch}
+          width={bw} height={(d.count / max) * ch} fill="#e0e7ff" rx={1} />
       ))}
-      <line x1={getX(p25)} y1={pad.t} x2={getX(p25)} y2={pad.t + ch} stroke="#f59e0b" strokeWidth={1.5} strokeDasharray="4 2" />
-      <text x={getX(p25)} y={pad.t - 5} textAnchor="middle" fontSize={9} fill="#f59e0b">P25: {Math.round(p25)}</text>
-      <line x1={getX(p50)} y1={pad.t} x2={getX(p50)} y2={pad.t + ch} stroke="#6366f1" strokeWidth={2} />
-      <text x={getX(p50)} y={pad.t - 5} textAnchor="middle" fontSize={9} fill="#6366f1" fontWeight="bold">P50: {Math.round(p50)}</text>
-      <line x1={getX(p75)} y1={pad.t} x2={getX(p75)} y2={pad.t + ch} stroke="#10b981" strokeWidth={1.5} strokeDasharray="4 2" />
-      <text x={getX(p75)} y={pad.t - 5} textAnchor="middle" fontSize={9} fill="#10b981">P75: {Math.round(p75)}</text>
-      {data.filter((_: any, i: number) => i % 4 === 0).map((d: any, i: number) => (
-        <text key={i} x={pad.l + ((d.bin - minB) / range) * cw} y={h - 4} textAnchor="middle" fontSize={8} fill="#94a3b8">{Math.round(d.bin)}</text>
+      {[
+        { x: getX(p25), color: '#f59e0b', label: `P25: ${Math.round(p25)}` },
+        { x: getX(p50), color: '#6366f1', label: `P50: ${Math.round(p50)}` },
+        { x: getX(p75), color: '#10b981', label: `P75: ${Math.round(p75)}` },
+      ].map(l => (
+        <g key={l.label}>
+          <line x1={l.x} y1={pad.t} x2={l.x} y2={pad.t + ch} stroke={l.color} strokeWidth={1} strokeDasharray={l.color === '#6366f1' ? '' : '3 2'} />
+          <text x={l.x} y={pad.t - 4} textAnchor="middle" fontSize={9} fill={l.color} fontWeight={l.color === '#6366f1' ? '600' : '400'}>{l.label}</text>
+        </g>
       ))}
     </svg>
   )
