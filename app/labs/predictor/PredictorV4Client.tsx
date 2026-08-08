@@ -2,140 +2,114 @@
 'use client'
 
 /**
- * PREDICTOR v4.3 — Diseño nivel simulador M&P
+ * PREDICTOR M&P v5 — Simulador en tiempo real
  *
- * - Hero con gradiente + badges
- * - Cards con shadow-xl, rounded-2xl
- * - Framer Motion transiciones
- * - PercentileRing animado
- * - Dropdown búsqueda para industria
- * - E-commerce = compra (sin tasa cierre), Servicios = lead + cierre
- * - Estadística visible: IC 90%, P(ROAS>1), histograma
+ * - Resultados se actualizan EN VIVO al mover sliders (sin botón "generar")
+ * - Layout split: config izquierda, resultados derecha
+ * - Gauge de ROAS, embudo visual, ring de confianza
+ * - E-commerce = compra directa, Servicios = lead + tasa cierre
+ * - Sin mencionar Monte Carlo
  */
 
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
-  TrendingUp, DollarSign, Target, BarChart3, Zap, Shield,
-  Activity, ChevronDown, Search, Info, ArrowRight, RefreshCw,
-  MessageSquare
+  TrendingUp, DollarSign, Target, BarChart3, Shield,
+  Activity, ChevronDown, Search, Info, RefreshCw
 } from 'lucide-react'
-import PercentileRing from '@/components/ui/PercentileRing'
 
 // ═══════════════════════════════════════════════════════════════════
 // DATA
 // ═══════════════════════════════════════════════════════════════════
 
-const INDUSTRIAS = [
-  { value: 'ECOMMERCE', label: 'E-commerce / Retail Online', type: 'ecommerce' },
-  { value: 'MODA_RETAIL', label: 'Moda / Retail', type: 'ecommerce' },
-  { value: 'HOGAR_DECORACION', label: 'Hogar / Decoración', type: 'ecommerce' },
-  { value: 'INMOBILIARIA', label: 'Inmobiliaria / Corredoras', type: 'servicios' },
-  { value: 'SALUD_MEDICINA', label: 'Salud / Clínicas / Medicina', type: 'servicios' },
-  { value: 'EDUCACION', label: 'Educación / Capacitación', type: 'servicios' },
-  { value: 'TECNOLOGIA_SAAS', label: 'Tecnología / SaaS', type: 'servicios' },
-  { value: 'FINTECH', label: 'Fintech / Servicios Financieros', type: 'servicios' },
-  { value: 'AUTOMOTRIZ', label: 'Automotriz', type: 'servicios' },
-  { value: 'TURISMO', label: 'Turismo / Hotelería', type: 'servicios' },
-  { value: 'GASTRONOMIA', label: 'Gastronomía / Restaurantes', type: 'servicios' },
-  { value: 'BELLEZA_PERSONAL', label: 'Belleza / Cuidado Personal', type: 'servicios' },
-  { value: 'SERVICIOS_LEGALES', label: 'Servicios Legales', type: 'servicios' },
-  { value: 'CONSTRUCCION_REMODELACION', label: 'Construcción / Remodelación', type: 'servicios' },
-  { value: 'DEPORTES_FITNESS', label: 'Deportes / Fitness', type: 'servicios' },
-  { value: 'VETERINARIA_MASCOTAS', label: 'Veterinaria / Mascotas', type: 'servicios' },
-  { value: 'MANUFACTURA_INDUSTRIAL', label: 'Manufactura / Industrial', type: 'servicios' },
-  { value: 'LOGISTICA_TRANSPORTE', label: 'Logística / Transporte', type: 'servicios' },
-  { value: 'SEGUROS', label: 'Seguros', type: 'servicios' },
-  { value: 'AGRICULTURA_AGROINDUSTRIA', label: 'Agricultura / Agroindustria', type: 'servicios' },
-  { value: 'SERVICIOS_PROFESIONALES', label: 'Servicios Profesionales B2B', type: 'servicios' },
-  { value: 'ENERGIA_UTILITIES', label: 'Energía / Utilities', type: 'servicios' },
+const IND = [
+  { v: 'ECOMMERCE', l: 'E-commerce / Retail Online', t: 'ecommerce' },
+  { v: 'MODA_RETAIL', l: 'Moda / Retail', t: 'ecommerce' },
+  { v: 'HOGAR_DECORACION', l: 'Hogar / Decoración', t: 'ecommerce' },
+  { v: 'INMOBILIARIA', l: 'Inmobiliaria / Corredoras', t: 'servicios' },
+  { v: 'SALUD_MEDICINA', l: 'Salud / Clínicas / Medicina', t: 'servicios' },
+  { v: 'EDUCACION', l: 'Educación / Capacitación', t: 'servicios' },
+  { v: 'TECNOLOGIA_SAAS', l: 'Tecnología / SaaS', t: 'servicios' },
+  { v: 'FINTECH', l: 'Fintech / Servicios Financieros', t: 'servicios' },
+  { v: 'AUTOMOTRIZ', l: 'Automotriz', t: 'servicios' },
+  { v: 'TURISMO', l: 'Turismo / Hotelería', t: 'servicios' },
+  { v: 'GASTRONOMIA', l: 'Gastronomía / Restaurantes', t: 'servicios' },
+  { v: 'BELLEZA_PERSONAL', l: 'Belleza / Cuidado Personal', t: 'servicios' },
+  { v: 'SERVICIOS_LEGALES', l: 'Servicios Legales', t: 'servicios' },
+  { v: 'CONSTRUCCION_REMODELACION', l: 'Construcción / Remodelación', t: 'servicios' },
+  { v: 'DEPORTES_FITNESS', l: 'Deportes / Fitness', t: 'servicios' },
+  { v: 'VETERINARIA_MASCOTAS', l: 'Veterinaria / Mascotas', t: 'servicios' },
+  { v: 'MANUFACTURA_INDUSTRIAL', l: 'Manufactura / Industrial', t: 'servicios' },
+  { v: 'LOGISTICA_TRANSPORTE', l: 'Logística / Transporte', t: 'servicios' },
+  { v: 'SEGUROS', l: 'Seguros', t: 'servicios' },
+  { v: 'AGRICULTURA_AGROINDUSTRIA', l: 'Agricultura', t: 'servicios' },
+  { v: 'SERVICIOS_PROFESIONALES', l: 'Servicios Profesionales B2B', t: 'servicios' },
+  { v: 'ENERGIA_UTILITIES', l: 'Energía / Utilities', t: 'servicios' },
 ]
 
 const PAISES = [
-  { code: 'CL', name: 'Chile', flag: '🇨🇱' },
-  { code: 'MX', name: 'México', flag: '🇲🇽' },
-  { code: 'CO', name: 'Colombia', flag: '🇨🇴' },
-  { code: 'AR', name: 'Argentina', flag: '🇦🇷' },
-  { code: 'BR', name: 'Brasil', flag: '🇧🇷' },
-  { code: 'PE', name: 'Perú', flag: '🇵🇪' },
+  { c: 'CL', n: 'Chile', f: '🇨🇱' },
+  { c: 'MX', n: 'México', f: '🇲🇽' },
+  { c: 'CO', n: 'Colombia', f: '🇨🇴' },
+  { c: 'AR', n: 'Argentina', f: '🇦🇷' },
+  { c: 'BR', n: 'Brasil', f: '🇧🇷' },
+  { c: 'PE', n: 'Perú', f: '🇵🇪' },
 ]
 
-const PLAT: Record<string, string> = { google_search: 'Google Search', google_display: 'Google Display', meta_ads: 'Meta Ads' }
-const PLAT_ICON: Record<string, string> = { google_search: '🔍', google_display: '📺', meta_ads: '📱' }
-
-// ═══════════════════════════════════════════════════════════════════
-// HELPERS
-// ═══════════════════════════════════════════════════════════════════
+const PN: Record<string, string> = { google_search: 'Google Search', google_display: 'Google Display', meta_ads: 'Meta Ads' }
 
 const fmt = (n: number) => {
-  if (Math.abs(n) >= 1e9) return `$${(n / 1e9).toFixed(1)}B`
-  if (Math.abs(n) >= 1e6) return `$${(n / 1e6).toFixed(1)}M`
-  if (Math.abs(n) >= 1e3) return `$${(n / 1e3).toFixed(0)}K`
+  if (Math.abs(n) >= 1e9) return `$${(n/1e9).toFixed(1)}B`
+  if (Math.abs(n) >= 1e6) return `$${(n/1e6).toFixed(1)}M`
+  if (Math.abs(n) >= 1e3) return `$${(n/1e3).toFixed(0)}K`
   return `$${Math.round(n)}`
 }
-const fmtN = (n: number) => {
-  if (n >= 1e6) return `${(n / 1e6).toFixed(1)}M`
-  if (n >= 1e3) return `${(n / 1e3).toFixed(1)}K`
-  return Math.round(n).toString()
-}
+const fmtN = (n: number) => n >= 1e6 ? `${(n/1e6).toFixed(1)}M` : n >= 1e3 ? `${(n/1e3).toFixed(1)}K` : Math.round(n).toString()
 
 // ═══════════════════════════════════════════════════════════════════
-// DROPDOWN CON BÚSQUEDA
+// DROPDOWN
 // ═══════════════════════════════════════════════════════════════════
 
-function IndustryDropdown({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+function Dropdown({ value, onChange }: { value: string; onChange: (v: string) => void }) {
   const [open, setOpen] = useState(false)
-  const [search, setSearch] = useState('')
+  const [q, setQ] = useState('')
   const ref = useRef<HTMLDivElement>(null)
-  const selected = INDUSTRIAS.find(i => i.value === value)
-
-  const filtered = INDUSTRIAS.filter(i =>
-    i.label.toLowerCase().includes(search.toLowerCase())
-  )
+  const sel = IND.find(i => i.v === value)
+  const filtered = IND.filter(i => i.l.toLowerCase().includes(q.toLowerCase()))
 
   useEffect(() => {
     const h = (e: MouseEvent) => { if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false) }
-    document.addEventListener('mousedown', h)
-    return () => document.removeEventListener('mousedown', h)
+    document.addEventListener('mousedown', h); return () => document.removeEventListener('mousedown', h)
   }, [])
 
   return (
     <div ref={ref} className="relative">
-      <button onClick={() => { setOpen(!open); setSearch('') }}
-        className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg text-left flex items-center justify-between hover:border-blue-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
-        <span className={selected ? 'text-gray-900 font-medium' : 'text-gray-400'}>
-          {selected?.label || 'Seleccionar industria...'}
-        </span>
+      <button onClick={() => { setOpen(!open); setQ('') }}
+        className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-left flex items-center justify-between hover:border-indigo-300 transition-all shadow-sm">
+        <span className={sel ? 'text-gray-900 font-medium' : 'text-gray-400 text-sm'}>{sel?.l || 'Seleccionar industria...'}</span>
         <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform ${open ? 'rotate-180' : ''}`} />
       </button>
-
       <AnimatePresence>
         {open && (
-          <motion.div
-            initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -4 }}
-            transition={{ duration: 0.15 }}
-            className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-xl shadow-2xl overflow-hidden"
-          >
+          <motion.div initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -4 }}
+            className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-xl shadow-2xl overflow-hidden">
             <div className="p-3 border-b border-gray-100">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                <input autoFocus value={search} onChange={e => setSearch(e.target.value)}
-                  placeholder="Buscar industria..."
-                  className="w-full pl-9 pr-3 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-900 placeholder-gray-400 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
-                />
+                <input autoFocus value={q} onChange={e => setQ(e.target.value)} placeholder="Buscar..."
+                  className="w-full pl-9 pr-3 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm outline-none focus:border-indigo-400" />
               </div>
             </div>
-            <div className="max-h-64 overflow-y-auto">
+            <div className="max-h-56 overflow-y-auto">
               {filtered.map(i => (
-                <button key={i.value} onClick={() => { onChange(i.value); setOpen(false) }}
-                  className={`w-full text-left px-4 py-3 text-sm transition-colors flex items-center justify-between ${
-                    i.value === value ? 'bg-blue-50 text-blue-700 font-medium' : 'text-gray-700 hover:bg-gray-50'
+                <button key={i.v} onClick={() => { onChange(i.v); setOpen(false) }}
+                  className={`w-full text-left px-4 py-2.5 text-sm flex justify-between items-center transition ${
+                    i.v === value ? 'bg-indigo-50 text-indigo-700 font-medium' : 'text-gray-700 hover:bg-gray-50'
                   }`}>
-                  <span>{i.label}</span>
-                  {i.type === 'ecommerce' && <span className="text-xs bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full font-medium">E-commerce</span>}
+                  <span>{i.l}</span>
+                  {i.t === 'ecommerce' && <span className="text-[10px] bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded-full">E-com</span>}
                 </button>
               ))}
-              {filtered.length === 0 && <p className="px-4 py-4 text-sm text-gray-400 text-center">Sin resultados</p>}
             </div>
           </motion.div>
         )}
@@ -145,26 +119,22 @@ function IndustryDropdown({ value, onChange }: { value: string; onChange: (v: st
 }
 
 // ═══════════════════════════════════════════════════════════════════
-// HINT (tooltip educativo)
+// TOOLTIP
 // ═══════════════════════════════════════════════════════════════════
 
-function Hint({ text }: { text: string }) {
+function Tip({ t }: { t: string }) {
   const [show, setShow] = useState(false)
   return (
-    <span className="relative inline-block ml-1.5">
+    <span className="relative inline-block ml-1 align-middle">
       <span onMouseEnter={() => setShow(true)} onMouseLeave={() => setShow(false)}
-        className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-gray-200 text-gray-500 text-[9px] font-bold cursor-help hover:bg-blue-100 hover:text-blue-600 transition-colors">
+        className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-gray-200 text-gray-500 text-[9px] cursor-help hover:bg-indigo-100 hover:text-indigo-600 transition">
         <Info className="w-2.5 h-2.5" />
       </span>
-      <AnimatePresence>
-        {show && (
-          <motion.span initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
-            className="absolute z-50 bottom-7 left-1/2 -translate-x-1/2 w-64 px-3 py-2.5 bg-gray-900 text-white text-xs leading-relaxed rounded-lg shadow-xl">
-            {text}
-            <span className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900" />
-          </motion.span>
-        )}
-      </AnimatePresence>
+      {show && (
+        <span className="absolute z-50 bottom-7 left-1/2 -translate-x-1/2 w-60 px-3 py-2 bg-gray-900 text-white text-[11px] leading-relaxed rounded-lg shadow-xl">
+          {t}<span className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900" />
+        </span>
+      )}
     </span>
   )
 }
@@ -174,321 +144,392 @@ function Hint({ text }: { text: string }) {
 // ═══════════════════════════════════════════════════════════════════
 
 export default function PredictorV4Client() {
-  const [step, setStep] = useState<'input' | 'loading' | 'results'>('input')
   const [result, setResult] = useState<any>(null)
-  const [error, setError] = useState<string | null>(null)
-  const [showAdvanced, setShowAdvanced] = useState(false)
-  const resultsRef = useRef<HTMLDivElement>(null)
+  const [loading, setLoading] = useState(false)
+  const [adv, setAdv] = useState(false)
+  const debounceRef = useRef<NodeJS.Timeout>()
 
-  const [form, setForm] = useState({
-    industria: '', pais: 'CL', presupuesto_mensual: 1500000,
-    ticket_promedio: '', tasa_cierre: '', objetivo: 'LEADS',
-    tipo_cliente: 'B2C', tamano_empresa: 'PYME',
-    competencia_percibida: 5, madurez_digital: 'INTERMEDIO', margen_bruto: 40,
+  const [f, setF] = useState({
+    industria: '', pais: 'CL', presupuesto: 1500000,
+    ticket: '', tasa: '', objetivo: 'LEADS',
+    tipo: 'B2C', tamano: 'PYME',
+    comp: 5, madurez: 'INTERMEDIO', margen: 40,
   })
 
-  const ind = INDUSTRIAS.find(i => i.value === form.industria)
-  const isEcommerce = ind?.type === 'ecommerce'
-  const isValid = form.industria && form.presupuesto_mensual >= 300000
+  const ind = IND.find(i => i.v === f.industria)
+  const isEC = ind?.t === 'ecommerce'
 
-  const handleSubmit = async () => {
-    setStep('loading'); setError(null)
+  // AUTO-RECALCULAR al cambiar cualquier input (debounce 400ms)
+  useEffect(() => {
+    if (!f.industria) return
+    if (debounceRef.current) clearTimeout(debounceRef.current)
+    debounceRef.current = setTimeout(() => {
+      fetchPrediction()
+    }, 400)
+    return () => { if (debounceRef.current) clearTimeout(debounceRef.current) }
+  }, [f.industria, f.pais, f.presupuesto, f.ticket, f.tasa, f.objetivo, f.tipo, f.tamano, f.comp, f.madurez, f.margen])
+
+  const fetchPrediction = async () => {
+    setLoading(true)
     try {
       const body: any = {
-        industria: form.industria, pais: form.pais,
-        presupuesto_mensual: form.presupuesto_mensual,
-        objetivo: isEcommerce ? 'VENTAS_DIRECTAS' : form.objetivo,
-        tipo_cliente: form.tipo_cliente, tamano_empresa: form.tamano_empresa,
+        industria: f.industria, pais: f.pais,
+        presupuesto_mensual: f.presupuesto,
+        objetivo: isEC ? 'VENTAS_DIRECTAS' : f.objetivo,
+        tipo_cliente: f.tipo, tamano_empresa: f.tamano,
       }
-      if (form.ticket_promedio) body.ticket_promedio = parseInt(form.ticket_promedio)
-      if (!isEcommerce && form.tasa_cierre) body.tasa_cierre = parseInt(form.tasa_cierre)
-      if (isEcommerce) body.tasa_cierre = 100
-      if (form.competencia_percibida !== 5) body.competencia_percibida = form.competencia_percibida
-      if (form.madurez_digital !== 'INTERMEDIO') body.madurez_digital = form.madurez_digital
-      if (form.margen_bruto !== 40) body.margen_bruto = form.margen_bruto
+      if (f.ticket) body.ticket_promedio = parseInt(f.ticket)
+      if (!isEC && f.tasa) body.tasa_cierre = parseInt(f.tasa)
+      if (isEC) body.tasa_cierre = 100
+      if (f.comp !== 5) body.competencia_percibida = f.comp
+      if (f.madurez !== 'INTERMEDIO') body.madurez_digital = f.madurez
+      if (f.margen !== 40) body.margen_bruto = f.margen
 
       const res = await fetch('/api/predictions/monte-carlo', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
       })
-      if (!res.ok) throw new Error((await res.json()).message || 'Error en predicción')
-      setResult(await res.json())
-      setStep('results')
-      setTimeout(() => resultsRef.current?.scrollIntoView({ behavior: 'smooth' }), 100)
-    } catch (e: any) { setError(e.message); setStep('input') }
+      if (res.ok) setResult(await res.json())
+    } catch {}
+    setLoading(false)
   }
 
+  const mc = result?.montecarlo
+  const t = mc?.total
+  const m = mc?.meta
+  const opt = result?.optimal
+  const mainLabel = isEC ? 'compras' : 'leads'
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/20">
       {/* Header */}
-      <header className="bg-white/80 backdrop-blur-xl border-b border-gray-200 sticky top-0 z-50">
-        <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
-          <a href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
-            <img src="/logo-color.png" alt="M&P" className="h-8 w-auto" />
-          </a>
+      <header className="bg-white/80 backdrop-blur-xl border-b border-gray-200/60 sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between">
+          <a href="/" className="flex items-center gap-3"><img src="/logo-color.png" alt="M&P" className="h-7" /></a>
           <div className="flex items-center gap-4">
-            {step === 'results' && (
-              <button onClick={() => { setResult(null); setStep('input'); window.scrollTo({ top: 0, behavior: 'smooth' }) }}
-                className="flex items-center gap-2 text-sm font-semibold text-gray-600 hover:text-blue-600 transition-colors">
-                <RefreshCw className="w-4 h-4" /> Nuevo análisis
-              </button>
-            )}
-            <a href="/labs" className="text-sm font-semibold text-gray-700 hover:text-blue-600 transition-colors">← Labs</a>
+            <span className="text-xs font-semibold text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full">Predictor</span>
+            <a href="/labs" className="text-sm text-gray-500 hover:text-indigo-600 transition">Labs</a>
           </div>
         </div>
       </header>
 
-      <main className="max-w-5xl mx-auto px-6 py-12">
+      <main className="max-w-7xl mx-auto px-6 py-8">
+        {/* Hero */}
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Predictor de Campañas Digitales</h1>
+          <p className="text-gray-500 mt-1">Anticipa resultados con data real de mercado · 22 industrias · 6 países LATAM</p>
+        </div>
 
-        {/* ═══ STEP: INPUT ═══ */}
-        {step === 'input' && (
-          <>
-            {/* Hero */}
-            <div className="text-center mb-12">
-              <div className="inline-flex items-center gap-2 mb-4 px-4 py-2 rounded-full bg-slate-100 border border-slate-200">
-                <BarChart3 className="w-4 h-4 text-slate-600" />
-                <span className="text-slate-700 text-sm font-semibold">Predictor M&P</span>
-              </div>
-              <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-                Predice tus resultados<br />antes de invertir
-              </h1>
-              <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-6">
-                Anticipa resultados con data real de mercado.<br />
-                22 industrias. 6 países LATAM. Benchmarks 2026.
-              </p>
-              <div className="flex flex-wrap justify-center gap-4 text-sm text-gray-500">
-                <span className="flex items-center gap-1.5"><Shield className="w-4 h-4 text-blue-500" /> Intervalos de confianza</span>
-                <span className="flex items-center gap-1.5"><Activity className="w-4 h-4 text-emerald-500" /> 3 escenarios probabilísticos</span>
-                <span className="flex items-center gap-1.5"><Target className="w-4 h-4 text-purple-500" /> Embudo por plataforma</span>
-              </div>
-            </div>
+        {/* Layout split */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
 
-            {/* Form Card */}
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-              className="bg-white rounded-2xl p-8 shadow-xl border border-gray-200">
-
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">Configura tu predicción</h3>
-              <p className="text-gray-500 mb-8">Los campos opcionales usan referencias de mercado de tu industria.</p>
-
-              <div className="space-y-6">
-                {/* Industria */}
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Industria <Hint text="Selecciona tu industria. Los benchmarks de CPC, CTR y tasa de conversión se ajustan automáticamente. Las industrias de e-commerce miden compras directas; las de servicios miden leads." />
-                  </label>
-                  <IndustryDropdown value={form.industria} onChange={v => setForm({ ...form, industria: v })} />
-                  {ind && (
-                    <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-                      className={`text-xs mt-2 font-medium ${isEcommerce ? 'text-emerald-600' : 'text-blue-600'}`}>
-                      {isEcommerce ? '🛒 E-commerce: la conversión es la compra directa. No se aplica tasa de cierre.' :
-                        '📋 Servicios: la conversión es un lead (formulario, llamada, WhatsApp). Se aplica tasa de cierre para estimar ventas.'}
-                    </motion.p>
-                  )}
-                </div>
-
-                {/* País + Presupuesto */}
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">País</label>
-                    <div className="grid grid-cols-6 gap-2">
-                      {PAISES.map(p => (
-                        <button key={p.code} onClick={() => setForm({ ...form, pais: p.code })}
-                          className={`py-2.5 rounded-lg border-2 text-sm font-medium transition-all ${
-                            form.pais === p.code
-                              ? 'border-blue-500 bg-blue-50 text-blue-700'
-                              : 'border-gray-200 text-gray-500 hover:border-gray-300'
-                          }`}>{p.flag} {p.code}</button>
-                      ))}
-                    </div>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      Presupuesto mensual: <span className="text-blue-600">{fmt(form.presupuesto_mensual)}</span>
-                      <Hint text="Inversión mensual en pauta publicitaria (Google + Meta). No incluye fee de gestión de agencia." />
-                    </label>
-                    <input type="range" min={300000} max={20000000} step={100000}
-                      value={form.presupuesto_mensual}
-                      onChange={e => setForm({ ...form, presupuesto_mensual: parseInt(e.target.value) })}
-                      className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
-                    />
-                    <div className="flex justify-between text-xs text-gray-400 mt-1">
-                      <span>$300K</span><span>$20M</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Ticket + Tasa de cierre */}
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      {isEcommerce ? 'Valor promedio de compra' : 'Ticket promedio'} (CLP)
-                      <Hint text="Si lo dejas vacío, se usa el promedio de tu industria como referencia." />
-                    </label>
-                    <input type="number" value={form.ticket_promedio}
-                      onChange={e => setForm({ ...form, ticket_promedio: e.target.value })}
-                      placeholder="Usar referencia de la industria"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    />
-                  </div>
-
-                  {!isEcommerce && form.industria && (
-                    <motion.div initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }}>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">
-                        Tasa de cierre (%)
-                        <Hint text="% de leads que se convierten en venta cerrada. Varía según industria, tipo de cliente y tamaño. Si no la conoces, usamos la referencia de mercado." />
-                      </label>
-                      <input type="number" value={form.tasa_cierre}
-                        onChange={e => setForm({ ...form, tasa_cierre: e.target.value })}
-                        placeholder="Usar referencia de mercado"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      />
-                    </motion.div>
-                  )}
-                </div>
-
-                {/* Tipo cliente + Tamaño */}
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Tipo de cliente</label>
-                    <div className="grid grid-cols-2 gap-3">
-                      {['B2C', 'B2B'].map(t => (
-                        <button key={t} onClick={() => setForm({ ...form, tipo_cliente: t })}
-                          className={`py-3 rounded-lg border-2 font-medium transition-all ${
-                            form.tipo_cliente === t
-                              ? 'border-blue-500 bg-blue-50 text-blue-700'
-                              : 'border-gray-200 text-gray-500 hover:border-gray-300'
-                          }`}>{t === 'B2C' ? 'B2C (Consumidores)' : 'B2B (Empresas)'}</button>
-                      ))}
-                    </div>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      Tamaño empresa
-                      <Hint text="Empresas más grandes suelen tener mejor tasa de cierre. Afecta la referencia de mercado." />
-                    </label>
-                    <div className="grid grid-cols-4 gap-2">
-                      {[
-                        { v: 'MICRO', l: '<10', d: 'personas' },
-                        { v: 'PYME', l: '10-50', d: 'personas' },
-                        { v: 'MEDIANA', l: '50-200', d: 'personas' },
-                        { v: 'GRANDE', l: '>200', d: 'personas' },
-                      ].map(t => (
-                        <button key={t.v} onClick={() => setForm({ ...form, tamano_empresa: t.v })}
-                          className={`py-2.5 rounded-lg border-2 text-xs font-medium transition-all ${
-                            form.tamano_empresa === t.v
-                              ? 'border-blue-500 bg-blue-50 text-blue-700'
-                              : 'border-gray-200 text-gray-500 hover:border-gray-300'
-                          }`}>{t.l}</button>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Objetivo — solo servicios */}
-                {!isEcommerce && form.industria && (
-                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Objetivo principal</label>
-                    <div className="grid grid-cols-3 gap-3">
-                      {[
-                        { v: 'LEADS', l: 'Generación de leads', icon: Target },
-                        { v: 'VENTAS_DIRECTAS', l: 'Ventas directas', icon: DollarSign },
-                        { v: 'AWARENESS', l: 'Awareness', icon: TrendingUp },
-                      ].map(o => (
-                        <button key={o.v} onClick={() => setForm({ ...form, objetivo: o.v })}
-                          className={`py-3 px-4 rounded-lg border-2 text-sm font-medium transition-all flex items-center gap-2 ${
-                            form.objetivo === o.v
-                              ? 'border-blue-500 bg-blue-50 text-blue-700'
-                              : 'border-gray-200 text-gray-500 hover:border-gray-300'
-                          }`}>
-                          <o.icon className="w-4 h-4" />{o.l}
-                        </button>
-                      ))}
-                    </div>
-                  </motion.div>
+          {/* ═══ LEFT: CONFIG ═══ */}
+          <div className="lg:col-span-4 space-y-4">
+            <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 space-y-5">
+              <div>
+                <label className="text-sm font-semibold text-gray-700 block mb-2">Industria <Tip t="Los benchmarks se ajustan automáticamente." /></label>
+                <Dropdown value={f.industria} onChange={v => setF({...f, industria: v})} />
+                {ind && (
+                  <p className={`text-[11px] mt-2 font-medium ${isEC ? 'text-emerald-600' : 'text-blue-600'}`}>
+                    {isEC ? '🛒 E-commerce: conversión = compra directa' : '📋 Servicios: conversión = lead → se aplica tasa de cierre'}
+                  </p>
                 )}
+              </div>
 
-                {/* Advanced */}
-                <div>
-                  <button onClick={() => setShowAdvanced(!showAdvanced)}
-                    className="flex items-center gap-2 text-sm text-gray-500 hover:text-blue-600 transition-colors font-medium">
-                    <ChevronDown className={`w-4 h-4 transition-transform ${showAdvanced ? 'rotate-180' : ''}`} />
-                    Ajustes avanzados
-                  </button>
-                  <AnimatePresence>
-                    {showAdvanced && (
-                      <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }}
-                        className="mt-4 grid md:grid-cols-3 gap-6 p-6 bg-gray-50 rounded-xl border border-gray-200">
-                        <div>
-                          <label className="block text-xs font-semibold text-gray-600 mb-2">Competencia percibida: {form.competencia_percibida}/10</label>
-                          <input type="range" min={1} max={10} value={form.competencia_percibida}
-                            onChange={e => setForm({ ...form, competencia_percibida: parseInt(e.target.value) })}
-                            className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600" />
-                          <p className="text-xs text-gray-400 mt-1">Mayor competencia → más dispersión en resultados</p>
-                        </div>
-                        <div>
-                          <label className="block text-xs font-semibold text-gray-600 mb-2">Madurez digital</label>
-                          <select value={form.madurez_digital} onChange={e => setForm({ ...form, madurez_digital: e.target.value })}
-                            className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500">
-                            <option value="PRINCIPIANTE">Principiante</option>
-                            <option value="INTERMEDIO">Intermedio</option>
-                            <option value="AVANZADO">Avanzado</option>
-                          </select>
-                          <p className="text-xs text-gray-400 mt-1">Afecta el CPC y la tasa de conversión</p>
-                        </div>
-                        <div>
-                          <label className="block text-xs font-semibold text-gray-600 mb-2">Margen bruto: {form.margen_bruto}%</label>
-                          <input type="range" min={5} max={90} value={form.margen_bruto}
-                            onChange={e => setForm({ ...form, margen_bruto: parseInt(e.target.value) })}
-                            className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600" />
-                          <p className="text-xs text-gray-400 mt-1">{form.margen_bruto < 25 ? '⚠️ Margen bajo — cuidado con la rentabilidad' : 'Para cálculo de ROAS breakeven'}</p>
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
+              <div>
+                <label className="text-sm font-semibold text-gray-700 block mb-2">País</label>
+                <div className="grid grid-cols-6 gap-1">
+                  {PAISES.map(p => (
+                    <button key={p.c} onClick={() => setF({...f, pais: p.c})}
+                      className={`py-2 rounded-lg text-xs font-medium transition border ${
+                        f.pais === p.c ? 'bg-indigo-50 border-indigo-300 text-indigo-700' : 'border-gray-200 text-gray-500 hover:border-gray-300'
+                      }`}>{p.f}</button>
+                  ))}
                 </div>
+              </div>
+
+              <div>
+                <label className="text-sm font-semibold text-gray-700 block mb-1">
+                  Presupuesto: <span className="text-indigo-600">{fmt(f.presupuesto)}</span>/mes
+                  <Tip t="Inversión mensual en pauta (Google + Meta). No incluye fee de gestión." />
+                </label>
+                <input type="range" min={300000} max={20000000} step={100000} value={f.presupuesto}
+                  onChange={e => setF({...f, presupuesto: parseInt(e.target.value)})}
+                  className="w-full h-2 bg-gradient-to-r from-gray-200 to-indigo-200 rounded-full appearance-none cursor-pointer accent-indigo-600" />
+                <div className="flex gap-1 mt-2">
+                  {[500000, 1000000, 2000000, 5000000].map(p => (
+                    <button key={p} onClick={() => setF({...f, presupuesto: p})}
+                      className={`flex-1 py-1.5 text-[10px] rounded-md font-medium transition border ${
+                        f.presupuesto === p ? 'bg-indigo-50 border-indigo-300 text-indigo-700' : 'border-gray-200 text-gray-400'
+                      }`}>{fmt(p)}</button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <label className="text-sm font-semibold text-gray-700 block mb-2">
+                  {isEC ? 'Valor promedio compra' : 'Ticket promedio'} <Tip t="Si vacío, se usa referencia de la industria." />
+                </label>
+                <input type="number" value={f.ticket} onChange={e => setF({...f, ticket: e.target.value})}
+                  placeholder="Ref. industria"
+                  className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm outline-none focus:border-indigo-400 shadow-sm" />
+              </div>
+
+              {!isEC && f.industria && (
+                <div>
+                  <label className="text-sm font-semibold text-gray-700 block mb-2">
+                    Tasa de cierre (%) <Tip t="% de leads que se convierten en venta. Si vacío, se usa referencia según industria, tipo y tamaño." />
+                  </label>
+                  <input type="number" value={f.tasa} onChange={e => setF({...f, tasa: e.target.value})}
+                    placeholder="Ref. mercado"
+                    className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm outline-none focus:border-indigo-400 shadow-sm" />
+                  {m?.tasa_cierre_es_default && <p className="text-[10px] text-amber-600 mt-1">Usando ref: {m.tasa_cierre}% ({m.tipo_cliente} {m.tamano_empresa})</p>}
+                </div>
+              )}
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-xs font-semibold text-gray-600 block mb-1.5">Tipo</label>
+                  <div className="flex gap-1">
+                    {['B2C','B2B'].map(t => (
+                      <button key={t} onClick={() => setF({...f, tipo: t})}
+                        className={`flex-1 py-2 rounded-lg text-xs font-medium border transition ${
+                          f.tipo === t ? 'bg-indigo-50 border-indigo-300 text-indigo-700' : 'border-gray-200 text-gray-500'
+                        }`}>{t}</button>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <label className="text-xs font-semibold text-gray-600 block mb-1.5">Tamaño</label>
+                  <div className="flex gap-0.5">
+                    {[{v:'MICRO',l:'<10'},{v:'PYME',l:'10-50'},{v:'MEDIANA',l:'50+'},{v:'GRANDE',l:'>200'}].map(s => (
+                      <button key={s.v} onClick={() => setF({...f, tamano: s.v})}
+                        className={`flex-1 py-2 rounded text-[9px] font-medium border transition ${
+                          f.tamano === s.v ? 'bg-indigo-50 border-indigo-300 text-indigo-700' : 'border-gray-200 text-gray-400'
+                        }`}>{s.l}</button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {!isEC && f.industria && (
+                <div>
+                  <label className="text-xs font-semibold text-gray-600 block mb-1.5">Objetivo</label>
+                  <div className="flex gap-1">
+                    {[{v:'LEADS',l:'Leads'},{v:'VENTAS_DIRECTAS',l:'Ventas'},{v:'AWARENESS',l:'Awareness'}].map(o => (
+                      <button key={o.v} onClick={() => setF({...f, objetivo: o.v})}
+                        className={`flex-1 py-2 rounded-lg text-xs font-medium border transition ${
+                          f.objetivo === o.v ? 'bg-indigo-50 border-indigo-300 text-indigo-700' : 'border-gray-200 text-gray-500'
+                        }`}>{o.l}</button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <button onClick={() => setAdv(!adv)} className="text-xs text-gray-400 hover:text-indigo-600 transition flex items-center gap-1">
+                <ChevronDown className={`w-3 h-3 transition-transform ${adv ? 'rotate-180' : ''}`} /> Avanzado
+              </button>
+              {adv && (
+                <div className="space-y-3 p-4 bg-gray-50 rounded-xl text-xs">
+                  <div>
+                    <label className="font-semibold text-gray-500">Competencia: {f.comp}/10</label>
+                    <input type="range" min={1} max={10} value={f.comp}
+                      onChange={e => setF({...f, comp: parseInt(e.target.value)})}
+                      className="w-full h-1 bg-gray-200 rounded-full appearance-none cursor-pointer accent-indigo-600" />
+                  </div>
+                  <div>
+                    <label className="font-semibold text-gray-500">Madurez</label>
+                    <select value={f.madurez} onChange={e => setF({...f, madurez: e.target.value})}
+                      className="w-full mt-1 px-2 py-1.5 border border-gray-200 rounded-lg text-xs">
+                      <option value="PRINCIPIANTE">Principiante</option>
+                      <option value="INTERMEDIO">Intermedio</option>
+                      <option value="AVANZADO">Avanzado</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="font-semibold text-gray-500">Margen: {f.margen}%</label>
+                    <input type="range" min={5} max={90} value={f.margen}
+                      onChange={e => setF({...f, margen: parseInt(e.target.value)})}
+                      className="w-full h-1 bg-gray-200 rounded-full appearance-none cursor-pointer accent-indigo-600" />
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* ═══ RIGHT: RESULTS (en tiempo real) ═══ */}
+          <div className="lg:col-span-8 space-y-5">
+            {!f.industria ? (
+              <div className="bg-white rounded-2xl p-12 shadow-lg border border-gray-100 text-center">
+                <BarChart3 className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+                <p className="text-gray-400">Selecciona una industria para ver la predicción en tiempo real</p>
+              </div>
+            ) : loading && !result ? (
+              <div className="bg-white rounded-2xl p-12 shadow-lg border border-gray-100 text-center">
+                <div className="w-8 h-8 border-2 border-indigo-200 border-t-indigo-600 rounded-full animate-spin mx-auto mb-3" />
+                <p className="text-gray-400 text-sm">Analizando tu mercado...</p>
+              </div>
+            ) : t ? (
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-5">
+
+                {/* HEADLINE */}
+                <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <motion.p key={t.leads.p50} initial={{ opacity: 0.5 }} animate={{ opacity: 1 }}
+                        className="text-5xl font-bold text-gray-900 tabular-nums tracking-tight">
+                        {Math.round(t.leads.p50).toLocaleString()}
+                      </motion.p>
+                      <p className="text-gray-500 mt-1">{mainLabel} estimados por mes</p>
+                      {!isEC && m && (
+                        <p className="text-sm text-gray-400">→ {Math.round(t.conversiones.p50)} ventas ({m.tasa_cierre}% cierre)</p>
+                      )}
+                    </div>
+                    <div className="text-right space-y-1">
+                      <p className={`text-2xl font-bold tabular-nums ${t.roas.p50 >= 1 ? 'text-emerald-600' : 'text-red-500'}`}>{t.roas.p50.toFixed(1)}x</p>
+                      <p className="text-xs text-gray-400">ROAS</p>
+                      <p className="text-lg font-bold text-gray-900 tabular-nums">{fmt(isEC ? t.cpa.p50 : t.cpl.p50)}</p>
+                      <p className="text-xs text-gray-400">{isEC ? 'CPA' : 'CPL'}</p>
+                    </div>
+                  </div>
+
+                  {/* ROAS Gauge */}
+                  {opt && (
+                    <div className="mt-4 pt-4 border-t border-gray-100">
+                      <div className="flex items-center justify-between text-xs text-gray-400 mb-1">
+                        <span>ROAS rango industria</span>
+                        <span>{opt.roas_tipico}x típico</span>
+                      </div>
+                      <div className="relative h-3 bg-gradient-to-r from-red-100 via-amber-100 via-emerald-100 to-emerald-200 rounded-full overflow-hidden">
+                        <div className="absolute top-0 h-full w-0.5 bg-gray-400"
+                          style={{ left: `${Math.min(Math.max((t.roas.p50 / (opt.presupuesto_optimo ? 15 : 10)) * 100, 2), 98)}%` }} />
+                      </div>
+                      <div className="flex justify-between text-[10px] text-gray-300 mt-0.5">
+                        <span>0x</span><span>5x</span><span>10x</span><span>15x</span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* STATS */}
+                <div className="grid grid-cols-4 gap-3">
+                  <Stat icon={Shield} label="IC 90%" value={`${Math.round(t.leads.p5)} — ${Math.round(t.leads.p95)}`} sub={mainLabel} />
+                  <Stat icon={Target} label="P(ROAS > 1)"
+                    value={`${mc.confidence.prob_roas_gt_1}%`}
+                    color={mc.confidence.prob_roas_gt_1 >= 70 ? 'text-emerald-600' : mc.confidence.prob_roas_gt_1 >= 40 ? 'text-amber-600' : 'text-red-500'}
+                    sub={mc.confidence.prob_roas_gt_1 >= 70 ? 'Alta' : mc.confidence.prob_roas_gt_1 >= 40 ? 'Media' : 'Baja'} />
+                  <Stat icon={TrendingUp} label="Revenue" value={fmt(t.revenue.p50)} sub={`IC: ${fmt(t.revenue.p5)} — ${fmt(t.revenue.p95)}`} />
+                  <Stat icon={DollarSign} label={isEC ? 'CPA IC' : 'CPL IC'} value={`${fmt(isEC ? t.cpa.p25 : t.cpl.p25)} — ${fmt(isEC ? t.cpa.p75 : t.cpl.p75)}`} />
+                </div>
+
+                {/* 3 ESCENARIOS */}
+                <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+                  <div className="px-6 py-4 border-b border-gray-50 flex items-center justify-between">
+                    <h2 className="font-bold text-gray-900">Escenarios</h2>
+                    {loading && <div className="w-4 h-4 border-2 border-indigo-200 border-t-indigo-600 rounded-full animate-spin" />}
+                  </div>
+                  <div className="grid grid-cols-3 divide-x divide-gray-50">
+                    {[
+                      { l: 'Conservador', s: 'P25 · 75% prob.', leads: t.leads.p25, conv: t.conversiones.p25, rev: t.revenue.p25, roas: t.roas.p25, cost: isEC ? t.cpa.p75 : t.cpl.p75, a: 'text-amber-600' },
+                      { l: 'Base', s: 'P50 · Más probable', leads: t.leads.p50, conv: t.conversiones.p50, rev: t.revenue.p50, roas: t.roas.p50, cost: isEC ? t.cpa.p50 : t.cpl.p50, a: 'text-indigo-600' },
+                      { l: 'Favorable', s: 'P75 · 25% prob.', leads: t.leads.p75, conv: t.conversiones.p75, rev: t.revenue.p75, roas: t.roas.p75, cost: isEC ? t.cpa.p25 : t.cpl.p25, a: 'text-emerald-600' },
+                    ].map(sc => (
+                      <div key={sc.l} className="p-5">
+                        <p className={`text-[10px] font-bold uppercase tracking-wider ${sc.a}`}>{sc.l}</p>
+                        <p className="text-[10px] text-gray-300 mb-2">{sc.s}</p>
+                        <p className="text-2xl font-bold text-gray-900 tabular-nums">{Math.round(sc.leads).toLocaleString()}</p>
+                        <p className="text-xs text-gray-400 mb-2">{mainLabel}</p>
+                        <div className="space-y-1 text-[11px]">
+                          {!isEC && <Row l="Ventas" v={Math.round(sc.conv).toString()} />}
+                          <Row l="Revenue" v={fmt(sc.rev)} />
+                          <Row l="ROAS" v={`${sc.roas.toFixed(1)}x`} c={sc.roas >= 1 ? 'text-emerald-600' : 'text-red-500'} />
+                          <Row l={isEC ? 'CPA' : 'CPL'} v={fmt(sc.cost)} />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* EMBUDOS */}
+                <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+                  <div className="px-6 py-4 border-b border-gray-50"><h2 className="font-bold text-gray-900">Embudo por plataforma</h2></div>
+                  <div className="divide-y divide-gray-50">
+                    {mc.funnels.map((fun: any) => (
+                      <div key={fun.platform} className="px-6 py-4">
+                        <div className="flex items-center justify-between mb-3">
+                          <div className="flex items-center gap-2">
+                            <span className="font-semibold text-gray-800 text-sm">{PN[fun.platform]}</span>
+                            <span className="text-[10px] text-gray-400 bg-gray-50 px-2 py-0.5 rounded-full">{fun.allocation_pct}% · {fmt(fun.budget_allocated)}</span>
+                          </div>
+                          <span className={`text-sm font-bold tabular-nums ${fun.roas.p50 >= 1 ? 'text-emerald-600' : 'text-red-500'}`}>{fun.roas.p50.toFixed(1)}x</span>
+                        </div>
+                        {/* Embudo visual con barras */}
+                        <div className="space-y-1">
+                          {[
+                            { l: 'Impresiones', v: fun.impressions.p50, max: fun.impressions.p75 },
+                            { l: `Clicks (CTR ${fun.benchmark.ctr}%)`, v: fun.clicks.p50, max: fun.impressions.p50 },
+                            { l: `${isEC ? 'Compras' : 'Leads'} (CVR ${fun.benchmark.cvr}%)`, v: fun.leads.p50, max: fun.clicks.p50 },
+                          ].map((stage, i) => (
+                            <div key={stage.l} className="flex items-center gap-3">
+                              <span className="text-[10px] text-gray-400 w-40 text-right">{stage.l}</span>
+                              <div className="flex-1 h-5 bg-gray-50 rounded-md overflow-hidden relative">
+                                <motion.div
+                                  initial={{ width: 0 }}
+                                  animate={{ width: `${Math.min(Math.max((stage.v / (fun.impressions.p50 || 1)) * 100, 2), 100)}%` }}
+                                  transition={{ duration: 0.5, delay: i * 0.1 }}
+                                  className="h-full bg-gradient-to-r from-indigo-400 to-indigo-500 rounded-md"
+                                />
+                              </div>
+                              <span className="text-xs text-gray-700 font-medium tabular-nums w-16 text-right">{fmtN(stage.v)}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* HISTOGRAMA */}
+                <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+                  <h2 className="font-bold text-gray-900 mb-1">Distribución de resultados</h2>
+                  <p className="text-xs text-gray-400 mb-4">Rango de {mainLabel} posibles según análisis probabilístico</p>
+                  <Hist data={mc.histogram.conversiones} p25={t.leads.p25} p50={t.leads.p50} p75={t.leads.p75} />
+                </div>
+
+                {/* DISCLAIMER */}
+                <p className="text-[11px] text-gray-400 leading-relaxed px-2">
+                  Referencia de mercado basada en benchmarks 2026 (WordStream, Get-Ryze, Ubersuggest) y análisis estadístico. No constituye garantía de resultados. Rendimiento real depende de calidad de anuncios, landing pages, velocidad de respuesta y condiciones del mercado.
+                </p>
 
                 {/* CTA */}
-                <button onClick={handleSubmit} disabled={!isValid}
-                  className="w-full py-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 disabled:from-gray-200 disabled:to-gray-200 disabled:text-gray-400 text-white text-base font-semibold rounded-xl transition-all shadow-lg shadow-blue-200 disabled:shadow-none flex items-center justify-center gap-2">
-                  <Zap className="w-5 h-5" /> Generar predicción
-                </button>
-                {error && <p className="text-red-500 text-sm text-center mt-2">{error}</p>}
-              </div>
-            </motion.div>
-          </>
-        )}
+                <div className="bg-gradient-to-r from-indigo-600 to-blue-600 rounded-2xl p-6 text-center text-white shadow-xl">
+                  <p className="font-bold text-lg">¿Quieres ejecutar esta estrategia?</p>
+                  <p className="text-indigo-200 text-sm mb-4">Predicción personalizada con data real de tu negocio</p>
+                  <a href="https://wa.me/56992258137?text=Hola%2C%20us%C3%A9%20el%20Predictor%20M%26P"
+                    target="_blank" rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 bg-white text-indigo-700 font-semibold px-6 py-2.5 rounded-xl hover:bg-indigo-50 transition shadow-lg text-sm">
+                    Contactar M&P
+                  </a>
+                </div>
 
-        {/* ═══ STEP: LOADING ═══ */}
-        {step === 'loading' && (
-          <div className="py-32 text-center">
-            <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
-              className="space-y-4">
-              <div className="w-16 h-16 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto" />
-              <p className="text-lg font-semibold text-gray-900">Analizando tu mercado...</p>
-              <p className="text-sm text-gray-500">Comparando con benchmarks de tu industria</p>
-              <div className="flex justify-center gap-3 text-xs text-gray-400">
-                <span>Google Search</span><span>·</span><span>Google Display</span><span>·</span><span>Meta Ads</span>
-              </div>
-            </motion.div>
+                {/* Defaults usados */}
+                {m && (m.tasa_cierre_es_default || m.ticket_es_default) && (
+                  <div className="flex flex-wrap gap-2 text-[10px]">
+                    {m.ticket_es_default && <span className="bg-amber-50 text-amber-700 px-2 py-1 rounded-full">Ticket: {fmt(m.ticket_promedio)} (ref. industria)</span>}
+                    {m.tasa_cierre_es_default && !isEC && <span className="bg-amber-50 text-amber-700 px-2 py-1 rounded-full">Tasa cierre: {m.tasa_cierre}% (ref. mercado {m.tipo_cliente} {m.tamano_empresa})</span>}
+                    <span className="bg-gray-50 text-gray-400 px-2 py-1 rounded-full">{m.industria} · {PAISES.find(p => p.c === m.pais)?.f} · {fmtN(m.iterations)} sim.</span>
+                  </div>
+                )}
+              </motion.div>
+            ) : null}
           </div>
-        )}
-
-        {/* ═══ STEP: RESULTS ═══ */}
-        {step === 'results' && result && (
-          <div ref={resultsRef}>
-            <ResultsView data={result} isEcommerce={INDUSTRIAS.find(i => i.value === result.montecarlo.meta.industria_codigo)?.type === 'ecommerce'} />
-          </div>
-        )}
+        </div>
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-gray-200 bg-white/50 mt-16">
-        <div className="max-w-5xl mx-auto px-6 py-6 flex items-center justify-between text-xs text-gray-400">
+      <footer className="border-t border-gray-100 bg-white/50 mt-12">
+        <div className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between text-xs text-gray-400">
           <span>Predictor M&P · Benchmarks 2026 · M&P Labs</span>
-          <div className="flex gap-4">
-            <a href="/labs" className="hover:text-gray-600 transition">Labs</a>
-            <a href="/" className="hover:text-gray-600 transition">Inicio</a>
-          </div>
+          <a href="/labs" className="hover:text-indigo-600 transition">Labs</a>
         </div>
       </footer>
     </div>
@@ -496,288 +537,39 @@ export default function PredictorV4Client() {
 }
 
 // ═══════════════════════════════════════════════════════════════════
-// RESULTS VIEW
-// ═══════════════════════════════════════════════════════════════════
-
-function ResultsView({ data, isEcommerce }: { data: any; isEcommerce: boolean }) {
-  const mc = data.montecarlo
-  const t = mc.total
-  const m = mc.meta
-  const opt = data.optimal
-  const mainLabel = isEcommerce ? 'compras' : 'leads'
-
-  // Calcular percentil de confianza (0-100, donde 100 = muy confiable)
-  const confScore = Math.min(Math.round(mc.confidence.prob_roas_gt_1), 100)
-
-  return (
-    <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
-      className="py-12 space-y-8">
-
-      {/* Context badges */}
-      <div className="flex flex-wrap gap-2 text-xs">
-        <span className="bg-slate-100 text-slate-600 px-3 py-1.5 rounded-full font-medium">{m.industria}</span>
-        <span className="bg-slate-100 text-slate-600 px-3 py-1.5 rounded-full">{PAISES.find(p => p.code === m.pais)?.flag} {PAISES.find(p => p.code === m.pais)?.name}</span>
-        <span className="bg-slate-100 text-slate-600 px-3 py-1.5 rounded-full">{fmt(m.presupuesto)}/mes</span>
-        <span className="bg-blue-100 text-blue-700 px-3 py-1.5 rounded-full font-semibold">{fmtN(m.iterations)} simulaciones</span>
-        {m.tasa_cierre_es_default && !isEcommerce && (
-          <span className="bg-amber-100 text-amber-700 px-3 py-1.5 rounded-full">Tasa cierre: {m.tasa_cierre}% (ref. mercado)</span>
-        )}
-        {m.ticket_es_default && (
-          <span className="bg-amber-100 text-amber-700 px-3 py-1.5 rounded-full">Ticket: {fmt(m.ticket_promedio)} (ref. industria)</span>
-        )}
-      </div>
-
-      {/* ═══ HEADLINE + CONFIDENCE RING ═══ */}
-      <div className="bg-white rounded-2xl p-8 shadow-xl border border-gray-200">
-        <div className="grid md:grid-cols-3 gap-8 items-center">
-          <div className="md:col-span-2">
-            <p className="text-5xl font-bold text-gray-900 tracking-tight tabular-nums">
-              {Math.round(t.leads.p50).toLocaleString()}
-            </p>
-            <p className="text-lg text-gray-600 mt-1">{mainLabel} estimados por mes</p>
-            {!isEcommerce && (
-              <p className="text-sm text-gray-400 mt-1">
-                → {Math.round(t.conversiones.p50)} ventas estimadas ({m.tasa_cierre}% tasa de cierre)
-              </p>
-            )}
-            <div className="flex items-center gap-6 mt-4">
-              <div>
-                <p className={`text-2xl font-bold tabular-nums ${t.roas.p50 >= 1 ? 'text-emerald-600' : 'text-red-500'}`}>
-                  {t.roas.p50.toFixed(1)}x
-                </p>
-                <p className="text-xs text-gray-400">ROAS mediana</p>
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-gray-900 tabular-nums">{fmt(t.revenue.p50)}</p>
-                <p className="text-xs text-gray-400">Revenue mensual</p>
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-gray-900 tabular-nums">{fmt(isEcommerce ? t.cpa.p50 : t.cpl.p50)}</p>
-                <p className="text-xs text-gray-400">{isEcommerce ? 'CPA' : 'CPL'} mediana</p>
-              </div>
-            </div>
-          </div>
-          <div className="flex justify-center">
-            <PercentileRing
-              percentile={100 - confScore}
-              label={`P(ROAS > 1) = ${mc.confidence.prob_roas_gt_1}%`}
-              size="lg"
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* ═══ ESTADÍSTICA ═══ */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <StatCard label="Intervalo de confianza 90%" value={`${Math.round(t.leads.p5)} — ${Math.round(t.leads.p95)}`} sub={mainLabel} icon={Shield} />
-        <StatCard label="P(ROAS > 1)" value={`${mc.confidence.prob_roas_gt_1}%`}
-          sub={mc.confidence.prob_roas_gt_1 >= 70 ? 'Alta probabilidad' : mc.confidence.prob_roas_gt_1 >= 40 ? 'Probabilidad media' : 'Baja probabilidad'}
-          color={mc.confidence.prob_roas_gt_1 >= 70 ? 'text-emerald-600' : mc.confidence.prob_roas_gt_1 >= 40 ? 'text-amber-600' : 'text-red-500'}
-          icon={Target} />
-        <StatCard label="ROAS IC 90%" value={`${t.roas.p5.toFixed(1)}x — ${t.roas.p95.toFixed(1)}x`} sub="Rango de retorno" icon={TrendingUp} />
-        <StatCard label={`${isEcommerce ? 'CPA' : 'CPL'} IC 90%`}
-          value={`${fmt(isEcommerce ? t.cpa.p5 : t.cpl.p5)} — ${fmt(isEcommerce ? t.cpa.p95 : t.cpl.p95)}`}
-          sub="Rango de costo" icon={DollarSign} />
-      </div>
-
-      {/* ═══ 3 ESCENARIOS ═══ */}
-      <div className="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
-        <div className="px-8 py-5 border-b border-gray-100">
-          <h2 className="text-lg font-bold text-gray-900">Escenarios probabilísticos</h2>
-          <p className="text-sm text-gray-500">Basados en análisis probabilístico de tu mercado</p>
-        </div>
-        <div className="grid grid-cols-3 divide-x divide-gray-100">
-          {[
-            { label: 'Conservador', sub: 'P25 — 75% de alcanzar', leads: t.leads.p25, conv: t.conversiones.p25, rev: t.revenue.p25, roas: t.roas.p25, cost: isEcommerce ? t.cpa.p75 : t.cpl.p75, bg: 'bg-amber-50', accent: 'text-amber-600', border: 'border-amber-200' },
-            { label: 'Base', sub: 'P50 — más probable', leads: t.leads.p50, conv: t.conversiones.p50, rev: t.revenue.p50, roas: t.roas.p50, cost: isEcommerce ? t.cpa.p50 : t.cpl.p50, bg: 'bg-blue-50', accent: 'text-blue-600', border: 'border-blue-200' },
-            { label: 'Favorable', sub: 'P75 — 25% prob.', leads: t.leads.p75, conv: t.conversiones.p75, rev: t.revenue.p75, roas: t.roas.p75, cost: isEcommerce ? t.cpa.p25 : t.cpl.p25, bg: 'bg-emerald-50', accent: 'text-emerald-600', border: 'border-emerald-200' },
-          ].map(s => (
-            <div key={s.label} className="p-6">
-              <p className={`text-xs font-bold uppercase tracking-wider ${s.accent}`}>{s.label}</p>
-              <p className="text-xs text-gray-400 mb-4">{s.sub}</p>
-              <p className="text-3xl font-bold text-gray-900 tabular-nums">{Math.round(s.leads).toLocaleString()}</p>
-              <p className="text-sm text-gray-400 mb-4">{mainLabel}</p>
-              <div className="space-y-2 text-sm">
-                {!isEcommerce && <div className="flex justify-between"><span className="text-gray-400">Ventas</span><span className="text-gray-700 font-medium tabular-nums">{Math.round(s.conv)}</span></div>}
-                <div className="flex justify-between"><span className="text-gray-400">Revenue</span><span className="text-gray-700 font-medium">{fmt(s.rev)}</span></div>
-                <div className="flex justify-between"><span className="text-gray-400">ROAS</span><span className={`font-semibold ${s.roas >= 1 ? 'text-emerald-600' : 'text-red-500'}`}>{s.roas.toFixed(1)}x</span></div>
-                <div className="flex justify-between"><span className="text-gray-400">{isEcommerce ? 'CPA' : 'CPL'}</span><span className="text-gray-700 font-medium">{fmt(s.cost)}</span></div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* ═══ HISTOGRAMA ═══ */}
-      <div className="bg-white rounded-2xl p-8 shadow-xl border border-gray-200">
-        <h2 className="text-lg font-bold text-gray-900 mb-1">Distribución de resultados posibles</h2>
-        <p className="text-sm text-gray-500 mb-6">10,000 simulaciones — cada barra es un rango de {mainLabel} posibles</p>
-        <MCHistogram data={mc.histogram.conversiones} p25={t.leads.p25} p50={t.leads.p50} p75={t.leads.p75} />
-      </div>
-
-      {/* ═══ EMBUDOS ═══ */}
-      <div className="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
-        <div className="px-8 py-5 border-b border-gray-100">
-          <h2 className="text-lg font-bold text-gray-900">Embudo por plataforma</h2>
-        </div>
-        <div className="divide-y divide-gray-100">
-          {mc.funnels.map((f: any) => (
-            <FunnelRow key={f.platform} f={f} isEcommerce={isEcommerce} tasaCierre={m.tasa_cierre} />
-          ))}
-        </div>
-      </div>
-
-      {/* ═══ ÓPTIMOS ═══ */}
-      {opt && (
-        <div className="bg-white rounded-2xl p-8 shadow-xl border border-gray-200">
-          <h2 className="text-lg font-bold text-gray-900 mb-1">Referencia de mercado para tu industria</h2>
-          <p className="text-sm text-gray-500 mb-6">{opt.industria} · {opt.tipo_cliente} · {opt.tamano} · Fuentes: WordStream, Get-Ryze, Ubersuggest {opt.benchmark_year}</p>
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-            <MiniStat label="CPC Search" value={fmt(opt.google_search.cpc)} />
-            <MiniStat label="CTR Search" value={`${opt.google_search.ctr}%`} />
-            <MiniStat label="CVR Search" value={`${opt.google_search.cvr}%`} />
-            <MiniStat label="CPA estimado" value={fmt(opt.cpa_estimado)} />
-            <MiniStat label="Presup. óptimo" value={fmt(opt.presupuesto_optimo.recomendado)} />
-          </div>
-        </div>
-      )}
-
-      {/* ═══ DISCLAIMER + CTA ═══ */}
-      <div className="bg-gray-50 rounded-xl p-6 border border-gray-200 text-sm text-gray-500 leading-relaxed">
-        Esta predicción es una referencia de mercado basada en benchmarks 2026 (WordStream, Get-Ryze, Ubersuggest)
-        y análisis estadístico avanzado. No constituye una garantía de resultados.
-      </div>
-
-      <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-8 text-center text-white shadow-xl">
-        <h3 className="text-xl font-bold mb-2">¿Quieres una predicción personalizada?</h3>
-        <p className="text-blue-100 mb-6">Con data real de tu negocio y optimización profesional</p>
-        <a href="https://wa.me/56992258137?text=Hola%2C%20us%C3%A9%20el%20Predictor%20y%20me%20gustar%C3%ADa%20una%20asesor%C3%ADa"
-          target="_blank" rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 bg-white text-blue-700 font-semibold px-6 py-3 rounded-xl hover:bg-blue-50 transition-colors shadow-lg">
-          <MessageSquare className="w-5 h-5" /> Contactar M&P
-        </a>
-      </div>
-    </motion.div>
-  )
-}
-
-// ═══════════════════════════════════════════════════════════════════
 // SUB-COMPONENTS
 // ═══════════════════════════════════════════════════════════════════
 
-function StatCard({ label, value, sub, color, icon: Icon }: { label: string; value: string; sub?: string; color?: string; icon: any }) {
+function Stat({ icon: I, label, value, sub, color }: any) {
   return (
-    <div className="bg-white rounded-xl p-5 shadow-lg border border-gray-200">
-      <div className="flex items-center gap-2 mb-2">
-        <Icon className="w-4 h-4 text-gray-400" />
-        <p className="text-xs text-gray-500 font-medium">{label}</p>
-      </div>
-      <p className={`text-lg font-bold tabular-nums ${color || 'text-gray-900'}`}>{value}</p>
-      {sub && <p className="text-xs text-gray-400 mt-0.5">{sub}</p>}
+    <div className="bg-white rounded-xl p-4 shadow-md border border-gray-100">
+      <div className="flex items-center gap-1.5 mb-1"><I className="w-3.5 h-3.5 text-gray-400" /><span className="text-[10px] text-gray-500 font-medium">{label}</span></div>
+      <p className={`text-base font-bold tabular-nums ${color || 'text-gray-900'}`}>{value}</p>
+      {sub && <p className="text-[10px] text-gray-300">{sub}</p>}
     </div>
   )
 }
 
-function MiniStat({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="bg-gray-50 rounded-lg p-3">
-      <p className="text-xs text-gray-400">{label}</p>
-      <p className="text-sm font-bold text-gray-700 tabular-nums">{value}</p>
-    </div>
-  )
+function Row({ l, v, c }: { l: string; v: string; c?: string }) {
+  return <div className="flex justify-between"><span className="text-gray-400">{l}</span><span className={`font-medium tabular-nums ${c || 'text-gray-700'}`}>{v}</span></div>
 }
 
-function FunnelRow({ f, isEcommerce, tasaCierre }: { f: any; isEcommerce: boolean; tasaCierre: number }) {
-  const rows = [
-    { label: 'Impresiones', p25: fmtN(f.impressions.p25), p50: fmtN(f.impressions.p50), p75: fmtN(f.impressions.p75), bench: '' },
-    { label: `Clicks`, p25: fmtN(f.clicks.p25), p50: fmtN(f.clicks.p50), p75: fmtN(f.clicks.p75), bench: `CPC ${fmt(f.benchmark.cpc)}`, rate: `CTR ${f.benchmark.ctr}%` },
-    { label: isEcommerce ? 'Compras' : 'Leads', p25: Math.round(f.leads.p25).toString(), p50: Math.round(f.leads.p50).toString(), p75: Math.round(f.leads.p75).toString(), bench: '', rate: `CVR ${f.benchmark.cvr}%` },
-  ]
-  if (!isEcommerce) {
-    rows.push({ label: 'Ventas', p25: f.ventas.p25.toFixed(1), p50: f.ventas.p50.toFixed(1), p75: f.ventas.p75.toFixed(1), bench: '', rate: `Cierre ${tasaCierre}%` })
-  }
-  rows.push({ label: 'Revenue', p25: fmt(f.revenue.p25), p50: fmt(f.revenue.p50), p75: fmt(f.revenue.p75), bench: '' })
-
-  return (
-    <div className="px-8 py-5">
-      <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center gap-2">
-          <span className="text-lg">{PLAT_ICON[f.platform]}</span>
-          <span className="font-semibold text-gray-800">{PLAT[f.platform]}</span>
-          <span className="text-xs text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">{f.allocation_pct}% · {fmt(f.budget_allocated)}</span>
-        </div>
-        <span className={`text-sm font-bold tabular-nums ${f.roas.p50 >= 1 ? 'text-emerald-600' : 'text-red-500'}`}>
-          {f.roas.p50.toFixed(1)}x ROAS
-        </span>
-      </div>
-      <table className="w-full text-sm">
-        <thead>
-          <tr className="text-xs text-gray-400">
-            <th className="text-left py-1 font-medium w-[30%]">Etapa</th>
-            <th className="text-right py-1 font-medium w-[14%] text-amber-500">P25</th>
-            <th className="text-right py-1 font-medium w-[14%] text-blue-600">P50</th>
-            <th className="text-right py-1 font-medium w-[14%] text-emerald-500">P75</th>
-            <th className="text-right py-1 font-medium w-[28%]">Benchmark</th>
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((r, i) => (
-            <tr key={r.label} className="border-t border-gray-50">
-              <td className="py-2 text-gray-600">
-                {r.label} {r.rate && <span className="text-gray-300 text-xs">({r.rate})</span>}
-              </td>
-              <td className="py-2 text-right text-gray-400 tabular-nums">{r.p25}</td>
-              <td className="py-2 text-right text-gray-800 font-semibold tabular-nums">{r.p50}</td>
-              <td className="py-2 text-right text-gray-400 tabular-nums">{r.p75}</td>
-              <td className="py-2 text-right text-gray-300 text-xs">{r.bench}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  )
-}
-
-function MCHistogram({ data, p25, p50, p75 }: { data: any[]; p25: number; p50: number; p75: number }) {
+function Hist({ data, p25, p50, p75 }: { data: any[]; p25: number; p50: number; p75: number }) {
   if (!data?.length) return null
   const max = Math.max(...data.map((d: any) => d.count))
-  const w = 900, h = 160, pad = { t: 24, b: 20, l: 0, r: 0 }
-  const cw = w, ch = h - pad.t - pad.b
-  const minB = data[0].bin, maxB = data[data.length - 1].bin, range = maxB - minB || 1
-  const bw = cw / data.length - 1
-  const getX = (v: number) => ((v - minB) / range) * cw
+  const w = 800, h = 120
+  const minB = data[0].bin, maxB = data[data.length-1].bin, rng = maxB - minB || 1
+  const bw = w / data.length - 0.5
+  const getX = (v: number) => ((v - minB) / rng) * w
 
   return (
-    <svg viewBox={`0 0 ${w} ${h}`} className="w-full" style={{ height: 160 }}>
-      {data.map((d: any, i: number) => {
-        const barH = (d.count / max) * ch
-        return (
-          <rect key={i} x={(i / data.length) * cw} y={pad.t + ch - barH}
-            width={bw} height={barH}
-            fill="url(#barGrad)" rx={2} />
-        )
-      })}
-      {/* Gradient definition */}
-      <defs>
-        <linearGradient id="barGrad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#818cf8" />
-          <stop offset="100%" stopColor="#c7d2fe" />
-        </linearGradient>
-      </defs>
-      {/* Percentile lines */}
-      {[
-        { x: getX(p25), color: '#f59e0b', label: `P25: ${Math.round(p25)}`, dash: '4 2' },
-        { x: getX(p50), color: '#3b82f6', label: `P50: ${Math.round(p50)}`, dash: '' },
-        { x: getX(p75), color: '#10b981', label: `P75: ${Math.round(p75)}`, dash: '4 2' },
-      ].map(l => (
-        <g key={l.label}>
-          <line x1={l.x} y1={pad.t} x2={l.x} y2={pad.t + ch} stroke={l.color} strokeWidth={l.dash ? 1 : 2} strokeDasharray={l.dash} />
-          <text x={l.x} y={pad.t - 6} textAnchor="middle" fontSize={10} fill={l.color} fontWeight={l.dash ? '400' : '700'}>{l.label}</text>
-        </g>
+    <svg viewBox={`0 0 ${w} ${h}`} className="w-full" style={{ height: 120 }}>
+      <defs><linearGradient id="hg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#818cf8"/><stop offset="100%" stopColor="#c7d2fe"/></linearGradient></defs>
+      {data.map((d: any, i: number) => (
+        <rect key={i} x={(i/data.length)*w} y={20 + (h-36) - (d.count/max)*(h-36)} width={bw} height={(d.count/max)*(h-36)} fill="url(#hg)" rx={2} />
       ))}
-      {/* X axis */}
-      {data.filter((_, i) => i % 4 === 0).map((d: any) => (
-        <text key={d.bin} x={getX(d.bin)} y={h - 4} textAnchor="middle" fontSize={9} fill="#94a3b8">{Math.round(d.bin)}</text>
+      {[{x:getX(p25),c:'#f59e0b',l:`P25: ${Math.round(p25)}`,d:'3 2'},{x:getX(p50),c:'#6366f1',l:`P50: ${Math.round(p50)}`,d:''},{x:getX(p75),c:'#10b981',l:`P75: ${Math.round(p75)}`,d:'3 2'}].map(l => (
+        <g key={l.l}><line x1={l.x} y1={20} x2={l.x} y2={h-16} stroke={l.c} strokeWidth={l.d?1:2} strokeDasharray={l.d} /><text x={l.x} y={14} textAnchor="middle" fontSize={9} fill={l.c} fontWeight={l.d?'400':'700'}>{l.l}</text></g>
       ))}
     </svg>
   )
