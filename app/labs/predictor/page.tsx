@@ -28,8 +28,8 @@ const predictorSchema = {
     '22 industrias con benchmarks CPC, CTR, CVR, CPA',
     '6 países LATAM (Chile, México, Colombia, Argentina, Brasil, Perú)',
     'Distribución óptima de presupuesto por plataforma',
-    'Simulación Monte Carlo con 10,000 iteraciones',
-    'Percentiles P25/P50/P75 con intervalos de confianza'
+    'Análisis probabilístico con intervalos de confianza',
+    'Escenarios conservador, base y favorable con datos reales'
   ]
 }
 
@@ -58,7 +58,7 @@ const faqSchema = {
       name: '¿Para qué industrias funciona?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Funciona para 12 industrias: E-commerce, SaaS/Tecnología, Fintech, Inmobiliaria, Salud, Educación, Servicios Profesionales, Automotriz, Turismo, Gastronomía, Moda/Retail y Belleza.'
+        text: 'Funciona para 22 industrias: E-commerce, SaaS, Fintech, Inmobiliaria, Salud, Educación, Automotriz, Turismo, Gastronomía, Moda, Belleza, Legal, Construcción, Fitness, Veterinaria, Manufactura, Logística, Seguros, Agricultura, Servicios Profesionales, Energía y Hogar.'
       }
     },
     {

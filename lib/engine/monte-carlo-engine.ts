@@ -145,30 +145,38 @@ const SATURATION_THRESHOLDS: Record<string, number> = {
 }
 
 // Tasa de cierre matrix: industria × tipo_cliente × tamaño
-// Formato: { B2C: { MICRO, PYME, MEDIANA, GRANDE }, B2B: idem }
+// REGLA: a mayor ticket promedio de la industria, menor tasa de cierre
+// Inmobiliaria/Automotriz/Manufactura con tickets en millones → 0.3-1%
+// Salud/Educación/Gastronomía con tickets bajos → 8-20%
+// E-commerce: NO aplica tasa de cierre (la compra es la conversión)
 const TASA_CIERRE_MATRIX: Record<string, Record<string, Record<string, number>>> = {
-  ECOMMERCE:                { B2C: { MICRO: 6, PYME: 8, MEDIANA: 10, GRANDE: 12 },  B2B: { MICRO: 3, PYME: 5, MEDIANA: 6, GRANDE: 8 } },
-  INMOBILIARIA:             { B2C: { MICRO: 2, PYME: 3, MEDIANA: 4, GRANDE: 5 },    B2B: { MICRO: 2, PYME: 3, MEDIANA: 4, GRANDE: 5 } },
-  TURISMO:                  { B2C: { MICRO: 8, PYME: 12, MEDIANA: 15, GRANDE: 18 }, B2B: { MICRO: 5, PYME: 8, MEDIANA: 10, GRANDE: 12 } },
-  GASTRONOMIA:              { B2C: { MICRO: 12, PYME: 15, MEDIANA: 18, GRANDE: 20 },B2B: { MICRO: 8, PYME: 10, MEDIANA: 12, GRANDE: 15 } },
-  AUTOMOTRIZ:               { B2C: { MICRO: 3, PYME: 5, MEDIANA: 6, GRANDE: 8 },   B2B: { MICRO: 2, PYME: 3, MEDIANA: 5, GRANDE: 6 } },
-  SALUD_MEDICINA:           { B2C: { MICRO: 8, PYME: 10, MEDIANA: 12, GRANDE: 15 }, B2B: { MICRO: 5, PYME: 8, MEDIANA: 10, GRANDE: 12 } },
-  EDUCACION:                { B2C: { MICRO: 5, PYME: 8, MEDIANA: 10, GRANDE: 12 },  B2B: { MICRO: 3, PYME: 5, MEDIANA: 8, GRANDE: 10 } },
-  MODA_RETAIL:              { B2C: { MICRO: 8, PYME: 10, MEDIANA: 12, GRANDE: 15 }, B2B: { MICRO: 5, PYME: 8, MEDIANA: 10, GRANDE: 12 } },
-  FINTECH:                  { B2C: { MICRO: 3, PYME: 5, MEDIANA: 6, GRANDE: 8 },   B2B: { MICRO: 2, PYME: 3, MEDIANA: 5, GRANDE: 6 } },
-  SERVICIOS_LEGALES:        { B2C: { MICRO: 5, PYME: 8, MEDIANA: 10, GRANDE: 12 }, B2B: { MICRO: 3, PYME: 5, MEDIANA: 8, GRANDE: 10 } },
-  BELLEZA_PERSONAL:         { B2C: { MICRO: 10, PYME: 12, MEDIANA: 15, GRANDE: 18 },B2B: { MICRO: 5, PYME: 8, MEDIANA: 10, GRANDE: 12 } },
-  TECNOLOGIA_SAAS:          { B2C: { MICRO: 3, PYME: 5, MEDIANA: 6, GRANDE: 8 },   B2B: { MICRO: 2, PYME: 3, MEDIANA: 4, GRANDE: 5 } },
-  CONSTRUCCION_REMODELACION:{ B2C: { MICRO: 3, PYME: 5, MEDIANA: 6, GRANDE: 8 },   B2B: { MICRO: 2, PYME: 3, MEDIANA: 5, GRANDE: 6 } },
-  DEPORTES_FITNESS:         { B2C: { MICRO: 8, PYME: 10, MEDIANA: 12, GRANDE: 15 }, B2B: { MICRO: 5, PYME: 8, MEDIANA: 10, GRANDE: 12 } },
-  VETERINARIA_MASCOTAS:     { B2C: { MICRO: 12, PYME: 15, MEDIANA: 18, GRANDE: 20 },B2B: { MICRO: 8, PYME: 10, MEDIANA: 12, GRANDE: 15 } },
-  MANUFACTURA_INDUSTRIAL:   { B2C: { MICRO: 2, PYME: 3, MEDIANA: 4, GRANDE: 5 },   B2B: { MICRO: 2, PYME: 3, MEDIANA: 4, GRANDE: 5 } },
-  LOGISTICA_TRANSPORTE:     { B2C: { MICRO: 3, PYME: 5, MEDIANA: 6, GRANDE: 8 },   B2B: { MICRO: 2, PYME: 3, MEDIANA: 5, GRANDE: 6 } },
-  SEGUROS:                  { B2C: { MICRO: 3, PYME: 5, MEDIANA: 6, GRANDE: 8 },   B2B: { MICRO: 2, PYME: 3, MEDIANA: 5, GRANDE: 6 } },
-  AGRICULTURA_AGROINDUSTRIA:{ B2C: { MICRO: 3, PYME: 5, MEDIANA: 6, GRANDE: 8 },   B2B: { MICRO: 2, PYME: 3, MEDIANA: 5, GRANDE: 6 } },
-  SERVICIOS_PROFESIONALES:  { B2C: { MICRO: 3, PYME: 5, MEDIANA: 6, GRANDE: 8 },   B2B: { MICRO: 2, PYME: 3, MEDIANA: 5, GRANDE: 6 } },
-  ENERGIA_UTILITIES:        { B2C: { MICRO: 2, PYME: 3, MEDIANA: 4, GRANDE: 5 },   B2B: { MICRO: 2, PYME: 3, MEDIANA: 4, GRANDE: 5 } },
-  HOGAR_DECORACION:         { B2C: { MICRO: 8, PYME: 10, MEDIANA: 12, GRANDE: 15 }, B2B: { MICRO: 5, PYME: 8, MEDIANA: 10, GRANDE: 12 } },
+  // TICKET ALTO (>$5M): tasa muy baja
+  INMOBILIARIA:             { B2C: { MICRO: 0.3, PYME: 0.5, MEDIANA: 0.8, GRANDE: 1 },  B2B: { MICRO: 0.3, PYME: 0.5, MEDIANA: 0.8, GRANDE: 1 } },
+  AUTOMOTRIZ:               { B2C: { MICRO: 0.5, PYME: 1, MEDIANA: 1.5, GRANDE: 2 },    B2B: { MICRO: 0.5, PYME: 1, MEDIANA: 1.5, GRANDE: 2 } },
+  MANUFACTURA_INDUSTRIAL:   { B2C: { MICRO: 0.5, PYME: 1, MEDIANA: 1.5, GRANDE: 2 },    B2B: { MICRO: 0.5, PYME: 1, MEDIANA: 1.5, GRANDE: 2 } },
+  ENERGIA_UTILITIES:        { B2C: { MICRO: 0.5, PYME: 1, MEDIANA: 1.5, GRANDE: 2 },    B2B: { MICRO: 0.5, PYME: 1, MEDIANA: 1.5, GRANDE: 2 } },
+  AGRICULTURA_AGROINDUSTRIA:{ B2C: { MICRO: 1, PYME: 1.5, MEDIANA: 2, GRANDE: 3 },      B2B: { MICRO: 1, PYME: 1.5, MEDIANA: 2, GRANDE: 3 } },
+  // TICKET MEDIO ($500K-$5M): tasa baja
+  CONSTRUCCION_REMODELACION:{ B2C: { MICRO: 1, PYME: 2, MEDIANA: 3, GRANDE: 4 },        B2B: { MICRO: 1, PYME: 1.5, MEDIANA: 2, GRANDE: 3 } },
+  TECNOLOGIA_SAAS:          { B2C: { MICRO: 1, PYME: 2, MEDIANA: 3, GRANDE: 4 },        B2B: { MICRO: 1, PYME: 1.5, MEDIANA: 2, GRANDE: 3 } },
+  FINTECH:                  { B2C: { MICRO: 1, PYME: 2, MEDIANA: 3, GRANDE: 4 },        B2B: { MICRO: 1, PYME: 1.5, MEDIANA: 2, GRANDE: 3 } },
+  SERVICIOS_LEGALES:        { B2C: { MICRO: 2, PYME: 3, MEDIANA: 4, GRANDE: 5 },        B2B: { MICRO: 1, PYME: 2, MEDIANA: 3, GRANDE: 4 } },
+  SERVICIOS_PROFESIONALES:  { B2C: { MICRO: 2, PYME: 3, MEDIANA: 4, GRANDE: 5 },        B2B: { MICRO: 1, PYME: 2, MEDIANA: 3, GRANDE: 4 } },
+  LOGISTICA_TRANSPORTE:     { B2C: { MICRO: 2, PYME: 3, MEDIANA: 4, GRANDE: 5 },        B2B: { MICRO: 1, PYME: 2, MEDIANA: 3, GRANDE: 4 } },
+  SEGUROS:                  { B2C: { MICRO: 2, PYME: 3, MEDIANA: 4, GRANDE: 5 },        B2B: { MICRO: 1, PYME: 2, MEDIANA: 3, GRANDE: 4 } },
+  // TICKET MEDIO-BAJO ($50K-$500K): tasa media
+  EDUCACION:                { B2C: { MICRO: 3, PYME: 5, MEDIANA: 6, GRANDE: 8 },        B2B: { MICRO: 2, PYME: 3, MEDIANA: 5, GRANDE: 6 } },
+  TURISMO:                  { B2C: { MICRO: 5, PYME: 8, MEDIANA: 10, GRANDE: 12 },      B2B: { MICRO: 3, PYME: 5, MEDIANA: 8, GRANDE: 10 } },
+  // TICKET BAJO (<$100K): tasa alta (decisión de compra rápida)
+  SALUD_MEDICINA:           { B2C: { MICRO: 8, PYME: 10, MEDIANA: 12, GRANDE: 15 },     B2B: { MICRO: 5, PYME: 8, MEDIANA: 10, GRANDE: 12 } },
+  BELLEZA_PERSONAL:         { B2C: { MICRO: 10, PYME: 12, MEDIANA: 15, GRANDE: 18 },    B2B: { MICRO: 5, PYME: 8, MEDIANA: 10, GRANDE: 12 } },
+  GASTRONOMIA:              { B2C: { MICRO: 12, PYME: 15, MEDIANA: 18, GRANDE: 20 },    B2B: { MICRO: 8, PYME: 10, MEDIANA: 12, GRANDE: 15 } },
+  DEPORTES_FITNESS:         { B2C: { MICRO: 8, PYME: 10, MEDIANA: 12, GRANDE: 15 },     B2B: { MICRO: 5, PYME: 8, MEDIANA: 10, GRANDE: 12 } },
+  VETERINARIA_MASCOTAS:     { B2C: { MICRO: 12, PYME: 15, MEDIANA: 18, GRANDE: 20 },    B2B: { MICRO: 8, PYME: 10, MEDIANA: 12, GRANDE: 15 } },
+  // E-COMMERCE: la tasa de cierre NO se usa (CVR ya es la compra)
+  ECOMMERCE:                { B2C: { MICRO: 100, PYME: 100, MEDIANA: 100, GRANDE: 100 },B2B: { MICRO: 100, PYME: 100, MEDIANA: 100, GRANDE: 100 } },
+  MODA_RETAIL:              { B2C: { MICRO: 100, PYME: 100, MEDIANA: 100, GRANDE: 100 },B2B: { MICRO: 100, PYME: 100, MEDIANA: 100, GRANDE: 100 } },
+  HOGAR_DECORACION:         { B2C: { MICRO: 100, PYME: 100, MEDIANA: 100, GRANDE: 100 },B2B: { MICRO: 100, PYME: 100, MEDIANA: 100, GRANDE: 100 } },
 }
 
 /** Obtiene tasa de cierre de referencia según industria, tipo cliente y tamaño */

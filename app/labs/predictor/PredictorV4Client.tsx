@@ -247,14 +247,14 @@ export default function PredictorV4Client() {
             <div className="text-center mb-12">
               <div className="inline-flex items-center gap-2 mb-4 px-4 py-2 rounded-full bg-slate-100 border border-slate-200">
                 <BarChart3 className="w-4 h-4 text-slate-600" />
-                <span className="text-slate-700 text-sm font-semibold">Predictor Monte Carlo</span>
+                <span className="text-slate-700 text-sm font-semibold">Predictor M&P</span>
               </div>
               <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
                 Predice tus resultados<br />antes de invertir
               </h1>
               <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-6">
-                Simulación estadística con 10,000 iteraciones.<br />
-                Data verificada 2026. 22 industrias. 6 países LATAM.
+                Anticipa resultados con data real de mercado.<br />
+                22 industrias. 6 países LATAM. Benchmarks 2026.
               </p>
               <div className="flex flex-wrap justify-center gap-4 text-sm text-gray-500">
                 <span className="flex items-center gap-1.5"><Shield className="w-4 h-4 text-blue-500" /> Intervalos de confianza</span>
@@ -464,8 +464,8 @@ export default function PredictorV4Client() {
             <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
               className="space-y-4">
               <div className="w-16 h-16 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto" />
-              <p className="text-lg font-semibold text-gray-900">Ejecutando simulación...</p>
-              <p className="text-sm text-gray-500">10,000 iteraciones Monte Carlo</p>
+              <p className="text-lg font-semibold text-gray-900">Analizando tu mercado...</p>
+              <p className="text-sm text-gray-500">Comparando con benchmarks de tu industria</p>
               <div className="flex justify-center gap-3 text-xs text-gray-400">
                 <span>Google Search</span><span>·</span><span>Google Display</span><span>·</span><span>Meta Ads</span>
               </div>
@@ -484,7 +484,7 @@ export default function PredictorV4Client() {
       {/* Footer */}
       <footer className="border-t border-gray-200 bg-white/50 mt-16">
         <div className="max-w-5xl mx-auto px-6 py-6 flex items-center justify-between text-xs text-gray-400">
-          <span>Motor Monte Carlo v4.3 · Benchmarks 2026 · M&P Labs</span>
+          <span>Predictor M&P · Benchmarks 2026 · M&P Labs</span>
           <div className="flex gap-4">
             <a href="/labs" className="hover:text-gray-600 transition">Labs</a>
             <a href="/" className="hover:text-gray-600 transition">Inicio</a>
@@ -584,7 +584,7 @@ function ResultsView({ data, isEcommerce }: { data: any; isEcommerce: boolean })
       <div className="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
         <div className="px-8 py-5 border-b border-gray-100">
           <h2 className="text-lg font-bold text-gray-900">Escenarios probabilísticos</h2>
-          <p className="text-sm text-gray-500">Basados en percentiles de la distribución Monte Carlo</p>
+          <p className="text-sm text-gray-500">Basados en análisis probabilístico de tu mercado</p>
         </div>
         <div className="grid grid-cols-3 divide-x divide-gray-100">
           {[
@@ -610,7 +610,7 @@ function ResultsView({ data, isEcommerce }: { data: any; isEcommerce: boolean })
 
       {/* ═══ HISTOGRAMA ═══ */}
       <div className="bg-white rounded-2xl p-8 shadow-xl border border-gray-200">
-        <h2 className="text-lg font-bold text-gray-900 mb-1">Distribución Monte Carlo</h2>
+        <h2 className="text-lg font-bold text-gray-900 mb-1">Distribución de resultados posibles</h2>
         <p className="text-sm text-gray-500 mb-6">10,000 simulaciones — cada barra es un rango de {mainLabel} posibles</p>
         <MCHistogram data={mc.histogram.conversiones} p25={t.leads.p25} p50={t.leads.p50} p75={t.leads.p75} />
       </div>
@@ -645,7 +645,7 @@ function ResultsView({ data, isEcommerce }: { data: any; isEcommerce: boolean })
       {/* ═══ DISCLAIMER + CTA ═══ */}
       <div className="bg-gray-50 rounded-xl p-6 border border-gray-200 text-sm text-gray-500 leading-relaxed">
         Esta predicción es una referencia de mercado basada en benchmarks 2026 (WordStream, Get-Ryze, Ubersuggest)
-        y simulación Monte Carlo con {fmtN(m.iterations)} iteraciones. No constituye una garantía de resultados.
+        y análisis estadístico avanzado. No constituye una garantía de resultados.
       </div>
 
       <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-8 text-center text-white shadow-xl">
