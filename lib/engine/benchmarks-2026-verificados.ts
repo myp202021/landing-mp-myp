@@ -157,7 +157,7 @@ export const BENCHMARKS_INDUSTRIAS_2026: Record<string, IndustryBenchmark2026> =
     },
     chile_factor: 0.8,
     max_conversiones_mes: 60,
-    roas_maximo: 25,
+    roas_maximo: 8,     // Ticket altísimo ($150M+) pero ciclo largo y baja tasa de cierre → cap realista
     cpa_minimo: 50000,
     tasa_cierre_explicacion: '% de formularios de contacto que se convierten en ventas cerradas',
     plataformas_recomendadas: ['GOOGLE_SEARCH', 'META_ADS', 'LINKEDIN', 'GOOGLE_DISPLAY'],

@@ -526,7 +526,12 @@ export function runMonteCarlo(input: MCInput): MCResult {
       // Cap por max_conversiones_mes de la industria (proporcionado por plataforma)
       const maxConvPlatform = (benchmark.max_conversiones_mes || 200) * (cfg.pct / 100)
       const ventas = Math.min(leads * (tasa_cierre / 100), maxConvPlatform)
-      const revenue = ventas * ticket_promedio * factores.factor_revenue_realizado
+      let revenue = ventas * ticket_promedio * factores.factor_revenue_realizado
+
+      // Cap de ROAS por industria — no puede exceder el roas_maximo del benchmark
+      // Esto evita resultados absurdos (ej: inmobiliaria ticket $150M → ROAS 88x)
+      const maxRevenuePlatform = cfg.budget * (benchmark.roas_maximo || 15)
+      revenue = Math.min(revenue, maxRevenuePlatform)
 
       // 3. Guardar
       res.impressions[i] = impressions
