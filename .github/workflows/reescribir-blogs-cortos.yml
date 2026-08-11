@@ -1,0 +1,22 @@
+name: Reescribir Blogs Cortos (30 posts → 4000+ palabras)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  reescribir:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install dependencies
+        run: npm install node-fetch@2 @supabase/supabase-js@2
+      - name: Reescribir blogs cortos
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: node scripts/reescribir-blogs-cortos.js
