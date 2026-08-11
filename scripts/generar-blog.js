@@ -269,69 +269,54 @@ Responde SOLO con un JSON (nada más):
   }
 }
 
-async function generarArticulo(tema) {
+// ============================================================================
+// STEP 1: Generar outline con 8-10 secciones H2
+// ============================================================================
+async function generarOutline(tema) {
   const hoy = new Date().toISOString().split('T')[0]
-  const slug = slugify(tema.tema)
+  console.log(`📋 Generando outline para: ${tema.tema}`)
 
-  console.log(`📝 Generando artículo: ${tema.tema}`)
-
-  const prompt = `Eres un experto en marketing digital y performance marketing en Chile. Escribe un artículo completo para el blog de Muller y Pérez (www.mulleryperez.cl), una agencia de performance marketing chilena.
+  const prompt = `Eres un experto en marketing digital y performance marketing en Chile. Genera un OUTLINE detallado para un artículo extenso (4000+ palabras) del blog de Muller y Pérez (www.mulleryperez.cl).
 
 TEMA: ${tema.tema}
 CATEGORÍA: ${tema.categoria}
 FECHA: ${hoy}
 
-INSTRUCCIONES ESTRICTAS:
-
-1. ESTRUCTURA HTML (usa estas clases exactas de Tailwind):
-- El artículo debe estar dentro de <div class="prose prose-lg max-w-none">
-- H2: <h2 class="text-3xl font-bold text-gray-900 mt-12 mb-6">
-- H3: <h3 class="text-2xl font-bold text-gray-900 mt-8 mb-4">
-- Párrafos: <p class="text-gray-700 mb-4">
-- Listas: <ul class="space-y-3 text-gray-700 mb-8"> con <li class="flex items-start gap-3"><span class="text-blue-600 font-bold">•</span><span>...</span></li>
-- Callout importante: <div class="bg-blue-50 border-l-4 border-blue-600 p-6 rounded-r-xl mb-8"><h3 class="text-xl font-bold text-gray-900 mb-4">Título</h3><p class="text-gray-700">...</p></div>
-- Callout dato: <div class="bg-emerald-50 border-l-4 border-emerald-600 p-6 rounded-r-xl mb-8"><p class="text-gray-700">...</p></div>
-- Callout advertencia: <div class="bg-amber-50 border-l-4 border-amber-600 p-6 rounded-r-xl mb-8"><p class="text-gray-700">...</p></div>
-- Tablas: <div class="overflow-x-auto mb-8"><table class="min-w-full border-collapse"><thead><tr class="bg-gray-900 text-white"><th class="px-4 py-3 text-left text-sm font-semibold">...</th></tr></thead><tbody><tr class="border-b border-gray-200 hover:bg-gray-50"><td class="px-4 py-3 text-sm text-gray-700">...</td></tr></tbody></table></div>
-
-2. CONTENIDO:
-- Mínimo 4000 palabras — extenso y profundo
-- Al menos 8 H2 y varios H3
-- AL MENOS 1 tabla HTML con datos reales de Chile (benchmarks CPC, CPL, ROAS, costos por industria, comparativas)
-- Datos reales o benchmarks de Chile cuando sea posible
+INSTRUCCIONES:
+- Genera entre 8 y 10 secciones H2
+- Cada sección debe tener 3-5 puntos clave a desarrollar
+- Incluye datos reales de Chile, benchmarks, ejemplos prácticos
 - Tono profesional pero directo, sin relleno
-- Mencionar a Muller y Pérez naturalmente 1-2 veces como referencia, sin ser spam
-- Incluir ejemplos prácticos aplicables a empresas chilenas
+- Mencionar a Muller y Pérez naturalmente 1-2 veces como referencia
+- AL MENOS 1 sección debe incluir una tabla HTML con datos reales de Chile (benchmarks CPC, CPL, ROAS, costos por industria)
+- La ÚLTIMA sección SIEMPRE debe ser "Preguntas frecuentes" con mínimo 6 preguntas (cada una como H3 terminando en ?)
+- Incluir al menos 4 links internos distribuidos en las secciones:
+  * /servicios — servicios de marketing digital
+  * /contacto — contactar a nuestro equipo
+  * /blog — blog de marketing digital
+  * /labs/predictor — predictor de inversión
+  * /ranking-agencias-marketing-digital-chile — ranking de agencias
+  * /indicadores — indicadores de marketing
+  * /casos-de-exito — casos de éxito
 
-3. SECCIÓN FAQ OBLIGATORIA AL FINAL:
-- H2: "Preguntas frecuentes"
-- Mínimo 6 preguntas como H3 (cada H3 DEBE terminar con ?)
-- Cada pregunta seguida de un párrafo <p> con respuesta completa (min 50 palabras)
-- Esto es CRÍTICO para el schema FAQ automático
-
-4. LINKS INTERNOS OBLIGATORIOS (mínimo 4):
-Incluir naturalmente en el texto estos enlaces:
-- <a href="/servicios" class="text-blue-600 hover:underline">servicios de marketing digital</a>
-- <a href="/contacto" class="text-blue-600 hover:underline">contactar a nuestro equipo</a>
-- <a href="/blog" class="text-blue-600 hover:underline">blog de marketing digital</a>
-- <a href="/labs/predictor" class="text-blue-600 hover:underline">predictor de inversión</a>
-- <a href="/ranking-agencias-marketing-digital-chile" class="text-blue-600 hover:underline">ranking de agencias</a>
-- <a href="/indicadores" class="text-blue-600 hover:underline">indicadores de marketing</a>
-- <a href="/casos-de-exito" class="text-blue-600 hover:underline">casos de éxito</a>
-Usar al menos 4 de estos links distribuidos naturalmente en el contenido.
-
-5. CTA FINAL:
-- Después del FAQ, incluir un div CTA:
-<div class="bg-gradient-to-r from-blue-900 to-purple-900 rounded-2xl p-8 text-center mt-12 mb-8"><h2 class="text-2xl font-bold text-white mb-4">¿Necesitas resultados reales en marketing digital?</h2><p class="text-blue-100 mb-6">En Muller y Pérez trabajamos con datos, no con suposiciones. Agenda una reunión estratégica sin costo.</p><a href="/contacto" class="inline-block bg-white text-blue-900 font-bold px-8 py-3 rounded-lg hover:bg-blue-50 transition">Solicitar propuesta →</a></div>
-
-6. NO incluir:
-- El H1 (se genera aparte)
-- Header ni footer
-- Imágenes
-- Metadata (se genera aparte)
-- La palabra "artículo" ni meta-referencias al texto
-
-RESPONDE SOLO CON EL HTML DEL CONTENIDO (desde el primer <div class="prose..."> hasta el cierre </div>). Nada más.`
+Responde SOLO con JSON (nada más):
+{
+  "secciones": [
+    {
+      "h2": "Título de la sección H2",
+      "puntos": ["punto 1 a desarrollar", "punto 2", "punto 3"],
+      "incluye_tabla": false,
+      "links_internos": []
+    },
+    ...
+    {
+      "h2": "Preguntas frecuentes",
+      "puntos": ["¿Pregunta 1?", "¿Pregunta 2?", "¿Pregunta 3?", "¿Pregunta 4?", "¿Pregunta 5?", "¿Pregunta 6?"],
+      "incluye_tabla": false,
+      "links_internos": []
+    }
+  ]
+}`
 
   const res = await fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
@@ -342,20 +327,160 @@ RESPONDE SOLO CON EL HTML DEL CONTENIDO (desde el primer <div class="prose..."> 
     body: JSON.stringify({
       model: 'gpt-4o',
       messages: [{ role: 'user', content: prompt }],
-      max_tokens: 16000,
+      max_tokens: 3000,
+      temperature: 0.7,
+      response_format: { type: 'json_object' }
+    })
+  })
+
+  if (!res.ok) {
+    const err = await res.text()
+    throw new Error(`OpenAI API error (outline): ${res.status} — ${err}`)
+  }
+
+  const data = await res.json()
+  const raw = data.choices[0].message.content.trim()
+  const outline = JSON.parse(raw)
+
+  console.log(`✅ Outline generado: ${outline.secciones.length} secciones`)
+  for (const s of outline.secciones) {
+    console.log(`   → ${s.h2} (${s.puntos.length} puntos)`)
+  }
+
+  return outline
+}
+
+// ============================================================================
+// STEP 2: Generar una sección individual
+// ============================================================================
+async function generarSeccion(tema, outline, seccion, index, total) {
+  const hoy = new Date().toISOString().split('T')[0]
+  const esFAQ = index === total - 1
+  const esPrimera = index === 0
+  const esUltimaAntesFAQ = index === total - 2
+
+  console.log(`   ✍️  Sección ${index + 1}/${total}: ${seccion.h2}`)
+
+  const outlineResumen = outline.secciones.map((s, i) => `${i + 1}. ${s.h2}`).join('\n')
+
+  let instruccionesSeccion = ''
+  if (esFAQ) {
+    instruccionesSeccion = `Esta es la sección FAQ (la última). Genera:
+- H2: "Preguntas frecuentes" con class="text-3xl font-bold text-gray-900 mt-12 mb-6"
+- Mínimo 6 preguntas como H3 (class="text-2xl font-bold text-gray-900 mt-8 mb-4"), cada H3 DEBE terminar con ?
+- Cada pregunta seguida de un párrafo <p class="text-gray-700 mb-4"> con respuesta completa (mínimo 50 palabras)
+- Esto es CRÍTICO para el schema FAQ automático
+
+DESPUÉS del FAQ, incluir este CTA final:
+<div class="bg-gradient-to-r from-blue-900 to-purple-900 rounded-2xl p-8 text-center mt-12 mb-8"><h2 class="text-2xl font-bold text-white mb-4">¿Necesitas resultados reales en marketing digital?</h2><p class="text-blue-100 mb-6">En Muller y Pérez trabajamos con datos, no con suposiciones. Agenda una reunión estratégica sin costo.</p><a href="/contacto" class="inline-block bg-white text-blue-900 font-bold px-8 py-3 rounded-lg hover:bg-blue-50 transition">Solicitar propuesta →</a></div>`
+  } else {
+    instruccionesSeccion = `Genera 400-600 palabras de contenido HTML para esta sección.
+${seccion.incluye_tabla ? 'INCLUIR una tabla HTML con datos reales/benchmarks de Chile.' : ''}
+${seccion.links_internos && seccion.links_internos.length > 0 ? `Incluir estos links internos naturalmente: ${seccion.links_internos.join(', ')}` : ''}`
+  }
+
+  const prompt = `Eres un experto en marketing digital y performance marketing en Chile. Escribe UNA SECCIÓN de un artículo para el blog de Muller y Pérez.
+
+TEMA GENERAL: ${tema.tema}
+CATEGORÍA: ${tema.categoria}
+FECHA: ${hoy}
+
+OUTLINE COMPLETO DEL ARTÍCULO (para contexto):
+${outlineResumen}
+
+SECCIÓN ACTUAL (${index + 1} de ${total}): ${seccion.h2}
+PUNTOS A DESARROLLAR:
+${seccion.puntos.map(p => `- ${p}`).join('\n')}
+
+${instruccionesSeccion}
+
+CLASES TAILWIND OBLIGATORIAS:
+- H2: <h2 class="text-3xl font-bold text-gray-900 mt-12 mb-6">
+- H3: <h3 class="text-2xl font-bold text-gray-900 mt-8 mb-4">
+- Párrafos: <p class="text-gray-700 mb-4">
+- Listas: <ul class="space-y-3 text-gray-700 mb-8"> con <li class="flex items-start gap-3"><span class="text-blue-600 font-bold">•</span><span>...</span></li>
+- Callout importante: <div class="bg-blue-50 border-l-4 border-blue-600 p-6 rounded-r-xl mb-8"><h3 class="text-xl font-bold text-gray-900 mb-4">Título</h3><p class="text-gray-700">...</p></div>
+- Callout dato: <div class="bg-emerald-50 border-l-4 border-emerald-600 p-6 rounded-r-xl mb-8"><p class="text-gray-700">...</p></div>
+- Callout advertencia: <div class="bg-amber-50 border-l-4 border-amber-600 p-6 rounded-r-xl mb-8"><p class="text-gray-700">...</p></div>
+- Tablas: <div class="overflow-x-auto mb-8"><table class="min-w-full border-collapse"><thead><tr class="bg-gray-900 text-white"><th class="px-4 py-3 text-left text-sm font-semibold">...</th></tr></thead><tbody><tr class="border-b border-gray-200 hover:bg-gray-50"><td class="px-4 py-3 text-sm text-gray-700">...</td></tr></tbody></table></div>
+
+LINKS INTERNOS disponibles (usar si encajan naturalmente):
+- <a href="/servicios" class="text-blue-600 hover:underline">servicios de marketing digital</a>
+- <a href="/contacto" class="text-blue-600 hover:underline">contactar a nuestro equipo</a>
+- <a href="/blog" class="text-blue-600 hover:underline">blog de marketing digital</a>
+- <a href="/labs/predictor" class="text-blue-600 hover:underline">predictor de inversión</a>
+- <a href="/ranking-agencias-marketing-digital-chile" class="text-blue-600 hover:underline">ranking de agencias</a>
+- <a href="/indicadores" class="text-blue-600 hover:underline">indicadores de marketing</a>
+- <a href="/casos-de-exito" class="text-blue-600 hover:underline">casos de éxito</a>
+
+REGLAS:
+- Datos reales o benchmarks de Chile cuando sea posible
+- Tono profesional pero directo, sin relleno
+- NO incluir el wrapper <div class="prose..."> — solo el contenido de la sección
+- NO incluir H1, header, footer, imágenes ni metadata
+- NO mencionar "en este artículo" ni meta-referencias
+
+RESPONDE SOLO CON EL HTML DE ESTA SECCIÓN. Nada más.`
+
+  const res = await fetch('https://api.openai.com/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${OPENAI_API_KEY}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      model: 'gpt-4o',
+      messages: [{ role: 'user', content: prompt }],
+      max_tokens: 3000,
       temperature: 0.7
     })
   })
 
   if (!res.ok) {
     const err = await res.text()
-    throw new Error(`OpenAI API error: ${res.status} — ${err}`)
+    throw new Error(`OpenAI API error (sección ${index + 1}): ${res.status} — ${err}`)
   }
 
   const data = await res.json()
-  const contenidoHtml = data.choices[0].message.content
+  let html = data.choices[0].message.content
+  html = html.replace(/^```html\n?/g, '').replace(/\n?```$/g, '').trim()
 
-  // QA Gate: rechazar si OpenAI devolvió una negativa o contenido vacío
+  console.log(`   ✅ Sección ${index + 1}: ${html.length} chars`)
+  return html
+}
+
+// ============================================================================
+// MAIN: generarArticulo — outline + secciones + join + metadata
+// ============================================================================
+async function generarArticulo(tema) {
+  const hoy = new Date().toISOString().split('T')[0]
+  const slug = slugify(tema.tema)
+
+  console.log(`📝 Generando artículo por secciones: ${tema.tema}`)
+
+  // Step 1: Outline
+  const outline = await generarOutline(tema)
+
+  // Step 2: Generar cada sección secuencialmente
+  const secciones = []
+  for (let i = 0; i < outline.secciones.length; i++) {
+    const html = await generarSeccion(tema, outline, outline.secciones[i], i, outline.secciones.length)
+    secciones.push(html)
+  }
+
+  // Step 3: Join
+  const contenidoHtml = `<div class="prose prose-lg max-w-none">\n${secciones.join('\n\n')}\n</div>`
+
+  // QA Log
+  const charCount = contenidoHtml.length
+  const h2Count = (contenidoHtml.match(/<h2/g) || []).length
+  console.log(`\n📊 QA Log:`)
+  console.log(`   Caracteres totales: ${charCount}`)
+  console.log(`   Secciones H2: ${h2Count}`)
+  if (charCount < 20000) console.log(`   ⚠️ WARN: contenido bajo 20000 chars (${charCount})`)
+  if (h2Count < 7) console.log(`   ⚠️ WARN: menos de 7 H2s (${h2Count})`)
+
+  // QA Gate: rechazar si contenido insuficiente
   const REFUSAL_PHRASES = [
     "i'm sorry", "i can't assist", "i cannot assist", "i'm unable to",
     "i cannot help", "i can't help", "as an ai", "i'm not able to",
@@ -363,14 +488,13 @@ RESPONDE SOLO CON EL HTML DEL CONTENIDO (desde el primer <div class="prose..."> 
   ]
   const lowerContent = contenidoHtml.toLowerCase()
   const isRefusal = REFUSAL_PHRASES.some(p => lowerContent.includes(p))
-  if (isRefusal || contenidoHtml.length < 15000) {
-    throw new Error(`OpenAI devolvió contenido inválido (${contenidoHtml.length} chars, mínimo 15000, refusal: ${isRefusal}). Primeros 200: ${contenidoHtml.substring(0, 200)}`)
+  if (isRefusal || charCount < 15000) {
+    throw new Error(`Contenido inválido (${charCount} chars, mínimo 15000, refusal: ${isRefusal}). Primeros 200: ${contenidoHtml.substring(0, 200)}`)
   }
-  const h2Count = (contenidoHtml.match(/<h2/g) || []).length
   if (h2Count < 5) {
-    throw new Error(`OpenAI devolvió contenido con pocas secciones (${h2Count} H2s, mínimo 5). No se publica.`)
+    throw new Error(`Contenido con pocas secciones (${h2Count} H2s, mínimo 5). No se publica.`)
   }
-  console.log(`✓ QA Gate: contenido OK (${contenidoHtml.length} chars, ${h2Count} H2s, sin refusal)`)
+  console.log(`✓ QA Gate: contenido OK (${charCount} chars, ${h2Count} H2s, sin refusal)`)
 
   // Generar metadata
   const metaPrompt = `Para este artículo de blog de marketing digital en Chile:

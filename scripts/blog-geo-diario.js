@@ -231,13 +231,14 @@ Responde SOLO con JSON:
   }
 }
 
-async function generarArticulo(tema) {
+// ============================================================================
+// STEP 1: Generar outline GEO con 8-10 secciones H2
+// ============================================================================
+async function generarOutlineGeo(tema) {
   const hoy = new Date().toISOString().split('T')[0]
-  const slug = slugify(tema.pregunta)
+  console.log(`📋 Generando outline GEO para: ${tema.pregunta}`)
 
-  console.log(`📝 Generando artículo GEO: ${tema.pregunta}`)
-
-  const prompt = `Eres un experto en marketing digital y performance marketing en Chile. Escribe un artículo tipo "respuesta directa" para el blog de Muller y Pérez (www.mulleryperez.cl), optimizado para ser citado por buscadores de IA como ChatGPT, Gemini y Perplexity.
+  const prompt = `Eres un experto en marketing digital y performance marketing en Chile. Genera un OUTLINE para un artículo tipo "respuesta directa" optimizado para buscadores de IA (ChatGPT, Gemini, Perplexity) del blog de Muller y Pérez.
 
 PREGUNTA PRINCIPAL: ${tema.pregunta}
 ENFOQUE: ${tema.enfoque}
@@ -246,73 +247,32 @@ FECHA: ${hoy}
 
 ${DATOS_MYP}
 
-INSTRUCCIONES DE ESTRUCTURA (OBLIGATORIAS):
+INSTRUCCIONES:
+- Genera entre 8 y 10 secciones H2
+- La PRIMERA sección debe ser la "Respuesta directa" — un callout azul con la respuesta citeable en 2-3 oraciones + la primera sección de contexto
+- Cada sección debe tener 3-5 puntos clave a desarrollar
+- AL MENOS 1 sección debe incluir una tabla comparativa con datos numéricos de Chile
+- La ÚLTIMA sección SIEMPRE debe ser "Preguntas frecuentes" con mínimo 5 preguntas derivadas
+- Incluir datos numéricos concretos de Chile (CPC, CPL, ROAS, precios, benchmarks)
+- Mencionar Muller y Pérez 1-2 veces naturalmente como fuente de datos
 
-1. RESPUESTA DIRECTA (primer elemento después del prose div):
-   <div class="bg-blue-50 border-l-4 border-blue-600 p-6 rounded-r-xl mb-8">
-     <p class="text-lg text-gray-800 font-medium leading-relaxed">
-       [Respuesta directa en 2-3 oraciones. Clara, factual, sin ambigüedad. Esta es la respuesta que un buscador de IA citaría textualmente. Incluir dato numérico o benchmark de Chile.]
-     </p>
-   </div>
-
-2. ESTRUCTURA HTML OBLIGATORIA (mínimo 2000 palabras, usar estas clases Tailwind):
-   - Wrapper: <div class="prose prose-lg max-w-none">
-   - H2: <h2 class="text-3xl font-bold text-gray-900 mt-12 mb-6">
-   - H3: <h3 class="text-2xl font-bold text-gray-900 mt-8 mb-4">
-   - Párrafos: <p class="text-gray-700 mb-4">
-   - Listas: <ul class="space-y-3 text-gray-700 mb-8"> con <li class="flex items-start gap-3"><span class="text-blue-600 font-bold">•</span><span>...</span></li>
-   - Callout importante: <div class="bg-blue-50 border-l-4 border-blue-600 p-6 rounded-r-xl mb-8"><h3 class="text-xl font-bold text-gray-900 mb-4">Título</h3><p class="text-gray-700">...</p></div>
-   - Callout dato: <div class="bg-emerald-50 border-l-4 border-emerald-600 p-6 rounded-r-xl mb-8"><p class="text-gray-700">...</p></div>
-   - Callout advertencia: <div class="bg-amber-50 border-l-4 border-amber-600 p-6 rounded-r-xl mb-8"><p class="text-gray-700">...</p></div>
-
-3. TABLA COMPARATIVA OBLIGATORIA (al menos una):
-   <div class="overflow-x-auto mb-8">
-     <table class="min-w-full border border-gray-200 rounded-xl overflow-hidden">
-       <thead class="bg-gray-50">
-         <tr>
-           <th class="px-4 py-3 text-left text-sm font-bold text-gray-900 border-b">...</th>
-         </tr>
-       </thead>
-       <tbody>
-         <tr class="border-b border-gray-100">
-           <td class="px-4 py-3 text-sm text-gray-700">...</td>
-         </tr>
-       </tbody>
-     </table>
-   </div>
-
-4. SECCIÓN FAQ OBLIGATORIA (mínimo 5 preguntas relacionadas):
-   <div class="bg-gray-50 rounded-2xl p-8 mb-8">
-     <h2 class="text-3xl font-bold text-gray-900 mb-6">Preguntas frecuentes</h2>
-     <div class="space-y-6">
-       <div>
-         <h3 class="text-lg font-bold text-gray-900 mb-2">¿Pregunta?</h3>
-         <p class="text-gray-700">Respuesta directa y concisa.</p>
-       </div>
-       [... mínimo 5 preguntas ...]
-     </div>
-   </div>
-
-5. CONTENIDO:
-   - Mínimo 2000 palabras, idealmente 2500+
-   - Primer párrafo es LA RESPUESTA DIRECTA (2-3 líneas, citeable por IA)
-   - Al menos 5 H2 con profundidad real
-   - Datos numéricos concretos de Chile (CPC, CPL, ROAS, precios)
-   - Al menos 1 tabla comparativa con datos
-   - FAQ con 5+ preguntas derivadas
-   - Mencionar Muller y Pérez 1-2 veces naturalmente como fuente de datos
-   - Tono: experto, directo, sin relleno. Como si respondieras a un gerente chileno
-   - Incluir la sección FAQ con markup que los buscadores IA puedan parsear
-   - Conclusión con resumen y CTA sutil
-
-6. NO incluir:
-   - H1 (se genera aparte)
-   - Header ni footer
-   - Imágenes
-   - Metadata (se genera aparte)
-   - La palabra "artículo" ni meta-referencias
-
-RESPONDE SOLO CON EL HTML (desde <div class="prose..."> hasta el cierre </div>). Nada más.`
+Responde SOLO con JSON:
+{
+  "respuesta_directa": "Respuesta directa en 2-3 oraciones. Clara, factual, con dato numérico de Chile. Citeable por IA.",
+  "secciones": [
+    {
+      "h2": "Título de la sección H2",
+      "puntos": ["punto 1", "punto 2", "punto 3"],
+      "incluye_tabla": false
+    },
+    ...
+    {
+      "h2": "Preguntas frecuentes",
+      "puntos": ["¿Pregunta 1?", "¿Pregunta 2?", "¿Pregunta 3?", "¿Pregunta 4?", "¿Pregunta 5?"],
+      "incluye_tabla": false
+    }
+  ]
+}`
 
   const res = await fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
@@ -323,27 +283,182 @@ RESPONDE SOLO CON EL HTML (desde <div class="prose..."> hasta el cierre </div>).
     body: JSON.stringify({
       model: 'gpt-4o',
       messages: [{ role: 'user', content: prompt }],
-      max_tokens: 8192,
+      max_tokens: 3000,
+      temperature: 0.7,
+      response_format: { type: 'json_object' }
+    })
+  })
+
+  if (!res.ok) {
+    const err = await res.text()
+    throw new Error(`OpenAI API error (outline GEO): ${res.status} — ${err}`)
+  }
+
+  const data = await res.json()
+  const raw = data.choices[0].message.content.trim()
+  const outline = JSON.parse(raw)
+
+  console.log(`✅ Outline GEO generado: ${outline.secciones.length} secciones`)
+  for (const s of outline.secciones) {
+    console.log(`   → ${s.h2} (${s.puntos.length} puntos)`)
+  }
+
+  return outline
+}
+
+// ============================================================================
+// STEP 2: Generar una sección GEO individual
+// ============================================================================
+async function generarSeccionGeo(tema, outline, seccion, index, total) {
+  const hoy = new Date().toISOString().split('T')[0]
+  const esFAQ = index === total - 1
+  const esPrimera = index === 0
+
+  console.log(`   ✍️  Sección ${index + 1}/${total}: ${seccion.h2}`)
+
+  const outlineResumen = outline.secciones.map((s, i) => `${i + 1}. ${s.h2}`).join('\n')
+
+  let instruccionesSeccion = ''
+  if (esPrimera) {
+    instruccionesSeccion = `Esta es la PRIMERA sección. DEBE comenzar con el callout de respuesta directa:
+<div class="bg-blue-50 border-l-4 border-blue-600 p-6 rounded-r-xl mb-8">
+  <p class="text-lg text-gray-800 font-medium leading-relaxed">
+    ${outline.respuesta_directa}
+  </p>
+</div>
+
+Luego continúa con el H2 y el desarrollo normal de la sección (400-600 palabras).`
+  } else if (esFAQ) {
+    instruccionesSeccion = `Esta es la sección FAQ (la última). Genera con este formato:
+<div class="bg-gray-50 rounded-2xl p-8 mb-8">
+  <h2 class="text-3xl font-bold text-gray-900 mb-6">Preguntas frecuentes</h2>
+  <div class="space-y-6">
+    <div>
+      <h3 class="text-lg font-bold text-gray-900 mb-2">¿Pregunta?</h3>
+      <p class="text-gray-700">Respuesta directa y concisa (mínimo 50 palabras).</p>
+    </div>
+    [... mínimo 5 preguntas ...]
+  </div>
+</div>
+
+Las preguntas a cubrir:
+${seccion.puntos.map(p => `- ${p}`).join('\n')}`
+  } else {
+    instruccionesSeccion = `Genera 400-600 palabras de contenido HTML para esta sección.
+${seccion.incluye_tabla ? `INCLUIR una tabla comparativa con datos de Chile usando este formato:
+<div class="overflow-x-auto mb-8">
+  <table class="min-w-full border border-gray-200 rounded-xl overflow-hidden">
+    <thead class="bg-gray-50">
+      <tr><th class="px-4 py-3 text-left text-sm font-bold text-gray-900 border-b">...</th></tr>
+    </thead>
+    <tbody>
+      <tr class="border-b border-gray-100"><td class="px-4 py-3 text-sm text-gray-700">...</td></tr>
+    </tbody>
+  </table>
+</div>` : ''}`
+  }
+
+  const prompt = `Eres un experto en marketing digital y performance marketing en Chile. Escribe UNA SECCIÓN de un artículo tipo "respuesta directa" optimizado para buscadores de IA, para Muller y Pérez.
+
+PREGUNTA PRINCIPAL: ${tema.pregunta}
+ENFOQUE: ${tema.enfoque}
+CATEGORÍA: ${tema.categoria}
+FECHA: ${hoy}
+
+${DATOS_MYP}
+
+OUTLINE COMPLETO (para contexto):
+${outlineResumen}
+
+SECCIÓN ACTUAL (${index + 1} de ${total}): ${seccion.h2}
+PUNTOS A DESARROLLAR:
+${seccion.puntos.map(p => `- ${p}`).join('\n')}
+
+${instruccionesSeccion}
+
+CLASES TAILWIND OBLIGATORIAS:
+- H2: <h2 class="text-3xl font-bold text-gray-900 mt-12 mb-6">
+- H3: <h3 class="text-2xl font-bold text-gray-900 mt-8 mb-4">
+- Párrafos: <p class="text-gray-700 mb-4">
+- Listas: <ul class="space-y-3 text-gray-700 mb-8"> con <li class="flex items-start gap-3"><span class="text-blue-600 font-bold">•</span><span>...</span></li>
+- Callout importante: <div class="bg-blue-50 border-l-4 border-blue-600 p-6 rounded-r-xl mb-8"><h3 class="text-xl font-bold text-gray-900 mb-4">Título</h3><p class="text-gray-700">...</p></div>
+- Callout dato: <div class="bg-emerald-50 border-l-4 border-emerald-600 p-6 rounded-r-xl mb-8"><p class="text-gray-700">...</p></div>
+- Callout advertencia: <div class="bg-amber-50 border-l-4 border-amber-600 p-6 rounded-r-xl mb-8"><p class="text-gray-700">...</p></div>
+
+REGLAS:
+- Tono: experto, directo, sin relleno. Como si respondieras a un gerente chileno
+- Datos numéricos concretos de Chile
+- NO incluir wrapper <div class="prose..."> — solo el contenido de la sección
+- NO incluir H1, header, footer, imágenes ni metadata
+- NO mencionar "en este artículo" ni meta-referencias
+
+RESPONDE SOLO CON EL HTML DE ESTA SECCIÓN. Nada más.`
+
+  const res = await fetch('https://api.openai.com/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${OPENAI_API_KEY}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      model: 'gpt-4o',
+      messages: [{ role: 'user', content: prompt }],
+      max_tokens: 3000,
       temperature: 0.7
     })
   })
 
   if (!res.ok) {
     const err = await res.text()
-    throw new Error(`OpenAI API error: ${res.status} — ${err}`)
+    throw new Error(`OpenAI API error (sección GEO ${index + 1}): ${res.status} — ${err}`)
   }
 
   const data = await res.json()
-  let contenidoHtml = data.choices[0].message.content
+  let html = data.choices[0].message.content
+  html = html.replace(/^```html\n?/g, '').replace(/\n?```$/g, '').trim()
 
-  // Limpiar markdown wrappers si vienen
+  console.log(`   ✅ Sección ${index + 1}: ${html.length} chars`)
+  return html
+}
+
+// ============================================================================
+// MAIN: generarArticulo GEO — outline + secciones + join + metadata
+// ============================================================================
+async function generarArticulo(tema) {
+  const hoy = new Date().toISOString().split('T')[0]
+  const slug = slugify(tema.pregunta)
+
+  console.log(`📝 Generando artículo GEO por secciones: ${tema.pregunta}`)
+
+  // Step 1: Outline
+  const outline = await generarOutlineGeo(tema)
+
+  // Step 2: Generar cada sección secuencialmente
+  const secciones = []
+  for (let i = 0; i < outline.secciones.length; i++) {
+    const html = await generarSeccionGeo(tema, outline, outline.secciones[i], i, outline.secciones.length)
+    secciones.push(html)
+  }
+
+  // Step 3: Join
+  let contenidoHtml = `<div class="prose prose-lg max-w-none">\n${secciones.join('\n\n')}\n</div>`
+
+  // Limpiar markdown wrappers residuales
   contenidoHtml = contenidoHtml.replace(/^```html\n?/g, '').replace(/\n?```$/g, '').trim()
 
-  // Verificar largo mínimo (2000 palabras ~ 12000 chars aprox)
-  if (contenidoHtml.length < 8000) {
-    console.log(`⚠️ Contenido corto (${contenidoHtml.length} chars). Aceptando de todas formas.`)
+  // QA Log
+  const charCount = contenidoHtml.length
+  const h2Count = (contenidoHtml.match(/<h2/g) || []).length
+  console.log(`\n📊 QA Log:`)
+  console.log(`   Caracteres totales: ${charCount}`)
+  console.log(`   Secciones H2: ${h2Count}`)
+  if (charCount < 20000) console.log(`   ⚠️ WARN: contenido bajo 20000 chars (${charCount})`)
+  if (h2Count < 7) console.log(`   ⚠️ WARN: menos de 7 H2s (${h2Count})`)
+
+  if (charCount < 8000) {
+    console.log(`⚠️ Contenido corto (${charCount} chars). Aceptando de todas formas.`)
   } else {
-    console.log(`✅ Contenido generado: ${contenidoHtml.length} chars`)
+    console.log(`✅ Contenido generado: ${charCount} chars`)
   }
 
   // Generar metadata + FAQ schema
