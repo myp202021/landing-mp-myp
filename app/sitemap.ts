@@ -698,12 +698,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'weekly',
       priority: 0.8,
     },
-    // Blog Articles (automático)
-    ...blogPosts.map(post => ({
-      url: `${baseUrl}/blog/${post}`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly' as const,
-      priority: 0.8,
-    })),
+    // Blog Articles (automático — con fecha real de publicación)
+    ...blogPosts.map(slug => {
+      const supaPost = supabasePosts.find(p => p.slug === slug)
+      return {
+        url: `${baseUrl}/blog/${slug}`,
+        lastModified: supaPost ? supaPost.date_published : currentDate,
+        changeFrequency: 'monthly' as const,
+        priority: 0.8,
+      }
+    }),
   ]
 }
