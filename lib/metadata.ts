@@ -230,21 +230,21 @@ export function createOrganizationSchema() {
     image: siteConfig.ogImage,
     description: siteConfig.description,
 
-    // Dirección principal - Las Condes
+    // Dirección principal - Vitacura
     address: {
       '@type': 'PostalAddress',
-      streetAddress: 'Badajoz 100, Of 523',
-      addressLocality: 'Las Condes',
+      streetAddress: 'Monseñor Escrivá de Balaguer 9447 dpto 1308',
+      addressLocality: 'Vitacura',
       addressRegion: 'Región Metropolitana',
-      postalCode: '7560000',
+      postalCode: '7630000',
       addressCountry: 'CL'
     },
 
-    // Ubicación geográfica (Las Condes)
+    // Ubicación geográfica (Vitacura)
     geo: {
       '@type': 'GeoCoordinates',
-      latitude: -33.3983,
-      longitude: -70.5472
+      latitude: -33.3810,
+      longitude: -70.5710
     },
 
     // Área de servicio
@@ -280,10 +280,12 @@ export function createOrganizationSchema() {
     },
 
     // Contacto
+    telephone: '+56954197432',
+    email: 'contacto@mulleryperez.cl',
     contactPoint: [
       {
         '@type': 'ContactPoint',
-        telephone: '+56992258137',
+        telephone: '+56954197432',
         contactType: 'customer service',
         email: 'contacto@mulleryperez.cl',
         areaServed: 'CL',
@@ -292,7 +294,7 @@ export function createOrganizationSchema() {
       },
       {
         '@type': 'ContactPoint',
-        telephone: '+56992258137',
+        telephone: '+56954197432',
         contactType: 'sales',
         areaServed: 'CL',
         availableLanguage: 'Spanish'

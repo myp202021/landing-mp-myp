@@ -3,7 +3,7 @@ import AgentesClient from './AgentesClient'
 
 export const metadata: Metadata = {
   title: 'Agentes IA para Posicionamiento en Google y Buscadores de IA | Muller y Pérez',
-  description: 'Agentes de IA que publican contenido SEO en tu blog todos los días. 24 artículos/mes con estructura optimizada para Google y buscadores de IA. Desde $49.990/mes.',
+  description: 'Agentes IA para posicionamiento en Google y buscadores de inteligencia artificial. Blog automático, rankings SEO y visibilidad GEO.',
   alternates: { canonical: 'https://www.mulleryperez.cl/agentes' },
   openGraph: {
     title: 'Agentes IA — Posicionamiento en Google y Buscadores de IA',

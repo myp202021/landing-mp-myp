@@ -17,7 +17,7 @@ import {
 } from '@/lib/metadata'
 
 export const metadata: Metadata = createMetadata({
-  title: 'Agencia de Marketing Digital en Chile — Muller y Pérez',
+  title: 'Agencia de Marketing Digital en Chile',
   description: 'Agencia de marketing digital y performance marketing en Chile. Google Ads, Meta Ads, LinkedIn Ads. +50 clientes, ROAS promedio 4.2x. Equipo dedicado.',
   keywords: [
     'agencia marketing digital chile',

@@ -4,8 +4,8 @@ import { Target, Users, BarChart3, Award, CheckCircle2, ArrowRight, HelpCircle }
 import SiteHeader from '@/components/SiteHeader'
 
 export const metadata: Metadata = {
-  title: 'Quiénes Somos | Muller y Pérez - Agencia de Marketing Digital Chile',
-  description: 'Conoce a Muller y Pérez: agencia de performance marketing en Chile desde 2019. Equipo especializado en Google Ads, Meta Ads y estrategias data-driven con resultados medibles.',
+  title: 'Quiénes Somos',
+  description: 'Conoce al equipo de Muller y Pérez. Agencia de performance marketing en Chile con más de 6 años y 40+ clientes activos.',
   keywords: [
     'muller y perez',
     'agencia marketing digital chile',
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: 'Quiénes Somos | Muller y Pérez',
-    description: 'Conoce a Muller y Pérez: agencia de performance marketing en Chile desde 2019.',
+    description: 'Conoce al equipo de Muller y Pérez. Agencia de performance marketing en Chile con más de 6 años y 40+ clientes activos.',
     type: 'website',
     url: 'https://www.mulleryperez.cl/nosotros'
   }
@@ -37,14 +37,14 @@ const aboutSchema = {
     description: 'Agencia de performance marketing especializada en Google Ads, Meta Ads y estrategias data-driven.',
     address: {
       '@type': 'PostalAddress',
-      streetAddress: 'Badajoz 100, Of 523',
-      addressLocality: 'Las Condes',
+      streetAddress: 'Monseñor Escrivá de Balaguer 9447 dpto 1308',
+      addressLocality: 'Vitacura',
       addressRegion: 'Región Metropolitana',
       addressCountry: 'CL'
     },
     contactPoint: {
       '@type': 'ContactPoint',
-      telephone: '+56992258137',
+      telephone: '+56954197432',
       contactType: 'sales',
       email: 'contacto@mulleryperez.cl'
     },
