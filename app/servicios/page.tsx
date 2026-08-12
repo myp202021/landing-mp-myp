@@ -9,8 +9,8 @@ import { createMetadata, createFAQPageSchema, createWebPageSchema } from '@/lib/
 import SiteHeader from '@/components/SiteHeader'
 
 export const metadata: Metadata = createMetadata({
-  title: 'Servicios de Marketing Digital Chile | Google Ads, Meta Ads, IA, SEO, Dron y Diseño',
-  description: 'Servicios de marketing digital en Chile: Google Ads, Meta Ads, LinkedIn Ads, TikTok Ads, SEO, Performance Marketing, Inteligencia Competitiva con IA (M&P Copilot), Video con Dron, Diseño Digital y Automatización. Agencia data-driven con equipo dedicado y resultados medibles.',
+  title: 'Servicios Marketing Digital Chile | Google Ads, Meta Ads, SEO, IA',
+  description: 'Google Ads, Meta Ads, LinkedIn Ads, TikTok Ads, SEO, Performance Marketing e IA. Agencia data-driven con equipo dedicado y resultados medibles en Chile.',
   keywords: [
     // Servicios core
     'servicios marketing digital chile',

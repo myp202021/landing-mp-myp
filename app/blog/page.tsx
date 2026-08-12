@@ -15,6 +15,8 @@ export const metadata: Metadata = {
     title: 'Blog Marketing Digital 2026 - Guías Google Ads y Performance | M&P',
     description: 'Aprende estrategias de marketing digital, Google Ads, Meta Ads y performance marketing. Guías prácticas con datos reales de +200 campañas Chile 2026',
     type: 'website',
+    locale: 'es_CL',
+    siteName: 'Muller y Pérez',
     url: 'https://www.mulleryperez.cl/blog',
     images: [
       {
@@ -24,6 +26,13 @@ export const metadata: Metadata = {
         alt: 'Blog Marketing Digital M&P'
       }
     ]
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Blog Marketing Digital 2026 - Guías Google Ads y Performance | M&P',
+    description: 'Aprende estrategias de marketing digital y performance marketing. Guías con datos reales de +200 campañas Chile 2026.',
+    images: ['https://www.mulleryperez.cl/og-image.jpg'],
+    creator: '@mulleryperez',
   }
 }
 

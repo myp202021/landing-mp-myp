@@ -10,12 +10,21 @@ export const metadata: Metadata = {
     description: 'Tu sitio publicando contenido SEO todos los días. Automático. 24 artículos/mes desde $49.990.',
     url: 'https://www.mulleryperez.cl/agentes',
     siteName: 'Muller y Pérez',
+    locale: 'es_CL',
     type: 'website',
+    images: [{
+      url: 'https://www.mulleryperez.cl/og-image.jpg',
+      width: 1200,
+      height: 630,
+      alt: 'Agentes IA para SEO — Muller y Pérez',
+    }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Agentes IA — Posicionamiento en Google y Buscadores de IA | M&P',
+    title: 'Agentes IA — Posicionamiento en Google y Buscadores de IA',
     description: 'Agentes de IA que publican contenido SEO en tu blog automáticamente. Desde $49.990/mes.',
+    images: ['https://www.mulleryperez.cl/og-image.jpg'],
+    creator: '@mulleryperez',
   },
 }
 

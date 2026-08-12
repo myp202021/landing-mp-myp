@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 
 export const siteConfig = {
   name: 'Muller y Pérez — Agencia de Performance Marketing Chile',
-  description: 'Agencia de marketing digital y performance que convierte tu inversión en clientes reales. Google Ads, Meta Ads y redes sociales con equipo dedicado y resultados medibles. Chile.',
+  description: 'Agencia de performance marketing en Chile. Google Ads, Meta Ads y redes sociales con equipo dedicado y resultados medibles.',
   url: 'https://www.mulleryperez.cl',
   ogImage: 'https://www.mulleryperez.cl/og-image.jpg', // Imagen optimizada 1200x630px
   links: {
@@ -154,7 +154,7 @@ export const defaultMetadata: Metadata = {
     title: siteConfig.name,
     description: siteConfig.description,
     images: [siteConfig.ogImage],
-    creator: '@mulleryper​ez'
+    creator: '@mulleryperez'
   },
   robots: {
     index: true,
@@ -209,7 +209,7 @@ export function createMetadata({
       title,
       description,
       images: [ogImage],
-      creator: '@mulleryper​ez'
+      creator: '@mulleryperez'
     },
     alternates: {
       canonical: url
@@ -397,10 +397,10 @@ export function createOrganizationSchema() {
 
     // Redes sociales y enlaces
     sameAs: [
-      'https://www.instagram.com/mulleryp​erez',
+      'https://www.instagram.com/mulleryperez',
       'https://www.linkedin.com/company/m%C3%BCller-y-p%C3%A9rez/',
-      'https://www.youtube.com/@mulleryp​erez',
-      'https://www.facebook.com/mulleryp​erez',
+      'https://www.youtube.com/@mulleryperez',
+      'https://www.facebook.com/mulleryperez',
       siteConfig.links.whatsapp
     ],
 
