@@ -163,6 +163,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'monthly',
       priority: 0.85,
     },
+    // Investigación - Estudios
+    {
+      url: `${baseUrl}/investigacion/estudio-performance-marketing-chile-2026`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/investigacion/google-meridian-marketing-mix-modeling-chile`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.9,
+    },
     // Equipo - Christopher Müller
     {
       url: `${baseUrl}/equipo/christopher-muller`,
@@ -626,6 +639,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'monthly',
       priority: 0.9,
     },
+    {
+      url: `${baseUrl}/servicios/growth-marketing`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.9,
+    },
     // Recursos - Rankings Agencias
     {
       url: `${baseUrl}/recursos/ranking-agencias-performance-marketing-chile-2025`,
@@ -662,6 +681,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: currentDate,
       changeFrequency: 'monthly',
       priority: 0.95,
+    },
+    {
+      url: `${baseUrl}/recursos/ebook-marketing-datos-2025`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.85,
     },
     // M&P Labs Hub
     {
