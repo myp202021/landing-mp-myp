@@ -13,6 +13,7 @@ export const metadata: Metadata = {
     siteName: 'Müller & Pérez',
     locale: 'es_CL',
     type: 'website',
+    images: [{ url: 'https://www.mulleryperez.cl/og-image.jpg', width: 1200, height: 630 }],
   },
   alternates: {
     canonical: 'https://www.mulleryperez.cl/marketing-digital-b2b-chile',

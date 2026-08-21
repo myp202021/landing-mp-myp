@@ -61,7 +61,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
 
   const articleSchema = {
     '@context': 'https://schema.org',
-    '@type': 'Article',
+    '@type': 'BlogPosting',
     headline: post.title,
     description: post.description,
     url: `https://www.mulleryperez.cl/blog/${post.slug}`,
