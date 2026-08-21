@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Script from "next/script";
 import { defaultMetadata, createOrganizationSchema } from "@/lib/metadata";
-import { createEnhancedFAQSchema } from "@/lib/ai-search-optimization";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import Breadcrumbs from "./components/Breadcrumbs";
 import ThirdPartyScripts from "@/components/ThirdPartyScripts";
@@ -18,7 +17,6 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const organizationSchema = createOrganizationSchema();
-  const faqSchema = createEnhancedFAQSchema();
 
   return (
     <html lang="es">
@@ -35,12 +33,6 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
-        />
-
-        {/* FAQ Schema - Rich Results en Google */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
         />
 
         {/* WebSite + SearchAction Schema — Rich Snippet sitelinks search box */}

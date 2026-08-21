@@ -2,6 +2,14 @@
   "buildCommand": "next build",
   "framework": "nextjs",
   "regions": ["gru1"],
+  "redirects": [
+    {
+      "source": "/:path(.*)",
+      "has": [{ "type": "host", "value": "mulleryperez.cl" }],
+      "destination": "https://www.mulleryperez.cl/:path",
+      "permanent": true
+    }
+  ],
   "crons": [
     {
       "path": "/api/cron/sync-meta-leads",

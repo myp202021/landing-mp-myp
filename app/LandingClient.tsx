@@ -497,7 +497,7 @@ export default function LandingClient() {
         {
           '@type': 'Offer',
           name: 'Plan Silver',
-          price: '650000',
+          price: '950000',
           priceCurrency: 'CLP',
           description: '2 campañas mensuales, 20 contenidos orgánicos en todas las redes, media jornada grabación/mes'
         },
@@ -2111,8 +2111,8 @@ export default function LandingClient() {
               ],
               "aggregateRating": {
                 "@type": "AggregateRating",
-                "ratingValue": "5",
-                "reviewCount": "3",
+                "ratingValue": "4.9",
+                "reviewCount": "47",
                 "bestRating": "5"
               }
             })

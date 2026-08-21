@@ -37,14 +37,14 @@ const aboutSchema = {
     description: 'Agencia de performance marketing especializada en Google Ads, Meta Ads y estrategias data-driven.',
     address: {
       '@type': 'PostalAddress',
-      streetAddress: 'Monseñor Escrivá de Balaguer 9447 dpto 1308',
-      addressLocality: 'Vitacura',
+      streetAddress: 'Badajoz 100, Of 523',
+      addressLocality: 'Las Condes',
       addressRegion: 'Región Metropolitana',
       addressCountry: 'CL'
     },
     contactPoint: {
       '@type': 'ContactPoint',
-      telephone: '+56954197432',
+      telephone: '+56992258137',
       contactType: 'sales',
       email: 'contacto@mulleryperez.cl'
     },
