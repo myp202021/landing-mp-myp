@@ -38,6 +38,8 @@ export default function CRMLayout({ children, title, authenticated = true, onRef
       { href: '/crm/copilot', label: 'M&P Copilot', icon: '📡' },
     ],
     equipo: [
+      { href: '/crm/leads', label: 'Leads', icon: '📋' },
+      { href: '/crm/prospeccion-2026', label: 'Prospección 2026', icon: '🔍' },
       { href: '/crm/grillas', label: 'Grillas', icon: '📅' },
       { href: '/crm/benchmark', label: 'Benchmark', icon: '📊' },
       { href: '/crm/reportes', label: 'Reportes', icon: '📈' },
