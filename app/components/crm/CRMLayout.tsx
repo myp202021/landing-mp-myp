@@ -27,11 +27,13 @@ export default function CRMLayout({ children, title, authenticated = true, onRef
   const navItemsByRole: Record<string, Array<{ href: string; label: string; icon: string }>> = {
     admin: [
       { href: '/crm', label: 'CRM Admin', icon: '🏠' },
+      { href: '/crm/dashboard-myp', label: 'Dashboard M&P', icon: '📊' },
       { href: '/crm/clientes', label: 'Clientes', icon: '👥' },
       { href: '/crm/integraciones', label: 'Integraciones', icon: '🔌' },
       { href: '/crm/grillas', label: 'Grillas', icon: '📅' },
       { href: '/crm/benchmark', label: 'Benchmark', icon: '📊' },
       { href: '/crm/prospeccion', label: 'Prospección', icon: '🎯' },
+      { href: '/crm/prospeccion-2026', label: 'Prospección 2026', icon: '🔍' },
       { href: '/crm/reportes', label: 'Reportes', icon: '📈' },
       { href: '/crm/copilot', label: 'M&P Copilot', icon: '📡' },
     ],
