@@ -100,7 +100,7 @@ export default function LeadsPage() {
 
     try {
       // Fetch ALL leads without filters for stats calculation
-      const params = new URLSearchParams({ clientId: selectedCliente, limit: '10000' })
+      const params = new URLSearchParams({ cliente_id: selectedCliente, limit: '10000' })
       const res = await fetch(`/api/crm/leads?${params}`)
       const data = await res.json()
       setAllLeads(data.leads || [])
@@ -116,7 +116,7 @@ export default function LeadsPage() {
     try {
       // Only include non-empty filters
       const params = new URLSearchParams({
-        clientId: selectedCliente,
+        cliente_id: selectedCliente,
         limit: '10000' // Aumentar límite para mostrar todos los leads
       })
 
