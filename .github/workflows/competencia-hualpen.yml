@@ -56,6 +56,15 @@ jobs:
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
           RESEND: ${{ secrets.RESEND }}
 
+      - name: Subir PDF como artifact
+        if: steps.check.outputs.already_ran == 'false'
+        uses: actions/upload-artifact@v4
+        with:
+          name: reporte-competencia-hualpen
+          path: /tmp/reporte-hualpen.pdf
+          if-no-files-found: ignore
+          retention-days: 3
+
       - name: Alerta si falla
         if: failure() && steps.check.outputs.already_ran == 'false'
         run: |
