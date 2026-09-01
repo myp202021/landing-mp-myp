@@ -2,14 +2,24 @@ name: Watchdog — Verificar y disparar workflows diarios
 
 on:
   schedule:
-    # Corre cada hora de 08:00 a 14:00 UTC (05:00 a 11:00 AM Chile)
-    - cron: '0 8 * * *'
-    - cron: '0 9 * * *'
-    - cron: '0 10 * * *'
-    - cron: '0 11 * * *'
-    - cron: '0 12 * * *'
-    - cron: '0 13 * * *'
-    - cron: '0 14 * * *'
+    # Cada 20 minutos de 09:30 a 14:40 UTC (06:30 a 11:40 AM Chile)
+    # Más entradas = más chances de que GitHub dispare al menos una
+    - cron: '30 9 * * *'
+    - cron: '50 9 * * *'
+    - cron: '10 10 * * *'
+    - cron: '30 10 * * *'
+    - cron: '50 10 * * *'
+    - cron: '10 11 * * *'
+    - cron: '30 11 * * *'
+    - cron: '50 11 * * *'
+    - cron: '10 12 * * *'
+    - cron: '30 12 * * *'
+    - cron: '50 12 * * *'
+    - cron: '10 13 * * *'
+    - cron: '30 13 * * *'
+    - cron: '50 13 * * *'
+    - cron: '10 14 * * *'
+    - cron: '30 14 * * *'
   workflow_dispatch:
 
 jobs:
@@ -19,106 +29,169 @@ jobs:
       - name: Verificar y disparar workflows que no corrieron hoy
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RESEND_KEY: ${{ secrets.RESEND }}
         run: |
           TODAY=$(date -u +%Y-%m-%d)
           HOUR_UTC=$(date -u +%H)
-          REPO="myp202021/landing-mp-myp"
           DOW=$(date -u +%u)  # 1=lunes, 7=domingo
 
-          echo "=== Watchdog: $TODAY ${HOUR_UTC}:00 UTC (DOW=$DOW) ==="
+          echo "=== Watchdog: $TODAY $(date -u +%H:%M) UTC (DOW=$DOW) ==="
+
+          TRIGGERED=""
+          ERRORS=""
 
           check_and_trigger() {
-            local workflow_file=$1
-            local workflow_name=$2
-            local min_hour_utc=$3  # hora UTC minima para verificar
-            local days=$4          # "daily" o "weekdays"
+            local repo=$1
+            local workflow_file=$2
+            local workflow_name=$3
+            local min_hour_utc=$4
+            local days=$5  # "daily" o "weekdays"
 
             # Si es fin de semana y el workflow es solo L-V, saltar
             if [ "$days" = "weekdays" ] && [ "$DOW" -gt 5 ]; then
-              echo "SKIP $workflow_name (solo L-V, hoy es fin de semana)"
               return
             fi
 
-            # Solo verificar si ya paso la hora esperada
+            # Solo verificar si ya paso la hora esperada + 30 min de gracia
             if [ "$HOUR_UTC" -lt "$min_hour_utc" ]; then
-              echo "SKIP $workflow_name (aun no es hora, espera ${min_hour_utc}:00 UTC)"
               return
             fi
 
             # Buscar si hubo un run exitoso hoy
-            RAN=$(curl -s -H "Authorization: Bearer $GH_TOKEN" \
-              "https://api.github.com/repos/$REPO/actions/workflows/$workflow_file/runs?per_page=5&status=success&created=%3E=${TODAY}T00:00:00Z" \
-              | python3 -c "import json,sys; d=json.load(sys.stdin); print(len(d.get('workflow_runs',[])))")
+            local response
+            response=$(curl -s -H "Authorization: Bearer $GH_TOKEN" \
+              "https://api.github.com/repos/$repo/actions/workflows/$workflow_file/runs?per_page=5&status=success&created=%3E=${TODAY}T00:00:00Z")
 
-            if [ "$RAN" = "0" ]; then
-              echo "TRIGGER $workflow_name — no corrio hoy, disparando..."
-              curl -s -X POST \
+            local ran
+            ran=$(echo "$response" | python3 -c "import json,sys; d=json.load(sys.stdin); print(len(d.get('workflow_runs',[])))" 2>/dev/null || echo "error")
+
+            if [ "$ran" = "error" ]; then
+              echo "ERROR $workflow_name ($repo) — no se pudo verificar"
+              ERRORS="$ERRORS<li>❌ $workflow_name — error al verificar</li>"
+              return
+            fi
+
+            if [ "$ran" = "0" ]; then
+              echo "TRIGGER $workflow_name ($repo) — no corrio hoy, disparando..."
+              local dispatch_result
+              dispatch_result=$(curl -s -o /dev/null -w "%{http_code}" -X POST \
                 -H "Authorization: Bearer $GH_TOKEN" \
                 -H "Accept: application/vnd.github.v3+json" \
-                "https://api.github.com/repos/$REPO/actions/workflows/$workflow_file/dispatches" \
-                -d '{"ref":"main"}'
-              echo " -> Disparado!"
+                "https://api.github.com/repos/$repo/actions/workflows/$workflow_file/dispatches" \
+                -d '{"ref":"main"}')
+
+              if [ "$dispatch_result" = "204" ]; then
+                echo " -> Disparado OK!"
+                TRIGGERED="$TRIGGERED<li>🔄 $workflow_name</li>"
+              else
+                echo " -> ERROR al disparar (HTTP $dispatch_result)"
+                ERRORS="$ERRORS<li>❌ $workflow_name — HTTP $dispatch_result al disparar</li>"
+              fi
             else
-              echo "OK $workflow_name — ya corrio hoy ($RAN runs exitosos)"
+              echo "OK $workflow_name — ya corrio hoy ($ran runs)"
             fi
           }
 
-          # Workflows diarios (L-D)
-          check_and_trigger "blog-diario.yml" "Blog Diario M&P" 10 "daily"
-          check_and_trigger "clipping-prensa-hualpen.yml" "Clipping Prensa Hualpen" 10 "daily"
-          check_and_trigger "backup-supabase.yml" "Backup Supabase" 9 "daily"
-          check_and_trigger "clipping-swing-artistas.yml" "Clipping Swing" 11 "daily"
+          # ============================================================
+          # REPO: landing-mp-myp
+          # ============================================================
+          MAIN_REPO="myp202021/landing-mp-myp"
 
-          # Workflows L-V
-          check_and_trigger "competencia-hualpen.yml" "Competencia Hualpen" 11 "weekdays"
-          check_and_trigger "invas-blog-diario.yml" "Invas Blog Diario" 11 "weekdays"
-          check_and_trigger "copilot-agentes-test.yml" "Copilot Pipeline" 11 "weekdays"
+          # Diarios (L-D)
+          check_and_trigger "$MAIN_REPO" "blog-diario.yml" "Blog Diario M&P" 10 "daily"
+          check_and_trigger "$MAIN_REPO" "blog-geo-diario.yml" "Blog GEO Diario" 11 "daily"
+          check_and_trigger "$MAIN_REPO" "clipping-prensa-hualpen.yml" "Clipping Prensa Hualpén" 10 "daily"
+          check_and_trigger "$MAIN_REPO" "clipping-swing-artistas.yml" "Clipping Swing" 11 "daily"
+          check_and_trigger "$MAIN_REPO" "backup-supabase.yml" "Backup Supabase" 9 "daily"
+
+          # L-V
+          check_and_trigger "$MAIN_REPO" "competencia-hualpen.yml" "Competencia Hualpén" 11 "weekdays"
+          check_and_trigger "$MAIN_REPO" "invas-blog-diario.yml" "Invas Blog Diario" 11 "weekdays"
+          check_and_trigger "$MAIN_REPO" "copilot-agentes-test.yml" "Copilot Pipeline" 12 "weekdays"
+          check_and_trigger "$MAIN_REPO" "radar-lifecycle.yml" "Radar Lifecycle" 12 "weekdays"
+          check_and_trigger "$MAIN_REPO" "columna-semanal.yml" "Columna Semanal" 11 "weekdays"
 
           # Rankings semanales (jueves)
           if [ "$DOW" = "4" ]; then
-            check_and_trigger "blog-rankings-semanal.yml" "Rankings M&P (Jueves)" 12 "weekdays"
-            check_and_trigger "invas-blog-rankings-semanal.yml" "Rankings Invas (Jueves)" 12 "weekdays"
+            check_and_trigger "$MAIN_REPO" "blog-rankings-semanal.yml" "Rankings M&P (Jueves)" 12 "weekdays"
+            check_and_trigger "$MAIN_REPO" "invas-blog-rankings-semanal.yml" "Rankings Invas (Jueves)" 12 "weekdays"
           fi
 
-          # Indicadores marketing (sabado)
+          # Indicadores marketing (sábado)
           if [ "$DOW" = "6" ]; then
-            check_and_trigger "indicadores-marketing.yml" "Indicadores Marketing (Sabado)" 12 "daily"
+            check_and_trigger "$MAIN_REPO" "indicadores-marketing.yml" "Indicadores Marketing" 12 "daily"
           fi
 
-          # DevuelveMiPie SEO (repo aparte)
-          echo "--- DevuelveMiPie SEO ---"
+          # Reportes mensuales (día 1)
+          DAY=$(date -u +%d)
+          if [ "$DAY" = "01" ]; then
+            check_and_trigger "$MAIN_REPO" "radar-clipping-mensual.yml" "Radar Clipping Mensual" 13 "daily"
+          fi
+
+          # Prospección (martes)
+          if [ "$DOW" = "2" ]; then
+            check_and_trigger "$MAIN_REPO" "prospecting.yml" "Prospección (Martes)" 13 "weekdays"
+          fi
+
+          # ============================================================
+          # REPO: devuelvemipie-seo
+          # ============================================================
           DMP_REPO="myp202021/devuelvemipie-seo"
-          DMP_RAN=$(curl -s -H "Authorization: Bearer $GH_TOKEN" \
-            "https://api.github.com/repos/$DMP_REPO/actions/workflows/dmp-blog-diario.yml/runs?per_page=5&status=success&created=%3E=${TODAY}T00:00:00Z" \
-            | python3 -c "import json,sys; d=json.load(sys.stdin); print(len(d.get('workflow_runs',[])))")
-          if [ "$DMP_RAN" = "0" ]; then
-            echo "TRIGGER DMP Blog Diario — no corrio hoy, disparando..."
-            curl -s -X POST \
-              -H "Authorization: Bearer $GH_TOKEN" \
-              -H "Accept: application/vnd.github.v3+json" \
-              "https://api.github.com/repos/$DMP_REPO/actions/workflows/dmp-blog-diario.yml/dispatches" \
-              -d '{"ref":"main"}'
-            echo " -> Disparado!"
-          else
-            echo "OK DMP Blog Diario — ya corrio hoy ($DMP_RAN runs)"
+          check_and_trigger "$DMP_REPO" "dmp-blog-diario.yml" "DMP Blog Diario" 11 "weekdays"
+          if [ "$DOW" = "5" ]; then
+            check_and_trigger "$DMP_REPO" "dmp-blog-rankings-semanal.yml" "DMP Rankings (Viernes)" 12 "weekdays"
           fi
 
-          # Rankings DMP (viernes)
+          # ============================================================
+          # REPO: lablab-seo
+          # ============================================================
+          LABLAB_REPO="myp202021/lablab-seo"
+          check_and_trigger "$LABLAB_REPO" "lablab-blog-diario.yml" "LabLab Blog Diario" 11 "weekdays"
           if [ "$DOW" = "5" ]; then
-            DMP_RANK=$(curl -s -H "Authorization: Bearer $GH_TOKEN" \
-              "https://api.github.com/repos/$DMP_REPO/actions/workflows/dmp-blog-rankings-semanal.yml/runs?per_page=5&status=success&created=%3E=${TODAY}T00:00:00Z" \
-              | python3 -c "import json,sys; d=json.load(sys.stdin); print(len(d.get('workflow_runs',[])))")
-            if [ "$DMP_RANK" = "0" ]; then
-              echo "TRIGGER DMP Rankings (Viernes) — disparando..."
-              curl -s -X POST \
-                -H "Authorization: Bearer $GH_TOKEN" \
-                -H "Accept: application/vnd.github.v3+json" \
-                "https://api.github.com/repos/$DMP_REPO/actions/workflows/dmp-blog-rankings-semanal.yml/dispatches" \
-                -d '{"ref":"main"}'
-              echo " -> Disparado!"
-            else
-              echo "OK DMP Rankings — ya corrio ($DMP_RANK runs)"
+            check_and_trigger "$LABLAB_REPO" "lablab-rankings-semanal.yml" "LabLab Rankings (Viernes)" 12 "weekdays"
+          fi
+
+          # ============================================================
+          # REPO: premiosincreibles-seo
+          # ============================================================
+          PI_REPO="myp202021/premiosincreibles-seo"
+          check_and_trigger "$PI_REPO" "pinc-blog-diario.yml" "Premios Blog Diario" 12 "daily"
+
+          # ============================================================
+          # ENVIAR RESUMEN POR EMAIL SI HUBO TRIGGERS O ERRORES
+          # ============================================================
+          if [ -n "$TRIGGERED" ] || [ -n "$ERRORS" ]; then
+            echo ""
+            echo "=== Enviando alerta por email ==="
+
+            BODY="<h2>🐕 Watchdog — $TODAY $(date -u +%H:%M) UTC</h2>"
+
+            if [ -n "$TRIGGERED" ]; then
+              BODY="$BODY<h3>Workflows disparados manualmente:</h3><ul>$TRIGGERED</ul>"
             fi
+
+            if [ -n "$ERRORS" ]; then
+              BODY="$BODY<h3>Errores:</h3><ul>$ERRORS</ul>"
+            fi
+
+            BODY="$BODY<p style='color:#888;font-size:12px;margin-top:20px;'>GitHub Actions no los disparó a tiempo. El Watchdog los ejecutó como respaldo.</p>"
+
+            curl -s -X POST "https://api.resend.com/emails" \
+              -H "Authorization: Bearer $RESEND_KEY" \
+              -H "Content-Type: application/json" \
+              -d "$(python3 -c "
+import json
+print(json.dumps({
+    'from': 'Watchdog M&P <contacto@mulleryperez.cl>',
+    'to': 'contacto@mulleryperez.cl',
+    'subject': '🐕 Watchdog: workflows disparados manualmente — $TODAY',
+    'html': '''$BODY'''
+}))
+")" | python3 -c "import json,sys; d=json.load(sys.stdin); print('Email enviado:', d.get('id','ERROR'))"
+
+          else
+            echo ""
+            echo "✅ Todos los workflows corrieron a tiempo — nada que hacer"
           fi
 
           echo "=== Watchdog completo ==="
