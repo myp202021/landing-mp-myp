@@ -1,165 +1,21 @@
-name: Enviar email licitacion IEST (una vez)
+name: Enviar email licitacion IEST
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: '0 0 1 1 *'
 
 jobs:
   send:
     runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch'
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-
-      - name: Instalar dependencias
-        run: npm install node-fetch@2
-
-      - name: Enviar email con adjuntos
+      - run: npm install node-fetch@2
+      - name: Enviar email
         env:
           RESEND: ${{ secrets.RESEND }}
-        run: |
-          node << 'NODEOF'
-          const fetch = require('node-fetch');
-          const fs = require('fs');
-
-          async function main() {
-            const attachments = [
-              { path: 'temp-licitacion/BasesAdministrativas.pdf', name: 'Bases_Administrativas_Licitacion_IEST.pdf' },
-              { path: 'temp-licitacion/BasesTecnicas.pdf', name: 'Bases_Tecnicas_Licitacion_IEST.pdf' },
-              { path: 'temp-licitacion/Anexo4.xlsx', name: 'Anexo4_Oferta_Economica.xlsx' },
-            ].map(f => {
-              const content = fs.readFileSync(f.path).toString('base64');
-              console.log('Adjunto:', f.name, Math.round(fs.statSync(f.path).size/1024) + 'KB');
-              return { filename: f.name, content };
-            });
-
-            const html = `<div style="font-family:Arial,sans-serif;max-width:700px;color:#222">
-<h2 style="color:#1F4E79">Licitacion Santo Tomas (IEST) — Requisitos Partner HubSpot</h2>
-<p>Christopher, aca va todo lo que necesitas para mandarle al partner HubSpot.</p>
-<hr style="border:1px solid #ddd">
-
-<h3 style="color:#1F4E79">1. Contexto de la licitacion</h3>
-<p>Las Instituciones de Educacion Santo Tomas (Universidad + Educacion Continua) licitaron la contratacion de una <strong>Agencia de Marketing Digital Integral</strong>. La licitacion permite adjudicacion fraccionada:</p>
-<ul>
-<li><strong>M&P cubre:</strong> Administracion de Ads (Postgrado y EC) + Agente Conversacional IA</li>
-<li><strong>Partner cubre:</strong> Implementacion y Operacion de HubSpot CRM</li>
-</ul>
-
-<h3 style="color:#1F4E79">2. Que necesita cubrir el partner</h3>
-
-<h4>Licenciamiento HubSpot</h4>
-<ul>
-<li>Marketing Hub Enterprise + Sales Hub Enterprise</li>
-<li>Postgrado/EC: 30.000 contactos marketing, 2 usuarios MKT, 9 usuarios Sales</li>
-<li>Pregrado Presencial: 220.000 contactos marketing, 15 usuarios MKT, 44 usuarios Sales</li>
-<li>Base total minima: 2 millones de registros</li>
-<li>Comparar 3 escenarios: portal unico / 2 portales / 3 instancias</li>
-<li>Licencias se contratan directo Santo Tomas - HubSpot (no a traves de agencia)</li>
-</ul>
-
-<h4>Implementacion y Setup</h4>
-<ul>
-<li>Levantamiento funcional y tecnico (captacion, nutricion, admision, matricula)</li>
-<li>Modelo de datos y segmentacion por unidad</li>
-<li>Pipelines, etapas, motivos de perdida, asignacion, alertas</li>
-<li>Flujos de nutricion (email, WhatsApp, otros canales)</li>
-<li>Roles, permisos, equipos, vistas, propiedades</li>
-<li>Migracion de datos desde Oracle CRM</li>
-<li>Dashboards por institucion, unidad, programa, canal, campana, ejecutivo, etapa</li>
-<li>Pruebas funcionales, tecnicas, seguridad y aceptacion</li>
-</ul>
-
-<h4>Integraciones (end-to-end)</h4>
-<table style="border-collapse:collapse;width:100%;font-size:14px">
-<tr style="background:#1F4E79;color:white"><th style="padding:8px;text-align:left">Integracion</th><th style="padding:8px;text-align:left">Detalle</th></tr>
-<tr style="border-bottom:1px solid #ddd"><td style="padding:8px"><strong>HubSpot - Oracle CRM</strong></td><td style="padding:8px">Bidireccional, middleware, objetos, campos, sincronizacion, duplicados, auditoria</td></tr>
-<tr style="border-bottom:1px solid #ddd"><td style="padding:8px"><strong>WiseCX Contact Center - HubSpot</strong></td><td style="padding:8px">Llamadas, resultados, grabaciones, estados, trazabilidad</td></tr>
-<tr style="border-bottom:1px solid #ddd"><td style="padding:8px"><strong>IDA formularios web - HubSpot</strong></td><td style="padding:8px">Validacion, deduplicacion, consentimiento, atribucion</td></tr>
-<tr style="border-bottom:1px solid #ddd"><td style="padding:8px"><strong>Meta/Google/LinkedIn/TikTok Ads</strong></td><td style="padding:8px">Integracion nativa, audiencias, conversiones, atribucion</td></tr>
-<tr style="border-bottom:1px solid #ddd"><td style="padding:8px"><strong>WhatsApp / Webchat</strong></td><td style="padding:8px">Con Atom o WiseCX, validar bidireccionalidad</td></tr>
-<tr style="border-bottom:1px solid #ddd"><td style="padding:8px"><strong>HubSpot Breeze / IA nativa</strong></td><td style="padding:8px">Opcional, confirmar alcance por edicion</td></tr>
-<tr style="border-bottom:1px solid #ddd"><td style="padding:8px"><strong>SSO Microsoft</strong></td><td style="padding:8px">Autenticacion institucional</td></tr>
-<tr><td style="padding:8px"><strong>Ambientes TEST + Produccion</strong></td><td style="padding:8px">Separados, procedimiento formal de paso a produccion</td></tr>
-</table>
-
-<h4>Operacion Delegada + SLA</h4>
-<ul>
-<li>Primera etapa 100% delegada</li>
-<li>SLA con niveles Critica/Alta/Media/Baja y tiempos de respuesta</li>
-<li>Monitoreo preventivo, alertas de falla, plan de continuidad</li>
-</ul>
-
-<h4>Transferencia + Plan de Salida</h4>
-<ul>
-<li>Capacitacion por rol, grabaciones, materiales</li>
-<li>Documentacion completa (funcional, tecnica, diccionario de datos)</li>
-<li>Plan de salida que permita cambio de proveedor sin perdida de datos</li>
-</ul>
-
-<h3 style="color:#1F4E79">3. Documentacion que necesitamos del partner</h3>
-<ol>
-<li>Nombre empresa, RUT, datos de contacto</li>
-<li>Nivel de partnership HubSpot + certificaciones vigentes</li>
-<li>CV del equipo propuesto (roles, certificaciones, dedicacion)</li>
-<li>Lista de implementaciones HubSpot Enterprise comparables (ultimos 48 meses)</li>
-<li>Al menos 2 referencias verificables con contacto (idealmente educacion)</li>
-<li><strong>Propuesta tecnica:</strong> arquitectura, integraciones, cronograma, comparacion escenarios de portal</li>
-<li><strong>Propuesta economica</strong> desglosada (ver Anexo N4 adjunto):
-    <ul>
-    <li>Licencias HubSpot (linea separada)</li>
-    <li>Implementacion y setup</li>
-    <li>Integraciones</li>
-    <li>Fee operador mensual</li>
-    <li>Transferencia de conocimiento</li>
-    <li>Otros terceros (middleware, conectores, telefonia, almacenamiento)</li>
-    <li>Total por escenario (portal unico / 2 portales / 3 instancias)</li>
-    <li><strong>Ofertas obligatorias para 12 y 24 meses</strong></li>
-    </ul>
-</li>
-<li>SLA propuesto (tiempos de respuesta por severidad)</li>
-<li>Plan de salida y reversibilidad</li>
-</ol>
-
-<h3 style="color:#c00">4. Cronograma — URGENTE</h3>
-<table style="border-collapse:collapse;width:100%;font-size:14px">
-<tr style="background:#c00;color:white"><th style="padding:8px">Hito</th><th style="padding:8px">Fecha</th></tr>
-<tr style="border-bottom:1px solid #ddd"><td style="padding:8px">Consultas a IEST</td><td style="padding:8px">3 de septiembre 2026</td></tr>
-<tr style="border-bottom:1px solid #ddd"><td style="padding:8px">Respuestas de IEST</td><td style="padding:8px">8 de septiembre 2026</td></tr>
-<tr style="border-bottom:1px solid #ddd;background:#fff3cd"><td style="padding:8px"><strong>Necesitamos propuesta del partner</strong></td><td style="padding:8px"><strong>14 de septiembre 2026</strong></td></tr>
-<tr style="border-bottom:1px solid #ddd;background:#f8d7da"><td style="padding:8px"><strong>Entrega de ofertas a IEST</strong></td><td style="padding:8px"><strong>17 de septiembre 2026</strong></td></tr>
-<tr style="border-bottom:1px solid #ddd"><td style="padding:8px">Evaluacion</td><td style="padding:8px">17-25 septiembre</td></tr>
-<tr style="border-bottom:1px solid #ddd"><td style="padding:8px">Adjudicacion</td><td style="padding:8px">28-30 septiembre</td></tr>
-<tr><td style="padding:8px">Inicio servicio</td><td style="padding:8px">1 octubre 2026</td></tr>
-</table>
-
-<h3 style="color:#1F4E79">5. Adjuntos</h3>
-<ol>
-<li><strong>Bases Administrativas</strong> — Condiciones contractuales, garantias, multas, cronograma (29 pags)</li>
-<li><strong>Bases Tecnicas</strong> — Alcance del servicio, dimensionamiento, integraciones, SLA (14 pags)</li>
-<li><strong>Anexo N4</strong> — Estructura de oferta economica (Excel para completar)</li>
-</ol>
-
-<p style="margin-top:30px;color:#888;font-size:12px">Enviado desde M&P — Muller y Perez SpA</p>
-</div>`;
-
-            const res = await fetch('https://api.resend.com/emails', {
-              method: 'POST',
-              headers: { 'Authorization': 'Bearer ' + process.env.RESEND, 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                from: 'M&P Licitaciones <contacto@mulleryperez.cl>',
-                to: 'christopher@mulleryperez.cl',
-                subject: 'Licitacion Santo Tomas (IEST) — Todo para el Partner HubSpot',
-                html,
-                attachments
-              })
-            });
-
-            const data = await res.json();
-            console.log('Status:', res.status);
-            console.log('Email ID:', data.id || JSON.stringify(data));
-          }
-
-          main().catch(e => { console.error(e); process.exit(1); });
-          NODEOF
+        run: node scripts/send-licitacion-email.js
