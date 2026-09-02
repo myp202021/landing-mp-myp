@@ -2,8 +2,8 @@ name: Clipping Prensa Hualpen (menciones competencia)
 
 on:
   schedule:
-    - cron: '0 9 * * *'    # 06:00 AM Chile (UTC-3) — todos los días
-    - cron: '30 9 * * *'   # 06:30 AM Chile — respaldo
+    - cron: '0 10 * * *'    # 07:00 AM Chile (UTC-3) — todos los días
+    - cron: '30 10 * * *'  # 07:30 AM Chile — respaldo
   workflow_dispatch:
 
 jobs:
