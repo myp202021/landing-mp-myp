@@ -1,0 +1,22 @@
+name: Enviar consultas IEST
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 1 1 *'
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install node-fetch@2
+      - name: Copiar Excel
+        run: |
+          mkdir -p $HOME/Desktop/licitacion-iest/propuesta
+      - name: Enviar email
+        env:
+          RESEND: ${{ secrets.RESEND }}
+        run: node scripts/send-consultas-iest.js
