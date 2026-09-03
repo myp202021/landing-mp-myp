@@ -2,14 +2,14 @@ name: Reporte Diario Competencia Hualpen
 
 on:
   schedule:
-    # Múltiples entradas — el workflow verifica si ya corrió hoy antes de ejecutar
-    - cron: '0 10 * * 1-5'    # 07:00 AM Chile — intento principal
-    - cron: '15 10 * * 1-5'   # 07:15 AM Chile — respaldo 1
-    - cron: '30 10 * * 1-5'   # 07:30 AM Chile — respaldo 2
-    - cron: '45 10 * * 1-5'   # 07:45 AM Chile — respaldo 3
-    - cron: '0 11 * * 1-5'    # 08:00 AM Chile — respaldo 4
-    - cron: '30 11 * * 1-5'   # 08:30 AM Chile — respaldo 5
-    - cron: '0 12 * * 1-5'    # 09:00 AM Chile — respaldo final
+    # 06:00 AM Chile (UTC-3) = 09:00 UTC — múltiples entradas, verifica duplicados antes de ejecutar
+    - cron: '0 9 * * 1-5'     # 06:00 AM Chile — intento principal
+    - cron: '15 9 * * 1-5'    # 06:15 AM Chile — respaldo 1
+    - cron: '30 9 * * 1-5'    # 06:30 AM Chile — respaldo 2
+    - cron: '45 9 * * 1-5'    # 06:45 AM Chile — respaldo 3
+    - cron: '0 10 * * 1-5'    # 07:00 AM Chile — respaldo 4
+    - cron: '30 10 * * 1-5'   # 07:30 AM Chile — respaldo 5
+    - cron: '0 11 * * 1-5'    # 08:00 AM Chile — respaldo final
   workflow_dispatch:
 
 jobs:

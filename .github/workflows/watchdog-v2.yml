@@ -105,7 +105,7 @@ jobs:
           check_and_trigger "$MAIN_REPO" "backup-supabase.yml" "Backup Supabase" 9 "daily"
 
           # L-V
-          check_and_trigger "$MAIN_REPO" "competencia-hualpen.yml" "Competencia Hualpén" 11 "weekdays"
+          check_and_trigger "$MAIN_REPO" "competencia-hualpen.yml" "Competencia Hualpén" 10 "weekdays"
           check_and_trigger "$MAIN_REPO" "invas-blog-diario.yml" "Invas Blog Diario" 11 "weekdays"
           check_and_trigger "$MAIN_REPO" "copilot-agentes-test.yml" "Copilot Pipeline" 12 "weekdays"
           check_and_trigger "$MAIN_REPO" "radar-lifecycle.yml" "Radar Lifecycle" 12 "weekdays"
