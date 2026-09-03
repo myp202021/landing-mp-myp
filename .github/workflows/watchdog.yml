@@ -28,7 +28,7 @@ jobs:
     steps:
       - name: Verificar y disparar workflows que no corrieron hoy
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_PAT }}
           RESEND_KEY: ${{ secrets.RESEND }}
         run: |
           TODAY=$(date -u +%Y-%m-%d)
