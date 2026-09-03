@@ -888,7 +888,7 @@ async function enviarEmail({ hoy, postsIG, competidoresConPost, sinActividad, po
   })
 
   if (res.ok) {
-    console.log('✉️  Email enviado a felipe.munoz@buseshualpen.cl y contacto@mulleryperez.cl')
+    console.log(`✉️  Email enviado a ${TEST_MODE ? TEST_EMAIL : 'felipe.munoz@buseshualpen.cl y contacto@mulleryperez.cl'}`)
   } else {
     const err = await res.text()
     console.error('❌ Error enviando email:', err)
