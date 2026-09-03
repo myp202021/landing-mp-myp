@@ -1,0 +1,29 @@
+name: TEST Competencia Hualpen (solo Christopher)
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 1 1 *'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Instalar wkhtmltopdf
+        run: sudo apt-get update && sudo apt-get install -y wkhtmltopdf
+      - name: Instalar dependencias
+        run: npm install node-fetch@2 @supabase/supabase-js@2 ws
+      - name: Ejecutar scraper en modo test
+        run: node scripts/scrape-competencia.js
+        env:
+          APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          RESEND: ${{ secrets.RESEND }}
+          TEST_MODE: "true"
+          TEST_EMAIL: "christopher@mulleryperez.cl"

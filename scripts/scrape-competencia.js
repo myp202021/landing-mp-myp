@@ -9,6 +9,9 @@ const { execSync } = require('child_process')
 const fs = require('fs')
 
 const APIFY_TOKEN = process.env.APIFY_TOKEN
+const TEST_MODE = process.env.TEST_MODE === 'true'
+const TEST_EMAIL = process.env.TEST_EMAIL || 'christopher@mulleryperez.cl'
+if (TEST_MODE) console.log(`🧪 TEST MODE — email solo a ${TEST_EMAIL}, sin guardar en Supabase`)
 
 // Descargar imagen y convertir a base64 data URI (para que no expiren en el PDF)
 async function imgToBase64(url) {
@@ -168,7 +171,7 @@ async function main() {
   const urlsYaReportadas = new Set((reportesPrevios || []).map(r => r.post_url).filter(Boolean))
   console.log(`🔁 URLs ya reportadas últimos 3 días (desde ${hace3dias}): ${urlsYaReportadas.size}`)
 
-  await supabase.from('reportes_competencia').delete().eq('fecha_reporte', hoy)
+  if (!TEST_MODE) await supabase.from('reportes_competencia').delete().eq('fecha_reporte', hoy)
 
   // ── Instagram Posts ──────────────────────────────────────────────────────
   const conIG = COMPETIDORES.filter(c => c.instagram)
@@ -369,7 +372,7 @@ async function main() {
 
     const postUrl = post.url || (post.shortCode ? `https://www.instagram.com/p/${post.shortCode}/` : null)
       || (post.id ? `ig:${post.ownerUsername}:${post.id}` : null)
-    await supabase.from('reportes_competencia').insert({
+    if (!TEST_MODE) await supabase.from('reportes_competencia').insert({
       competidor: comp.nombre, instagram_handle: comp.instagram, red_social: 'Instagram',
       post_url: postUrl,
       post_texto: (post.caption || '').substring(0, 600),
@@ -381,7 +384,7 @@ async function main() {
 
   // Guardar stories en DB para dedup en días siguientes
   for (const s of storiesIG) {
-    await supabase.from('reportes_competencia').insert({
+    if (!TEST_MODE) await supabase.from('reportes_competencia').insert({
       competidor: s.competidor, instagram_handle: s.handle, red_social: 'Instagram-Story',
       post_url: `story:${s.handle}:${s.pk}`,
       post_texto: `Story ${s.type} de @${s.handle}`,
@@ -389,12 +392,12 @@ async function main() {
       fecha_post: s.timestamp || null, fecha_reporte: hoy, sin_actividad: false,
     })
   }
-  console.log(`💾 ${storiesIG.length} stories guardadas en DB para dedup`)
+  console.log(`💾 ${storiesIG.length} stories ${TEST_MODE ? 'NO guardadas (test)' : 'guardadas en DB para dedup'}`)
 
   // sin_actividad para los que no publicaron
   for (const comp of COMPETIDORES) {
     if (competidoresConPost.has(comp.nombre)) continue
-    await supabase.from('reportes_competencia').insert({
+    if (!TEST_MODE) await supabase.from('reportes_competencia').insert({
       competidor: comp.nombre, instagram_handle: comp.instagram || null, red_social: 'Instagram',
       post_url: null, post_texto: null, post_imagen: null, likes: null, comentarios: null,
       fecha_post: null, fecha_reporte: hoy, sin_actividad: true,
@@ -850,7 +853,7 @@ async function enviarEmail({ hoy, postsIG, competidoresConPost, sinActividad, po
 
   const payload = {
     from: 'Muller y Perez <contacto@mulleryperez.cl>',
-    to: ['felipe.munoz@buseshualpen.cl', 'contacto@mulleryperez.cl'],
+    to: TEST_MODE ? [TEST_EMAIL] : ['felipe.munoz@buseshualpen.cl', 'contacto@mulleryperez.cl'],
     subject: `🚌 Competencia Hualpén — ${fecha}${totalOfertas > 0 ? ` · ⚠️ ${totalOfertas} oferta${totalOfertas > 1 ? 's' : ''} laboral${totalOfertas > 1 ? 'es' : ''}` : ''} (${totalPosts} posts)`,
     html: `<div style="font-family:'Segoe UI',sans-serif;max-width:500px;margin:0 auto;padding:32px 16px;color:#1E293B;">
     <h2 style="font-size:18px;font-weight:800;margin:0 0 8px;">🚌 Reporte Diario — Competencia Hualpén</h2>
