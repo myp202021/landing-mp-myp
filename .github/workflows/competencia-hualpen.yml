@@ -87,3 +87,68 @@ jobs:
             })
           }).then(r => r.json()).then(d => console.log('Alerta enviada:', d.id)).catch(e => console.error('Error enviando alerta:', e));
           "
+
+      # ════════════════════════════════════════════════════════════
+      # WATCHDOG: verificar y disparar otros workflows que no corrieron
+      # Se ejecuta SIEMPRE (incluso si el reporte ya corrio hoy)
+      # ════════════════════════════════════════════════════════════
+      - name: Watchdog - verificar otros workflows
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT }}
+          RESEND_KEY: ${{ secrets.RESEND }}
+        run: |
+          TODAY=$(date -u +%Y-%m-%d)
+          HOUR_UTC=$(date -u +%H)
+          DOW=$(date -u +%u)
+          echo "=== Watchdog: $TODAY $(date -u +%H:%M) UTC (DOW=$DOW) ==="
+
+          TRIGGERED=""
+
+          check_and_trigger() {
+            local repo=$1 wf=$2 name=$3 min_h=$4 days=$5
+            if [ "$days" = "weekdays" ] && [ "$DOW" -gt 5 ]; then return; fi
+            if [ "$HOUR_UTC" -lt "$min_h" ]; then return; fi
+            local ran=$(curl -s -H "Authorization: Bearer $GH_TOKEN" \
+              "https://api.github.com/repos/$repo/actions/workflows/$wf/runs?per_page=3&status=success&created=%3E=${TODAY}T00:00:00Z" \
+              | python3 -c "import json,sys; d=json.load(sys.stdin); print(len(d.get('workflow_runs',[])))" 2>/dev/null || echo "0")
+            if [ "$ran" = "0" ]; then
+              local code=$(curl -s -o /dev/null -w "%{http_code}" -X POST \
+                -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github.v3+json" \
+                "https://api.github.com/repos/$repo/actions/workflows/$wf/dispatches" -d '{"ref":"main"}')
+              echo "TRIGGER $name -> HTTP $code"
+              TRIGGERED="$TRIGGERED<li>$name (HTTP $code)</li>"
+            else
+              echo "OK $name ($ran runs)"
+            fi
+          }
+
+          R="myp202021/landing-mp-myp"
+          check_and_trigger "$R" "blog-diario.yml" "Blog Diario" 10 "daily"
+          check_and_trigger "$R" "blog-geo-diario.yml" "Blog GEO" 11 "daily"
+          check_and_trigger "$R" "clipping-prensa-hualpen.yml" "Clipping Hualpen" 10 "daily"
+          check_and_trigger "$R" "clipping-swing-artistas.yml" "Clipping Swing" 11 "daily"
+          check_and_trigger "$R" "invas-blog-diario.yml" "Invas Blog" 11 "weekdays"
+          check_and_trigger "$R" "columna-semanal.yml" "Columna Semanal" 11 "weekdays"
+          check_and_trigger "myp202021/devuelvemipie-seo" "dmp-blog-diario.yml" "DMP Blog" 11 "weekdays"
+          check_and_trigger "myp202021/lablab-seo" "lablab-blog-diario.yml" "LabLab Blog" 11 "weekdays"
+          check_and_trigger "myp202021/premiosincreibles-seo" "pinc-blog-diario.yml" "Premios Blog" 12 "daily"
+
+          if [ "$DOW" = "4" ]; then
+            check_and_trigger "$R" "blog-rankings-semanal.yml" "Rankings M&P" 12 "weekdays"
+            check_and_trigger "$R" "invas-blog-rankings-semanal.yml" "Rankings Invas" 12 "weekdays"
+          fi
+          if [ "$DOW" = "5" ]; then
+            check_and_trigger "myp202021/devuelvemipie-seo" "dmp-blog-rankings-semanal.yml" "DMP Rankings" 12 "weekdays"
+            check_and_trigger "myp202021/lablab-seo" "lablab-rankings-semanal.yml" "LabLab Rankings" 12 "weekdays"
+          fi
+
+          if [ -n "$TRIGGERED" ]; then
+            echo "Enviando alerta..."
+            curl -s -X POST "https://api.resend.com/emails" \
+              -H "Authorization: Bearer $RESEND_KEY" -H "Content-Type: application/json" \
+              -d "{\"from\":\"Watchdog <contacto@mulleryperez.cl>\",\"to\":\"contacto@mulleryperez.cl\",\"subject\":\"Watchdog $TODAY\",\"html\":\"<h2>Watchdog $TODAY</h2><ul>$TRIGGERED</ul>\"}" \
+              | python3 -c "import json,sys; print('Email:', json.load(sys.stdin).get('id','ERR'))" 2>/dev/null
+          else
+            echo "Todos OK"
+          fi
