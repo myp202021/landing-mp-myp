@@ -1,4 +1,4 @@
-name: Watchdog — Verificar y disparar workflows diarios
+name: Watchdog diario
 
 on:
   schedule:
