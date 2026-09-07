@@ -784,7 +784,7 @@ export default function LandingClient() {
       {/* Hero */}
       <section className="pt-36 pb-28 px-6 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-white relative overflow-hidden" role="main" aria-label="Sección principal">
         <video
-          src="/hero-bg.mp4"
+          src="/ads-video-1.mp4"
           className="absolute inset-0 w-full h-full object-cover opacity-30"
           autoPlay muted loop playsInline
           aria-hidden="true"
