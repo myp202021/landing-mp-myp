@@ -1,0 +1,56 @@
+name: Watchdog Hualpen
+
+on:
+  schedule:
+    # 06:20 AM Chile (UTC-3) = 09:20 UTC — verifica si el reporte corrió
+    - cron: '20 9 * * 1-5'
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verificar si el reporte corrió hoy
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT }}
+          RESEND_KEY: ${{ secrets.RESEND }}
+        run: |
+          TODAY=$(date -u +%Y-%m-%d)
+          echo "=== Watchdog Hualpen: $TODAY $(date -u +%H:%M) UTC ==="
+
+          # Buscar runs exitosos del workflow principal HOY
+          RUNS=$(curl -s -H "Authorization: Bearer $GH_TOKEN" \
+            "https://api.github.com/repos/myp202021/landing-mp-myp/actions/workflows/competencia-hualpen.yml/runs?per_page=5&created=%3E=${TODAY}T00:00:00Z" \
+            | python3 -c "
+          import json, sys
+          d = json.load(sys.stdin)
+          runs = d.get('workflow_runs', [])
+          success = [r for r in runs if r.get('conclusion') == 'success']
+          in_progress = [r for r in runs if r.get('status') == 'in_progress']
+          print(f'{len(success)} success, {len(in_progress)} in_progress, {len(runs)} total')
+          if len(success) > 0 or len(in_progress) > 0:
+              print('STATUS=ok')
+          else:
+              print('STATUS=missing')
+          " 2>/dev/null)
+
+          echo "$RUNS"
+
+          if echo "$RUNS" | grep -q "STATUS=missing"; then
+            echo "No corrió hoy. Disparando workflow principal..."
+            CODE=$(curl -s -o /dev/null -w "%{http_code}" -X POST \
+              -H "Authorization: Bearer $GH_TOKEN" \
+              -H "Accept: application/vnd.github.v3+json" \
+              "https://api.github.com/repos/myp202021/landing-mp-myp/actions/workflows/competencia-hualpen.yml/dispatches" \
+              -d '{"ref":"main"}')
+            echo "Dispatch HTTP: $CODE"
+
+            # Notificar
+            curl -s -X POST "https://api.resend.com/emails" \
+              -H "Authorization: Bearer $RESEND_KEY" \
+              -H "Content-Type: application/json" \
+              -d "{\"from\":\"Watchdog <contacto@mulleryperez.cl>\",\"to\":\"contacto@mulleryperez.cl\",\"subject\":\"Watchdog: Hualpen NO corrio $TODAY - disparado manual\",\"html\":\"<p>El reporte de competencia Hualpen no se disparo a las 06:00 AM. El watchdog lo disparo automaticamente a las 06:20 AM.</p>\"}"
+            echo "Alerta enviada"
+          else
+            echo "Reporte OK, no se necesita accion"
+          fi
