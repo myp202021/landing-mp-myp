@@ -232,7 +232,7 @@ export default function AdsLanding() {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
             {[
               { icon: Shield, title: 'Sin contrato de permanencia', desc: 'Si no funciona, te vas. Nuestra retención del 95% se basa en resultados, no en obligaciones.', color: 'blue' },
-              { icon: Users, title: 'Equipo dedicado de 3 personas', desc: 'Paid Media Planner + Publicista + Diseñador. No un freelancer compartido entre 20 cuentas.', color: 'purple' },
+              { icon: Users, title: 'Equipo dedicado de 3 áreas', desc: 'Paid Media + Publicista + Diseñador. No un freelancer compartido entre 20 cuentas.', color: 'purple' },
               { icon: BarChart3, title: 'Métricas de negocio reales', desc: 'CPL, CPA, CAC, ROAS. Lo que importa para tomar decisiones comerciales.', color: 'cyan' },
               { icon: Target, title: 'Benchmark de competencia', desc: 'En cada reporte ves cómo está tu industria y qué hace tu competencia.', color: 'emerald' },
               { icon: Zap, title: 'Transparencia total', desc: 'Acceso 24/7 a tus cuentas publicitarias. Los datos son tuyos, siempre.', color: 'amber' },
