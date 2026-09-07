@@ -137,23 +137,44 @@ export default function AdsLanding() {
             </div>
           </motion.div>
 
-          {/* Right — Stats cards stacked */}
-          <motion.div initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.7, delay: 0.2 }} className="hidden lg:grid grid-cols-2 gap-4">
-            {[
-              { value: '+40', label: 'Clientes activos', icon: Users, color: 'from-blue-500 to-blue-600' },
-              { value: '+200', label: 'Campañas gestionadas', icon: BarChart3, color: 'from-purple-500 to-purple-600' },
-              { value: '+15', label: 'Industrias atendidas', icon: Target, color: 'from-cyan-500 to-cyan-600' },
-              { value: '6+', label: 'Años operando', icon: TrendingUp, color: 'from-emerald-500 to-emerald-600' },
-            ].map((s, i) => (
-              <motion.div key={s.label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 + i * 0.1 }}
-                className="bg-white/[0.06] backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:bg-white/[0.1] transition-all group">
-                <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${s.color} flex items-center justify-center mb-4 shadow-lg group-hover:scale-110 transition-transform`}>
-                  <s.icon className="w-5 h-5 text-white" />
+          {/* Right — Form in hero */}
+          <motion.div initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.7, delay: 0.2 }} className="hidden lg:block">
+            {formData.enviado ? (
+              <div className="bg-white/[0.08] backdrop-blur-xl border border-white/15 rounded-2xl p-8 text-center">
+                <div className="w-14 h-14 rounded-full bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center mx-auto mb-5">
+                  <CheckCircle2 className="w-7 h-7 text-emerald-400" />
                 </div>
-                <div className="text-3xl font-bold text-white mb-1">{s.value}</div>
-                <div className="text-sm text-white/50">{s.label}</div>
-              </motion.div>
-            ))}
+                <h3 className="text-xl font-bold mb-2">Mensaje recibido</h3>
+                <p className="text-white/50 mb-5 text-sm">Te contactaremos dentro de las próximas horas.</p>
+                <a href="https://wa.me/56992258137" target="_blank" rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 bg-emerald-500 text-white font-semibold rounded-xl hover:bg-emerald-600 transition-colors text-sm">
+                  <MessageSquare className="w-4 h-4" /> WhatsApp
+                </a>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit} className="bg-white/[0.08] backdrop-blur-xl border border-white/15 rounded-2xl p-7 space-y-3.5">
+                <h3 className="text-lg font-bold text-white mb-1">Agenda tu reunión con M&P</h3>
+                <p className="text-white/40 text-xs mb-2">Sin compromiso. Te contactamos en menos de 24 hrs.</p>
+                {[
+                  { key: 'nombre', label: 'Nombre', type: 'text', placeholder: 'Juan Pérez' },
+                  { key: 'empresa', label: 'Empresa', type: 'text', placeholder: 'Tu empresa' },
+                  { key: 'email', label: 'Email', type: 'email', placeholder: 'juan@empresa.cl' },
+                  { key: 'telefono', label: 'Teléfono', type: 'tel', placeholder: '+56 9 1234 5678' },
+                  { key: 'cargo', label: 'Cargo', type: 'text', placeholder: 'Gerente comercial' },
+                ].map(f => (
+                  <div key={f.key}>
+                    <input type={f.type} required value={(formData as any)[f.key]}
+                      onChange={e => setFormData(p => ({ ...p, [f.key]: e.target.value }))}
+                      className="w-full px-4 py-2.5 bg-white/[0.06] border border-white/[0.1] rounded-xl text-white placeholder-white/30 focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/30 outline-none transition-all text-sm"
+                      placeholder={f.placeholder} />
+                  </div>
+                ))}
+                <button type="submit" disabled={formData.enviando}
+                  className="w-full py-3 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-semibold rounded-xl shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 transition-all disabled:opacity-50 flex items-center justify-center gap-2 text-sm">
+                  {formData.enviando ? <><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />Enviando...</> : <><Calendar className="w-4 h-4" />Agendar reunión</>}
+                </button>
+              </form>
+            )}
           </motion.div>
         </div>
       </section>
