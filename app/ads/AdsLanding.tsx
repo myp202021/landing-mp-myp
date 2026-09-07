@@ -94,9 +94,12 @@ export default function AdsLanding() {
           HERO — Video background + strong headline
       ════════════════════════════════════════════ */}
       <section className="relative min-h-screen flex items-center overflow-hidden pt-20">
-        {/* Video */}
-        <video src="/hero-bg.mp4" className="absolute inset-0 w-full h-full object-cover opacity-25" autoPlay muted loop playsInline />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#050510]/80 via-[#050510]/40 to-[#050510]" />
+        {/* Hero background image (Santiago/Costanera) + video */}
+        <div className="absolute inset-0">
+          <Image src="/ads-hero-bg.jpg" alt="" fill className="object-cover" priority />
+        </div>
+        <video src="/ads-video-1.mp4" className="absolute inset-0 w-full h-full object-cover opacity-30 mix-blend-luminosity" autoPlay muted loop playsInline />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#050510]/85 via-[#050510]/50 to-[#050510]" />
         <div className="absolute inset-0 bg-gradient-to-r from-blue-900/30 via-transparent to-purple-900/20" />
 
         <div className="relative z-10 max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-12 items-center">
