@@ -3,7 +3,8 @@ name: Watchdog Hualpen
 on:
   schedule:
     # 06:20 AM Chile (UTC-3) = 09:20 UTC — verifica si el reporte corrió
-    - cron: '20 9 * * 1-5'
+    # DESACTIVADO — ya no se necesita, cron-job.org es el trigger externo
+    - cron: '0 0 1 1 *'
   workflow_dispatch:
 
 jobs:

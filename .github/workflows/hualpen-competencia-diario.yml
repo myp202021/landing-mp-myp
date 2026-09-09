@@ -3,7 +3,8 @@ name: Hualpen Competencia Diario
 on:
   schedule:
     # 06:00 AM Chile (UTC-3) = 09:00 UTC — L a V
-    - cron: '0 9 * * 1-5'
+    # DESACTIVADO — cron-job.org dispara via Vercel
+    - cron: '0 0 1 1 *'
   workflow_dispatch:
 
 jobs:
