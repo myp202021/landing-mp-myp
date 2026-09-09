@@ -2,10 +2,12 @@
 
 /**
  * LEADS DASHBOARD - Gestión de leads con filtros y edición inline
+ * Vista principal de Arturo (rol equipo)
  */
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import EquipoNav from '@/app/components/crm/EquipoNav'
 
 interface Cliente {
   id: string
@@ -231,7 +233,9 @@ export default function LeadsPage() {
   const stats = getStats()
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4">
+    <div className="min-h-screen bg-gray-50">
+      <EquipoNav />
+      <div className="py-8 px-4">
       <div className="max-w-7xl mx-auto">
         <div className="bg-white rounded-lg shadow-lg p-6">
           {/* Header */}
@@ -502,6 +506,7 @@ export default function LeadsPage() {
             </>
           )}
         </div>
+      </div>
       </div>
     </div>
   )

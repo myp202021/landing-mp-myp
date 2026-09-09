@@ -26,7 +26,7 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
     // Si estamos en /crm/login y ya hay usuario, redirigir según rol
     if (isAuthenticated && pathname === '/crm/login') {
       if (user?.role === 'equipo') {
-        router.push('/crm/grillas')
+        router.push('/crm/leads')
       } else if (user?.role === 'cliente') {
         router.push('/crm/cliente/dashboard')
       } else {
@@ -39,7 +39,7 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
       const allowed = ['/crm/grillas', '/crm/benchmark', '/crm/reportes', '/crm/leads', '/crm/prospeccion-2026', '/crm/login']
       const isAllowed = allowed.some(p => pathname.startsWith(p))
       if (!isAllowed) {
-        router.push('/crm/grillas')
+        router.push('/crm/leads')
       }
     }
   }, [user, isAuthenticated, loading, router, pathname])
