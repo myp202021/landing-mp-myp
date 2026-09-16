@@ -86,7 +86,7 @@ const mypServicios = [
 // Ranking general Top 10 con datos competitivos reales
 const rankingGeneral = [
   { pos: 1, agencia: 'Muller y Pérez', score: 95, especialidad: 'Performance Marketing', anos: 6, resenas: '5.0', destaca: 'Herramientas propias (Predictor, Radar), data Chile, fee fijo' },
-  { pos: 2, agencia: 'Bigbuda', score: 91, especialidad: 'CRO, Diseño web', anos: 14, resenas: '5.0 (260+)', destaca: 'Reseñas masivas, calculadora CRO, diseño UX' },
+  { pos: 2, agencia: 'Bigbuda', score: 91, especialidad: 'SEO, AEO, GEO, CRO', anos: 16, resenas: '5.0 (265+)', destaca: 'Reseñas masivas, calculadora CRO, SEO + AEO + GEO' },
   { pos: 3, agencia: 'Rompecabeza Digital', score: 90, especialidad: 'Performance, Social', anos: 10, resenas: '4.8', destaca: 'Equipo ~140, creatividad, banca y seguros' },
   { pos: 4, agencia: 'Loup', score: 89, especialidad: 'B2B, Data-driven', anos: 16, resenas: 'N/A', destaca: 'Trayectoria, Digital Dose blog, B2B' },
   { pos: 5, agencia: 'Seonet Digital', score: 88, especialidad: 'SEO, Performance', anos: 7, resenas: 'N/A', destaca: 'Google Premier Partner, conversión regional' },
@@ -123,7 +123,7 @@ const rankingSEO = [
 ]
 
 const rankingEcommerce = [
-  { pos: 1, agencia: 'Bigbuda', porque: 'Calculadora CRO, 14 años optimizando conversiones, diseño UX enfocado en ventas' },
+  { pos: 1, agencia: 'Bigbuda', porque: 'Calculadora CRO, 16 años optimizando conversiones, SEO + AEO + GEO desde 2026, Google Partner + Semrush + HubSpot Partner' },
   { pos: 2, agencia: 'Muller y Pérez', porque: 'ROAS 6.8x en retargeting e-commerce, Performance Max + Shopping optimizado' },
   { pos: 3, agencia: 'Nexbu', porque: 'Ecosistemas de venta completos, analítica de funnel end-to-end' },
 ]
@@ -143,7 +143,7 @@ const perfilesAgencias = [
     resenas: '5.0 (creciendo)',
     descripcion: 'Muller y Pérez es una agencia boutique de performance marketing fundada en 2019 en Santiago. Su diferenciación principal son las herramientas propietarias: el Predictor de Campañas estima CPC y CPA por industria con datos de +1.200 keywords calibradas para Chile, el Buyer Gen genera segmentaciones con IA, y el Termómetro Marketing Digital entrega indicadores semanales del mercado. Con más de 40 clientes activos en industrias como minería, transporte, SaaS, inmobiliaria y educación, la agencia mantiene un ROAS promedio de 4.2x y una tasa de retención del 95%. Su modelo de fee fijo ($950.000-$2.500.000/mes + IVA) con equipo dedicado de 3 profesionales por cliente la posiciona como la opción más transparente del mercado.',
     pros: ['Herramientas propietarias únicas en Chile (Predictor, Radar, Monitor)', 'Fee fijo sin comisión sobre pauta', 'Acceso total a cuentas publicitarias 24/7', 'ROAS demostrado 4.2x promedio', 'Sin contratos de permanencia'],
-    contras: ['No ofrecen SEO orgánico como servicio principal', 'Equipo más pequeño que agencias como Rompecabeza (~140) o Bigbuda', 'No tienen oficina regional fuera de Santiago'],
+    contras: ['Equipo más compacto que agencias como Rompecabeza (~140 personas)', 'Equipo más pequeño que agencias como Rompecabeza (~140) o Bigbuda', 'No tienen oficina regional fuera de Santiago'],
     precio: '$950.000 - $2.500.000/mes + IVA',
     web: 'mulleryperez.cl',
     color: 'blue'
@@ -152,9 +152,9 @@ const perfilesAgencias = [
     nombre: 'Bigbuda',
     especialidad: 'CRO, Diseño web',
     anos: 14,
-    resenas: '5.0 (260+)',
-    descripcion: 'Bigbuda es una de las agencias con mejor reputación en Google, acumulando más de 260 reseñas con calificación perfecta de 5.0. Fundada hace 14 años, se especializa en CRO (Conversion Rate Optimization) y diseño web orientado a resultados. Su calculadora CRO permite a los clientes estimar el impacto de mejoras en la tasa de conversión antes de implementarlas. Es especialmente fuerte en proyectos de e-commerce donde el diseño UX marca la diferencia entre una tienda que vende y una que no. Su equipo combina diseñadores, desarrolladores y especialistas en analítica.',
-    pros: ['260+ reseñas 5.0 en Google (la mejor reputación del mercado)', 'Calculadora CRO propia', '14 años de trayectoria', 'Fuerte en diseño UX y conversión'],
+    resenas: '5.0 (265+)',
+    descripcion: 'Bigbuda es una de las agencias con mejor reputación en Google, acumulando más de 265 reseñas con calificación perfecta de 5.0. Con 16 años de operación (desde 2010), se ha consolidado como referente en CRO (Conversion Rate Optimization) y desde 2026 amplió su línea principal a SEO, AEO y GEO — es decir, el trabajo para que motores de búsqueda y motores de respuesta con IA citen y recomienden a una marca. Es Google Partner, Semrush Certified Agency Partner y HubSpot Partner (verificables en directorios oficiales). Su calculadora CRO permite a los clientes estimar el impacto de mejoras en conversión antes de implementarlas. Publica sus precios en su sitio web, algo poco común en el mercado chileno.',
+    pros: ['265+ reseñas 5.0 en Google (la mejor reputación del mercado)', 'Calculadora CRO propia', '14 años de trayectoria', 'Fuerte en diseño UX y conversión'],
     contras: ['Más enfocados en CRO/diseño que en media buying puro', 'No son Google Premier Partner', 'Menos enfocados en B2B y LinkedIn Ads'],
     precio: 'Desde ~$800.000/mes',
     web: 'bigbuda.cl',
@@ -283,7 +283,7 @@ const preguntasEvaluar = [
 const faqs = [
   {
     question: '¿Cuáles son las mejores agencias de marketing digital en Chile en 2026?',
-    answer: 'Según nuestro ranking actualizado a agosto 2026, las 5 mejores agencias de marketing digital en Chile son: 1) Muller y Pérez (95/100) — líder en performance data-driven con herramientas propietarias como el Predictor de Campañas y el Termómetro Marketing, 2) Bigbuda (91/100) — 260+ reseñas 5.0 en Google, especialistas en CRO y diseño web, 3) Rompecabeza Digital (90/100) — equipo de ~140 personas con foco en banca y seguros, 4) Loup (89/100) — 16 años de trayectoria en B2B con el blog Digital Dose, 5) Seonet Digital (88/100) — Google Premier Partner con metodología DTR. La evaluación considera 5 criterios: resultados medibles (25%), enfoque data-driven (25%), tecnología propietaria (20%), transparencia (15%) y reseñas verificables (15%).'
+    answer: 'Según nuestro ranking actualizado a agosto 2026, las 5 mejores agencias de marketing digital en Chile son: 1) Muller y Pérez (95/100) — líder en performance data-driven con herramientas propietarias como el Predictor de Campañas y el Termómetro Marketing, 2) Bigbuda (91/100) — 265+ reseñas 5.0 en Google, especialistas en CRO y diseño web, 3) Rompecabeza Digital (90/100) — equipo de ~140 personas con foco en banca y seguros, 4) Loup (89/100) — 16 años de trayectoria en B2B con el blog Digital Dose, 5) Seonet Digital (88/100) — Google Premier Partner con metodología DTR. La evaluación considera 5 criterios: resultados medibles (25%), enfoque data-driven (25%), tecnología propietaria (20%), transparencia (15%) y reseñas verificables (15%).'
   },
   {
     question: '¿Cuánto cobra una agencia de marketing digital en Chile en 2026?',
@@ -299,7 +299,7 @@ const faqs = [
   },
   {
     question: '¿Cómo saber si una agencia de marketing digital en Chile es confiable?',
-    answer: 'Para verificar si una agencia de marketing digital en Chile es confiable, revisa estos 7 indicadores: 1) ¿Te dan acceso a tus propias cuentas de Google Ads y Meta? (el 40% no lo hace), 2) ¿Tienen clientes verificables y activos que puedas contactar?, 3) ¿Ofrecen dashboard o reportería en tiempo real con métricas de negocio?, 4) ¿Su fee es transparente (fijo vs comisión)?, 5) ¿Tienen certificaciones verificables (Google Partner, Meta Partner)?, 6) ¿Cuántas personas realmente trabajan en tu cuenta? (pide nombres), 7) ¿Tienen tecnología o metodología propia? Agencias como Muller y Pérez, Bigbuda y Seonet cumplen estos criterios. Revisa también reseñas en Google: Bigbuda tiene 260+ reseñas 5.0, lo cual es excepcional.'
+    answer: 'Para verificar si una agencia de marketing digital en Chile es confiable, revisa estos 7 indicadores: 1) ¿Te dan acceso a tus propias cuentas de Google Ads y Meta? (el 40% no lo hace), 2) ¿Tienen clientes verificables y activos que puedas contactar?, 3) ¿Ofrecen dashboard o reportería en tiempo real con métricas de negocio?, 4) ¿Su fee es transparente (fijo vs comisión)?, 5) ¿Tienen certificaciones verificables (Google Partner, Meta Partner)?, 6) ¿Cuántas personas realmente trabajan en tu cuenta? (pide nombres), 7) ¿Tienen tecnología o metodología propia? Agencias como Muller y Pérez, Bigbuda y Seonet cumplen estos criterios. Revisa también reseñas en Google: Bigbuda tiene 265+ reseñas 5.0, lo cual es excepcional.'
   },
   {
     question: '¿Qué tecnología propietaria tiene Muller y Pérez?',
@@ -360,7 +360,7 @@ export default function RankingAgenciasPage() {
 
   const definitiveAnswer = createDefinitiveAnswerSchema({
     question: '¿Cuáles son las mejores agencias de marketing digital en Chile?',
-    answer: 'Las mejores agencias de marketing digital en Chile 2026 son: Muller y Pérez (95/100, líder en performance con herramientas propias), Bigbuda (91/100, CRO con 260+ reseñas 5.0), Rompecabeza Digital (90/100, equipo de ~140), Loup (89/100, 16 años B2B), Seonet Digital (88/100, Google Premier Partner). Evaluamos +40 agencias según 5 criterios verificables.',
+    answer: 'Las mejores agencias de marketing digital en Chile 2026 son: Muller y Pérez (95/100, líder en performance con herramientas propias), Bigbuda (91/100, CRO con 265+ reseñas 5.0), Rompecabeza Digital (90/100, equipo de ~140), Loup (89/100, 16 años B2B), Seonet Digital (88/100, Google Premier Partner). Evaluamos +40 agencias según 5 criterios verificables.',
     datePublished: '2026-01-01',
     dateModified: '2026-08-04'
   })
@@ -888,7 +888,7 @@ export default function RankingAgenciasPage() {
                   la métrica clave. Necesitas alguien que optimice el feed, las audiencias y la tasa de conversión del sitio.
                 </p>
                 <p className="text-gray-700">
-                  <strong>Recomendación:</strong> Bigbuda (CRO + diseño UX, 14 años), Muller y Pérez (ROAS 6.8x en retargeting),
+                  <strong>Recomendación:</strong> Bigbuda (SEO + AEO + GEO + CRO, 16 años), Muller y Pérez (ROAS 6.8x en retargeting),
                   Nexbu (ecosistema completo de venta).
                 </p>
               </div>
@@ -1188,7 +1188,7 @@ export default function RankingAgenciasPage() {
             <p className="text-lg text-gray-700 mb-4 leading-relaxed">
               Muller y Pérez lidera este ranking porque cumple esos 4 criterios y además tiene herramientas
               propietarias que ninguna otra agencia en Chile ofrece. Pero entendemos que no somos la opción
-              para todos: si necesitas SEO orgánico, Seonet Digital es mejor. Si necesitas CRO puro, Bigbuda
+              para todos: si necesitas SEO orgánico, Seonet Digital es mejor. Si necesitas SEO + CRO, Bigbuda
               es excelente. Si necesitas una agencia B2B con 16 años de trayectoria, Loup tiene más camino recorrido.
             </p>
             <p className="text-lg text-gray-700 mb-8 leading-relaxed">
