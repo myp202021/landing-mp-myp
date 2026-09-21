@@ -1,7 +1,6 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import RegistrationWizard from './components/RegistrationWizard'
 
 function fmt(n: number) {
   return '$' + n.toLocaleString('es-CL')
@@ -23,231 +22,115 @@ function useScrollReveal() {
   }, [])
 }
 
-/* ─── IMAGE URLS (mockups reales del producto) ─── */
-var IMG_DASHBOARD = '/copilot/mockup-dashboard.png'
-var IMG_SOCIAL = '/copilot/mockup-email-diario.png'
-var IMG_TEAM = '/copilot/mockup-copies.png'
-var IMG_MOBILE = '/copilot/mockup-email-diario.png'
-var IMG_CALENDAR = '/copilot/mockup-grilla.png'
-var IMG_AI = '/copilot/mockup-copies.png'
-var IMG_REPORTS = '/copilot/mockup-reporte.png'
-var IMG_ENGAGEMENT = '/copilot/mockup-auditoria.png'
-var IMG_BENCHMARK = '/copilot/mockup-dashboard.png'
-
-/* ─── FEATURE CARDS — mapeadas 1:1 con el dashboard ─── */
-var featureCards = [
-  { title: 'Instagram + LinkedIn en paralelo', desc: 'Monitorea a tus competidores en ambas redes. Engagement, formatos y temas analizados por separado porque IG y LinkedIn son mundos distintos. Cada dato comparado con tu industria en Chile.', img: '/copilot/mockup-email-diario.png', icon: '\uD83D\uDD0D' },
-  { title: 'Contenido diferenciado por red', desc: 'Copies profesionales para Instagram (hooks cortos, visual) y LinkedIn (thought leadership, datos). 16 posts con calendario, guiones de video y sugerencias de dise\u00f1o. Listos para publicar.', img: '/copilot/mockup-copies.png', icon: '\u270D\uFE0F' },
-  { title: 'Auditor\u00eda por plataforma', desc: 'Score mensual con criterios separados para IG y LinkedIn. Cada uno con dato real, benchmark de tu rubro y acci\u00f3n concreta. No mezcla m\u00e9tricas de redes distintas.', img: '/copilot/mockup-auditoria.png', icon: '\uD83D\uDCCA' },
-  { title: '\u00c1rbol de inversi\u00f3n digital', desc: 'Cu\u00e1nto invertir en cada canal, cu\u00e1ntos leads esperar, y tres escenarios de retorno. Calculado con datos reales de 22 industrias en Chile.', img: '/copilot/mockup-grilla.png', icon: '\uD83C\uDF33' },
-  { title: 'Reporte con acciones por red', desc: 'Reporte ejecutivo mensual con acciones priorizadas, hallazgos separados por Instagram y LinkedIn, y predicci\u00f3n del mes siguiente. Para tomar decisiones, no para decorar.', img: '/copilot/mockup-reporte.png', icon: '\uD83C\uDFAF' },
-  { title: 'Aprende de tu negocio', desc: 'Copilot recuerda qu\u00e9 aprobaste, qu\u00e9 rechazaste, qu\u00e9 funcion\u00f3. Cada mes el contenido es m\u00e1s preciso. Los agentes se retroalimentan entre s\u00ed: el brief mejora los copies, la auditor\u00eda mejora el brief.', img: '/copilot/mockup-email-diario.png', icon: '\uD83E\uDDE0' },
-]
-
-/* ─── PLANS DATA ─── */
+/* --- PLANS DATA --- */
 var plans = [
   {
-    name: 'Starter',
-    price: 34990,
-    desc: 'Monitoreo b\u00e1sico de competencia',
+    name: 'Setup',
+    price: 200000,
+    sessions: '1 sesion, 90 min',
+    desc: 'Tu primer agente funcionando',
     features: [
-      '5 cuentas Instagram + LinkedIn',
-      'An\u00e1lisis semanal con IA',
-      '4 copies por semana',
-      'Email semanal de competencia',
-      'Dashboard con m\u00e9tricas',
+      'Instalacion Claude Code',
+      'Memoria persistente (CLAUDE.md + auto-memory)',
+      'Hooks (SessionStart, formateo)',
+      'Primer agente funcional',
+      'Conexion a tu primer servicio',
     ],
-    cta: 'Comenzar gratis',
+    cta: 'Agendar setup',
     popular: false,
   },
   {
-    name: 'Pro',
-    price: 69990,
-    desc: 'Inteligencia competitiva completa',
+    name: 'Completo',
+    price: 700000,
+    sessions: '4 sesiones 1:1',
+    desc: 'Sistema operativo con IA completo',
     features: [
-      '15 cuentas IG + LinkedIn',
-      'Copies diferenciados IG vs LinkedIn',
-      'Grilla mensual 8 posts con calendario',
-      'Auditor\u00eda mensual por plataforma',
-      'Brief estrat\u00e9gico con territorios',
-      'Reporte ejecutivo con acciones',
-      'Banco de ideas + aprendizaje',
+      'Todo lo del Setup +',
+      'Agentes diarios (blog SEO, rankings) + GitHub Actions',
+      'Integraciones (WP API, Gmail, CRM, Resend)',
+      'Cotizaciones/PDFs profesionales',
+      'Master Agent (reporte diario, monitoreo)',
+      'Soporte WhatsApp entre sesiones',
     ],
-    cta: 'Probar gratis 7 d\u00edas',
+    cta: 'Empezar programa',
     popular: true,
   },
   {
-    name: 'Business',
-    price: 119990,
-    desc: 'Estrategia completa multi-red',
+    name: 'Agencia',
+    price: 1500000,
+    sessions: 'Presencial Santiago',
+    desc: 'Implementacion para equipos',
     features: [
-      '30 cuentas IG + LinkedIn',
-      'Grilla 16 posts + guiones de video',
-      'Benchmark competitivo mensual',
-      '\u00c1rbol de inversi\u00f3n con predictor',
-      'Copies de anuncios Google + Meta',
-      'Excel descargable de grilla',
-      'Todo lo de Pro incluido',
+      'Todo lo del Completo +',
+      'Sesion presencial 4 horas con equipo',
+      'Setup multi-usuario',
+      'Repos y workflows por cliente',
+      'Dashboard operativo',
+      '1 mes soporte post-implementacion',
     ],
-    cta: 'Hablar con ventas',
+    cta: 'Hablar con Christopher',
     popular: false,
   },
 ]
 
-/* ─── DEEP DIVE DATA — c\u00f3mo funciona Copilot ─── */
-var deepDive = [
-  {
-    title: 'Instagram y LinkedIn analizados por separado',
-    desc: 'No mezcla m\u00e9tricas de redes distintas. En Instagram mide engagement visual (likes, comentarios, saves). En LinkedIn mide reacciones, comentarios y alcance B2B. Cada competidor con desglose por red, formato ganador y tema dominante.',
-    img: '/copilot/mockup-email-diario.png',
-    reverse: false,
-  },
-  {
-    title: 'Copies que suenan a cada plataforma',
-    desc: 'Para Instagram: hooks cortos que paran el scroll, CTAs interactivos, 6-10 hashtags. Para LinkedIn: thought leadership con datos de industria, tono profesional, estructura larga. El mismo tema, dos enfoques completamente distintos.',
-    img: '/copilot/mockup-grilla.png',
-    reverse: true,
-  },
-  {
-    title: '21 agentes que se retroalimentan',
-    desc: 'Brief \u2192 Contenido \u2192 Grilla \u2192 Auditor\u00eda \u2192 Benchmark \u2192 Reporte. Cada agente lee lo que gener\u00f3 el anterior y mejora su output. La auditor\u00eda alimenta el brief del mes siguiente. El reporte corrige a los dem\u00e1s agentes. Ciclo continuo.',
-    img: '/copilot/mockup-auditoria.png',
-    reverse: false,
-  },
-  {
-    title: 'Acciones concretas, no m\u00e9tricas vac\u00edas',
-    desc: 'Reporte ejecutivo con acciones separadas por plataforma: qu\u00e9 hacer en Instagram esta semana, qu\u00e9 publicar en LinkedIn, con qu\u00e9 prioridad. Auditor\u00eda con benchmarks reales de tu industria. Explicado para que un due\u00f1o de empresa lo entienda.',
-    img: '/copilot/mockup-dashboard.png',
-    reverse: true,
-  },
+/* --- FAQ DATA --- */
+var faqs = [
+  { q: '¿Necesito saber programar?', a: 'No. Claude Code programa por ti. Tu describes lo que necesitas en lenguaje natural y Claude Code ejecuta: crea archivos, instala dependencias, conecta APIs, deploya sitios.' },
+  { q: '¿Que es Claude Code?', a: 'Es la herramienta CLI de Anthropic que lee archivos, ejecuta comandos, conecta APIs y tiene memoria persistente. No es un chat — es un sistema operativo que ejecuta acciones reales en tu computador.' },
+  { q: '¿En que se diferencia de ChatGPT?', a: 'ChatGPT es un chat. Claude Code es un sistema operativo que ejecuta acciones reales: lee tu disco, crea archivos, conecta APIs, recuerda todo, y corre agentes en segundo plano.' },
+  { q: '¿Cuanto dura cada sesion?', a: '90 minutos por videollamada. En el programa Completo son 4 sesiones de 90 minutos cada una.' },
+  { q: '¿Puedo hacer las sesiones online?', a: 'Si, todas son por videollamada. El programa Agencia incluye opcion presencial en Santiago.' },
+  { q: '¿Que resultados puedo esperar?', a: 'Desde la primera sesion tendras un agente funcionando — blog diario, reporte automatico, o el que elijas segun tu negocio.' },
+  { q: '¿Funciona para cualquier industria?', a: 'Si. Tenemos clientes en educacion, salud, inmobiliario, energia, legal, retail y mas.' },
+  { q: '¿Incluye soporte despues?', a: 'El programa Completo incluye soporte WhatsApp entre sesiones. El Agencia incluye 1 mes post-implementacion.' },
 ]
 
-/* ─── COMPONENT ─── */
+var WA_LINK = 'https://wa.me/56992258137?text=Hola%20Christopher,%20me%20interesa%20la%20consultor%C3%ADa%20Claude%20Code'
+
+/* --- COMPONENT --- */
 export default function CopilotClient() {
-  var [enviado, setEnviado] = useState(false)
-  var [trialId, setTrialId] = useState('')
-  var [trialEmail] = useState('')
-  var [tab, setTab] = useState('competencia')
   var [faqOpen, setFaqOpen] = useState(-1)
-  var [modalOpen, setModalOpen] = useState(false)
-  var [fallbackPassword, setFallbackPassword] = useState('')
+  var [formData, setFormData] = useState({ nombre: '', email: '', telefono: '', mensaje: '' })
+  var [enviando, setEnviando] = useState(false)
+  var [enviado, setEnviado] = useState(false)
 
   useScrollReveal()
-
-  function handleTrialSuccess(data: { id: string; password?: string }) {
-    setTrialId(data.id)
-    if (data.password) setFallbackPassword(data.password)
-    setEnviado(true)
-    setTimeout(function() {
-      var el = document.getElementById('trial')
-      if (el) el.scrollIntoView({ behavior: 'smooth' })
-    }, 100)
-  }
 
   function scrollTo(id: string) {
     var el = document.getElementById(id)
     if (el) el.scrollIntoView({ behavior: 'smooth' })
   }
 
-  function initAgentCanvas(canvas: HTMLCanvasElement) {
-    var ctx = canvas.getContext('2d')
-    if (!ctx) return
-    var container = canvas.parentElement
-    if (!container) return
-    function resize() { canvas.width = container!.clientWidth; canvas.height = container!.clientHeight }
-    resize(); window.addEventListener('resize', resize)
-    var GW = function() { return canvas.width }, GH = function() { return canvas.height }
-
-    var COLS = [[56,189,248],[129,140,248],[167,139,250],[192,132,252],[232,121,249],[244,114,182],[34,211,238],[96,165,250]]
-    var AD = [
-      {n:'Scraping',ci:0,r:0,d:'Extrae posts de Instagram y LinkedIn de tus competidores.',dt:'Apify + LinkdAPI'},
-      {n:'Memoria',ci:3,r:0,d:'Recuerda qu\u00e9 funcion\u00f3, qu\u00e9 rechazaste, qu\u00e9 aprob\u00f3 tu equipo.',dt:'Persistent storage'},
-      {n:'Brief',ci:7,r:0,d:'Genera territorios de contenido para Instagram y LinkedIn por separado.',dt:'Planning layer'},
-      {n:'Copies',ci:6,r:0,d:'IG: hooks cortos. LI: thought leadership con datos.',dt:'Dual generation'},
-      {n:'Grilla',ci:4,r:0,d:'16 posts con calendario. C\u00f3digo decide estructura, IA genera contenido.',dt:'11 IG + 5 LI'},
-      {n:'Guiones',ci:5,r:0,d:'Scripts de video con storyboard: escenas, texto, timing.',dt:'Video pipeline'},
-      {n:'Auditor\u00eda',ci:1,r:0,d:'Score separado IG vs LinkedIn con benchmark de tu industria.',dt:'Per-platform scoring'},
-      {n:'Benchmark',ci:2,r:0,d:'Cuadro comparativo competidor \u00d7 formato \u00d7 tono \u00d7 engagement.',dt:'Claude Sonnet'},
-      {n:'\u00c1rbol',ci:4,r:1,d:'Inversi\u00f3n por canal con 3 escenarios de retorno.',dt:'M&P Predictor'},
-      {n:'Reporte',ci:0,r:1,d:'6 acciones priorizadas, hallazgos, predicci\u00f3n.',dt:'Executive output'},
-      {n:'Ads',ci:5,r:1,d:'Headlines Google 30ch + Meta 125ch. Auto-validated.',dt:'Ad creative'},
-      {n:'Campa\u00f1a',ci:6,r:1,d:'Canales, presupuesto, calendario, KPIs.',dt:'Execution plan'},
-      {n:'Ideas',ci:3,r:1,d:'Gaps vs competencia y oportunidades.',dt:'Opportunity bank'},
-      {n:'Industria',ci:7,r:2,d:'22 industrias \u00d7 CPC \u00d7 CVR \u00d7 ROAS.',dt:'Reference data'},
-      {n:'Decisiones',ci:1,r:2,d:'Decide qu\u00e9 agentes correr seg\u00fan plan y datos.',dt:'Signal router'},
-      {n:'Perfil',ci:2,r:2,d:'Auto-genera rubro, competencia, diferenciadores.',dt:'Auto-detection'},
-      {n:'Lifecycle',ci:5,r:2,d:'6 emails con data real del dashboard.',dt:'Conversion funnel'},
-      {n:'Validador',ci:6,r:2,d:'Verifica cuentas IG/LinkedIn.',dt:'Input validation'},
-      {n:'QA',ci:5,r:2,d:'Revisa todos los entregables. Rechaza basura.',dt:'Quality gate'},
-      {n:'Aprendizaje',ci:3,r:2,d:'Correcciones del QA \u2192 agentes se autocorrigen.',dt:'Self-correction'},
-      {n:'LinkdAPI',ci:0,r:2,d:'Posts LinkedIn con reacciones y comentarios.',dt:'LinkedIn data'},
-    ]
-    var SYN = [[0,1],[0,2],[0,3],[0,6],[0,7],[1,2],[1,3],[1,4],[1,6],[2,3],[2,4],[2,5],[2,11],[3,4],[3,12],[6,9],[6,2],[7,9],[7,8],[8,9],[8,11],[9,19],[13,6],[13,8],[13,7],[14,3],[14,5],[15,2],[20,0],[18,19],[18,9],[19,1],[10,11],[16,15],[17,0],[10,9],[10,3],[12,2],[12,6],[16,9],[16,1],[17,6],[17,7],[20,7],[20,6],[5,4],[5,3],[11,9],[11,8],[15,9],[4,9],[13,2],[19,0]]
-    var phi=(1+Math.sqrt(5))/2
-    var nodes=AD.map(function(a,i){var fA=i*Math.PI*2/phi;var bR=a.r===0?110+(i%8)*15:a.r===1?210+(i%5)*18:310+(i%8)*14;return{name:a.n,ring:a.r,desc:a.d,detail:a.dt,color:COLS[a.ci],baseAngle:fA,radius:bR,offsetX:Math.sin(i*2.7)*40,offsetY:Math.cos(i*3.1)*25,size:a.r===0?15:a.r===1?11:8,x:0,y:0,cz:0,fireLevel:0,breathPhase:Math.random()*Math.PI*2,driftX:(Math.random()-0.5)*0.06,driftY:(Math.random()-0.5)*0.04}})
-    var dust=Array.from({length:150},function(){return{x:Math.random()*2000,y:Math.random()*1000,vx:(Math.random()-0.5)*0.12,vy:(Math.random()-0.5)*0.08,size:Math.random()*1.1,color:COLS[Math.floor(Math.random()*COLS.length)],alpha:0.03+Math.random()*0.1,twinkle:Math.random()*Math.PI*2,twinkleSpeed:0.5+Math.random()*2}})
-    var particles:any[]=[];var time2=0;var hovN:any=null;var selN:any=null;var lastH='';var mmx=0;var mmy=0
-
-    canvas.addEventListener('mousemove',function(e:any){var rect=canvas.getBoundingClientRect();mmx=e.clientX-rect.left;mmy=e.clientY-rect.top;hovN=null
-      for(var i=0;i<nodes.length;i++){var dx=mmx-nodes[i].x,dy=mmy-nodes[i].y;if(dx*dx+dy*dy<nodes[i].size*nodes[i].size*6){hovN=nodes[i];break}}
-      canvas.style.cursor=hovN?'pointer':'default'
-      var sp=document.getElementById('copilot-spotlight');if(!sp)return
-      if(hovN&&hovN.name!==lastH){lastH=hovN.name;selN=hovN;sp.querySelector('#copilot-spot-name')!.textContent=hovN.name.toUpperCase();sp.querySelector('#copilot-spot-desc')!.textContent=hovN.desc;sp.querySelector('#copilot-spot-detail')!.textContent=hovN.detail;(sp as HTMLElement).style.opacity='1'}
-      else if(!hovN&&lastH){lastH='';selN=null;(sp as HTMLElement).style.opacity='0'}
-    })
-
-    function frame(){time2+=0.016;var w=GW(),h=GH();ctx!.fillStyle='rgba(2,8,23,0.07)';ctx!.fillRect(0,0,w,h)
-      var cx=w/2,cy=h/2,rot=time2*0.004
-      // Stardust
-      dust.forEach(function(d){d.x+=d.vx;d.y+=d.vy;if(d.x<-10)d.x=w+10;if(d.x>w+10)d.x=-10;if(d.y<-10)d.y=h+10;if(d.y>h+10)d.y=-10
-        var tw=(Math.sin(time2*d.twinkleSpeed+d.twinkle)*0.5+0.5);var a=d.alpha*tw
-        ctx!.beginPath();ctx!.arc(d.x,d.y,d.size,0,Math.PI*2);ctx!.fillStyle='rgba('+d.color.join(',')+','+a+')';ctx!.fill()
-        if(d.size>0.8&&tw>0.7){ctx!.beginPath();ctx!.arc(d.x,d.y,d.size*3,0,Math.PI*2);ctx!.fillStyle='rgba('+d.color.join(',')+','+(a*0.15)+')';ctx!.fill()}
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    setEnviando(true)
+    try {
+      var res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          nombre: formData.nombre,
+          email: formData.email,
+          telefono: formData.telefono,
+          solicitud: 'Consultoria Claude Code\n\n' + formData.mensaje,
+          destinatario: 'contacto@mulleryperez.cl',
+          fuente: 'landing-copilot-claude-code',
+        }),
       })
-      // Nebula + pulse
-      var ng=ctx!.createRadialGradient(cx,cy,0,cx,cy,300);ng.addColorStop(0,'rgba(255,220,180,0.02)');ng.addColorStop(0.15,'rgba(192,132,252,0.025)');ng.addColorStop(0.35,'rgba(56,189,248,0.015)');ng.addColorStop(1,'rgba(2,8,23,0)')
-      ctx!.beginPath();ctx!.arc(cx,cy,300,0,Math.PI*2);ctx!.fillStyle=ng;ctx!.fill()
-      var pR=80+Math.sin(time2*0.5)*25;var pg=ctx!.createRadialGradient(cx,cy,0,cx,cy,pR);pg.addColorStop(0,'rgba(255,230,200,0.025)');pg.addColorStop(1,'rgba(139,92,246,0)')
-      ctx!.beginPath();ctx!.arc(cx,cy,pR,0,Math.PI*2);ctx!.fillStyle=pg;ctx!.fill()
-      // Update nodes
-      nodes.forEach(function(n){var a2=n.baseAngle+rot*(n.ring===0?0.8:n.ring===1?0.4:0.2);var br=1+Math.sin(time2*0.25+n.breathPhase)*0.02
-        n.x=cx+Math.cos(a2)*n.radius*br+n.offsetX+Math.sin(time2*n.driftX)*10;n.y=cy+Math.sin(a2)*n.radius*0.52*br+n.offsetY+Math.cos(time2*n.driftY)*7
-        n.cz=Math.cos(a2)*50;n.fireLevel=Math.max(0,n.fireLevel-0.005)})
-      // Connections
-      SYN.forEach(function(s){var f=nodes[s[0]],t=nodes[s[1]];var act=selN&&(selN===f||selN===t);var fire=Math.max(f.fireLevel,t.fireLevel)
-        var mc=[Math.round((f.color[0]+t.color[0])/2),Math.round((f.color[1]+t.color[1])/2),Math.round((f.color[2]+t.color[2])/2)]
-        var al=act?0.3:0.04*((f.cz+t.cz+100)/200*0.5+0.5)+fire*0.15
-        var mx2=(f.x+t.x)/2+(f.y-t.y)*0.06,my2=(f.y+t.y)/2+(t.x-f.x)*0.06
-        if(act||fire>0.2){ctx!.beginPath();ctx!.moveTo(f.x,f.y);ctx!.quadraticCurveTo(mx2,my2,t.x,t.y);ctx!.strokeStyle='rgba('+mc.join(',')+','+(act?0.08:fire*0.06)+')';ctx!.lineWidth=4;ctx!.stroke()}
-        ctx!.beginPath();ctx!.moveTo(f.x,f.y);ctx!.quadraticCurveTo(mx2,my2,t.x,t.y);ctx!.strokeStyle='rgba('+mc.join(',')+','+al+')';ctx!.lineWidth=act?1.5:0.5+fire*0.7;ctx!.stroke()})
-      // Impulses
-      if(Math.random()<0.05){var si=SYN[Math.floor(Math.random()*SYN.length)];particles.push({fi:si[0],ti:si[1],progress:0,speed:0.002+Math.random()*0.003,color:nodes[si[0]].color})}
-      particles=particles.filter(function(p:any){p.progress+=p.speed;if(p.progress>=1){nodes[p.ti].fireLevel=Math.min(1,nodes[p.ti].fireLevel+0.6);return false}
-        var f=nodes[p.fi],t=nodes[p.ti],tp=p.progress;var mx2=(f.x+t.x)/2+(f.y-t.y)*0.06,my2=(f.y+t.y)/2+(t.x-f.x)*0.06
-        var px=(1-tp)*(1-tp)*f.x+2*(1-tp)*tp*mx2+tp*tp*t.x,py=(1-tp)*(1-tp)*f.y+2*(1-tp)*tp*my2+tp*tp*t.y
-        var ig=ctx!.createRadialGradient(px,py,0,px,py,8);ig.addColorStop(0,'rgba('+p.color.join(',')+',0.35)');ig.addColorStop(1,'rgba('+p.color.join(',')+',0)')
-        ctx!.beginPath();ctx!.arc(px,py,8,0,Math.PI*2);ctx!.fillStyle=ig;ctx!.fill()
-        ctx!.beginPath();ctx!.arc(px,py,1.5,0,Math.PI*2);ctx!.fillStyle='rgba(224,242,254,0.8)';ctx!.fill();return true})
-      // Nodes
-      nodes.slice().sort(function(a:any,b:any){return a.cz-b.cz}).forEach(function(n:any){var da=0.3+(n.cz+50)/100*0.7;var act=hovN===n||selN===n;var fire=n.fireLevel;var sz=n.size*(act?1.4:1);var col=n.color
-        if(fire>0.03){var fr2=sz*(2+fire*3);var fg=ctx!.createRadialGradient(n.x,n.y,sz*0.5,n.x,n.y,fr2);fg.addColorStop(0,'rgba('+col.join(',')+','+(fire*0.2)+')');fg.addColorStop(1,'rgba('+col.join(',')+',0)');ctx!.beginPath();ctx!.arc(n.x,n.y,fr2,0,Math.PI*2);ctx!.fillStyle=fg;ctx!.fill()
-          ctx!.beginPath();ctx!.arc(n.x,n.y,sz*(1.2+fire),0,Math.PI*2);ctx!.strokeStyle='rgba('+col.join(',')+','+(fire*0.25)+')';ctx!.lineWidth=0.5;ctx!.stroke()}
-        var og=ctx!.createRadialGradient(n.x,n.y,0,n.x,n.y,sz*(act?4:2.8));og.addColorStop(0,'rgba('+col.join(',')+','+(act?0.25:0.08*da+fire*0.12)+')');og.addColorStop(0.5,'rgba('+col.join(',')+','+(act?0.08:0.02*da+fire*0.04)+')');og.addColorStop(1,'rgba('+col.join(',')+',0)')
-        ctx!.beginPath();ctx!.arc(n.x,n.y,sz*(act?4:2.8),0,Math.PI*2);ctx!.fillStyle=og;ctx!.fill()
-        ctx!.beginPath();ctx!.arc(n.x,n.y,sz,0,Math.PI*2);ctx!.strokeStyle='rgba('+col.join(',')+','+(act?0.9:da*0.4+fire*0.4)+')';ctx!.lineWidth=act?2:1+fire;ctx!.stroke()
-        var ig2=ctx!.createRadialGradient(n.x,n.y,0,n.x,n.y,sz*0.85);ig2.addColorStop(0,'rgba(255,255,255,'+(act?0.35:0.1*da+fire*0.15)+')');ig2.addColorStop(0.5,'rgba('+col.join(',')+','+(act?0.5:0.2*da+fire*0.25)+')');ig2.addColorStop(1,'rgba('+col.join(',')+','+(act?0.3:0.08*da+fire*0.12)+')')
-        ctx!.beginPath();ctx!.arc(n.x,n.y,sz*0.85,0,Math.PI*2);ctx!.fillStyle=ig2;ctx!.fill()
-        ctx!.beginPath();ctx!.arc(n.x,n.y,3+fire*2,0,Math.PI*2);ctx!.fillStyle='rgba(255,255,255,'+(act?0.8:da*0.35+fire*0.4)+')';ctx!.fill()
-        var fs2=act?13:n.ring===0?11:9;ctx!.font=(act?'700 ':'500 ')+fs2+'px Inter,sans-serif';ctx!.textAlign='center'
-        ctx!.fillStyle='rgba(2,8,23,0.5)';ctx!.fillText(n.name,n.x+1,n.y+sz+15)
-        ctx!.fillStyle='rgba('+col.join(',')+','+(act?1:da*(n.ring===0?0.7:0.5)+fire*0.3)+')';ctx!.fillText(n.name,n.x,n.y+sz+14)})
-      requestAnimationFrame(frame)}
-    frame()
+      if (res.ok) {
+        setEnviado(true)
+      } else {
+        alert('Error al enviar. Intenta por WhatsApp.')
+      }
+    } catch {
+      alert('Error al enviar. Intenta por WhatsApp.')
+    }
+    setEnviando(false)
   }
 
   return (
     <div style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
-      {/* ─── GLOBAL STYLES ─── */}
+      {/* --- GLOBAL STYLES --- */}
       <style dangerouslySetInnerHTML={{ __html: `
         .reveal { opacity: 0; transform: translateY(32px); transition: opacity 0.7s ease, transform 0.7s ease; }
         .revealed { opacity: 1; transform: none; }
@@ -268,129 +151,56 @@ export default function CopilotClient() {
           .plans-grid { grid-template-columns: 1fr !important; }
           .deep-row { flex-direction: column !important; }
           .steps-grid { grid-template-columns: 1fr !important; }
+          .problem-grid { grid-template-columns: 1fr !important; }
+          .kpi-grid { grid-template-columns: repeat(2, 1fr) !important; }
+          .profiles-grid { grid-template-columns: 1fr !important; }
+          .contact-grid { grid-template-columns: 1fr !important; }
         }
       ` }} />
 
-      {/* ═══════════════════════════════════════════════════════════ */}
+      {/* ================================================================= */}
       {/* SECTION 1 — HERO */}
-      {/* ═══════════════════════════════════════════════════════════ */}
-      <section style={{ background: 'linear-gradient(180deg, #F5F3FF 0%, #FFFFFF 100%)', padding: '120px 24px 80px' }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', alignItems: 'center', gap: 60 }} className="hero-grid">
-          {/* Left */}
-          <div style={{ flex: 1 }}>
-            <div className="reveal" style={{ display: 'inline-block', background: 'linear-gradient(135deg, #EEF2FF, #F3E8FF)', borderRadius: 100, padding: '8px 20px', marginBottom: 24, fontSize: 14, fontWeight: 600, color: '#4338CA' }}>
-              Instagram + LinkedIn + Estrategia + Predicci{'\u00f3'}n
-            </div>
-            <h1 className="reveal" style={{ fontSize: 46, fontWeight: 800, lineHeight: 1.1, margin: '0 0 20px', color: '#111827' }}>
-              Inteligencia competitiva<br/>para Instagram y LinkedIn.<br/><span className="gradient-text">Desde $34.990/mes.</span>
-            </h1>
-            <p className="reveal" style={{ fontSize: 19, lineHeight: 1.65, color: '#6B7280', margin: '0 0 32px', maxWidth: 560 }}>
-              Copilot monitorea a tu competencia en ambas redes, genera contenido profesional diferenciado por plataforma, y te entrega acciones concretas cada mes. 21 agentes de IA que aprenden de tu negocio.
-            </p>
-            <div className="reveal" style={{ display: 'flex', gap: 16, flexWrap: 'wrap', marginBottom: 20 }}>
-              <button className="btn-primary" onClick={function() { scrollTo('trial') }}>
-                Probar gratis 7 días
-              </button>
-              <button className="btn-secondary" onClick={function() { scrollTo('que-incluye') }}>
-                Ver qué incluye
-              </button>
-            </div>
-            <p className="reveal" style={{ fontSize: 13, color: '#9CA3AF', margin: 0 }}>
-              Sin tarjeta · Se cancela solo · 37 empresas activas
-            </p>
+      {/* ================================================================= */}
+      <section style={{ background: 'linear-gradient(180deg, #0F0A2E 0%, #1a1145 50%, #0F0A2E 100%)', padding: '120px 24px 80px', color: 'white' }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto', textAlign: 'center' }}>
+          <div className="reveal" style={{ display: 'inline-block', background: 'rgba(124,58,237,0.2)', border: '1px solid rgba(124,58,237,0.3)', borderRadius: 100, padding: '8px 24px', marginBottom: 28, fontSize: 13, fontWeight: 700, color: '#C4B5FD', letterSpacing: 2, textTransform: 'uppercase' as const }}>
+            Consultoria 1:1
           </div>
 
-          {/* Right — Mock Dashboard Card */}
-          <div className="reveal" style={{ flex: 1, maxWidth: 520 }}>
-            <div style={{ background: 'white', borderRadius: 20, boxShadow: '0 20px 60px rgba(0,0,0,0.08)', overflow: 'hidden', border: '1px solid #E5E7EB' }}>
-              {/* Tab bar */}
-              <div style={{ display: 'flex', borderBottom: '1px solid #F3F4F6', padding: '0 24px' }}>
-                {['Competencia', 'Contenido', 'Mi marca'].map(function(t) {
-                  var isActive = tab === t.toLowerCase().replace(' ', '-')
-                  return (
-                    <button key={t} onClick={function() { setTab(t.toLowerCase().replace(' ', '-')) }} style={{ padding: '14px 20px', fontSize: 14, fontWeight: isActive ? 700 : 500, color: isActive ? '#4338CA' : '#9CA3AF', borderBottom: isActive ? '3px solid #4338CA' : '3px solid transparent', background: 'none', border: 'none', borderBottomWidth: 3, borderBottomStyle: 'solid', borderBottomColor: isActive ? '#4338CA' : 'transparent', cursor: 'pointer' }}>
-                      {t}
-                    </button>
-                  )
-                })}
-              </div>
-              {/* Card content */}
-              <div style={{ padding: 24 }}>
-                {tab === 'competencia' && (
-                  <>
-                    <div style={{ display: 'flex', gap: 16, marginBottom: 16 }}>
-                      <div style={{ flex: 1, background: '#F5F3FF', borderRadius: 12, padding: 16 }}>
-                        <div style={{ fontSize: 12, color: '#6B7280', marginBottom: 4 }}>Posts detectados hoy</div>
-                        <div style={{ fontSize: 28, fontWeight: 800, color: '#4338CA' }}>24</div>
-                      </div>
-                      <div style={{ flex: 1, background: '#F0FDF4', borderRadius: 12, padding: 16 }}>
-                        <div style={{ fontSize: 12, color: '#6B7280', marginBottom: 4 }}>Empresas monitoreadas</div>
-                        <div style={{ fontSize: 28, fontWeight: 800, color: '#059669' }}>5</div>
-                      </div>
-                    </div>
-                    <img src="/copilot/mockup-email-diario.png" alt="Informe diario de competencia" style={{ width: '100%', borderRadius: 12, height: 180, objectFit: 'cover' }} />
-                  </>
-                )}
-                {tab === 'contenido' && (
-                  <>
-                    <div style={{ display: 'flex', gap: 16, marginBottom: 16 }}>
-                      <div style={{ flex: 1, background: '#F5F3FF', borderRadius: 12, padding: 16 }}>
-                        <div style={{ fontSize: 12, color: '#6B7280', marginBottom: 4 }}>Copies generados</div>
-                        <div style={{ fontSize: 28, fontWeight: 800, color: '#4338CA' }}>8</div>
-                      </div>
-                      <div style={{ flex: 1, background: '#F0FDF4', borderRadius: 12, padding: 16 }}>
-                        <div style={{ fontSize: 12, color: '#6B7280', marginBottom: 4 }}>Score promedio</div>
-                        <div style={{ fontSize: 28, fontWeight: 800, color: '#059669' }}>84</div>
-                      </div>
-                    </div>
-                    <img src="/copilot/mockup-copies.png" alt="Copies generados por IA" style={{ width: '100%', borderRadius: 12, height: 180, objectFit: 'cover' }} />
-                  </>
-                )}
-                {tab === 'mi-marca' && (
-                  <>
-                    <div style={{ display: 'flex', gap: 16, marginBottom: 16 }}>
-                      <div style={{ flex: 1, background: '#F5F3FF', borderRadius: 12, padding: 16 }}>
-                        <div style={{ fontSize: 12, color: '#6B7280', marginBottom: 4 }}>Score de perfil</div>
-                        <div style={{ fontSize: 28, fontWeight: 800, color: '#4338CA' }}>76</div>
-                      </div>
-                      <div style={{ flex: 1, background: '#F0FDF4', borderRadius: 12, padding: 16 }}>
-                        <div style={{ fontSize: 12, color: '#6B7280', marginBottom: 4 }}>Redes auditadas</div>
-                        <div style={{ fontSize: 28, fontWeight: 800, color: '#059669' }}>3</div>
-                      </div>
-                    </div>
-                    <img src="/copilot/mockup-auditoria.png" alt="Auditoría de marca" style={{ width: '100%', borderRadius: 12, height: 180, objectFit: 'cover' }} />
-                  </>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+          <h1 className="reveal" style={{ fontSize: 48, fontWeight: 800, lineHeight: 1.1, margin: '0 0 24px', color: 'white', maxWidth: 800, marginLeft: 'auto', marginRight: 'auto' }}>
+            Instala un sistema operativo con IA que{' '}
+            <span style={{ background: 'linear-gradient(135deg, #818cf8, #c084fc, #f472b6)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>gestione tu negocio</span>
+          </h1>
 
-      {/* ═══════════════════════════════════════════════════════════ */}
-      {/* SECTION 2 — WHAT COPILOT DOES */}
-      {/* ═══════════════════════════════════════════════════════════ */}
-      <section id="que-incluye" style={{ padding: '80px 24px', background: '#FFFFFF' }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-          <div className="reveal" style={{ textAlign: 'center', marginBottom: 56 }}>
-            <h2 style={{ fontSize: 38, fontWeight: 800, color: '#111827', margin: '0 0 16px' }}>
-              Todo lo que hace <span className="gradient-text">Copilot</span> por ti
-            </h2>
-            <p style={{ fontSize: 18, color: '#6B7280', maxWidth: 600, margin: '0 auto' }}>
-              Seis capacidades que trabajan juntas, cada día, sin que tengas que hacer nada.
-            </p>
+          <p className="reveal" style={{ fontSize: 19, lineHeight: 1.65, color: 'rgba(255,255,255,0.7)', margin: '0 auto 20px', maxWidth: 700 }}>
+            Una sola herramienta que lee archivos, envia mails, deploya sitios, genera PDFs, gestiona repos y conecta APIs — mientras tu duermes.
+          </p>
+
+          <p className="reveal" style={{ fontSize: 15, lineHeight: 1.6, color: 'rgba(255,255,255,0.45)', margin: '0 auto 36px', maxWidth: 680 }}>
+            Christopher Muller opera una agencia de 33 clientes y $80-100M CLP en pauta mensual 100% desde Claude Code. Ahora enseña como replicar este sistema.
+          </p>
+
+          <div className="reveal" style={{ display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 48 }}>
+            <a href={WA_LINK} target="_blank" rel="noopener noreferrer" className="btn-primary" style={{ padding: '16px 36px', fontSize: 17 }}>
+              Agendar sesion
+            </a>
+            <button className="btn-secondary" onClick={function() { scrollTo('programa') }} style={{ background: 'transparent', color: 'white', borderColor: 'rgba(255,255,255,0.2)' }}>
+              Ver programa
+            </button>
           </div>
 
-          <div className="feature-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 28 }}>
-            {featureCards.map(function(card, i) {
+          {/* KPI boxes */}
+          <div className="reveal kpi-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 20, maxWidth: 900, margin: '0 auto' }}>
+            {[
+              { num: '33', label: 'Clientes gestionados' },
+              { num: '96+', label: 'Articulos/semana automaticos' },
+              { num: '7', label: 'Repos con agentes' },
+              { num: '15 min', label: 'Por cotizacion profesional' },
+            ].map(function(kpi, i) {
               return (
-                <div key={i} className="reveal card-hover" style={{ background: 'white', borderRadius: 20, overflow: 'hidden', border: '1px solid #F3F4F6', boxShadow: '0 4px 20px rgba(0,0,0,0.04)' }}>
-                  <img src={card.img} alt={card.title} style={{ width: '100%', height: 180, objectFit: 'cover' }} />
-                  <div style={{ padding: '24px 24px 28px' }}>
-                    <div style={{ fontSize: 28, marginBottom: 8 }}>{card.icon}</div>
-                    <h3 style={{ fontSize: 20, fontWeight: 700, color: '#111827', margin: '0 0 8px' }}>{card.title}</h3>
-                    <p style={{ fontSize: 15, color: '#6B7280', margin: 0, lineHeight: 1.6 }}>{card.desc}</p>
-                  </div>
+                <div key={i} style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 16, padding: '24px 16px', textAlign: 'center' }}>
+                  <div style={{ fontSize: 32, fontWeight: 800, background: 'linear-gradient(135deg, #818cf8, #c084fc)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>{kpi.num}</div>
+                  <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', marginTop: 6 }}>{kpi.label}</div>
                 </div>
               )
             })}
@@ -398,123 +208,147 @@ export default function CopilotClient() {
         </div>
       </section>
 
-      {/* ═══════════════════════════════════════════════════════════ */}
-      {/* SECTION 3 — HOW IT WORKS (3D Visualization) */}
-      {/* ═══════════════════════════════════════════════════════════ */}
-      <section style={{ padding: '60px 24px 40px', background: '#0a0a1a', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto', position: 'relative', zIndex: 2 }}>
-          <div className="reveal" style={{ textAlign: 'center', marginBottom: 20 }}>
-            <h2 style={{ fontSize: 38, fontWeight: 800, margin: '0 0 12px', background: 'linear-gradient(135deg, #818cf8, #c084fc, #f472b6)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-              21 Agentes de IA trabajando juntos
-            </h2>
-            <p style={{ fontSize: 17, color: 'rgba(255,255,255,0.5)' }}>
-              Un sistema que piensa, aprende y se corrige solo. Haz click en cada agente.
-            </p>
-          </div>
-
-          {/* 3 Steps over the visualization */}
-          <div className="steps-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20, marginBottom: 16 }}>
-            {[
-              { step: '1', title: 'Conecta', desc: 'Agrega competidores de IG + LinkedIn', icon: '\u26A1', color: '#818cf8' },
-              { step: '2', title: '21 agentes analizan', desc: 'Scraping, brief, copies, auditor\u00eda, benchmark, reporte', icon: '\uD83E\uDDE0', color: '#c084fc' },
-              { step: '3', title: 'Apruebas y aprende', desc: 'Lo que apruebas se refuerza. Cada mes es mejor', icon: '\uD83D\uDE80', color: '#f472b6' },
-            ].map(function(s, i) {
-              return (
-                <div key={i} style={{ textAlign: 'center', padding: '16px 12px', background: 'rgba(255,255,255,0.04)', borderRadius: 14, border: '1px solid rgba(255,255,255,0.06)' }}>
-                  <span style={{ fontSize: 24 }}>{s.icon}</span>
-                  <span style={{ fontSize: 11, fontWeight: 700, color: s.color, textTransform: 'uppercase' as const, letterSpacing: 1, marginLeft: 8 }}>Paso {s.step}</span>
-                  <span style={{ fontSize: 15, fontWeight: 700, color: 'white', marginLeft: 8 }}>{s.title}</span>
-                  <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)', margin: '4px 0 0' }}>{s.desc}</p>
-                </div>
-              )
-            })}
-          </div>
-
-          {/* Spotlight info — zona fija entre pasos y canvas */}
-          <div id="copilot-spotlight" style={{ height: 70, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', textAlign: 'center', opacity: 0, transition: 'opacity 0.4s ease', marginBottom: 8 }}>
-            <div id="copilot-spot-name" style={{ fontSize: 16, fontWeight: 700, color: 'rgba(255,255,255,0.95)', letterSpacing: 2 }}></div>
-            <div id="copilot-spot-desc" style={{ fontSize: 13, fontWeight: 400, color: 'rgba(226,232,240,0.75)', lineHeight: 1.6, marginTop: 5, maxWidth: 500 }}></div>
-            <div id="copilot-spot-detail" style={{ fontSize: 10, color: 'rgba(56,189,248,0.55)', fontWeight: 500, marginTop: 4, letterSpacing: 1 }}></div>
-          </div>
-
-          {/* Canvas container */}
-          <div style={{ position: 'relative', height: 540 }}>
-            <canvas ref={function(el) { if (el && !(el as any)._copilotInit) { (el as any)._copilotInit = true; initAgentCanvas(el) } }} style={{ width: '100%', height: '100%', display: 'block' }} />
-          </div>
-
-          {/* Stats */}
-          <div style={{ display: 'flex', justifyContent: 'center', gap: 40, marginTop: 16 }}>
-            {[
-              { num: '21', label: 'Agentes IA' },
-              { num: '34', label: 'Conexiones' },
-              { num: '2', label: 'Plataformas' },
-              { num: '8', label: 'Herramientas' },
-              { num: '22', label: 'Industrias' },
-            ].map(function(s, i) {
-              return <div key={i} style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: 28, fontWeight: 900, background: 'linear-gradient(135deg, #818cf8, #c084fc)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>{s.num}</div>
-                <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.4)', marginTop: 2, letterSpacing: 1, textTransform: 'uppercase' as const }}>{s.label}</div>
-              </div>
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* ═══════════════════════════════════════════════════════════ */}
-      {/* SECTION 4 — FEATURES DEEP DIVE */}
-      {/* ═══════════════════════════════════════════════════════════ */}
+      {/* ================================================================= */}
+      {/* SECTION 2 — EL PROBLEMA */}
+      {/* ================================================================= */}
       <section style={{ padding: '80px 24px', background: '#FFFFFF' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto' }}>
-          <div className="reveal" style={{ textAlign: 'center', marginBottom: 64 }}>
-            <h2 style={{ fontSize: 38, fontWeight: 800, color: '#111827', margin: '0 0 16px' }}>
-              Funcionalidades que marcan <span className="gradient-text">la diferencia</span>
+          <div className="reveal" style={{ textAlign: 'center', marginBottom: 48 }}>
+            <h2 style={{ fontSize: 36, fontWeight: 800, color: '#111827', margin: '0 0 16px' }}>
+              Lo que hacen la mayoria de profesionales hoy
             </h2>
           </div>
 
-          {deepDive.map(function(item, i) {
-            return (
-              <div key={i} className="reveal deep-row" style={{ display: 'flex', alignItems: 'center', gap: 60, marginBottom: 80, flexDirection: item.reverse ? 'row-reverse' : 'row' }}>
-                <div style={{ flex: 1 }}>
-                  <img src={item.img} alt={item.title} style={{ width: '100%', borderRadius: 20, objectFit: 'cover', maxHeight: 340 }} />
-                </div>
-                <div style={{ flex: 1 }}>
-                  <h3 style={{ fontSize: 28, fontWeight: 800, color: '#111827', margin: '0 0 16px' }}>{item.title}</h3>
-                  <p style={{ fontSize: 17, color: '#6B7280', lineHeight: 1.7, margin: 0 }}>{item.desc}</p>
-                </div>
-              </div>
-            )
-          })}
+          <div className="problem-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 28 }}>
+            {/* Left — BAD */}
+            <div className="reveal" style={{ background: 'linear-gradient(135deg, #FEF2F2, #FFF5F5)', border: '1px solid #FECACA', borderRadius: 20, padding: '36px 32px' }}>
+              <h3 style={{ fontSize: 18, fontWeight: 700, color: '#DC2626', marginBottom: 24, display: 'flex', alignItems: 'center', gap: 10 }}>
+                <span style={{ width: 32, height: 32, borderRadius: 10, background: '#FEE2E2', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14 }}>&#x2717;</span>
+                La realidad actual
+              </h3>
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                {[
+                  'Horas en tareas repetitivas (reportes, propuestas, emails, contenido)',
+                  '10+ herramientas que no se hablan (Canva, ChatGPT, Notion, Slack, Sheets)',
+                  'No pueden escalar — ellos SON el cuello de botella',
+                  'Pagan por IA que apenas usan o usan superficialmente',
+                  'Todo es manual — no tienen sistemas automatizados',
+                  'Su "estrategia de IA" es copy-paste desde ChatGPT',
+                ].map(function(item, i) {
+                  return (
+                    <li key={i} style={{ padding: '10px 0', fontSize: 15, color: '#7F1D1D', display: 'flex', alignItems: 'flex-start', gap: 12, lineHeight: 1.5 }}>
+                      <span style={{ color: '#DC2626', fontWeight: 700, flexShrink: 0, marginTop: 2 }}>—</span>
+                      {item}
+                    </li>
+                  )
+                })}
+              </ul>
+            </div>
+
+            {/* Right — GOOD */}
+            <div className="reveal" style={{ background: 'linear-gradient(135deg, #F0FDF4, #F5FFF9)', border: '1px solid #BBF7D0', borderRadius: 20, padding: '36px 32px' }}>
+              <h3 style={{ fontSize: 18, fontWeight: 700, color: '#059669', marginBottom: 24, display: 'flex', alignItems: 'center', gap: 10 }}>
+                <span style={{ width: 32, height: 32, borderRadius: 10, background: '#D1FAE5', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14 }}>&#x2713;</span>
+                Lo que instalamos
+              </h3>
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                {[
+                  'Una herramienta que lee/escribe archivos, envia mails, deploya sitios, llama APIs',
+                  'Agentes automatizados que trabajan mientras duermes',
+                  'Memoria persistente que conoce tus clientes y contexto',
+                  'Integraciones reales (WordPress, HubSpot, Salesforce, Gmail, Google Ads)',
+                  'Entregables profesionales en minutos (PDFs, propuestas, auditorias)',
+                ].map(function(item, i) {
+                  return (
+                    <li key={i} style={{ padding: '10px 0', fontSize: 15, color: '#14532D', display: 'flex', alignItems: 'flex-start', gap: 12, lineHeight: 1.5 }}>
+                      <span style={{ color: '#059669', fontWeight: 700, flexShrink: 0, fontSize: 16 }}>&#x2713;</span>
+                      {item}
+                    </li>
+                  )
+                })}
+              </ul>
+            </div>
+          </div>
+
+          {/* Dark callout */}
+          <div className="reveal" style={{ marginTop: 40, background: '#111827', borderRadius: 20, padding: '32px 40px', textAlign: 'center' }}>
+            <p style={{ fontSize: 18, fontWeight: 600, color: 'white', margin: 0, lineHeight: 1.6 }}>
+              ChatGPT es un chat. Claude Code es un <span style={{ background: 'linear-gradient(135deg, #818cf8, #c084fc)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>sistema operativo</span>.
+              <br/>
+              <span style={{ fontSize: 15, fontWeight: 400, color: 'rgba(255,255,255,0.5)' }}>
+                Lee tu disco, ejecuta codigo, conecta APIs, recuerda todo, y corre agentes en segundo plano.
+              </span>
+            </p>
+          </div>
         </div>
       </section>
 
-      {/* ═══════════════════════════════════════════════════════════ */}
-      {/* SECTION 4B — EJEMPLO DE INFORMES */}
-      {/* ═══════════════════════════════════════════════════════════ */}
+      {/* ================================================================= */}
+      {/* SECTION 3 — RESULTADOS REALES */}
+      {/* ================================================================= */}
       <section style={{ padding: '80px 24px', background: 'linear-gradient(180deg, #111827 0%, #1E1B4B 100%)' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto' }}>
           <div className="reveal" style={{ textAlign: 'center', marginBottom: 56 }}>
-            <h2 style={{ fontSize: 38, fontWeight: 800, color: '#FFFFFF', margin: '0 0 16px' }}>
-              Así se ven tus informes
+            <h2 style={{ fontSize: 36, fontWeight: 800, color: '#FFFFFF', margin: '0 0 16px' }}>
+              Esto no son demos — son sistemas corriendo en produccion
             </h2>
-            <p style={{ fontSize: 18, color: '#94a3b8' }}>
-              Inteligencia competitiva + contenido + estrategia. Todo en tu correo y dashboard.
-            </p>
+            <p style={{ fontSize: 17, color: '#94a3b8' }}>Resultados reales de la agencia operada 100% con Claude Code.</p>
           </div>
 
-          <div className="feature-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 28 }}>
+          <div className="feature-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 24 }}>
             {[
-              { img: '/copilot/mockup-email-diario.png', title: 'Competencia IG + LinkedIn', desc: 'Qu\u00e9 publican tus competidores en cada red, qu\u00e9 formatos les funcionan, d\u00f3nde hay gaps. Cuadro comparativo por empresa.', tag: 'Cada semana' },
-              { img: '/copilot/mockup-copies.png', title: 'Contenido por plataforma', desc: 'Copies para Instagram (visual, hooks cortos) y LinkedIn (datos, B2B). Grilla con calendario. Guiones de video. Copies de anuncios.', tag: 'Cada semana' },
-              { img: '/copilot/mockup-reporte.png', title: 'Reporte + Auditor\u00eda', desc: 'Acciones priorizadas por red, auditor\u00eda con criterios separados IG vs LinkedIn, \u00e1rbol de inversi\u00f3n y predicci\u00f3n del pr\u00f3ximo mes.', tag: 'Cada mes' },
-            ].map(function(item, i) {
+              {
+                title: 'SEO automatizado',
+                items: [
+                  '4 clientes con agentes de blog diario (Halterlift, DMP, LabLab, Wiseplan)',
+                  'Publicacion automatica L-V 07:30, 10.000+ caracteres',
+                  'DevuelveMiPie: 98 articulos, schemas inyectados',
+                  'Wiseplan: score SEO de 4.1 a 7.1 en una sesion',
+                ],
+                color: '#818cf8',
+              },
+              {
+                title: 'Licitaciones con IA',
+                items: [
+                  'Licitacion Santo Tomas: 52 archivos, 9 carpetas, QA automatico',
+                  'Cotizaciones A4 en 15 minutos con diseño profesional',
+                  'Propuestas con data de mercado real',
+                ],
+                color: '#c084fc',
+              },
+              {
+                title: 'Operaciones diarias',
+                items: [
+                  'Master Agent: reporte diario con status de workflows',
+                  '22 workflows caducos identificados y limpiados',
+                  'Mails profesionales enviados desde terminal',
+                ],
+                color: '#f472b6',
+              },
+              {
+                title: 'Dashboards y CRM',
+                items: [
+                  'Integracion Salesforce Marketing Cloud',
+                  'Dashboards en tiempo real (Vercel + Supabase)',
+                  'Fiscalizacion WhatsApp con Twilio',
+                ],
+                color: '#34d399',
+              },
+            ].map(function(card, i) {
               return (
-                <div key={i} className="reveal card-hover" style={{ background: '#0F0D2E', borderRadius: 20, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.08)' }}>
-                  <img src={item.img} alt={item.title} style={{ width: '100%', height: 200, objectFit: 'cover', borderRadius: '20px 20px 0 0' }} />
-                  <div style={{ padding: '24px 24px 28px' }}>
-                    <h3 style={{ fontSize: 18, fontWeight: 700, color: '#FFFFFF', margin: '0 0 8px' }}>{item.title}</h3>
-                    <p style={{ fontSize: 14, color: '#94a3b8', margin: '0 0 16px', lineHeight: 1.6 }}>{item.desc}</p>
-                    <span style={{ display: 'inline-block', background: 'rgba(124,58,237,0.2)', color: '#A78BFA', fontSize: 12, fontWeight: 600, padding: '6px 14px', borderRadius: 100 }}>{item.tag}</span>
-                  </div>
+                <div key={i} className="reveal card-hover" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 20, padding: '32px 28px' }}>
+                  <div style={{ width: 48, height: 4, background: card.color, borderRadius: 4, marginBottom: 20 }}></div>
+                  <h3 style={{ fontSize: 22, fontWeight: 700, color: '#FFFFFF', margin: '0 0 16px' }}>{card.title}</h3>
+                  <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                    {card.items.map(function(item, j) {
+                      return (
+                        <li key={j} style={{ padding: '6px 0', fontSize: 14, color: '#94a3b8', display: 'flex', alignItems: 'flex-start', gap: 10, lineHeight: 1.6 }}>
+                          <span style={{ color: card.color, fontWeight: 700, flexShrink: 0 }}>&#x2713;</span>
+                          {item}
+                        </li>
+                      )
+                    })}
+                  </ul>
                 </div>
               )
             })}
@@ -522,43 +356,16 @@ export default function CopilotClient() {
         </div>
       </section>
 
-      {/* ═══════════════════════════════════════════════════════════ */}
-      {/* SECTION 4C — SOCIAL PROOF */}
-      {/* ═══════════════════════════════════════════════════════════ */}
-      <section style={{ padding: '80px 24px', background: '#F5F3FF' }}>
-        <div style={{ maxWidth: 800, margin: '0 auto', textAlign: 'center' }}>
-          <div className="reveal">
-            <h2 style={{ fontSize: 32, fontWeight: 800, color: '#111827', margin: '0 0 40px' }}>
-              Empresas que ya usan <span className="gradient-text">Copilot</span>
-            </h2>
-            <div style={{ background: 'white', borderRadius: 20, padding: '48px 40px', border: '1px solid #E5E7EB', boxShadow: '0 4px 20px rgba(0,0,0,0.04)' }}>
-              <p style={{ fontSize: 20, fontStyle: 'italic', color: '#374151', lineHeight: 1.7, margin: '0 0 24px' }}>
-                &ldquo;Copilot nos permite saber exactamente qué está haciendo nuestra competencia cada día. Los copies sugeridos nos ahorran horas de trabajo semanal.&rdquo;
-              </p>
-              <p style={{ fontSize: 16, fontWeight: 700, color: '#111827', margin: '0 0 4px' }}>
-                Genera HR
-              </p>
-              <p style={{ fontSize: 14, color: '#6B7280', margin: '0 0 32px' }}>
-                Control de asistencia líder en Chile
-              </p>
-              <p style={{ fontSize: 13, color: '#9CA3AF', margin: 0 }}>
-                37 empresas activas en Copilot
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ═══════════════════════════════════════════════════════════ */}
-      {/* SECTION 5 — PLANS */}
-      {/* ═══════════════════════════════════════════════════════════ */}
-      <section style={{ padding: '80px 24px', background: '#FAFAFA' }}>
+      {/* ================================================================= */}
+      {/* SECTION 4 — EL PROGRAMA */}
+      {/* ================================================================= */}
+      <section id="programa" style={{ padding: '80px 24px', background: '#FAFAFA' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto' }}>
           <div className="reveal" style={{ textAlign: 'center', marginBottom: 56 }}>
-            <h2 style={{ fontSize: 38, fontWeight: 800, color: '#111827', margin: '0 0 16px' }}>
-              Planes simples, sin letra chica
+            <h2 style={{ fontSize: 36, fontWeight: 800, color: '#111827', margin: '0 0 16px' }}>
+              Programa de consultoria <span className="gradient-text">Claude Code</span>
             </h2>
-            <p style={{ fontSize: 18, color: '#6B7280' }}>Todos los planes incluyen 7 días gratis. Precios + IVA.</p>
+            <p style={{ fontSize: 17, color: '#6B7280' }}>Tres niveles segun lo que necesitas. Precios + IVA.</p>
           </div>
 
           <div className="plans-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 28, alignItems: 'start' }}>
@@ -566,29 +373,30 @@ export default function CopilotClient() {
               return (
                 <div key={i} className={'reveal plan-card' + (plan.popular ? ' popular' : '')}>
                   {plan.popular && (
-                    <div style={{ position: 'absolute', top: -14, left: '50%', transform: 'translateX(-50%)', background: 'linear-gradient(135deg, #4338CA, #7C3AED)', color: 'white', fontSize: 12, fontWeight: 700, padding: '6px 20px', borderRadius: 100, textTransform: 'uppercase' as const, letterSpacing: 1 }}>
-                      Más elegido
+                    <div style={{ position: 'absolute', top: -14, left: '50%', transform: 'translateX(-50%)', background: 'linear-gradient(135deg, #4338CA, #7C3AED)', color: 'white', fontSize: 12, fontWeight: 700, padding: '6px 20px', borderRadius: 100, textTransform: 'uppercase' as const, letterSpacing: 1, whiteSpace: 'nowrap' as const }}>
+                      Mas popular
                     </div>
                   )}
-                  <h3 style={{ fontSize: 24, fontWeight: 800, color: '#111827', margin: '0 0 8px' }}>{plan.name}</h3>
+                  <h3 style={{ fontSize: 24, fontWeight: 800, color: '#111827', margin: '0 0 4px' }}>{plan.name}</h3>
+                  <p style={{ fontSize: 13, color: '#7C3AED', fontWeight: 600, margin: '0 0 8px' }}>{plan.sessions}</p>
                   <p style={{ fontSize: 14, color: '#9CA3AF', margin: '0 0 20px' }}>{plan.desc}</p>
                   <div style={{ marginBottom: 24 }}>
-                    <span style={{ fontSize: 40, fontWeight: 800, color: '#111827' }}>{fmt(plan.price)}</span>
-                    <span style={{ fontSize: 15, color: '#9CA3AF', marginLeft: 4 }}>/mes</span>
+                    <span style={{ fontSize: 38, fontWeight: 800, color: '#111827' }}>{fmt(plan.price)}</span>
+                    <span style={{ fontSize: 14, color: '#9CA3AF', marginLeft: 4 }}>CLP</span>
                   </div>
                   <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 28px' }}>
                     {plan.features.map(function(f, fi) {
                       return (
                         <li key={fi} style={{ padding: '8px 0', fontSize: 15, color: '#374151', display: 'flex', alignItems: 'flex-start', gap: 10 }}>
-                          <span style={{ color: '#7C3AED', fontWeight: 700, fontSize: 16, flexShrink: 0 }}>✓</span>
+                          <span style={{ color: '#7C3AED', fontWeight: 700, fontSize: 16, flexShrink: 0 }}>&#x2713;</span>
                           {f}
                         </li>
                       )
                     })}
                   </ul>
-                  <button className={plan.popular ? 'btn-primary' : 'btn-secondary'} style={{ width: '100%', textAlign: 'center' }} onClick={function() { scrollTo('trial') }}>
+                  <a href={WA_LINK} target="_blank" rel="noopener noreferrer" className={plan.popular ? 'btn-primary' : 'btn-secondary'} style={{ width: '100%', textAlign: 'center', display: 'block', boxSizing: 'border-box' }}>
                     {plan.cta}
-                  </button>
+                  </a>
                 </div>
               )
             })}
@@ -596,65 +404,254 @@ export default function CopilotClient() {
         </div>
       </section>
 
-      {/* ═══════════════════════════════════════════════════════════ */}
-      {/* SECTION 6 — TRIAL FORM */}
-      {/* ═══════════════════════════════════════════════════════════ */}
-      <section id="trial" style={{ padding: '80px 24px', background: 'linear-gradient(180deg, #FFFFFF 0%, #F5F3FF 100%)' }}>
-        <div style={{ maxWidth: 580, margin: '0 auto' }}>
-          <div className="reveal" style={{ textAlign: 'center', marginBottom: 40 }}>
-            <h2 style={{ fontSize: 36, fontWeight: 800, color: '#111827', margin: '0 0 12px' }}>
-              Activa tu <span className="gradient-text">Copilot</span> gratis
+      {/* ================================================================= */}
+      {/* SECTION 5 — COMO FUNCIONA */}
+      {/* ================================================================= */}
+      <section style={{ padding: '80px 24px', background: '#FFFFFF' }}>
+        <div style={{ maxWidth: 800, margin: '0 auto' }}>
+          <div className="reveal" style={{ textAlign: 'center', marginBottom: 56 }}>
+            <h2 style={{ fontSize: 36, fontWeight: 800, color: '#111827', margin: '0 0 16px' }}>
+              Las 4 sesiones del programa
             </h2>
-            <p style={{ fontSize: 17, color: '#6B7280' }}>7 días sin costo. Configura en 2 minutos.</p>
           </div>
 
-          {enviado ? (
-            <div style={{ background: 'white', borderRadius: 20, padding: 48, border: '1px solid #E5E7EB' }}>
-              <div style={{ textAlign: 'center', marginBottom: 24 }}>
-                <div style={{ fontSize: 48, marginBottom: 12 }}>{'\u2705'}</div>
-                <h3 style={{ fontSize: 24, fontWeight: 700, color: '#111827', margin: '0 0 8px' }}>Cuenta creada</h3>
-                <p style={{ fontSize: 15, color: '#6B7280' }}>{fallbackPassword ? 'Tu cuenta está lista. Guarda tus credenciales:' : 'Revisa tu email — te enviamos tu usuario y contraseña.'}</p>
-              </div>
-
-              {fallbackPassword && (
-                <div style={{ background: '#FEF2F2', border: '1px solid #FECACA', borderRadius: 12, padding: '16px 20px', marginBottom: 20, textAlign: 'center' }}>
-                  <p style={{ fontSize: 13, fontWeight: 700, color: '#991B1B', margin: '0 0 8px' }}>No pudimos enviar el email. Guarda estos datos:</p>
-                  <p style={{ fontSize: 14, color: '#111827', margin: '0 0 4px' }}>Usuario: <strong>{trialEmail}</strong></p>
-                  <p style={{ fontSize: 14, color: '#111827', margin: 0 }}>Contraseña: <strong style={{ fontFamily: 'monospace', fontSize: 16, letterSpacing: 1 }}>{fallbackPassword}</strong></p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+            {[
+              { step: '1', title: 'Setup + Memoria + Hooks + Primer agente', desc: 'Instalamos Claude Code, configuramos la memoria persistente que conoce tu negocio, activamos hooks de formateo y creamos tu primer agente funcional.', color: '#4338CA' },
+              { step: '2', title: 'Agentes diarios + GitHub Actions', desc: 'Configuramos agentes que corren automaticamente (blog SEO, rankings, reportes) y los conectamos a GitHub Actions para ejecucion programada.', color: '#7C3AED' },
+              { step: '3', title: 'Integraciones + Cotizaciones/PDFs', desc: 'Conectamos Claude Code a tus herramientas (WordPress, Gmail, CRM, Google Ads) y configuramos generacion de cotizaciones y PDFs profesionales.', color: '#A855F7' },
+              { step: '4', title: 'Master Agent + Dashboard operativo', desc: 'Creamos el agente maestro que monitorea todos los demas, genera reportes diarios y te mantiene al tanto de todo lo que pasa en tu negocio.', color: '#C084FC' },
+            ].map(function(s, i) {
+              return (
+                <div key={i} className="reveal" style={{ display: 'flex', alignItems: 'flex-start', gap: 24, background: '#F9FAFB', borderRadius: 20, padding: '28px 32px', border: '1px solid #F3F4F6' }}>
+                  <div style={{ width: 52, height: 52, borderRadius: 16, background: `linear-gradient(135deg, ${s.color}, ${s.color}dd)`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 800, fontSize: 20, flexShrink: 0 }}>
+                    {s.step}
+                  </div>
+                  <div>
+                    <h3 style={{ fontSize: 18, fontWeight: 700, color: '#111827', margin: '0 0 8px' }}>{s.title}</h3>
+                    <p style={{ fontSize: 15, color: '#6B7280', margin: 0, lineHeight: 1.6 }}>{s.desc}</p>
+                  </div>
                 </div>
-              )}
-
-              <div style={{ background: 'linear-gradient(135deg, #EEF2FF, #F5F3FF)', borderRadius: 14, padding: '20px 24px', marginBottom: 20 }}>
-                <p style={{ fontSize: 13, fontWeight: 700, color: '#4338CA', margin: '0 0 8px', letterSpacing: 0.5 }}>TU COPILOT SE ESTÁ PREPARANDO</p>
-                <p style={{ fontSize: 15, fontWeight: 600, color: '#111827', margin: '0 0 6px' }}>21 agentes de IA ya están trabajando en tu brief</p>
-                <p style={{ fontSize: 13, color: '#6B7280', margin: '0 0 16px', lineHeight: 1.6 }}>Con la información que nos diste, el pipeline está analizando a tu competencia, generando contenido y preparando tu benchmark.</p>
-                <a href={'/copilot/dashboard/' + trialId}
-                  style={{ display: 'inline-block', background: 'linear-gradient(135deg, #4338CA, #7C3AED)', color: 'white', padding: '14px 32px', borderRadius: 12, fontSize: 16, fontWeight: 600, textDecoration: 'none' }}>
-                  Ir a mi dashboard {'\u2192'}
-                </a>
-              </div>
-
-              <div style={{ background: '#FEF3C7', borderLeft: '4px solid #F59E0B', borderRadius: 8, padding: '14px 18px', marginBottom: 16 }}>
-                <p style={{ fontSize: 13, fontWeight: 700, color: '#92400E', margin: 0 }}>En 24 horas tu dashboard tendr{'a'} datos reales</p>
-                <p style={{ fontSize: 12, color: '#92400E', margin: '4px 0 0' }}>El pipeline corre autom{'á'}ticamente. Recibes tu primer informe por email + acceso al dashboard.</p>
-              </div>
-
-              <p style={{ fontSize: 12, color: '#9CA3AF', textAlign: 'center' }}>Si no ves el email, revisa spam. Tu trial dura 7 d{'í'}as.</p>
-            </div>
-          ) : (
-            <div className="reveal">
-              <RegistrationWizard onSuccess={handleTrialSuccess} />
-            </div>
-          )}
+              )
+            })}
+          </div>
         </div>
       </section>
 
-      {/* ═══════════════════════════════════════════════════════════ */}
-      {/* SECTION 7 — FOOTER */}
-      {/* ═══════════════════════════════════════════════════════════ */}
+      {/* ================================================================= */}
+      {/* SECTION 6 — PARA QUIEN */}
+      {/* ================================================================= */}
+      <section style={{ padding: '80px 24px', background: '#F5F3FF' }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+          <div className="reveal" style={{ textAlign: 'center', marginBottom: 48 }}>
+            <h2 style={{ fontSize: 36, fontWeight: 800, color: '#111827', margin: '0 0 16px' }}>
+              ¿Es para ti?
+            </h2>
+          </div>
+
+          <div className="reveal profiles-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20, marginBottom: 40 }}>
+            {[
+              { title: 'Agencias de marketing digital', desc: 'Que quieren escalar sin contratar mas personas.' },
+              { title: 'Consultores independientes', desc: 'Que son el cuello de botella de su propio negocio.' },
+              { title: 'Equipos tech', desc: 'Que quieren automatizar operaciones repetitivas.' },
+              { title: 'Usuarios de ChatGPT', desc: 'Que quieren pasar al siguiente nivel con IA que ejecuta.' },
+              { title: 'Fundadores de startups', desc: 'Que necesitan hacer mas con menos recursos.' },
+            ].map(function(profile, i) {
+              return (
+                <div key={i} className="card-hover" style={{ background: 'white', borderRadius: 16, padding: '28px 24px', border: '1px solid #E5E7EB', boxShadow: '0 4px 20px rgba(0,0,0,0.04)' }}>
+                  <h3 style={{ fontSize: 17, fontWeight: 700, color: '#111827', margin: '0 0 8px' }}>{profile.title}</h3>
+                  <p style={{ fontSize: 14, color: '#6B7280', margin: 0, lineHeight: 1.6 }}>{profile.desc}</p>
+                </div>
+              )
+            })}
+          </div>
+
+          {/* Requirements callout */}
+          <div className="reveal" style={{ background: 'white', borderRadius: 20, padding: '32px 36px', border: '1px solid #E5E7EB', maxWidth: 700, margin: '0 auto' }}>
+            <h3 style={{ fontSize: 18, fontWeight: 700, color: '#111827', margin: '0 0 20px' }}>Lo que necesitas</h3>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+              {[
+                'Mac o PC con terminal',
+                'Cuenta Anthropic (se configura en la sesion)',
+                'Un negocio real con procesos repetitivos',
+                'NO necesitas saber programar',
+              ].map(function(req, i) {
+                return (
+                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 14, color: '#374151' }}>
+                    <span style={{ color: '#7C3AED', fontWeight: 700 }}>&#x2713;</span>
+                    {req}
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ================================================================= */}
+      {/* SECTION 7 — SOBRE CHRISTOPHER */}
+      {/* ================================================================= */}
+      <section style={{ padding: '80px 24px', background: '#FFFFFF' }}>
+        <div style={{ maxWidth: 800, margin: '0 auto' }}>
+          <div className="reveal" style={{ textAlign: 'center', marginBottom: 48 }}>
+            <h2 style={{ fontSize: 36, fontWeight: 800, color: '#111827', margin: '0 0 16px' }}>
+              Quien te asesora
+            </h2>
+          </div>
+
+          <div className="reveal" style={{ display: 'flex', gap: 40, alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center' }}>
+            <div style={{ width: 160, height: 160, borderRadius: 20, overflow: 'hidden', flexShrink: 0, background: '#F3F4F6', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <img src="/logo-color.png" alt="Christopher Muller — Muller y Perez" style={{ width: '80%', height: 'auto', objectFit: 'contain' }} />
+            </div>
+            <div style={{ flex: 1, minWidth: 300 }}>
+              <h3 style={{ fontSize: 24, fontWeight: 800, color: '#111827', margin: '0 0 16px' }}>Christopher Muller</h3>
+              <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 20px' }}>
+                {[
+                  'Ingeniero Civil Industrial + MBA Universidad de Chile',
+                  '20+ años en tecnologia, marketing digital e IA',
+                  'Fundador de Muller y Perez (33 clientes, $80-100M pauta mensual)',
+                  'Opera 100% de su agencia con Claude Code',
+                  'Referente en IA aplicada a marketing en Chile',
+                ].map(function(item, i) {
+                  return (
+                    <li key={i} style={{ padding: '6px 0', fontSize: 15, color: '#374151', display: 'flex', alignItems: 'flex-start', gap: 10, lineHeight: 1.5 }}>
+                      <span style={{ color: '#7C3AED', fontWeight: 700, flexShrink: 0 }}>&#x2713;</span>
+                      {item}
+                    </li>
+                  )
+                })}
+              </ul>
+              <div style={{ background: '#F5F3FF', borderLeft: '4px solid #7C3AED', borderRadius: 8, padding: '16px 20px' }}>
+                <p style={{ fontSize: 15, fontStyle: 'italic', color: '#4B5563', margin: 0, lineHeight: 1.6 }}>
+                  &ldquo;Si buscan &lsquo;mejores agencias performance marketing Chile&rsquo; en Google o ChatGPT, nos van a encontrar.&rdquo;
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ================================================================= */}
+      {/* SECTION 8 — FAQ */}
+      {/* ================================================================= */}
+      <section style={{ padding: '80px 24px', background: '#F9FAFB' }}>
+        <div style={{ maxWidth: 740, margin: '0 auto' }}>
+          <div className="reveal" style={{ textAlign: 'center', marginBottom: 48 }}>
+            <h2 style={{ fontSize: 36, fontWeight: 800, color: '#111827', margin: '0 0 16px' }}>
+              Preguntas frecuentes
+            </h2>
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            {faqs.map(function(faq, i) {
+              var isOpen = faqOpen === i
+              return (
+                <div key={i} className="reveal" style={{ background: 'white', borderRadius: 16, border: '1px solid #E5E7EB', overflow: 'hidden', transition: 'all 0.3s' }}>
+                  <button
+                    onClick={function() { setFaqOpen(isOpen ? -1 : i) }}
+                    style={{ width: '100%', padding: '20px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', fontSize: 16, fontWeight: 600, color: '#111827', fontFamily: 'Inter, sans-serif' }}
+                  >
+                    {faq.q}
+                    <span style={{ fontSize: 20, color: '#7C3AED', transition: 'transform 0.3s', transform: isOpen ? 'rotate(45deg)' : 'none', flexShrink: 0, marginLeft: 12 }}>+</span>
+                  </button>
+                  {isOpen && (
+                    <div style={{ padding: '0 24px 20px', fontSize: 15, color: '#6B7280', lineHeight: 1.7 }}>
+                      {faq.a}
+                    </div>
+                  )}
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* ================================================================= */}
+      {/* SECTION 9 — CONTACTO */}
+      {/* ================================================================= */}
+      <section id="contacto" style={{ padding: '80px 24px', background: 'linear-gradient(180deg, #FFFFFF 0%, #F5F3FF 100%)' }}>
+        <div style={{ maxWidth: 1000, margin: '0 auto' }}>
+          <div className="reveal" style={{ textAlign: 'center', marginBottom: 48 }}>
+            <h2 style={{ fontSize: 36, fontWeight: 800, color: '#111827', margin: '0 0 16px' }}>
+              Agenda tu sesion
+            </h2>
+          </div>
+
+          <div className="reveal contact-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 40, alignItems: 'start' }}>
+            {/* Left — Direct contact */}
+            <div>
+              <p style={{ fontSize: 17, color: '#6B7280', lineHeight: 1.7, margin: '0 0 28px' }}>
+                Escribe por el formulario o contacta directamente por WhatsApp. Respondemos el mismo dia.
+              </p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 16, marginBottom: 28 }}>
+                <a href={WA_LINK} target="_blank" rel="noopener noreferrer" className="btn-primary" style={{ textAlign: 'center' }}>
+                  Escribir por WhatsApp
+                </a>
+              </div>
+              <div style={{ fontSize: 14, color: '#9CA3AF', lineHeight: 1.8 }}>
+                <p style={{ margin: '0 0 4px' }}>+56 9 9225 8137</p>
+                <p style={{ margin: '0 0 4px' }}>contacto@mulleryperez.cl</p>
+                <p style={{ margin: 0 }}>Badajoz 100 Of 523, Las Condes</p>
+              </div>
+            </div>
+
+            {/* Right — Form */}
+            <div>
+              {enviado ? (
+                <div style={{ background: 'white', borderRadius: 20, padding: 40, border: '1px solid #E5E7EB', textAlign: 'center' }}>
+                  <div style={{ fontSize: 48, marginBottom: 12 }}>&#x2705;</div>
+                  <h3 style={{ fontSize: 22, fontWeight: 700, color: '#111827', margin: '0 0 8px' }}>Mensaje recibido</h3>
+                  <p style={{ fontSize: 15, color: '#6B7280', margin: '0 0 20px' }}>Te contactaremos dentro de las proximas horas.</p>
+                  <a href={WA_LINK} target="_blank" rel="noopener noreferrer" className="btn-primary">
+                    WhatsApp directo
+                  </a>
+                </div>
+              ) : (
+                <form onSubmit={handleSubmit} style={{ background: 'white', borderRadius: 20, padding: '36px 32px', border: '1px solid #E5E7EB' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                    <input
+                      type="text" required placeholder="Nombre"
+                      className="input-field"
+                      value={formData.nombre}
+                      onChange={function(e) { setFormData(function(p) { return { ...p, nombre: e.target.value } }) }}
+                    />
+                    <input
+                      type="email" required placeholder="Email"
+                      className="input-field"
+                      value={formData.email}
+                      onChange={function(e) { setFormData(function(p) { return { ...p, email: e.target.value } }) }}
+                    />
+                    <input
+                      type="tel" required placeholder="Telefono"
+                      className="input-field"
+                      value={formData.telefono}
+                      onChange={function(e) { setFormData(function(p) { return { ...p, telefono: e.target.value } }) }}
+                    />
+                    <textarea
+                      placeholder="¿Que quieres automatizar?"
+                      className="input-field"
+                      rows={4}
+                      style={{ resize: 'vertical' }}
+                      value={formData.mensaje}
+                      onChange={function(e) { setFormData(function(p) { return { ...p, mensaje: e.target.value } }) }}
+                    />
+                    <button type="submit" className="btn-primary" style={{ width: '100%', textAlign: 'center', opacity: enviando ? 0.6 : 1 }} disabled={enviando}>
+                      {enviando ? 'Enviando...' : 'Agendar sesion de setup'}
+                    </button>
+                  </div>
+                </form>
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ================================================================= */}
+      {/* FOOTER */}
+      {/* ================================================================= */}
       <footer style={{ padding: '40px 24px', background: '#111827', textAlign: 'center' }}>
-        <p style={{ fontSize: 15, color: '#9CA3AF', margin: 0 }}>
-          M&amp;P Copilot by <a href="https://www.mulleryperez.cl" style={{ color: '#A5B4FC', textDecoration: 'none' }}>Muller y Pérez</a> · mulleryperez.cl
+        <p style={{ fontSize: 14, color: '#9CA3AF', margin: 0 }}>
+          Muller y Perez &middot; <a href="https://www.mulleryperez.cl" style={{ color: '#A5B4FC', textDecoration: 'none' }}>mulleryperez.cl</a> &middot; Badajoz 100 Of 523, Las Condes &middot; +56 9 9225 8137
         </p>
       </footer>
     </div>
