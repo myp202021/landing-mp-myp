@@ -58,6 +58,20 @@ function pct(n: number, d: number) {
   return d > 0 ? `${((n / d) * 100).toFixed(1)}%` : "—";
 }
 
+function PctCell({ n, d, color }: { n: number; d: number; color: string }) {
+  const v = d > 0 ? (n / d) * 100 : 0;
+  return (
+    <td className="px-2 py-1.5 w-28">
+      <div className="flex items-center gap-2 justify-end">
+        <div className="hidden md:block w-14 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+          <div className="h-full rounded-full" style={{ width: `${Math.min(v, 100)}%`, background: color }} />
+        </div>
+        <span className="text-xs font-semibold tabular-nums w-11 text-right">{d > 0 ? `${v.toFixed(v < 10 && v > 0 ? 1 : 0)}%` : "—"}</span>
+      </div>
+    </td>
+  );
+}
+
 export default function LeadsResumen({ leads, agrupacion, onFiltrar }: Props) {
   const data = useMemo(() => {
     const total = conteoVacio();
@@ -235,7 +249,7 @@ export default function LeadsResumen({ leads, agrupacion, onFiltrar }: Props) {
           Leads por {agrupacion === "dia" ? "día" : agrupacion} y fuente
         </h3>
         <div className="h-72">
-          <ResponsiveContainer width="100%" height="100%">
+          <ResponsiveContainer width="99%" height="100%" key={`${agrupacion}-${data.serie.length}`}>
             <BarChart
               data={data.serie}
               margin={{ top: 8, right: 8, left: 0, bottom: 0 }}
@@ -268,9 +282,9 @@ export default function LeadsResumen({ leads, agrupacion, onFiltrar }: Props) {
         </div>
       </section>
 
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 gap-6">
         {/* Por fuente */}
-        <section className="border border-gray-200 rounded-lg p-4 xl:col-span-2 overflow-x-auto">
+        <section className="border border-gray-200 rounded-lg p-4 overflow-x-auto">
           <h3 className="font-semibold text-gray-900 mb-3">
             Resultado por fuente
           </h3>
@@ -284,8 +298,9 @@ export default function LeadsResumen({ leads, agrupacion, onFiltrar }: Props) {
                     {e.label}
                   </th>
                 ))}
-                <th className="text-right px-2">% venta</th>
-                </tr>
+                <th className="text-right px-2">% contactado</th>
+                <th className="text-right px-2">% vendido</th>
+              </tr>
             </thead>
             <tbody className="divide-y divide-gray-100 tabular-nums">
               {data.canales.map((c) => (
@@ -294,7 +309,7 @@ export default function LeadsResumen({ leads, agrupacion, onFiltrar }: Props) {
                   className="hover:bg-gray-50 cursor-pointer"
                   onClick={() => onFiltrar({ canal: c.id })}
                 >
-                  <td className="py-2 pr-2">
+                  <td className="py-2 pr-2 whitespace-nowrap">
                     <span
                       className="inline-block w-2.5 h-2.5 rounded-full mr-2"
                       style={{ background: c.color }}
@@ -309,9 +324,8 @@ export default function LeadsResumen({ leads, agrupacion, onFiltrar }: Props) {
                       {c.conteo[e.id] || "·"}
                     </td>
                   ))}
-                  <td className="text-right px-2">
-                    {pct(c.conteo.vendido, c.conteo.total)}
-                  </td>
+                  <PctCell n={c.conteo.total - c.conteo.nuevo} d={c.conteo.total} color="#6366f1" />
+                  <PctCell n={c.conteo.vendido} d={c.conteo.total} color="#16a34a" />
                 </tr>
               ))}
             </tbody>
@@ -319,6 +333,7 @@ export default function LeadsResumen({ leads, agrupacion, onFiltrar }: Props) {
         </section>
 
         {/* Motivos */}
+        {(data.motivos.length > 0 || data.sinMotivo > 0) && (
         <section className="border border-gray-200 rounded-lg p-4">
           <h3 className="font-semibold text-gray-900 mb-3">
             Motivos de pérdida
@@ -353,6 +368,7 @@ export default function LeadsResumen({ leads, agrupacion, onFiltrar }: Props) {
             </p>
           )}
         </section>
+        )}
       </div>
 
       {/* Por período */}
@@ -370,6 +386,8 @@ export default function LeadsResumen({ leads, agrupacion, onFiltrar }: Props) {
                   {e.label}
                 </th>
               ))}
+              <th className="text-right px-2">% contactado</th>
+              <th className="text-right px-2">% vendido</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100 tabular-nums">
@@ -382,6 +400,8 @@ export default function LeadsResumen({ leads, agrupacion, onFiltrar }: Props) {
                     {p[e.id] || "·"}
                   </td>
                 ))}
+                <PctCell n={p.total - p.nuevo} d={p.total} color="#6366f1" />
+                <PctCell n={p.vendido} d={p.total} color="#16a34a" />
               </tr>
             ))}
           </tbody>

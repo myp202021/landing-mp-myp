@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 import { CANAL_MAP, canalDeFuente, type Canal } from "@/lib/crm/leads-pipeline";
-import { type Lead, periodoDe, etiquetaPeriodo } from "./types";
+import { type Lead, periodoDe, etiquetaPeriodo, fechaLocal } from "./types";
 
 const DIAS = [
   "domingo",
@@ -52,6 +52,22 @@ export default function LeadsInsights({ leads }: { leads: Lead[] }) {
     let sinGestionarViejos = 0;
     const ahora = Date.now();
 
+    // Cargas masivas (ej. 203 leads ingresados a mano el 31-mar): distorsionan día y hora
+    const porFecha = new Map<string, number>();
+    for (const l of leads) contar(porFecha, fechaLocal(l.fecha_ingreso));
+    const diasOrdenados = Array.from(porFecha.values()).sort((a, b) => a - b);
+    const mediana = diasOrdenados[Math.floor(diasOrdenados.length / 2)] || 1;
+    const masivos = new Set(
+      Array.from(porFecha.entries())
+        .filter(([, n]) => n >= 20 && n > mediana * 5)
+        .map(([f]) => f),
+    );
+    let enMasivos = 0;
+    let conEmail = 0;
+    let emailPersonal = 0;
+    const emails = new Map<string, number>();
+    let ultimaVenta = 0;
+
     for (const l of leads) {
       const mes = periodoDe(l.fecha_ingreso, "mes");
       contar(porMes, mes);
@@ -59,21 +75,22 @@ export default function LeadsInsights({ leads }: { leads: Lead[] }) {
       if (l.estado === "vendido") contar(ventasMes, mes);
 
       const d = new Date(l.fecha_ingreso);
-      const dia = DIAS.indexOf(
-        d.toLocaleDateString("es-CL", { timeZone: TZ, weekday: "long" }),
-      );
-      if (dia >= 0) contar(porDia, dia);
-      if (dia === 0 || dia === 6) finDeSemana++;
-      contar(
-        porHora,
-        parseInt(
-          d.toLocaleString("en-US", {
-            timeZone: TZ,
-            hour: "numeric",
-            hour12: false,
-          }),
-        ) % 24,
-      );
+      if (masivos.has(fechaLocal(l.fecha_ingreso))) {
+        enMasivos++;
+      } else {
+        const dia = DIAS.indexOf(d.toLocaleDateString("es-CL", { timeZone: TZ, weekday: "long" }));
+        if (dia >= 0) contar(porDia, dia);
+        if (dia === 0 || dia === 6) finDeSemana++;
+        contar(porHora, parseInt(d.toLocaleString("en-US", { timeZone: TZ, hour: "numeric", hour12: false })) % 24);
+      }
+
+      if (l.email) {
+        conEmail++;
+        const e = l.email.trim().toLowerCase();
+        contar(emails, e);
+        if (/@(gmail|hotmail|outlook|yahoo|live|icloud)\./.test(e)) emailPersonal++;
+      }
+      if (l.estado === "vendido") ultimaVenta = Math.max(ultimaVenta, d.getTime());
 
       const canal = canalDeFuente(l.fuente);
       contar(porCanal, canal);
@@ -165,7 +182,7 @@ export default function LeadsInsights({ leads }: { leads: Lead[] }) {
       out.push({
         titulo: "Día que más entran",
         valor: DIAS[topDia[0]],
-        detalle: `${pct(topDia[1], leads.length)}% de los leads · fin de semana ${pct(finDeSemana, leads.length)}%`,
+        detalle: `${pct(topDia[1], leads.length - enMasivos)}% de los leads · fin de semana ${pct(finDeSemana, leads.length - enMasivos)}%`,
       });
     }
 
@@ -182,11 +199,62 @@ export default function LeadsInsights({ leads }: { leads: Lead[] }) {
         franja = h;
       }
     }
-    out.push({
+    if (franjaN > 0) out.push({
       titulo: "Horario peak",
       valor: `${franja}:00 – ${(franja + 3) % 24}:00`,
-      detalle: `${pct(franjaN, leads.length)}% de los leads entra en esa franja`,
+      detalle: `${pct(franjaN, leads.length - enMasivos)}% de los leads entra en esa franja${enMasivos ? ` (sin ${enMasivos} de cargas masivas)` : ""}`,
     });
+
+    // Fuente con volumen y sin ventas
+    let peor: [Canal, number] | null = null;
+    porCanal.forEach((n, canal) => {
+      if (n >= 30 && !ventasCanal.get(canal) && (!peor || n > peor[1])) peor = [canal, n];
+    });
+    if (peor) {
+      const [c, n] = peor as [Canal, number];
+      out.push({
+        titulo: "Mucho volumen, cero ventas",
+        valor: CANAL_MAP[c].label,
+        detalle: `${n} leads (${pct(n, leads.length)}% del total) sin ninguna venta registrada`,
+        tono: "alerta",
+      });
+    }
+
+    if (ultimaVenta) {
+      const dias = Math.floor((ahora - ultimaVenta) / 864e5);
+      out.push({
+        titulo: "Última venta registrada",
+        valor: `hace ${dias} días`,
+        detalle: new Date(ultimaVenta).toLocaleDateString("es-CL", { timeZone: TZ, day: "numeric", month: "long" }) + (dias > 60 ? " · ¿no hubo ventas o no se están marcando?" : ""),
+        tono: dias > 60 ? "alerta" : "bueno",
+      });
+    }
+
+    if (conEmail >= 20) {
+      out.push({
+        titulo: "Correo personal (gmail, hotmail…)",
+        valor: `${pct(emailPersonal, conEmail)}%`,
+        detalle: `${emailPersonal} de ${conEmail} leads no dejan correo corporativo`,
+        tono: pct(emailPersonal, conEmail) > 50 ? "alerta" : "neutro",
+      });
+    }
+
+    const dup = Array.from(emails.values()).filter((n) => n > 1);
+    if (dup.length) {
+      out.push({
+        titulo: "Leads repetidos",
+        valor: String(dup.reduce((a, b) => a + b, 0)),
+        detalle: `${dup.length} personas entraron más de una vez (mismo email)`,
+      });
+    }
+
+    if (masivos.size) {
+      out.push({
+        titulo: "Cargas masivas detectadas",
+        valor: String(enMasivos),
+        detalle: `Leads ingresados en bloque (${Array.from(masivos).join(", ")}); excluidos de día y horario`,
+      });
+    }
 
     if (sinGestionarViejos > 0) {
       out.push({
@@ -220,7 +288,7 @@ export default function LeadsInsights({ leads }: { leads: Lead[] }) {
             className={`border border-gray-200 border-l-4 rounded-lg p-4 ${tonos[h.tono || "neutro"]}`}
           >
             <p className="text-xs text-gray-500">{h.titulo}</p>
-            <p className="text-xl font-bold text-gray-900 capitalize mt-0.5">
+            <p className="text-xl font-bold text-gray-900 first-letter:uppercase mt-0.5">
               {h.valor}
             </p>
             <p className="text-xs text-gray-600 mt-1">{h.detalle}</p>
