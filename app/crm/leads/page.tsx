@@ -142,7 +142,7 @@ function LeadsMP() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const [tab, setTab] = useState<"resumen" | "leads">("resumen");
+  const [tab, setTab] = useState<"resumen" | "leads">("leads");
   const [rango, setRango] = useState<Rango>("todo");
   const [desde, setDesde] = useState("");
   const [hasta, setHasta] = useState("");
@@ -393,13 +393,13 @@ function LeadsMP() {
 
           {/* Tabs */}
           <div className="flex gap-1 mb-5">
-            {(["resumen", "leads"] as const).map((t) => (
+            {(["leads", "resumen"] as const).map((t) => (
               <button
                 key={t}
                 onClick={() => setTab(t)}
                 className={`px-4 py-2 rounded-lg text-sm font-medium ${tab === t ? "bg-blue-50 text-blue-700" : "text-gray-600 hover:bg-gray-50"}`}
               >
-                {t === "resumen" ? "Resumen" : `Leads (${filtrados.length})`}
+                {t === "resumen" ? "Resumen y hallazgos" : `Leads (${filtrados.length})`}
               </button>
             ))}
           </div>
