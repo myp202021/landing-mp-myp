@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { ESTADOS_VALIDOS, booleanosDeEstado, type Estado } from '@/lib/crm/leads-pipeline'
 
 export const dynamic = 'force-dynamic'
 
@@ -15,24 +16,35 @@ export async function GET(req: NextRequest) {
     const cliente_id = searchParams.get('cliente_id')
     const limit = searchParams.get('limit') || '100'
 
-    let query = supabase
-      .from('leads')
-      .select('*')
-      .order('fecha_ingreso', { ascending: false })
-      .limit(parseInt(limit))
+    // PostgREST corta en 1000 filas por request: paginar hasta `limit`
+    const max = parseInt(limit)
+    const PAGE = 1000
+    const leads: any[] = []
+    for (let from = 0; from < max; from += PAGE) {
+      const to = Math.min(from + PAGE, max) - 1
+      let query = supabase
+        .from('leads')
+        .select('*')
+        .order('fecha_ingreso', { ascending: false })
+        .order('id', { ascending: false })
+        .range(from, to)
 
-    if (cliente_id) {
-      query = query.eq('cliente_id', cliente_id)
-    }
+      if (cliente_id) {
+        query = query.eq('cliente_id', cliente_id)
+      }
 
-    const { data: leads, error } = await query
+      const { data, error } = await query
 
-    if (error) {
-      console.error('Error obteniendo leads:', error)
-      return NextResponse.json(
-        { error: 'Error obteniendo leads', details: error.message },
-        { status: 500 }
-      )
+      if (error) {
+        console.error('Error obteniendo leads:', error)
+        return NextResponse.json(
+          { error: 'Error obteniendo leads', details: error.message },
+          { status: 500 }
+        )
+      }
+
+      leads.push(...data)
+      if (data.length < to - from + 1) break
     }
 
     console.log(`✅ Leads obtenidos: ${leads.length} (cliente_id: ${cliente_id || 'todos'})`)
@@ -51,7 +63,7 @@ export async function GET(req: NextRequest) {
 export async function PATCH(req: NextRequest) {
   try {
     const body = await req.json()
-    const { id, ...updates } = body
+    const { id, _usuario, ...updates } = body
 
     if (!id) {
       return NextResponse.json(
@@ -60,19 +72,78 @@ export async function PATCH(req: NextRequest) {
       )
     }
 
-    // Actualizar lead
-    const { data: lead, error } = await supabase
+    const { data: actual, error: actualError } = await supabase
       .from('leads')
-      .update(updates)
+      .select('*')
+      .eq('id', id)
+      .single()
+
+    if (actualError) {
+      return NextResponse.json(
+        { error: 'Lead no encontrado', details: actualError.message },
+        { status: 404 }
+      )
+    }
+
+    // Estado y booleanos legacy (contactado/vendido) siempre alineados
+    if (updates.estado !== undefined) {
+      if (!ESTADOS_VALIDOS.includes(updates.estado)) {
+        return NextResponse.json(
+          { error: `estado inválido: ${updates.estado}` },
+          { status: 400 }
+        )
+      }
+      Object.assign(updates, booleanosDeEstado(updates.estado as Estado))
+    } else if (updates.vendido !== undefined || updates.contactado !== undefined) {
+      const vendido = updates.vendido ?? actual.vendido
+      const contactado = updates.contactado ?? actual.contactado
+      actual.estado ??= actual.vendido ? 'vendido' : actual.contactado ? 'contactado' : 'nuevo'
+      if (vendido) updates.estado = 'vendido'
+      else if (!contactado) updates.estado = 'nuevo'
+      else if (actual.estado === 'nuevo' || actual.estado === 'vendido') updates.estado = 'contactado'
+    }
+
+    if (updates.contactado && !actual.fecha_contacto && updates.fecha_contacto === undefined) {
+      updates.fecha_contacto = new Date().toISOString()
+    }
+
+    // Sin migración aplicada (columna estado inexistente) solo se guardan los booleanos
+    const tieneEstado = 'estado' in actual
+    if (!tieneEstado && updates.estado && !['nuevo', 'contactado', 'vendido'].includes(updates.estado)) {
+      return NextResponse.json(
+        { error: 'Falta aplicar la migración de estados (supabase/migrations/20260925_leads_estado.sql)' },
+        { status: 409 }
+      )
+    }
+    const { estado: estadoNuevo, ...resto } = updates
+    const cambios = tieneEstado ? updates : resto
+
+    // Actualizar lead
+    const { data: leadDb, error } = await supabase
+      .from('leads')
+      .update(cambios)
       .eq('id', id)
       .select()
       .single()
+    const lead = leadDb && !tieneEstado ? { ...leadDb, estado: estadoNuevo ?? actual.estado } : leadDb
 
     if (error) {
       return NextResponse.json(
         { error: 'Error actualizando lead', details: error.message },
         { status: 500 }
       )
+    }
+
+    if (tieneEstado && updates.estado && updates.estado !== actual.estado) {
+      await supabase.from('lead_historial').insert({
+        lead_id: id,
+        usuario: _usuario || 'Sistema',
+        accion: 'estado',
+        campo_cambiado: 'estado',
+        valor_anterior: actual.estado,
+        valor_nuevo: updates.estado,
+        descripcion: updates.razon_no_venta ? `Motivo: ${updates.razon_no_venta}` : null
+      })
     }
 
     return NextResponse.json({
@@ -100,7 +171,10 @@ export async function POST(req: NextRequest) {
       telefono,
       empresa,
       fuente, // email, whatsapp, zapier, meta
-      observaciones
+      observaciones,
+      apellido,
+      mensaje,
+      estado
     } = body
 
     // Validar campos requeridos
@@ -126,9 +200,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Crear el lead
-    const { data: lead, error } = await supabase
-      .from('leads')
-      .insert({
+    const fila = {
         cliente_id,
         nombre: nombre || null,
         email: email || null,
@@ -136,12 +208,19 @@ export async function POST(req: NextRequest) {
         empresa: empresa || null,
         fuente,
         observaciones: observaciones || null,
-        contactado: false,
-        vendido: false,
+        apellido: apellido || null,
+        mensaje: mensaje || null,
+        ...(estado && ESTADOS_VALIDOS.includes(estado)
+          ? { estado, ...booleanosDeEstado(estado as Estado) }
+          : { contactado: false, vendido: false }),
         fecha_ingreso: new Date().toISOString()
-      })
-      .select()
-      .single()
+    }
+    let { data: lead, error } = await supabase.from('leads').insert(fila).select().single()
+    // Sin migración aplicada: reintentar sin la columna estado
+    if (error?.message.includes('estado')) {
+      const { estado: _e, ...sinEstado } = fila as Record<string, unknown>
+      ;({ data: lead, error } = await supabase.from('leads').insert(sinEstado).select().single())
+    }
 
     if (error) {
       console.error('Error creando lead:', error)

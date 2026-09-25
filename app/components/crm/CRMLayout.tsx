@@ -3,7 +3,7 @@
 import { ReactNode } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useSimpleAuth } from '@/lib/auth/simple-auth'
+import { useSimpleAuth, esComercial } from '@/lib/auth/simple-auth'
 import AuthGuard from './AuthGuard'
 
 interface CRMLayoutProps {
@@ -24,13 +24,13 @@ export default function CRMLayout({ children, title, authenticated = true, onRef
   // Filtrar navegación según rol
   const role = user?.role
 
-  const navItemsByRole: Record<string, Array<{ href: string; label: string; icon: string }>> = {
+  const navItemsByRole: Record<string, Array<{ href: string; label: string; icon: string; comercial?: boolean }>> = {
     admin: [
       { href: '/crm', label: 'CRM Admin', icon: '🏠' },
       { href: '/crm/dashboard-myp', label: 'Dashboard M&P', icon: '📊' },
+      { href: '/crm/leads', label: 'Leads M&P', icon: '📋' },
       { href: '/crm/clientes', label: 'Clientes', icon: '👥' },
       { href: '/crm/integraciones', label: 'Integraciones', icon: '🔌' },
-      { href: '/crm/grillas', label: 'Grillas', icon: '📅' },
       { href: '/crm/benchmark', label: 'Benchmark', icon: '📊' },
       { href: '/crm/prospeccion', label: 'Prospección', icon: '🎯' },
       { href: '/crm/prospeccion-2026', label: 'Prospección 2026', icon: '🔍' },
@@ -38,9 +38,8 @@ export default function CRMLayout({ children, title, authenticated = true, onRef
       { href: '/crm/copilot', label: 'M&P Copilot', icon: '📡' },
     ],
     equipo: [
-      { href: '/crm/leads', label: 'Leads', icon: '📋' },
-      { href: '/crm/prospeccion-2026', label: 'Prospección 2026', icon: '🔍' },
-      { href: '/crm/grillas', label: 'Grillas', icon: '📅' },
+      { href: '/crm/leads', label: 'Leads', icon: '📋', comercial: true },
+      { href: '/crm/prospeccion-2026', label: 'Prospección 2026', icon: '🔍', comercial: true },
       { href: '/crm/benchmark', label: 'Benchmark', icon: '📊' },
       { href: '/crm/reportes', label: 'Reportes', icon: '📈' },
     ],
@@ -49,11 +48,11 @@ export default function CRMLayout({ children, title, authenticated = true, onRef
       { href: '/crm/cliente/cotizaciones', label: 'Cotizaciones', icon: '📄' },
       { href: '/crm/cliente/analitica', label: 'Analítica', icon: '📈' },
       { href: '/crm/cliente/chatbot', label: 'ChatBot', icon: '🤖' },
-      { href: '/crm/cliente/grillas', label: 'Grillas', icon: '📅' },
     ],
   }
 
-  const navItems = navItemsByRole[role || 'cliente'] || navItemsByRole.cliente
+  const navItems = (navItemsByRole[role || 'cliente'] || navItemsByRole.cliente)
+    .filter(item => !item.comercial || esComercial(user))
 
   const handleLogout = () => {
     if (confirm('¿Estás seguro de que deseas cerrar sesión?')) {

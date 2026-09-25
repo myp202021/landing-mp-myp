@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useSimpleAuth } from '@/lib/auth/simple-auth'
+import { useSimpleAuth, inicioSegunRol } from '@/lib/auth/simple-auth'
 import { useRouter } from 'next/navigation'
 
 export default function LoginPage() {
@@ -9,15 +9,15 @@ export default function LoginPage() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
-  const { login, isAuthenticated } = useSimpleAuth()
+  const { login, isAuthenticated, user } = useSimpleAuth()
   const router = useRouter()
 
   // Si ya está autenticado, redirigir al dashboard
   useEffect(() => {
-    if (isAuthenticated) {
-      router.push('/crm')
+    if (isAuthenticated && user) {
+      router.push(inicioSegunRol(user))
     }
-  }, [isAuthenticated, router])
+  }, [isAuthenticated, user, router])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -34,11 +34,7 @@ export default function LoginPage() {
       }
 
       // Redirigir según el rol del usuario
-      if (response.user.role === 'admin') {
-        router.push('/crm')
-      } else {
-        router.push('/crm/cliente/dashboard')
-      }
+      router.push(inicioSegunRol(response.user))
     } else {
       setError(response.error || 'Error al iniciar sesión')
       setLoading(false)

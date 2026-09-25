@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
 import { useRouter } from 'next/navigation'
+import { MP_CLIENTE_ID } from '@/lib/crm/leads-pipeline'
 
 // Tipos
 export type UserRole = 'admin' | 'cliente' | 'equipo'
@@ -12,6 +13,21 @@ export interface User {
   nombre: string
   cliente_id?: string  // UUID del cliente para filtrar datos
   debe_cambiar_password?: boolean  // Flag para forzar cambio de contraseña
+}
+
+/**
+ * Comercial = usuario equipo asociado al cliente M&P (hoy: Arturo).
+ * Solo admin y comercial ven los leads propios de M&P y prospección.
+ */
+export function esComercial(user: Pick<User, 'role' | 'cliente_id'> | null | undefined): boolean {
+  if (!user) return false
+  return user.role === 'admin' || (user.role === 'equipo' && user.cliente_id === MP_CLIENTE_ID)
+}
+
+export function inicioSegunRol(user: Pick<User, 'role' | 'cliente_id'>): string {
+  if (user.role === 'cliente') return '/crm/cliente/dashboard'
+  if (user.role === 'equipo') return esComercial(user) ? '/crm/leads' : '/crm/reportes'
+  return '/crm'
 }
 
 export interface UserCredentials extends User {

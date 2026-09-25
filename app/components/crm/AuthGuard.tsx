@@ -1,6 +1,6 @@
 'use client'
 
-import { useSimpleAuth } from '@/lib/auth/simple-auth'
+import { useSimpleAuth, esComercial, inicioSegunRol } from '@/lib/auth/simple-auth'
 import { useRouter, usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
@@ -24,23 +24,24 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
     }
 
     // Si estamos en /crm/login y ya hay usuario, redirigir según rol
-    if (isAuthenticated && pathname === '/crm/login') {
-      if (user?.role === 'equipo') {
-        router.push('/crm/leads')
-      } else if (user?.role === 'cliente') {
-        router.push('/crm/cliente/dashboard')
-      } else {
-        router.push('/crm')
-      }
+    if (isAuthenticated && user && pathname === '/crm/login') {
+      router.push(inicioSegunRol(user))
+      return
     }
 
-    // Equipo solo puede ver grillas, benchmark, reportes, leads y prospeccion — redirigir si intenta otra cosa
-    if (isAuthenticated && user?.role === 'equipo' && pathname) {
-      const allowed = ['/crm/grillas', '/crm/benchmark', '/crm/reportes', '/crm/leads', '/crm/prospeccion-2026', '/crm/login']
-      const isAllowed = allowed.some(p => pathname.startsWith(p))
-      if (!isAllowed) {
-        router.push('/crm/leads')
-      }
+    if (!isAuthenticated || !user || !pathname) return
+
+    // Equipo: benchmark y reportes. Leads M&P y prospección solo comercial.
+    if (user.role === 'equipo') {
+      const allowed = ['/crm/benchmark', '/crm/reportes', '/crm/cambiar-password']
+      if (esComercial(user)) allowed.push('/crm/leads', '/crm/prospeccion-2026')
+      if (!allowed.some(p => pathname.startsWith(p))) router.push(inicioSegunRol(user))
+    }
+
+    // Cliente: solo su portal
+    if (user.role === 'cliente') {
+      const allowed = ['/crm/cliente', '/crm/cambiar-password']
+      if (!allowed.some(p => pathname.startsWith(p))) router.push(inicioSegunRol(user))
     }
   }, [user, isAuthenticated, loading, router, pathname])
 
