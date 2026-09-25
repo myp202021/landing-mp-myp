@@ -17,7 +17,8 @@ import {
   ESTADOS,
   ESTADO_MAP,
   MP_CLIENTE_ID,
-  canalDeFuente,
+  canalDeLead,
+  detalleOrigen,
   type Canal,
   type Estado,
 } from "@/lib/crm/leads-pipeline";
@@ -28,6 +29,7 @@ import {
   nombreCompleto,
   empresaDe,
 } from "@/app/components/crm/leads/types";
+import { whatsappUrl } from "@/app/components/crm/leads/types";
 import LeadsResumen from "@/app/components/crm/leads/LeadsResumen";
 import LeadDrawer from "@/app/components/crm/leads/LeadDrawer";
 import NuevoLeadModal from "@/app/components/crm/leads/NuevoLeadModal";
@@ -100,7 +102,7 @@ function descargarCSV(leads: Lead[]) {
   const cols: [string, (l: Lead) => unknown][] = [
     ["ID", (l) => l.id],
     ["Fecha", (l) => fechaLocal(l.fecha_ingreso)],
-    ["Fuente", (l) => CANAL_MAP[canalDeFuente(l.fuente)].label],
+    ["Fuente", (l) => CANAL_MAP[canalDeLead(l)].label],
     ["Fuente original", (l) => l.fuente],
     ["Nombre", (l) => nombreCompleto(l)],
     ["Empresa", (l) => empresaDe(l)],
@@ -142,7 +144,17 @@ function LeadsMP() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const [tab, setTab] = useState<"resumen" | "leads">("leads");
+  const [tab, setTab] = useState<"dashboard" | "leads">(() =>
+    typeof window !== "undefined" && new URLSearchParams(window.location.search).get("tab") === "dashboard"
+      ? "dashboard"
+      : "leads",
+  );
+  const cambiarTab = (t: "dashboard" | "leads") => {
+    setTab(t);
+    try {
+      window.history.replaceState(null, "", t === "dashboard" ? "?tab=dashboard" : window.location.pathname);
+    } catch {}
+  };
   const [rango, setRango] = useState<Rango>("todo");
   const [desde, setDesde] = useState("");
   const [hasta, setHasta] = useState("");
@@ -191,7 +203,7 @@ function LeadsMP() {
     return leads.filter((l) => {
       const f = fechaLocal(l.fecha_ingreso);
       if (f < d || f > h) return false;
-      if (canales.size && !canales.has(canalDeFuente(l.fuente))) return false;
+      if (canales.size && !canales.has(canalDeLead(l))) return false;
       return true;
     });
   }, [leads, rango, desde, hasta, canales]);
@@ -260,7 +272,7 @@ function LeadsMP() {
   const irALista = (f: { canal?: Canal; estado?: Estado }) => {
     if (f.canal) setCanales(new Set([f.canal]));
     if (f.estado) setEstados(new Set([f.estado]));
-    setTab("leads");
+    cambiarTab("leads");
   };
 
   const hayFiltros = canales.size > 0 || estados.size > 0 || search !== "";
@@ -349,6 +361,7 @@ function LeadsMP() {
                 </span>
               )}
             </div>
+            {tab === "dashboard" && (
             <div className="flex flex-wrap items-center gap-2">
               <span className="text-xs font-semibold text-gray-500 w-16">
                 Ver por
@@ -363,6 +376,7 @@ function LeadsMP() {
                 </button>
               ))}
             </div>
+            )}
             <div className="flex flex-wrap items-center gap-2">
               <span className="text-xs font-semibold text-gray-500 w-16">
                 Fuente
@@ -392,14 +406,14 @@ function LeadsMP() {
           </div>
 
           {/* Tabs */}
-          <div className="flex gap-1 mb-5">
-            {(["leads", "resumen"] as const).map((t) => (
+          <div className="flex gap-6 mb-5 border-b border-gray-200">
+            {(["leads", "dashboard"] as const).map((t) => (
               <button
                 key={t}
-                onClick={() => setTab(t)}
-                className={`px-4 py-2 rounded-lg text-sm font-medium ${tab === t ? "bg-blue-50 text-blue-700" : "text-gray-600 hover:bg-gray-50"}`}
+                onClick={() => cambiarTab(t)}
+                className={`-mb-px pb-3 text-base font-semibold border-b-2 ${tab === t ? "border-blue-600 text-blue-700" : "border-transparent text-gray-500 hover:text-gray-800"}`}
               >
-                {t === "resumen" ? "Resumen y hallazgos" : `Leads (${filtrados.length})`}
+                {t === "dashboard" ? "Dashboard" : `Leads (${filtrados.length})`}
               </button>
             ))}
           </div>
@@ -414,7 +428,7 @@ function LeadsMP() {
             <div className="text-center py-16 text-gray-500">
               Cargando leads…
             </div>
-          ) : tab === "resumen" ? (
+          ) : tab === "dashboard" ? (
             <LeadsResumen
               leads={enPeriodo}
               agrupacion={agrupacion}
@@ -422,26 +436,39 @@ function LeadsMP() {
             />
           ) : (
             <>
-              <div className="flex flex-wrap items-center gap-2 mb-4">
+              <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2 mb-4">
+                <button
+                  onClick={() => setEstados(new Set())}
+                  className={`rounded-lg p-3 text-left bg-slate-900 text-white ${estados.size === 0 ? "ring-2 ring-offset-1 ring-slate-400" : "opacity-80 hover:opacity-100"}`}
+                >
+                  <p className="text-xs opacity-80">Total leads</p>
+                  <p className="text-2xl font-bold tabular-nums">{enPeriodo.length}</p>
+                </button>
+                {ESTADOS.map((e) => {
+                  const n = enPeriodo.filter((l) => l.estado === e.id).length;
+                  return (
+                    <button
+                      key={e.id}
+                      onClick={() => setEstados((s) => toggle(s, e.id))}
+                      className={`rounded-lg p-3 text-left ${e.badge} ${estados.has(e.id) ? "ring-2 ring-offset-1 ring-gray-500" : "hover:ring-1 hover:ring-gray-300"}`}
+                    >
+                      <p className="text-xs font-medium opacity-80">{e.id === "nuevo" ? "Sin contactar" : e.label}</p>
+                      <p className="text-2xl font-bold tabular-nums">{n}</p>
+                      <p className="text-[11px] opacity-70 tabular-nums">
+                        {enPeriodo.length ? `${((n / enPeriodo.length) * 100).toFixed(1)}%` : "—"}
+                      </p>
+                    </button>
+                  );
+                })}
+              </div>
+              <div className="mb-4">
                 <input
                   type="search"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder="Buscar nombre, empresa, email, teléfono, notas…"
-                  className="border border-gray-300 rounded px-3 py-2 text-sm w-full md:w-80"
+                  className="border border-gray-300 rounded px-3 py-2 text-sm w-full md:w-96"
                 />
-                {ESTADOS.map((e) => (
-                  <button
-                    key={e.id}
-                    onClick={() => setEstados((s) => toggle(s, e.id))}
-                    className={pill(estados.has(e.id))}
-                  >
-                    {e.label}{" "}
-                    <span className="opacity-60">
-                      {enPeriodo.filter((l) => l.estado === e.id).length}
-                    </span>
-                  </button>
-                ))}
               </div>
 
               {filtrados.length === 0 ? (
@@ -455,15 +482,17 @@ function LeadsMP() {
                       <tr>
                         <th className="px-3 py-2 text-left">Fecha</th>
                         <th className="px-3 py-2 text-left">Fuente</th>
-                        <th className="px-3 py-2 text-left">Lead</th>
-                        <th className="px-3 py-2 text-left">Contacto</th>
+                        <th className="px-3 py-2 text-left">Nombre / empresa</th>
+                        <th className="px-3 py-2 text-left">Email</th>
+                        <th className="px-3 py-2 text-left">Teléfono</th>
                         <th className="px-3 py-2 text-left">Estado</th>
                         <th className="px-3 py-2 text-left">Motivo / notas</th>
+                        <th className="px-3 py-2 text-left">Acciones</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-100">
                       {filtrados.slice(0, visibles).map((lead) => {
-                        const canal = CANAL_MAP[canalDeFuente(lead.fuente)];
+                        const canal = CANAL_MAP[canalDeLead(lead)];
                         const est = ESTADO_MAP[lead.estado];
                         return (
                           <tr
@@ -481,6 +510,7 @@ function LeadsMP() {
                                   year: "2-digit",
                                 },
                               )}
+                              <div className="text-[10px] text-gray-400">#{lead.id}</div>
                             </td>
                             <td className="px-3 py-2 whitespace-nowrap">
                               <span
@@ -490,6 +520,11 @@ function LeadsMP() {
                               >
                                 {canal.label}
                               </span>
+                              {detalleOrigen(lead) && (
+                                <div className="text-[11px] text-gray-500 mt-1 max-w-[180px] truncate" title={detalleOrigen(lead) || ""}>
+                                  {detalleOrigen(lead)}
+                                </div>
+                              )}
                             </td>
                             <td className="px-3 py-2">
                               <div className="font-medium text-gray-900">
@@ -501,13 +536,11 @@ function LeadsMP() {
                                 </div>
                               )}
                             </td>
-                            <td className="px-3 py-2 text-xs text-gray-600">
-                              {lead.telefono && <div>{lead.telefono}</div>}
-                              {lead.email && (
-                                <div className="truncate max-w-[220px]">
-                                  {lead.email}
-                                </div>
-                              )}
+                            <td className="px-3 py-2 text-xs text-gray-700 max-w-[220px] truncate">
+                              {lead.email || "—"}
+                            </td>
+                            <td className="px-3 py-2 text-xs text-gray-700 whitespace-nowrap">
+                              {lead.telefono || "—"}
                             </td>
                             <td
                               className="px-3 py-2"
@@ -536,6 +569,32 @@ function LeadsMP() {
                               {lead.notas && (
                                 <div className="truncate">{lead.notas}</div>
                               )}
+                            </td>
+                            <td className="px-3 py-2 whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
+                              <div className="flex gap-1">
+                                <button
+                                  onClick={() => setAbierto(lead)}
+                                  className="px-2 py-1 rounded text-xs bg-blue-600 text-white hover:bg-blue-700"
+                                >
+                                  Ver / editar
+                                </button>
+                                {whatsappUrl(lead.telefono) && (
+                                  <a
+                                    href={whatsappUrl(lead.telefono)!}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="px-2 py-1 rounded text-xs bg-green-600 text-white hover:bg-green-700"
+                                  >
+                                    WhatsApp
+                                  </a>
+                                )}
+                                <Link
+                                  href={`/crm/cotizar/${lead.id}`}
+                                  className="px-2 py-1 rounded text-xs border border-gray-300 text-gray-700 hover:bg-gray-50"
+                                >
+                                  Cotizar
+                                </Link>
+                              </div>
                             </td>
                           </tr>
                         );

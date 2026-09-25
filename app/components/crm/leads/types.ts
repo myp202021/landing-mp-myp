@@ -102,3 +102,12 @@ export function siguientePeriodo(periodo: string, agrupacion: Agrupacion): strin
   d.setUTCDate(d.getUTCDate() + (agrupacion === "semana" ? 7 : 1));
   return d.toISOString().slice(0, 10);
 }
+
+/** Link wa.me desde un teléfono chileno (9 dígitos o con +56) */
+export function whatsappUrl(tel: string | null) {
+  if (!tel) return null;
+  let n = tel.replace(/\D/g, "");
+  if (n.length === 9 && n.startsWith("9")) n = "56" + n;
+  if (n.length < 10) return null;
+  return `https://wa.me/${n}`;
+}

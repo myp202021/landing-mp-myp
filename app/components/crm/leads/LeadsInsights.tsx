@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
-import { CANAL_MAP, canalDeFuente, type Canal } from "@/lib/crm/leads-pipeline";
+import { CANAL_MAP, canalDeLead, type Canal } from "@/lib/crm/leads-pipeline";
 import { type Lead, periodoDe, etiquetaPeriodo, fechaLocal } from "./types";
 
 const DIAS = [
@@ -92,7 +92,7 @@ export default function LeadsInsights({ leads }: { leads: Lead[] }) {
       }
       if (l.estado === "vendido") ultimaVenta = Math.max(ultimaVenta, d.getTime());
 
-      const canal = canalDeFuente(l.fuente);
+      const canal = canalDeLead(l);
       contar(porCanal, canal);
       if (l.estado === "vendido") contar(ventasCanal, canal);
 

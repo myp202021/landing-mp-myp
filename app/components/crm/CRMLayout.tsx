@@ -52,7 +52,7 @@ export default function CRMLayout({ children, title, authenticated = true, onRef
   }
 
   const navItems = (navItemsByRole[role || 'cliente'] || navItemsByRole.cliente)
-    .filter(item => !item.comercial || esComercial(user))
+    .filter(item => role !== 'equipo' || !!item.comercial === esComercial(user))
 
   const handleLogout = () => {
     if (confirm('¿Estás seguro de que deseas cerrar sesión?')) {

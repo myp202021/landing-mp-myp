@@ -7,10 +7,10 @@ import {
   ESTADO_MAP,
   MOTIVOS,
   CANAL_MAP,
-  canalDeFuente,
+  canalDeLead,
   type Estado,
 } from "@/lib/crm/leads-pipeline";
-import { type Lead, nombreCompleto, empresaDe } from "./types";
+import { type Lead, nombreCompleto, empresaDe, whatsappUrl } from "./types";
 
 interface Historial {
   id: number;
@@ -41,13 +41,6 @@ const CAMPOS_CONTACTO: { key: keyof Lead; label: string; type?: string }[] = [
   { key: "servicio", label: "Servicio de interés" },
 ];
 
-function whatsappUrl(tel: string | null) {
-  if (!tel) return null;
-  let n = tel.replace(/\D/g, "");
-  if (n.length === 9 && n.startsWith("9")) n = "56" + n;
-  if (n.length < 10) return null;
-  return `https://wa.me/${n}`;
-}
 
 export default function LeadDrawer({
   lead,
@@ -143,7 +136,7 @@ export default function LeadDrawer({
     }
   };
 
-  const canal = CANAL_MAP[canalDeFuente(lead.fuente)];
+  const canal = CANAL_MAP[canalDeLead(lead)];
   const wa = whatsappUrl(form.telefono);
   const motivos = MOTIVOS[form.estado] || [];
   const pideMotivo =

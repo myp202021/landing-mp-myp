@@ -31,10 +31,11 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
 
     if (!isAuthenticated || !user || !pathname) return
 
-    // Equipo: benchmark y reportes. Leads M&P y prospección solo comercial.
     if (user.role === 'equipo') {
-      const allowed = ['/crm/benchmark', '/crm/reportes', '/crm/cambiar-password']
-      if (esComercial(user)) allowed.push('/crm/leads', '/crm/prospeccion-2026')
+      // Comercial: solo leads M&P y prospección. Resto del equipo: benchmark y reportes.
+      const allowed = esComercial(user)
+        ? ['/crm/leads', '/crm/prospeccion-2026', '/crm/cambiar-password']
+        : ['/crm/benchmark', '/crm/reportes', '/crm/cambiar-password']
       if (!allowed.some(p => pathname.startsWith(p))) router.push(inicioSegunRol(user))
     }
 

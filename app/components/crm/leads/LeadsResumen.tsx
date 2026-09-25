@@ -14,7 +14,7 @@ import {
 import {
   CANALES,
   ESTADOS,
-  canalDeFuente,
+  canalDeLead,
   type Canal,
   type Estado,
 } from "@/lib/crm/leads-pipeline";
@@ -85,7 +85,7 @@ export default function LeadsResumen({ leads, agrupacion, onFiltrar }: Props) {
     for (const lead of leads) {
       sumar(total, lead);
 
-      const canal = canalDeFuente(lead.fuente);
+      const canal = canalDeLead(lead);
       if (!porCanal.has(canal)) porCanal.set(canal, conteoVacio());
       sumar(porCanal.get(canal)!, lead);
 

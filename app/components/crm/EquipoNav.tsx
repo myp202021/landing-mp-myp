@@ -7,8 +7,8 @@ import { useSimpleAuth, esComercial } from '@/lib/auth/simple-auth'
 const links = [
   { href: '/crm/leads', label: 'Leads', comercial: true },
   { href: '/crm/prospeccion-2026', label: 'Prospección', comercial: true },
-  { href: '/crm/benchmark', label: 'Benchmark' },
-  { href: '/crm/reportes', label: 'Reportes' },
+  { href: '/crm/benchmark', label: 'Benchmark', comercial: false },
+  { href: '/crm/reportes', label: 'Reportes', comercial: false },
 ]
 
 export default function EquipoNav() {
@@ -21,7 +21,7 @@ export default function EquipoNav() {
     <nav className="bg-white border-b border-gray-200 px-4 py-2 flex items-center justify-between mb-4">
       <div className="flex items-center gap-1">
         <span className="text-xs font-bold text-gray-400 mr-3">M&P CRM</span>
-        {links.filter(l => !l.comercial || esComercial(user)).map(l => (
+        {links.filter(l => (l.comercial ?? false) === esComercial(user)).map(l => (
           <Link
             key={l.href}
             href={l.href}

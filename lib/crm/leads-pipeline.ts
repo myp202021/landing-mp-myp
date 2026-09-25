@@ -20,7 +20,7 @@ export type Canal =
   | "otro";
 
 export const CANALES: { id: Canal; label: string; color: string }[] = [
-  { id: "zapier", label: "Zapier", color: "#f97316" },
+  { id: "zapier", label: "Zapier (Meta)", color: "#f97316" },
   { id: "meta", label: "Meta", color: "#3b82f6" },
   { id: "google", label: "Google", color: "#ef4444" },
   { id: "lead_magnet", label: "Lead Magnet", color: "#a855f7" },
@@ -35,6 +35,38 @@ export const CANALES: { id: Canal; label: string; color: string }[] = [
 export const CANAL_MAP = Object.fromEntries(
   CANALES.map((c) => [c.id, c]),
 ) as Record<Canal, (typeof CANALES)[number]>;
+
+interface LeadOrigen {
+  fuente: string | null;
+  form_nombre?: string | null;
+  campana_nombre?: string | null;
+  observaciones?: string | null;
+}
+
+/** Canal = por dónde entró el lead (chatbot, formulario, Zapier…). */
+export function canalDeLead(lead: LeadOrigen): Canal {
+  // El chatbot guarda en `fuente` el origen del tráfico; el canal es el chatbot
+  if ((lead.form_nombre || "").toLowerCase().includes("chatbot")) return "chatbot";
+  return canalDeFuente(lead.fuente);
+}
+
+/** Detalle del origen: campaña, formulario, tráfico del chatbot, etc. */
+export function detalleOrigen(lead: LeadOrigen): string | null {
+  const obs = lead.observaciones || "";
+  const canal = canalDeLead(lead);
+  if (canal === "chatbot") {
+    const m = obs.match(/\[([^\]]+)\]/);
+    return m ? `Tráfico: ${m[1]}` : null;
+  }
+  if (lead.campana_nombre) return lead.campana_nombre;
+  const camp = obs.match(/Campaña:\s*([^|\n]+)/);
+  if (camp) return camp[1].trim();
+  if (canal === "lead_magnet" && lead.form_nombre) return lead.form_nombre.replace(/^Lead Magnet:\s*/, "");
+  const f = (lead.fuente || "").toLowerCase();
+  if (f === "landing-ads") return "Landing /ads";
+  if (f === "calculadora_roi") return "Calculadora ROI";
+  return null;
+}
 
 export function canalDeFuente(fuente: string | null | undefined): Canal {
   const f = (fuente || "").toLowerCase();
