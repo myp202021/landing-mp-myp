@@ -443,7 +443,8 @@ RESPONDE SOLO CON EL HTML DE ESTA SECCIÓN. Nada más.`
 
   const data = await res.json()
   let html = data.choices[0].message.content
-  html = html.replace(/^```html\n?/g, '').replace(/\n?```$/g, '').trim()
+  // Quitar cercos ```html en cualquier posición (antes solo al inicio/fin exacto y se colaban al sitio)
+  html = html.replace(/```[a-z]*/gi, '').trim()
 
   console.log(`   ✅ Sección ${index + 1}: ${html.length} chars`)
   return html

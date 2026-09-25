@@ -287,7 +287,8 @@ async function generarSeccion(seccion, index, total, tema, linksInternos) {
   })
   var data = await r.json()
   var html = data.choices[0].message.content
-  html = html.replace(/^```html\n?/, '').replace(/\n?```$/, '').trim()
+  // Quitar cercos ```html en cualquier posición (antes solo al inicio/fin exacto y se colaban al sitio)
+  html = html.replace(/```[a-z]*/gi, '').trim()
   var wc = html.replace(/<[^>]*>/g, ' ').split(/\s+/).filter(function(w) { return w.length > 0 }).length
   console.log('     Sección ' + (index + 1) + ': ' + seccion.h2.substring(0, 40) + '... → ' + wc + ' palabras')
   return html
