@@ -536,7 +536,7 @@ function LeadsMP() {
                                 </div>
                               )}
                             </td>
-                            <td className="px-3 py-2 text-xs text-gray-700 max-w-[220px] truncate">
+                            <td className="px-3 py-2 text-xs text-gray-700 max-w-[190px] truncate">
                               {lead.email || "—"}
                             </td>
                             <td className="px-3 py-2 text-xs text-gray-700 whitespace-nowrap">
@@ -560,7 +560,7 @@ function LeadsMP() {
                                 ))}
                               </select>
                             </td>
-                            <td className="px-3 py-2 text-xs text-gray-600 max-w-[260px]">
+                            <td className="px-3 py-2 text-xs text-gray-600 max-w-[180px]">
                               {lead.razon_no_venta && (
                                 <div className="font-medium text-gray-800">
                                   {lead.razon_no_venta}
@@ -576,7 +576,7 @@ function LeadsMP() {
                                   onClick={() => setAbierto(lead)}
                                   className="px-2 py-1 rounded text-xs bg-blue-600 text-white hover:bg-blue-700"
                                 >
-                                  Ver / editar
+                                  Ver
                                 </button>
                                 {whatsappUrl(lead.telefono) && (
                                   <a
@@ -588,12 +588,6 @@ function LeadsMP() {
                                     WhatsApp
                                   </a>
                                 )}
-                                <Link
-                                  href={`/crm/cotizar/${lead.id}`}
-                                  className="px-2 py-1 rounded text-xs border border-gray-300 text-gray-700 hover:bg-gray-50"
-                                >
-                                  Cotizar
-                                </Link>
                               </div>
                             </td>
                           </tr>
