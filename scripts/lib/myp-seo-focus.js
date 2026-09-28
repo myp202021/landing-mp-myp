@@ -334,11 +334,31 @@ function instruccionesCluster(cluster, keyword, modo) {
 // ═══ PULIDO FINAL COMÚN (blog diario, GEO diario, ranking semanal) ═══
 
 // Palabras que la IA a veces escribe sin tilde o sin ñ
-var SIN_TILDE = ["tecnologia", "compania", "informacion", "metodologia", "analisis", "busqueda", "pagina", "numero",
-  "ultimo", "unico", "publico", "estrategico", "tambien", "ademas", "diseno", "campana", "campanas", "pequenas",
-  "segun", "despues", "rapido", "economico", "metricas", "optimizacion", "automatizacion",
-  "organico", "anos de", "espanol", "senal", "tecnica", "grafico", "estadisticas"]
-// Fuera de la lista: palabras que también son nombres de productos en inglés ("Conversion API", "inversion").;
+var ACENTOS = {
+  tecnologia: "tecnología", compania: "compañía", informacion: "información", metodologia: "metodología",
+  analisis: "análisis", busqueda: "búsqueda", busquedas: "búsquedas", pagina: "página", paginas: "páginas",
+  numero: "número", numeros: "números", ultimo: "último", ultimos: "últimos", unico: "único", unica: "única",
+  estrategico: "estratégico", estrategicos: "estratégicos", tambien: "también", ademas: "además",
+  diseno: "diseño", campana: "campaña", campanas: "campañas", pequenas: "pequeñas", segun: "según",
+  despues: "después", rapido: "rápido", economico: "económico", metricas: "métricas", optimizacion: "optimización",
+  automatizacion: "automatización", organico: "orgánico", espanol: "español", tecnica: "técnica",
+  grafico: "gráfico", estadisticas: "estadísticas",
+};
+// Fuera de la lista: palabras que también son nombres de productos en inglés ("Conversion API", "inversion").
+var SIN_TILDE = Object.keys(ACENTOS);
+
+// Reemplazo seguro palabra por palabra, solo en el texto entre etiquetas (nunca en href ni atributos)
+function acentuarTexto(html) {
+  var rx = new RegExp("\\b(" + SIN_TILDE.join("|") + ")\\b", "gi");
+  return String(html).replace(/>([^<]+)</g, function (m, texto) {
+    return ">" + texto.replace(rx, function (w) {
+      var r = ACENTOS[w.toLowerCase()];
+      if (!r) return w;
+      return w[0] === w[0].toUpperCase() ? r[0].toUpperCase() + r.slice(1) : r;
+    }) + "<";
+  });
+}
+
 function faltasOrtografia(html) {
   var t = " " + String(html).replace(/<[^>]*>/g, " ").toLowerCase() + " ";
   return SIN_TILDE.filter(function (w) {
@@ -483,7 +503,8 @@ async function pulirArticulo(html, opts) {
   var cierre = out.lastIndexOf("</div>");
   var bloque = fuentesHtml(fuentes);
   if (bloque) out = /^<div class="prose/.test(out) && cierre > 0 ? out.slice(0, cierre) + bloque + "\n</div>" : out + bloque;
-  return out;
+  // Al final (después de agregar fuentes): ninguna tilde faltante debe botar un artículo
+  return acentuarTexto(out);
 }
 
 module.exports = {
