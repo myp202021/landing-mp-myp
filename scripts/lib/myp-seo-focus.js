@@ -336,8 +336,9 @@ function instruccionesCluster(cluster, keyword, modo) {
 // Palabras que la IA a veces escribe sin tilde o sin ñ
 var SIN_TILDE = ["tecnologia", "compania", "informacion", "metodologia", "analisis", "busqueda", "pagina", "numero",
   "ultimo", "unico", "publico", "estrategico", "tambien", "ademas", "diseno", "campana", "campanas", "pequenas",
-  "segun", "despues", "rapido", "economico", "metricas", "optimizacion", "automatizacion", "conversion", "inversion",
-  "organico", "anos de", "espanol", "senal", "tecnica", "grafico", "estadisticas", "rentabilidad maxima"];
+  "segun", "despues", "rapido", "economico", "metricas", "optimizacion", "automatizacion",
+  "organico", "anos de", "espanol", "senal", "tecnica", "grafico", "estadisticas"]
+// Fuera de la lista: palabras que también son nombres de productos en inglés ("Conversion API", "inversion").;
 function faltasOrtografia(html) {
   var t = " " + String(html).replace(/<[^>]*>/g, " ").toLowerCase() + " ";
   return SIN_TILDE.filter(function (w) {

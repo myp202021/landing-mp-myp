@@ -1,0 +1,402 @@
+[
+  {
+    "id": "blog-diario",
+    "nombre": "Agente de blog diario",
+    "area": "Blog",
+    "que_hace": "Investiga, redacta y publica un artículo SEO de más de 3.000 palabras sobre performance, IA o paid media, con tablas, preguntas frecuentes y links internos.",
+    "frecuencia": "Todos los días",
+    "repo": "myp202021/landing-mp-myp",
+    "workflow": "blog-diario.yml",
+    "url_publica": "/blog"
+  },
+  {
+    "id": "blog-geo",
+    "nombre": "Agente GEO de respuesta directa",
+    "area": "GEO",
+    "que_hace": "Publica artículos en formato pregunta-respuesta pensados para que ChatGPT, Gemini, Claude y Perplexity los citen.",
+    "frecuencia": "Lunes a viernes",
+    "repo": "myp202021/landing-mp-myp",
+    "workflow": "blog-geo-diario.yml",
+    "url_publica": "/blog"
+  },
+  {
+    "id": "ranking-semanal",
+    "nombre": "Agente de ranking semanal",
+    "area": "Blog",
+    "que_hace": "Publica cada semana un análisis de autoridad con datos: rankings, benchmarks y tendencias del mercado chileno.",
+    "frecuencia": "Jueves",
+    "repo": "myp202021/landing-mp-myp",
+    "workflow": "blog-rankings-semanal.yml",
+    "url_publica": "/blog"
+  },
+  {
+    "id": "ranking-verificado",
+    "nombre": "Agente de ranking verificado de agencias",
+    "area": "GEO",
+    "que_hace": "Investiga agencias con búsqueda web, comprueba cada fuente y cita, y recalcula un ranking público con reglas fijas.",
+    "frecuencia": "Día 1 de cada mes",
+    "repo": "myp202021/landing-mp-myp",
+    "workflow": "ranking-agencias-verificado.yml",
+    "url_publica": "/blog/ranking-agencias-marketing-digital-chile-verificado"
+  },
+  {
+    "id": "columna",
+    "nombre": "Agente de columna de opinión",
+    "area": "Contenido",
+    "que_hace": "Redacta la columna semanal de Christopher Müller a partir de casos reales de la agencia.",
+    "frecuencia": "Lunes",
+    "repo": "myp202021/landing-mp-myp",
+    "workflow": "columna-semanal.yml",
+    "url_publica": "/blog"
+  },
+  {
+    "id": "termometro",
+    "nombre": "Termómetro del marketing digital",
+    "area": "Datos de mercado",
+    "que_hace": "Actualiza los indicadores públicos de CPC y CPL por industria en Chile.",
+    "frecuencia": "Sábados",
+    "repo": "myp202021/landing-mp-myp",
+    "workflow": "indicadores-marketing.yml",
+    "url_publica": "/indicadores"
+  },
+  {
+    "id": "revisor-editorial",
+    "nombre": "Revisor editorial",
+    "area": "Revisores de calidad",
+    "que_hace": "Revisa cada artículo antes de publicarlo: repeticiones, relleno, cifras, preguntas frecuentes, ortografía, tildes y ñ.",
+    "frecuencia": "En cada publicación",
+    "repo": "myp202021/landing-mp-myp",
+    "workflow": "blog-diario.yml",
+    "url_publica": null
+  },
+  {
+    "id": "verificador-fuentes",
+    "nombre": "Verificador de fuentes y citas",
+    "area": "Revisores de calidad",
+    "que_hace": "Comprueba que cada URL citada responda y que cada cita textual exista en la página de origen.",
+    "frecuencia": "En cada publicación",
+    "repo": "myp202021/landing-mp-myp",
+    "workflow": "ranking-agencias-verificado.yml",
+    "url_publica": null
+  },
+  {
+    "id": "revisor-grillas",
+    "nombre": "Revisor de grillas",
+    "area": "Revisores de calidad",
+    "que_hace": "Revisa las grillas de contenido para redes antes de enviarlas al cliente: tono, errores y coherencia con la marca.",
+    "frecuencia": "Mensual",
+    "repo": "myp202021/landing-mp-myp",
+    "workflow": "revisar-grillas.yml",
+    "url_publica": null
+  },
+  {
+    "id": "auditoria-seo-geo",
+    "nombre": "Agente de auditoría SEO + GEO",
+    "area": "Auditoría SEO",
+    "que_hace": "Audita SEO técnico, contenido, rendimiento y señales GEO de un sitio y lo compara contra sus competidores, con informe en PDF.",
+    "frecuencia": "Bajo demanda",
+    "repo": "myp202021/landing-mp-myp",
+    "workflow": null,
+    "url_publica": "/servicios/geo-chile"
+  },
+  {
+    "id": "blog-wms",
+    "nombre": "Blog diario — cliente de software logístico (WMS)",
+    "area": "Blog",
+    "que_hace": "Publica contenido SEO diario para un cliente de software WMS en Chile y Latinoamérica.",
+    "frecuencia": "Lunes a viernes",
+    "repo": "myp202021/invas-wms-seo",
+    "workflow": "invas-blog-diario.yml",
+    "url_publica": null
+  },
+  {
+    "id": "ranking-wms",
+    "nombre": "Ranking semanal — cliente de software logístico",
+    "area": "Blog",
+    "que_hace": "Publica rankings y comparativas semanales del sector logístico para el mismo cliente.",
+    "frecuencia": "Jueves",
+    "repo": "myp202021/invas-wms-seo",
+    "workflow": "invas-rankings-semanal.yml",
+    "url_publica": null
+  },
+  {
+    "id": "blog-importadora",
+    "nombre": "Blog diario — cliente importador mayorista de tecnología",
+    "area": "Blog",
+    "que_hace": "Publica guías de compra y comparativas B2B para retailers.",
+    "frecuencia": "Lunes a viernes",
+    "repo": "myp202021/distec-seo",
+    "workflow": "distec-blog-diario.yml",
+    "url_publica": null
+  },
+  {
+    "id": "blog-industrial",
+    "nombre": "Blog diario — cliente de equipamiento industrial",
+    "area": "Blog",
+    "que_hace": "Publica artículos técnicos sobre equipos de elevación para empresas.",
+    "frecuencia": "Lunes a viernes",
+    "repo": "myp202021/halterlift-panel",
+    "workflow": "halterlift-blog-daily.yml",
+    "url_publica": null
+  },
+  {
+    "id": "blog-outplacement",
+    "nombre": "Blog diario — cliente de outplacement",
+    "area": "Blog",
+    "que_hace": "Publica contenido sobre empleabilidad y transición laboral.",
+    "frecuencia": "Lunes a viernes",
+    "repo": "myp202021/lablab-seo",
+    "workflow": "lablab-blog-diario.yml",
+    "url_publica": null
+  },
+  {
+    "id": "ranking-outplacement",
+    "nombre": "Ranking semanal — cliente de outplacement",
+    "area": "Blog",
+    "que_hace": "Publica rankings semanales del sector de recursos humanos.",
+    "frecuencia": "Viernes",
+    "repo": "myp202021/lablab-seo",
+    "workflow": "lablab-rankings-semanal.yml",
+    "url_publica": null
+  },
+  {
+    "id": "blog-legal",
+    "nombre": "Blog diario — cliente legal inmobiliario",
+    "area": "Blog",
+    "que_hace": "Publica contenido sobre recuperación de pie inmobiliario y derechos del comprador.",
+    "frecuencia": "Lunes a viernes",
+    "repo": "myp202021/devuelvemipie-seo",
+    "workflow": "dmp-blog-diario.yml",
+    "url_publica": null
+  },
+  {
+    "id": "ranking-legal",
+    "nombre": "Ranking semanal — cliente legal inmobiliario",
+    "area": "Blog",
+    "que_hace": "Publica comparativas semanales del sector.",
+    "frecuencia": "Viernes",
+    "repo": "myp202021/devuelvemipie-seo",
+    "workflow": "dmp-blog-rankings-semanal.yml",
+    "url_publica": null
+  },
+  {
+    "id": "blog-energia",
+    "nombre": "Blog diario — cliente de energía solar",
+    "area": "Blog",
+    "que_hace": "Publica contenido técnico y comercial sobre energía solar para empresas.",
+    "frecuencia": "Lunes a viernes",
+    "repo": "myp202021/tritec-seo",
+    "workflow": "blog-diario.yml",
+    "url_publica": null
+  },
+  {
+    "id": "ranking-energia",
+    "nombre": "Ranking semanal — cliente de energía solar",
+    "area": "Blog",
+    "que_hace": "Publica rankings semanales del sector energético.",
+    "frecuencia": "Viernes",
+    "repo": "myp202021/tritec-seo",
+    "workflow": "ranking-semanal.yml",
+    "url_publica": null
+  },
+  {
+    "id": "blog-finanzas",
+    "nombre": "Blog diario — cliente de planificación financiera",
+    "area": "Blog",
+    "que_hace": "Publica contenido sobre planificación patrimonial y financiera.",
+    "frecuencia": "Lunes a viernes",
+    "repo": "myp202021/wiseplan-seo",
+    "workflow": "wiseplan-blog-diario.yml",
+    "url_publica": null
+  },
+  {
+    "id": "ranking-finanzas",
+    "nombre": "Ranking semanal — cliente de planificación financiera",
+    "area": "Blog",
+    "que_hace": "Publica comparativas semanales del sector financiero.",
+    "frecuencia": "Viernes",
+    "repo": "myp202021/wiseplan-seo",
+    "workflow": "wiseplan-ranking-semanal.yml",
+    "url_publica": null
+  },
+  {
+    "id": "blog-sorteos",
+    "nombre": "Blog diario — cliente de sorteos",
+    "area": "Blog",
+    "que_hace": "Publica contenido diario para un cliente de sorteos y premios.",
+    "frecuencia": "Lunes a viernes",
+    "repo": "myp202021/premiosincreibles-seo",
+    "workflow": "pinc-blog-diario.yml",
+    "url_publica": null
+  },
+  {
+    "id": "copilot",
+    "nombre": "Copilot: monitoreo de competencia con IA",
+    "area": "Monitoreo de competencia",
+    "que_hace": "Recolecta las publicaciones de la competencia en redes, las analiza con IA y genera recomendaciones y contenido.",
+    "frecuencia": "Lunes a viernes",
+    "repo": "myp202021/landing-mp-myp",
+    "workflow": "copilot-agentes-test.yml",
+    "url_publica": "/copilot"
+  },
+  {
+    "id": "radar-competencia",
+    "nombre": "Radar de competencia — cliente B2B",
+    "area": "Monitoreo de competencia",
+    "que_hace": "Informe diario de lo que publica la competencia de un cliente, con análisis y alertas.",
+    "frecuencia": "Lunes a viernes",
+    "repo": "myp202021/landing-mp-myp",
+    "workflow": "competencia-genera.yml",
+    "url_publica": null
+  },
+  {
+    "id": "competencia-transporte",
+    "nombre": "Reporte de competencia — cliente de transporte",
+    "area": "Monitoreo de competencia",
+    "que_hace": "Reporte diario de precios, promociones y publicaciones de la competencia de un cliente de transporte interurbano.",
+    "frecuencia": "Lunes a viernes",
+    "repo": "myp202021/landing-mp-myp",
+    "workflow": "competencia-hualpen.yml",
+    "url_publica": null
+  },
+  {
+    "id": "clipping-prensa",
+    "nombre": "Clipping de prensa",
+    "area": "Monitoreo de competencia",
+    "que_hace": "Detecta menciones de la marca y su competencia en medios chilenos.",
+    "frecuencia": "Todos los días",
+    "repo": "myp202021/landing-mp-myp",
+    "workflow": "clipping-prensa-hualpen.yml",
+    "url_publica": null
+  },
+  {
+    "id": "clipping-artistas",
+    "nombre": "Clipping de artistas",
+    "area": "Monitoreo de competencia",
+    "que_hace": "Monitorea prensa y redes de los artistas de un cliente del rubro espectáculos.",
+    "frecuencia": "Todos los días",
+    "repo": "myp202021/landing-mp-myp",
+    "workflow": "clipping-swing-artistas.yml",
+    "url_publica": null
+  },
+  {
+    "id": "radar-clipping",
+    "nombre": "Radar: inteligencia competitiva en redes",
+    "area": "Monitoreo de competencia",
+    "que_hace": "Producto SaaS: email diario, semanal y mensual con la actividad de la competencia y análisis con IA.",
+    "frecuencia": "Diario, semanal y mensual",
+    "repo": "myp202021/landing-mp-myp",
+    "workflow": "radar-clipping-diario.yml",
+    "url_publica": null
+  },
+  {
+    "id": "grillas",
+    "nombre": "Generador de grillas de contenido",
+    "area": "Contenido",
+    "que_hace": "Genera las grillas mensuales de redes sociales de cada cliente (OpenAI redacta, Claude revisa).",
+    "frecuencia": "Mensual",
+    "repo": "myp202021/landing-mp-myp",
+    "workflow": "generar-grillas.yml",
+    "url_publica": null
+  },
+  {
+    "id": "grilla-cliente",
+    "nombre": "Grilla mensual — cliente de servicios",
+    "area": "Contenido",
+    "que_hace": "Genera automáticamente la grilla de contenido mensual de un cliente con su briefing.",
+    "frecuencia": "Día 15 de cada mes",
+    "repo": "myp202021/landing-mp-myp",
+    "workflow": "grilla-genera.yml",
+    "url_publica": null
+  },
+  {
+    "id": "prospeccion",
+    "nombre": "Agente de prospección B2B",
+    "area": "Prospección",
+    "que_hace": "Busca empresas por industria y ciudad, encuentra y verifica contactos de decisores y los carga al CRM.",
+    "frecuencia": "Semanal",
+    "repo": "myp202021/landing-mp-myp",
+    "workflow": "prospecting.yml",
+    "url_publica": null
+  },
+  {
+    "id": "informe-seo",
+    "nombre": "Informe semanal SEO y GEO a clientes",
+    "area": "Informes SEO y GEO",
+    "que_hace": "Envía a cada cliente sus avances SEO y GEO de la semana; no envía si no hay datos o detecta errores.",
+    "frecuencia": "Lunes",
+    "repo": "myp202021/myp-daily-agent",
+    "workflow": "informe-semanal-clientes.yml",
+    "url_publica": null
+  },
+  {
+    "id": "reportes-mensuales",
+    "nombre": "Reportes mensuales de marketing digital",
+    "area": "Informes de marketing digital",
+    "que_hace": "Genera los reportes mensuales de campañas y resultados de cada cliente.",
+    "frecuencia": "Día 1 de cada mes",
+    "repo": "myp202021/landing-mp-myp",
+    "workflow": "reportes-mensuales.yml",
+    "url_publica": null
+  },
+  {
+    "id": "reporte-diario",
+    "nombre": "Reporte diario de gestión",
+    "area": "Paneles operativos",
+    "que_hace": "Resumen diario interno: leads por tipo, estado de campañas, pendientes y alertas.",
+    "frecuencia": "Lunes a viernes",
+    "repo": "myp202021/myp-daily-agent",
+    "workflow": "reporte-diario.yml",
+    "url_publica": null
+  },
+  {
+    "id": "dashboard-cliente",
+    "nombre": "Dashboard de resultados — cliente de sorteos",
+    "area": "Dashboards por cliente",
+    "que_hace": "Actualiza todos los días el dashboard de ventas y campañas de un cliente.",
+    "frecuencia": "Todos los días",
+    "repo": "myp202021/premios-dashboard",
+    "workflow": "update-data.yml",
+    "url_publica": null
+  },
+  {
+    "id": "fiscalizacion-whatsapp",
+    "nombre": "Fiscalización de leads por WhatsApp",
+    "area": "Chatbots y WhatsApp",
+    "que_hace": "24 horas después de cada lead, pregunta por WhatsApp si el equipo comercial del cliente lo contactó.",
+    "frecuencia": "Lunes a viernes, cada hora",
+    "repo": "myp202021/cym-dashboard",
+    "workflow": "whatsapp-fiscalizacion.yml",
+    "url_publica": null
+  },
+  {
+    "id": "whatsapp-agente",
+    "nombre": "Agente de WhatsApp con CRM",
+    "area": "Chatbots y WhatsApp",
+    "que_hace": "Atiende conversaciones de WhatsApp, califica leads y los registra en el CRM.",
+    "frecuencia": "Siempre activo",
+    "repo": "myp202021/myp-whatsapp-agent",
+    "workflow": null,
+    "url_publica": null
+  },
+  {
+    "id": "radar-inmobiliario",
+    "nombre": "Radar inmobiliario",
+    "area": "Datos de mercado",
+    "que_hace": "Recolecta propiedades de portales y remates judiciales, detecta oportunidades y envía alertas a corredores.",
+    "frecuencia": "Todos los días",
+    "repo": "myp202021/propiedades-bravo-muller",
+    "workflow": "informe-propiedades.yml",
+    "url_publica": null
+  },
+  {
+    "id": "cobros",
+    "nombre": "Agente de facturación y cobros",
+    "area": "Cobros y facturación",
+    "que_hace": "Emite y envía facturas y recordatorios de cobro a clientes.",
+    "frecuencia": "Mensual",
+    "repo": "myp202021/facturas-myp",
+    "workflow": null,
+    "url_publica": null
+  }
+]

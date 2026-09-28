@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
 import SiteHeader from '@/components/SiteHeader'
+import YouTubeLite from '@/components/YouTubeLite'
 
 export const metadata: Metadata = {
   title: 'Casos de Éxito Marketing Digital Chile 2026',
@@ -94,13 +95,43 @@ export default function CasosDeExitoPage() {
             </span>
           </h1>
           <p className="text-lg md:text-xl text-blue-200/80 max-w-3xl mx-auto mb-8">
-            5 casos reales: pauta digital, SEO, dashboards y automatización IA.
+            5 casos con datos y 4 testimonios en video: pauta digital, SEO, dashboards y automatización con IA.
             Datos extraídos directamente de las plataformas. Sin maquillaje.
           </p>
           <p className="text-sm text-blue-300/50 max-w-2xl mx-auto italic">
             Por confidencialidad no compartimos nombres, pero los datos son verificables
             en las plataformas de cada cliente.
           </p>
+        </div>
+      </section>
+
+      {/* Testimonios en video — clientes con nombre (videos publicados en el canal de YouTube de M&P) */}
+      <section className="pt-20 px-6">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Testimonios de clientes en video</h2>
+            <p className="text-blue-200/80 max-w-2xl mx-auto">
+              Los mismos clientes cuentan su experiencia trabajando con Muller y Pérez.
+            </p>
+          </div>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              { videoId: 'ZSwz_G86Vi4', cliente: 'Distec Chile', rubro: 'Importadora mayorista de tecnología' },
+              { videoId: 'PvN8KRK99WI', cliente: '4Life', rubro: 'Venta directa' },
+              { videoId: '8VZd4Sckm58', cliente: 'Power Energy', rubro: 'Energía' },
+              { videoId: 'vTn18twKalI', cliente: 'Clínica Dental López Mateo', rubro: 'Salud' },
+            ].map(v => (
+              <div key={v.videoId} className="bg-slate-800/60 border border-slate-700/50 rounded-2xl overflow-hidden">
+                <div className="aspect-[9/16] w-full">
+                  <YouTubeLite videoId={v.videoId} title={`Testimonio ${v.cliente} — Muller y Pérez`} thumbnailQuality="hqdefault" />
+                </div>
+                <div className="p-4">
+                  <p className="font-semibold text-white">{v.cliente}</p>
+                  <p className="text-sm text-blue-300/70">{v.rubro}</p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 

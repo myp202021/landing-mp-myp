@@ -332,7 +332,9 @@ async function confirmarTecnologia(agencia, datos) {
   var cambios = [];
   for (var campo in CRITERIOS_TEC) {
     try {
+      // 2 intentos: la búsqueda web no siempre encuentra la misma página; el juez filtra los falsos positivos
       var c = await confirmarCriterio(agencia, campo);
+      if (!c.valor) c = await confirmarCriterio(agencia, campo);
       var antes = tiene(datos[campo]);
       datos[campo] = c;
       if (antes !== c.valor) cambios.push(campo + ": " + antes + " → " + c.valor + (c.descartado ? " (" + c.descartado + ")" : ""));
