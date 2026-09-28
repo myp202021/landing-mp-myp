@@ -422,6 +422,9 @@ async function confirmarDesdeSitio(agencia, campo, frases) {
   var vistos = {};
   var candidatas = frases.filter(function (x) {
     if (!PALABRAS_CRITERIO[campo].test(x.frase) || vistos[x.frase]) return false;
+    // Para lo "propio" (IA, herramientas, CRM) la frase debe hablar de la agencia misma, no de la industria ni de terceros
+    if (campo !== "paneles_financieros" && !AUTORREFERENCIA.test(x.frase) && !/\b(desarroll|implement|cre|constru|oper|integr)amos\b/i.test(x.frase) &&
+        normalizarTexto(x.frase).indexOf(normalizarTexto(agencia.nombre)) < 0) return false;
     vistos[x.frase] = 1;
     return true;
   })
@@ -447,7 +450,7 @@ async function confirmarDesdeSitio(agencia, campo, frases) {
         role: "user",
         content: "Criterio: " + DEFINICION_ESTRICTA[campo] + "\n\nFrases publicadas en el sitio de " + agencia.nombre + ":\n" +
           candidatas.map(function (c, i) { return i + 1 + ". " + c.frase; }).join("\n") +
-          '\n\n¿Alguna frase, por sí sola, demuestra que se cumple el criterio? Responde SOLO JSON: {"indice": número de la frase que mejor lo demuestra o 0 si ninguna, "descripcion": "qué es, en una frase breve"}',
+          '\n\nNO cuentan: frases generales sobre la industria o sobre lo que la IA puede hacer; productos, plataformas o asistentes de terceros o de partners; preparar al cliente para la IA de otros (ej. \"preparamos tu catálogo para agentes de IA\"); menciones en artículos o noticias. SÍ cuenta solo si la frase afirma que la propia agencia desarrolló, construyó u opera esa herramienta o agente para sus clientes.\n¿Alguna frase, por sí sola, lo demuestra? Responde SOLO JSON: {\"indice\": número de la frase que mejor lo demuestra o 0 si ninguna, \"descripcion\": \"qué es, en una frase breve\"}',
       }],
     }),
   });
@@ -1336,6 +1339,11 @@ async function main() {
         "). No se publica.",
     );
 
+  // Sin ningún dato verificable no se puede evaluar a una agencia: no se publica con 0 (le pasó a "Relevant")
+  evaluadas = evaluadas.filter(function (r) {
+    if (r.verificacion.verificados === 0 && r.puntaje.total === 0) { console.log("Excluida por falta de datos verificables: " + r.nombre); return false; }
+    return true;
+  });
   evaluadas.sort(function (a, b) {
     return b.puntaje.total - a.puntaje.total;
   });
