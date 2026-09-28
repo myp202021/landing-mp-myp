@@ -485,7 +485,7 @@ async function paso4_publicar(research, htmlFinal, imageUrl, tema) {
     keywords: research.keywords || '',
     excerpt: (research.descripcion || '').substring(0, 200),
     category: tema.category,
-    tag: tema.category,
+    tag: 'Semanal', // fijo: los agentes diarios lo usan para no contar este post como 'ya publiqué hoy'
     read_time: readTime,
     content_html: htmlFinal,
     date_published: hoy,

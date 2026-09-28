@@ -79,12 +79,25 @@ var ESQUEMA = `{
   "certificaciones": {"valor": "p.ej. Google Partner, Meta Business Partner, HubSpot Partner", "fuente": "https://..."}
 }`;
 
+// Toma el PRIMER objeto JSON balanceado (la IA a veces agrega texto u otro JSON después)
 function extraerJson(texto) {
   var limpio = texto.replace(/```json|```/g, "");
   var ini = limpio.indexOf("{");
-  var fin = limpio.lastIndexOf("}");
-  if (ini < 0 || fin < 0) throw new Error("La investigación no devolvió JSON");
-  return JSON.parse(limpio.slice(ini, fin + 1));
+  if (ini < 0) throw new Error("La investigación no devolvió JSON");
+  var nivel = 0, enTexto = false, escape = false;
+  for (var i = ini; i < limpio.length; i++) {
+    var ch = limpio[i];
+    if (enTexto) {
+      if (escape) escape = false;
+      else if (ch === "\\") escape = true;
+      else if (ch === '"') enTexto = false;
+      continue;
+    }
+    if (ch === '"') enTexto = true;
+    else if (ch === "{") nivel++;
+    else if (ch === "}" && --nivel === 0) return JSON.parse(limpio.slice(ini, i + 1));
+  }
+  throw new Error("JSON incompleto en la respuesta");
 }
 
 async function llamarResponses(body) {
@@ -264,6 +277,29 @@ async function textoPagina(url) {
   return r;
 }
 
+// Juez: decide SOLO con la cita (que se publica), así cualquiera puede revisar el mismo juicio.
+var DEFINICION_ESTRICTA = {
+  agentes_ia: "la agencia opera agentes o automatizaciones de IA (propios o construidos por ella) en producción para clientes. Solo mencionar que 'usa IA' o herramientas de terceros NO basta.",
+  herramientas_propias: "la agencia DESARROLLÓ un software, plataforma o dashboard propio que usa en su servicio. NO cuenta: desarrollar sitios o plataformas para clientes como servicio, software de un partner o aliado, ni metodologías o índices.",
+  crm_propio: "la agencia desarrolló u opera un CRM propio. Revender o implementar HubSpot, Salesforce u otro CRM de terceros NO cuenta.",
+  paneles_financieros: "la agencia entrega a sus clientes paneles o reportes con métricas financieras (ROI, CAC, ROAS, margen o LTV).",
+};
+async function juezCita(agencia, campo, cita) {
+  var r = await fetch("https://api.openai.com/v1/chat/completions", {
+    method: "POST",
+    headers: { Authorization: "Bearer " + OPENAI_KEY, "Content-Type": "application/json" },
+    body: JSON.stringify({
+      model: MODEL,
+      temperature: 0,
+      max_tokens: 5,
+      messages: [{ role: "user", content: "Criterio: " + DEFINICION_ESTRICTA[campo] + "\n\nCita publicada por " + agencia.nombre + ": \"" + cita + "\"\n\n¿La cita, por sí sola, demuestra que se cumple el criterio? Responde solo SI o NO." }],
+    }),
+  });
+  var data = await r.json();
+  var resp = data.choices && data.choices[0] ? data.choices[0].message.content.trim().toUpperCase() : "NO";
+  return resp.indexOf("SI") === 0 || resp.indexOf("SÍ") === 0;
+}
+
 async function confirmarCriterio(agencia, campo) {
   var prompt = "Agencia de marketing digital chilena: \"" + agencia.nombre + "\"" + (agencia.web ? " (" + agencia.web + ")" : "") + ".\n"
     + CRITERIOS_TEC[campo] + "\n\nBusca primero en el sitio oficial de la agencia (páginas de servicios, tecnología, IA, agentes, herramientas, nosotros).\n"
@@ -278,7 +314,12 @@ async function confirmarCriterio(agencia, campo) {
   // Se compara un tramo central de la cita para tolerar diferencias de puntuación en los bordes
   var palabras = cita.split(" ");
   var tramo = palabras.slice(Math.floor(palabras.length * 0.15), Math.max(Math.ceil(palabras.length * 0.85), 6)).join(" ");
-  if (pag.texto && tramo.length >= 20 && pag.texto.indexOf(tramo) >= 0) {
+  var citaEnPagina = pag.texto && tramo.length >= 20 && pag.texto.indexOf(tramo) >= 0;
+  var bloqueado = !pag.texto && (pag.estado === 403 || pag.estado === 429);
+  if ((citaEnPagina || bloqueado) && !(await juezCita(agencia, campo, j.cita))) {
+    return { valor: false, descripcion: null, fuente: null, descartado: "la cita no demuestra el criterio" };
+  }
+  if (citaEnPagina) {
     return { valor: true, descripcion: j.descripcion, fuente: j.fuente, cita: j.cita, comprobado: "cita encontrada en la página" };
   }
   if (!pag.texto && (pag.estado === 403 || pag.estado === 429)) {

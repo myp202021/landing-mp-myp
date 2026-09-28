@@ -16,7 +16,7 @@ jobs:
           TODAY=$(date -u +%Y-%m-%d)
           # Contar posts de hoy — si hay 2+ ya se publicó el geo
           RESULT=$(curl -s -H "Authorization: Bearer ${{ secrets.SUPABASE_SERVICE_KEY }}" \
-            "${{ secrets.SUPABASE_URL }}/rest/v1/blog_posts?date_published=eq.${TODAY}&select=id&limit=5" \
+            "${{ secrets.SUPABASE_URL }}/rest/v1/blog_posts?date_published=eq.${TODAY}&category=not.in.(Rankings,Columna)&tag=not.in.(Semanal,Rankings)&select=id&limit=5" \
             -H "apikey: ${{ secrets.SUPABASE_SERVICE_KEY }}")
           COUNT=$(echo "$RESULT" | python3 -c "import sys,json; print(len(json.load(sys.stdin)))" 2>/dev/null || echo "0")
           if [ "$COUNT" -ge "2" ]; then

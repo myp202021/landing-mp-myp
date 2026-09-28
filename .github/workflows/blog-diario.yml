@@ -15,7 +15,7 @@ jobs:
         run: |
           TODAY=$(date -u +%Y-%m-%d)
           RESULT=$(curl -s -H "Authorization: Bearer ${{ secrets.SUPABASE_SERVICE_KEY }}" \
-            "${{ secrets.SUPABASE_URL }}/rest/v1/blog_posts?date_published=eq.${TODAY}&select=id&limit=1" \
+            "${{ secrets.SUPABASE_URL }}/rest/v1/blog_posts?date_published=eq.${TODAY}&category=not.in.(Rankings,Columna)&tag=not.in.(Semanal,Rankings)&select=id&limit=1" \
             -H "apikey: ${{ secrets.SUPABASE_SERVICE_KEY }}")
           if echo "$RESULT" | grep -q '"id"'; then
             echo "already_ran=true" >> $GITHUB_OUTPUT
