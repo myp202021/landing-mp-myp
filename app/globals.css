@@ -23,3 +23,12 @@
 .prose hr { border: none; border-top: 1px solid #e2e8f0; margin: 2.5rem 0; }
 .prose a { color: #4f46e5; text-decoration: underline; }
 .prose a:hover { color: #3730a3; }
+
+/* CTA de los artículos (div con gradiente): los estilos .prose de arriba pisaban el texto blanco,
+   dejaban el párrafo invisible, ponían una línea sobre el título y subrayaban el botón. */
+.prose [class*="bg-gradient"] { padding: 2.5rem 2rem; border-radius: 1.25rem; text-align: center; box-shadow: 0 20px 40px -15px rgba(49, 46, 129, 0.45); }
+.prose [class*="bg-gradient"] h2,
+.prose [class*="bg-gradient"] h3 { color: #fff; border-top: none; padding-top: 0; margin-top: 0; margin-bottom: 0.75rem; font-size: 1.6rem; }
+.prose [class*="bg-gradient"] p { color: #c7d2fe; max-width: 36rem; margin-left: auto; margin-right: auto; margin-bottom: 1.75rem; }
+.prose [class*="bg-gradient"] a { display: inline-block; background: #fff; color: #312e81; font-weight: 700; text-decoration: none; padding: 0.85rem 2rem; border-radius: 0.75rem; transition: transform 0.15s ease, box-shadow 0.15s ease; }
+.prose [class*="bg-gradient"] a:hover { color: #312e81; transform: translateY(-1px); box-shadow: 0 10px 20px -8px rgba(0, 0, 0, 0.4); }
