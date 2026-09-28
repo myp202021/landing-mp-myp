@@ -99,7 +99,7 @@ export default function CasosDeExitoPage() {
             Datos extraídos directamente de las plataformas. Sin maquillaje.
           </p>
           <p className="text-sm text-blue-300/50 max-w-2xl mx-auto italic">
-            Los datos vienen directamente de las plataformas de cada cliente. Un caso se mantiene sin nombre por confidencialidad.
+            Los datos vienen directamente de las plataformas de cada cliente.
           </p>
         </div>
       </section>
@@ -241,7 +241,7 @@ export default function CasosDeExitoPage() {
               <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div>
                   <p className="text-amber-400 text-sm font-bold uppercase tracking-wider mb-1">
-                    Cliente B
+                    Power Energy
                   </p>
                   <h2 className="text-2xl md:text-3xl font-bold text-white">
                     Iluminación Industrial

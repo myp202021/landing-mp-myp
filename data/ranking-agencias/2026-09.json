@@ -3564,181 +3564,6 @@
     },
     {
       "posicion": 14,
-      "nombre": "Relevant",
-      "puntaje": {
-        "trayectoria": 0,
-        "reputacion": 6.2,
-        "casos": 15,
-        "equipo": 9.4,
-        "clientes": 9.4,
-        "especialidades": 4.2,
-        "tecnologia": 0,
-        "ia": 5,
-        "liderazgo": 0,
-        "total": 49.2
-      },
-      "confianza": "media",
-      "verificacion": {
-        "verificados": 21,
-        "descartados": 5
-      },
-      "datos": {
-        "nombre": "Relevant",
-        "sitio_web": {
-          "valor": "https://relevantmkt.com/marketing-digital-chile/",
-          "fuente": "https://relevantmkt.com/marketing-digital-chile/"
-        },
-        "opera_en_chile": {
-          "valor": true,
-          "descripcion": "equipo en Chile, con enfoque especializado para Chile",
-          "fuente": "https://relevantmkt.com/marketing-digital-chile/"
-        },
-        "anio_fundacion": {
-          "valor": null,
-          "fuente": null
-        },
-        "fundador": {
-          "valor": null,
-          "fuente": null
-        },
-        "liderazgo": {
-          "nombre": null,
-          "formacion": null,
-          "postgrado": null,
-          "anios_experiencia": null,
-          "experiencia_previa": null,
-          "fuente": null
-        },
-        "equipo": {
-          "valor": "interno",
-          "tamano": "más de 30 profesionales",
-          "fuente": "https://relevantmkt.com/marketing-digital-chile/"
-        },
-        "especialidades": {
-          "performance": {
-            "valor": true,
-            "fuente": "https://relevantmkt.com/marketing-digital-chile/"
-          },
-          "contenido": {
-            "valor": true,
-            "fuente": "https://relevantmkt.com/marketing-digital-chile/"
-          },
-          "creatividad": {
-            "valor": true,
-            "fuente": "https://relevantmkt.com/marketing-digital-chile/"
-          },
-          "seo": {
-            "valor": true,
-            "fuente": "https://relevantmkt.com/marketing-digital-chile/"
-          },
-          "ecommerce": {
-            "valor": false,
-            "fuente": null
-          },
-          "b2b": {
-            "valor": true,
-            "fuente": "https://relevantmkt.com/marketing-digital/"
-          }
-        },
-        "herramientas_propias": {
-          "valor": false,
-          "descripcion": null,
-          "fuente": null,
-          "descartado": "la cita no demuestra el criterio"
-        },
-        "crm_propio": {
-          "valor": false,
-          "descripcion": null,
-          "fuente": null
-        },
-        "paneles_financieros": {
-          "valor": false,
-          "descripcion": null,
-          "fuente": null,
-          "descartado": "la cita no demuestra el criterio"
-        },
-        "agentes_ia": {
-          "valor": true,
-          "descripcion": "Desarrollan agentes de IA propios adaptados a las necesidades de cada cliente",
-          "fuente": "https://relevantgroup.media/que-hacemos",
-          "cita": "Desarrollamos agentes IA propios adaptados a las necesidades de cada cliente · Equipo experto interno · Arquitectura multi‑LLM · De la idea al agente en producción",
-          "comprobado": "cita encontrada en la página"
-        },
-        "casos_exito": [
-          {
-            "cliente": "Corona BrewMaster Experience",
-            "rubro": null,
-            "resultado": null,
-            "fuente": "https://relevantmkt.com/marketing-digital/"
-          },
-          {
-            "cliente": "Cerveza Montejo",
-            "rubro": "Publicidad",
-            "resultado": null,
-            "fuente": "https://relevantmkt.com/marketing-digital-chile/"
-          },
-          {
-            "cliente": "Katamaniacos",
-            "rubro": "Publicidad",
-            "resultado": null,
-            "fuente": "https://relevantmkt.com/marketing-digital-chile/"
-          },
-          {
-            "cliente": "Stand La Mole",
-            "rubro": "Marketing de Eventos",
-            "resultado": null,
-            "fuente": "https://relevantmkt.com/marketing-digital-chile/"
-          },
-          {
-            "cliente": "Visa",
-            "rubro": "Stand",
-            "resultado": null,
-            "fuente": "https://relevantmkt.com/marketing-digital-chile/"
-          }
-        ],
-        "clientes_destacados": [
-          {
-            "nombre": "Corona BrewMaster Experience",
-            "fuente": "https://relevantmkt.com/marketing-digital/"
-          },
-          {
-            "nombre": "Cerveza Montejo",
-            "fuente": "https://relevantmkt.com/marketing-digital-chile/"
-          },
-          {
-            "nombre": "Katamaniacos",
-            "fuente": "https://relevantmkt.com/marketing-digital-chile/"
-          },
-          {
-            "nombre": "Stand La Mole",
-            "fuente": "https://relevantmkt.com/marketing-digital-chile/"
-          },
-          {
-            "nombre": "Visa",
-            "fuente": "https://relevantmkt.com/marketing-digital-chile/"
-          }
-        ],
-        "premios": [],
-        "precios_publicados": {
-          "valor": null,
-          "fuente": null
-        },
-        "resenas_google": {
-          "cantidad": 18,
-          "rating": 5,
-          "fuente": "https://www.google.com/maps/search/?api=1&query=Relevant%20Agency%20-%20Agencia%20de%20Marketing%20Digital&query_place_id=ChIJh4PL2D23NUoRPzyWpN74CXM",
-          "origen": "Google Maps",
-          "ficha": "Relevant Agency - Agencia de Marketing Digital"
-        },
-        "directorios": [],
-        "tamano_clientes": {
-          "valor": "mixto",
-          "fuente": "https://relevantmkt.com/marketing-digital/"
-        }
-      }
-    },
-    {
-      "posicion": 15,
       "nombre": "Focus Ads",
       "puntaje": {
         "trayectoria": 1.3,
@@ -4048,7 +3873,700 @@
       }
     },
     {
-      "posicion": 16,
+      "posicion": 15,
+      "nombre": "Loup",
+      "puntaje": {
+        "trayectoria": 7.3,
+        "reputacion": 4.7,
+        "casos": 4,
+        "equipo": 8,
+        "clientes": 1.9,
+        "especialidades": 5,
+        "tecnologia": 0,
+        "ia": 0,
+        "liderazgo": 0,
+        "total": 30.9
+      },
+      "confianza": "alta",
+      "verificacion": {
+        "verificados": 30,
+        "descartados": 8
+      },
+      "datos": {
+        "nombre": "Loup",
+        "sitio_web": {
+          "valor": "https://loup.cl",
+          "fuente": "https://loup.cl"
+        },
+        "opera_en_chile": {
+          "valor": true,
+          "descripcion": "oficina en Providencia, Santiago, Chile",
+          "fuente": "https://loup.cl/nuestra_filosofia/"
+        },
+        "anio_fundacion": {
+          "valor": 2015,
+          "fuente": "https://cl.linkedin.com/company/loup-consultora-marketing-digital"
+        },
+        "fundador": {
+          "valor": "Sebastián Ruiz Arredondo (Co‑fundador, consultor Marketing B2B/B2C)",
+          "fuente": "https://cl.linkedin.com/company/loup-consultora-marketing-digital"
+        },
+        "liderazgo": {
+          "nombre": "Sebastián Ruiz Arredondo",
+          "formacion": null,
+          "postgrado": null,
+          "anios_experiencia": null,
+          "experiencia_previa": null,
+          "fuente": "https://cl.linkedin.com/company/loup-consultora-marketing-digital"
+        },
+        "equipo": {
+          "valor": "interno",
+          "tamano": "De 2 a 10 empleados",
+          "fuente": "https://cl.linkedin.com/company/loup-consultora-marketing-digital"
+        },
+        "especialidades": {
+          "performance": {
+            "valor": true,
+            "fuente": "https://loup.cl/sitios-web-preparados-para-la-ia/",
+            "cita": "Cruzan la lista estructurada de elementos que obtienen del DOM y del árbol de accesibilidad con la renderización visual, porque cada canal por separado deja una brecha semántica."
+          },
+          "contenido": {
+            "valor": true,
+            "fuente": "https://loup.cl/marketing-digital-servicios-profesionales-chile/",
+            "cita": "ABM , B2B , Estrategia Digital B2B , Publicidad Digital , Redes Sociales , SEO"
+          },
+          "creatividad": {
+            "valor": true,
+            "fuente": "https://loup.cl/posicionamiento-inteligencia-artificial-chile/",
+            "cita": "La claridad de posicionamiento no es solo un problema de branding: es una condición para existir en el ecosistema del Search Engine Everywhere."
+          },
+          "seo": {
+            "valor": true,
+            "fuente": "https://loup.cl/casos-de-estudio/",
+            "cita": "GEO sector energético , posicionamiento renovables Chile , Search Engine Everywhere , SEO empresas solares , SEO eólicas Chile , SEO sector energía"
+          },
+          "ecommerce": {
+            "valor": true,
+            "fuente": "https://loup.cl/marketing-digital-servicios-profesionales-chile/",
+            "cita": "En servicios profesionales, las métricas que importan son distintas a las de un e-commerce."
+          },
+          "b2b": {
+            "valor": true,
+            "fuente": "https://loup.cl/",
+            "cita": "Diseñamos estrategias digitales para empresas B2B y B2C que necesitan resultados medibles, no solo presencia."
+          }
+        },
+        "herramientas_propias": {
+          "valor": false,
+          "descripcion": null,
+          "fuente": null,
+          "descartado": "cita no encontrada en https://loup.cl/agencia-de-marketing-digital-b2b-chile"
+        },
+        "crm_propio": {
+          "valor": false,
+          "descripcion": null,
+          "fuente": null
+        },
+        "paneles_financieros": {
+          "valor": true,
+          "descripcion": "La agencia ofrece dashboards en tiempo real para cada cliente, lo que implica la entrega de reportes con métricas financieras.",
+          "fuente": "https://loup.cl/agencia-digital-chile/",
+          "cita": "Destaca por sus herramientas propietarias: un Predictor de Campañas que estima CPC y CPA antes de invertir, un sistema de segmentación con IA (Buyer Gen) y dashboards en tiempo real para cada cliente.",
+          "comprobado": "frase publicada en el sitio de la agencia"
+        },
+        "agentes_ia": {
+          "valor": false,
+          "descripcion": null,
+          "fuente": null
+        },
+        "casos_exito": [
+          {
+            "cliente": "Grido Chile",
+            "rubro": "heladería / consumo masivo",
+            "resultado": "comunidad digital creció más de 4 veces en menos de un año",
+            "fuente": "https://cl.linkedin.com/company/loup-consultora-marketing-digital"
+          }
+        ],
+        "clientes_destacados": [
+          {
+            "nombre": "Grido Chile",
+            "fuente": "https://cl.linkedin.com/company/loup-consultora-marketing-digital"
+          }
+        ],
+        "premios": [],
+        "precios_publicados": {
+          "valor": null,
+          "fuente": null
+        },
+        "resenas_google": {
+          "cantidad": 3,
+          "rating": 4.7,
+          "fuente": "https://www.google.com/maps/search/?api=1&query=Loup%20-%20Consultora%20de%20Marketing%20Digital&query_place_id=ChIJ73SRzZ7FYpYREIrLQUgFIbQ",
+          "origen": "Google Maps",
+          "ficha": "Loup - Consultora de Marketing Digital"
+        },
+        "directorios": [
+          {
+            "sitio": "Clutch",
+            "resenas": 0,
+            "fuente": "https://clutch.co/profile/loup-marketing-digital"
+          }
+        ],
+        "tamano_clientes": {
+          "valor": null,
+          "fuente": null
+        },
+        "senales": {
+          "google_ads": {
+            "valor": true,
+            "fuente": "https://loup.cl/agencia-digital-chile/",
+            "cita": "Las 10 mejores agencias digitales en Chile en 2026, clasificadas por especialidad, son: Loup (B2B + B2C, trazabilidad), Bigbuda (CRO y eCommerce), Muller y Pérez (performance y Google Ads), Cebra (inbound y HubSpot), Seonet (SEO orgánico), Rompecabeza Digital (performance enterprise), ONEDigital (presencia digital integral), Relevant (branding y mercado chileno), Moov Media Group (omnicanal y growth) y Webketing (B2B e inbound)."
+          },
+          "meta_ads": {
+            "valor": false,
+            "fuente": null
+          },
+          "linkedin_ads": {
+            "valor": true,
+            "fuente": "https://loup.cl/abm-marketing-chile/",
+            "cita": "Combinando LinkedIn Ads segmentado por cuenta, contenido técnico orientado a los desafíos específicos de cada industria, email personalizado y contacto directo del equipo comercial."
+          },
+          "tiktok_ads": {
+            "valor": false,
+            "fuente": null
+          },
+          "shopping": {
+            "valor": false,
+            "fuente": null
+          },
+          "cro": {
+            "valor": true,
+            "fuente": "https://loup.cl/empresas-de-posicionamiento-en-ia-chile/",
+            "cita": "Citaciones en IA, tráfico desde IA (con mayor tasa de conversión), featured snippets capturados"
+          },
+          "produccion": {
+            "valor": true,
+            "fuente": "https://loup.cl/descubre-cuatro-herramientas-para-tener-un-mejor-sitio-web/",
+            "cita": "Y para ganar aquí, Hubspot dice que los negocios necesitan estas herramientas:"
+          },
+          "influencers": {
+            "valor": true,
+            "fuente": "https://loup.cl/agencia-digital-chile/",
+            "cita": "Especialización en growth marketing, social intelligence e influencer marketing."
+          },
+          "precios": {
+            "valor": true,
+            "fuente": "https://loup.cl/agencia-digital-chile/",
+            "cita": "Una agencia pequeña con gestión de 1 canal cobra desde $500.000 mensuales."
+          },
+          "whatsapp": {
+            "valor": false,
+            "fuente": null
+          }
+        },
+        "tipo_agencia": {
+          "tipo": "performance",
+          "cita": "Nos enfocamos en la generación de leads de calidad, aumentamos tus ventas y creamos comunidad. CONVIERTE TU MARKETING DIGITAL EN UN MOTOR DE CRECIMIENTO REAL",
+          "fuente": "https://loup.cl"
+        }
+      }
+    }
+  ],
+  "especializadas": [
+    {
+      "nombre": "Adinfluence",
+      "tipo": {
+        "tipo": "influencers",
+        "cita": "Adinfluence | Agencia de influencers en Chile",
+        "fuente": "https://www.adinfluence.cl"
+      },
+      "puntaje": {
+        "trayectoria": 0,
+        "reputacion": 7.5,
+        "casos": 20,
+        "equipo": 10,
+        "clientes": 15,
+        "especialidades": 5,
+        "tecnologia": 5,
+        "ia": 5,
+        "liderazgo": 10,
+        "total": 77.5
+      },
+      "datos": {
+        "nombre": "Adinfluence",
+        "sitio_web": {
+          "valor": "https://www.adinfluence.cl",
+          "fuente": "https://www.adinfluence.cl"
+        },
+        "opera_en_chile": {
+          "valor": true,
+          "descripcion": "oficina en Las Condes, Santiago de Chile",
+          "fuente": "https://www.adinfluence.cl"
+        },
+        "anio_fundacion": {
+          "valor": null,
+          "fuente": null
+        },
+        "fundador": {
+          "valor": null,
+          "fuente": null
+        },
+        "liderazgo": {
+          "nombre": "David Caro Benado",
+          "formacion": "Licenciado en Administración de Empresas / Ingeniero Comercial, Universidad del Desarrollo (2010-2014)",
+          "postgrado": "Diplomado en Control de Gestión, Pontificia Universidad Católica de Chile (no es magíster)",
+          "anios_experiencia": 11,
+          "experiencia_previa": "Co-fundador de Wizz (startup de alineadores dentales, 2018); Holding Colloky S.A.",
+          "fuente": "https://cl.linkedin.com/in/david-caro-benado-35595677",
+          "verificado": "perfil revisado"
+        },
+        "equipo": {
+          "valor": "interno",
+          "tamano": "entre 51 y 200 empleados",
+          "fuente": "https://cl.linkedin.com/company/adinfluencecl"
+        },
+        "especialidades": {
+          "performance": {
+            "valor": true,
+            "fuente": "https://www.adinfluence.cl/",
+            "cita": "En Adinfluence desarrollamos campañas integrales que combinan estrategia, creatividad y performance."
+          },
+          "contenido": {
+            "valor": true,
+            "fuente": "https://www.adinfluence.cl/",
+            "cita": "Performance con IA Snack-Content Redes Sociales Publicidad Digital"
+          },
+          "creatividad": {
+            "valor": true,
+            "fuente": "https://www.adinfluence.cl/",
+            "cita": "En Adinfluence desarrollamos campañas integrales que combinan estrategia, creatividad y performance."
+          },
+          "seo": {
+            "valor": true,
+            "fuente": "https://www.adinfluence.cl/",
+            "cita": "Maximizamos la conversión mediante una fusión de E-content de alto impacto y curatoría SEO."
+          },
+          "ecommerce": {
+            "valor": true,
+            "fuente": "https://adinfluence.cl/performance-con-ia",
+            "cita": "Imagina un e-commerce de suplementos deportivos en Chile ."
+          },
+          "b2b": {
+            "valor": true,
+            "fuente": "https://adinfluence.cl/blog-posts/que-es-el-marketing-360-casos-de-exito-faqs",
+            "cita": "Especialmente útil en sectores donde el ciclo de decisión es largo (B2B, inmobiliaria, servicios técnicos), donde el cliente necesita múltiples impactos y confianza antes de convertir."
+          }
+        },
+        "herramientas_propias": {
+          "valor": true,
+          "descripcion": "Plataforma propia de Adinfluence integrada con la API de Instagram/Tiktok para recolección automática de datos.",
+          "fuente": "https://adinfluence.cl/blog-posts/adinfluence-lanza-la-primera-plataforma-con-ai-permite-trackear-influencers-y-gestionar-sus-contenidos-en-tiempo-real",
+          "cita": "Automatización de la recolección de datos: Nuestra plataforma está integrada con la API de Instagram/Tiktok, lo que permite la recolección automática de datos de publicaciones públicas sin intervención manual.",
+          "comprobado": "frase publicada en el sitio de la agencia"
+        },
+        "crm_propio": {
+          "valor": false,
+          "descripcion": null,
+          "fuente": null
+        },
+        "paneles_financieros": {
+          "valor": true,
+          "descripcion": "Dashboards personalizados en Looker Studio para que los clientes visualicen KPIs y el retorno de inversión al instante.",
+          "fuente": "https://adinfluence.cl/performance-con-ia",
+          "cita": "Analítica en Tiempo Real: Dashboards personalizados en Looker Studio para que visualices tus KPIs y el retorno de tu inversión al instante.",
+          "comprobado": "frase publicada en el sitio de la agencia"
+        },
+        "agentes_ia": {
+          "valor": true,
+          "descripcion": "Adinfluence desarrolló su propia plataforma con apoyo de inteligencia artificial para que los clientes hagan seguimiento de campañas en tiempo real.",
+          "fuente": "https://adinfluence.cl/blog-posts/adinfluence-lanza-la-primera-plataforma-con-ai-permite-trackear-influencers-y-gestionar-sus-contenidos-en-tiempo-real",
+          "cita": "Es por esto, que Adinfluence desarrolló su propia plataforma con apoyo de inteligencia artificial, en donde cualquier cliente, puede hacer un completo seguimiento del rendimiento de su campaña en tiempo real, simplificando la planificación y ejecución del contenido de los influencers, permitiéndole a la marca centrarse en lo que realmente le debe importar: conectar con su público objetivo.",
+          "comprobado": "frase publicada en el sitio de la agencia"
+        },
+        "casos_exito": [
+          {
+            "cliente": "Soprole (Manjarate Peanut Butter)",
+            "rubro": "alimentos lácteos",
+            "resultado": "Alcance 2.801.998, CPA $3,5",
+            "fuente": "https://www.adinfluence.cl/blog-posts/campanas-exitosas-con-influencers-4-ejemplos-casos-de-exito-adinfluence"
+          },
+          {
+            "cliente": "Copec Pay",
+            "rubro": "pagos digitales / fintech",
+            "resultado": "Alcance 9.480.599, interacciones 876.643, CPA $3,4",
+            "fuente": "https://www.adinfluence.cl/blog-posts/campanas-exitosas-con-influencers-4-ejemplos-casos-de-exito-adinfluence"
+          },
+          {
+            "cliente": "IKEA Food (Navidad Escandinava)",
+            "rubro": "retail / food",
+            "resultado": "Alcance 3.268.976, CPA $2",
+            "fuente": "https://www.adinfluence.cl/blog-posts/campanas-exitosas-con-influencers-4-ejemplos-casos-de-exito-adinfluence"
+          },
+          {
+            "cliente": "AkiKB (Minibodegas)",
+            "rubro": "servicios B2B/B2C de bodegaje",
+            "resultado": "3.000 leads, CTR 16%, CPA CLP $1.600",
+            "fuente": "https://www.adinfluence.cl/blog-posts/campanas-exitosas-con-influencers-4-ejemplos-casos-de-exito-adinfluence"
+          },
+          {
+            "cliente": "Blockstore",
+            "rubro": "retail calzado urbano",
+            "resultado": "ROAS promedio >20x, 50% crecimiento en ventas",
+            "fuente": "https://www.adinfluence.cl"
+          }
+        ],
+        "clientes_destacados": [
+          {
+            "nombre": "Disney",
+            "fuente": "https://adinfluence.cl"
+          },
+          {
+            "nombre": "Samsonite",
+            "fuente": "https://adinfluence.cl"
+          },
+          {
+            "nombre": "Block",
+            "fuente": "https://adinfluence.cl"
+          },
+          {
+            "nombre": "Ibis",
+            "fuente": "https://adinfluence.cl"
+          },
+          {
+            "nombre": "Despegar",
+            "fuente": "https://adinfluence.cl"
+          },
+          {
+            "nombre": "Jac",
+            "fuente": "https://adinfluence.cl"
+          },
+          {
+            "nombre": "Pichara",
+            "fuente": "https://adinfluence.cl"
+          },
+          {
+            "nombre": "Ariztia",
+            "fuente": "https://adinfluence.cl"
+          },
+          {
+            "nombre": "Parquearauco",
+            "fuente": "https://adinfluence.cl"
+          },
+          {
+            "nombre": "Liola",
+            "fuente": "https://adinfluence.cl"
+          },
+          {
+            "nombre": "Tntsport",
+            "fuente": "https://adinfluence.cl"
+          },
+          {
+            "nombre": "Ccu",
+            "fuente": "https://adinfluence.cl"
+          },
+          {
+            "nombre": "Latam",
+            "fuente": "https://adinfluence.cl"
+          },
+          {
+            "nombre": "Montina",
+            "fuente": "https://adinfluence.cl"
+          },
+          {
+            "nombre": "Prater",
+            "fuente": "https://adinfluence.cl"
+          },
+          {
+            "nombre": "Ripley",
+            "fuente": "https://adinfluence.cl"
+          },
+          {
+            "nombre": "Viajesfalabella",
+            "fuente": "https://adinfluence.cl"
+          },
+          {
+            "nombre": "Palumbo",
+            "fuente": "https://adinfluence.cl"
+          },
+          {
+            "nombre": "Changan",
+            "fuente": "https://adinfluence.cl"
+          },
+          {
+            "nombre": "Gob",
+            "fuente": "https://adinfluence.cl"
+          },
+          {
+            "nombre": "Rosen",
+            "fuente": "https://adinfluence.cl"
+          },
+          {
+            "nombre": "Fundamenta",
+            "fuente": "https://adinfluence.cl"
+          },
+          {
+            "nombre": "Linkediin partner",
+            "fuente": "https://adinfluence.cl/en-us/performance-con-ia"
+          },
+          {
+            "nombre": "Pinterest partner",
+            "fuente": "https://adinfluence.cl/en-us/performance-con-ia"
+          },
+          {
+            "nombre": "Ondemand partner",
+            "fuente": "https://adinfluence.cl/en-us/performance-con-ia"
+          },
+          {
+            "nombre": "Vtr",
+            "fuente": "https://adinfluence.cl/en-us/performance-con-ia"
+          }
+        ],
+        "premios": [],
+        "precios_publicados": {
+          "valor": null,
+          "fuente": null
+        },
+        "resenas_google": {
+          "cantidad": 40,
+          "rating": 4.8,
+          "fuente": "https://www.google.com/maps/search/?api=1&query=Adinfluence&query_place_id=ChIJMcRpr6beEWIR1fd_MGDXu3A",
+          "origen": "Google Maps",
+          "ficha": "Adinfluence"
+        },
+        "directorios": [],
+        "tamano_clientes": {
+          "valor": "mixto",
+          "fuente": "https://cl.linkedin.com/company/adinfluencecl"
+        },
+        "senales": {
+          "google_ads": {
+            "valor": true,
+            "fuente": "https://adinfluence.cl/performance-con-ia",
+            "cita": "En Akikb logramos ser líderes de mercado con una estrategia superior en Google Ads."
+          },
+          "meta_ads": {
+            "valor": true,
+            "fuente": "https://adinfluence.cl/performance-con-ia",
+            "cita": "En Blockstore logramos ventas históricas mediante estrategias de campañas pagadas en TikTok y Meta Ads."
+          },
+          "linkedin_ads": {
+            "valor": false,
+            "fuente": null
+          },
+          "tiktok_ads": {
+            "valor": true,
+            "fuente": "https://adinfluence.cl/blog-posts/que-es-el-marketing-360-casos-de-exito-faqs",
+            "cita": "Además de potenciar tu marca con Marketing de influencers , somos tu Agencia Paid Media Chile: Meta Ads, Google Ads, TikTok Ads ."
+          },
+          "shopping": {
+            "valor": true,
+            "fuente": "https://adinfluence.cl/blog-posts/aeo-answer-engine-optimization-seo-en-la-era-de-la-ia",
+            "cita": "A través de iniciativas como el Merchant Center (User Conversion Platform) , el buscador busca listar productos para la transacción directamente en su motor, integrando el inventario de los comercios con la experiencia de búsqueda generativa."
+          },
+          "cro": {
+            "valor": true,
+            "fuente": "https://www.adinfluence.cl/",
+            "cita": "CVR MÁXIMO: Pico histórico en tasa de conversión digital."
+          },
+          "produccion": {
+            "valor": true,
+            "fuente": "https://www.adinfluence.cl/",
+            "cita": "Diseñamos la estrategia integral y la producción audiovisual que convirtió la apertura del Claro Arena en un fenómeno viral junto a Kramer."
+          },
+          "influencers": {
+            "valor": true,
+            "fuente": "https://www.adinfluence.cl/",
+            "cita": "Adinfluence | Agencia de influencers en Chile | Impulsados por IA"
+          },
+          "precios": {
+            "valor": true,
+            "fuente": "https://adinfluence.cl/blog-posts/campanas-exitosas-con-influencers-4-ejemplos-casos-de-exito-adinfluence",
+            "cita": "Eficiencia en el Gasto Publicitario: Logró un Costo por Adquisición (CPA) de solo $1.600 CLP, permitiendo a la marca escalar sus ventas con una inversión sumamente optimizada."
+          },
+          "whatsapp": {
+            "valor": false,
+            "fuente": null
+          }
+        },
+        "tipo_agencia": {
+          "tipo": "influencers",
+          "cita": "Adinfluence | Agencia de influencers en Chile",
+          "fuente": "https://www.adinfluence.cl"
+        }
+      }
+    }
+  ],
+  "incompletas": [
+    {
+      "nombre": "Relevant",
+      "puntaje": {
+        "trayectoria": 0,
+        "reputacion": 6.2,
+        "casos": 15,
+        "equipo": 9.4,
+        "clientes": 9.4,
+        "especialidades": 4.2,
+        "tecnologia": 0,
+        "ia": 5,
+        "liderazgo": 0,
+        "total": 49.2
+      },
+      "datos": {
+        "nombre": "Relevant",
+        "sitio_web": {
+          "valor": "https://relevantmkt.com/marketing-digital-chile/",
+          "fuente": "https://relevantmkt.com/marketing-digital-chile/"
+        },
+        "opera_en_chile": {
+          "valor": true,
+          "descripcion": "equipo en Chile, con enfoque especializado para Chile",
+          "fuente": "https://relevantmkt.com/marketing-digital-chile/"
+        },
+        "anio_fundacion": {
+          "valor": null,
+          "fuente": null
+        },
+        "fundador": {
+          "valor": null,
+          "fuente": null
+        },
+        "liderazgo": {
+          "nombre": null,
+          "formacion": null,
+          "postgrado": null,
+          "anios_experiencia": null,
+          "experiencia_previa": null,
+          "fuente": null
+        },
+        "equipo": {
+          "valor": "interno",
+          "tamano": "más de 30 profesionales",
+          "fuente": "https://relevantmkt.com/marketing-digital-chile/"
+        },
+        "especialidades": {
+          "performance": {
+            "valor": true,
+            "fuente": "https://relevantmkt.com/marketing-digital-chile/"
+          },
+          "contenido": {
+            "valor": true,
+            "fuente": "https://relevantmkt.com/marketing-digital-chile/"
+          },
+          "creatividad": {
+            "valor": true,
+            "fuente": "https://relevantmkt.com/marketing-digital-chile/"
+          },
+          "seo": {
+            "valor": true,
+            "fuente": "https://relevantmkt.com/marketing-digital-chile/"
+          },
+          "ecommerce": {
+            "valor": false,
+            "fuente": null
+          },
+          "b2b": {
+            "valor": true,
+            "fuente": "https://relevantmkt.com/marketing-digital/"
+          }
+        },
+        "herramientas_propias": {
+          "valor": false,
+          "descripcion": null,
+          "fuente": null,
+          "descartado": "la cita no demuestra el criterio"
+        },
+        "crm_propio": {
+          "valor": false,
+          "descripcion": null,
+          "fuente": null
+        },
+        "paneles_financieros": {
+          "valor": false,
+          "descripcion": null,
+          "fuente": null,
+          "descartado": "la cita no demuestra el criterio"
+        },
+        "agentes_ia": {
+          "valor": true,
+          "descripcion": "Desarrollan agentes de IA propios adaptados a las necesidades de cada cliente",
+          "fuente": "https://relevantgroup.media/que-hacemos",
+          "cita": "Desarrollamos agentes IA propios adaptados a las necesidades de cada cliente · Equipo experto interno · Arquitectura multi‑LLM · De la idea al agente en producción",
+          "comprobado": "cita encontrada en la página"
+        },
+        "casos_exito": [
+          {
+            "cliente": "Corona BrewMaster Experience",
+            "rubro": null,
+            "resultado": null,
+            "fuente": "https://relevantmkt.com/marketing-digital/"
+          },
+          {
+            "cliente": "Cerveza Montejo",
+            "rubro": "Publicidad",
+            "resultado": null,
+            "fuente": "https://relevantmkt.com/marketing-digital-chile/"
+          },
+          {
+            "cliente": "Katamaniacos",
+            "rubro": "Publicidad",
+            "resultado": null,
+            "fuente": "https://relevantmkt.com/marketing-digital-chile/"
+          },
+          {
+            "cliente": "Stand La Mole",
+            "rubro": "Marketing de Eventos",
+            "resultado": null,
+            "fuente": "https://relevantmkt.com/marketing-digital-chile/"
+          },
+          {
+            "cliente": "Visa",
+            "rubro": "Stand",
+            "resultado": null,
+            "fuente": "https://relevantmkt.com/marketing-digital-chile/"
+          }
+        ],
+        "clientes_destacados": [
+          {
+            "nombre": "Corona BrewMaster Experience",
+            "fuente": "https://relevantmkt.com/marketing-digital/"
+          },
+          {
+            "nombre": "Cerveza Montejo",
+            "fuente": "https://relevantmkt.com/marketing-digital-chile/"
+          },
+          {
+            "nombre": "Katamaniacos",
+            "fuente": "https://relevantmkt.com/marketing-digital-chile/"
+          },
+          {
+            "nombre": "Stand La Mole",
+            "fuente": "https://relevantmkt.com/marketing-digital-chile/"
+          },
+          {
+            "nombre": "Visa",
+            "fuente": "https://relevantmkt.com/marketing-digital-chile/"
+          }
+        ],
+        "premios": [],
+        "precios_publicados": {
+          "valor": null,
+          "fuente": null
+        },
+        "resenas_google": {
+          "cantidad": 18,
+          "rating": 5,
+          "fuente": "https://www.google.com/maps/search/?api=1&query=Relevant%20Agency%20-%20Agencia%20de%20Marketing%20Digital&query_place_id=ChIJh4PL2D23NUoRPzyWpN74CXM",
+          "origen": "Google Maps",
+          "ficha": "Relevant Agency - Agencia de Marketing Digital"
+        },
+        "directorios": [],
+        "tamano_clientes": {
+          "valor": "mixto",
+          "fuente": "https://relevantmkt.com/marketing-digital/"
+        }
+      }
+    },
+    {
       "nombre": "OneDigital",
       "puntaje": {
         "trayectoria": 3.3,
@@ -4061,11 +4579,6 @@
         "ia": 0,
         "liderazgo": 4,
         "total": 36.5
-      },
-      "confianza": "media",
-      "verificacion": {
-        "verificados": 30,
-        "descartados": 1
       },
       "datos": {
         "nombre": "OneDigital",
@@ -4490,206 +5003,6 @@
       }
     },
     {
-      "posicion": 17,
-      "nombre": "Loup",
-      "puntaje": {
-        "trayectoria": 7.3,
-        "reputacion": 4.7,
-        "casos": 4,
-        "equipo": 8,
-        "clientes": 1.9,
-        "especialidades": 5,
-        "tecnologia": 0,
-        "ia": 0,
-        "liderazgo": 0,
-        "total": 30.9
-      },
-      "confianza": "alta",
-      "verificacion": {
-        "verificados": 30,
-        "descartados": 8
-      },
-      "datos": {
-        "nombre": "Loup",
-        "sitio_web": {
-          "valor": "https://loup.cl",
-          "fuente": "https://loup.cl"
-        },
-        "opera_en_chile": {
-          "valor": true,
-          "descripcion": "oficina en Providencia, Santiago, Chile",
-          "fuente": "https://loup.cl/nuestra_filosofia/"
-        },
-        "anio_fundacion": {
-          "valor": 2015,
-          "fuente": "https://cl.linkedin.com/company/loup-consultora-marketing-digital"
-        },
-        "fundador": {
-          "valor": "Sebastián Ruiz Arredondo (Co‑fundador, consultor Marketing B2B/B2C)",
-          "fuente": "https://cl.linkedin.com/company/loup-consultora-marketing-digital"
-        },
-        "liderazgo": {
-          "nombre": "Sebastián Ruiz Arredondo",
-          "formacion": null,
-          "postgrado": null,
-          "anios_experiencia": null,
-          "experiencia_previa": null,
-          "fuente": "https://cl.linkedin.com/company/loup-consultora-marketing-digital"
-        },
-        "equipo": {
-          "valor": "interno",
-          "tamano": "De 2 a 10 empleados",
-          "fuente": "https://cl.linkedin.com/company/loup-consultora-marketing-digital"
-        },
-        "especialidades": {
-          "performance": {
-            "valor": true,
-            "fuente": "https://loup.cl/sitios-web-preparados-para-la-ia/",
-            "cita": "Cruzan la lista estructurada de elementos que obtienen del DOM y del árbol de accesibilidad con la renderización visual, porque cada canal por separado deja una brecha semántica."
-          },
-          "contenido": {
-            "valor": true,
-            "fuente": "https://loup.cl/marketing-digital-servicios-profesionales-chile/",
-            "cita": "ABM , B2B , Estrategia Digital B2B , Publicidad Digital , Redes Sociales , SEO"
-          },
-          "creatividad": {
-            "valor": true,
-            "fuente": "https://loup.cl/posicionamiento-inteligencia-artificial-chile/",
-            "cita": "La claridad de posicionamiento no es solo un problema de branding: es una condición para existir en el ecosistema del Search Engine Everywhere."
-          },
-          "seo": {
-            "valor": true,
-            "fuente": "https://loup.cl/casos-de-estudio/",
-            "cita": "GEO sector energético , posicionamiento renovables Chile , Search Engine Everywhere , SEO empresas solares , SEO eólicas Chile , SEO sector energía"
-          },
-          "ecommerce": {
-            "valor": true,
-            "fuente": "https://loup.cl/marketing-digital-servicios-profesionales-chile/",
-            "cita": "En servicios profesionales, las métricas que importan son distintas a las de un e-commerce."
-          },
-          "b2b": {
-            "valor": true,
-            "fuente": "https://loup.cl/",
-            "cita": "Diseñamos estrategias digitales para empresas B2B y B2C que necesitan resultados medibles, no solo presencia."
-          }
-        },
-        "herramientas_propias": {
-          "valor": false,
-          "descripcion": null,
-          "fuente": null,
-          "descartado": "cita no encontrada en https://loup.cl/agencia-de-marketing-digital-b2b-chile"
-        },
-        "crm_propio": {
-          "valor": false,
-          "descripcion": null,
-          "fuente": null
-        },
-        "paneles_financieros": {
-          "valor": true,
-          "descripcion": "La agencia ofrece dashboards en tiempo real para cada cliente, lo que implica la entrega de reportes con métricas financieras.",
-          "fuente": "https://loup.cl/agencia-digital-chile/",
-          "cita": "Destaca por sus herramientas propietarias: un Predictor de Campañas que estima CPC y CPA antes de invertir, un sistema de segmentación con IA (Buyer Gen) y dashboards en tiempo real para cada cliente.",
-          "comprobado": "frase publicada en el sitio de la agencia"
-        },
-        "agentes_ia": {
-          "valor": false,
-          "descripcion": null,
-          "fuente": null
-        },
-        "casos_exito": [
-          {
-            "cliente": "Grido Chile",
-            "rubro": "heladería / consumo masivo",
-            "resultado": "comunidad digital creció más de 4 veces en menos de un año",
-            "fuente": "https://cl.linkedin.com/company/loup-consultora-marketing-digital"
-          }
-        ],
-        "clientes_destacados": [
-          {
-            "nombre": "Grido Chile",
-            "fuente": "https://cl.linkedin.com/company/loup-consultora-marketing-digital"
-          }
-        ],
-        "premios": [],
-        "precios_publicados": {
-          "valor": null,
-          "fuente": null
-        },
-        "resenas_google": {
-          "cantidad": 3,
-          "rating": 4.7,
-          "fuente": "https://www.google.com/maps/search/?api=1&query=Loup%20-%20Consultora%20de%20Marketing%20Digital&query_place_id=ChIJ73SRzZ7FYpYREIrLQUgFIbQ",
-          "origen": "Google Maps",
-          "ficha": "Loup - Consultora de Marketing Digital"
-        },
-        "directorios": [
-          {
-            "sitio": "Clutch",
-            "resenas": 0,
-            "fuente": "https://clutch.co/profile/loup-marketing-digital"
-          }
-        ],
-        "tamano_clientes": {
-          "valor": null,
-          "fuente": null
-        },
-        "senales": {
-          "google_ads": {
-            "valor": true,
-            "fuente": "https://loup.cl/agencia-digital-chile/",
-            "cita": "Las 10 mejores agencias digitales en Chile en 2026, clasificadas por especialidad, son: Loup (B2B + B2C, trazabilidad), Bigbuda (CRO y eCommerce), Muller y Pérez (performance y Google Ads), Cebra (inbound y HubSpot), Seonet (SEO orgánico), Rompecabeza Digital (performance enterprise), ONEDigital (presencia digital integral), Relevant (branding y mercado chileno), Moov Media Group (omnicanal y growth) y Webketing (B2B e inbound)."
-          },
-          "meta_ads": {
-            "valor": false,
-            "fuente": null
-          },
-          "linkedin_ads": {
-            "valor": true,
-            "fuente": "https://loup.cl/abm-marketing-chile/",
-            "cita": "Combinando LinkedIn Ads segmentado por cuenta, contenido técnico orientado a los desafíos específicos de cada industria, email personalizado y contacto directo del equipo comercial."
-          },
-          "tiktok_ads": {
-            "valor": false,
-            "fuente": null
-          },
-          "shopping": {
-            "valor": false,
-            "fuente": null
-          },
-          "cro": {
-            "valor": true,
-            "fuente": "https://loup.cl/empresas-de-posicionamiento-en-ia-chile/",
-            "cita": "Citaciones en IA, tráfico desde IA (con mayor tasa de conversión), featured snippets capturados"
-          },
-          "produccion": {
-            "valor": true,
-            "fuente": "https://loup.cl/descubre-cuatro-herramientas-para-tener-un-mejor-sitio-web/",
-            "cita": "Y para ganar aquí, Hubspot dice que los negocios necesitan estas herramientas:"
-          },
-          "influencers": {
-            "valor": true,
-            "fuente": "https://loup.cl/agencia-digital-chile/",
-            "cita": "Especialización en growth marketing, social intelligence e influencer marketing."
-          },
-          "precios": {
-            "valor": true,
-            "fuente": "https://loup.cl/agencia-digital-chile/",
-            "cita": "Una agencia pequeña con gestión de 1 canal cobra desde $500.000 mensuales."
-          },
-          "whatsapp": {
-            "valor": false,
-            "fuente": null
-          }
-        },
-        "tipo_agencia": {
-          "tipo": "performance",
-          "cita": "Nos enfocamos en la generación de leads de calidad, aumentamos tus ventas y creamos comunidad. CONVIERTE TU MARKETING DIGITAL EN UN MOTOR DE CRECIMIENTO REAL",
-          "fuente": "https://loup.cl"
-        }
-      }
-    },
-    {
-      "posicion": 18,
       "nombre": "Agencia Los Navegantes",
       "puntaje": {
         "trayectoria": 7.3,
@@ -4702,11 +5015,6 @@
         "ia": 0,
         "liderazgo": 4,
         "total": 25.8
-      },
-      "confianza": "media",
-      "verificacion": {
-        "verificados": 20,
-        "descartados": 5
       },
       "datos": {
         "nombre": "Agencia Los Navegantes",
@@ -4813,7 +5121,6 @@
       }
     },
     {
-      "posicion": 19,
       "nombre": "Seonet",
       "puntaje": {
         "trayectoria": 0,
@@ -4826,11 +5133,6 @@
         "ia": 0,
         "liderazgo": 0,
         "total": 19
-      },
-      "confianza": "media",
-      "verificacion": {
-        "verificados": 17,
-        "descartados": 7
       },
       "datos": {
         "nombre": "Seonet",
@@ -4963,330 +5265,5 @@
         }
       }
     }
-  ],
-  "especializadas": [
-    {
-      "nombre": "Adinfluence",
-      "tipo": {
-        "tipo": "influencers",
-        "cita": "Adinfluence | Agencia de influencers en Chile",
-        "fuente": "https://www.adinfluence.cl"
-      },
-      "puntaje": {
-        "trayectoria": 0,
-        "reputacion": 7.5,
-        "casos": 20,
-        "equipo": 10,
-        "clientes": 15,
-        "especialidades": 5,
-        "tecnologia": 5,
-        "ia": 5,
-        "liderazgo": 10,
-        "total": 77.5
-      },
-      "datos": {
-        "nombre": "Adinfluence",
-        "sitio_web": {
-          "valor": "https://www.adinfluence.cl",
-          "fuente": "https://www.adinfluence.cl"
-        },
-        "opera_en_chile": {
-          "valor": true,
-          "descripcion": "oficina en Las Condes, Santiago de Chile",
-          "fuente": "https://www.adinfluence.cl"
-        },
-        "anio_fundacion": {
-          "valor": null,
-          "fuente": null
-        },
-        "fundador": {
-          "valor": null,
-          "fuente": null
-        },
-        "liderazgo": {
-          "nombre": "David Caro Benado",
-          "formacion": "Licenciado en Administración de Empresas / Ingeniero Comercial, Universidad del Desarrollo (2010-2014)",
-          "postgrado": "Diplomado en Control de Gestión, Pontificia Universidad Católica de Chile (no es magíster)",
-          "anios_experiencia": 11,
-          "experiencia_previa": "Co-fundador de Wizz (startup de alineadores dentales, 2018); Holding Colloky S.A.",
-          "fuente": "https://cl.linkedin.com/in/david-caro-benado-35595677",
-          "verificado": "perfil revisado"
-        },
-        "equipo": {
-          "valor": "interno",
-          "tamano": "entre 51 y 200 empleados",
-          "fuente": "https://cl.linkedin.com/company/adinfluencecl"
-        },
-        "especialidades": {
-          "performance": {
-            "valor": true,
-            "fuente": "https://www.adinfluence.cl/",
-            "cita": "En Adinfluence desarrollamos campañas integrales que combinan estrategia, creatividad y performance."
-          },
-          "contenido": {
-            "valor": true,
-            "fuente": "https://www.adinfluence.cl/",
-            "cita": "Performance con IA Snack-Content Redes Sociales Publicidad Digital"
-          },
-          "creatividad": {
-            "valor": true,
-            "fuente": "https://www.adinfluence.cl/",
-            "cita": "En Adinfluence desarrollamos campañas integrales que combinan estrategia, creatividad y performance."
-          },
-          "seo": {
-            "valor": true,
-            "fuente": "https://www.adinfluence.cl/",
-            "cita": "Maximizamos la conversión mediante una fusión de E-content de alto impacto y curatoría SEO."
-          },
-          "ecommerce": {
-            "valor": true,
-            "fuente": "https://adinfluence.cl/performance-con-ia",
-            "cita": "Imagina un e-commerce de suplementos deportivos en Chile ."
-          },
-          "b2b": {
-            "valor": true,
-            "fuente": "https://adinfluence.cl/blog-posts/que-es-el-marketing-360-casos-de-exito-faqs",
-            "cita": "Especialmente útil en sectores donde el ciclo de decisión es largo (B2B, inmobiliaria, servicios técnicos), donde el cliente necesita múltiples impactos y confianza antes de convertir."
-          }
-        },
-        "herramientas_propias": {
-          "valor": true,
-          "descripcion": "Plataforma propia de Adinfluence integrada con la API de Instagram/Tiktok para recolección automática de datos.",
-          "fuente": "https://adinfluence.cl/blog-posts/adinfluence-lanza-la-primera-plataforma-con-ai-permite-trackear-influencers-y-gestionar-sus-contenidos-en-tiempo-real",
-          "cita": "Automatización de la recolección de datos: Nuestra plataforma está integrada con la API de Instagram/Tiktok, lo que permite la recolección automática de datos de publicaciones públicas sin intervención manual.",
-          "comprobado": "frase publicada en el sitio de la agencia"
-        },
-        "crm_propio": {
-          "valor": false,
-          "descripcion": null,
-          "fuente": null
-        },
-        "paneles_financieros": {
-          "valor": true,
-          "descripcion": "Dashboards personalizados en Looker Studio para que los clientes visualicen KPIs y el retorno de inversión al instante.",
-          "fuente": "https://adinfluence.cl/performance-con-ia",
-          "cita": "Analítica en Tiempo Real: Dashboards personalizados en Looker Studio para que visualices tus KPIs y el retorno de tu inversión al instante.",
-          "comprobado": "frase publicada en el sitio de la agencia"
-        },
-        "agentes_ia": {
-          "valor": true,
-          "descripcion": "Adinfluence desarrolló su propia plataforma con apoyo de inteligencia artificial para que los clientes hagan seguimiento de campañas en tiempo real.",
-          "fuente": "https://adinfluence.cl/blog-posts/adinfluence-lanza-la-primera-plataforma-con-ai-permite-trackear-influencers-y-gestionar-sus-contenidos-en-tiempo-real",
-          "cita": "Es por esto, que Adinfluence desarrolló su propia plataforma con apoyo de inteligencia artificial, en donde cualquier cliente, puede hacer un completo seguimiento del rendimiento de su campaña en tiempo real, simplificando la planificación y ejecución del contenido de los influencers, permitiéndole a la marca centrarse en lo que realmente le debe importar: conectar con su público objetivo.",
-          "comprobado": "frase publicada en el sitio de la agencia"
-        },
-        "casos_exito": [
-          {
-            "cliente": "Soprole (Manjarate Peanut Butter)",
-            "rubro": "alimentos lácteos",
-            "resultado": "Alcance 2.801.998, CPA $3,5",
-            "fuente": "https://www.adinfluence.cl/blog-posts/campanas-exitosas-con-influencers-4-ejemplos-casos-de-exito-adinfluence"
-          },
-          {
-            "cliente": "Copec Pay",
-            "rubro": "pagos digitales / fintech",
-            "resultado": "Alcance 9.480.599, interacciones 876.643, CPA $3,4",
-            "fuente": "https://www.adinfluence.cl/blog-posts/campanas-exitosas-con-influencers-4-ejemplos-casos-de-exito-adinfluence"
-          },
-          {
-            "cliente": "IKEA Food (Navidad Escandinava)",
-            "rubro": "retail / food",
-            "resultado": "Alcance 3.268.976, CPA $2",
-            "fuente": "https://www.adinfluence.cl/blog-posts/campanas-exitosas-con-influencers-4-ejemplos-casos-de-exito-adinfluence"
-          },
-          {
-            "cliente": "AkiKB (Minibodegas)",
-            "rubro": "servicios B2B/B2C de bodegaje",
-            "resultado": "3.000 leads, CTR 16%, CPA CLP $1.600",
-            "fuente": "https://www.adinfluence.cl/blog-posts/campanas-exitosas-con-influencers-4-ejemplos-casos-de-exito-adinfluence"
-          },
-          {
-            "cliente": "Blockstore",
-            "rubro": "retail calzado urbano",
-            "resultado": "ROAS promedio >20x, 50% crecimiento en ventas",
-            "fuente": "https://www.adinfluence.cl"
-          }
-        ],
-        "clientes_destacados": [
-          {
-            "nombre": "Disney",
-            "fuente": "https://adinfluence.cl"
-          },
-          {
-            "nombre": "Samsonite",
-            "fuente": "https://adinfluence.cl"
-          },
-          {
-            "nombre": "Block",
-            "fuente": "https://adinfluence.cl"
-          },
-          {
-            "nombre": "Ibis",
-            "fuente": "https://adinfluence.cl"
-          },
-          {
-            "nombre": "Despegar",
-            "fuente": "https://adinfluence.cl"
-          },
-          {
-            "nombre": "Jac",
-            "fuente": "https://adinfluence.cl"
-          },
-          {
-            "nombre": "Pichara",
-            "fuente": "https://adinfluence.cl"
-          },
-          {
-            "nombre": "Ariztia",
-            "fuente": "https://adinfluence.cl"
-          },
-          {
-            "nombre": "Parquearauco",
-            "fuente": "https://adinfluence.cl"
-          },
-          {
-            "nombre": "Liola",
-            "fuente": "https://adinfluence.cl"
-          },
-          {
-            "nombre": "Tntsport",
-            "fuente": "https://adinfluence.cl"
-          },
-          {
-            "nombre": "Ccu",
-            "fuente": "https://adinfluence.cl"
-          },
-          {
-            "nombre": "Latam",
-            "fuente": "https://adinfluence.cl"
-          },
-          {
-            "nombre": "Montina",
-            "fuente": "https://adinfluence.cl"
-          },
-          {
-            "nombre": "Prater",
-            "fuente": "https://adinfluence.cl"
-          },
-          {
-            "nombre": "Ripley",
-            "fuente": "https://adinfluence.cl"
-          },
-          {
-            "nombre": "Viajesfalabella",
-            "fuente": "https://adinfluence.cl"
-          },
-          {
-            "nombre": "Palumbo",
-            "fuente": "https://adinfluence.cl"
-          },
-          {
-            "nombre": "Changan",
-            "fuente": "https://adinfluence.cl"
-          },
-          {
-            "nombre": "Gob",
-            "fuente": "https://adinfluence.cl"
-          },
-          {
-            "nombre": "Rosen",
-            "fuente": "https://adinfluence.cl"
-          },
-          {
-            "nombre": "Fundamenta",
-            "fuente": "https://adinfluence.cl"
-          },
-          {
-            "nombre": "Linkediin partner",
-            "fuente": "https://adinfluence.cl/en-us/performance-con-ia"
-          },
-          {
-            "nombre": "Pinterest partner",
-            "fuente": "https://adinfluence.cl/en-us/performance-con-ia"
-          },
-          {
-            "nombre": "Ondemand partner",
-            "fuente": "https://adinfluence.cl/en-us/performance-con-ia"
-          },
-          {
-            "nombre": "Vtr",
-            "fuente": "https://adinfluence.cl/en-us/performance-con-ia"
-          }
-        ],
-        "premios": [],
-        "precios_publicados": {
-          "valor": null,
-          "fuente": null
-        },
-        "resenas_google": {
-          "cantidad": 40,
-          "rating": 4.8,
-          "fuente": "https://www.google.com/maps/search/?api=1&query=Adinfluence&query_place_id=ChIJMcRpr6beEWIR1fd_MGDXu3A",
-          "origen": "Google Maps",
-          "ficha": "Adinfluence"
-        },
-        "directorios": [],
-        "tamano_clientes": {
-          "valor": "mixto",
-          "fuente": "https://cl.linkedin.com/company/adinfluencecl"
-        },
-        "senales": {
-          "google_ads": {
-            "valor": true,
-            "fuente": "https://adinfluence.cl/performance-con-ia",
-            "cita": "En Akikb logramos ser líderes de mercado con una estrategia superior en Google Ads."
-          },
-          "meta_ads": {
-            "valor": true,
-            "fuente": "https://adinfluence.cl/performance-con-ia",
-            "cita": "En Blockstore logramos ventas históricas mediante estrategias de campañas pagadas en TikTok y Meta Ads."
-          },
-          "linkedin_ads": {
-            "valor": false,
-            "fuente": null
-          },
-          "tiktok_ads": {
-            "valor": true,
-            "fuente": "https://adinfluence.cl/blog-posts/que-es-el-marketing-360-casos-de-exito-faqs",
-            "cita": "Además de potenciar tu marca con Marketing de influencers , somos tu Agencia Paid Media Chile: Meta Ads, Google Ads, TikTok Ads ."
-          },
-          "shopping": {
-            "valor": true,
-            "fuente": "https://adinfluence.cl/blog-posts/aeo-answer-engine-optimization-seo-en-la-era-de-la-ia",
-            "cita": "A través de iniciativas como el Merchant Center (User Conversion Platform) , el buscador busca listar productos para la transacción directamente en su motor, integrando el inventario de los comercios con la experiencia de búsqueda generativa."
-          },
-          "cro": {
-            "valor": true,
-            "fuente": "https://www.adinfluence.cl/",
-            "cita": "CVR MÁXIMO: Pico histórico en tasa de conversión digital."
-          },
-          "produccion": {
-            "valor": true,
-            "fuente": "https://www.adinfluence.cl/",
-            "cita": "Diseñamos la estrategia integral y la producción audiovisual que convirtió la apertura del Claro Arena en un fenómeno viral junto a Kramer."
-          },
-          "influencers": {
-            "valor": true,
-            "fuente": "https://www.adinfluence.cl/",
-            "cita": "Adinfluence | Agencia de influencers en Chile | Impulsados por IA"
-          },
-          "precios": {
-            "valor": true,
-            "fuente": "https://adinfluence.cl/blog-posts/campanas-exitosas-con-influencers-4-ejemplos-casos-de-exito-adinfluence",
-            "cita": "Eficiencia en el Gasto Publicitario: Logró un Costo por Adquisición (CPA) de solo $1.600 CLP, permitiendo a la marca escalar sus ventas con una inversión sumamente optimizada."
-          },
-          "whatsapp": {
-            "valor": false,
-            "fuente": null
-          }
-        },
-        "tipo_agencia": {
-          "tipo": "influencers",
-          "cita": "Adinfluence | Agencia de influencers en Chile",
-          "fuente": "https://www.adinfluence.cl"
-        }
-      }
-    }
-  ],
-  "incompletas": []
+  ]
 }

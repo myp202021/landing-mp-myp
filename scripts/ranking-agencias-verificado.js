@@ -1644,8 +1644,9 @@ async function main() {
   evaluadas = evaluadas.filter(operaEnChile);
   evaluadas.forEach(function (r) { r.confianza = confianza(r); });
   var especializadas = evaluadas.filter(function (r) { return !esComparable(r); });
-  var incompletas = evaluadas.filter(function (r) { return esComparable(r) && r.confianza === "baja"; });
-  evaluadas = evaluadas.filter(function (r) { return esComparable(r) && r.confianza !== "baja"; });
+  // Solo con confianza alta se publica un puntaje (Christopher: "el que no tiene datos que no salga")
+  var incompletas = evaluadas.filter(function (r) { return esComparable(r) && r.confianza !== "alta"; });
+  evaluadas = evaluadas.filter(function (r) { return esComparable(r) && r.confianza === "alta"; });
   console.log("Ranking general: " + evaluadas.length + " | especializadas: " + especializadas.length + " | evaluación incompleta: " + incompletas.length);
   evaluadas.sort(function (a, b) {
     return b.puntaje.total - a.puntaje.total;
