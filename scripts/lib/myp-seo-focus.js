@@ -401,10 +401,13 @@ async function urlResponde(url) {
   }
 }
 
+// Sitios de agencias de marketing: nunca se citan como fuente (enlazarlos les transfiere autoridad en nuestras keywords)
+var AGENCIAS_COMPETENCIA = /bigbuda|loup\.cl|nexbu|seonet|milaperformance|milimetrix|metrix\.digital|focus-ads|adinfluence|lagencia|rompecabeza|cebra\.|moov\.cl|meat\.cl|relevant|wolfbcpp|postedin|marketboost|onedigital|subeagencia|agencia|agency|marketing4ecommerce/i;
+
 // Busca en la web fuentes reales para el tema y devuelve solo las que responden.
 async function buscarFuentes(tema, openaiKey) {
   var prompt = "Busca en la web entre 4 y 6 fuentes reales y actuales (estudios, informes, documentación oficial, estadísticas) " +
-    "que respalden un artículo sobre: \"" + tema + "\" en Chile o Latinoamérica. Prioriza IAB Chile, Cámara de Comercio de Santiago, " +
+    "que respalden un artículo sobre: \"" + tema + "\" en Chile o Latinoamérica. NUNCA uses sitios de agencias de marketing. Prioriza IAB Chile, Cámara de Comercio de Santiago, " +
     "Google, Meta, Statista, Kantar, CEPAL, INE, Subtel, HubSpot Research, Think with Google.\n" +
     'Responde SOLO JSON: {"fuentes": [{"nombre": "título exacto del estudio o página", "organizacion": "quién lo publica", "anio": 2026, "url": "URL exacta"}]}';
   var herramientas = ["web_search", "web_search_preview"];
@@ -427,6 +430,7 @@ async function buscarFuentes(tema, openaiKey) {
       for (var k = 0; k < (j.fuentes || []).length; k++) {
         var f = j.fuentes[k];
         var url = String(f.url || "").replace(/[‐-―−]/g, "-").match(/https?:\/\/[^\s"“”'<>()]+/);
+        if (url && AGENCIAS_COMPETENCIA.test(url[0])) continue; // no dar autoridad a competidores
         if (url && (await urlResponde(url[0]))) { f.url = url[0]; ok.push(f); }
       }
       console.log("   Fuentes: " + ok.length + " verificadas de " + (j.fuentes || []).length);
