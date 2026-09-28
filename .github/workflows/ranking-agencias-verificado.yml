@@ -1,0 +1,63 @@
+name: "Ranking Agencias Verificado (mensual, día 1 · 09:00 Chile)"
+
+on:
+  schedule:
+    - cron: "0 12 1 * *"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "No publicar (solo generar snapshot y HTML como artefacto)"
+        type: boolean
+        default: true
+      limit:
+        description: "Cantidad de agencias (0 = todas)"
+        default: "0"
+
+permissions:
+  contents: write
+
+jobs:
+  ranking:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: npm install node-fetch@2 @supabase/supabase-js@2 ws
+      - name: Investigar, verificar fuentes, puntuar y publicar
+        run: node scripts/ranking-agencias-verificado.js
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          RESEND: ${{ secrets.RESEND }}
+          # En el cron mensual inputs viene vacío → publica. A mano, dry_run por defecto.
+          DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run && '1' || '0' }}
+          LIMIT: ${{ inputs.limit || '0' }}
+
+      - name: Guardar snapshot mensual en el repo (auditoría pública del ranking)
+        if: success() && !(github.event_name == 'workflow_dispatch' && inputs.dry_run)
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add data/ranking-agencias/*.json
+          git diff --cached --quiet || git commit -m "chore: snapshot ranking agencias verificado [skip ci]"
+          git push || echo "Push falló — snapshot no guardado"
+
+      - name: Subir snapshot y HTML como artefacto
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ranking-agencias-verificado
+          path: data/ranking-agencias/
+          retention-days: 90
+
+      - name: Alerta si falla
+        if: failure()
+        run: |
+          curl -s -X POST "https://api.resend.com/emails" \
+            -H "Authorization: Bearer ${{ secrets.RESEND }}" \
+            -H "Content-Type: application/json" \
+            -d "{\"from\":\"contacto@mulleryperez.cl\",\"to\":\"contacto@mulleryperez.cl\",\"subject\":\"⚠️ FALLO Ranking Agencias Verificado\",\"html\":\"<p><a href='https://github.com/myp202021/landing-mp-myp/actions'>Ver logs</a></p>\"}"
