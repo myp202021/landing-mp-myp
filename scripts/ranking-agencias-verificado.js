@@ -228,6 +228,80 @@ async function verificar(obj) {
   return stats;
 }
 
+// ═══ PASO 2B: CONFIRMAR CRITERIOS DE TECNOLOGÍA E IA CON CITA TEXTUAL ═══
+// La clasificación sí/no de la IA varía entre corridas (falsos positivos y negativos). Para los 4 criterios
+// que más pesan se hace una consulta enfocada que debe devolver la frase EXACTA de la página, y el script
+// descarga la página y comprueba que la frase esté ahí. La cita se publica como evidencia.
+var CRITERIOS_TEC = {
+  agentes_ia: "¿La agencia desarrolló y opera agentes o automatizaciones de inteligencia artificial PROPIOS en producción para sus clientes? Usar ChatGPT, Jasper u otra herramienta de terceros, o revender software de un partner, NO cuenta.",
+  herramientas_propias: "¿La agencia desarrolló software, plataformas, dashboards o herramientas propias (no de terceros)?",
+  crm_propio: "¿La agencia desarrolló u opera un CRM propio para gestionar los leads de sus clientes (revender HubSpot o Salesforce NO cuenta)?",
+  paneles_financieros: "¿La agencia entrega a sus clientes paneles o dashboards con métricas financieras como ROI, CAC, ROAS o margen?",
+};
+
+function normalizarTexto(t) {
+  return String(t || "")
+    .toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    .replace(/&[a-z#0-9]+;/g, " ")
+    .replace(/[^a-z0-9ñ]+/g, " ")
+    .trim();
+}
+
+var cachePaginas = {};
+async function textoPagina(url) {
+  if (url in cachePaginas) return cachePaginas[url];
+  var r = { estado: 0, texto: "" };
+  try {
+    var ctrl = new AbortController();
+    var t = setTimeout(function () { ctrl.abort(); }, 15000);
+    var res = await fetch(url, { redirect: "follow", signal: ctrl.signal, headers: { "User-Agent": "Mozilla/5.0 (compatible; MPRankingVerifier/1.0; +https://www.mulleryperez.cl)" } });
+    clearTimeout(t);
+    r.estado = res.status;
+    if (res.ok) r.texto = normalizarTexto((await res.text()).replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/gi, " ").replace(/<[^>]+>/g, " "));
+  } catch (e) { r.estado = 0; }
+  cachePaginas[url] = r;
+  return r;
+}
+
+async function confirmarCriterio(agencia, campo) {
+  var prompt = "Agencia de marketing digital chilena: \"" + agencia.nombre + "\"" + (agencia.web ? " (" + agencia.web + ")" : "") + ".\n"
+    + CRITERIOS_TEC[campo] + "\n\nBusca primero en el sitio oficial de la agencia (páginas de servicios, tecnología, IA, agentes, herramientas, nosotros).\n"
+    + "Responde SOLO JSON: {\"valor\": true|false, \"descripcion\": \"qué es, en una frase\", \"fuente\": \"UNA URL exacta\", \"cita\": \"frase copiada LITERALMENTE de esa página (15 a 40 palabras) que lo demuestra\"}\n"
+    + "Si no hay evidencia publicada, responde {\"valor\": false, \"descripcion\": null, \"fuente\": null, \"cita\": null}.";
+  var data = await llamarResponses({ model: MODEL, input: prompt });
+  var j = extraerJson(textoDeRespuesta(data));
+  j.fuente = normalizarUrl(j.fuente);
+  if (!j.valor || !j.fuente || !j.cita) return { valor: false, descripcion: null, fuente: null };
+  var pag = await textoPagina(j.fuente);
+  var cita = normalizarTexto(j.cita);
+  // Se compara un tramo central de la cita para tolerar diferencias de puntuación en los bordes
+  var palabras = cita.split(" ");
+  var tramo = palabras.slice(Math.floor(palabras.length * 0.15), Math.max(Math.ceil(palabras.length * 0.85), 6)).join(" ");
+  if (pag.texto && tramo.length >= 20 && pag.texto.indexOf(tramo) >= 0) {
+    return { valor: true, descripcion: j.descripcion, fuente: j.fuente, cita: j.cita, comprobado: "cita encontrada en la página" };
+  }
+  if (!pag.texto && (pag.estado === 403 || pag.estado === 429)) {
+    return { valor: true, descripcion: j.descripcion, fuente: j.fuente, cita: j.cita, comprobado: "sitio bloquea verificación automática" };
+  }
+  return { valor: false, descripcion: null, fuente: null, descartado: "cita no encontrada en " + j.fuente };
+}
+
+async function confirmarTecnologia(agencia, datos) {
+  var cambios = [];
+  for (var campo in CRITERIOS_TEC) {
+    try {
+      var c = await confirmarCriterio(agencia, campo);
+      var antes = tiene(datos[campo]);
+      datos[campo] = c;
+      if (antes !== c.valor) cambios.push(campo + ": " + antes + " → " + c.valor + (c.descartado ? " (" + c.descartado + ")" : ""));
+    } catch (e) {
+      console.log("   confirmación " + campo + " falló: " + e.message);
+    }
+  }
+  return cambios;
+}
+
 // ═══ ESTABILIDAD ENTRE MESES ═══
 // La búsqueda web no encuentra siempre lo mismo. Un dato verificado el mes anterior se mantiene si su fuente
 // sigue respondiendo; así una agencia no baja solo porque la IA no lo encontró esta vez.
@@ -242,6 +316,8 @@ async function heredarDelMesAnterior(datos, previo, nombre) {
   for (var i = 0; i < campos.length; i++) {
     var c = campos[i], nuevo = datos[c], viejo = a[c];
     var nuevoVacio = !nuevo || !nuevo.fuente || (nuevo.valor == null && !nuevo.cantidad);
+    // Los criterios de tecnología/IA solo se heredan si el mes anterior se comprobaron con cita
+    if (c in CRITERIOS_TEC && !(viejo && viejo.comprobado)) continue;
     if (nuevoVacio && viejo && viejo.fuente && (viejo.valor != null || viejo.cantidad) && (await urlResponde(viejo.fuente))) {
       datos[c] = viejo; n++;
     }
@@ -682,7 +758,8 @@ async function redactar(ranking, anterior, fechaTxt) {
   function ev(r, campo) {
     var x = r.datos[campo];
     r._evidencia = tiene(x)
-      ? esc(x.descripcion || (typeof x.valor === "string" ? x.valor : "Sí"))
+      ? esc(x.descripcion || (typeof x.valor === "string" ? x.valor : "Sí")) +
+        (x.cita ? '<br><em class="text-gray-500">“' + esc(x.cita) + '”</em>' : "")
       : "—";
     r._fuente = x && x.fuente ? link(x.fuente) : "—";
     return tiene(x);
@@ -908,6 +985,8 @@ async function main() {
           stats = stats2;
         }
       }
+      var cambios = await confirmarTecnologia(ag, datos);
+      if (cambios.length) console.log("   confirmación con cita: " + cambios.join(" | "));
       var heredados = await heredarDelMesAnterior(datos, previo, ag.nombre);
       if (heredados) console.log("   " + heredados + " datos heredados del mes anterior (fuente re-verificada)");
       var p = puntaje(datos);
