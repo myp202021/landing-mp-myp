@@ -145,7 +145,7 @@ async function investigar(agencia) {
     "Clutch, Sortlist, GoodFirms, DesignRush y prensa.\n\n" +
     "REGLAS ESTRICTAS:\n" +
     '- "fuente" es UNA sola URL completa, sin comentarios ni citas, con guiones normales (-). Cada dato DEBE llevar en "fuente" la URL exacta donde aparece. Si no encuentras una URL que lo respalde, pon null en ese campo.\n' +
-    '- No infieras ni estimes. "La agencia ofrece SEO" solo es true si una página lo dice.\n' +
+    '- No infieras ni estimes; nunca escribas suposiciones como "presumiblemente" o "probablemente": si no está publicado, null. "La agencia ofrece SEO" solo es true si una página lo dice.\n' +
     "- casos_exito: solo casos publicados con cliente identificable. Máximo 5.\n" +
     "- liderazgo: busca al fundador o gerente general en LinkedIn y en la página de equipo o nosotros del sitio; su formación, postgrado, años de experiencia y cargos previos.\n" +
     "- herramientas_propias / crm_propio / paneles_financieros / agentes_ia: solo si la agencia los desarrolló o los opera ella misma y lo publica; revender HubSpot o usar ChatGPT no cuenta.\n" +
