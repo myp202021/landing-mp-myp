@@ -1,3 +1,4 @@
+require('./lib/correo') // correos por Gmail (ver scripts/lib/correo.js)
 // clipping-prensa-hualpen.js
 // Corre L-V 06:00 AM Chile via GitHub Actions
 // Scrapea Instagram de medios chilenos, filtra posts sobre transporte y envía links.

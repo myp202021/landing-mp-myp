@@ -1,3 +1,4 @@
+require('./lib/correo') // correos por Gmail (ver scripts/lib/correo.js)
 // invas-blog-rankings-semanal.js
 // Genera 1 artículo de ranking/comparativa semanal para invaswms.com
 // Corre cada jueves via GitHub Actions

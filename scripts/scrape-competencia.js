@@ -1,3 +1,4 @@
+require('./lib/correo') // correos por Gmail (ver scripts/lib/correo.js)
 // scrape-competencia.js
 // Corre todos los días L-V a las 08:50 AM via GitHub Actions
 // Scrape Instagram + LinkedIn + Facebook de competidores de Buses Hualpén

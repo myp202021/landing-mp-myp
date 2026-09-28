@@ -5,6 +5,11 @@ on:
   schedule:
     - cron: '0 0 1 1 *'
 
+env:
+  GMAIL_USER: ${{ secrets.GMAIL_USER }}
+  GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+  CORREO_MODO: ambos
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -17,7 +22,7 @@ jobs:
       - name: Instalar wkhtmltopdf
         run: sudo apt-get update && sudo apt-get install -y wkhtmltopdf
       - name: Instalar dependencias
-        run: npm install node-fetch@2 @supabase/supabase-js@2 ws
+        run: npm install node-fetch@2 @supabase/supabase-js@2 ws nodemailer@6
       - name: Ejecutar scraper en modo test
         run: node scripts/scrape-competencia.js
         env:
