@@ -1,0 +1,114 @@
+{
+  "Muller y Pérez": {
+    "cantidad": 115,
+    "rating": 5,
+    "fuente": "https://www.google.com/maps/search/?api=1&query=M%C3%BCller%20y%20P%C3%A9rez%20Agencia%20Digital&query_place_id=ChIJv5_N0orPYpYRNdP4PXlxNKM",
+    "origen": "Google Maps",
+    "ficha": "Müller y Pérez Agencia Digital"
+  },
+  "Bigbuda": {
+    "cantidad": 268,
+    "rating": 5,
+    "fuente": "https://www.google.com/maps/search/?api=1&query=Bigbuda%20%E2%80%93%20Agencia%20de%20Marketing%20Digital%20y%20CRO&query_place_id=ChIJg7OPNN_OYpYRdEfz1lDamF4",
+    "origen": "Google Maps",
+    "ficha": "Bigbuda – Agencia de Marketing Digital y CRO"
+  },
+  "Loup": {
+    "cantidad": 3,
+    "rating": 4.7,
+    "fuente": "https://www.google.com/maps/search/?api=1&query=Loup%20-%20Consultora%20de%20Marketing%20Digital&query_place_id=ChIJ73SRzZ7FYpYREIrLQUgFIbQ",
+    "origen": "Google Maps",
+    "ficha": "Loup - Consultora de Marketing Digital"
+  },
+  "Rompecabeza": {
+    "cantidad": 24,
+    "rating": 4.7,
+    "fuente": "https://www.google.com/maps/search/?api=1&query=Rompecabeza%20Agencia%20Digital%20%7C%20The%20Marketing%20Company&query_place_id=ChIJY4hpJEDPYpYRpH0EjeUKWw0",
+    "origen": "Google Maps",
+    "ficha": "Rompecabeza Agencia Digital | The Marketing Company"
+  },
+  "Cebra": {
+    "cantidad": 15,
+    "rating": 4.7,
+    "fuente": "https://www.google.com/maps/search/?api=1&query=Cebra%20%7C%20Agencia%20de%20Marketing%20Digital&query_place_id=ChIJEx-MSt_OYpYRR0VYKDXX5bc",
+    "origen": "Google Maps",
+    "ficha": "Cebra | Agencia de Marketing Digital"
+  },
+  "Moov": {
+    "cantidad": 16,
+    "rating": 4.5,
+    "fuente": "https://www.google.com/maps/search/?api=1&query=MMG%20-%20Moov%20Media%20Group%20%7C%20Agencia%20de%20Growth%20Marketing&query_place_id=ChIJV-T8QqjIYpYRmGRDEDwL1SU",
+    "origen": "Google Maps",
+    "ficha": "MMG - Moov Media Group | Agencia de Growth Marketing"
+  },
+  "MEAT Group": {
+    "cantidad": 23,
+    "rating": 4.8,
+    "fuente": "https://www.google.com/maps/search/?api=1&query=Agencias%20de%20Marketing%20y%20Publicidad%3A%20MEAT%20Group%20-%20Marketing%20digital%2C%20desarrollo%20web%2C%20performance%2C%20audiovisual%20y%20ciberseguridad&query_place_id=ChIJQZWukmjPYpYRmqxejZzeVpM",
+    "origen": "Google Maps",
+    "ficha": "Agencias de Marketing y Publicidad: MEAT Group - Marketing digital, desarrollo web, performance, audiovisual y ciberseguridad"
+  },
+  "Relevant": {
+    "cantidad": 18,
+    "rating": 5,
+    "fuente": "https://www.google.com/maps/search/?api=1&query=Relevant%20Agency%20-%20Agencia%20de%20Marketing%20Digital&query_place_id=ChIJh4PL2D23NUoRPzyWpN74CXM",
+    "origen": "Google Maps",
+    "ficha": "Relevant Agency - Agencia de Marketing Digital"
+  },
+  "Nexbu": {
+    "cantidad": 40,
+    "rating": 4.1,
+    "fuente": "https://www.google.com/maps/search/?api=1&query=Nexbu%20Chile&query_place_id=ChIJ79Y0Ht3PYpYR8fcVB0zjLqA",
+    "origen": "Google Maps",
+    "ficha": "Nexbu Chile"
+  },
+  "Seonet": {
+    "cantidad": 53,
+    "rating": 4.6,
+    "fuente": "https://www.google.com/maps/search/?api=1&query=SEOnet&query_place_id=ChIJX_Xog0m_vJURdU8lY2zwXD8",
+    "origen": "Google Maps",
+    "ficha": "SEOnet"
+  },
+  "Wolf BCPP": {
+    "cantidad": 15,
+    "rating": 4.9,
+    "fuente": "https://www.google.com/maps/search/?api=1&query=Wolf%20BCPP&query_place_id=ChIJZYFSMTfPYpYRgN93Q5D5amo",
+    "origen": "Google Maps",
+    "ficha": "Wolf BCPP"
+  },
+  "Milimetrix": {
+    "cantidad": 2,
+    "rating": 5,
+    "fuente": "https://www.google.com/maps/search/?api=1&query=Milimetrix&query_place_id=ChIJZWHIGfzPYpYRRKqvKchp8PY",
+    "origen": "Google Maps",
+    "ficha": "Milimetrix"
+  },
+  "Focus Ads": {
+    "cantidad": 2,
+    "rating": 5,
+    "fuente": "https://www.google.com/maps/search/?api=1&query=Focus%20Ads%20-%20Agencia%20de%20Performance%20%26%20Growth%20Marketing&query_place_id=ChIJs4c9gfwQh00RK2u_K0asFH4",
+    "origen": "Google Maps",
+    "ficha": "Focus Ads - Agencia de Performance & Growth Marketing"
+  },
+  "Adinfluence": {
+    "cantidad": 40,
+    "rating": 4.8,
+    "fuente": "https://www.google.com/maps/search/?api=1&query=Adinfluence&query_place_id=ChIJMcRpr6beEWIR1fd_MGDXu3A",
+    "origen": "Google Maps",
+    "ficha": "Adinfluence"
+  },
+  "Lagencia": {
+    "cantidad": 39,
+    "rating": 5,
+    "fuente": "https://www.google.com/maps/search/?api=1&query=LaGencia%20-%20Agencia%20de%20Marketing%20Digital%20en%20Santiago&query_place_id=ChIJi5KLXPLPYpYRExMPxiQueh8",
+    "origen": "Google Maps",
+    "ficha": "LaGencia - Agencia de Marketing Digital en Santiago"
+  },
+  "Postedin": {
+    "cantidad": 5,
+    "rating": 5,
+    "fuente": "https://www.google.com/maps/search/?api=1&query=Postedin%20%7C%20Agencia%20de%20Marketing%20Digital%20Org%C3%A1nico&query_place_id=ChIJq8K5i67PYpYRMxMl1pYWI2U",
+    "origen": "Google Maps",
+    "ficha": "Postedin | Agencia de Marketing Digital Orgánico"
+  }
+}
