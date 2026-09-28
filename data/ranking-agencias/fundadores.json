@@ -1,0 +1,315 @@
+[
+  {
+    "agencia": "Muller y Pérez",
+    "nombre": "Christopher Müller",
+    "cargo": "Fundador",
+    "formacion": "Ingeniero Civil Industrial, Universidad de Chile",
+    "postgrado": "MBA, Universidad de Chile",
+    "anios_experiencia": 20,
+    "experiencia_previa": null,
+    "fuente": "https://www.mulleryperez.cl/copilot",
+    "fuentes_extra": [
+      "https://cl.linkedin.com/in/christophermullerm/en",
+      "https://www.linkedin.com/in/christophermullerm/"
+    ],
+    "confianza": "alta",
+    "nota": "Sitio publica 'Ingeniero Civil Industrial + MBA Universidad de Chile' y '20+ años en tecnología, marketing digital e IA'. Snippet LinkedIn confirma título y MBA (ambos 'graduated with honors') y Universidad de Chile. Cargos previos no visibles (LinkedIn bloquea lectura directa, HTTP 999)."
+  },
+  {
+    "agencia": "Bigbuda",
+    "nombre": "Marcel Acunis Zuker",
+    "cargo": "Fundador y CEO",
+    "formacion": "Ingeniería Comercial, Universidad Adolfo Ibáñez; Ingeniería Civil en Informática y Telecomunicaciones, Universidad Diego Portales",
+    "postgrado": null,
+    "anios_experiencia": null,
+    "experiencia_previa": "CEO de Budamail y Budahost (según snippet LinkedIn; no queda claro si son previos o paralelos)",
+    "fuente": "https://www.linkedin.com/in/marcel-acunis-aa161596/",
+    "fuentes_extra": [
+      "https://bigbuda.cl/en/about-us",
+      "https://theorg.com/org/bigbuda-inc/org-chart/marcel-acunis-zuker"
+    ],
+    "confianza": "media",
+    "nota": "Sitio confirma que fundó Bigbuda en 2010 y la lidera. Formación proviene de snippet de LinkedIn en buscador (no se pudo abrir el perfil); no indica si ambas carreras fueron completadas. Sin postgrado publicado."
+  },
+  {
+    "agencia": "Loup",
+    "nombre": "Sebastián Ruiz Arredondo",
+    "cargo": "Co-fundador",
+    "formacion": null,
+    "postgrado": null,
+    "anios_experiencia": null,
+    "experiencia_previa": null,
+    "fuente": "https://cl.linkedin.com/in/sebasti%C3%A1n-ruiz-arredondo-41b12624",
+    "fuentes_extra": [],
+    "confianza": "baja",
+    "nota": "Solo el título del perfil LinkedIn ('Co-fundador Loup Agencia') aparece en buscador. loup.cl no tiene página de equipo accesible (/nosotros 404). No se identificó CEO/gerente general ni otros socios; sin datos de formación."
+  },
+  {
+    "agencia": "Rompecabeza",
+    "nombre": "Ariel Jeria Cánovas",
+    "cargo": "Socio fundador y Gerente General",
+    "formacion": "Ingeniero Comercial, Universidad de Chile",
+    "postgrado": "MBA, Pontificia Universidad Católica de Chile",
+    "anios_experiencia": 20,
+    "experiencia_previa": "Gerente General Agencia Cardumen (2011-2016); crecimiento y diversificación de servicios en Fusiona (2009-2011); Subgerente Marketing y Ventas Habite Inmobiliaria (2008); Product Manager Terra Networks (2005-2008)",
+    "fuente": "https://www.arieljeria.cl/",
+    "fuentes_extra": [
+      "https://www.rompecabeza.cl/consejo-directivo/",
+      "https://cl.linkedin.com/in/arieljeria/en",
+      "https://www.anda.cl/la-agencia-rompecabeza-digital-cumple-4-anos-con-nuevos-desafios-y-constante-crecimiento/"
+    ],
+    "confianza": "alta",
+    "nota": "Cofundada en 2016 con Yerko Halat (Ing. Civil Industrial PUCV, MBA UC, hoy director). Sitio personal publica 'más de 20 años'; la página de consejo directivo dice 14 años (desactualizada). MBA UC figura en sitio personal y LinkedIn; la página de consejo no lo menciona."
+  },
+  {
+    "agencia": "Cebra",
+    "nombre": "Héctor Lascar",
+    "cargo": "Founder & Global CEO",
+    "formacion": "Ingeniería Comercial, Universidad Adolfo Ibáñez (2005-2009)",
+    "postgrado": "Magíster en Dirección Estratégica de Ventas, Universidad Adolfo Ibáñez (2010); Babson Entrepreneurship Program, Babson College (2011)",
+    "anios_experiencia": null,
+    "experiencia_previa": "HubSpot y CBA figuran en experiencia LinkedIn (sin cargo ni fechas visibles)",
+    "fuente": "https://www.linkedin.com/in/lascar/",
+    "fuentes_extra": [
+      "https://www.cebra.com/equipo-agencia-cebra",
+      "https://portalinnova.cl/nace-cebra-andes/"
+    ],
+    "confianza": "media",
+    "nota": "Página de equipo de Cebra confirma 'Founder & Global CEO' sin formación. Formación y magíster vienen de snippets de LinkedIn en buscador (perfil no accesible directo). Desde 2025 Michael Zschweigert es CEO de Cebra Andes (Chile, Perú, Colombia)."
+  },
+  {
+    "agencia": "Moov",
+    "nombre": "Rodrigo Andrade Herrera",
+    "cargo": "Co-fundador y CEO Chile de Moov Media Group",
+    "formacion": "Ingeniero Comercial, Pontificia Universidad Católica de Chile (2007-2012)",
+    "postgrado": "M.S. in Technology Management, Georgetown University",
+    "anios_experiencia": 16,
+    "experiencia_previa": null,
+    "fuente": "https://cl.linkedin.com/in/rodrigoandradeherrera/en",
+    "fuentes_extra": [
+      "https://www.amddchile.com/moov-media-group-redefine-su-estrategia-directiva-2/",
+      "https://publimark.cl/marketing/casos/moov-media-group-dio-a-conocer-su-nueva-estructura-directiva-2.html"
+    ],
+    "confianza": "alta",
+    "nota": "Moov Media Group fundado en 2010 por los ingenieros comerciales Andrés Alcalde, Rodrigo Andrade e Ignacio Miranda; en 2025 Andrade asumió como CEO Chile. Snippet LinkedIn: 'más de 16 años de experiencia' y profesor en UAI. Sin cargos previos a la agencia publicados."
+  },
+  {
+    "agencia": "MEAT Group",
+    "nombre": "Nicolás Buzeta",
+    "cargo": "Socio fundador y Gerente General (Director Ejecutivo Meat Agency)",
+    "formacion": "Pontificia Universidad Católica de Chile (carrera no visible)",
+    "postgrado": null,
+    "anios_experiencia": null,
+    "experiencia_previa": null,
+    "fuente": "https://www.linkedin.com/in/nicol%C3%A1s-buzeta-78468534/",
+    "fuentes_extra": [
+      "https://www.meat.cl/sobre-nosotros/",
+      "https://www.publimark.cl/publicidad/agencias/meat-group-una-agencia-que-evoluciona-como-nativa-digital.amp.html"
+    ],
+    "confianza": "media",
+    "nota": "Fundada en 2012 por Nicolás Buzeta y Francisco Órdenes (Director Ejecutivo Meat Code). Sitio no publica formación; snippet LinkedIn solo indica PUC sin título. Sin cargos previos publicados."
+  },
+  {
+    "agencia": "Relevant",
+    "nombre": "Alejandro M. Calles",
+    "cargo": "Co-Founder y CEO México",
+    "formacion": null,
+    "postgrado": null,
+    "anios_experiencia": null,
+    "experiencia_previa": null,
+    "fuente": "https://relevantmkt.com/nosotros/",
+    "fuentes_extra": [
+      "https://relevantmkt.com/contacto/"
+    ],
+    "confianza": "baja",
+    "nota": "relevantmkt.com se define como agencia con oficinas en México, Argentina y Perú (no chilena); cofundadores: Alejandro M. Calles (CEO México) y Patricio L. Chatruc (CEO Argentina). No se confirmó que sea la 'Relevant' pretendida (existe también linkedin.com/company/agenciarelevant sin datos). Sin formación publicada. Ojo: un resultado de búsqueda atribuía Relevant a Hernán Pinzón, pero en la fuente él es cofundador de Paxzu, no de Relevant."
+  },
+  {
+    "agencia": "Nexbu",
+    "nombre": "Mario Vera G.",
+    "cargo": "Fundador y Director Ejecutivo (CEO)",
+    "formacion": "Ingeniero Comercial, Universidad Adolfo Ibáñez (minor en Ciencia Política y Gobierno)",
+    "postgrado": "MSc in Marketing, Universidad Adolfo Ibáñez; Brand Management Programme, ESADE",
+    "anios_experiencia": null,
+    "experiencia_previa": "Head of Ecommerce Solutions (proyectos B2B/B2C/B2B2C en Latinoamérica); consultor en investigación de mercados para Porsche AG; E-Commerce Product Owner en GE2",
+    "fuente": "https://nexbu.com/equipo/mario-vera",
+    "fuentes_extra": [
+      "https://es.linkedin.com/in/mveragonz",
+      "https://nexbu.com/blog/mario-vera-es-nombrado-director-ejecutivo-de-nexbu"
+    ],
+    "confianza": "alta",
+    "nota": "Página de equipo dice que fundó y lidera Nexbu desde 2012 (nexbu.es dice que la agencia nació en 2011). Años de experiencia no publicados."
+  },
+  {
+    "agencia": "Seonet",
+    "nombre": "Pablo Suárez",
+    "cargo": "Fundador y CEO",
+    "formacion": null,
+    "postgrado": null,
+    "anios_experiencia": null,
+    "experiencia_previa": null,
+    "fuente": "https://es.wikipedia.org/wiki/Seonet",
+    "fuentes_extra": [
+      "https://theorg.com/org/seonet-digital/org-chart/pablo-suarez",
+      "https://www.linkedin.com/in/pablomsuarez/"
+    ],
+    "confianza": "media",
+    "nota": "Seonet fue fundada en 2005 en Buenos Aires (Argentina) por Pablo Suárez, actual CEO; opera en Chile vía seonetdigital.cl. Socio y director comercial: Raúl Suárez. Snippet LinkedIn solo menciona estudios en Hyper Island (sin programa). Una afirmación de 'ingeniero en informática' en un resumen de buscador no se pudo verificar en fuente, se omite."
+  },
+  {
+    "agencia": "Wolf BCPP",
+    "nombre": "Diego Perry",
+    "cargo": "CEO / Gerente General y socio fundador",
+    "formacion": "Publicista con mención en Marketing, Universidad del Pacífico",
+    "postgrado": "Magíster en Innovación, Universidad Adolfo Ibáñez; diplomados en Marketing Estratégico (Universidad de Chile) y Marketing Integrado (UAI)",
+    "anios_experiencia": null,
+    "experiencia_previa": "Director General de Cuentas en Porta; director de ACHAP y APG",
+    "fuente": "https://comunicaciones.udd.cl/persona/diego-perry/",
+    "fuentes_extra": [
+      "https://www.df.cl/capital/cultura/algo-sobre-mi-padre-el-debut-literario-de-diego-perry",
+      "https://www.latinspots.com/noticia/wolf-bcpp-diego-perry-y-gonzalo-baeza-creatividad-integrada/93421"
+    ],
+    "confianza": "alta",
+    "nota": "Wolf fundada en 2015 por Gonzalo Baeza, Mariano Pérez y Diego Perry. Bio UDD publica formación y postgrado. DF confirma que estudió arquitectura 3 años antes de Publicidad y que venía de Porta. Cargo en Porta ('Director General de Cuentas') proviene de snippet ZoomInfo/LinkedIn en buscador."
+  },
+  {
+    "agencia": "Milimetrix",
+    "nombre": "Tomás Varela Yuraszeck",
+    "cargo": "CEO & Founder",
+    "formacion": "Ingeniero Comercial, Universidad de los Andes",
+    "postgrado": null,
+    "anios_experiencia": 15,
+    "experiencia_previa": "Gerente Comercial y Digital (Chile y USA) en Grupo Limonada; cargos en Ripley Chile y Cencosud",
+    "fuente": "https://www.milimetrix.com/team/tomas-varela",
+    "fuentes_extra": [
+      "https://www.linkedin.com/in/tomasvarela/"
+    ],
+    "confianza": "alta",
+    "nota": "Página de equipo publica 'más de 15 años de experiencia en retail y negocios digitales' y roles en Ripley, Cencosud y Grupo Limonada. Cargo exacto en Limonada viene de snippet LinkedIn (también estudió Derecho en U. de los Andes 2002-2004, sin título). Sin postgrado publicado (solo 'Reforge 22' en titular)."
+  },
+  {
+    "agencia": "Metrix",
+    "nombre": "Ignacio Miranda",
+    "cargo": "Co-fundador de Moov Media Group y de Metrix; Corporate Growth & Development Manager del grupo",
+    "formacion": "Ingeniero Comercial, Pontificia Universidad Católica de Chile (2007-2011)",
+    "postgrado": "MBA, Northwestern University Kellogg",
+    "anios_experiencia": null,
+    "experiencia_previa": null,
+    "fuente": "https://mx.linkedin.com/in/ignacio-miranda-62a23423",
+    "fuentes_extra": [
+      "https://www.amddchile.com/moov-media-group-redefine-su-estrategia-directiva-2/",
+      "https://www.metrix.digital/"
+    ],
+    "confianza": "media",
+    "nota": "Metrix es una unidad de Moov Media Group (MMG), no una agencia independiente; metrix.digital no publica líder. Miranda figura en LinkedIn con titular de Metrix y como cofundador/director de Metrix desde 2016; RocketReach lo lista como 'CEO México y Centro América'. El CEO del grupo en Chile es Rodrigo Andrade (ver Moov). Formación de snippet LinkedIn."
+  },
+  {
+    "agencia": "Focus Ads",
+    "nombre": "Felipe Meza Corredoira",
+    "cargo": "Founder & Strategist / Head of Performance",
+    "formacion": null,
+    "postgrado": null,
+    "anios_experiencia": 5,
+    "experiencia_previa": null,
+    "fuente": "https://focus-ads.cl/equipo/",
+    "fuentes_extra": [
+      "https://www.linkedin.com/in/felipe-meza-corredoira-marketing-digital/"
+    ],
+    "confianza": "media",
+    "nota": "Página de equipo de focus-ads.cl (Viña del Mar) lo lista como 'Founder & Strategist'. Snippet LinkedIn: '5+ años' en paid media. Sin formación publicada. No confundir con Jaime Valenzuela, fundador de 'Agencia Focus' (otra empresa)."
+  },
+  {
+    "agencia": "Adinfluence",
+    "nombre": "David Caro Benado",
+    "cargo": "Fundador y CEO",
+    "formacion": "Licenciado en Administración de Empresas / Ingeniero Comercial, Universidad del Desarrollo (2010-2014)",
+    "postgrado": "Diplomado en Control de Gestión, Pontificia Universidad Católica de Chile (no es magíster)",
+    "anios_experiencia": 11,
+    "experiencia_previa": "Co-fundador de Wizz (startup de alineadores dentales, 2018); Holding Colloky S.A.",
+    "fuente": "https://cl.linkedin.com/in/david-caro-benado-35595677",
+    "fuentes_extra": [
+      "https://cl.linkedin.com/in/david-caro-benadoo",
+      "https://www.emol.com/noticias/Economia/2024/05/08/1130178/startup-chilena-adinfluence.html"
+    ],
+    "confianza": "media",
+    "nota": "Emol confirma fundador y CEO, sin formación. Formación, diplomado y '11 años de experiencia' provienen de snippets LinkedIn en buscador (dos perfiles del mismo nombre). La cifra de 11 años puede estar desactualizada."
+  },
+  {
+    "agencia": "Lagencia",
+    "nombre": "Andrés Araya Romano",
+    "cargo": "Fundador y CEO",
+    "formacion": null,
+    "postgrado": null,
+    "anios_experiencia": null,
+    "experiencia_previa": null,
+    "fuente": "https://lagencia.cl/cuanto-cuesta-hacer-marketing-digital-en-chile-en-2025/",
+    "fuentes_extra": [
+      "https://lagencia.cl/author/araya_romano/"
+    ],
+    "confianza": "media",
+    "nota": "Firma de autor en lagencia.cl: 'Fundador y CEO de LaGencia, agencia de marketing digital en Chile con más de 15 años de experiencia' (los 15 años se atribuyen a la agencia, no a la persona). Un resumen de buscador mencionó a Victor Casabuenas Ojeda como cofundador, no verificado en fuente. Sin formación publicada."
+  },
+  {
+    "agencia": "Postedin",
+    "nombre": "Rodrigo Farcas Capetillo",
+    "cargo": "Co-fundador y CEO",
+    "formacion": "Ingeniero Comercial, Universidad Adolfo Ibáñez",
+    "postgrado": "Master of Science en Marketing (universidad no indicada)",
+    "anios_experiencia": null,
+    "experiencia_previa": "Subgerente en Paris.cl (área comercial); abrió el área de negocios digitales de FOX Networks en Chile; co-creó con su hermano Aarón 13 comunidades online (universitarios.cl, carretes.cl, etc.)",
+    "fuente": "https://www.endi.cl/academicos/",
+    "fuentes_extra": [
+      "https://www.amddchile.com/magazine/rodrigo-farcas-la-ia-funciona-como-un-filtro-de-credibilidad/",
+      "https://postgrados.uss.cl/noticias/ceo-de-postedin-participa-en-webinar-de-marketing-digital-en-chile-organizada-por-la-uss/",
+      "https://www.postedin.com/blog/a/rodrigo/"
+    ],
+    "confianza": "alta",
+    "nota": "Postedin fundada en diciembre 2012 por Rodrigo y Aarón Farcas. ENDI publica título UAI, MSc en Marketing y cargos previos; AMDD confirma ingeniero comercial y máster en marketing. Docente del Magíster en Dirección Comercial y Marketing USS."
+  },
+  {
+    "agencia": "Agencia Los Navegantes",
+    "nombre": "Matías Villanueva García",
+    "cargo": "CEO & Founder",
+    "formacion": null,
+    "postgrado": null,
+    "anios_experiencia": 14,
+    "experiencia_previa": "Corredor de propiedades y fundador del eCommerce Ozzypark (2012-2014); consultor freelance de marketing (2014-2015); profesor en Platzi desde 2018; fundador de Academia Metrics (2020)",
+    "fuente": "https://matiasvillanueva.com/sobre-mi/",
+    "fuentes_extra": [
+      "https://cl.linkedin.com/in/matiasvillanuevagarcia",
+      "https://theorg.com/org/agencia-los-navegantes/org-chart/matias-villanueva-garcia"
+    ],
+    "confianza": "media",
+    "nota": "Su sitio dice que estudió Derecho y dejó la universidad en 2011 (autodidacta). Un snippet de buscador atribuye 'Ingeniería Comercial, Universidad de Artes, Ciencias y Comunicación (UNIACC)' a LinkedIn: contradice su propio sitio, por eso formación = null. Años deducidos del primer cargo con año (2012). Fecha de fundación inconsistente: julio 2014 (LinkedIn/The Org) vs 2015 (sitio)."
+  },
+  {
+    "agencia": "Marketboost",
+    "nombre": "André Autran Orellana",
+    "cargo": "Fundador y CEO",
+    "formacion": null,
+    "postgrado": null,
+    "anios_experiencia": 10,
+    "experiencia_previa": "Especialista Marketing E-commerce en DKo Home (según titular LinkedIn)",
+    "fuente": "https://agenciamarketboost.com/blog/mejor-publicista-digital-de-chile",
+    "fuentes_extra": [
+      "https://www.linkedin.com/in/andre-autran-orellana-marketboost/"
+    ],
+    "confianza": "media",
+    "nota": "El blog de la propia agencia publica '+10 años de experiencia en marketing digital y performance en Chile y Estados Unidos' y certificaciones Google/Meta (fuente autorreferente). Snippet LinkedIn dice 'trabajando en internet desde 2017' (≈9 años), levemente inconsistente. Sin formación universitaria publicada."
+  },
+  {
+    "agencia": "OneDigital",
+    "nombre": "José Manuel Cornejo",
+    "cargo": "Director y Fundador (Gerente General)",
+    "formacion": null,
+    "postgrado": null,
+    "anios_experiencia": 20,
+    "experiencia_previa": "Country Manager de Adfunky, representante de Yahoo! en Latinoamérica",
+    "fuente": "https://www.onedigital.cl/el-marketing-digital-en-la-era-de-la-inteligencia-artificial/",
+    "fuentes_extra": [
+      "https://www.linkedin.com/in/josemanuelcornejo/"
+    ],
+    "confianza": "media",
+    "nota": "Entrevista en onedigital.cl: 'Con más de 20 años ligado a la industria —desde sus inicios como Country Manager de Adfunky, representante de Yahoo! en Latinoamérica'. Fuente autorreferente. Sin formación publicada."
+  }
+]
