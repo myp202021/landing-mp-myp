@@ -4,6 +4,7 @@ import { createClient } from '@supabase/supabase-js'
 import { ArrowLeft, TrendingUp, TrendingDown, Minus, BarChart2, DollarSign, HelpCircle } from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
+export const fetchCache = 'force-no-store'
 
 export const metadata: Metadata = {
   title: 'CPC y CPA por Industria en Chile 2026 — Google Ads y Meta Ads',
@@ -193,7 +194,9 @@ function buildSchemas(data: any, cpcData: any[], fecha: string | null) {
 export default async function IndicadoresPage() {
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY!
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    // Sin esto Next.js guardaba la consulta en su caché de datos y la página seguía mostrando la semana 36
+    { global: { fetch: (url, init) => fetch(url, { ...init, cache: 'no-store' }) } }
   )
 
   const { data } = await supabase
