@@ -569,19 +569,17 @@ async function resenasGoogleMaps(agencias) {
   // Los créditos de Apify se comparten con otros clientes (Hualpén): las pruebas nunca lo usan
   if (DRY_RUN && process.env.APIFY_EN_PRUEBA !== "1") { console.log("Prueba: se omite Apify (ahorro de créditos)"); return {}; }
   if (process.env.SIN_APIFY === "1") { console.log("Corrida manual sin Apify: reseñas desde la búsqueda web"); return {}; }
-  var busquedas = agencias.map(function (a) { return a.nombre + " agencia marketing digital"; });
+  // Igual que prospect-discover.js (que sí funciona): la ubicación va dentro de la búsqueda, sin locationQuery
+  var busquedas = agencias.map(function (a) { return a.nombre + " agencia de marketing digital Santiago Chile"; });
   try {
     var r = await fetch("https://api.apify.com/v2/acts/compass~crawler-google-places/run-sync-get-dataset-items?token=" + token + "&timeout=600", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         searchStringsArray: busquedas,
-        locationQuery: "Santiago, Chile",
         maxCrawledPlacesPerSearch: 2, // ~40 fichas al mes en total
         language: "es",
-        maxReviews: 0,
-        maxImages: 0,
-        scrapePlaceDetailPage: false,
+        includeWebResults: false,
       }),
     });
     if (!r.ok) { console.log("Apify Google Maps: HTTP " + r.status); return {}; }
