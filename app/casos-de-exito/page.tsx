@@ -99,8 +99,7 @@ export default function CasosDeExitoPage() {
             Datos extraídos directamente de las plataformas. Sin maquillaje.
           </p>
           <p className="text-sm text-blue-300/50 max-w-2xl mx-auto italic">
-            Por confidencialidad no compartimos nombres, pero los datos son verificables
-            en las plataformas de cada cliente.
+            Los datos vienen directamente de las plataformas de cada cliente. Un caso se mantiene sin nombre por confidencialidad.
           </p>
         </div>
       </section>
@@ -144,7 +143,7 @@ export default function CasosDeExitoPage() {
               <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div>
                   <p className="text-blue-400 text-sm font-bold uppercase tracking-wider mb-1">
-                    Cliente A
+                    Genera
                   </p>
                   <h2 className="text-2xl md:text-3xl font-bold text-white">
                     Software B2B
@@ -344,7 +343,7 @@ export default function CasosDeExitoPage() {
               <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div>
                   <p className="text-emerald-400 text-sm font-bold uppercase tracking-wider mb-1">
-                    Cliente C
+                    Invas WMS
                   </p>
                   <h2 className="text-2xl md:text-3xl font-bold text-white">
                     WMS para Latinoamérica
@@ -437,7 +436,7 @@ export default function CasosDeExitoPage() {
               <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div>
                   <p className="text-violet-400 text-sm font-bold uppercase tracking-wider mb-1">
-                    Cliente D
+                    CyM Propiedades
                   </p>
                   <h2 className="text-2xl md:text-3xl font-bold text-white">
                     Inmobiliaria Sector Oriente
@@ -530,7 +529,7 @@ export default function CasosDeExitoPage() {
               <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div>
                   <p className="text-cyan-400 text-sm font-bold uppercase tracking-wider mb-1">
-                    Cliente E
+                    DevuelveMiPie
                   </p>
                   <h2 className="text-2xl md:text-3xl font-bold text-white">
                     Legal — Recuperación de Propiedades

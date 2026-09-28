@@ -81,7 +81,6 @@ var ESQUEMA = `{
   "resenas_google": {"cantidad": 115, "rating": 5.0, "fuente": "https://..."},
   "directorios": [{"sitio": "Clutch | Sortlist | GoodFirms | DesignRush | The Manifest (solo estos)", "resenas": 10, "fuente": "https://..."}],
   "tamano_clientes": {"valor": "pymes | medianas | grandes | mixto", "fuente": "https://..."},
-  "certificaciones": {"valor": "p.ej. Google Partner, Meta Business Partner, HubSpot Partner", "fuente": "https://..."}
 }`;
 
 // Toma el PRIMER objeto JSON balanceado (la IA a veces agrega texto u otro JSON después)
@@ -760,7 +759,8 @@ function tiene(x) {
 var DIRECTORIOS_VALIDOS = /clutch|sortlist|goodfirms|designrush|the ?manifest/i;
 
 // Pesos pensados como elige un cliente real: reputación y resultados primero; tecnología e IA suman, pero poco
-var MAX = { reputacion: 20, casos: 20, trayectoria: 10, equipo: 10, clientes: 10, certificaciones: 5, especialidades: 5, tecnologia: 5, ia: 5, liderazgo: 10 };
+// Sin certificaciones de partner: ser partner de Google/Meta es un trámite de gasto, no prueba calidad
+var MAX = { reputacion: 20, casos: 20, trayectoria: 10, equipo: 10, clientes: 15, especialidades: 5, tecnologia: 5, ia: 5, liderazgo: 10 };
 function n(p, k) { return MAX[k] ? (p[k] || 0) / MAX[k] : 0; }
 var CRM_TERCEROS = /hubspot|salesforce|pipedrive|zoho|monday|tu crm|su crm|crm del cliente|crm existente/i;
 
@@ -785,8 +785,7 @@ function puntaje(a) {
   p.equipo = (eqv.indexOf("interno") >= 0 ? 5 : eqv.indexOf("mixto") >= 0 ? 3 : eqv.indexOf("freelance") >= 0 ? 1 : 0) +
     (nums.length ? Math.round(Math.min(Math.log10(Math.max.apply(null, nums) + 1) / Math.log10(51), 1) * 5 * 10) / 10 : 0);
 
-  p.clientes = Math.round((Math.min((a.clientes_destacados || []).filter(function (c) { return c.fuente; }).length, 6) / 6) * 10 * 10) / 10;
-  p.certificaciones = tiene(a.certificaciones) ? 5 : 0;
+  p.clientes = Math.round((Math.min((a.clientes_destacados || []).filter(function (c) { return c.fuente; }).length, 8) / 8) * 15 * 10) / 10;
 
   var esp = a.especialidades || {};
   var ne = ["performance", "contenido", "creatividad", "seo", "ecommerce", "b2b"].filter(function (k) { return tiene(esp[k]); }).length;
@@ -816,8 +815,7 @@ var METODOLOGIA = [
   ["Casos de éxito", 20, "3 pts por caso publicado con cliente identificable (tope 5) + 1 pt por caso con resultados en cifras (tope 5)."],
   ["Trayectoria", 10, "Años desde la fundación, con fuente (tope 15 años)."],
   ["Equipo", 10, "Equipo interno 5 pts (mixto 3, freelance 1) + tamaño del equipo publicado hasta 5 pts."],
-  ["Clientes destacados", 10, "Clientes que la agencia publica en su sitio, con fuente (tope 6)."],
-  ["Certificaciones", 5, "Google Partner, Meta Business Partner, HubSpot u otras certificaciones publicadas."],
+  ["Clientes destacados", 15, "Clientes que la agencia publica en su sitio (casos o logos), con fuente (tope 8). No cuentan insignias de partners ni logos de herramientas."],
   ["Especialidades", 5, "Proporcional a las especialidades publicadas en sus páginas de servicios: performance, contenido, creatividad, SEO, e-commerce, B2B."],
   ["Tecnología propia", 5, "Software, dashboards o CRM desarrollados por la agencia. Integrarse con el CRM del cliente no cuenta."],
   ["IA en producción", 5, "Agentes o automatizaciones de IA propios operando para clientes, respaldados por una frase de su sitio."],
@@ -1306,7 +1304,7 @@ async function redactar(ranking, anterior, fechaTxt, especializadas, incompletas
         if (pz.reputacion >= 12) f.push("reputación verificable");
         if (pz.casos >= 15) f.push("casos con resultados");
         if (pz.trayectoria >= 7) f.push(Math.round((pz.trayectoria / 10) * 15) >= 15 ? "más de 15 años" : "trayectoria");
-        if (pz.clientes >= 7) f.push("clientes reconocidos");
+        if (pz.clientes >= 10) f.push("clientes reconocidos");
         if (pz.liderazgo >= 6) f.push("liderazgo con formación en negocios");
         if (pz.tecnologia) f.push("tecnología propia");
         if (pz.ia) f.push("IA en producción");
