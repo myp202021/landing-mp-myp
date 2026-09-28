@@ -27,4 +27,4 @@ jobs:
           git config user.email "actions@github.com"
           git add data/agentes-evidencia.json
           git diff --cached --quiet || git commit -m "chore: evidencia semanal de agentes IA"
-          git push
+          git pull --rebase origin main && git push
