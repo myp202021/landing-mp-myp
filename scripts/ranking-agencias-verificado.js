@@ -343,6 +343,53 @@ async function confirmarTecnologia(agencia, datos) {
   return cambios;
 }
 
+// ═══ RESEÑAS DE GOOGLE DESDE GOOGLE MAPS (Apify) ═══
+// La búsqueda web encontraba las reseñas de unas agencias y de otras no (medición desigual).
+// Se leen directo de la ficha de Google Maps de cada agencia, igual para todas: cantidad, nota y URL de la ficha.
+function hostDe(u) {
+  try { return new URL(u).hostname.replace(/^www\./, ""); } catch (e) { return ""; }
+}
+
+async function resenasGoogleMaps(agencias) {
+  var token = process.env.APIFY_TOKEN;
+  if (!token) { console.log("Sin APIFY_TOKEN: reseñas de Google desde la búsqueda web"); return {}; }
+  var busquedas = agencias.map(function (a) { return a.nombre + " agencia marketing digital"; });
+  try {
+    var r = await fetch("https://api.apify.com/v2/acts/compass~crawler-google-places/run-sync-get-dataset-items?token=" + token + "&timeout=600", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        searchStringsArray: busquedas,
+        locationQuery: "Santiago, Chile",
+        maxCrawledPlacesPerSearch: 3,
+        language: "es",
+        maxReviews: 0,
+        maxImages: 0,
+        scrapePlaceDetailPage: false,
+      }),
+    });
+    if (!r.ok) { console.log("Apify Google Maps: HTTP " + r.status); return {}; }
+    var items = await r.json();
+    var out = {};
+    agencias.forEach(function (a, i) {
+      var candidatos = items.filter(function (it) { return it.searchString === busquedas[i]; });
+      var host = a.web ? hostDe(a.web) : "";
+      var nombre = normalizarTexto(a.nombre);
+      // 1º: ficha cuyo sitio web coincide con el de la agencia; 2º: ficha cuyo nombre contiene el de la agencia
+      var elegido = candidatos.filter(function (it) { return host && hostDe(it.website || "") === host; })[0]
+        || candidatos.filter(function (it) { return normalizarTexto(it.title).indexOf(nombre) >= 0; })[0];
+      if (elegido && elegido.reviewsCount) {
+        out[a.nombre] = { cantidad: elegido.reviewsCount, rating: elegido.totalScore, fuente: elegido.url, origen: "Google Maps", ficha: elegido.title };
+      }
+    });
+    console.log("Google Maps: reseñas encontradas para " + Object.keys(out).length + "/" + agencias.length + " agencias");
+    return out;
+  } catch (e) {
+    console.log("Apify Google Maps falló: " + e.message);
+    return {};
+  }
+}
+
 // ═══ ESTABILIDAD ENTRE MESES ═══
 // La búsqueda web no encuentra siempre lo mismo. Un dato verificado el mes anterior se mantiene si su fuente
 // sigue respondiendo; así una agencia no baja solo porque la IA no lo encontró esta vez.
@@ -461,7 +508,7 @@ var METODOLOGIA = [
   [
     "Reputación verificable",
     20,
-    "Reseñas de Google (cantidad en escala logarítmica × nota) hasta 12 pts + 2 pts por directorio con reseñas (Clutch, Sortlist, GoodFirms, DesignRush), tope 8.",
+    "Reseñas de Google leídas directamente de la ficha de Google Maps de cada agencia (cantidad en escala logarítmica × nota) hasta 12 pts + 2 pts por directorio con reseñas (Clutch, Sortlist, GoodFirms, DesignRush), tope 8.",
   ],
   [
     "Casos de éxito publicados",
@@ -1009,6 +1056,7 @@ async function main() {
 
   var lista = LIMIT > 0 ? AGENCIAS.slice(0, LIMIT) : AGENCIAS;
   var previo = snapshotAnterior(mes);
+  var maps = await resenasGoogleMaps(lista);
   var evaluadas = [];
   for (var i = 0; i < lista.length; i++) {
     var ag = lista[i];
@@ -1030,6 +1078,10 @@ async function main() {
       if (cambios.length) console.log("   confirmación con cita: " + cambios.join(" | "));
       var heredados = await heredarDelMesAnterior(datos, previo, ag.nombre);
       if (heredados) console.log("   " + heredados + " datos heredados del mes anterior (fuente re-verificada)");
+      if (maps[ag.nombre]) {
+        datos.resenas_google = maps[ag.nombre];
+        console.log("   Google Maps: " + maps[ag.nombre].cantidad + " reseñas, nota " + maps[ag.nombre].rating);
+      }
       var p = puntaje(datos);
       console.log(
         "   fuentes verificadas: " +
