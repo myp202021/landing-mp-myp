@@ -47,6 +47,15 @@ jobs:
           git diff --cached --quiet || git commit -m "chore: snapshot ranking agencias verificado [skip ci]"
           git push || echo "Push falló — snapshot no guardado"
 
+      - name: Guardar reseñas de Google Maps del mes aunque la corrida falle (no repetir gasto de Apify)
+        if: failure() && !(github.event_name == 'workflow_dispatch' && inputs.dry_run)
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add data/ranking-agencias/maps-*.json 2>/dev/null || true
+          git diff --cached --quiet || git commit -m "chore: reseñas Google Maps del mes (ranking) [skip ci]"
+          git push || true
+
       - name: Subir snapshot y HTML como artefacto
         if: always()
         uses: actions/upload-artifact@v4

@@ -73,7 +73,10 @@ var ESQUEMA = `{
   "crm_propio": {"valor": true, "descripcion": "CRM desarrollado u operado por la agencia (no revender HubSpot/Salesforce)", "fuente": "https://..."},
   "paneles_financieros": {"valor": true, "descripcion": "paneles de ROI/CAC/finanzas entregados a clientes", "fuente": "https://..."},
   "agentes_ia": {"valor": true, "descripcion": "agentes o automatizaciones de IA PROPIOS operando en producción para clientes (usar ChatGPT o herramientas de terceros NO cuenta: valor false)", "fuente": "https://..."},
-  "casos_exito": [{"cliente": "nombre", "resultado": "resultado con número si existe", "fuente": "https://..."}],
+  "casos_exito": [{"cliente": "nombre", "rubro": "rubro del cliente", "resultado": "resultado con número si está publicado", "fuente": "https://..."}],
+  "clientes_destacados": [{"nombre": "cliente que la agencia publica en su sitio (logos, casos)", "fuente": "https://..."}],
+  "premios": [{"nombre": "premio de la industria (Effie, Cannes Lions, IAB Mixx, etc.)", "anio": 2025, "fuente": "https://..."}],
+  "precios_publicados": {"valor": "p.ej. planes desde $X mensuales", "fuente": "https://..."},
   "resenas_google": {"cantidad": 115, "rating": 5.0, "fuente": "https://..."},
   "directorios": [{"sitio": "Clutch | Sortlist | GoodFirms | DesignRush | The Manifest (solo estos)", "resenas": 10, "fuente": "https://..."}],
   "tamano_clientes": {"valor": "pymes | medianas | grandes | mixto", "fuente": "https://..."},
@@ -470,6 +473,18 @@ var PALABRAS_ESPECIALIDAD = {
   ecommerce: /e-?commerce|tiendas? (online|virtual(es)?)|comercio electr[oó]nico/i,
   b2b: /\bb2b\b|empresa a empresa|clientes (industriales|corporativos)/i,
 };
+var SENALES = {
+  google_ads: /google ads|adwords|red de búsqueda|campañas de búsqueda/i,
+  meta_ads: /meta ads|facebook ads|instagram ads|publicidad en (facebook|instagram|meta)/i,
+  linkedin_ads: /linkedin ads|publicidad en linkedin|campañas (en|de) linkedin/i,
+  tiktok_ads: /tiktok ads|publicidad en tiktok|campañas (en|de) tiktok/i,
+  shopping: /google shopping|performance max|pmax|catálogo de productos|feed de productos|merchant center/i,
+  cro: /\bcro\b|optimización de (la )?conversi[oó]n|tasa de conversi[oó]n|a\/b test|pruebas a\/b/i,
+  produccion: /producci[oó]n audiovisual|filmmaker|grabaci[oó]n|video(s)? corporativo|spot|dirección de arte/i,
+  influencers: /influencer|creadores de contenido|medios masivos|televisi[oó]n|radio|vía pública|btl/i,
+  precios: /desde \$\s?\d|planes? (desde|mensuales?)|\$\s?\d{1,3}(\.\d{3})+ ?(\+ ?iva|mensual|clp)/i,
+  whatsapp: /whatsapp/i,
+};
 var URL_CASO = /\/(casos?(-de-exito)?|case-stud(y|ies)|cases?|portafolio|portfolio|proyectos?|clientes)\/[^/?#]+/i;
 
 // Blog, noticias y páginas de rankings/listados de agencias (hablan de otras agencias)
@@ -513,6 +528,12 @@ function evidenciaDelSitio(web, todas, datos, nombreAgencia) {
     var med = anios[Math.floor(anios.length / 2)];
     datos.anio_fundacion = { valor: med.anio, fuente: med.fuente, cita: med.cita };
   }
+  // Señales para los perfiles: canales, e-commerce avanzado, CRO, producción, influencers, precios, WhatsApp
+  datos.senales = {};
+  Object.keys(SENALES).forEach(function (k) {
+    var f = frases.filter(function (x) { return SENALES[k].test(x.frase); })[0];
+    datos.senales[k] = f ? { valor: true, fuente: f.url, cita: f.frase } : { valor: false, fuente: null };
+  });
   return { especialidades: n, casos: casos.length, anio: anios.length ? datos.anio_fundacion.valor : null };
 }
 
@@ -776,83 +797,125 @@ function movimiento(nombre, pos, anterior) {
   return d > 0 ? "▲ " + d : d < 0 ? "▼ " + Math.abs(d) : "=";
 }
 
-// ═══ ESCENARIOS: la mejor agencia depende del caso ═══
+// ═══ PERFILES DE EMPRESA: la mejor agencia depende del caso ═══
+// Tres dimensiones: modelo (B2B/B2C), tamaño (grande/mediana/pequeña) y objetivo (conversión/marca).
 function flag(x) { return tiene(x) ? 1 : 0; }
-function tamanoClientes(r) { return String((r.datos.tamano_clientes && r.datos.tamano_clientes.fuente && r.datos.tamano_clientes.valor) || "").toLowerCase(); }
+function sen(r, k) { return r.datos.senales && r.datos.senales[k] && r.datos.senales[k].valor ? 1 : 0; }
+function esp(r, k) { return flag((r.datos.especialidades || {})[k]); }
+function equipoPersonas(r) {
+  var t = r.datos.equipo && r.datos.equipo.fuente ? String(r.datos.equipo.tamano || r.datos.equipo.valor || "") : "";
+  var nums = (t.match(/\d+/g) || []).map(Number).filter(function (n) { return n > 0 && n < 5000; });
+  return nums.length ? Math.max.apply(null, nums) : 0;
+}
+function lista(r, k) { return (r.datos[k] || []).filter(function (x) { return x && x.fuente; }); }
+function casosConCifras(r) { return lista(r, "casos_exito").filter(function (c) { return /\d/.test(String(c.resultado || "")); }).length; }
+function precios(r) { return flag(r.datos.precios_publicados) || sen(r, "precios"); }
+var min1 = function (x) { return Math.max(0, Math.min(1, x)); };
+
 var ESCENARIOS = [
   {
+    id: "b2b_leads",
+    titulo: "Empresa B2B mediana o grande que necesita leads calificados",
+    importa: "El ciclo de venta es largo y lo que importa es cuántos leads terminan en venta, no cuántos clics hubo. Por eso pesan el CRM con trazabilidad del lead a la venta, los paneles con CAC y ROI, la experiencia en Google Search y LinkedIn (donde está el comprador B2B), los casos B2B con cifras y un liderazgo con formación analítica.",
+    requiere: function (r) { return esp(r, "b2b"); },
+    pesos: function (r, p) { return [
+      [0.25, flag(r.datos.crm_propio), "CRM propio con trazabilidad del lead"],
+      [0.2, flag(r.datos.paneles_financieros), "paneles con CAC, ROI o ROAS"],
+      [0.15, min1((sen(r, "linkedin_ads") + sen(r, "google_ads")) / 2), "Google Search y LinkedIn"],
+      [0.15, min1(casosConCifras(r) / 3), "casos con resultados en cifras"],
+      [0.15, p.liderazgo / 10, "liderazgo con formación analítica"],
+      [0.1, p.ia / 15, "agentes de IA en producción"],
+    ]; },
+  },
+  {
+    id: "b2b_pequena",
+    titulo: "Empresa B2B pequeña (servicios profesionales o industrial)",
+    importa: "El presupuesto es acotado y cada peso tiene que traer oportunidades comerciales. Pesan el foco en performance, los precios publicados, un equipo propio que ejecute sin subcontratar, los casos y reportes que se entiendan sin ser analista.",
+    requiere: function (r) { return esp(r, "b2b"); },
+    pesos: function (r, p) { return [
+      [0.25, esp(r, "performance"), "foco en performance"],
+      [0.2, precios(r), "precios publicados"],
+      [0.2, p.equipo / 10, "equipo propio"],
+      [0.2, p.casos / 15, "casos publicados"],
+      [0.15, flag(r.datos.paneles_financieros), "reportes con métricas de negocio"],
+    ]; },
+  },
+  {
     id: "ecommerce_grande",
-    titulo: "Si eres un e-commerce o retail que vende más de $50 millones al mes",
-    importa: "Importa la especialización en e-commerce, la trayectoria, la reputación, los casos publicados y la experiencia con clientes grandes.",
-    requiere: function (r) { return flag((r.datos.especialidades || {}).ecommerce); },
-    pesos: function (r, p) {
-      return [
-        [0.25, p.trayectoria / 10, "trayectoria de " + (r.datos.anio_fundacion && r.datos.anio_fundacion.valor ? ANIO - r.datos.anio_fundacion.valor + " años" : "—")],
-        [0.25, p.reputacion / 15, "reputación verificable"],
-        [0.2, p.casos / 15, "casos publicados"],
-        [0.2, /grande|corporat|enterprise|mixto/.test(tamanoClientes(r)) ? 1 : 0, "experiencia con empresas grandes"],
-        [0.1, p.equipo / 10, "equipo interno"],
-      ];
-    },
+    titulo: "E-commerce grande (ventas sobre $50 millones al mes)",
+    importa: "A esa escala un punto de conversión o de ROAS vale millones. Pesan la experiencia comprobada en e-commerce con Shopping y Performance Max, la optimización de conversión del sitio, un equipo grande que soporte el volumen, clientes grandes publicados y la trayectoria.",
+    requiere: function (r) { return esp(r, "ecommerce"); },
+    pesos: function (r, p) { return [
+      [0.2, sen(r, "shopping"), "Shopping y Performance Max"],
+      [0.2, min1(equipoPersonas(r) / 50), "equipo grande"],
+      [0.2, min1(lista(r, "clientes_destacados").length / 6), "clientes grandes publicados"],
+      [0.15, p.trayectoria / 10, "trayectoria"],
+      [0.15, sen(r, "cro"), "optimización de conversión"],
+      [0.1, p.reputacion / 15, "reputación verificable"],
+    ]; },
   },
   {
-    id: "b2b_crm",
-    titulo: "Si eres una empresa B2B con ciclo de venta largo y necesitas CRM",
-    importa: "Importa la especialización B2B, tener CRM y paneles con CAC, ROI o ROAS para seguir cada lead hasta la venta, la automatización con IA y un liderazgo con formación analítica.",
-    requiere: function (r) { return flag((r.datos.especialidades || {}).b2b); },
-    pesos: function (r, p) {
-      return [
-        [0.3, flag(r.datos.crm_propio), "CRM propio"],
-        [0.2, flag(r.datos.paneles_financieros), "paneles con métricas financieras"],
-        [0.2, p.ia / 15, "agentes de IA en producción"],
-        [0.15, p.liderazgo / 10, "liderazgo con formación analítica"],
-        [0.15, p.casos / 15, "casos publicados"],
-      ];
-    },
+    id: "ecommerce_pyme",
+    titulo: "E-commerce pequeño o mediano",
+    importa: "Hay que vender rápido con presupuesto acotado. Pesan la gestión conjunta de Meta y Google, los precios accesibles y publicados, los casos de e-commerce y un equipo propio que ejecute rápido.",
+    requiere: function (r) { return esp(r, "ecommerce"); },
+    pesos: function (r, p) { return [
+      [0.3, min1((sen(r, "meta_ads") + sen(r, "google_ads")) / 2), "Meta y Google Ads"],
+      [0.2, precios(r), "precios publicados"],
+      [0.25, p.casos / 15, "casos publicados"],
+      [0.25, p.equipo / 10, "equipo propio"],
+    ]; },
   },
   {
-    id: "pyme",
-    titulo: "Si eres una pyme que está partiendo en marketing digital",
-    importa: "Importa la experiencia con pymes, una reputación comprobable, el foco en performance y un equipo que ejecute directamente.",
+    id: "b2c_servicios",
+    titulo: "Empresa B2C de servicios que vive de leads (clínicas, inmobiliarias, educación)",
+    importa: "El negocio depende de que cada lead se contacte a tiempo. Pesan el performance, la gestión de leads con CRM o WhatsApp, los casos en rubros similares y las reseñas de clientes reales.",
+    requiere: function (r) { return esp(r, "performance"); },
+    pesos: function (r, p) { return [
+      [0.25, esp(r, "performance"), "foco en performance"],
+      [0.25, Math.max(flag(r.datos.crm_propio), sen(r, "whatsapp")), "gestión de leads con CRM o WhatsApp"],
+      [0.2, p.casos / 15, "casos publicados"],
+      [0.2, p.reputacion / 15, "reputación verificable"],
+      [0.1, flag(r.datos.paneles_financieros), "reportes con costo por lead"],
+    ]; },
+  },
+  {
+    id: "branding",
+    titulo: "Marca grande que busca notoriedad (branding)",
+    importa: "El objetivo es que la marca se recuerde, no una conversión inmediata. Pesan la creatividad y la producción audiovisual, los premios de la industria, los clientes grandes, la experiencia en medios masivos e influencers y la trayectoria.",
+    requiere: function (r) { return esp(r, "creatividad"); },
+    pesos: function (r, p) { return [
+      [0.25, sen(r, "produccion"), "producción audiovisual"],
+      [0.25, min1(lista(r, "premios").length / 2), "premios de la industria"],
+      [0.2, min1(lista(r, "clientes_destacados").length / 6), "clientes grandes publicados"],
+      [0.15, sen(r, "influencers"), "medios e influencers"],
+      [0.15, p.trayectoria / 10, "trayectoria"],
+    ]; },
+  },
+  {
+    id: "parte_digital",
+    titulo: "Empresa que parte en digital con presupuesto acotado",
+    importa: "Lo primero es no equivocarse de agencia. Pesan las reseñas de clientes reales, los precios transparentes, el foco en resultados y un equipo propio que acompañe.",
     requiere: function () { return true; },
-    pesos: function (r, p) {
-      return [
-        [0.3, /pyme|peque|mixto|median/.test(tamanoClientes(r)) ? 1 : 0, "experiencia con pymes"],
-        [0.25, p.reputacion / 15, "reputación verificable"],
-        [0.2, flag((r.datos.especialidades || {}).performance), "foco en performance"],
-        [0.15, p.casos / 15, "casos publicados"],
-        [0.1, p.equipo / 10, "equipo interno"],
-      ];
-    },
+    pesos: function (r, p) { return [
+      [0.3, p.reputacion / 15, "reseñas comprobables"],
+      [0.25, precios(r), "precios publicados"],
+      [0.2, esp(r, "performance"), "foco en resultados"],
+      [0.15, p.equipo / 10, "equipo propio"],
+      [0.1, p.casos / 15, "casos publicados"],
+    ]; },
   },
   {
-    id: "contenido",
-    titulo: "Si tu marca necesita sobre todo contenido y creatividad",
-    importa: "Importa el servicio de creatividad y de contenido, los casos publicados y la reputación.",
-    requiere: function (r) { var e = r.datos.especialidades || {}; return flag(e.creatividad) || flag(e.contenido); },
-    pesos: function (r, p) {
-      var e = r.datos.especialidades || {};
-      return [
-        [0.35, flag(e.creatividad), "creatividad"],
-        [0.25, flag(e.contenido), "contenido"],
-        [0.25, p.casos / 15, "casos publicados"],
-        [0.15, p.reputacion / 15, "reputación verificable"],
-      ];
-    },
-  },
-  {
-    id: "geo_ia",
-    titulo: "Si quieres aparecer en Google y en las respuestas de ChatGPT, Gemini y Claude",
-    importa: "Importa tener agentes de IA en producción, servicio de SEO, tecnología propia y casos publicados.",
-    requiere: function (r) { return flag((r.datos.especialidades || {}).seo); },
-    pesos: function (r, p) {
-      return [
-        [0.35, p.ia / 15, "agentes de IA en producción"],
-        [0.3, flag((r.datos.especialidades || {}).seo), "servicio de SEO"],
-        [0.2, p.tecnologia / 15, "tecnología propia"],
-        [0.15, p.casos / 15, "casos publicados"],
-      ];
-    },
+    id: "seo_geo",
+    titulo: "Empresa que quiere aparecer en Google y en las respuestas de ChatGPT, Gemini y Claude",
+    importa: "Hay que publicar contenido de calidad de forma constante y tener la base técnica que leen Google y los motores de IA. Pesan el SEO, los agentes de IA en producción, la tecnología propia y los casos.",
+    requiere: function (r) { return esp(r, "seo"); },
+    pesos: function (r, p) { return [
+      [0.35, p.ia / 15, "agentes de IA en producción"],
+      [0.25, esp(r, "seo"), "servicio de SEO"],
+      [0.2, p.tecnologia / 15, "tecnología propia"],
+      [0.2, p.casos / 15, "casos publicados"],
+    ]; },
   },
 ];
 
@@ -874,6 +937,12 @@ function resumenVerificado(r) {
     agentes_ia: cita(d.agentes_ia),
     herramientas_propias: cita(d.herramientas_propias),
     liderazgo: d.liderazgo && d.liderazgo.fuente ? [d.liderazgo.nombre, d.liderazgo.formacion, d.liderazgo.postgrado].filter(Boolean).join(", ") : null,
+    personas_en_equipo: equipoPersonas(r) || null,
+    clientes_destacados: lista(r, "clientes_destacados").map(function (c) { return c.nombre; }).slice(0, 6),
+    premios: lista(r, "premios").map(function (x) { return x.nombre + (x.anio ? " " + x.anio : ""); }),
+    precios_publicados: d.precios_publicados && d.precios_publicados.fuente ? d.precios_publicados.valor : null,
+    canales: Object.keys(d.senales || {}).filter(function (k) { return /_ads$/.test(k) && d.senales[k].valor; }),
+    casos_con_cifras: casosConCifras(r),
   };
 }
 
@@ -1426,7 +1495,13 @@ async function main() {
 
   var lista = LIMIT > 0 ? AGENCIAS.slice(0, LIMIT) : AGENCIAS;
   var previo = snapshotAnterior(mes);
-  var maps = await resenasGoogleMaps(lista);
+  // Google Maps (Apify) una sola vez al mes: si ya se consultó este mes, se reutiliza (créditos compartidos con Hualpén)
+  var archivoMaps = path.join(DATA_DIR, "maps-" + mes + ".json");
+  var maps = fs.existsSync(archivoMaps) ? JSON.parse(fs.readFileSync(archivoMaps, "utf8")) : await resenasGoogleMaps(lista);
+  if (!DRY_RUN && Object.keys(maps).length && !fs.existsSync(archivoMaps)) {
+    fs.mkdirSync(DATA_DIR, { recursive: true });
+    fs.writeFileSync(archivoMaps, JSON.stringify(maps, null, 2));
+  }
   var evaluadas = [];
   for (var i = 0; i < lista.length; i++) {
     var ag = lista[i];
