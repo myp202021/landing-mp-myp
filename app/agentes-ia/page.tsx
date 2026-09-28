@@ -1,8 +1,8 @@
 /**
- * /agentes-ia — Agentes de IA de M&P en producción, con evidencia.
- * Lista SOLO los agentes con ejecuciones exitosas comprobadas en los últimos 30 días.
- * Datos: data/agentes-ia.json (inventario) + data/agentes-evidencia.json (ejecuciones reales en GitHub Actions,
- * se refresca cada lunes con .github/workflows/agentes-evidencia.yml).
+ * /agentes-ia — Agentes de IA de M&P en producción, con su registro real de ejecuciones.
+ * Lista SOLO agentes con ≥70% de ejecuciones exitosas en 30 días.
+ * Datos: data/agentes-ia.json (inventario) + data/agentes-evidencia.json (GitHub Actions, refresco semanal).
+ * Pieza central: el tablero de 30 días (una fila por agente, un cuadro por día).
  */
 
 import { Metadata } from "next";
@@ -17,9 +17,9 @@ import inventario from "@/data/agentes-ia.json";
 import evidencia from "@/data/agentes-evidencia.json";
 
 export const metadata: Metadata = createMetadata({
-  title: "Agentes de IA en producción: lista y evidencia",
+  title: "Agentes de IA en producción y su registro de ejecuciones",
   description:
-    "Los agentes de inteligencia artificial que Muller y Pérez tiene corriendo para sus clientes: qué hace cada uno, cada cuánto corre y su registro real de ejecuciones.",
+    "Los agentes de inteligencia artificial que Muller y Pérez tiene corriendo para sus clientes: qué hace cada uno, cada cuánto corre y su registro real de ejecuciones de los últimos 30 días.",
   keywords: [
     "agentes de ia",
     "agentes ia marketing",
@@ -38,31 +38,50 @@ type Agente = {
   que_hace: string;
   frecuencia: string;
   url_publica: string | null;
-  imagen?: string | null;
 };
 type Evidencia = {
   tipo: string;
   ejecuciones_30d?: number;
   exitosas_30d?: number;
   ultima_exitosa?: string | null;
+  dias?: Record<string, string>;
 };
 
-const ev = (
-  evidencia as { generado: string; agentes: Record<string, Evidencia> }
-).agentes;
+const EV = evidencia as unknown as {
+  generado: string;
+  agentes: Record<string, Evidencia>;
+};
 
-// Solo se muestran agentes que funcionan: al menos 1 ejecución exitosa y 70% o más de éxito en 30 días
 function funciona(e?: Evidencia) {
   if (!e || e.tipo !== "workflow" || !e.exitosas_30d || !e.ejecuciones_30d)
     return false;
   return e.exitosas_30d / e.ejecuciones_30d >= 0.7;
 }
 
-const activos = (inventario as Agente[]).filter((a) => funciona(ev[a.id]));
+const activos = (inventario as Agente[]).filter((a) =>
+  funciona(EV.agentes[a.id]),
+);
 const totalEjecuciones = activos.reduce(
-  (s, a) => s + (ev[a.id].exitosas_30d || 0),
+  (s, a) => s + (EV.agentes[a.id].exitosas_30d || 0),
   0,
 );
+
+// Ventana de 30 días que termina el día en que se generó el registro (hora de Chile)
+const fin = new Date(EV.generado);
+const DIAS: string[] = Array.from({ length: 30 }, (_, i) => {
+  const d = new Date(fin.getTime() - (29 - i) * 86400000);
+  return d.toLocaleDateString("sv-SE", { timeZone: "America/Santiago" });
+});
+
+function fechaCorta(iso?: string | null) {
+  if (!iso) return "sin registro";
+  return new Date(iso).toLocaleDateString("es-CL", {
+    day: "numeric",
+    month: "long",
+    timeZone: "America/Santiago",
+  });
+}
+const rango = `${fechaCorta(DIAS[0] + "T15:00:00Z")} al ${fechaCorta(DIAS[29] + "T15:00:00Z")}`;
 
 const ORDEN_AREAS = [
   "Blog",
@@ -85,35 +104,93 @@ const areas = ORDEN_AREAS.map((area) => ({
   agentes: activos.filter((a) => a.area === area),
 })).filter((g) => g.agentes.length);
 
-function fecha(iso?: string | null) {
-  if (!iso) return "—";
-  return new Date(iso).toLocaleDateString("es-CL", {
-    day: "numeric",
-    month: "long",
-    timeZone: "America/Santiago",
-  });
+// Nombre corto para el tablero
+function corto(n: string) {
+  return n
+    .replace(/^Blog diario — cliente (de )?/, "Blog, ")
+    .replace(/^Ranking semanal — cliente (de )?/, "Ranking, ")
+    .replace(/^Reporte de competencia — cliente (de )?/, "Competencia, ")
+    .replace(/^Dashboard de resultados — cliente (de )?/, "Dashboard, ")
+    .replace(/: .*$/, "");
 }
+
+// Franja de 30 días: verde = corrió bien, ámbar = solo fallas, gris = no le correspondía o no corrió
+function Franja({ id, grande = false }: { id: string; grande?: boolean }) {
+  const dias = EV.agentes[id]?.dias || {};
+  const ok = Object.values(dias).filter((v) => v === "ok").length;
+  return (
+    <div
+      className="flex gap-[3px]"
+      role="img"
+      aria-label={`Registro de 30 días: ${ok} días con ejecución exitosa`}
+    >
+      {DIAS.map((d) => (
+        <span
+          key={d}
+          title={`${d}: ${dias[d] === "ok" ? "ejecución exitosa" : dias[d] === "fallo" ? "falló" : "sin ejecución"}`}
+          className={`${grande ? "h-3.5 w-3.5 sm:h-4 sm:w-4" : "h-2.5 w-2.5"} shrink-0 rounded-[3px] ${
+            dias[d] === "ok"
+              ? "bg-[#16A34A]"
+              : dias[d] === "fallo"
+                ? "bg-[#F59E0B]"
+                : "bg-[#E4E4EE]"
+          }`}
+        />
+      ))}
+    </div>
+  );
+}
+
+const PUBLICA = [
+  {
+    img: "/agentes/blog-diario.jpg",
+    agente: "Agente de blog diario",
+    texto:
+      "El artículo de hoy: más de 3.000 palabras, revisado por un segundo agente antes de publicarse.",
+    href: "/blog",
+  },
+  {
+    img: "/agentes/blog-geo.jpg",
+    agente: "Agente GEO",
+    texto:
+      "Formato pregunta y respuesta directa, pensado para que ChatGPT, Gemini y Claude lo citen.",
+    href: "/blog",
+  },
+  {
+    img: "/agentes/termometro.jpg",
+    agente: "Termómetro del marketing digital",
+    texto: "CPC y CPA de 22 industrias en Chile, actualizado cada sábado.",
+    href: "/indicadores",
+  },
+  {
+    img: "/agentes/ranking-semanal.jpg",
+    agente: "Agente de ranking semanal",
+    texto:
+      "Un análisis de autoridad con datos y fuentes enlazadas cada jueves.",
+    href: "/blog",
+  },
+];
 
 const faqs = [
   {
     q: "¿Qué es un agente de IA en marketing?",
-    a: "Es un programa que combina modelos de inteligencia artificial con datos y reglas para ejecutar una tarea completa sin intervención manual: investigar, redactar, revisar, publicar, monitorear o reportar. A diferencia de usar ChatGPT a mano, un agente corre solo con una frecuencia definida y entrega un resultado que se puede medir.",
+    a: "Es un programa que combina modelos de inteligencia artificial con datos y reglas para completar una tarea sin intervención manual: investigar, redactar, revisar, publicar, monitorear o reportar. A diferencia de usar ChatGPT a mano, un agente corre solo con una frecuencia definida y deja un registro de cada ejecución.",
   },
   {
     q: "¿Cómo se comprueba que estos agentes funcionan?",
-    a: "Cada agente corre como un proceso programado y cada ejecución queda registrada con fecha y resultado. Esta página muestra, para cada uno, cuántas ejecuciones exitosas tuvo en los últimos 30 días y cuándo fue la última. Solo aparecen los agentes con al menos 70% de ejecuciones exitosas; el registro se actualiza cada semana.",
+    a: "Cada agente corre como un proceso programado y cada ejecución queda registrada con fecha y resultado. El tablero de esta página muestra los últimos 30 días de cada uno: verde si corrió bien, ámbar si falló. Solo aparecen agentes con al menos 70% de ejecuciones exitosas, y el registro se actualiza cada lunes.",
   },
   {
     q: "¿Por qué no aparecen los nombres de los clientes?",
-    a: "Por confidencialidad. Los agentes que trabajan para clientes se identifican por rubro (software logístico, energía, outplacement, etc.). Los que producen contenido público de Muller y Pérez incluyen el enlace a lo que publican.",
+    a: "Por confidencialidad. Los agentes que trabajan para clientes se identifican por rubro: software logístico, energía, outplacement, legal inmobiliario, planificación financiera. Los que producen contenido público de Muller y Pérez enlazan a lo que publican.",
   },
   {
     q: "¿Qué modelos de IA usan los agentes?",
-    a: "Principalmente modelos de OpenAI para investigación y redacción y Claude de Anthropic para revisión editorial. Cada artículo pasa por una revisión automática de calidad antes de publicarse: extensión, preguntas frecuentes, enlaces, ortografía y fuentes con URL comprobada.",
+    a: "Modelos de OpenAI para investigar y redactar, y Claude de Anthropic para la revisión editorial. Antes de publicar, cada artículo pasa un control automático de extensión, preguntas frecuentes, enlaces, ortografía y fuentes con URL comprobada.",
   },
   {
     q: "¿Puedo tener estos agentes trabajando para mi empresa?",
-    a: "Sí. Los agentes de blog, GEO, monitoreo de competencia, informes y dashboards se configuran para cada cliente dentro de los planes de Muller y Pérez.",
+    a: "Sí. Los agentes de blog, GEO, monitoreo de competencia, reportes y dashboards se configuran para cada cliente dentro de los planes de Muller y Pérez, conectados a nuestro CRM y a nuestro predictor de campañas.",
   },
 ];
 
@@ -163,222 +240,287 @@ export default function AgentesIAPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
 
-      <div className="min-h-screen bg-white">
-        <section className="bg-gradient-to-br from-slate-950 via-indigo-950 to-purple-950 text-white pt-28 pb-20 px-6">
-          <div className="max-w-5xl mx-auto text-center">
-            <nav className="mb-8 text-sm" aria-label="Breadcrumb">
-              <Link
-                href="/"
-                className="text-indigo-200 hover:text-white transition"
-              >
+      <div className="min-h-screen bg-[#F7F7FB] text-[#1B1740]">
+        {/* Hero: el tablero es la pieza central */}
+        <section className="bg-[#1B1740] text-white pt-28 pb-16 px-6">
+          <div className="max-w-6xl mx-auto">
+            <nav
+              className="mb-10 text-sm text-indigo-200"
+              aria-label="Breadcrumb"
+            >
+              <Link href="/" className="hover:text-white">
                 Inicio
               </Link>
-              <span className="mx-2 text-indigo-300">/</span>
-              <span className="text-white font-semibold">Agentes de IA</span>
+              <span className="mx-2 text-indigo-400">/</span>
+              <span className="text-white">Agentes de IA</span>
             </nav>
-            <p className="text-sm font-bold text-purple-300 uppercase tracking-widest mb-4">
-              Evidencia, no promesas
-            </p>
-            <h1 className="text-4xl md:text-5xl font-black mb-6 leading-tight">
-              Agentes de IA en producción
-            </h1>
-            <p className="text-xl text-indigo-100 max-w-3xl mx-auto mb-10">
-              Estos son los agentes de inteligencia artificial que Muller y
-              Pérez tiene trabajando hoy para sus clientes y para su propia
-              marca, conectados a nuestro CRM propio y a nuestro predictor de campañas. De cada uno mostramos qué hace, cada cuánto corre y su
-              registro real de ejecuciones.
-            </p>
-            <div className="grid grid-cols-3 gap-4 max-w-2xl mx-auto">
-              <div className="bg-white/10 rounded-2xl p-5 border border-white/10">
-                <p className="text-4xl font-black text-purple-300">
-                  {activos.length}
+            <div className="grid lg:grid-cols-[1fr_1.15fr] gap-12 items-start">
+              <div>
+                <h1 className="text-4xl md:text-[3.25rem] font-black leading-[1.05] tracking-tight mb-6">
+                  {activos.length} agentes de IA trabajando hoy. Este es su
+                  registro.
+                </h1>
+                <p className="text-lg text-indigo-100/90 leading-relaxed max-w-xl mb-8">
+                  Cualquier agencia puede decir que usa inteligencia artificial.
+                  Nosotros mostramos cada ejecución: qué agente corrió, qué día
+                  y si terminó bien. Trabajan conectados a nuestro CRM propio y
+                  a nuestro predictor de campañas.
                 </p>
-                <p className="text-sm text-indigo-200 mt-1">
-                  agentes con evidencia
-                </p>
+                <dl className="grid grid-cols-2 gap-6 max-w-md tabular-nums">
+                  <div>
+                    <dt className="text-sm text-indigo-200">
+                      Ejecuciones exitosas en 30 días
+                    </dt>
+                    <dd className="text-3xl font-black">
+                      {totalEjecuciones.toLocaleString("es-CL")}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt className="text-sm text-indigo-200">
+                      Áreas de trabajo
+                    </dt>
+                    <dd className="text-3xl font-black">{areas.length}</dd>
+                  </div>
+                </dl>
               </div>
-              <div className="bg-white/10 rounded-2xl p-5 border border-white/10">
-                <p className="text-4xl font-black text-purple-300">
-                  {totalEjecuciones.toLocaleString("es-CL")}
-                </p>
-                <p className="text-sm text-indigo-200 mt-1">
-                  ejecuciones exitosas en 30 días
-                </p>
-              </div>
-              <div className="bg-white/10 rounded-2xl p-5 border border-white/10">
-                <p className="text-4xl font-black text-purple-300">
-                  {areas.length}
-                </p>
-                <p className="text-sm text-indigo-200 mt-1">áreas de trabajo</p>
-              </div>
+
+              <figure className="bg-white text-[#1B1740] rounded-2xl p-5 sm:p-6 shadow-[0_30px_60px_-30px_rgba(0,0,0,0.6)]">
+                <figcaption className="flex flex-wrap items-baseline justify-between gap-2 mb-4">
+                  <span className="font-bold">Registro de ejecuciones</span>
+                  <span className="text-sm text-slate-500">{rango}</span>
+                </figcaption>
+                <div className="overflow-x-auto -mx-1 px-1">
+                  <table className="w-full text-xs">
+                    <tbody>
+                      {activos.map((a) => (
+                        <tr key={a.id}>
+                          <th
+                            scope="row"
+                            className="text-left font-medium text-slate-600 pr-3 py-[3px] whitespace-nowrap"
+                          >
+                            {corto(a.nombre)}
+                          </th>
+                          <td className="py-[3px]">
+                            <Franja id={a.id} />
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                <div className="flex flex-wrap gap-4 mt-4 text-xs text-slate-500">
+                  <span className="flex items-center gap-1.5">
+                    <span className="h-2.5 w-2.5 rounded-[3px] bg-[#16A34A]" />
+                    Corrió bien
+                  </span>
+                  <span className="flex items-center gap-1.5">
+                    <span className="h-2.5 w-2.5 rounded-[3px] bg-[#F59E0B]" />
+                    Falló
+                  </span>
+                  <span className="flex items-center gap-1.5">
+                    <span className="h-2.5 w-2.5 rounded-[3px] bg-[#E4E4EE]" />
+                    No le correspondía correr
+                  </span>
+                </div>
+              </figure>
             </div>
-            <p className="text-xs text-indigo-300/70 mt-6">
-              Registro actualizado el{" "}
-              {fecha((evidencia as { generado: string }).generado)}. Ventana:
-              últimos 30 días.
-            </p>
           </div>
         </section>
 
-        <div className="max-w-6xl mx-auto px-6 py-16">
-          <div className="bg-indigo-50 border-l-4 border-indigo-500 p-6 rounded-r-lg mb-16">
-            <p className="text-indigo-900">
-              <strong>Cómo leer la evidencia:</strong> cada agente es un proceso
-              programado que deja registro de cada ejecución. Mostramos las
-              ejecuciones exitosas de los últimos 30 días y la fecha de la
-              última. Solo listamos agentes con al menos 70% de ejecuciones
-              exitosas; los clientes aparecen por rubro por confidencialidad.
+        {/* Lo que publican: capturas recortadas de resultados públicos */}
+        <section className="px-6 py-20 bg-white">
+          <div className="max-w-6xl mx-auto">
+            <h2 className="text-3xl md:text-4xl font-black tracking-tight mb-3">
+              Lo que publican
+            </h2>
+            <p className="text-slate-600 max-w-2xl mb-10">
+              Resultados públicos de los agentes, tal como están en el sitio
+              hoy.
             </p>
-          </div>
-
-          {areas.map((g) => (
-            <section key={g.area} className="mb-16">
-              <h2 className="text-3xl font-bold text-gray-900 mb-6">
-                {g.area}
-              </h2>
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {g.agentes.map((a) => {
-                  const e = ev[a.id];
-                  return (
-                    <article
-                      key={a.id}
-                      className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition flex flex-col"
-                    >
-                      {a.imagen && (
-                        <div className="relative aspect-[16/10] bg-gray-100 border-b border-gray-200">
-                          <Image
-                            src={a.imagen}
-                            alt={`Resultado publicado por: ${a.nombre}`}
-                            fill
-                            className="object-cover object-top"
-                            sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
-                          />
-                        </div>
-                      )}
-                      <div className="p-6 flex flex-col flex-1">
-                        <h3 className="text-lg font-bold text-gray-900 mb-2">
-                          {a.nombre}
-                        </h3>
-                        <p className="text-gray-600 text-sm leading-relaxed mb-4 flex-1">
-                          {a.que_hace}
-                        </p>
-                        <dl className="text-sm space-y-1 mb-4">
-                          <div className="flex justify-between gap-4">
-                            <dt className="text-gray-500">Frecuencia</dt>
-                            <dd className="text-gray-900 font-medium text-right">
-                              {a.frecuencia}
-                            </dd>
-                          </div>
-                          <div className="flex justify-between gap-4">
-                            <dt className="text-gray-500">
-                              Ejecuciones exitosas (30 días)
-                            </dt>
-                            <dd className="text-emerald-700 font-bold">
-                              {e.exitosas_30d}
-                            </dd>
-                          </div>
-                          <div className="flex justify-between gap-4">
-                            <dt className="text-gray-500">Última ejecución</dt>
-                            <dd className="text-gray-900 font-medium">
-                              {fecha(e.ultima_exitosa)}
-                            </dd>
-                          </div>
-                        </dl>
-                        {a.url_publica && (
-                          <Link
-                            href={a.url_publica}
-                            className="text-indigo-600 hover:text-indigo-800 font-semibold text-sm"
-                          >
-                            Ver lo que publica →
-                          </Link>
-                        )}
-                      </div>
-                    </article>
-                  );
-                })}
-              </div>
-            </section>
-          ))}
-
-          <section className="mb-16">
-            <h2 className="text-3xl font-bold text-gray-900 mb-3">Tecnología propia que usan los agentes</h2>
-            <p className="text-gray-600 mb-8 max-w-3xl">
-              Los agentes no trabajan sobre herramientas arrendadas: se conectan a software que desarrollamos nosotros.
-            </p>
-            <div className="grid md:grid-cols-2 gap-8">
-              {[
-                {
-                  nombre: 'Predictor de campañas',
-                  texto: 'Estima costo por clic, costo por lead y resultados antes de invertir, con benchmarks de 22 industrias y 6 países de Latinoamérica. Lo usamos para planificar cada campaña y está abierto al público.',
-                  imagen: '/agentes/predictor.jpg',
-                  href: '/labs/predictor',
-                  cta: 'Probar el predictor →',
-                },
-                {
-                  nombre: 'CRM propio',
-                  texto: 'Cada lead de las campañas llega con su fuente, campaña, estado y seguimiento. El equipo comercial del cliente lo ve en tiempo real y los agentes de informes y de fiscalización por WhatsApp trabajan sobre estos datos.',
-                  imagen: '/agentes/crm.jpg',
-                  href: '/tecnologia',
-                  cta: 'Ver la tecnología →',
-                },
-              ].map(t => (
-                <article key={t.nombre} className="border border-gray-200 rounded-2xl overflow-hidden shadow-sm flex flex-col">
-                  <div className="relative aspect-[16/10] bg-gray-100 border-b border-gray-200">
-                    <Image src={t.imagen} alt={t.nombre + ' de Muller y Pérez'} fill className="object-cover object-top" sizes="(min-width: 768px) 50vw, 100vw" />
+            <div className="grid md:grid-cols-2 gap-x-10 gap-y-12">
+              {PUBLICA.map((p) => (
+                <Link
+                  key={p.img}
+                  href={p.href}
+                  className="group block rounded-xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#4F46E5]"
+                >
+                  <div className="relative aspect-[16/9] overflow-hidden rounded-xl ring-1 ring-slate-200 bg-slate-50">
+                    <Image
+                      src={p.img}
+                      alt={`Captura: ${p.agente}`}
+                      fill
+                      className="object-cover object-top"
+                      sizes="(min-width: 768px) 50vw, 100vw"
+                    />
                   </div>
-                  <div className="p-6 flex flex-col flex-1">
-                    <h3 className="text-xl font-bold text-gray-900 mb-2">{t.nombre}</h3>
-                    <p className="text-gray-600 leading-relaxed mb-4 flex-1">{t.texto}</p>
-                    <Link href={t.href} className="text-indigo-600 hover:text-indigo-800 font-semibold">{t.cta}</Link>
-                  </div>
-                </article>
+                  <p className="mt-4 font-bold group-hover:text-[#4F46E5]">
+                    {p.agente}
+                  </p>
+                  <p className="text-slate-600 text-sm mt-1">{p.texto}</p>
+                </Link>
               ))}
             </div>
-          </section>
+          </div>
+        </section>
 
-          <section className="mb-16">
-            <h2 className="text-3xl font-bold text-gray-900 mb-6">
-              Preguntas frecuentes
+        {/* Registro por área */}
+        <section className="px-6 py-20">
+          <div className="max-w-6xl mx-auto">
+            <h2 className="text-3xl md:text-4xl font-black tracking-tight mb-3">
+              Qué hace cada agente
             </h2>
-            <div className="space-y-6">
-              {faqs.map((f) => (
-                <div key={f.q} className="bg-gray-50 rounded-xl p-6">
-                  <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                    {f.q}
+            <p className="text-slate-600 max-w-2xl mb-12">
+              Los clientes aparecen por rubro. Para cada agente mostramos su
+              frecuencia, sus ejecuciones exitosas del último mes y su franja de
+              30 días.
+            </p>
+            <div className="space-y-14">
+              {areas.map((g) => (
+                <div key={g.area}>
+                  <h3 className="text-xl font-black mb-2 pb-3 border-b-2 border-[#1B1740]">
+                    {g.area}
                   </h3>
-                  <p className="text-gray-700 leading-relaxed">{f.a}</p>
+                  <ul className="divide-y divide-slate-200">
+                    {g.agentes.map((a) => {
+                      const e = EV.agentes[a.id];
+                      return (
+                        <li
+                          key={a.id}
+                          className="py-5 grid md:grid-cols-[1.4fr_1fr] gap-4 md:gap-10 items-center"
+                        >
+                          <div>
+                            <p className="font-bold">{a.nombre}</p>
+                            <p className="text-slate-600 text-sm leading-relaxed mt-1">
+                              {a.que_hace}
+                            </p>
+                            {a.url_publica && (
+                              <Link
+                                href={a.url_publica}
+                                className="inline-block mt-2 text-sm font-semibold text-[#4F46E5] hover:underline"
+                              >
+                                Ver lo que publica
+                              </Link>
+                            )}
+                          </div>
+                          <div className="tabular-nums overflow-x-auto">
+                            <Franja id={a.id} grande />
+                            <p className="text-sm text-slate-600 mt-2">
+                              {a.frecuencia}.{" "}
+                              <strong className="text-[#16A34A]">
+                                {e.exitosas_30d} ejecuciones exitosas
+                              </strong>
+                              , la última el {fechaCorta(e.ultima_exitosa)}.
+                            </p>
+                          </div>
+                        </li>
+                      );
+                    })}
+                  </ul>
                 </div>
               ))}
             </div>
-          </section>
+          </div>
+        </section>
 
-          <section className="bg-gradient-to-r from-indigo-900 to-purple-900 rounded-2xl p-12 text-center text-white">
-            <h2 className="text-3xl font-bold mb-4">
-              ¿Quieres agentes trabajando para tu empresa?
+        {/* Tecnología propia */}
+        <section className="px-6 py-20 bg-white">
+          <div className="max-w-6xl mx-auto">
+            <h2 className="text-3xl md:text-4xl font-black tracking-tight mb-3">
+              Sobre qué trabajan los agentes
             </h2>
-            <p className="text-xl text-indigo-100 mb-8 max-w-2xl mx-auto">
-              Blog, GEO, monitoreo de competencia, informes y dashboards,
-              configurados para tu negocio.
+            <p className="text-slate-600 max-w-2xl mb-10">
+              Software que desarrollamos nosotros, no herramientas arrendadas.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="grid md:grid-cols-2 gap-10">
+              {[
+                {
+                  nombre: "Predictor de campañas",
+                  texto:
+                    "Estima costo por clic, costo por lead y resultados antes de invertir, con benchmarks de 22 industrias y 6 países de Latinoamérica. Lo usamos para planificar cada campaña y está abierto al público.",
+                  imagen: "/agentes/predictor.jpg",
+                  href: "/labs/predictor",
+                  cta: "Probar el predictor",
+                },
+                {
+                  nombre: "CRM propio",
+                  texto:
+                    "Cada lead llega con su fuente, campaña, estado y seguimiento. El equipo comercial del cliente lo ve en tiempo real, y los agentes de reportes y de fiscalización por WhatsApp trabajan sobre estos datos.",
+                  imagen: "/agentes/crm.jpg",
+                  href: "/tecnologia",
+                  cta: "Ver la tecnología",
+                },
+              ].map((t) => (
+                <div key={t.nombre}>
+                  <div className="relative aspect-[16/9] overflow-hidden rounded-xl ring-1 ring-slate-200 bg-slate-50">
+                    <Image
+                      src={t.imagen}
+                      alt={`${t.nombre} de Muller y Pérez`}
+                      fill
+                      className="object-cover object-top"
+                      sizes="(min-width: 768px) 50vw, 100vw"
+                    />
+                  </div>
+                  <h3 className="text-xl font-black mt-5 mb-2">{t.nombre}</h3>
+                  <p className="text-slate-600 leading-relaxed mb-3">
+                    {t.texto}
+                  </p>
+                  <Link
+                    href={t.href}
+                    className="font-semibold text-[#4F46E5] hover:underline"
+                  >
+                    {t.cta}
+                  </Link>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* FAQ */}
+        <section className="px-6 py-20">
+          <div className="max-w-3xl mx-auto">
+            <h2 className="text-3xl md:text-4xl font-black tracking-tight mb-10">
+              Preguntas frecuentes
+            </h2>
+            <div className="divide-y divide-slate-200">
+              {faqs.map((f) => (
+                <div key={f.q} className="py-6">
+                  <h3 className="text-lg font-bold mb-2">{f.q}</h3>
+                  <p className="text-slate-600 leading-relaxed">{f.a}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* CTA */}
+        <section className="px-6 pb-24">
+          <div className="max-w-6xl mx-auto bg-[#1B1740] text-white rounded-3xl px-8 py-14 md:px-14 grid md:grid-cols-[1.5fr_1fr] gap-8 items-center">
+            <div>
+              <h2 className="text-3xl font-black tracking-tight mb-3">
+                Pon estos agentes a trabajar para tu empresa
+              </h2>
+              <p className="text-indigo-100/90">
+                Blog, GEO, monitoreo de competencia, reportes y dashboards,
+                configurados para tu negocio.
+              </p>
+            </div>
+            <div className="flex flex-col sm:flex-row md:flex-col gap-3">
               <Link
                 href="/#contacto"
-                className="px-8 py-4 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition font-semibold text-lg"
+                className="text-center px-6 py-3.5 bg-white text-[#1B1740] rounded-xl font-bold hover:bg-indigo-50"
               >
-                Agendar reunión
+                Agendar una reunión
               </Link>
               <Link
-                href="/casos-de-exito"
-                className="px-8 py-4 bg-white text-indigo-900 rounded-lg hover:bg-indigo-50 transition font-semibold text-lg"
+                href="/agentes"
+                className="text-center px-6 py-3.5 border border-white/30 rounded-xl font-semibold hover:bg-white/10"
               >
-                Ver casos de éxito
-              </Link>
-              <Link href="/agentes" className="px-8 py-4 bg-white/10 text-white border border-white/30 rounded-lg hover:bg-white/20 transition font-semibold text-lg">
-                Agente de blog para tu sitio
+                Contratar el agente de blog
               </Link>
             </div>
-          </section>
-        </div>
+          </div>
+        </section>
       </div>
     </>
   );
