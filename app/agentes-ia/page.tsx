@@ -185,7 +185,7 @@ export default function AgentesIAPage() {
             <p className="text-xl text-indigo-100 max-w-3xl mx-auto mb-10">
               Estos son los agentes de inteligencia artificial que Muller y
               Pérez tiene trabajando hoy para sus clientes y para su propia
-              marca. De cada uno mostramos qué hace, cada cuánto corre y su
+              marca, conectados a nuestro CRM propio y a nuestro predictor de campañas. De cada uno mostramos qué hace, cada cuánto corre y su
               registro real de ejecuciones.
             </p>
             <div className="grid grid-cols-3 gap-4 max-w-2xl mx-auto">
@@ -299,6 +299,42 @@ export default function AgentesIAPage() {
               </div>
             </section>
           ))}
+
+          <section className="mb-16">
+            <h2 className="text-3xl font-bold text-gray-900 mb-3">Tecnología propia que usan los agentes</h2>
+            <p className="text-gray-600 mb-8 max-w-3xl">
+              Los agentes no trabajan sobre herramientas arrendadas: se conectan a software que desarrollamos nosotros.
+            </p>
+            <div className="grid md:grid-cols-2 gap-8">
+              {[
+                {
+                  nombre: 'Predictor de campañas',
+                  texto: 'Estima costo por clic, costo por lead y resultados antes de invertir, con benchmarks de 22 industrias y 6 países de Latinoamérica. Lo usamos para planificar cada campaña y está abierto al público.',
+                  imagen: '/agentes/predictor.jpg',
+                  href: '/labs/predictor',
+                  cta: 'Probar el predictor →',
+                },
+                {
+                  nombre: 'CRM propio',
+                  texto: 'Cada lead de las campañas llega con su fuente, campaña, estado y seguimiento. El equipo comercial del cliente lo ve en tiempo real y los agentes de informes y de fiscalización por WhatsApp trabajan sobre estos datos.',
+                  imagen: '/agentes/crm.jpg',
+                  href: '/tecnologia',
+                  cta: 'Ver la tecnología →',
+                },
+              ].map(t => (
+                <article key={t.nombre} className="border border-gray-200 rounded-2xl overflow-hidden shadow-sm flex flex-col">
+                  <div className="relative aspect-[16/10] bg-gray-100 border-b border-gray-200">
+                    <Image src={t.imagen} alt={t.nombre + ' de Muller y Pérez'} fill className="object-cover object-top" sizes="(min-width: 768px) 50vw, 100vw" />
+                  </div>
+                  <div className="p-6 flex flex-col flex-1">
+                    <h3 className="text-xl font-bold text-gray-900 mb-2">{t.nombre}</h3>
+                    <p className="text-gray-600 leading-relaxed mb-4 flex-1">{t.texto}</p>
+                    <Link href={t.href} className="text-indigo-600 hover:text-indigo-800 font-semibold">{t.cta}</Link>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
 
           <section className="mb-16">
             <h2 className="text-3xl font-bold text-gray-900 mb-6">
