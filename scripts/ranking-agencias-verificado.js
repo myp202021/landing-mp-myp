@@ -130,7 +130,7 @@ async function investigar(agencia) {
     "Busca en su sitio oficial (páginas de nosotros, equipo, servicios, casos), LinkedIn, Google Business Profile, " +
     "Clutch, Sortlist, GoodFirms, DesignRush y prensa.\n\n" +
     "REGLAS ESTRICTAS:\n" +
-    '- Cada dato DEBE llevar en "fuente" la URL exacta donde aparece. Si no encuentras una URL que lo respalde, pon null en ese campo.\n' +
+    '- "fuente" es UNA sola URL completa, sin comentarios ni citas, con guiones normales (-). Cada dato DEBE llevar en "fuente" la URL exacta donde aparece. Si no encuentras una URL que lo respalde, pon null en ese campo.\n' +
     '- No infieras ni estimes. "La agencia ofrece SEO" solo es true si una página lo dice.\n' +
     "- casos_exito: solo casos publicados con cliente identificable. Máximo 5.\n" +
     "- herramientas_propias / crm_propio / paneles_financieros / agentes_ia: solo si la agencia los desarrolló o los opera ella misma y lo publica; revender HubSpot o usar ChatGPT no cuenta.\n" +
@@ -144,6 +144,15 @@ async function investigar(agencia) {
 }
 
 // ═══ PASO 2: VERIFICAR FUENTES ═══
+// La IA a veces devuelve 'https://clutch.co/profile/bigbuda‑0 (“27 reviews”) y https://...' con guiones Unicode.
+// Se deja solo la primera URL, con guiones ASCII, para no descartar datos válidos por formato.
+function normalizarUrl(u) {
+  if (!u || typeof u !== "string") return u;
+  var limpio = u.replace(/[\u2010-\u2015\u2212]/g, "-");
+  var m = limpio.match(/https?:\/\/[^\s"“”'<>()]+/);
+  return m ? m[0].replace(/[.,;:]+$/, "") : u;
+}
+
 var cacheUrls = {};
 async function urlResponde(url) {
   if (!url || typeof url !== "string" || !/^https?:\/\//.test(url))
@@ -182,6 +191,7 @@ async function verificar(obj) {
       var quedan = [];
       for (var i = 0; i < o.length; i++) {
         if (o[i] && typeof o[i] === "object" && "fuente" in o[i]) {
+          o[i].fuente = normalizarUrl(o[i].fuente);
           if (await urlResponde(o[i].fuente)) {
             quedan.push(o[i]);
             stats.verificados++;
@@ -205,6 +215,7 @@ async function verificar(obj) {
             v.valor !== "") ||
           v.cantidad;
         if (!tieneValor) continue;
+        v.fuente = normalizarUrl(v.fuente);
         if (await urlResponde(v.fuente)) stats.verificados++;
         else {
           o[k] = { valor: null, fuente: null, descartado: true };
@@ -849,6 +860,16 @@ async function main() {
     try {
       var datos = await investigar(ag);
       var stats = await verificar(datos);
+      if (stats.descartados > stats.verificados) {
+        // Una investigación con mayoría de fuentes caídas no es justa con la agencia: se reintenta una vez
+        console.log("   " + stats.descartados + " descartadas vs " + stats.verificados + " verificadas → reintento");
+        var datos2 = await investigar(ag);
+        var stats2 = await verificar(datos2);
+        if (stats2.verificados > stats.verificados) {
+          datos = datos2;
+          stats = stats2;
+        }
+      }
       var p = puntaje(datos);
       console.log(
         "   fuentes verificadas: " +
