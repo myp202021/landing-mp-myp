@@ -104,13 +104,13 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
   // Extract FAQ from content if present (h2/h3 with ? followed by content)
   // <p[^>]*> porque los agentes generan <p class="..."> y con <p> exacto no se detectaba ningún FAQ
   const faqMatches = (post.content_html || '').match(/<h[23][^>]*>\s*(.*?\?)\s*<\/h[23]>\s*<p[^>]*>([\s\S]*?)<\/p>/gi) || []
-  const faqItems = faqMatches.slice(0, 10).map((match: string) => {
+  const faqItems = faqMatches.slice(0, 12).map((match: string) => {
     const qMatch = match.match(/<h[23][^>]*>\s*(.*?)\s*<\/h[23]>/i)
     const aMatch = match.match(/<\/h[23]>\s*<p[^>]*>([\s\S]*?)<\/p>/i)
     return qMatch && aMatch ? {
       '@type': 'Question' as const,
       name: qMatch[1].replace(/<[^>]+>/g, ''),
-      acceptedAnswer: { '@type': 'Answer' as const, text: aMatch[1].replace(/<[^>]+>/g, '').substring(0, 300) }
+      acceptedAnswer: { '@type': 'Answer' as const, text: aMatch[1].replace(/<[^>]+>/g, '').trim() }
     } : null
   }).filter(Boolean)
 

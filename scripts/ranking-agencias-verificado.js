@@ -586,6 +586,12 @@ async function resenasGoogleMaps(agencias) {
     });
     if (!r.ok) { console.log("Apify Google Maps: HTTP " + r.status); return {}; }
     var items = await r.json();
+    // Diagnóstico: en la corrida del 28 sept Apify devolvió datos pero se leyeron 0 de 20
+    console.log("Google Maps: " + (Array.isArray(items) ? items.length : "respuesta no es lista") + " fichas recibidas");
+    if (Array.isArray(items) && items[0]) {
+      console.log("   campos: " + Object.keys(items[0]).slice(0, 40).join(", "));
+      items.slice(0, 4).forEach(function (it) { console.log("   · " + JSON.stringify({ searchString: it.searchString, title: it.title, website: it.website, reviewsCount: it.reviewsCount, totalScore: it.totalScore })); });
+    } else console.log("   respuesta: " + JSON.stringify(items).substring(0, 300));
     var out = {};
     agencias.forEach(function (a, i) {
       var candidatos = items.filter(function (it) { return it.searchString === busquedas[i]; });
@@ -604,6 +610,36 @@ async function resenasGoogleMaps(agencias) {
     console.log("Apify Google Maps falló: " + e.message);
     return {};
   }
+}
+
+// ═══ COMBINAR DOS INVESTIGACIONES ═══
+function tieneDato(v) { return v && v.fuente && ((v.valor !== null && v.valor !== undefined && v.valor !== false && v.valor !== "") || v.cantidad || v.nombre); }
+function combinarInvestigaciones(a, b) {
+  var n = 0;
+  Object.keys(b).forEach(function (k) {
+    var va = a[k], vb = b[k];
+    if (Array.isArray(vb)) {
+      var ya = {};
+      (a[k] = Array.isArray(va) ? va : []).forEach(function (x) { if (x && x.fuente) ya[x.fuente] = 1; });
+      vb.forEach(function (x) { if (x && x.fuente && !ya[x.fuente]) { a[k].push(x); ya[x.fuente] = 1; n++; } });
+    } else if (vb && typeof vb === "object" && !("fuente" in vb) && k === "especialidades") {
+      a[k] = a[k] || {};
+      Object.keys(vb).forEach(function (e) { if (!tieneDato(a[k][e]) && tieneDato(vb[e])) { a[k][e] = vb[e]; n++; } });
+    } else if (!tieneDato(va) && tieneDato(vb)) { a[k] = vb; n++; }
+  });
+  return n;
+}
+
+// ═══ FUNDADORES VERIFICADOS (data/ranking-agencias/fundadores.json) ═══
+// Perfiles del fundador o gerente general revisados con su LinkedIn o página de equipo. Si existe, reemplaza
+// lo que encontró la búsqueda automática (que a veces no lo halla o lo confunde).
+var FUNDADORES = (function () {
+  try { return JSON.parse(fs.readFileSync(path.join(DATA_DIR, "fundadores.json"), "utf8")); } catch (e) { return []; }
+})();
+function aplicarFundadorVerificado(nombre, datos) {
+  var f = FUNDADORES.filter(function (x) { return x.agencia === nombre && x.fuente && x.confianza !== "baja"; })[0];
+  if (!f) return;
+  datos.liderazgo = { nombre: f.nombre, formacion: f.formacion, postgrado: f.postgrado, anios_experiencia: f.anios_experiencia, experiencia_previa: f.experiencia_previa, fuente: f.fuente, verificado: "perfil revisado" };
 }
 
 // ═══ ESTABILIDAD ENTRE MESES ═══
@@ -650,123 +686,69 @@ function tiene(x) {
 }
 var DIRECTORIOS_VALIDOS = /clutch|sortlist|goodfirms|designrush|the ?manifest/i;
 
+// Pesos pensados como elige un cliente real: reputación y resultados primero; tecnología e IA suman, pero poco
+var MAX = { reputacion: 20, casos: 20, trayectoria: 10, equipo: 10, clientes: 10, certificaciones: 5, especialidades: 5, tecnologia: 5, ia: 5, liderazgo: 10 };
+function n(p, k) { return MAX[k] ? (p[k] || 0) / MAX[k] : 0; }
+var CRM_TERCEROS = /hubspot|salesforce|pipedrive|zoho|monday|tu crm|su crm|crm del cliente|crm existente/i;
+
 function puntaje(a) {
   var p = {};
-  var anios =
-    a.anio_fundacion && a.anio_fundacion.valor
-      ? Math.max(0, ANIO - a.anio_fundacion.valor)
-      : 0;
+  var anios = a.anio_fundacion && a.anio_fundacion.valor ? Math.max(0, ANIO - a.anio_fundacion.valor) : 0;
   p.trayectoria = Math.round((Math.min(anios, 15) / 15) * 10 * 10) / 10;
 
   var g = a.resenas_google || {};
   var rep = 0;
-  if (g.cantidad && g.rating && g.fuente)
-    rep +=
-      Math.min(Math.log10(g.cantidad + 1) / Math.log10(301), 1) *
-      9 *
-      (g.rating / 5);
-  var dirs = (a.directorios || []).filter(function (d) {
-    return d.fuente && DIRECTORIOS_VALIDOS.test((d.sitio || "") + " " + d.fuente);
-  });
-  rep += Math.min(dirs.length, 3) * 2;
+  if (g.cantidad && g.rating && g.fuente) rep += Math.min(Math.log10(g.cantidad + 1) / Math.log10(301), 1) * 12 * (g.rating / 5);
+  var dirs = (a.directorios || []).filter(function (d) { return d.fuente && DIRECTORIOS_VALIDOS.test((d.sitio || "") + " " + d.fuente); });
+  rep += Math.min(dirs.length, 4) * 2;
   p.reputacion = Math.round(rep * 10) / 10;
 
-  p.casos = Math.min((a.casos_exito || []).length, 5) * 3;
+  var casos = (a.casos_exito || []).filter(function (c) { return c.fuente; });
+  var conCifras = casos.filter(function (c) { return /\d/.test(String(c.resultado || "")); });
+  p.casos = Math.min(casos.length, 5) * 3 + Math.min(conCifras.length, 5);
 
-  p.tecnologia =
-    (tiene(a.herramientas_propias) ? 7 : 0) +
-    (tiene(a.crm_propio) ? 4 : 0) +
-    (tiene(a.paneles_financieros) ? 4 : 0);
-  p.ia = tiene(a.agentes_ia) ? 15 : 0;
+  var eqv = a.equipo && a.equipo.fuente ? String(a.equipo.valor || "").toLowerCase() : "";
+  var nums = eqv ? (String(a.equipo.tamano || "").match(/\d+/g) || []).map(Number).filter(function (x) { return x > 0 && x < 5000; }) : [];
+  p.equipo = (eqv.indexOf("interno") >= 0 ? 5 : eqv.indexOf("mixto") >= 0 ? 3 : eqv.indexOf("freelance") >= 0 ? 1 : 0) +
+    (nums.length ? Math.round(Math.min(Math.log10(Math.max.apply(null, nums) + 1) / Math.log10(51), 1) * 5 * 10) / 10 : 0);
 
-  var eq =
-    a.equipo && a.equipo.fuente
-      ? String(a.equipo.valor || "").toLowerCase()
-      : "";
-  p.equipo =
-    eq.indexOf("interno") >= 0
-      ? 10
-      : eq.indexOf("mixto") >= 0
-        ? 6
-        : eq.indexOf("freelance") >= 0
-          ? 3
-          : 0;
+  p.clientes = Math.round((Math.min((a.clientes_destacados || []).filter(function (c) { return c.fuente; }).length, 6) / 6) * 10 * 10) / 10;
+  p.certificaciones = tiene(a.certificaciones) ? 5 : 0;
 
   var esp = a.especialidades || {};
-  var n = [
-    "performance",
-    "contenido",
-    "creatividad",
-    "seo",
-    "ecommerce",
-    "b2b",
-  ].filter(function (k) {
-    return tiene(esp[k]);
-  }).length;
-  p.especialidades = Math.round(((n * 10) / 6) * 10) / 10;
+  var ne = ["performance", "contenido", "creatividad", "seo", "ecommerce", "b2b"].filter(function (k) { return tiene(esp[k]); }).length;
+  p.especialidades = Math.round((ne / 6) * 5 * 10) / 10;
 
-  // Liderazgo y formación del equipo directivo (10 pts), solo con fuente
+  // CRM "propio" no cuenta si la frase habla de integrarse con el CRM del cliente o uno de terceros
+  var crmPropio = tiene(a.crm_propio) && !CRM_TERCEROS.test(String(a.crm_propio.cita || a.crm_propio.descripcion || ""));
+  if (a.crm_propio && tiene(a.crm_propio) && !crmPropio) a.crm_propio = { valor: false, fuente: null, descartado: "habla de un CRM de terceros" };
+  p.tecnologia = tiene(a.herramientas_propias) || crmPropio ? 5 : 0;
+  p.ia = tiene(a.agentes_ia) ? 5 : 0;
+
   var l = a.liderazgo || {};
   p.liderazgo = 0;
   if (l.fuente && l.nombre) {
     if (/ingenier|econom|administraci|comercial|negocios|finanzas|estad[ií]stic|matem[aá]tic|contador|auditor/i.test(l.formacion || "")) p.liderazgo += 3;
-    if (l.postgrado && /mba|mag[ií]ster|master|doctor|phd|diplomado en (gesti|direcci|negocios)/i.test(l.postgrado)) p.liderazgo += 3;
+    if (l.postgrado && /mba|mag[ií]ster|master|doctor|phd/i.test(l.postgrado)) p.liderazgo += 3;
     if (Number(l.anios_experiencia) >= 10) p.liderazgo += 2;
     if (l.experiencia_previa && !NEGATIVO.test(String(l.experiencia_previa))) p.liderazgo += 2;
   }
 
-  p.total =
-    Math.round(
-      (p.trayectoria +
-        p.reputacion +
-        p.casos +
-        p.tecnologia +
-        p.ia +
-        p.equipo +
-        p.especialidades +
-        p.liderazgo) *
-        10,
-    ) / 10;
+  p.total = Math.round(Object.keys(MAX).reduce(function (s, k) { return s + (p[k] || 0); }, 0) * 10) / 10;
   return p;
 }
 
 var METODOLOGIA = [
-  ["Trayectoria", 10, "Años desde la fundación (tope 15 años), con fuente."],
-  [
-    "Reputación verificable",
-    15,
-    "Reseñas de Google leídas directamente de la ficha de Google Maps de cada agencia (cantidad en escala logarítmica × nota) hasta 9 pts + 2 pts por directorio con reseñas (Clutch, Sortlist, GoodFirms, DesignRush, The Manifest), tope 6.",
-  ],
-  [
-    "Casos de éxito publicados",
-    15,
-    "3 pts por caso con cliente identificable y fuente, tope 5 casos.",
-  ],
-  [
-    "Tecnología propia",
-    15,
-    "Herramientas o dashboards propios 7 pts, CRM propio 4 pts, paneles financieros (ROI, CAC) 4 pts.",
-  ],
-  [
-    "IA en producción",
-    15,
-    "Agentes o automatizaciones de IA propios y publicados, operando para clientes. Usar ChatGPT u otras herramientas de terceros no suma.",
-  ],
-  [
-    "Equipo",
-    10,
-    "Equipo interno 10 pts, mixto 6 pts, freelance 3 pts, sin información 0.",
-  ],
-  [
-    "Especialidades",
-    10,
-    "Puntaje proporcional a las especialidades publicadas: performance, contenido, creatividad, SEO, e-commerce, B2B.",
-  ],
-  [
-    "Liderazgo y formación",
-    10,
-    "Perfil verificable del fundador o gerente general: formación universitaria analítica o de negocios 3 pts, postgrado (MBA o magíster) 3 pts, 10 o más años de experiencia 2 pts, experiencia previa en gestión, finanzas o datos 2 pts.",
-  ],
+  ["Reputación verificable", 20, "Reseñas de Google (cantidad en escala logarítmica × nota) hasta 12 pts + 2 pts por directorio con reseñas (Clutch, Sortlist, GoodFirms, DesignRush, The Manifest), tope 8."],
+  ["Casos de éxito", 20, "3 pts por caso publicado con cliente identificable (tope 5) + 1 pt por caso con resultados en cifras (tope 5)."],
+  ["Trayectoria", 10, "Años desde la fundación, con fuente (tope 15 años)."],
+  ["Equipo", 10, "Equipo interno 5 pts (mixto 3, freelance 1) + tamaño del equipo publicado hasta 5 pts."],
+  ["Clientes destacados", 10, "Clientes que la agencia publica en su sitio, con fuente (tope 6)."],
+  ["Certificaciones", 5, "Google Partner, Meta Business Partner, HubSpot u otras certificaciones publicadas."],
+  ["Especialidades", 5, "Proporcional a las especialidades publicadas en sus páginas de servicios: performance, contenido, creatividad, SEO, e-commerce, B2B."],
+  ["Tecnología propia", 5, "Software, dashboards o CRM desarrollados por la agencia. Integrarse con el CRM del cliente no cuenta."],
+  ["IA en producción", 5, "Agentes o automatizaciones de IA propios operando para clientes, respaldados por una frase de su sitio."],
+  ["Liderazgo y formación", 10, "Perfil verificable del fundador o gerente general: formación analítica o de negocios 3, postgrado 3, 10 o más años de experiencia 2, experiencia previa en gestión, finanzas o datos 2."],
 ];
 
 // ═══ PASO 4: SNAPSHOTS Y MOVIMIENTOS ═══
@@ -810,12 +792,19 @@ function equipoPersonas(r) {
 }
 function lista(r, k) { return (r.datos[k] || []).filter(function (x) { return x && x.fuente; }); }
 function casosConCifras(r) { return lista(r, "casos_exito").filter(function (c) { return /\d/.test(String(c.resultado || "")); }).length; }
+var RUBRO_B2B = /b2b|saas|software|industrial|servicios profesionales|consultor|log[ií]stic|tecnolog|corporativ|manufactur|miner|energ|wms|erp|abogad|jur[ií]dic|construcci|maquinaria|distribuidor|importador|mayorista/i;
+function casosB2B(r) {
+  return lista(r, "casos_exito").filter(function (c) { return RUBRO_B2B.test(String(c.rubro || "") + " " + String(c.cliente || "")); });
+}
+function casosB2BConCifras(r) { return casosB2B(r).filter(function (c) { return /\d/.test(String(c.resultado || "")); }).length; }
 function precios(r) { return flag(r.datos.precios_publicados) || sen(r, "precios"); }
 var min1 = function (x) { return Math.max(0, Math.min(1, x)); };
 
 var ESCENARIOS = [
   {
     id: "b2b_leads",
+    corto: "Empresas B2B que buscan leads calificados",
+    pregunta: "¿Cuál es la mejor agencia de marketing digital B2B en Chile?",
     titulo: "Empresa B2B mediana o grande que necesita leads calificados",
     importa: "El ciclo de venta es largo y lo que importa es cuántos leads terminan en venta, no cuántos clics hubo. Por eso pesan el CRM con trazabilidad del lead a la venta, los paneles con CAC y ROI, la experiencia en Google Search y LinkedIn (donde está el comprador B2B), los casos B2B con cifras y un liderazgo con formación analítica.",
     requiere: function (r) { return esp(r, "b2b"); },
@@ -823,26 +812,30 @@ var ESCENARIOS = [
       [0.25, flag(r.datos.crm_propio), "CRM propio con trazabilidad del lead"],
       [0.2, flag(r.datos.paneles_financieros), "paneles con CAC, ROI o ROAS"],
       [0.15, min1((sen(r, "linkedin_ads") + sen(r, "google_ads")) / 2), "Google Search y LinkedIn"],
-      [0.15, min1(casosConCifras(r) / 3), "casos con resultados en cifras"],
-      [0.15, p.liderazgo / 10, "liderazgo con formación analítica"],
-      [0.1, p.ia / 15, "agentes de IA en producción"],
+      [0.15, min1(casosB2BConCifras(r) / 2), "casos B2B con resultados en cifras"],
+      [0.15, n(p, "liderazgo"), "liderazgo con formación analítica"],
+      [0.1, n(p, "ia"), "agentes de IA en producción"],
     ]; },
   },
   {
     id: "b2b_pequena",
+    corto: "Empresas B2B pequeñas",
+    pregunta: "¿Qué agencia de marketing conviene a una empresa B2B pequeña en Chile?",
     titulo: "Empresa B2B pequeña (servicios profesionales o industrial)",
     importa: "El presupuesto es acotado y cada peso tiene que traer oportunidades comerciales. Pesan el foco en performance, los precios publicados, un equipo propio que ejecute sin subcontratar, los casos y reportes que se entiendan sin ser analista.",
     requiere: function (r) { return esp(r, "b2b"); },
     pesos: function (r, p) { return [
       [0.25, esp(r, "performance"), "foco en performance"],
       [0.2, precios(r), "precios publicados"],
-      [0.2, p.equipo / 10, "equipo propio"],
-      [0.2, p.casos / 15, "casos publicados"],
+      [0.2, n(p, "equipo"), "equipo propio"],
+      [0.2, min1(casosB2B(r).length / 2), "casos B2B publicados"],
       [0.15, flag(r.datos.paneles_financieros), "reportes con métricas de negocio"],
     ]; },
   },
   {
     id: "ecommerce_grande",
+    corto: "E-commerce grandes",
+    pregunta: "¿Cuál es la mejor agencia para un e-commerce grande en Chile?",
     titulo: "E-commerce grande (ventas sobre $50 millones al mes)",
     importa: "A esa escala un punto de conversión o de ROAS vale millones. Pesan la experiencia comprobada en e-commerce con Shopping y Performance Max, la optimización de conversión del sitio, un equipo grande que soporte el volumen, clientes grandes publicados y la trayectoria.",
     requiere: function (r) { return esp(r, "ecommerce"); },
@@ -850,38 +843,44 @@ var ESCENARIOS = [
       [0.2, sen(r, "shopping"), "Shopping y Performance Max"],
       [0.2, min1(equipoPersonas(r) / 50), "equipo grande"],
       [0.2, min1(lista(r, "clientes_destacados").length / 6), "clientes grandes publicados"],
-      [0.15, p.trayectoria / 10, "trayectoria"],
+      [0.15, n(p, "trayectoria"), "trayectoria"],
       [0.15, sen(r, "cro"), "optimización de conversión"],
-      [0.1, p.reputacion / 15, "reputación verificable"],
+      [0.1, n(p, "reputacion"), "reputación verificable"],
     ]; },
   },
   {
     id: "ecommerce_pyme",
+    corto: "E-commerce pequeños y medianos",
+    pregunta: "¿Qué agencia conviene a un e-commerce pequeño o mediano en Chile?",
     titulo: "E-commerce pequeño o mediano",
     importa: "Hay que vender rápido con presupuesto acotado. Pesan la gestión conjunta de Meta y Google, los precios accesibles y publicados, los casos de e-commerce y un equipo propio que ejecute rápido.",
     requiere: function (r) { return esp(r, "ecommerce"); },
     pesos: function (r, p) { return [
       [0.3, min1((sen(r, "meta_ads") + sen(r, "google_ads")) / 2), "Meta y Google Ads"],
       [0.2, precios(r), "precios publicados"],
-      [0.25, p.casos / 15, "casos publicados"],
-      [0.25, p.equipo / 10, "equipo propio"],
+      [0.25, n(p, "casos"), "casos publicados"],
+      [0.25, n(p, "equipo"), "equipo propio"],
     ]; },
   },
   {
     id: "b2c_servicios",
+    corto: "Servicios B2C que viven de leads",
+    pregunta: "¿Qué agencia de marketing conviene a clínicas, inmobiliarias o instituciones educativas en Chile?",
     titulo: "Empresa B2C de servicios que vive de leads (clínicas, inmobiliarias, educación)",
     importa: "El negocio depende de que cada lead se contacte a tiempo. Pesan el performance, la gestión de leads con CRM o WhatsApp, los casos en rubros similares y las reseñas de clientes reales.",
     requiere: function (r) { return esp(r, "performance"); },
     pesos: function (r, p) { return [
       [0.25, esp(r, "performance"), "foco en performance"],
       [0.25, Math.max(flag(r.datos.crm_propio), sen(r, "whatsapp")), "gestión de leads con CRM o WhatsApp"],
-      [0.2, p.casos / 15, "casos publicados"],
-      [0.2, p.reputacion / 15, "reputación verificable"],
+      [0.2, n(p, "casos"), "casos publicados"],
+      [0.2, n(p, "reputacion"), "reputación verificable"],
       [0.1, flag(r.datos.paneles_financieros), "reportes con costo por lead"],
     ]; },
   },
   {
     id: "branding",
+    corto: "Marcas grandes que buscan notoriedad",
+    pregunta: "¿Cuál es la mejor agencia de branding y creatividad en Chile?",
     titulo: "Marca grande que busca notoriedad (branding)",
     importa: "El objetivo es que la marca se recuerde, no una conversión inmediata. Pesan la creatividad y la producción audiovisual, los premios de la industria, los clientes grandes, la experiencia en medios masivos e influencers y la trayectoria.",
     requiere: function (r) { return esp(r, "creatividad"); },
@@ -890,32 +889,36 @@ var ESCENARIOS = [
       [0.25, min1(lista(r, "premios").length / 2), "premios de la industria"],
       [0.2, min1(lista(r, "clientes_destacados").length / 6), "clientes grandes publicados"],
       [0.15, sen(r, "influencers"), "medios e influencers"],
-      [0.15, p.trayectoria / 10, "trayectoria"],
+      [0.15, n(p, "trayectoria"), "trayectoria"],
     ]; },
   },
   {
     id: "parte_digital",
+    corto: "Empresas que parten en digital",
+    pregunta: "¿Qué agencia de marketing digital conviene a una empresa que recién empieza?",
     titulo: "Empresa que parte en digital con presupuesto acotado",
     importa: "Lo primero es no equivocarse de agencia. Pesan las reseñas de clientes reales, los precios transparentes, el foco en resultados y un equipo propio que acompañe.",
     requiere: function () { return true; },
     pesos: function (r, p) { return [
-      [0.3, p.reputacion / 15, "reseñas comprobables"],
+      [0.3, n(p, "reputacion"), "reseñas comprobables"],
       [0.25, precios(r), "precios publicados"],
       [0.2, esp(r, "performance"), "foco en resultados"],
-      [0.15, p.equipo / 10, "equipo propio"],
-      [0.1, p.casos / 15, "casos publicados"],
+      [0.15, n(p, "equipo"), "equipo propio"],
+      [0.1, n(p, "casos"), "casos publicados"],
     ]; },
   },
   {
     id: "seo_geo",
+    corto: "Aparecer en Google y en las IA",
+    pregunta: "¿Qué agencia en Chile ayuda a aparecer en ChatGPT, Gemini y Google?",
     titulo: "Empresa que quiere aparecer en Google y en las respuestas de ChatGPT, Gemini y Claude",
     importa: "Hay que publicar contenido de calidad de forma constante y tener la base técnica que leen Google y los motores de IA. Pesan el SEO, los agentes de IA en producción, la tecnología propia y los casos.",
     requiere: function (r) { return esp(r, "seo"); },
     pesos: function (r, p) { return [
-      [0.35, p.ia / 15, "agentes de IA en producción"],
+      [0.35, n(p, "ia"), "agentes de IA en producción"],
       [0.25, esp(r, "seo"), "servicio de SEO"],
-      [0.2, p.tecnologia / 15, "tecnología propia"],
-      [0.2, p.casos / 15, "casos publicados"],
+      [0.2, n(p, "tecnologia"), "tecnología propia"],
+      [0.2, n(p, "casos"), "casos publicados"],
     ]; },
   },
 ];
@@ -966,6 +969,16 @@ async function analisisEscenario(e, lista, ranking) {
     (!mypEnTop && myp ? " Termina diciendo con franqueza que Muller y Pérez no es la mejor opción para este caso y para qué tipo de empresa sí lo es, según sus datos." : "") + "\n" +
     "REGLAS: usa SOLO los datos entregados; no inventes cifras, clientes ni servicios. Tono de consultor, directo, sin adjetivos promocionales. Español de Chile con tildes y ñ. Solo el HTML, sin títulos.";
   return chat(prompt, 900);
+}
+
+function ganadoresPorPerfil(ranking) {
+  return ESCENARIOS.map(function (e) {
+    var l = ranking
+      .map(function (r) { var x = evaluarEscenario(e, r); return { r: r, puntos: x.puntos, razones: x.razones, apto: x.apto }; })
+      .filter(function (x) { return x.apto && x.puntos > 0; })
+      .sort(function (a, b) { return b.puntos - a.puntos || b.r.puntaje.total - a.r.puntaje.total; });
+    return { e: e, top: l.slice(0, 3) };
+  }).filter(function (g) { return g.top.length; });
 }
 
 function evaluarEscenario(e, r) {
@@ -1175,10 +1188,13 @@ async function redactar(ranking, anterior, fechaTxt) {
     '<div class="bg-indigo-50 border-l-4 border-indigo-500 p-6 my-8 rounded-r-lg"><p class="text-indigo-900 font-medium">' +
       "Respuesta directa: según los datos verificables de " +
       fechaTxt +
-      ", las agencias con mayor puntaje son " +
+      ", las agencias con mayor puntaje general son " +
       esc(top) +
-      ". " +
-      "El puntaje combina trayectoria, reputación verificable, casos de éxito publicados, tecnología propia, IA en producción, equipo y especialidades.</p></div>",
+      ". Pero la mejor agencia depende de tu empresa:</p><ul class=\"list-disc pl-6 mt-3 space-y-1 text-indigo-900\">" +
+      ganadoresPorPerfil(ranking).map(function (g) {
+        return "<li><strong>" + esc(g.e.corto) + ":</strong> " + esc(g.top[0].r.nombre) + (g.top[1] ? " (luego " + esc(g.top[1].r.nombre) + ")" : "") + "</li>";
+      }).join("") +
+      "</ul></div>",
   );
   partes.push(
     '<p class="' +
@@ -1198,12 +1214,15 @@ async function redactar(ranking, anterior, fechaTxt) {
       ["#", "Agencia", "Puntaje", "vs mes anterior", "Fortalezas verificadas"],
       ranking.map(function (r) {
         var f = [];
-        if (r.puntaje.ia) f.push("IA en producción");
-        if (r.puntaje.tecnologia >= 7) f.push("tecnología propia");
-        if (r.puntaje.casos >= 9) f.push("casos publicados");
-        if (r.puntaje.reputacion >= 12) f.push("reputación");
-        if (r.puntaje.trayectoria >= 7) f.push("trayectoria");
-        if (r.puntaje.liderazgo >= 6) f.push("liderazgo con formación en negocios");
+        // En orden de lo que más mira un cliente
+        var pz = r.puntaje;
+        if (pz.reputacion >= 12) f.push("reputación verificable");
+        if (pz.casos >= 15) f.push("casos con resultados");
+        if (pz.trayectoria >= 7) f.push(Math.round((pz.trayectoria / 10) * 15) >= 15 ? "más de 15 años" : "trayectoria");
+        if (pz.clientes >= 7) f.push("clientes reconocidos");
+        if (pz.liderazgo >= 6) f.push("liderazgo con formación en negocios");
+        if (pz.tecnologia) f.push("tecnología propia");
+        if (pz.ia) f.push("IA en producción");
         return [
           r.posicion,
           "<strong>" + esc(r.nombre) + "</strong>",
@@ -1243,11 +1262,11 @@ async function redactar(ranking, anterior, fechaTxt) {
         },
     );
     partes.push(
-      '<h2 class="' +
-        CL.h2 +
+      '<h3 class="' +
+        CL.h3 +
         '">' +
         titulo +
-        '</h2><p class="' +
+        '</h3><p class="' +
         CL.p +
         '">' +
         intro +
@@ -1285,80 +1304,6 @@ async function redactar(ranking, anterior, fechaTxt) {
     r._fuente = x && x.fuente ? link(x.fuente) : "—";
     return !!(x && x.valor);
   }
-  cat(
-    "Mejores agencias de performance marketing",
-    "Agencias que publican servicio de performance (campañas pagadas orientadas a resultados medibles), ordenadas por puntaje total.",
-    function (r) {
-      return evEsp(r, "performance");
-    },
-  );
-  cat(
-    "Agencias que usan agentes de IA en producción",
-    "Solo cuenta IA propia que opera para clientes y está publicada. Usar ChatGPT para redactar no califica.",
-    function (r) {
-      return ev(r, "agentes_ia");
-    },
-  );
-  cat(
-    "Agencias con herramientas y paneles propios",
-    "Software, dashboards o plataformas desarrolladas por la agencia.",
-    function (r) {
-      return ev(r, "herramientas_propias");
-    },
-  );
-  cat(
-    "Agencias con CRM propio",
-    "CRM desarrollado u operado por la agencia para gestionar leads de sus clientes.",
-    function (r) {
-      return ev(r, "crm_propio");
-    },
-  );
-  cat(
-    "Agencias con paneles financieros para clientes",
-    "Paneles de ROI, CAC o unit economics entregados al cliente.",
-    function (r) {
-      return ev(r, "paneles_financieros");
-    },
-  );
-  cat(
-    "Mejores agencias para e-commerce",
-    "Agencias que publican especialización en comercio electrónico.",
-    function (r) {
-      return evEsp(r, "ecommerce");
-    },
-  );
-  cat(
-    "Mejores agencias B2B",
-    "Agencias que publican especialización en empresas B2B.",
-    function (r) {
-      return evEsp(r, "b2b");
-    },
-  );
-  cat(
-    "Mejores agencias de contenido",
-    "Agencias que publican servicio de contenido.",
-    function (r) {
-      return evEsp(r, "contenido");
-    },
-  );
-  cat(
-    "Mejores agencias creativas",
-    "Agencias que publican servicio de creatividad y diseño.",
-    function (r) {
-      return evEsp(r, "creatividad");
-    },
-  );
-  cat(
-    "Agencias con mayor trayectoria",
-    "Ordenadas por año de fundación verificado.",
-    function (r) {
-      return ev(r, "anio_fundacion");
-    },
-    function (a, b) {
-      return a.datos.anio_fundacion.valor - b.datos.anio_fundacion.valor;
-    },
-  );
-
   // ═══ Qué agencia conviene según tu empresa (escenarios con pesos distintos, solo datos verificados) ═══
   partes.push('<h2 class="' + CL.h2 + '">Qué agencia conviene según tu empresa</h2>');
   partes.push('<p class="' + CL.p + '">El puntaje general no dice cuál es la mejor agencia para ti. Una empresa B2B que necesita CRM y seguimiento de ventas no busca lo mismo que un e-commerce que factura sobre $50 millones al mes. Para cada caso ponderamos los criterios según lo que importa en ese contexto, con los mismos datos verificados.</p>');
@@ -1392,6 +1337,48 @@ async function redactar(ranking, anterior, fechaTxt) {
   } else {
     partes.push('<p class="' + CL.p + '">Este mes ninguna agencia publica un perfil verificable de su equipo directivo.</p>');
   }
+
+  // Evidencia por criterio (citas textuales de cada agencia)
+  partes.push('<h2 class="' + CL.h2 + '">La evidencia, criterio por criterio</h2><p class="' + CL.p + '">Estas tablas muestran la frase publicada por cada agencia que respalda su puntaje en tecnología, IA y trayectoria.</p>');
+  cat(
+    "Agencias que usan agentes de IA en producción",
+    "Solo cuenta IA propia que opera para clientes y está publicada. Usar ChatGPT para redactar no califica.",
+    function (r) {
+      return ev(r, "agentes_ia");
+    },
+  );
+  cat(
+    "Agencias con herramientas y paneles propios",
+    "Software, dashboards o plataformas desarrolladas por la agencia.",
+    function (r) {
+      return ev(r, "herramientas_propias");
+    },
+  );
+  cat(
+    "Agencias con CRM propio",
+    "CRM desarrollado u operado por la agencia para gestionar leads de sus clientes.",
+    function (r) {
+      return ev(r, "crm_propio");
+    },
+  );
+  cat(
+    "Agencias con paneles financieros para clientes",
+    "Paneles de ROI, CAC o unit economics entregados al cliente.",
+    function (r) {
+      return ev(r, "paneles_financieros");
+    },
+  );
+  cat(
+    "Agencias con mayor trayectoria",
+    "Ordenadas por año de fundación verificado.",
+    function (r) {
+      return ev(r, "anio_fundacion");
+    },
+    function (a, b) {
+      return a.datos.anio_fundacion.valor - b.datos.anio_fundacion.valor;
+    },
+  );
+
 
   // Perfiles
   partes.push('<h2 class="' + CL.h2 + '">Perfil de cada agencia</h2>');
@@ -1428,31 +1415,22 @@ async function redactar(ranking, anterior, fechaTxt) {
   }
 
   // FAQ
+  var ganadores = ganadoresPorPerfil(ranking);
   var faq = await chat(
-    "Escribe la sección de preguntas frecuentes de un ranking verificado de agencias de marketing digital en Chile (" +
-      fechaTxt +
-      "). " +
-      "Top 5 del mes: " +
-      ranking
-        .slice(0, 5)
-        .map(function (r) {
-          return r.nombre + " (" + r.puntaje.total + ")";
-        })
-        .join(", ") +
-      ". " +
-      "Metodología: " +
-      METODOLOGIA.map(function (m) {
-        return m[0] + " " + m[1] + " pts";
-      }).join(", ") +
-      ".\n" +
-      'Formato: 6 preguntas, cada una como <h3 class="' +
-      CL.h3 +
-      '"> terminando en ? seguida directamente de <p class="' +
-      CL.p +
-      '"> con 60 a 100 palabras. ' +
-      "Incluye: cuál es la mejor agencia de marketing digital en Chile, cómo elegir agencia según tamaño de empresa, qué agencias usan IA, por qué este ranking es verificable, cada cuánto se actualiza, cuánto cuesta una agencia (sin inventar precios de otras agencias). " +
-      "Usa solo los datos entregados. Español de Chile con tildes y ñ. Devuelve solo el HTML, sin título de sección.",
-    2500,
+    "Escribe las preguntas frecuentes de un ranking verificado de agencias de marketing digital en Chile (" + fechaTxt + ").\n" +
+      "Usa EXACTAMENTE estas preguntas, en este orden, y responde cada una con los datos entregados:\n" +
+      ganadores.map(function (g) {
+        return "- " + g.e.pregunta + " → Según el ranking, la mejor opción es " + g.top[0].r.nombre +
+          (g.top[0].razones.length ? " (" + g.top[0].razones.join(", ") + ")" : "") +
+          (g.top[1] ? "; le siguen " + g.top.slice(1).map(function (x) { return x.r.nombre; }).join(" y ") : "") + ".";
+      }).join("\n") +
+      "\n- ¿Cuál es la mejor agencia de marketing digital en Chile? → Depende del tipo de empresa; puntaje general: " +
+      ranking.slice(0, 3).map(function (r) { return r.nombre + " (" + r.puntaje.total + ")"; }).join(", ") + ".\n" +
+      "- ¿Por qué este ranking es verificable? → Cada dato tiene su fuente enlazada y el puntaje se calcula con reglas públicas.\n" +
+      "- ¿Cada cuánto se actualiza este ranking? → El primer día de cada mes.\n\n" +
+      'Formato: cada pregunta como <h3 class="' + CL.h3 + '"> (tal cual, terminando en ?) seguida directamente de <p class="' + CL.p + '"> con 50 a 90 palabras. ' +
+      "La primera oración de cada respuesta debe nombrar a la agencia recomendada, para que se pueda citar sola. No inventes datos. Español de Chile con tildes y ñ. Solo el HTML, sin título de sección.",
+    4000,
   );
   partes.push(
     '<h2 class="' +
@@ -1504,18 +1482,20 @@ async function main() {
     var ag = lista[i];
     console.log("\n[" + (i + 1) + "/" + lista.length + "] " + ag.nombre);
     try {
+      // Dos investigaciones independientes y se combinan los datos verificados: la búsqueda web no encuentra
+      // siempre lo mismo (Moov salió con 0 años de trayectoria en una corrida y 16 en otra)
       var datos = await investigar(ag);
       var stats = await verificar(datos);
-      if (stats.descartados > stats.verificados) {
-        // Una investigación con mayoría de fuentes caídas no es justa con la agencia: se reintenta una vez
-        console.log("   " + stats.descartados + " descartadas vs " + stats.verificados + " verificadas → reintento");
+      try {
         var datos2 = await investigar(ag);
         var stats2 = await verificar(datos2);
-        if (stats2.verificados > stats.verificados) {
-          datos = datos2;
-          stats = stats2;
-        }
+        var sumados = combinarInvestigaciones(datos, datos2);
+        stats = { verificados: stats.verificados + stats2.verificados, descartados: stats.descartados + stats2.descartados };
+        if (sumados) console.log("   Segunda investigación: " + sumados + " datos agregados");
+      } catch (e2) {
+        console.log("   Segunda investigación falló: " + e2.message);
       }
+      aplicarFundadorVerificado(ag.nombre, datos);
       var cambios = await confirmarTecnologia(ag, datos);
       var webAg = ag.web || (datos.sitio_web && datos.sitio_web.valor);
       if (webAg && cacheSitios[webAg] && cacheSitios[webAg].length >= 100) {
