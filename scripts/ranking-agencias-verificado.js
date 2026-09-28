@@ -1050,7 +1050,7 @@ async function analisisEscenario(e, lista, ranking) {
   return chat(prompt, 900);
 }
 
-function ganadoresPorPerfil(todas) {
+function ganadoresPorPerfil(ranking) {
   return ESCENARIOS.map(function (e) {
     var l = ranking
       .map(function (r) { var x = evaluarEscenario(e, r); return { r: r, puntos: x.puntos, razones: x.razones, apto: x.apto }; })
