@@ -68,13 +68,13 @@ var ESQUEMA = `{
     "ecommerce": {"valor": true, "fuente": "https://..."},
     "b2b": {"valor": true, "fuente": "https://..."}
   },
-  "herramientas_propias": {"valor": "descripción de software, dashboards o herramientas desarrolladas por la agencia", "fuente": "https://..."},
-  "crm_propio": {"valor": "descripción", "fuente": "https://..."},
-  "paneles_financieros": {"valor": "descripción de paneles de ROI/CAC/finanzas para clientes", "fuente": "https://..."},
-  "agentes_ia": {"valor": "descripción concreta de agentes o automatizaciones de IA en producción", "fuente": "https://..."},
+  "herramientas_propias": {"valor": true, "descripcion": "software, dashboards o herramientas DESARROLLADAS por la agencia", "fuente": "https://..."},
+  "crm_propio": {"valor": true, "descripcion": "CRM desarrollado u operado por la agencia (no revender HubSpot/Salesforce)", "fuente": "https://..."},
+  "paneles_financieros": {"valor": true, "descripcion": "paneles de ROI/CAC/finanzas entregados a clientes", "fuente": "https://..."},
+  "agentes_ia": {"valor": true, "descripcion": "agentes o automatizaciones de IA PROPIOS operando en producción para clientes (usar ChatGPT o herramientas de terceros NO cuenta: valor false)", "fuente": "https://..."},
   "casos_exito": [{"cliente": "nombre", "resultado": "resultado con número si existe", "fuente": "https://..."}],
   "resenas_google": {"cantidad": 115, "rating": 5.0, "fuente": "https://..."},
-  "directorios": [{"sitio": "Clutch | Sortlist | GoodFirms | DesignRush", "resenas": 10, "fuente": "https://..."}],
+  "directorios": [{"sitio": "Clutch | Sortlist | GoodFirms | DesignRush | The Manifest (solo estos)", "resenas": 10, "fuente": "https://..."}],
   "tamano_clientes": {"valor": "pymes | medianas | grandes | mixto", "fuente": "https://..."},
   "certificaciones": {"valor": "p.ej. Google Partner, Meta Business Partner, HubSpot Partner", "fuente": "https://..."}
 }`;
@@ -228,11 +228,47 @@ async function verificar(obj) {
   return stats;
 }
 
+// ═══ ESTABILIDAD ENTRE MESES ═══
+// La búsqueda web no encuentra siempre lo mismo. Un dato verificado el mes anterior se mantiene si su fuente
+// sigue respondiendo; así una agencia no baja solo porque la IA no lo encontró esta vez.
+async function heredarDelMesAnterior(datos, previo, nombre) {
+  if (!previo) return 0;
+  var ant = (previo.ranking || []).filter(function (r) { return r.nombre === nombre; })[0];
+  if (!ant) return 0;
+  var n = 0;
+  var a = ant.datos;
+  var campos = ["sitio_web", "anio_fundacion", "fundador", "equipo", "herramientas_propias", "crm_propio",
+    "paneles_financieros", "agentes_ia", "resenas_google", "tamano_clientes", "certificaciones"];
+  for (var i = 0; i < campos.length; i++) {
+    var c = campos[i], nuevo = datos[c], viejo = a[c];
+    var nuevoVacio = !nuevo || !nuevo.fuente || (nuevo.valor == null && !nuevo.cantidad);
+    if (nuevoVacio && viejo && viejo.fuente && (viejo.valor != null || viejo.cantidad) && (await urlResponde(viejo.fuente))) {
+      datos[c] = viejo; n++;
+    }
+  }
+  datos.especialidades = datos.especialidades || {};
+  Object.keys(a.especialidades || {}).forEach(function (k) {
+    var v = a.especialidades[k];
+    if ((!datos.especialidades[k] || !datos.especialidades[k].fuente) && v && v.valor && v.fuente) { datos.especialidades[k] = v; n++; }
+  });
+  ["casos_exito", "directorios"].forEach(function (c) {
+    var ya = {};
+    (datos[c] = datos[c] || []).forEach(function (x) { ya[x.fuente] = 1; });
+    (a[c] || []).forEach(function (x) { if (x.fuente && !ya[x.fuente] && datos[c].length < 5) { datos[c].push(x); n++; } });
+  });
+  return n;
+}
+
 // ═══ PASO 3: PUNTAJE CON REGLAS FIJAS (publicadas en la metodología) ═══
 var ANIO = new Date().getFullYear();
+// Antes cualquier texto contaba como "sí" (p.ej. "no se identifican agentes de IA propios" daba 15 pts)
+var NEGATIVO = /^\s*(no\b|sin\b|ningun|ninguna|n\/a|no se )/i;
 function tiene(x) {
-  return !!(x && x.valor);
+  if (!x || !x.fuente) return false;
+  if (x.valor === true) return true;
+  return typeof x.valor === "string" && x.valor.trim() !== "" && !NEGATIVO.test(x.valor);
 }
+var DIRECTORIOS_VALIDOS = /clutch|sortlist|goodfirms|designrush|the ?manifest/i;
 
 function puntaje(a) {
   var p = {};
@@ -250,7 +286,7 @@ function puntaje(a) {
       12 *
       (g.rating / 5);
   var dirs = (a.directorios || []).filter(function (d) {
-    return d.fuente;
+    return d.fuente && DIRECTORIOS_VALIDOS.test((d.sitio || "") + " " + d.fuente);
   });
   rep += Math.min(dirs.length, 4) * 2;
   p.reputacion = Math.round(rep * 10) / 10;
@@ -323,7 +359,7 @@ var METODOLOGIA = [
   [
     "IA en producción",
     15,
-    "Agentes o automatizaciones de IA propios y publicados, operando para clientes.",
+    "Agentes o automatizaciones de IA propios y publicados, operando para clientes. Usar ChatGPT u otras herramientas de terceros no suma.",
   ],
   [
     "Equipo",
@@ -645,10 +681,11 @@ async function redactar(ranking, anterior, fechaTxt) {
   }
   function ev(r, campo) {
     var x = r.datos[campo];
-    r._evidencia =
-      x && x.valor ? esc(typeof x.valor === "string" ? x.valor : "Sí") : "—";
+    r._evidencia = tiene(x)
+      ? esc(x.descripcion || (typeof x.valor === "string" ? x.valor : "Sí"))
+      : "—";
     r._fuente = x && x.fuente ? link(x.fuente) : "—";
-    return !!(x && x.valor);
+    return tiene(x);
   }
   function evEsp(r, k) {
     var x = (r.datos.especialidades || {})[k];
@@ -853,6 +890,7 @@ async function main() {
   );
 
   var lista = LIMIT > 0 ? AGENCIAS.slice(0, LIMIT) : AGENCIAS;
+  var previo = snapshotAnterior(mes);
   var evaluadas = [];
   for (var i = 0; i < lista.length; i++) {
     var ag = lista[i];
@@ -870,6 +908,8 @@ async function main() {
           stats = stats2;
         }
       }
+      var heredados = await heredarDelMesAnterior(datos, previo, ag.nombre);
+      if (heredados) console.log("   " + heredados + " datos heredados del mes anterior (fuente re-verificada)");
       var p = puntaje(datos);
       console.log(
         "   fuentes verificadas: " +
