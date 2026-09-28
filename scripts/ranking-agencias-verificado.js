@@ -976,6 +976,22 @@ function evaluarEscenario(e, r) {
   return { apto: true, puntos: puntos, razones: razones };
 }
 
+// Schema ItemList con las agencias en orden (Google y los motores de IA leen el ranking estructurado)
+function itemListSchema(ranking) {
+  var data = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "Ranking verificado de agencias de marketing digital en Chile",
+    itemListOrder: "https://schema.org/ItemListOrderDescending",
+    numberOfItems: ranking.length,
+    itemListElement: ranking.map(function (r) {
+      var web = r.datos.sitio_web && r.datos.sitio_web.valor;
+      return { "@type": "ListItem", position: r.posicion, item: Object.assign({ "@type": "Organization", name: r.nombre }, web ? { url: web } : {}) };
+    }),
+  };
+  return '<script type="application/ld+json">' + JSON.stringify(data).replace(/</g, "\\u003c") + "</script>";
+}
+
 // ═══ PASO 5: REDACCIÓN ═══
 function esc(s) {
   return String(s == null ? "" : s)
@@ -1377,31 +1393,6 @@ async function redactar(ranking, anterior, fechaTxt) {
     partes.push('<p class="' + CL.p + '">Este mes ninguna agencia publica un perfil verificable de su equipo directivo.</p>');
   }
 
-  // Por tamaño de empresa
-  partes.push(
-    '<h2 class="' +
-      CL.h2 +
-      '">Qué agencia conviene según el tamaño de tu empresa</h2>',
-  );
-  partes.push(
-    tabla(
-      ["Agencia", "Tipo de cliente publicado", "Equipo", "Fuente"],
-      ranking.map(function (r) {
-        var t = r.datos.tamano_clientes || {};
-        var e = r.datos.equipo || {};
-        return [
-          esc(r.nombre),
-          esc(t.valor || "Sin información pública"),
-          esc(
-            [e.valor, e.tamano].filter(Boolean).join(", ") ||
-              "Sin información pública",
-          ),
-          t.fuente ? link(t.fuente) : e.fuente ? link(e.fuente) : "—",
-        ];
-      }),
-    ),
-  );
-
   // Perfiles
   partes.push('<h2 class="' + CL.h2 + '">Perfil de cada agencia</h2>');
   for (var i = 0; i < ranking.length; i++) {
@@ -1478,7 +1469,7 @@ async function redactar(ranking, anterior, fechaTxt) {
   );
 
   return (
-    '<div class="prose prose-lg max-w-none">\n' + partes.join("\n") + "\n</div>"
+    '<div class="prose prose-lg max-w-none">\n' + partes.join("\n") + "\n" + itemListSchema(ranking) + "\n</div>"
   );
 }
 
@@ -1646,14 +1637,10 @@ async function main() {
   var post = {
     slug: SLUG,
     title: titulo,
-    seo_title:
-      "Ranking agencias marketing digital Chile " +
-      hoy.getFullYear() +
-      " (verificado)",
+    // Con la plantilla " | M&P" el title queda bajo 60 caracteres
+    seo_title: "Ranking agencias de marketing digital Chile " + hoy.getFullYear(),
     description:
-      "Ranking mensual de agencias de marketing digital en Chile con fuentes verificables: performance, IA, e-commerce, B2B, contenido y creatividad. Actualizado " +
-      fechaTxt +
-      ".",
+      "Ranking mensual verificable de agencias de marketing digital en Chile, con fuentes enlazadas y la mejor opción según el tipo de empresa.",
     keywords:
       "ranking agencias marketing digital chile, mejores agencias marketing digital chile, agencias performance chile, agencias ia chile, agencias ecommerce chile, agencias b2b chile",
     excerpt:

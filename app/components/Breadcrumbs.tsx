@@ -80,11 +80,13 @@ export default function Breadcrumbs() {
 
   return (
     <>
-      {/* Schema.org JSON-LD */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
-      />
+      {/* Schema.org JSON-LD. En posts del blog no: la plantilla del post ya publica su BreadcrumbList con el título real */}
+      {!(segments[0] === 'blog' && segments.length === 2) && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+        />
+      )}
 
       {/* Breadcrumbs visuales */}
       <nav
