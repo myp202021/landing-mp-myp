@@ -2343,6 +2343,34 @@ export default function LandingClient() {
         </div>
       </section>
 
+      {/* Videos creados con IA — agregar aquí cada video nuevo del canal (videoId de YouTube) */}
+      <section id="videos-ia" className="py-20 px-6 bg-gradient-to-br from-slate-950 via-indigo-950 to-purple-950 text-white" aria-labelledby="videos-ia-titulo">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 id="videos-ia-titulo" className="text-4xl md:text-5xl font-black mb-4">
+              Videos creados con inteligencia artificial
+            </h2>
+            <p className="text-lg text-indigo-200 max-w-3xl mx-auto">
+              Cortometrajes, influencers virtuales y piezas para campañas producidas por nuestro equipo con IA generativa.
+            </p>
+          </div>
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              { videoId: 'R5zpS3j_wYs', title: "Cortometraje Influencer's — creado con IA" },
+            ].map(v => (
+              <div key={v.videoId} className="bg-white/5 rounded-xl overflow-hidden border border-white/10 hover:border-white/30 transition-all">
+                <div className="aspect-video">
+                  <YouTubeLite videoId={v.videoId} title={v.title} thumbnailQuality="hqdefault" />
+                </div>
+                <div className="p-4">
+                  <p className="text-sm text-indigo-100 font-semibold">{v.title}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Casos de Éxito */}
       <section id="casos-exito" className="py-20 px-6 bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50">
         <div className="max-w-7xl mx-auto">
@@ -2385,6 +2413,34 @@ export default function LandingClient() {
               </div>
               <div className="p-4">
                 <p className="text-sm text-gray-600 font-semibold">Caso de Éxito: Power Energy</p>
+              </div>
+            </div>
+
+            {/* Caso - Distec Chile (short de YouTube, sept 2026) */}
+            <div className="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all">
+              <div className="aspect-video">
+                <YouTubeLite
+                  videoId="ZSwz_G86Vi4"
+                  title="Testimonio Distec Chile - Muller y Pérez"
+                  thumbnailQuality="hqdefault"
+                />
+              </div>
+              <div className="p-4">
+                <p className="text-sm text-gray-600 font-semibold">Testimonio: Distec Chile</p>
+              </div>
+            </div>
+
+            {/* Caso - 4Life (short de YouTube, sept 2026) */}
+            <div className="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all">
+              <div className="aspect-video">
+                <YouTubeLite
+                  videoId="PvN8KRK99WI"
+                  title="Testimonio 4Life - Muller y Pérez"
+                  thumbnailQuality="hqdefault"
+                />
+              </div>
+              <div className="p-4">
+                <p className="text-sm text-gray-600 font-semibold">Testimonio: 4Life</p>
               </div>
             </div>
           </div>

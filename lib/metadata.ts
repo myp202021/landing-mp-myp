@@ -398,7 +398,7 @@ export function createOrganizationSchema() {
     sameAs: [
       'https://www.instagram.com/mulleryperez',
       'https://www.linkedin.com/company/m%C3%BCller-y-p%C3%A9rez/',
-      'https://www.youtube.com/@mulleryperez',
+      'https://www.youtube.com/channel/UCgzocZZQLNnthZ82oEyblrA',
       'https://www.facebook.com/mulleryperez',
       siteConfig.links.whatsapp
     ],
