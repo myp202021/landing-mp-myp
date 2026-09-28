@@ -952,7 +952,12 @@ async function analisisEscenario(e, lista, ranking) {
   var prompt = "Eres un consultor independiente que asesora a una empresa chilena a elegir agencia de marketing digital.\n" +
     "CASO: " + e.titulo + ". Lo que importa en este caso: " + e.importa + "\n\n" +
     "Las tres agencias con mejor ajuste a este caso, según datos verificados:\n" +
-    JSON.stringify(lista.map(function (x) { return Object.assign({ ajuste_al_caso: Math.round(x.puntos) }, resumenVerificado(x.r)); }), null, 1) + "\n\n" +
+    JSON.stringify(lista.map(function (x) {
+      var d = Object.assign({ ajuste_al_caso: Math.round(x.puntos) }, resumenVerificado(x.r));
+      // Los premios de la industria (Effie, Cannes) solo son relevantes para branding de marcas grandes
+      if (e.id !== "branding") delete d.premios;
+      return d;
+    }), null, 1) + "\n\n" +
     (!mypEnTop && myp ? "Muller y Pérez (quien publica este ranking) NO está entre las mejores para este caso. Sus datos: " + JSON.stringify(resumenVerificado(myp)) + "\n\n" : "") +
     "Escribe 2 párrafos (150 a 220 palabras en total), en HTML con <p class=\"" + CL.p + "\">:\n" +
     "1. Qué necesita realmente este tipo de empresa y por qué la primera agencia encaja mejor, y en qué se diferencian la segunda y la tercera (qué perfil de cliente le conviene a cada una). Usa los datos concretos (años, reseñas, citas) como argumento, no los enumeres.\n" +
