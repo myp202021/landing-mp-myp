@@ -8,10 +8,10 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
+import SiteHeader from "@/components/SiteHeader";
 import {
   createMetadata,
   createFAQPageSchema,
-  createBreadcrumbSchema,
 } from "@/lib/metadata";
 import inventario from "@/data/agentes-ia.json";
 import evidencia from "@/data/agentes-evidencia.json";
@@ -118,9 +118,10 @@ function corto(n: string) {
 function Franja({ id, grande = false }: { id: string; grande?: boolean }) {
   const dias = EV.agentes[id]?.dias || {};
   const ok = Object.values(dias).filter((v) => v === "ok").length;
+  // 30 columnas iguales: la franja se adapta al ancho disponible y nunca desborda
   return (
     <div
-      className="flex gap-[3px]"
+      className={`grid grid-cols-[repeat(30,minmax(0,1fr))] ${grande ? "gap-[3px] max-w-[34rem]" : "gap-[2px] sm:gap-[3px]"}`}
       role="img"
       aria-label={`Registro de 30 días: ${ok} días con ejecución exitosa`}
     >
@@ -128,7 +129,7 @@ function Franja({ id, grande = false }: { id: string; grande?: boolean }) {
         <span
           key={d}
           title={`${d}: ${dias[d] === "ok" ? "ejecución exitosa" : dias[d] === "fallo" ? "falló" : "sin ejecución"}`}
-          className={`${grande ? "h-3.5 w-3.5 sm:h-4 sm:w-4" : "h-2.5 w-2.5"} shrink-0 rounded-[3px] ${
+          className={`aspect-square rounded-[2px] sm:rounded-[3px] ${
             dias[d] === "ok"
               ? "bg-[#16A34A]"
               : dias[d] === "fallo"
@@ -217,10 +218,6 @@ export default function AgentesIAPage() {
       },
     })),
   };
-  const breadcrumb = createBreadcrumbSchema([
-    { name: "Inicio", url: "https://www.mulleryperez.cl" },
-    { name: "Agentes de IA", url: "https://www.mulleryperez.cl/agentes-ia" },
-  ]);
   const faqSchema = createFAQPageSchema(
     faqs.map((f) => ({ question: f.q, answer: f.a })),
   );
@@ -233,28 +230,15 @@ export default function AgentesIAPage() {
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }}
-      />
-      <script
-        type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
 
+      <SiteHeader />
       <div className="min-h-screen bg-[#F7F7FB] text-[#1B1740]">
         {/* Hero: el tablero es la pieza central */}
         <section className="bg-[#1B1740] text-white pt-28 pb-16 px-6">
           <div className="max-w-6xl mx-auto">
-            <nav
-              className="mb-10 text-sm text-indigo-200"
-              aria-label="Breadcrumb"
-            >
-              <Link href="/" className="hover:text-white">
-                Inicio
-              </Link>
-              <span className="mx-2 text-indigo-400">/</span>
-              <span className="text-white">Agentes de IA</span>
-            </nav>
-            <div className="grid lg:grid-cols-[1fr_1.15fr] gap-12 items-start">
+            <div className="grid lg:grid-cols-[1fr_1.15fr] gap-12 items-start [&>*]:min-w-0">
               <div>
                 <h1 className="text-4xl md:text-[3.25rem] font-black leading-[1.05] tracking-tight mb-6">
                   {activos.length} agentes de IA trabajando hoy. Este es su
@@ -289,25 +273,14 @@ export default function AgentesIAPage() {
                   <span className="font-bold">Registro de ejecuciones</span>
                   <span className="text-sm text-slate-500">{rango}</span>
                 </figcaption>
-                <div className="overflow-x-auto -mx-1 px-1">
-                  <table className="w-full text-xs">
-                    <tbody>
-                      {activos.map((a) => (
-                        <tr key={a.id}>
-                          <th
-                            scope="row"
-                            className="text-left font-medium text-slate-600 pr-3 py-[3px] whitespace-nowrap"
-                          >
-                            {corto(a.nombre)}
-                          </th>
-                          <td className="py-[3px]">
-                            <Franja id={a.id} />
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+                <ul className="space-y-[5px]">
+                  {activos.map((a) => (
+                    <li key={a.id} className="grid grid-cols-[minmax(0,7.5rem)_1fr] sm:grid-cols-[minmax(0,13rem)_1fr] items-center gap-3 text-xs">
+                      <span className="truncate font-medium text-slate-600" title={a.nombre}>{corto(a.nombre)}</span>
+                      <Franja id={a.id} />
+                    </li>
+                  ))}
+                </ul>
                 <div className="flex flex-wrap gap-4 mt-4 text-xs text-slate-500">
                   <span className="flex items-center gap-1.5">
                     <span className="h-2.5 w-2.5 rounded-[3px] bg-[#16A34A]" />
@@ -349,7 +322,7 @@ export default function AgentesIAPage() {
                       src={p.img}
                       alt={`Captura: ${p.agente}`}
                       fill
-                      className="object-cover object-top"
+                      className="object-contain object-top p-3"
                       sizes="(min-width: 768px) 50vw, 100vw"
                     />
                   </div>
@@ -386,7 +359,7 @@ export default function AgentesIAPage() {
                       return (
                         <li
                           key={a.id}
-                          className="py-5 grid md:grid-cols-[1.4fr_1fr] gap-4 md:gap-10 items-center"
+                          className="py-5 grid md:grid-cols-[1.4fr_1fr] gap-4 md:gap-10 items-center [&>*]:min-w-0"
                         >
                           <div>
                             <p className="font-bold">{a.nombre}</p>
@@ -402,7 +375,7 @@ export default function AgentesIAPage() {
                               </Link>
                             )}
                           </div>
-                          <div className="tabular-nums overflow-x-auto">
+                          <div className="tabular-nums min-w-0">
                             <Franja id={a.id} grande />
                             <p className="text-sm text-slate-600 mt-2">
                               {a.frecuencia}.{" "}
@@ -456,7 +429,7 @@ export default function AgentesIAPage() {
                       src={t.imagen}
                       alt={`${t.nombre} de Muller y Pérez`}
                       fill
-                      className="object-cover object-top"
+                      className="object-contain object-top p-3"
                       sizes="(min-width: 768px) 50vw, 100vw"
                     />
                   </div>

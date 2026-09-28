@@ -45,7 +45,11 @@ export default function Breadcrumbs() {
     'juega-aprende': 'Juega y Aprende',
     'reporte-competencia': 'Reporte Competencia',
     'benchmarks': 'Benchmarks 2025',
-    'planes': 'Planes'
+    'planes': 'Planes',
+    'agentes-ia': 'Agentes de IA',
+    'servicios': 'Servicios',
+    'geo-chile': 'GEO Chile',
+    'seo-chile': 'SEO Chile'
   }
 
   // Construir breadcrumbs

@@ -9,11 +9,11 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
+import SiteHeader from "@/components/SiteHeader";
 import {
   createMetadata,
   createServiceSchema,
   createFAQPageSchema,
-  createBreadcrumbSchema,
 } from "@/lib/metadata";
 
 export const metadata: Metadata = createMetadata({
@@ -141,14 +141,6 @@ export default function GEOChilePage() {
       text: p.que,
     })),
   };
-  const breadcrumbSchema = createBreadcrumbSchema([
-    { name: "Inicio", url: "https://www.mulleryperez.cl" },
-    { name: "Servicios", url: "https://www.mulleryperez.cl/servicios" },
-    {
-      name: "GEO Chile",
-      url: "https://www.mulleryperez.cl/servicios/geo-chile",
-    },
-  ]);
   const faqSchema = createFAQPageSchema(
     faqs.map((f) => ({ question: f.q, answer: f.a })),
   );
@@ -165,31 +157,14 @@ export default function GEOChilePage() {
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
-      />
-      <script
-        type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
 
+      <SiteHeader />
       <div className="min-h-screen bg-[#F7F7FB] text-[#1B1740]">
         {/* Hero */}
         <section className="bg-[#1B1740] text-white pt-28 pb-20 px-6">
           <div className="max-w-6xl mx-auto">
-            <nav
-              className="mb-10 text-sm text-indigo-200"
-              aria-label="Breadcrumb"
-            >
-              <Link href="/" className="hover:text-white">
-                Inicio
-              </Link>
-              <span className="mx-2 text-indigo-400">/</span>
-              <Link href="/servicios" className="hover:text-white">
-                Servicios
-              </Link>
-              <span className="mx-2 text-indigo-400">/</span>
-              <span className="text-white">GEO Chile</span>
-            </nav>
             <div className="grid lg:grid-cols-[1.1fr_1fr] gap-12 items-end">
               <div>
                 <h1 className="text-4xl md:text-[3.25rem] font-black leading-[1.05] tracking-tight mb-6">
