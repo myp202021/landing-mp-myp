@@ -57,6 +57,7 @@ var AGENCIAS = [
 var ESQUEMA = `{
   "nombre": "nombre oficial",
   "sitio_web": {"valor": "https://...", "fuente": "https://..."},
+  "opera_en_chile": {"valor": true, "descripcion": "oficina o equipo en Chile, o sede en otro país", "fuente": "https://..."},
   "anio_fundacion": {"valor": 2015, "fuente": "https://..."},
   "fundador": {"valor": "nombre(s) y perfil profesional breve (cargo, experiencia previa)", "fuente": "https://..."},
   "liderazgo": {"nombre": "fundador o gerente general", "formacion": "título de pregrado y universidad", "postgrado": "MBA o magíster y universidad, o null", "anios_experiencia": 20, "experiencia_previa": "cargos de gestión, finanzas, datos o consultoría antes de la agencia, o null", "fuente": "URL de LinkedIn o de la página de equipo donde aparece"},
@@ -406,17 +407,42 @@ function frasesDe(html) {
   return out;
 }
 
+var NO_CLIENTE = /^(image|imagen|img|foto|photo|banner|hero|icon|avatar|logo)?\s*\d*$|chatgpt|openai|claude|gemini|google|meta business|\bmeta\b|facebook|instagram|linkedin|tiktok|youtube|whatsapp|hubspot|semrush|clutch|sortlist|goodfirms|designrush|looker|midjourney|heygen|higgsfield|gohighlevel|shopify|wordpress|woocommerce|vtex|salesforce|mailchimp|canva|figma|adobe|zapier|notion|slack|apple|android|visa|mastercard|webpay/i;
+function agenciaDeWeb(web) { var a = AGENCIAS.filter(function (x) { return x.web && hostDe(x.web) === hostDe(web); })[0]; return a ? a.nombre : hostDe(web).split(".")[0]; }
 var cacheSitios = {};
+var logosSitio = {};
+var homeHtml = {};
 var todasLasUrls = {};
 async function frasesDelSitio(web) {
   if (cacheSitios[web]) return cacheSitios[web];
   var urls = await urlsDelSitio(web);
   var frases = [];
+  var logos = {};
   for (var i = 0; i < urls.length; i++) {
     var html = await htmlDe(urls[i]);
+    if (i === 0) homeHtml[web] = html;
     frasesDe(html).forEach(function (f) { frases.push({ frase: f, url: urls[i] }); });
+    // Logos de clientes: imágenes cuyo alt o archivo dice logo/cliente/marca (cuenta igual para todas las agencias)
+    (html.match(/<img[^>]+>/gi) || []).forEach(function (img) {
+      var alt = (img.match(/alt="([^"]*)"/i) || [])[1] || "";
+      var src = decodeURIComponent((img.match(/src="([^"]*)"/i) || [])[1] || "");
+      if (!/logo|client|marca|brand|partner/i.test(alt + " " + src)) return;
+      if (/logo[^a-z]*(de )?(la )?agencia|logotipo m&p|favicon|icon/i.test(alt)) return;
+      var nombre = alt.replace(/\b[0-9a-f]{16,}\b/gi, "").replace(/^\s*(logo(tipo)?( de\b)?|cliente)\s*/i, "").replace(/\s*[—–-]\s*cliente.*$/i, "").replace(/\s*logo\s*$/i, "").trim();
+      if (!nombre) nombre = (src.split("/").pop() || "").replace(/\.(png|jpe?g|webp|svg|gif).*$/i, "").replace(/[-_]+/g, " ").trim();
+      nombre = nombre.replace(/\b[0-9a-f]{16,}\b/gi, "").replace(/\.(png|jpe?g|webp|svg|gif|avif)\b/gi, "")
+        .replace(/mask group|versiones? de|\blogos?\b|logo(?=[a-z])|\bmarcas?\b|\bfull\b|\bcolor\b|\bblanco\b|\bnegro\b|\bwhite\b|\bblack\b|\b\d+x\b|\b\d{1,3}\b/gi, " ")
+        .replace(/\s+/g, " ").trim();
+      nombre = nombre.replace(/\s*logo\s*$/i, "").trim();
+      if (nombre) nombre = nombre.charAt(0).toUpperCase() + nombre.slice(1);
+      // Fuera: la propia agencia, insignias de partner/directorios, herramientas y plataformas, imágenes genéricas
+      if (NO_CLIENTE.test(nombre) || /partner|trusted|certificad|award|premio/i.test(alt)) return;
+      if (normalizarTexto(nombre).indexOf(normalizarTexto(agenciaDeWeb(web))) >= 0) return;
+      if (nombre.length >= 2 && nombre.length <= 40) logos[normalizarTexto(nombre)] = { nombre: nombre, fuente: urls[i] };
+    });
   }
-  console.log("   Sitio recorrido: " + urls.length + " páginas, " + frases.length + " frases");
+  logosSitio[web] = Object.values(logos);
+  console.log("   Sitio recorrido: " + urls.length + " páginas, " + frases.length + " frases, " + logosSitio[web].length + " logos de clientes");
   cacheSitios[web] = frases;
   return frases;
 }
@@ -534,8 +560,57 @@ function evidenciaDelSitio(web, todas, datos, nombreAgencia) {
     var f = frases.filter(function (x) { return SENALES[k].test(x.frase); })[0];
     datos.senales[k] = f ? { valor: true, fuente: f.url, cita: f.frase } : { valor: false, fuente: null };
   });
-  return { especialidades: n, casos: casos.length, anio: anios.length ? datos.anio_fundacion.valor : null };
+  // Clientes destacados: si el sitio muestra más logos de clientes que los encontrados por la búsqueda, se usan los logos
+  var logos = logosSitio[web] || [];
+  if (logos.length > (datos.clientes_destacados || []).filter(function (c) { return c && c.fuente; }).length) datos.clientes_destacados = logos;
+  return { especialidades: n, casos: casos.length, anio: anios.length ? datos.anio_fundacion.valor : null, logos: logos.length };
 }
+
+// ═══ TIPO DE AGENCIA: solo se comparan agencias de la misma categoría ═══
+// Una agencia de influencers o una de SEO no compite en el ranking general contra una de performance.
+var TIPOS = {
+  performance: "Performance o marketing digital integral",
+  seo: "SEO y contenido",
+  influencers: "Marketing de influencers",
+  creativa: "Creativa o de branding",
+  otra: "Otra especialidad",
+};
+async function tipoAgencia(agencia, html, frases) {
+  var titulo = ((html.match(/<title[^>]*>([^<]*)</i) || [])[1] || "").trim();
+  var desc = ((html.match(/<meta[^>]+name="description"[^>]+content="([^"]*)"/i) || [])[1] || "").trim();
+  var encabezados = (html.match(/<h[12][^>]*>[\s\S]*?<\/h[12]>/gi) || []).slice(0, 8).map(function (h) { return h.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim(); });
+  var prompt = "Clasifica la agencia chilena \"" + agencia.nombre + "\" según cómo se presenta en su propia página de inicio.\n" +
+    "Título: " + titulo + "\nDescripción: " + desc + "\nEncabezados: " + encabezados.join(" | ") + "\n\n" +
+    "Categorías: performance (campañas pagadas, Google/Meta Ads, generación de leads o ventas, marketing digital integral con foco en resultados), " +
+    "seo (posicionamiento orgánico y contenido como servicio principal), influencers (marketing de influencers o creadores como servicio principal), " +
+    "creativa (branding, publicidad creativa, diseño, producción), otra.\n" +
+    'Responde SOLO JSON: {"tipo": "performance|seo|influencers|creativa|otra", "cita": "frase exacta del título, descripción o encabezados que lo muestra"}';
+  try {
+    var r = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: { Authorization: "Bearer " + OPENAI_KEY, "Content-Type": "application/json" },
+      body: JSON.stringify({ model: MODEL, temperature: 0, response_format: { type: "json_object" }, max_tokens: 150, messages: [{ role: "user", content: prompt }] }),
+    });
+    var j = JSON.parse((await r.json()).choices[0].message.content);
+    if (!TIPOS[j.tipo]) j.tipo = "otra";
+    return { tipo: j.tipo, cita: j.cita, fuente: agencia.web || null };
+  } catch (e) {
+    return { tipo: "performance", cita: null, fuente: null };
+  }
+}
+// Confianza: cuántos datos básicos se pudieron verificar. Sin lo básico no se publica un número (sería castigar por falta de datos)
+function confianza(r) {
+  var a = r.datos, n = 0;
+  if (a.anio_fundacion && a.anio_fundacion.valor && a.anio_fundacion.fuente) n++;
+  if (a.resenas_google && a.resenas_google.cantidad) n++;
+  if ((a.casos_exito || []).some(function (c) { return c && c.fuente; })) n++;
+  if ((a.clientes_destacados || []).some(function (c) { return c && c.fuente; })) n++;
+  if (a.equipo && a.equipo.fuente) n++;
+  if (a.liderazgo && a.liderazgo.fuente) n++;
+  return n >= 5 ? "alta" : n >= 3 ? "media" : "baja";
+}
+function operaEnChile(r) { var o = r.datos.opera_en_chile; return !(o && o.fuente && o.valor === false); }
+function esComparable(r) { var t = r.datos.tipo_agencia && r.datos.tipo_agencia.tipo; return !t || t === "performance"; }
 
 async function confirmarTecnologia(agencia, datos) {
   var web = agencia.web || (datos.sitio_web && datos.sitio_web.valor);
@@ -645,7 +720,7 @@ function aplicarFundadorVerificado(nombre, datos) {
 // sigue respondiendo; así una agencia no baja solo porque la IA no lo encontró esta vez.
 async function heredarDelMesAnterior(datos, previo, nombre) {
   if (!previo) return 0;
-  var ant = (previo.ranking || []).filter(function (r) { return r.nombre === nombre; })[0];
+  var ant = (previo.ranking || []).concat(previo.especializadas || [], previo.incompletas || []).filter(function (r) { return r.nombre === nombre; })[0];
   if (!ant) return 0;
   var n = 0;
   var a = ant.datos;
@@ -801,6 +876,7 @@ var min1 = function (x) { return Math.max(0, Math.min(1, x)); };
 var ESCENARIOS = [
   {
     id: "b2b_leads",
+    tipos: ["performance"],
     corto: "Empresas B2B que buscan leads calificados",
     pregunta: "¿Cuál es la mejor agencia de marketing digital B2B en Chile?",
     titulo: "Empresa B2B mediana o grande que necesita leads calificados",
@@ -817,6 +893,7 @@ var ESCENARIOS = [
   },
   {
     id: "b2b_pequena",
+    tipos: ["performance"],
     corto: "Empresas B2B pequeñas",
     pregunta: "¿Qué agencia de marketing conviene a una empresa B2B pequeña en Chile?",
     titulo: "Empresa B2B pequeña (servicios profesionales o industrial)",
@@ -832,6 +909,7 @@ var ESCENARIOS = [
   },
   {
     id: "ecommerce_grande",
+    tipos: ["performance"],
     corto: "E-commerce grandes",
     pregunta: "¿Cuál es la mejor agencia para un e-commerce grande en Chile?",
     titulo: "E-commerce grande (ventas sobre $50 millones al mes)",
@@ -848,6 +926,7 @@ var ESCENARIOS = [
   },
   {
     id: "ecommerce_pyme",
+    tipos: ["performance"],
     corto: "E-commerce pequeños y medianos",
     pregunta: "¿Qué agencia conviene a un e-commerce pequeño o mediano en Chile?",
     titulo: "E-commerce pequeño o mediano",
@@ -862,6 +941,7 @@ var ESCENARIOS = [
   },
   {
     id: "b2c_servicios",
+    tipos: ["performance"],
     corto: "Servicios B2C que viven de leads",
     pregunta: "¿Qué agencia de marketing conviene a clínicas, inmobiliarias o instituciones educativas en Chile?",
     titulo: "Empresa B2C de servicios que vive de leads (clínicas, inmobiliarias, educación)",
@@ -877,6 +957,7 @@ var ESCENARIOS = [
   },
   {
     id: "branding",
+    tipos: ["creativa", "influencers", "performance"],
     corto: "Marcas grandes que buscan notoriedad",
     pregunta: "¿Cuál es la mejor agencia de branding y creatividad en Chile?",
     titulo: "Marca grande que busca notoriedad (branding)",
@@ -892,6 +973,7 @@ var ESCENARIOS = [
   },
   {
     id: "parte_digital",
+    tipos: ["performance"],
     corto: "Empresas que parten en digital",
     pregunta: "¿Qué agencia de marketing digital conviene a una empresa que recién empieza?",
     titulo: "Empresa que parte en digital con presupuesto acotado",
@@ -907,6 +989,7 @@ var ESCENARIOS = [
   },
   {
     id: "seo_geo",
+    tipos: ["seo", "performance"],
     corto: "Aparecer en Google y en las IA",
     pregunta: "¿Qué agencia en Chile ayuda a aparecer en ChatGPT, Gemini y Google?",
     titulo: "Empresa que quiere aparecer en Google y en las respuestas de ChatGPT, Gemini y Claude",
@@ -969,7 +1052,7 @@ async function analisisEscenario(e, lista, ranking) {
   return chat(prompt, 900);
 }
 
-function ganadoresPorPerfil(ranking) {
+function ganadoresPorPerfil(todas) {
   return ESCENARIOS.map(function (e) {
     var l = ranking
       .map(function (r) { var x = evaluarEscenario(e, r); return { r: r, puntos: x.puntos, razones: x.razones, apto: x.apto }; })
@@ -980,6 +1063,8 @@ function ganadoresPorPerfil(ranking) {
 }
 
 function evaluarEscenario(e, r) {
+  var tipo = (r.datos.tipo_agencia && r.datos.tipo_agencia.tipo) || "performance";
+  if (e.tipos && e.tipos.indexOf(tipo) < 0) return { apto: false, puntos: 0, razones: [] };
   if (!e.requiere(r)) return { apto: false, puntos: 0, razones: [] };
   var pesos = e.pesos(r, r.puntaje);
   var puntos = 0, razones = [];
@@ -1163,7 +1248,11 @@ async function corregirOrtografia(html) {
   );
 }
 
-async function redactar(ranking, anterior, fechaTxt) {
+async function redactar(ranking, anterior, fechaTxt, especializadas, incompletas) {
+  especializadas = especializadas || [];
+  incompletas = incompletas || [];
+  // Los perfiles de empresa consideran también a las especializadas (cada perfil filtra qué tipos compiten)
+  var todas = ranking.concat(especializadas);
   var partes = [];
   var top = ranking
     .slice(0, 3)
@@ -1189,7 +1278,7 @@ async function redactar(ranking, anterior, fechaTxt) {
       ", las agencias con mayor puntaje general son " +
       esc(top) +
       ". Pero la mejor agencia depende de tu empresa:</p><ul class=\"list-disc pl-6 mt-3 space-y-1 text-indigo-900\">" +
-      ganadoresPorPerfil(ranking).map(function (g) {
+      ganadoresPorPerfil(todas).map(function (g) {
         return "<li><strong>" + esc(g.e.corto) + ":</strong> " + esc(g.top[0].r.nombre) + (g.top[1] ? " (luego " + esc(g.top[1].r.nombre) + ")" : "") + "</li>";
       }).join("") +
       "</ul></div>",
@@ -1250,6 +1339,22 @@ async function redactar(ranking, anterior, fechaTxt) {
       }),
     ),
   );
+  partes.push('<h3 class="' + CL.h3 + '">Qué agencias entran al ranking general</h3><p class="' + CL.p + '">Solo se comparan agencias de la misma categoría: performance o marketing digital integral, que operan en Chile. ' +
+    'Las agencias especializadas en influencers, SEO o creatividad se presentan aparte y compiten solo en los perfiles de empresa donde su especialidad es relevante. ' +
+    'Cuando de una agencia no se pudo verificar lo básico (trayectoria, reseñas, casos, clientes, equipo o liderazgo), no se le asigna un puntaje: se indica como evaluación incompleta, para no castigarla por falta de información pública.</p>');
+
+  // Especializadas: se presentan sin competir en el ranking general
+  if (especializadas.length) {
+    partes.push('<h2 class="' + CL.h2 + '">Agencias especializadas</h2><p class="' + CL.p + '">Agencias con otra especialidad principal. No compiten en el ranking general porque no son comparables con una agencia de performance; se consideran en los perfiles de empresa donde su especialidad aplica.</p>');
+    partes.push(tabla(["Agencia", "Especialidad", "Cómo se presenta", "Reseñas en Google"], especializadas.map(function (r) {
+      var t = r.datos.tipo_agencia || {}, g = r.datos.resenas_google || {};
+      return [esc(r.nombre), esc(TIPOS[t.tipo] || "—"), t.cita ? "<em>“" + esc(t.cita) + "”</em>" : "—", g.cantidad ? esc(g.cantidad + " reseñas, nota " + g.rating) : "Sin información pública"];
+    })));
+  }
+  if (incompletas.length) {
+    partes.push('<p class="' + CL.p + '"><strong>Evaluación incompleta este mes:</strong> ' + incompletas.map(function (r) { return esc(r.nombre); }).join(", ") +
+      '. No publican suficiente información verificable para asignarles un puntaje justo; si alguna publica o nos envía la URL que lo respalde, se incorpora el mes siguiente.</p>');
+  }
 
   // Rankings por categoría
   function cat(titulo, intro, filtro, orden) {
@@ -1307,7 +1412,7 @@ async function redactar(ranking, anterior, fechaTxt) {
   partes.push('<p class="' + CL.p + '">El puntaje general no dice cuál es la mejor agencia para ti. Una empresa B2B que necesita CRM y seguimiento de ventas no busca lo mismo que un e-commerce que factura sobre $50 millones al mes. Para cada caso ponderamos los criterios según lo que importa en ese contexto, con los mismos datos verificados.</p>');
   for (var ie = 0; ie < ESCENARIOS.length; ie++) {
     var esc_ = ESCENARIOS[ie];
-    var lista = ranking
+    var lista = todas
       .map(function (r) { var e = evaluarEscenario(esc_, r); return { r: r, puntos: e.puntos, razones: e.razones, apto: e.apto }; })
       .filter(function (x) { return x.apto && x.puntos > 0; })
       .sort(function (a, b) { return b.puntos - a.puntos || b.r.puntaje.total - a.r.puntaje.total; })
@@ -1413,7 +1518,7 @@ async function redactar(ranking, anterior, fechaTxt) {
   }
 
   // FAQ
-  var ganadores = ganadoresPorPerfil(ranking);
+  var ganadores = ganadoresPorPerfil(todas);
   var faq = await chat(
     "Escribe las preguntas frecuentes de un ranking verificado de agencias de marketing digital en Chile (" + fechaTxt + ").\n" +
       "Usa EXACTAMENTE estas preguntas, en este orden, y responde cada una con los datos entregados:\n" +
@@ -1498,7 +1603,9 @@ async function main() {
       var webAg = ag.web || (datos.sitio_web && datos.sitio_web.valor);
       if (webAg && cacheSitios[webAg] && cacheSitios[webAg].length >= 100) {
         var evs = evidenciaDelSitio(webAg, cacheSitios[webAg], datos, ag.nombre);
-        console.log("   Desde el sitio: " + evs.especialidades + " especialidades, " + evs.casos + " páginas de casos, fundación " + (evs.anio || "sin dato"));
+        console.log("   Desde el sitio: " + evs.especialidades + " especialidades, " + evs.casos + " páginas de casos, " + evs.logos + " logos, fundación " + (evs.anio || "sin dato"));
+        datos.tipo_agencia = await tipoAgencia(ag, homeHtml[webAg] || "", cacheSitios[webAg]);
+        console.log("   Tipo: " + datos.tipo_agencia.tipo);
       }
       if (cambios.length) console.log("   confirmación con cita: " + cambios.join(" | "));
       var heredados = await heredarDelMesAnterior(datos, previo, ag.nombre);
@@ -1538,6 +1645,15 @@ async function main() {
     if (r.verificacion.verificados === 0 && r.puntaje.total === 0) { console.log("Excluida por falta de datos verificables: " + r.nombre); return false; }
     return true;
   });
+  // Universo: agencias que operan en Chile; ranking general solo entre comparables (performance/integral) con confianza suficiente
+  var fueraDeChile = evaluadas.filter(function (r) { return !operaEnChile(r); });
+  fueraDeChile.forEach(function (r) { console.log("Fuera del universo (no opera en Chile): " + r.nombre); });
+  evaluadas = evaluadas.filter(operaEnChile);
+  evaluadas.forEach(function (r) { r.confianza = confianza(r); });
+  var especializadas = evaluadas.filter(function (r) { return !esComparable(r); });
+  var incompletas = evaluadas.filter(function (r) { return esComparable(r) && r.confianza === "baja"; });
+  evaluadas = evaluadas.filter(function (r) { return esComparable(r) && r.confianza !== "baja"; });
+  console.log("Ranking general: " + evaluadas.length + " | especializadas: " + especializadas.length + " | evaluación incompleta: " + incompletas.length);
   evaluadas.sort(function (a, b) {
     return b.puntaje.total - a.puntaje.total;
   });
@@ -1546,7 +1662,7 @@ async function main() {
   });
 
   var anterior = snapshotAnterior(mes);
-  var html = focus.acentuarTexto(await redactar(evaluadas, anterior, fechaTxt));
+  var html = focus.acentuarTexto(await redactar(evaluadas, anterior, fechaTxt, especializadas, incompletas));
 
   // QA
   var chars = html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").length;
@@ -1581,10 +1697,13 @@ async function main() {
         posicion: r.posicion,
         nombre: r.nombre,
         puntaje: r.puntaje,
+        confianza: r.confianza,
         verificacion: r.verificacion,
         datos: r.datos,
       };
     }),
+    especializadas: especializadas.map(function (r) { return { nombre: r.nombre, tipo: r.datos.tipo_agencia, puntaje: r.puntaje, datos: r.datos }; }),
+    incompletas: incompletas.map(function (r) { return { nombre: r.nombre, puntaje: r.puntaje, datos: r.datos }; }),
   };
   var archivo = path.join(
     DATA_DIR,
