@@ -54,7 +54,7 @@ export default function SiteHeader() {
 
           {/* Agentes */}
           <Link
-            href="/agentes"
+            href="/agentes-ia"
             className="hidden md:block text-sm font-semibold text-gray-700 hover:text-blue-600 transition-all duration-200"
           >
             Agentes

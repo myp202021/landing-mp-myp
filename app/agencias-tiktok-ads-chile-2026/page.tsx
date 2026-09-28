@@ -195,7 +195,7 @@ export default function AgenciasTikTokAdsPage() {
                 TikTok se ha consolidado como la <strong>plataforma publicitaria de mayor crecimiento en Chile en 2026</strong>. Con mas de <strong>8 millones de usuarios activos</strong> — el 42% de la poblacion — y un tiempo promedio de uso de <strong>95 minutos diarios</strong>, TikTok supera a Instagram (53 min) y compite directamente con YouTube (74 min) en atencion del usuario. Para las marcas, esto significa una oportunidad sin precedentes de capturar atencion en un formato que los consumidores eligen activamente consumir.
               </p>
               <p className="text-lg text-gray-700 mb-4 leading-relaxed">
-                Lo que hace unico a TikTok como plataforma publicitaria es que <strong>la publicidad que funciona se ve y se siente como contenido organico</strong>. No hay banners, no hay pop-ups, no hay interrupciones. Los anuncios mas exitosos son videos que el usuario no distingue del contenido que eligio ver. Esto cambia completamente la logica creativa: mientras en Google Ads la optimizacion es tecnica (pujas, keywords, extensiones) y en Meta Ads es algorítmica (audiencias, segmentacion), en TikTok Ads la optimizacion es fundamentalmente <strong>creativa</strong>.
+                Lo que hace único a TikTok como plataforma publicitaria es que <strong>la publicidad que funciona se ve y se siente como contenido organico</strong>. No hay banners, no hay pop-ups, no hay interrupciones. Los anuncios mas exitosos son videos que el usuario no distingue del contenido que eligio ver. Esto cambia completamente la logica creativa: mientras en Google Ads la optimización es tecnica (pujas, keywords, extensiones) y en Meta Ads es algorítmica (audiencias, segmentacion), en TikTok Ads la optimización es fundamentalmente <strong>creativa</strong>.
               </p>
               <p className="text-lg text-gray-700 mb-4 leading-relaxed">
                 El problema para las marcas chilenas es que la mayoría de agencias de marketing digital en Chile estan optimizadas para Google y Meta. Adaptar una pieza de Instagram a TikTok no funciona — el algoritmo de TikTok castiga el contenido que se siente "corporate" o producido. Una agencia especializada en TikTok Ads entiende que necesitas <strong>contenido nativo, UGC (User Generated Content), hooks en los primeros 3 segundos</strong> y rotacion creativa constante. Este ranking identifica las agencias que realmente dominan TikTok Ads en Chile.
@@ -281,10 +281,10 @@ export default function AgenciasTikTokAdsPage() {
             </div>
 
             <p className="text-lg text-gray-700 mb-4 leading-relaxed">
-              La distribucion geografica tambien ha evolucionado. Santiago concentra el 55% de los usuarios, pero <strong>regiones como Valparaiso, Concepcion, La Serena, Temuco y Antofagasta</strong> muestran tasas de crecimiento superiores al 60% interanual. Para marcas con presencia regional, TikTok ofrece una oportunidad de alcance que antes solo era posible con television local o radio.
+              La distribucion geografica también ha evolucionado. Santiago concentra el 55% de los usuarios, pero <strong>regiones como Valparaiso, Concepcion, La Serena, Temuco y Antofagasta</strong> muestran tasas de crecimiento superiores al 60% interanual. Para marcas con presencia regional, TikTok ofrece una oportunidad de alcance que antes solo era posible con television local o radio.
             </p>
             <p className="text-lg text-gray-700 mb-4 leading-relaxed">
-              Un dato relevante para la planificacion publicitaria: el <strong>consumo de TikTok en Chile se concentra entre las 12:00-14:00 hrs y las 19:00-23:00 hrs</strong>. Los fines de semana, el horario se extiende y el engagement aumenta un 25%. Las campanas que programan sus anuncios en estos horarios obtienen CTRs 15-20% superiores al promedio. Una agencia especializada ajusta la programacion horaria como parte de la optimizacion.
+              Un dato relevante para la planificacion publicitaria: el <strong>consumo de TikTok en Chile se concentra entre las 12:00-14:00 hrs y las 19:00-23:00 hrs</strong>. Los fines de semana, el horario se extiende y el engagement aumenta un 25%. Las campañas que programan sus anuncios en estos horarios obtienen CTRs 15-20% superiores al promedio. Una agencia especializada ajusta la programacion horaria como parte de la optimización.
             </p>
           </section>
 
@@ -294,7 +294,7 @@ export default function AgenciasTikTokAdsPage() {
               Formatos de TikTok Ads: Guia Completa 2026
             </h2>
             <p className="text-lg text-gray-700 mb-6 leading-relaxed">
-              TikTok ofrece una variedad de formatos publicitarios que van desde anuncios accesibles para pymes hasta experiencias premium para marcas globales. Cada formato tiene su logica de costos, optimizacion y mejores casos de uso. Una buena agencia domina cada formato y sabe cual recomendar segun el objetivo, el presupuesto y la industria.
+              TikTok ofrece una variedad de formatos publicitarios que van desde anuncios accesibles para pymes hasta experiencias premium para marcas globales. Cada formato tiene su logica de costos, optimización y mejores casos de uso. Una buena agencia domina cada formato y sabe cual recomendar según el objetivo, el presupuesto y la industria.
             </p>
 
             <div className="space-y-6 mb-8">
@@ -437,7 +437,7 @@ export default function AgenciasTikTokAdsPage() {
                   <h3 className="text-2xl font-bold text-gray-900">Moov Media Group — 91/100</h3>
                 </div>
                 <p className="text-gray-700 mb-4 leading-relaxed">
-                  Moov Media Group tiene la ventaja de contar con <strong>3 hubs creativos especializados</strong> y produccion de video in-house, lo que les permite crear contenido TikTok a escala sin depender de productoras externas. Su equipo creativo maneja la estetica nativa de TikTok y produce variaciones rapidas para testear. Tienen experiencia con marcas grandes que requieren volumen de contenido alto y gestion de influencers coordinada con campanas pagadas.
+                  Moov Media Group tiene la ventaja de contar con <strong>3 hubs creativos especializados</strong> y produccion de video in-house, lo que les permite crear contenido TikTok a escala sin depender de productoras externas. Su equipo creativo maneja la estetica nativa de TikTok y produce variaciones rapidas para testear. Tienen experiencia con marcas grandes que requieren volumen de contenido alto y gestión de influencers coordinada con campañas pagadas.
                 </p>
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
@@ -465,7 +465,7 @@ export default function AgenciasTikTokAdsPage() {
                   <h3 className="text-2xl font-bold text-gray-900">Jelly — 89/100</h3>
                 </div>
                 <p className="text-gray-700 mb-4 leading-relaxed">
-                  Jelly es la agencia mas "social-first" del mercado chileno. Su equipo creativo es predominantemente joven y nativo de TikTok, lo que se traduce en contenido que se siente autentico desde la concepcion. Tienen una red amplia de creadores e influencers chilenos y experiencia coordinando campanas de UGC + paid. Para marcas que necesitan autenticidad sobre produccion, Jelly es una opcion solida.
+                  Jelly es la agencia mas "social-first" del mercado chileno. Su equipo creativo es predominantemente joven y nativo de TikTok, lo que se traduce en contenido que se siente autentico desde la concepcion. Tienen una red amplia de creadores e influencers chilenos y experiencia coordinando campañas de UGC + paid. Para marcas que necesitan autenticidad sobre produccion, Jelly es una opcion solida.
                 </p>
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
@@ -495,7 +495,7 @@ export default function AgenciasTikTokAdsPage() {
               Best Practices Creativos para TikTok Ads en Chile 2026
             </h2>
             <p className="text-lg text-gray-700 mb-6 leading-relaxed">
-              La creatividad es el 80% del exito en TikTok Ads. A diferencia de Google Ads (donde la optimizacion es tecnica) o Meta Ads (donde la segmentacion algorítmica domina), en TikTok el <strong>contenido es la segmentacion</strong>. El algoritmo distribuye tu contenido a las personas que mas probabilidad tienen de interactuar con ese tipo de video, sin importar cuantos seguidores tengas. Estas son las reglas que toda agencia de TikTok Ads debe seguir.
+              La creatividad es el 80% del exito en TikTok Ads. A diferencia de Google Ads (donde la optimización es tecnica) o Meta Ads (donde la segmentacion algorítmica domina), en TikTok el <strong>contenido es la segmentacion</strong>. El algoritmo distribuye tu contenido a las personas que mas probabilidad tienen de interactuar con ese tipo de video, sin importar cuantos seguidores tengas. Estas son las reglas que toda agencia de TikTok Ads debe seguir.
             </p>
 
             <div className="grid md:grid-cols-2 gap-6">
@@ -570,7 +570,7 @@ export default function AgenciasTikTokAdsPage() {
             </div>
 
             <p className="text-sm text-gray-500 italic">
-              Datos referenciales del mercado chileno en TikTok Ads, agosto 2026. Los costos reales varian segun industria, calidad creativa y competencia. Valores en USD.
+              Datos referenciales del mercado chileno en TikTok Ads, agosto 2026. Los costos reales varian según industria, calidad creativa y competencia. Valores en USD.
             </p>
           </section>
 
@@ -667,7 +667,7 @@ export default function AgenciasTikTokAdsPage() {
               Uno de los mayores desafios de TikTok Ads es la <strong>medicion de conversiones</strong>. A diferencia de Google Ads (donde la atribucion es relativamente clara porque el usuario busca activamente) o Meta Ads (donde el Pixel tiene anos de datos), TikTok tiene desafios unicos de atribucion que una buena agencia debe saber manejar.
             </p>
             <p className="text-lg text-gray-700 mb-4 leading-relaxed">
-              El principal problema es el <strong>"efecto de descubrimiento diferido"</strong>: un usuario ve un anuncio de TikTok, no hace clic, pero despues busca la marca en Google y compra. TikTok no se lleva la atribucion, pero sin el anuncio de TikTok la compra no habria ocurrido. Estudios de TikTok indican que el 40-50% del impacto real de TikTok Ads no se captura en reportes de atribucion last-click.
+              El principal problema es el <strong>"efecto de descubrimiento diferido"</strong>: un usuario ve un anuncio de TikTok, no hace clic, pero después busca la marca en Google y compra. TikTok no se lleva la atribucion, pero sin el anuncio de TikTok la compra no habria ocurrido. Estudios de TikTok indican que el 40-50% del impacto real de TikTok Ads no se captura en reportes de atribucion last-click.
             </p>
 
             <div className="grid md:grid-cols-2 gap-6">

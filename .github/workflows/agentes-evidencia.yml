@@ -1,0 +1,30 @@
+name: "Evidencia de agentes IA (lunes 06:00 Chile)"
+
+on:
+  schedule:
+    - cron: '0 9 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  evidencia:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Leer ejecuciones reales de cada agente en GitHub Actions
+        run: node scripts/agentes-evidencia.js
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}
+      - name: Guardar evidencia (el push despliega /agentes-ia actualizada)
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add data/agentes-evidencia.json
+          git diff --cached --quiet || git commit -m "chore: evidencia semanal de agentes IA"
+          git push

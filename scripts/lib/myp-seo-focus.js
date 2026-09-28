@@ -114,8 +114,8 @@ var CLUSTERS = [
       "automatización con ia",
     ],
     links: [
+      "/agentes-ia",
       "/agentes",
-      "/copilot",
       "/estudio-ia-marketing-digital-chile-2026",
       "/servicios/performance-marketing",
     ],

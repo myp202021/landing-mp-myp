@@ -18,7 +18,7 @@ import {
 
 export const metadata: Metadata = createMetadata({
   title: 'Agencia de Marketing Digital en Chile',
-  description: 'Agencia de marketing digital y performance marketing en Chile. Google Ads, Meta Ads, LinkedIn Ads. +50 clientes, ROAS promedio 4.2x. Equipo dedicado.',
+  description: 'Agencia de marketing digital y performance marketing en Chile. Google Ads, Meta Ads, LinkedIn Ads. +40 clientes, ROAS promedio 4.2x. Equipo dedicado.',
   keywords: [
     'agencia marketing digital chile',
     'agencia de marketing digital',
@@ -58,7 +58,7 @@ const faqs = [
   },
   {
     question: '¿Cómo saber si una agencia de marketing digital es confiable?',
-    answer: 'Verifica estos 7 indicadores: 1) ¿Te dan acceso completo a tus cuentas de Google Ads y Meta? 2) ¿Tienen clientes activos verificables? 3) ¿Ofrecen dashboard o reportería en tiempo real? 4) ¿Su fee es transparente (fijo vs comisión sobre pauta)? 5) ¿Cuántas personas trabajan realmente en tu cuenta? 6) ¿Tienen certificaciones verificables? 7) ¿Tienen tecnología o metodología propia? Muller y Pérez cumple los 7 criterios con más de 50 clientes activos verificables y 6 herramientas propietarias.'
+    answer: 'Verifica estos 7 indicadores: 1) ¿Te dan acceso completo a tus cuentas de Google Ads y Meta? 2) ¿Tienen clientes activos verificables? 3) ¿Ofrecen dashboard o reportería en tiempo real? 4) ¿Su fee es transparente (fijo vs comisión sobre pauta)? 5) ¿Cuántas personas trabajan realmente en tu cuenta? 6) ¿Tienen certificaciones verificables? 7) ¿Tienen tecnología o metodología propia? Muller y Pérez cumple los 7 criterios con más de 40 clientes activos verificables y 6 herramientas propietarias.'
   },
   {
     question: '¿Es mejor contratar una agencia o un equipo interno de marketing?',
@@ -157,7 +157,7 @@ export default function AgenciaMarketingDigitalChilePage() {
 
   const webPageSchema = createWebPageSchema(
     'Agencia de Marketing Digital en Chile — Muller y Pérez',
-    'Agencia de marketing digital y performance marketing en Chile. Google Ads, Meta Ads, LinkedIn Ads. +50 clientes, ROAS promedio 4.2x. Equipo dedicado.',
+    'Agencia de marketing digital y performance marketing en Chile. Google Ads, Meta Ads, LinkedIn Ads. +40 clientes, ROAS promedio 4.2x. Equipo dedicado.',
     'https://www.mulleryperez.cl/agencia-marketing-digital-chile'
   )
 
@@ -615,7 +615,7 @@ export default function AgenciaMarketingDigitalChilePage() {
           {/* ============================================================ */}
           <section className="mb-16">
             <h2 className="text-3xl font-bold text-gray-900 mb-6">
-              Metodologia M&P: Como Trabajamos
+              Metodología M&P: Como Trabajamos
             </h2>
             <p className="text-lg text-gray-700 mb-8 leading-relaxed">
               Cada proyecto sigue un proceso estructurado de 4 etapas que nos permite entregar resultados
@@ -629,7 +629,7 @@ export default function AgenciaMarketingDigitalChilePage() {
                 <h3 className="text-xl font-semibold text-gray-900 mb-3 ml-4">Diagnostico</h3>
                 <p className="text-gray-700 leading-relaxed">
                   Auditamos tu situacion actual: cuentas publicitarias, tracking, landing pages, competencia
-                  y mercado. Usamos nuestro <Link href="/labs/predictor" className="text-blue-600 hover:underline">Predictor de Campanas</Link> para
+                  y mercado. Usamos nuestro <Link href="/labs/predictor" className="text-blue-600 hover:underline">Predictor de Campañas</Link> para
                   estimar CPC y CPA reales de tu industria en Chile antes de invertir un peso.
                 </p>
               </div>
@@ -649,7 +649,7 @@ export default function AgenciaMarketingDigitalChilePage() {
                 <h3 className="text-xl font-semibold text-gray-900 mb-3 ml-4">Ejecucion</h3>
                 <p className="text-gray-700 leading-relaxed">
                   Tu equipo dedicado de 3 profesionales (Paid Media Planner, Publicista y Disenador) lanza las
-                  campanas en <Link href="/servicios/google-ads-chile" className="text-blue-600 hover:underline">Google Ads</Link>,{' '}
+                  campañas en <Link href="/servicios/google-ads-chile" className="text-blue-600 hover:underline">Google Ads</Link>,{' '}
                   <Link href="/servicios/meta-ads-chile" className="text-blue-600 hover:underline">Meta Ads</Link> y/o LinkedIn Ads.
                   Configuramos tracking avanzado con GA4 y Tag Manager para medir cada conversion.
                 </p>
@@ -657,11 +657,11 @@ export default function AgenciaMarketingDigitalChilePage() {
 
               <div className="bg-blue-50 rounded-xl p-6 relative">
                 <span className="absolute -top-3 -left-3 bg-blue-600 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg">4</span>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3 ml-4">Optimizacion Continua</h3>
+                <h3 className="text-xl font-semibold text-gray-900 mb-3 ml-4">Optimización Continua</h3>
                 <p className="text-gray-700 leading-relaxed">
                   Cada semana analizamos resultados, ajustamos pujas, rotamos creatividades y refinamos
-                  audiencias. Recibes reportes semanales con metricas de negocio reales (no vanidad),
-                  y reuniones estrategicas para alinear la campana con tus objetivos comerciales.
+                  audiencias. Recibes reportes semanales con métricas de negocio reales (no vanidad),
+                  y reuniones estrategicas para alinear la campaña con tus objetivos comerciales.
                 </p>
               </div>
             </div>
@@ -733,8 +733,8 @@ export default function AgenciaMarketingDigitalChilePage() {
             </div>
 
             <p className="text-sm text-gray-500 mt-4">
-              Los resultados varian segun industria, presupuesto y condiciones de mercado. Cifras basadas en datos
-              reales de campanas gestionadas por M&P entre 2024 y 2026.
+              Los resultados varian según industria, presupuesto y condiciones de mercado. Cifras basadas en datos
+              reales de campañas gestionadas por M&P entre 2024 y 2026.
             </p>
           </section>
 
@@ -816,18 +816,18 @@ export default function AgenciaMarketingDigitalChilePage() {
             </h2>
             <p className="text-lg text-gray-700 mb-8 leading-relaxed">
               Mientras la mayoria de las agencias de marketing digital en Chile depende de herramientas
-              de terceros, en Muller y Perez desarrollamos tecnologia propia que nos da una ventaja
+              de terceros, en Muller y Perez desarrollamos tecnología propia que nos da una ventaja
               competitiva real sobre el mercado:
             </p>
 
             <div className="space-y-6">
               <div className="bg-white rounded-xl p-6 shadow-sm">
                 <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                  <Link href="/labs/predictor" className="hover:text-blue-600 transition">Predictor de Campanas</Link>
+                  <Link href="/labs/predictor" className="hover:text-blue-600 transition">Predictor de Campañas</Link>
                 </h3>
                 <p className="text-gray-700 leading-relaxed">
                   Estima tu CPC, CPA y presupuesto optimo antes de invertir, usando datos reales de mas de 1.200 keywords
-                  del mercado chileno. Permite tomar decisiones informadas y reducir el riesgo de campanas nuevas.
+                  del mercado chileno. Permite tomar decisiones informadas y reducir el riesgo de campañas nuevas.
                 </p>
               </div>
 
@@ -855,7 +855,7 @@ export default function AgenciaMarketingDigitalChilePage() {
                 </h3>
                 <p className="text-gray-700 leading-relaxed">
                   Base de datos propia con benchmarks de CPC, CVR, CPA y ROAS para mas de 50 industrias en Chile.
-                  Permite calibrar expectativas y configurar campanas con metas realistas desde el primer dia.
+                  Permite calibrar expectativas y configurar campañas con metas realistas desde el primer dia.
                 </p>
               </div>
 
@@ -863,8 +863,8 @@ export default function AgenciaMarketingDigitalChilePage() {
                 <h3 className="text-xl font-semibold text-gray-900 mb-2">MP Intelligence</h3>
                 <p className="text-gray-700 leading-relaxed">
                   Sistema de monitoreo automatico de competidores en Instagram, LinkedIn y Facebook. Detecta
-                  publicaciones, ofertas laborales y movimientos estrategicos de la competencia de cada cliente,
-                  entregando alertas diarias por email con analisis consolidado.
+                  publicaciones, ofertas laborales y movimientos estratégicos de la competencia de cada cliente,
+                  entregando alertas diarias por email con análisis consolidado.
                 </p>
               </div>
             </div>

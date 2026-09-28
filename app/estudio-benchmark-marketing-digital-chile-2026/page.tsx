@@ -400,16 +400,16 @@ export default function EstudioBenchmarkPage() {
           <SpeakableContent>
             <section className="mb-20">
               <h2 className="text-3xl font-bold text-gray-900 mb-6">
-                Metodologia: Como Recopilamos Estos Datos
+                Metodología: Como Recopilamos Estos Datos
               </h2>
               <p className="text-lg text-gray-700 mb-4 leading-relaxed">
-                Este estudio no esta basado en encuestas, estimaciones de terceros ni datos globales extrapolados a Chile. <strong>Son datos reales de campanas activas gestionadas por Muller y Perez</strong>, extraidos directamente de las cuentas publicitarias de nuestros clientes a traves de nuestro sistema propietario <strong>M&P Predictor</strong>.
+                Este estudio no esta basado en encuestas, estimaciones de terceros ni datos globales extrapolados a Chile. <strong>Son datos reales de campañas activas gestionadas por Muller y Perez</strong>, extraidos directamente de las cuentas publicitarias de nuestros clientes a traves de nuestro sistema propietario <strong>M&P Predictor</strong>.
               </p>
               <p className="text-lg text-gray-700 mb-4 leading-relaxed">
-                La muestra incluye <strong>200+ campanas activas</strong> de <strong>40+ clientes</strong> en <strong>15 industrias</strong> diferentes. Los datos cubren campanas en <strong>Google Ads</strong> (Search, Shopping, Performance Max), <strong>Meta Ads</strong> (Facebook e Instagram) y <strong>LinkedIn Ads</strong> (Sponsored Content, Lead Gen Forms, InMail). Todos los valores estan en <strong>pesos chilenos (CLP)</strong>.
+                La muestra incluye <strong>200+ campañas activas</strong> de <strong>40+ clientes</strong> en <strong>15 industrias</strong> diferentes. Los datos cubren campañas en <strong>Google Ads</strong> (Search, Shopping, Performance Max), <strong>Meta Ads</strong> (Facebook e Instagram) y <strong>LinkedIn Ads</strong> (Sponsored Content, Lead Gen Forms, InMail). Todos los valores estan en <strong>pesos chilenos (CLP)</strong>.
               </p>
               <p className="text-lg text-gray-700 mb-4 leading-relaxed">
-                Presentamos tres valores por metrica: <strong>percentil 25 (p25)</strong>, <strong>mediana (p50)</strong> y <strong>percentil 75 (p75)</strong>. El p25 representa campanas con optimizacion basica, la mediana es el rendimiento tipico, y el p75 son campanas con optimizacion avanzada y presupuesto adecuado. Esta distribucion es mas informativa que un simple promedio porque muestra el rango real del mercado.
+                Presentamos tres valores por metrica: <strong>percentil 25 (p25)</strong>, <strong>mediana (p50)</strong> y <strong>percentil 75 (p75)</strong>. El p25 representa campañas con optimización basica, la mediana es el rendimiento tipico, y el p75 son campañas con optimización avanzada y presupuesto adecuado. Esta distribucion es mas informativa que un simple promedio porque muestra el rango real del mercado.
               </p>
 
               <div className="bg-blue-50 rounded-2xl p-8 mb-8">
@@ -417,7 +417,7 @@ export default function EstudioBenchmarkPage() {
                 <div className="grid md:grid-cols-4 gap-6">
                   <div className="text-center">
                     <p className="text-3xl font-bold text-blue-700">200+</p>
-                    <p className="text-sm text-gray-600">Campanas analizadas</p>
+                    <p className="text-sm text-gray-600">Campañas analizadas</p>
                   </div>
                   <div className="text-center">
                     <p className="text-3xl font-bold text-blue-700">40+</p>
@@ -436,7 +436,7 @@ export default function EstudioBenchmarkPage() {
 
               <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-6">
                 <p className="text-sm text-yellow-800">
-                  <strong>Nota importante:</strong> Los datos reflejan el rendimiento de campanas profesionalmente gestionadas. Las campanas autogestionadas sin experiencia en optimizacion pueden tener resultados significativamente por debajo del p25. Los valores se actualizan mensualmente. Ultima actualizacion: agosto 2026.
+                  <strong>Nota importante:</strong> Los datos reflejan el rendimiento de campañas profesionalmente gestionadas. Las campañas autogestionadas sin experiencia en optimización pueden tener resultados significativamente por debajo del p25. Los valores se actualizan mensualmente. Ultima actualizacion: agosto 2026.
                 </p>
               </div>
             </section>
@@ -451,7 +451,7 @@ export default function EstudioBenchmarkPage() {
                 Resumen Ejecutivo: 8 Hallazgos Clave del Mercado Chileno
               </h2>
               <p className="text-lg text-gray-700 mb-8 leading-relaxed">
-                Antes de entrar en los datos detallados por industria, estos son los hallazgos mas relevantes que emergen del analisis de 200+ campanas en Chile.
+                Antes de entrar en los datos detallados por industria, estos son los hallazgos mas relevantes que emergen del análisis de 200+ campañas en Chile.
               </p>
 
               <div className="grid md:grid-cols-2 gap-6 mb-8">
@@ -519,10 +519,10 @@ export default function EstudioBenchmarkPage() {
               ROAS por Industria y Canal: Tabla Completa (15 Industrias)
             </h2>
             <p className="text-lg text-gray-700 mb-4 leading-relaxed">
-              El ROAS (Return On Ad Spend) es la metrica mas importante para evaluar la rentabilidad de una campana publicitaria. Un ROAS de 5.0x significa que por cada $1 invertido en publicidad, la campana genera $5 en ingresos atribuibles. La siguiente tabla muestra el ROAS en formato <strong>p25 – mediana – p75</strong> para cada industria y canal.
+              El ROAS (Return On Ad Spend) es la metrica mas importante para evaluar la rentabilidad de una campaña publicitaria. Un ROAS de 5.0x significa que por cada $1 invertido en publicidad, la campaña genera $5 en ingresos atribuibles. La siguiente tabla muestra el ROAS en formato <strong>p25 – mediana – p75</strong> para cada industria y canal.
             </p>
             <p className="text-gray-600 mb-6 text-sm">
-              Valores en formato: percentil 25 – mediana – percentil 75. Fuente: M&P Predictor, 200+ campanas activas, agosto 2026.
+              Valores en formato: percentil 25 – mediana – percentil 75. Fuente: M&P Predictor, 200+ campañas activas, agosto 2026.
             </p>
 
             <div className="overflow-x-auto mb-8">
@@ -554,13 +554,13 @@ export default function EstudioBenchmarkPage() {
             </div>
 
             <div className="bg-green-50 border border-green-200 rounded-xl p-6 mb-8">
-              <h3 className="text-lg font-bold text-green-900 mb-2">Lectura rapida de la tabla</h3>
+              <h3 className="text-lg font-bold text-green-900 mb-2">Lectura rápida de la tabla</h3>
               <ul className="text-gray-700 space-y-2 text-sm leading-relaxed">
                 <li><strong>Mayor ROAS mediana:</strong> Inmobiliaria con 10.0x en Google Ads — el ticket alto ($80-150M CLP) compensa el CAC elevado y genera retornos excepcionales cuando se gestiona bien.</li>
-                <li><strong>ROAS mas consistente:</strong> Tecnologia/SaaS con 7.0x en Google, 5.5x en LinkedIn y 4.5x en Meta — es la unica industria donde los tres canales superan 4.0x de ROAS mediana.</li>
-                <li><strong>Mayor brecha Google vs Meta:</strong> Automotriz (8.0x Google vs 6.0x Meta) e Inmobiliaria (10.0x vs 8.0x) — el intent de busqueda es determinante en tickets altos.</li>
-                <li><strong>Meta supera a Google en:</strong> Gastronomia y Moda/Retail, donde el contenido visual genera impulso de compra mas efectivo que la busqueda.</li>
-                <li><strong>LinkedIn justifica su costo en:</strong> Tecnologia/SaaS (ROAS 5.5x) y Fintech (6.0x), pero no en Ecommerce (solo 2.5x).</li>
+                <li><strong>ROAS mas consistente:</strong> Tecnología/SaaS con 7.0x en Google, 5.5x en LinkedIn y 4.5x en Meta — es la única industria donde los tres canales superan 4.0x de ROAS mediana.</li>
+                <li><strong>Mayor brecha Google vs Meta:</strong> Automotriz (8.0x Google vs 6.0x Meta) e Inmobiliaria (10.0x vs 8.0x) — el intent de búsqueda es determinante en tickets altos.</li>
+                <li><strong>Meta supera a Google en:</strong> Gastronomia y Moda/Retail, donde el contenido visual genera impulso de compra mas efectivo que la búsqueda.</li>
+                <li><strong>LinkedIn justifica su costo en:</strong> Tecnología/SaaS (ROAS 5.5x) y Fintech (6.0x), pero no en Ecommerce (solo 2.5x).</li>
               </ul>
             </div>
           </section>
@@ -610,7 +610,7 @@ export default function EstudioBenchmarkPage() {
             </div>
 
             <div className="bg-orange-50 border border-orange-200 rounded-xl p-6 mb-8">
-              <h3 className="text-lg font-bold text-orange-900 mb-2">Analisis del CAC por segmento</h3>
+              <h3 className="text-lg font-bold text-orange-900 mb-2">Análisis del CAC por segmento</h3>
               <div className="grid md:grid-cols-3 gap-6">
                 <div>
                   <p className="font-semibold text-gray-900 mb-1 text-sm">CAC Bajo (bajo $30K mediana)</p>
@@ -636,7 +636,7 @@ export default function EstudioBenchmarkPage() {
                   <p className="font-semibold text-gray-900 mb-1 text-sm">CAC Alto (sobre $80K mediana)</p>
                   <ul className="text-gray-700 text-xs space-y-1">
                     <li>Fintech: $80K-$90K</li>
-                    <li>Tecnologia/SaaS: $80K-$100K</li>
+                    <li>Tecnología/SaaS: $80K-$100K</li>
                     <li>Inmobiliaria: $100K-$120K</li>
                     <li>Construccion: $120K-$140K</li>
                     <li>Automotriz: $160K-$180K</li>
@@ -644,7 +644,7 @@ export default function EstudioBenchmarkPage() {
                 </div>
               </div>
               <p className="text-xs text-gray-500 mt-4">
-                Un CAC alto no es necesariamente malo. Automotriz tiene el CAC mas alto ($160K-$180K) pero tambien uno de los mejores ROAS (8.0x) porque el ticket de venta es de $15-40M CLP. Lo importante es la relacion CAC vs ticket promedio de venta.
+                Un CAC alto no es necesariamente malo. Automotriz tiene el CAC mas alto ($160K-$180K) pero también uno de los mejores ROAS (8.0x) porque el ticket de venta es de $15-40M CLP. Lo importante es la relacion CAC vs ticket promedio de venta.
               </p>
             </div>
           </section>
@@ -657,7 +657,7 @@ export default function EstudioBenchmarkPage() {
               Tasa de Conversion (CVR) por Industria y Canal
             </h2>
             <p className="text-lg text-gray-700 mb-4 leading-relaxed">
-              La tasa de conversion (CVR) mide el porcentaje de visitantes que completan la accion deseada: enviar un formulario, hacer una compra, agendar una cita o solicitar una cotizacion. Es la metrica que mas depende de la <strong>calidad del sitio web, la landing page y la experiencia de usuario</strong>, no solo de la campana publicitaria.
+              La tasa de conversion (CVR) mide el porcentaje de visitantes que completan la accion deseada: enviar un formulario, hacer una compra, agendar una cita o solicitar una cotización. Es la metrica que mas depende de la <strong>calidad del sitio web, la landing page y la experiencia de usuario</strong>, no solo de la campaña publicitaria.
             </p>
             <p className="text-gray-600 mb-6 text-sm">
               Valores en %, formato: p25 – mediana – p75. Fuente: M&P Predictor, agosto 2026.
@@ -694,10 +694,10 @@ export default function EstudioBenchmarkPage() {
             <div className="bg-purple-50 border border-purple-200 rounded-xl p-6 mb-8">
               <h3 className="text-lg font-bold text-purple-900 mb-2">Hallazgos sorprendentes en CVR</h3>
               <ul className="text-gray-700 space-y-2 text-sm leading-relaxed">
-                <li><strong>Gastronomia en Meta Ads tiene CVR 18.3%:</strong> El mas alto del estudio. La combinacion de contenido visual (fotos de platos), bajo compromiso financiero y urgencia (hambre) genera conversion masiva. Es tambien la industria donde la creatividad del anuncio tiene mayor impacto.</li>
+                <li><strong>Gastronomia en Meta Ads tiene CVR 18.3%:</strong> El mas alto del estudio. La combinacion de contenido visual (fotos de platos), bajo compromiso financiero y urgencia (hambre) genera conversion masiva. Es también la industria donde la creatividad del anuncio tiene mayor impacto.</li>
                 <li><strong>Automotriz en Google Ads tiene CVR 13.0%:</strong> Sorprendentemente alto para un ticket tan alto. La razon: las personas que buscan "cotizar auto nuevo" o "[marca] precio Chile" tienen intencion de compra muy definida. El CVR baja a 4.9% en Meta, donde la conversion es mas de awareness que de compra directa.</li>
                 <li><strong>Inmobiliaria tiene el CVR mas bajo en Google (1.2%):</strong> El proceso de compra inmobiliaria es largo y complejo. Un clic en Google no se traduce facilmente en un lead. Sin embargo, en Meta el CVR sube a 9.7% gracias a formularios de contacto rapidos — aunque la calidad de esos leads es tipicamente menor.</li>
-                <li><strong>Educacion tiene CVR parejo entre canales (10.0%):</strong> Es la unica industria donde Google y Meta tienen rendimiento casi identico en conversion. La hipotesis: las personas que buscan educacion estan igualmente motivadas ya sea que encuentren el programa en Google o en Instagram.</li>
+                <li><strong>Educacion tiene CVR parejo entre canales (10.0%):</strong> Es la única industria donde Google y Meta tienen rendimiento casi identico en conversion. La hipotesis: las personas que buscan educacion estan igualmente motivadas ya sea que encuentren el programa en Google o en Instagram.</li>
                 <li><strong>Meta Ads supera a Google en CVR en 12 de 15 industrias:</strong> Los formularios instantaneos de Meta (sin salir de la app) generan mas conversiones que las landing pages de Google. Pero atencion: CVR mas alto no siempre significa leads de mejor calidad. La calidad del lead debe medirse por tasa de cierre, no por CVR.</li>
               </ul>
             </div>
@@ -749,7 +749,7 @@ export default function EstudioBenchmarkPage() {
               <div className="bg-blue-50 border border-blue-200 rounded-xl p-6">
                 <h3 className="text-lg font-bold text-blue-900 mb-3">Google Ads gana cuando...</h3>
                 <ul className="text-gray-700 text-sm space-y-2 leading-relaxed">
-                  <li><strong>Hay intent de busqueda claro:</strong> Inmobiliaria, Automotriz, Salud, Servicios Profesionales — las personas buscan activamente una solucion.</li>
+                  <li><strong>Hay intent de búsqueda claro:</strong> Inmobiliaria, Automotriz, Salud, Servicios Profesionales — las personas buscan activamente una solucion.</li>
                   <li><strong>El ticket es alto:</strong> El CPC de Google es mas caro, pero la calidad del lead compensa. Inmobiliaria (ticket $80-150M) tiene ROAS 10.0x.</li>
                   <li><strong>La decision es racional:</strong> Seguros, Construccion, Fintech — decisiones donde la persona investiga antes de comprar.</li>
                   <li><strong>El producto/servicio es necesidad, no deseo:</strong> Salud, Veterinaria (urgencias), Servicios Profesionales.</li>
@@ -770,7 +770,7 @@ export default function EstudioBenchmarkPage() {
               <h3 className="text-lg font-bold text-green-900 mb-2">La estrategia ganadora: ambos canales combinados</h3>
               <p className="text-gray-700 text-sm leading-relaxed">
                 En la mayoria de las industrias, la estrategia optima no es elegir uno u otro, sino <strong>combinar Google Ads + Meta Ads con presupuesto diferenciado</strong>. Google captura la demanda existente (personas que ya buscan tu producto) y Meta genera demanda nueva (personas que no sabian que necesitaban tu producto). La proporcion optima varia: en industrias con alto intent (Inmobiliaria, Automotriz), se recomienda 60-70% Google y 30-40% Meta. En industrias visuales (Gastronomia, Moda), se invierte: 30-40% Google y 60-70% Meta. Puedes simular escenarios en nuestro{' '}
-                <Link href="/labs/predictor" className="text-blue-600 hover:underline font-semibold">Predictor de Campanas</Link>.
+                <Link href="/labs/predictor" className="text-blue-600 hover:underline font-semibold">Predictor de Campañas</Link>.
               </p>
             </div>
           </section>
@@ -828,7 +828,7 @@ export default function EstudioBenchmarkPage() {
               <div className="bg-green-50 border border-green-200 rounded-xl p-6">
                 <h3 className="text-lg font-bold text-green-900 mb-2">LinkedIn vale la pena en:</h3>
                 <ul className="text-gray-700 text-sm space-y-2">
-                  <li><strong>Tecnologia/SaaS:</strong> ROAS 5.5x (cercano al 7.0x de Google) con targeting por cargo que Google no puede replicar. Para vender a CTOs o Gerentes de IT, LinkedIn es insustituible.</li>
+                  <li><strong>Tecnología/SaaS:</strong> ROAS 5.5x (cercano al 7.0x de Google) con targeting por cargo que Google no puede replicar. Para vender a CTOs o Gerentes de IT, LinkedIn es insustituible.</li>
                   <li><strong>Fintech:</strong> ROAS 6.0x compite con Google (7.0x). El targeting por industria financiera + cargo senior es muy preciso.</li>
                   <li><strong>Seguros corporativos:</strong> ROAS 5.5x, ideal para seguros de empresa donde el decisor es un Gerente de RRHH o CFO.</li>
                 </ul>
@@ -852,7 +852,7 @@ export default function EstudioBenchmarkPage() {
               Estacionalidad y Ciclos de Venta por Industria
             </h2>
             <p className="text-lg text-gray-700 mb-4 leading-relaxed">
-              Uno de los errores mas costosos en marketing digital es ignorar la estacionalidad. Invertir el mismo presupuesto todos los meses cuando tu industria tiene peaks claros es desperdiciar dinero en meses de baja demanda y perder oportunidades en meses de alta demanda. Estos son los patrones estacionales reales que observamos en campanas en Chile.
+              Uno de los errores mas costosos en marketing digital es ignorar la estacionalidad. Invertir el mismo presupuesto todos los meses cuando tu industria tiene peaks claros es desperdiciar dinero en meses de baja demanda y perder oportunidades en meses de alta demanda. Estos son los patrones estacionales reales que observamos en campañas en Chile.
             </p>
 
             <div className="overflow-x-auto mb-8">
@@ -883,7 +883,7 @@ export default function EstudioBenchmarkPage() {
             <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 mb-8">
               <h3 className="text-lg font-bold text-blue-900 mb-3">Estrategia de presupuesto estacional</h3>
               <p className="text-gray-700 text-sm leading-relaxed mb-4">
-                La recomendacion general es <strong>aumentar la inversion un 30-50% en meses de temporada alta y reducirla un 20-30% en temporada baja</strong>, sin apagar las campanas completamente (el aprendizaje del algoritmo se pierde). Ejemplos concretos:
+                La recomendacion general es <strong>aumentar la inversion un 30-50% en meses de temporada alta y reducirla un 20-30% en temporada baja</strong>, sin apagar las campañas completamente (el aprendizaje del algoritmo se pierde). Ejemplos concretos:
               </p>
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
@@ -911,7 +911,7 @@ export default function EstudioBenchmarkPage() {
             <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-6">
               <h3 className="text-lg font-bold text-yellow-900 mb-2">Ciclo de venta y evaluacion de ROAS</h3>
               <p className="text-gray-700 text-sm leading-relaxed">
-                <strong>Error comun:</strong> Evaluar el ROAS de Inmobiliaria (ciclo 60-180 dias) o SaaS (ciclo 30-90 dias) a los 30 dias de campana. Muchas empresas apagan campanas &ldquo;que no funcionan&rdquo; antes de que el ciclo de venta se complete. Si tu industria tiene un ciclo de 90 dias, necesitas al menos 120 dias de campana antes de evaluar ROAS real. Las industrias con ciclo corto (Gastronomia, Ecommerce, Moda) si pueden evaluarse mensualmente.
+                <strong>Error comun:</strong> Evaluar el ROAS de Inmobiliaria (ciclo 60-180 dias) o SaaS (ciclo 30-90 dias) a los 30 dias de campaña. Muchas empresas apagan campañas &ldquo;que no funcionan&rdquo; antes de que el ciclo de venta se complete. Si tu industria tiene un ciclo de 90 dias, necesitas al menos 120 dias de campaña antes de evaluar ROAS real. Las industrias con ciclo corto (Gastronomia, Ecommerce, Moda) si pueden evaluarse mensualmente.
               </p>
             </div>
           </section>
@@ -924,7 +924,7 @@ export default function EstudioBenchmarkPage() {
               Recomendaciones Practicas por Industria
             </h2>
             <p className="text-lg text-gray-700 mb-8 leading-relaxed">
-              Basado en los datos de 200+ campanas, estas son las recomendaciones especificas para cada industria. Incluimos los errores mas comunes que observamos, la plataforma recomendada y los KPIs que deberias monitorear.
+              Basado en los datos de 200+ campañas, estas son las recomendaciones especificas para cada industria. Incluimos los errores mas comunes que observamos, la plataforma recomendada y los KPIs que deberias monitorear.
             </p>
 
             <div className="space-y-6">
@@ -998,7 +998,7 @@ export default function EstudioBenchmarkPage() {
             <div className="mt-8 bg-gray-50 rounded-xl p-6">
               <p className="text-gray-700 text-sm leading-relaxed">
                 <strong>Nota sobre industrias adicionales:</strong> Moda/Retail, Turismo, Fintech, Seguros, Veterinaria y Deportes siguen patrones similares a las industrias detalladas arriba. Moda y Turismo se comportan como Gastronomia (visual + impulso, Meta gana). Fintech y Seguros se comportan como SaaS (search intent + B2B, Google + LinkedIn gana). Veterinaria combina busqueda local (Google) con comunidad (Meta). Deportes se parece a Moda con componente de comunidad. Puedes explorar datos especificos de cada industria en nuestro{' '}
-                <Link href="/labs/predictor" className="text-blue-600 hover:underline">Predictor de Campanas</Link>.
+                <Link href="/labs/predictor" className="text-blue-600 hover:underline">Predictor de Campañas</Link>.
               </p>
             </div>
           </section>
@@ -1008,7 +1008,7 @@ export default function EstudioBenchmarkPage() {
               ========================================================= */}
           <section className="mb-20">
             <h2 className="text-3xl font-bold text-gray-900 mb-6">
-              Como Usar Este Estudio para Mejorar tus Campanas
+              Como Usar Este Estudio para Mejorar tus Campañas
             </h2>
             <p className="text-lg text-gray-700 mb-6 leading-relaxed">
               Estos benchmarks son una herramienta practica, no solo informativa. Sigue estos 5 pasos para aplicarlos a tu negocio.
@@ -1051,7 +1051,7 @@ export default function EstudioBenchmarkPage() {
               <h3 className="text-lg font-bold text-green-900 mb-2">Herramientas complementarias de M&P</h3>
               <div className="grid md:grid-cols-3 gap-4">
                 <Link href="/labs/predictor" className="block p-3 bg-white rounded-lg hover:shadow-sm transition">
-                  <p className="font-semibold text-gray-900 text-sm">Predictor de Campanas</p>
+                  <p className="font-semibold text-gray-900 text-sm">Predictor de Campañas</p>
                   <p className="text-xs text-gray-500">Simula ROAS y CPL antes de invertir</p>
                 </Link>
                 <Link href="/indicadores" className="block p-3 bg-white rounded-lg hover:shadow-sm transition">
@@ -1071,10 +1071,10 @@ export default function EstudioBenchmarkPage() {
               ========================================================= */}
           <section className="mb-20">
             <h2 className="text-3xl font-bold text-gray-900 mb-6">
-              Fichas Detalladas: Todas las Metricas por Industria
+              Fichas Detalladas: Todas las Métricas por Industria
             </h2>
             <p className="text-lg text-gray-700 mb-8 leading-relaxed">
-              Para referencia rapida, cada ficha contiene todas las metricas de una industria en un solo lugar: ROAS, CAC, CVR, CPL, mejor plataforma, estacionalidad y ciclo de venta.
+              Para referencia rápida, cada ficha contiene todas las métricas de una industria en un solo lugar: ROAS, CAC, CVR, CPL, mejor plataforma, estacionalidad y ciclo de venta.
             </p>
 
             <div className="grid md:grid-cols-2 gap-6">
@@ -1126,13 +1126,13 @@ export default function EstudioBenchmarkPage() {
               ========================================================= */}
           <section className="bg-gradient-to-r from-blue-900 to-purple-900 rounded-2xl p-12 text-center text-white mb-16">
             <h2 className="text-3xl font-bold mb-4">
-              Quieres Saber Como se Comparan tus Campanas con tu Industria?
+              Quieres Saber Como se Comparan tus Campañas con tu Industria?
             </h2>
             <p className="text-xl text-blue-100 mb-4 max-w-3xl mx-auto">
-              Usa el Predictor de Campanas de M&P para simular escenarios con datos reales de tu industria. O habla con nuestro equipo para un diagnostico gratuito de tus campanas actuales.
+              Usa el Predictor de Campañas de M&P para simular escenarios con datos reales de tu industria. O habla con nuestro equipo para un diagnostico gratuito de tus campañas actuales.
             </p>
             <p className="text-blue-200 mb-8 max-w-2xl mx-auto">
-              M&P gestiona 200+ campanas activas en 15 industrias con fee fijo, sin contratos de permanencia y con un equipo dedicado de 3 profesionales por cliente.
+              M&P gestiona 200+ campañas activas en 15 industrias con fee fijo, sin contratos de permanencia y con un equipo dedicado de 3 profesionales por cliente.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/labs/predictor" className="px-8 py-4 bg-white text-blue-900 rounded-lg hover:bg-blue-50 transition font-semibold text-lg">
@@ -1149,7 +1149,7 @@ export default function EstudioBenchmarkPage() {
             <h3 className="text-lg font-bold text-gray-900 mb-4">Recursos Relacionados</h3>
             <div className="grid md:grid-cols-3 gap-4">
               <Link href="/labs/predictor" className="block p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition">
-                <p className="font-semibold text-gray-900 text-sm">Predictor de Campanas</p>
+                <p className="font-semibold text-gray-900 text-sm">Predictor de Campañas</p>
                 <p className="text-xs text-gray-500">Simula ROAS, CPL y conversiones</p>
               </Link>
               <Link href="/indicadores" className="block p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition">
@@ -1191,7 +1191,7 @@ export default function EstudioBenchmarkPage() {
           <section className="mb-8">
             <div className="bg-gray-50 rounded-xl p-6">
               <p className="text-xs text-gray-500 leading-relaxed">
-                <strong>Metodologia y disclaimer:</strong> Los datos de este estudio provienen de campanas activas gestionadas por Muller y Perez (mulleryperez.cl) a traves del sistema propietario M&P Predictor. La muestra incluye 200+ campanas de 40+ clientes en 15 industrias en Chile. Los valores se presentan en percentiles (p25, mediana, p75) y se actualizan mensualmente. Los resultados reales pueden variar segun la calidad del sitio web, la oferta comercial, la competencia especifica y la gestion de la campana. Este estudio no constituye una garantia de resultados. Los datos de terceros (competidores) mencionados en las comparativas provienen de fuentes publicas. Ultima actualizacion: agosto 2026. Para uso comercial o citas de este estudio, contactar a christopher@mulleryperez.cl.
+                <strong>Metodología y disclaimer:</strong> Los datos de este estudio provienen de campañas activas gestionadas por Muller y Perez (mulleryperez.cl) a traves del sistema propietario M&P Predictor. La muestra incluye 200+ campañas de 40+ clientes en 15 industrias en Chile. Los valores se presentan en percentiles (p25, mediana, p75) y se actualizan mensualmente. Los resultados reales pueden variar según la calidad del sitio web, la oferta comercial, la competencia especifica y la gestión de la campaña. Este estudio no constituye una garantia de resultados. Los datos de terceros (competidores) mencionados en las comparativas provienen de fuentes publicas. Ultima actualizacion: agosto 2026. Para uso comercial o citas de este estudio, contactar a christopher@mulleryperez.cl.
               </p>
             </div>
           </section>

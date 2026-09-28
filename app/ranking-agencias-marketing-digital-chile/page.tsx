@@ -72,7 +72,7 @@ const mypDiferenciadores = [
   "Buyer Gen: segmentación con IA basada en datos reales",
   "ROAS promedio 4.2x (vs 2.8x industria)",
   "Dashboards ejecutivos en tiempo real para cada cliente",
-  "+33 clientes activos en +15 industrias distintas",
+  "+40 clientes activos en +15 industrias distintas",
   "Reducción de CAC del 38% promedio en clientes B2B",
   "Monitor de Competencia automatizado (Instagram, LinkedIn, Facebook)",
   "Termómetro Marketing: indicadores semanales del mercado chileno",

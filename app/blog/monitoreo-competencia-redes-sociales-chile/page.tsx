@@ -43,13 +43,13 @@ export default function BlogMonitoreoPage() {
         <div className="prose prose-gray max-w-none">
           <p className="text-lg text-gray-700 leading-relaxed">Si manejas marketing, comunicaciones o ventas en una empresa chilena, probablemente te has preguntado: que esta publicando mi competencia? Les esta funcionando? Deberia estar haciendo algo diferente?</p>
 
-          <p className="text-gray-700 leading-relaxed">En esta guia te explico las opciones que existen para monitorear la competencia en redes sociales, cuanto cuestan, y cual conviene segun tu presupuesto y necesidad.</p>
+          <p className="text-gray-700 leading-relaxed">En esta guia te explico las opciones que existen para monitorear la competencia en redes sociales, cuanto cuestan, y cual conviene según tu presupuesto y necesidad.</p>
 
           <h2 className="text-2xl font-bold text-gray-900 mt-10 mb-4">Por que monitorear a tu competencia en redes sociales</h2>
-          <p className="text-gray-700 leading-relaxed">No se trata de copiar. Se trata de tomar mejores decisiones con informacion real:</p>
+          <p className="text-gray-700 leading-relaxed">No se trata de copiar. Se trata de tomar mejores decisiones con información real:</p>
           <ul className="text-gray-700 space-y-2">
             <li><strong>Detectar oportunidades:</strong> si ningun competidor habla de un tema relevante, puedes posicionarte primero.</li>
-            <li><strong>Reaccionar rapido:</strong> si tu competidor lanza una promo agresiva, puedes responder el mismo dia.</li>
+            <li><strong>Reaccionar rápido:</strong> si tu competidor lanza una promo agresiva, puedes responder el mismo dia.</li>
             <li><strong>Optimizar tu contenido:</strong> si los Reels generan 3x mas engagement que las imagenes en tu industria, deberia cambiar tu formato.</li>
             <li><strong>Ahorrar tiempo:</strong> en promedio, un marketing manager gasta 45 minutos al dia revisando redes de competidores. Eso son 15 horas al mes.</li>
           </ul>
@@ -77,14 +77,14 @@ export default function BlogMonitoreoPage() {
           <h2 className="text-2xl font-bold text-gray-900 mt-10 mb-4">Que buscar en una herramienta de monitoreo</h2>
           <ol className="text-gray-700 space-y-3">
             <li><strong>1. Que redes cubre:</strong> Instagram y LinkedIn son las mas importantes para B2B en Chile. Facebook sigue siendo relevante para B2C. Si la herramienta solo cubre Twitter/X, no te sirve mucho aca.</li>
-            <li><strong>2. Analisis, no solo datos:</strong> ver que publico tu competidor es facil. Lo dificil es interpretar que significa y que deberias hacer. Busca herramientas con IA que generen insights accionables.</li>
+            <li><strong>2. Análisis, no solo datos:</strong> ver que publico tu competidor es facil. Lo dificil es interpretar que significa y que deberias hacer. Busca herramientas con IA que generen insights accionables.</li>
             <li><strong>3. Precio vs valor:</strong> pagar $500K/mes por Meltwater solo tiene sentido si eres una empresa grande con equipo de comunicaciones. Para pymes y agencias, hay opciones desde $28K/mes que entregan el 80% del valor.</li>
             <li><strong>4. Sin contratos largos:</strong> el monitoreo es algo que necesitas probar antes de comprometerte. Evita herramientas que te obliguen a pagar 12 meses por adelantado.</li>
             <li><strong>5. En espanol:</strong> las herramientas anglosajonas analizan bien el ingles pero fallan con el espanol chileno (modismos, chilenismos, contexto local).</li>
           </ol>
 
           <h2 className="text-2xl font-bold text-gray-900 mt-10 mb-4">Radar: la alternativa chilena</h2>
-          <p className="text-gray-700 leading-relaxed">En Muller y Perez creamos Radar para resolver exactamente este problema. No es un dashboard mas. Es un email que llega cada manana a las 7:30 AM con todo lo que publico tu competencia, analisis IA en espanol, y recomendaciones de contenido.</p>
+          <p className="text-gray-700 leading-relaxed">En Muller y Perez creamos Radar para resolver exactamente este problema. No es un dashboard mas. Es un email que llega cada manana a las 7:30 AM con todo lo que publico tu competencia, análisis IA en espanol, y recomendaciones de contenido.</p>
 
           <div className="bg-indigo-50 rounded-xl p-6 my-6 border border-indigo-100">
             <p className="font-bold text-indigo-900 mb-3">Lo que incluye Radar:</p>
@@ -92,7 +92,7 @@ export default function BlogMonitoreoPage() {
               <li>Monitoreo diario de Instagram, Facebook, LinkedIn y prensa chilena</li>
               <li>Resumen semanal con ranking y benchmarking (cada lunes)</li>
               <li>Informe mensual con PDF y plan de accion (1ro de cada mes)</li>
-              <li>Analisis IA con contexto estacional y recomendaciones</li>
+              <li>Análisis IA con contexto estacional y recomendaciones</li>
               <li>Contenido sugerido: 2-3 ideas de posts escritas por IA</li>
               <li>Dashboard web con graficos de evolucion</li>
               <li>Desde $27.990/mes. 7 dias gratis.</li>

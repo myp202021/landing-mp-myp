@@ -37,7 +37,7 @@ export default function AgentesConfirmacionPage() {
           <ul className="space-y-2 text-gray-300 text-sm">
             <li className="flex items-start gap-2">
               <span className="text-emerald-400 mt-0.5">&#10003;</span>
-              <span>24 articulos SEO publicados por mes en tu blog</span>
+              <span>24 artículos SEO publicados por mes en tu blog</span>
             </li>
             <li className="flex items-start gap-2">
               <span className="text-emerald-400 mt-0.5">&#10003;</span>

@@ -265,10 +265,10 @@ export default function BenchmarksClient() {
             </h1>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-4">
               CPC Google Ads y Meta Ads, CPL, CTR y tasas de conversion por industria.
-              Datos reales de +200 campanas activas en Chile, 22 industrias.
+              Datos reales de +200 campañas activas en Chile, 22 industrias.
             </p>
             <p className="text-sm text-gray-400">
-              Fuente: ~1.200 keywords Ubersuggest + datos propios M&P de +200 campanas activas
+              Fuente: ~1.200 keywords Ubersuggest + datos propios M&P de +200 campañas activas
             </p>
           </div>
 
@@ -282,7 +282,7 @@ export default function BenchmarksClient() {
             <div className="bg-white rounded-xl p-6 text-center shadow-lg">
               <Target className="w-8 h-8 text-green-600 mx-auto mb-2" />
               <div className="text-3xl font-bold text-gray-900">+200</div>
-              <div className="text-sm text-gray-600">Campanas</div>
+              <div className="text-sm text-gray-600">Campañas</div>
             </div>
             <div className="bg-white rounded-xl p-6 text-center shadow-lg">
               <DollarSign className="w-8 h-8 text-purple-600 mx-auto mb-2" />
@@ -302,7 +302,7 @@ export default function BenchmarksClient() {
       <section className="pb-16 px-6">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-6">
-            CPC y metricas por industria — Chile 2026
+            CPC y métricas por industria — Chile 2026
           </h2>
           <p className="text-gray-500 text-sm mb-4">Haz clic en las columnas para ordenar la tabla.</p>
 
@@ -468,21 +468,21 @@ export default function BenchmarksClient() {
           <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-100">
             <div className="flex items-start gap-3 mb-4">
               <Info className="w-6 h-6 text-blue-600 shrink-0 mt-0.5" />
-              <h2 className="text-xl font-bold text-gray-900">Metodologia</h2>
+              <h2 className="text-xl font-bold text-gray-900">Metodología</h2>
             </div>
             <div className="space-y-4 text-gray-600 text-sm leading-relaxed">
               <div>
                 <h3 className="font-semibold text-gray-800 mb-1">CPC Google Ads</h3>
                 <p>
-                  Promedios ponderados por volumen de busqueda, calculados sobre ~1.200 keywords de Ubersuggest
-                  combinadas con datos reales de +200 campanas activas gestionadas por Muller y Perez.
+                  Promedios ponderados por volumen de búsqueda, calculados sobre ~1.200 keywords de Ubersuggest
+                  combinadas con datos reales de +200 campañas activas gestionadas por Muller y Perez.
                   La ponderacion asegura que keywords con mayor demanda real tengan mas peso en el promedio.
                 </p>
               </div>
               <div>
                 <h3 className="font-semibold text-gray-800 mb-1">CPC Meta Ads</h3>
                 <p>
-                  Estimados a partir del portafolio propio de campanas Meta (Facebook + Instagram).
+                  Estimados a partir del portafolio propio de campañas Meta (Facebook + Instagram).
                   En general, Meta tiene CPCs entre un 40-60% del CPC de Google Search, dependiendo de la industria.
                   Industrias visuales (e-commerce, moda, hogar) tienden a tener un descuento mayor en Meta.
                 </p>
@@ -491,7 +491,7 @@ export default function BenchmarksClient() {
                 <h3 className="font-semibold text-gray-800 mb-1">CPL (Costo por Lead)</h3>
                 <p>
                   Calculado como CPC dividido por la tasa de conversion estimada.
-                  Los rangos reflejan la variabilidad segun calidad de landing page, segmentacion y oferta.
+                  Los rangos reflejan la variabilidad según calidad de landing page, segmentacion y oferta.
                 </p>
               </div>
               <div>
@@ -520,10 +520,10 @@ export default function BenchmarksClient() {
           <div className="bg-blue-50 rounded-xl px-6 py-5 text-sm text-gray-600">
             <p className="mb-2"><strong>Notas importantes:</strong></p>
             <ul className="list-disc list-inside space-y-1">
-              <li>Datos basados en +200 campanas activas en Chile (Q2 2026)</li>
+              <li>Datos basados en +200 campañas activas en Chile (Q2 2026)</li>
               <li>CPC = Costo por Clic | CPL = Costo por Lead | CTR = Click-Through Rate</li>
               <li>Conv. Rate = Tasa de conversion de clic a lead/formulario</li>
-              <li>Los rangos varian segun segmentacion, calidad de landing page, oferta y temporada</li>
+              <li>Los rangos varian según segmentacion, calidad de landing page, oferta y temporada</li>
               <li>Meta CPC estimado: ~40% del Google CPC para industrias visuales, ~60% para el resto</li>
               <li>Competitividad basada en nivel de CPC: Baja (&lt;$200), Media ($200-$400), Alta (&gt;$400)</li>
             </ul>
@@ -540,7 +540,7 @@ export default function BenchmarksClient() {
               Descarga el PDF Completo
             </h2>
             <p className="text-xl opacity-90 mb-8">
-              Incluye analisis detallado por canal, estrategias de optimizacion y casos de exito reales.
+              Incluye análisis detallado por canal, estrategias de optimización y casos de exito reales.
               22 industrias, Chile vs LATAM y USA.
             </p>
 
@@ -571,7 +571,7 @@ export default function BenchmarksClient() {
                 <h3 className="text-2xl font-bold mb-2">Gracias!</h3>
                 <p className="text-lg opacity-90 mb-6">
                   El PDF se esta abriendo en una nueva pestana.<br />
-                  Tambien lo enviamos a <strong>{email}</strong>
+                  También lo enviamos a <strong>{email}</strong>
                 </p>
                 <Link
                   href="/"
@@ -589,7 +589,7 @@ export default function BenchmarksClient() {
       <footer className="pb-8 text-center text-xs text-gray-400">
         <p>Muller y Perez &mdash; Performance Marketing | Ultima actualizacion: Junio 2026</p>
         <p className="mt-1">
-          Fuente: ~1.200 keywords Ubersuggest + datos propios M&P de +200 campanas activas
+          Fuente: ~1.200 keywords Ubersuggest + datos propios M&P de +200 campañas activas
         </p>
       </footer>
     </div>

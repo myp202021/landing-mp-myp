@@ -476,7 +476,7 @@ export default function BuyerGenClient() {
               {/* Step 1 */}
               {currentStep === 1 && (
                 <div className="bg-white rounded-2xl p-8 shadow-xl border border-gray-200">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-6">Paso 1: Informacion Basica</h3>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-6">Paso 1: Información Basica</h3>
                   <div className="space-y-6">
                     <div>
                       <label className="block text-sm font-semibold text-gray-700 mb-2">Industria / Rubro</label>
@@ -530,7 +530,7 @@ export default function BuyerGenClient() {
                         <option value="leads">Generacion de Leads</option>
                         <option value="ventas">Aumento de Ventas</option>
                         <option value="awareness">Brand Awareness</option>
-                        <option value="conversion">Optimizacion de Conversion</option>
+                        <option value="conversion">Optimización de Conversion</option>
                         <option value="retention">Retencion de Clientes</option>
                       </select>
                     </div>
@@ -660,7 +660,7 @@ export default function BuyerGenClient() {
                 </button>
                 <button onClick={contactWhatsApp}
                   className="px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg font-semibold flex items-center gap-2 transition-all shadow-lg">
-                  <MessageCircle className="w-5 h-5" /> Consultoria Gratis
+                  <MessageCircle className="w-5 h-5" /> Consultoría Gratis
                 </button>
               </div>
 

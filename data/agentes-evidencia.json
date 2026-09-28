@@ -1,0 +1,231 @@
+{
+  "generado": "2026-09-28T15:12:20.844Z",
+  "ventana_dias": 30,
+  "agentes": {
+    "blog-diario": {
+      "tipo": "workflow",
+      "ejecuciones_30d": 57,
+      "exitosas_30d": 55,
+      "ultima_exitosa": "2026-09-23T14:17:08Z"
+    },
+    "blog-geo": {
+      "tipo": "workflow",
+      "ejecuciones_30d": 44,
+      "exitosas_30d": 44,
+      "ultima_exitosa": "2026-09-25T17:27:46Z"
+    },
+    "ranking-semanal": {
+      "tipo": "workflow",
+      "ejecuciones_30d": 5,
+      "exitosas_30d": 5,
+      "ultima_exitosa": "2026-09-28T14:37:58Z"
+    },
+    "ranking-verificado": {
+      "tipo": "workflow",
+      "ejecuciones_30d": 5,
+      "exitosas_30d": 5,
+      "ultima_exitosa": "2026-09-28T15:10:04Z"
+    },
+    "columna": {
+      "tipo": "workflow",
+      "ejecuciones_30d": 8,
+      "exitosas_30d": 8,
+      "ultima_exitosa": "2026-09-21T16:08:16Z"
+    },
+    "termometro": {
+      "tipo": "workflow",
+      "ejecuciones_30d": 5,
+      "exitosas_30d": 5,
+      "ultima_exitosa": "2026-09-26T15:05:18Z"
+    },
+    "revisor-editorial": {
+      "tipo": "workflow",
+      "ejecuciones_30d": 57,
+      "exitosas_30d": 55,
+      "ultima_exitosa": "2026-09-23T14:17:08Z"
+    },
+    "verificador-fuentes": {
+      "tipo": "workflow",
+      "ejecuciones_30d": 5,
+      "exitosas_30d": 5,
+      "ultima_exitosa": "2026-09-28T15:10:04Z"
+    },
+    "revisor-grillas": {
+      "tipo": "workflow",
+      "ejecuciones_30d": 0,
+      "exitosas_30d": 0,
+      "ultima_exitosa": null
+    },
+    "auditoria-seo-geo": {
+      "tipo": "sin_workflow"
+    },
+    "blog-wms": {
+      "tipo": "workflow",
+      "ejecuciones_30d": 20,
+      "exitosas_30d": 20,
+      "ultima_exitosa": "2026-09-25T14:56:26Z"
+    },
+    "ranking-wms": {
+      "tipo": "workflow",
+      "ejecuciones_30d": 4,
+      "exitosas_30d": 4,
+      "ultima_exitosa": "2026-09-24T15:47:30Z"
+    },
+    "blog-importadora": {
+      "tipo": "workflow",
+      "ejecuciones_30d": 2,
+      "exitosas_30d": 2,
+      "ultima_exitosa": "2026-09-25T15:24:36Z"
+    },
+    "blog-industrial": {
+      "tipo": "workflow",
+      "ejecuciones_30d": 11,
+      "exitosas_30d": 8,
+      "ultima_exitosa": "2026-09-25T15:24:44Z"
+    },
+    "blog-outplacement": {
+      "tipo": "workflow",
+      "ejecuciones_30d": 25,
+      "exitosas_30d": 25,
+      "ultima_exitosa": "2026-09-25T15:21:19Z"
+    },
+    "ranking-outplacement": {
+      "tipo": "workflow",
+      "ejecuciones_30d": 5,
+      "exitosas_30d": 5,
+      "ultima_exitosa": "2026-09-25T15:43:10Z"
+    },
+    "blog-legal": {
+      "tipo": "workflow",
+      "ejecuciones_30d": 27,
+      "exitosas_30d": 25,
+      "ultima_exitosa": "2026-09-25T15:28:34Z"
+    },
+    "ranking-legal": {
+      "tipo": "workflow",
+      "ejecuciones_30d": 5,
+      "exitosas_30d": 4,
+      "ultima_exitosa": "2026-09-25T15:46:29Z"
+    },
+    "blog-energia": {
+      "tipo": "workflow",
+      "ejecuciones_30d": 6,
+      "exitosas_30d": 1,
+      "ultima_exitosa": "2026-09-25T18:31:17Z"
+    },
+    "ranking-energia": {
+      "tipo": "workflow",
+      "ejecuciones_30d": 1,
+      "exitosas_30d": 0,
+      "ultima_exitosa": null
+    },
+    "blog-finanzas": {
+      "tipo": "workflow",
+      "ejecuciones_30d": 6,
+      "exitosas_30d": 6,
+      "ultima_exitosa": "2026-09-25T15:27:12Z"
+    },
+    "ranking-finanzas": {
+      "tipo": "workflow",
+      "ejecuciones_30d": 2,
+      "exitosas_30d": 2,
+      "ultima_exitosa": "2026-09-25T15:43:43Z"
+    },
+    "copilot": {
+      "tipo": "workflow",
+      "ejecuciones_30d": 22,
+      "exitosas_30d": 22,
+      "ultima_exitosa": "2026-09-21T17:56:52Z"
+    },
+    "radar-competencia": {
+      "tipo": "workflow",
+      "ejecuciones_30d": 0,
+      "exitosas_30d": 0,
+      "ultima_exitosa": null
+    },
+    "competencia-transporte": {
+      "tipo": "workflow",
+      "ejecuciones_30d": 50,
+      "exitosas_30d": 50,
+      "ultima_exitosa": "2026-09-28T09:12:37Z"
+    },
+    "clipping-prensa": {
+      "tipo": "workflow",
+      "ejecuciones_30d": 178,
+      "exitosas_30d": 175,
+      "ultima_exitosa": "2026-09-27T16:05:18Z"
+    },
+    "clipping-artistas": {
+      "tipo": "workflow",
+      "ejecuciones_30d": 35,
+      "exitosas_30d": 32,
+      "ultima_exitosa": "2026-09-27T14:59:50Z"
+    },
+    "radar-clipping": {
+      "tipo": "workflow",
+      "ejecuciones_30d": 2,
+      "exitosas_30d": 2,
+      "ultima_exitosa": "2026-09-08T09:08:22Z"
+    },
+    "grillas": {
+      "tipo": "workflow",
+      "ejecuciones_30d": 0,
+      "exitosas_30d": 0,
+      "ultima_exitosa": null
+    },
+    "grilla-cliente": {
+      "tipo": "workflow",
+      "ejecuciones_30d": 0,
+      "exitosas_30d": 0,
+      "ultima_exitosa": null
+    },
+    "prospeccion": {
+      "tipo": "workflow",
+      "ejecuciones_30d": 0,
+      "exitosas_30d": 0,
+      "ultima_exitosa": null
+    },
+    "informe-seo": {
+      "tipo": "workflow",
+      "ejecuciones_30d": 5,
+      "exitosas_30d": 1,
+      "ultima_exitosa": "2026-09-28T12:16:08Z"
+    },
+    "reportes-mensuales": {
+      "tipo": "workflow",
+      "ejecuciones_30d": 1,
+      "exitosas_30d": 1,
+      "ultima_exitosa": "2026-09-01T13:58:52Z"
+    },
+    "reporte-diario": {
+      "tipo": "workflow",
+      "ejecuciones_30d": 12,
+      "exitosas_30d": 11,
+      "ultima_exitosa": "2026-09-28T12:06:36Z"
+    },
+    "dashboard-cliente": {
+      "tipo": "workflow",
+      "ejecuciones_30d": 31,
+      "exitosas_30d": 29,
+      "ultima_exitosa": "2026-09-27T14:14:06Z"
+    },
+    "fiscalizacion-whatsapp": {
+      "tipo": "workflow",
+      "ejecuciones_30d": 12,
+      "exitosas_30d": 12,
+      "ultima_exitosa": "2026-09-04T16:06:57Z"
+    },
+    "whatsapp-agente": {
+      "tipo": "sin_workflow"
+    },
+    "radar-inmobiliario": {
+      "tipo": "workflow",
+      "ejecuciones_30d": 30,
+      "exitosas_30d": 3,
+      "ultima_exitosa": "2026-09-26T13:32:25Z"
+    },
+    "cobros": {
+      "tipo": "sin_workflow"
+    }
+  }
+}

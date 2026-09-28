@@ -181,7 +181,7 @@ export default function MarketingPymesPage() {
                 Las pymes representan el <strong>98% de las empresas en Chile</strong> y generan el <strong>65% del empleo formal</strong>. Sin embargo, solo el <strong>35% invierte activamente en marketing digital</strong>. Esto significa que el 65% de las pymes chilenas depende exclusivamente del boca a boca, la ubicacion fisica o referidos para conseguir clientes. En 2026, cuando el <strong>72% de los consumidores chilenos busca productos y servicios en Google antes de comprar</strong>, no estar en digital es basicamente ser invisible para la mayoria de los potenciales clientes.
               </p>
               <p className="text-lg text-gray-700 mb-4 leading-relaxed">
-                El problema no es la falta de interes — es la <strong>falta de informacion practica y honesta</strong>. La mayoria del contenido sobre marketing digital esta escrito para empresas grandes con presupuestos de $10.000.000+/mes. Las pymes necesitan saber que pueden hacer con <strong>$300.000 o $500.000 al mes</strong>, que canales priorizar, cuando tiene sentido contratar una agencia vs hacerlo internamente, y como evitar las estafas que abundan en el mercado.
+                El problema no es la falta de interes — es la <strong>falta de información practica y honesta</strong>. La mayoria del contenido sobre marketing digital esta escrito para empresas grandes con presupuestos de $10.000.000+/mes. Las pymes necesitan saber que pueden hacer con <strong>$300.000 o $500.000 al mes</strong>, que canales priorizar, cuando tiene sentido contratar una agencia vs hacerlo internamente, y como evitar las estafas que abundan en el mercado.
               </p>
               <p className="text-lg text-gray-700 mb-4 leading-relaxed">
                 Esta guia esta escrita especificamente para <strong>duenos de pymes en Chile</strong> — desde el almacen de barrio hasta la empresa mediana con 50 empleados. Con presupuestos reales en pesos chilenos, canales que funcionan con inversiones limitadas, y consejos practicos basados en la experiencia real del mercado chileno en 2026.
@@ -307,10 +307,10 @@ export default function MarketingPymesPage() {
           {/* 4. DIY VS AGENCIA */}
           <section className="mb-16">
             <h2 className="text-3xl font-bold text-gray-900 mb-6">
-              ¿Hacerlo Solo o Contratar Agencia? Analisis Honesto para Pymes
+              ¿Hacerlo Solo o Contratar Agencia? Análisis Honesto para Pymes
             </h2>
             <p className="text-lg text-gray-700 mb-6 leading-relaxed">
-              La decision de hacerlo tu mismo (DIY) o contratar una agencia es una de las mas importantes para una pyme. Aqui va un analisis honesto, sin vender servicios de agencia donde no se necesitan.
+              La decision de hacerlo tu mismo (DIY) o contratar una agencia es una de las mas importantes para una pyme. Aqui va un análisis honesto, sin vender servicios de agencia donde no se necesitan.
             </p>
 
             <div className="grid md:grid-cols-2 gap-8 mb-8">
@@ -324,21 +324,21 @@ export default function MarketingPymesPage() {
                   <li className="flex gap-2"><span className="text-green-600 font-bold">5.</span> Estas dispuesto a aprender (hay excelentes tutoriales gratuitos en YouTube)</li>
                 </ul>
                 <p className="text-sm text-green-800 mt-4 font-medium">
-                  Herramientas DIY gratuitas: Google My Business, Canva (diseno), Meta Business Suite (programar posts), Google Analytics, WhatsApp Business.
+                  Herramientas DIY gratuitas: Google My Business, Canva (diseño), Meta Business Suite (programar posts), Google Analytics, WhatsApp Business.
                 </p>
               </div>
 
               <div className="bg-blue-50 border border-blue-200 rounded-2xl p-6">
                 <h3 className="text-xl font-bold text-blue-900 mb-4">Cuando Contratar Agencia</h3>
                 <ul className="space-y-3 text-gray-700">
-                  <li className="flex gap-2"><span className="text-blue-600 font-bold">1.</span> Tu presupuesto de pauta supera $500.000/mes (la optimizacion impacta los resultados)</li>
-                  <li className="flex gap-2"><span className="text-blue-600 font-bold">2.</span> Necesitas Google Ads o campanas de conversion en Meta (requiere experiencia tecnica)</li>
+                  <li className="flex gap-2"><span className="text-blue-600 font-bold">1.</span> Tu presupuesto de pauta supera $500.000/mes (la optimización impacta los resultados)</li>
+                  <li className="flex gap-2"><span className="text-blue-600 font-bold">2.</span> Necesitas Google Ads o campañas de conversion en Meta (requiere experiencia tecnica)</li>
                   <li className="flex gap-2"><span className="text-blue-600 font-bold">3.</span> No tienes tiempo para dedicar 5+ horas/semana a marketing</li>
                   <li className="flex gap-2"><span className="text-blue-600 font-bold">4.</span> Ya probaste DIY y no obtuviste resultados claros</li>
                   <li className="flex gap-2"><span className="text-blue-600 font-bold">5.</span> Tu costo de oportunidad es alto (tu hora vale mas que el fee de agencia dividido por las horas que te ahorra)</li>
                 </ul>
                 <p className="text-sm text-blue-800 mt-4 font-medium">
-                  Senal clave: si tu pauta supera $500K/mes sin resultados medibles, una agencia se paga sola con la optimizacion.
+                  Senal clave: si tu pauta supera $500K/mes sin resultados medibles, una agencia se paga sola con la optimización.
                 </p>
               </div>
             </div>
@@ -346,7 +346,7 @@ export default function MarketingPymesPage() {
             <div className="bg-amber-50 border border-amber-200 rounded-xl p-6">
               <h3 className="text-lg font-bold text-amber-900 mb-2">Opcion Intermedia: Freelancer o Agencia Boutique</h3>
               <p className="text-gray-700 leading-relaxed">
-                Para pymes con presupuestos de $300K-$800K/mes, un <strong>freelancer especializado</strong> o una <strong>agencia boutique</strong> puede ser la mejor opcion. Ofrecen la experiencia tecnica necesaria para gestionar campanas pagadas sin los fees de una agencia grande. Busca freelancers con certificaciones de Google Ads o Meta Blueprint, pide acceso a tus propias cuentas publicitarias, y exige reportes mensuales con CPL y CPA medible. El fee tipico de un freelancer en Chile es de $200.000-$500.000/mes.
+                Para pymes con presupuestos de $300K-$800K/mes, un <strong>freelancer especializado</strong> o una <strong>agencia boutique</strong> puede ser la mejor opcion. Ofrecen la experiencia tecnica necesaria para gestionar campañas pagadas sin los fees de una agencia grande. Busca freelancers con certificaciones de Google Ads o Meta Blueprint, pide acceso a tus propias cuentas publicitarias, y exige reportes mensuales con CPL y CPA medible. El fee tipico de un freelancer en Chile es de $200.000-$500.000/mes.
               </p>
             </div>
           </section>
@@ -398,7 +398,7 @@ export default function MarketingPymesPage() {
               10 Errores que las Pymes Deben Evitar en Marketing Digital
             </h2>
             <p className="text-lg text-gray-700 mb-6 leading-relaxed">
-              Despues de trabajar con decenas de pymes chilenas, estos son los errores mas comunes que vemos — y como evitarlos.
+              Después de trabajar con decenas de pymes chilenas, estos son los errores mas comunes que vemos — y como evitarlos.
             </p>
 
             <div className="grid md:grid-cols-2 gap-6">
@@ -428,7 +428,7 @@ export default function MarketingPymesPage() {
               Como Identificar Agencias de Marketing que Son una Estafa
             </h2>
             <p className="text-lg text-gray-700 mb-4 leading-relaxed">
-              El mercado de agencias de marketing digital en Chile tiene un problema de calidad. Hay excelentes profesionales y agencias, pero tambien abundan <strong>estafadores que se aprovechan del desconocimiento de las pymes</strong>. Estas son las senales de alerta que debes reconocer.
+              El mercado de agencias de marketing digital en Chile tiene un problema de calidad. Hay excelentes profesionales y agencias, pero también abundan <strong>estafadores que se aprovechan del desconocimiento de las pymes</strong>. Estas son las senales de alerta que debes reconocer.
             </p>
 
             <div className="space-y-4">
@@ -453,7 +453,7 @@ export default function MarketingPymesPage() {
               Beneficios Tributarios del Marketing Digital para Pymes en Chile (SII)
             </h2>
             <p className="text-lg text-gray-700 mb-4 leading-relaxed">
-              Una ventaja que muchas pymes desconocen: <strong>el gasto en marketing digital es deducible de impuestos</strong> como gasto necesario para producir la renta (articulo 31 de la Ley de Impuesto a la Renta). Esto aplica a:
+              Una ventaja que muchas pymes desconocen: <strong>el gasto en marketing digital es deducible de impuestos</strong> como gasto necesario para producir la renta (artículo 31 de la Ley de Impuesto a la Renta). Esto aplica a:
             </p>
 
             <div className="grid md:grid-cols-2 gap-6">
@@ -472,7 +472,7 @@ export default function MarketingPymesPage() {
             </div>
 
             <p className="text-sm text-gray-500 italic mt-4">
-              Informacion referencial. Consulta con tu contador para la aplicacion especifica a tu situacion tributaria. Fuente: Ley de Impuesto a la Renta, articulo 31.
+              Información referencial. Consulta con tu contador para la aplicacion especifica a tu situacion tributaria. Fuente: Ley de Impuesto a la Renta, artículo 31.
             </p>
           </section>
 
@@ -497,10 +497,10 @@ export default function MarketingPymesPage() {
               Conclusion: El Marketing Digital No Es Opcional para las Pymes en 2026
             </h2>
             <p className="text-lg text-gray-700 mb-4 leading-relaxed">
-              En 2026, el 72% de los consumidores chilenos busca productos y servicios en Google antes de comprar. Las pymes que no estan presentes en digital estan perdiendo clientes frente a competidores que si lo estan. La buena noticia es que empezar no requiere grandes presupuestos: Google My Business es gratis, WhatsApp Business es gratis, Instagram organico es gratis, y una campana basica en Meta Ads cuesta desde $300.000/mes.
+              En 2026, el 72% de los consumidores chilenos busca productos y servicios en Google antes de comprar. Las pymes que no estan presentes en digital estan perdiendo clientes frente a competidores que si lo estan. La buena noticia es que empezar no requiere grandes presupuestos: Google My Business es gratis, WhatsApp Business es gratis, Instagram organico es gratis, y una campaña basica en Meta Ads cuesta desde $300.000/mes.
             </p>
             <p className="text-lg text-gray-700 mb-4 leading-relaxed">
-              La clave para las pymes es <strong>empezar simple, medir todo, y escalar lo que funciona</strong>. No necesitas estar en todos los canales — necesitas dominar 1-2 canales que funcionen para tu negocio. Y cuando tu inversion justifique una agencia profesional, elige una que mida resultados reales (leads, clientes, ventas), no metricas de vanidad (likes, seguidores, impresiones).
+              La clave para las pymes es <strong>empezar simple, medir todo, y escalar lo que funciona</strong>. No necesitas estar en todos los canales — necesitas dominar 1-2 canales que funcionen para tu negocio. Y cuando tu inversion justifique una agencia profesional, elige una que mida resultados reales (leads, clientes, ventas), no métricas de vanidad (likes, seguidores, impresiones).
             </p>
             <p className="text-lg text-gray-700 mb-8 leading-relaxed">
               Para una vision completa del mercado de agencias en Chile, consulta nuestro <Link href="/ranking-agencias-marketing-digital-chile" className="text-amber-600 hover:underline font-semibold">ranking general de agencias</Link>, las guias especializadas de <Link href="/mejores-agencias-google-ads-chile-2026" className="text-amber-600 hover:underline font-semibold">Google Ads</Link>, <Link href="/agencias-meta-ads-chile-2026" className="text-amber-600 hover:underline font-semibold">Meta Ads</Link>, y si tu pyme es un ecommerce, la guia de <Link href="/agencias-ecommerce-chile-2026" className="text-amber-600 hover:underline font-semibold">agencias e-commerce</Link>.

@@ -88,7 +88,7 @@ export default function ArticlePage() {
           </h1>
 
           <p className="text-xl text-gray-600 mb-12 leading-relaxed">
-            Definir cuanto invertir en publicidad digital es la decision mas critica de tu estrategia de marketing. Esta guia te muestra, con data real del mercado chileno 2026, como distribuir tu presupuesto entre Google, Meta, LinkedIn, TikTok y programatica segun tu industria, tamano y objetivos.
+            Definir cuanto invertir en publicidad digital es la decision mas critica de tu estrategia de marketing. Esta guia te muestra, con data real del mercado chileno 2026, como distribuir tu presupuesto entre Google, Meta, LinkedIn, TikTok y programatica según tu industria, tamano y objetivos.
           </p>
 
           <div className="prose prose-lg max-w-none">
@@ -100,7 +100,7 @@ export default function ArticlePage() {
             </h2>
 
             <p className="text-gray-700 leading-relaxed mb-6">
-              La distribucion del presupuesto entre canales digitales no es una formula unica. Depende de tu modelo de negocio, tu audiencia y tus objetivos. Sin embargo, despues de gestionar mas de 200 cuentas activas en Chile, hemos identificado patrones claros que funcionan como punto de partida solido para la mayoria de las empresas.
+              La distribucion del presupuesto entre canales digitales no es una formula única. Depende de tu modelo de negocio, tu audiencia y tus objetivos. Sin embargo, después de gestionar mas de 200 cuentas activas en Chile, hemos identificado patrones claros que funcionan como punto de partida solido para la mayoria de las empresas.
             </p>
 
             <div className="bg-blue-50 border-l-4 border-blue-600 p-6 rounded-r-xl mb-8">
@@ -115,7 +115,7 @@ export default function ArticlePage() {
             </div>
 
             <p className="text-gray-700 leading-relaxed mb-6">
-              Esta distribucion 40/30/15/10/5 funciona como punto de partida, pero debe ajustarse segun los resultados de cada canal. En M&P revisamos la distribucion mensualmente y reasignamos presupuesto hacia los canales que mejor ROAS estan generando. Un error comun es fijar la distribucion al inicio y no volver a tocarla: el mercado cambia, la competencia cambia, y tu mix debe adaptarse.
+              Esta distribucion 40/30/15/10/5 funciona como punto de partida, pero debe ajustarse según los resultados de cada canal. En M&P revisamos la distribucion mensualmente y reasignamos presupuesto hacia los canales que mejor ROAS estan generando. Un error comun es fijar la distribucion al inicio y no volver a tocarla: el mercado cambia, la competencia cambia, y tu mix debe adaptarse.
             </p>
 
             <p className="text-gray-700 leading-relaxed mb-6">
@@ -262,7 +262,7 @@ export default function ArticlePage() {
             </div>
 
             <p className="text-gray-700 leading-relaxed mb-6">
-              Un patron claro que vemos en Chile: las industrias con ticket promedio alto (inmobiliaria, B2B, servicios profesionales) necesitan mayor inversion minima porque sus CPCs son mas altos, pero su ROAS potencial tambien es mayor por el valor de cada conversion. En cambio, industrias con ticket bajo (gastronomia, retail) pueden empezar con menos inversion pero necesitan volumen para ser rentables.
+              Un patron claro que vemos en Chile: las industrias con ticket promedio alto (inmobiliaria, B2B, servicios profesionales) necesitan mayor inversion minima porque sus CPCs son mas altos, pero su ROAS potencial también es mayor por el valor de cada conversion. En cambio, industrias con ticket bajo (gastronomia, retail) pueden empezar con menos inversion pero necesitan volumen para ser rentables.
             </p>
 
             {/* Section 4 */}
@@ -272,14 +272,14 @@ export default function ArticlePage() {
             </h2>
 
             <p className="text-gray-700 leading-relaxed mb-6">
-              La estacionalidad es un factor clave que muchas empresas chilenas ignoran al planificar su presupuesto de publicidad digital. Los costos por clic y las tasas de conversion varian significativamente segun la epoca del ano, y ajustar tu presupuesto en consecuencia puede mejorar tu ROAS anual entre un 15% y 25%.
+              La estacionalidad es un factor clave que muchas empresas chilenas ignoran al planificar su presupuesto de publicidad digital. Los costos por clic y las tasas de conversion varian significativamente según la epoca del ano, y ajustar tu presupuesto en consecuencia puede mejorar tu ROAS anual entre un 15% y 25%.
             </p>
 
             <div className="grid md:grid-cols-2 gap-6 mb-8">
               <div className="bg-red-50 border-2 border-red-200 rounded-xl p-6">
                 <h3 className="text-xl font-bold text-gray-900 mb-4">Periodos de alta inversion (+20-40%)</h3>
                 <ul className="space-y-3 text-gray-700">
-                  <li><strong>Octubre - Diciembre (Q4):</strong> Cyber Monday, Black Friday, Navidad. Los CPCs suben 20-35% pero la conversion tambien aumenta. Si vendes productos, es tu momento. Sube presupuesto 30-40%.</li>
+                  <li><strong>Octubre - Diciembre (Q4):</strong> Cyber Monday, Black Friday, Navidad. Los CPCs suben 20-35% pero la conversion también aumenta. Si vendes productos, es tu momento. Sube presupuesto 30-40%.</li>
                   <li><strong>Marzo:</strong> Vuelta a clases, inicio de ano laboral. Educacion, servicios profesionales y B2B ven su mejor momento. Sube 20-25%.</li>
                   <li><strong>Mayo:</strong> Dia de la Madre. Retail, gastronomia y experiencias ven un spike. Sube 15-25%.</li>
                   <li><strong>Septiembre:</strong> Fiestas Patrias. Turismo, gastronomia, retail masivo. Sube 20-30%.</li>
@@ -289,9 +289,9 @@ export default function ArticlePage() {
               <div className="bg-green-50 border-2 border-green-200 rounded-xl p-6">
                 <h3 className="text-xl font-bold text-gray-900 mb-4">Periodos de baja inversion (-15-25%)</h3>
                 <ul className="space-y-3 text-gray-700">
-                  <li><strong>Enero:</strong> Vacaciones de verano. La mayoria de las industrias B2B bajan. CPCs pueden ser menores pero la conversion tambien baja. Reduce 15-20%.</li>
+                  <li><strong>Enero:</strong> Vacaciones de verano. La mayoria de las industrias B2B bajan. CPCs pueden ser menores pero la conversion también baja. Reduce 15-20%.</li>
                   <li><strong>Febrero:</strong> Similar a enero pero con leve recuperacion en la segunda quincena. Reduce 10-15%.</li>
-                  <li><strong>Julio (primera quincena):</strong> Vacaciones de invierno. B2B desacelera, pero turismo y entretenimiento suben. Ajusta segun tu industria.</li>
+                  <li><strong>Julio (primera quincena):</strong> Vacaciones de invierno. B2B desacelera, pero turismo y entretenimiento suben. Ajusta según tu industria.</li>
                 </ul>
                 <p className="text-sm text-gray-500 mt-4">Nota: la estacionalidad varia por industria. Turismo tiene su propio ciclo inverso al B2B.</p>
               </div>
@@ -316,7 +316,7 @@ export default function ArticlePage() {
               <ul className="space-y-2 text-gray-700">
                 <li><strong>Diversificacion minima:</strong> No pongas mas del 60% de tu presupuesto en un solo canal. Si Google Search desaparece manana (cambio de algoritmo, suspension de cuenta), necesitas otros canales activos.</li>
                 <li><strong>Regla del 70/20/10:</strong> 70% en canales probados con ROAS demostrado, 20% en canales en crecimiento con potencial, 10% en experimentacion (nuevos formatos, canales emergentes).</li>
-                <li><strong>Atribucion multi-touch:</strong> El ultimo clic no cuenta toda la historia. Un usuario puede ver tu anuncio en Instagram, buscarte en Google y convertir. Sin atribucion multi-touch, subestimas el valor de Meta y sobrevaloras Google.</li>
+                <li><strong>Atribucion multi-touch:</strong> El último clic no cuenta toda la historia. Un usuario puede ver tu anuncio en Instagram, buscarte en Google y convertir. Sin atribucion multi-touch, subestimas el valor de Meta y sobrevaloras Google.</li>
                 <li><strong>Incrementalidad:</strong> No todo lo que reporta Google o Meta como conversion es incremental. Estudios de lift (conversion lift) ayudan a entender cuantas ventas son realmente generadas por la publicidad vs. las que habrian ocurrido de todas formas.</li>
               </ul>
             </div>
@@ -332,17 +332,17 @@ export default function ArticlePage() {
             </h2>
 
             <p className="text-gray-700 leading-relaxed mb-6">
-              Saber cuando escalar y cuando frenar es una de las habilidades mas valiosas en performance marketing. Muchas empresas cometen el error de escalar demasiado rapido cuando ven buenos resultados, o de cortar presupuesto cuando los resultados bajan temporalmente sin investigar la causa.
+              Saber cuando escalar y cuando frenar es una de las habilidades mas valiosas en performance marketing. Muchas empresas cometen el error de escalar demasiado rápido cuando ven buenos resultados, o de cortar presupuesto cuando los resultados bajan temporalmente sin investigar la causa.
             </p>
 
             <div className="grid md:grid-cols-2 gap-6 mb-8">
               <div className="bg-green-50 border-2 border-green-200 rounded-xl p-6">
                 <h3 className="text-xl font-bold text-green-800 mb-4">Senales para ESCALAR</h3>
                 <ul className="space-y-3 text-gray-700">
-                  <li><strong>ROAS consistente sobre 3x por 4+ semanas:</strong> Si tus campanas estan generando al menos 3 pesos por cada peso invertido de forma sostenida, hay espacio para crecer.</li>
+                  <li><strong>ROAS consistente sobre 3x por 4+ semanas:</strong> Si tus campañas estan generando al menos 3 pesos por cada peso invertido de forma sostenida, hay espacio para crecer.</li>
                   <li><strong>CPL estable o en baja:</strong> Si tu costo por lead no sube al aumentar presupuesto, el mercado tiene mas demanda que capturar.</li>
                   <li><strong>Tasa de cierre estable:</strong> Si tus leads siguen cerrando al mismo ritmo, tu equipo comercial puede absorber mas volumen.</li>
-                  <li><strong>Impression Share bajo (menor a 70%):</strong> Si no estas apareciendo en todas las busquedas relevantes, hay oportunidad de crecer sin saturar.</li>
+                  <li><strong>Impression Share bajo (menor a 70%):</strong> Si no estas apareciendo en todas las búsquedas relevantes, hay oportunidad de crecer sin saturar.</li>
                 </ul>
               </div>
 
@@ -351,7 +351,7 @@ export default function ArticlePage() {
                 <ul className="space-y-3 text-gray-700">
                   <li><strong>CPL en aumento sostenido por 3+ semanas:</strong> Si cada semana pagas mas por lead sin mejora en calidad, algo no esta funcionando. Investiga antes de seguir gastando.</li>
                   <li><strong>Tasa de cierre en caida:</strong> Si generas mas leads pero cierras menos, el problema puede estar en la calidad de leads o en tu proceso comercial.</li>
-                  <li><strong>ROAS bajo 2x:</strong> Por debajo de 2x la mayoria de los negocios no son rentables. Reduce, optimiza y vuelve a subir cuando los numeros mejoren.</li>
+                  <li><strong>ROAS bajo 2x:</strong> Por debajo de 2x la mayoria de los negocios no son rentables. Reduce, optimiza y vuelve a subir cuando los números mejoren.</li>
                   <li><strong>Saturacion de mercado:</strong> Si tu Impression Share ya es mayor a 90% y subes presupuesto, solo pagaras mas por los mismos usuarios.</li>
                 </ul>
               </div>
@@ -379,7 +379,7 @@ export default function ArticlePage() {
                 <CheckCircle2 className="w-6 h-6 text-green-600 flex-shrink-0 mt-1" />
                 <div>
                   <h3 className="font-bold text-gray-900 mb-2">Marca nueva (0-2 anos): 80% performance / 20% branding</h3>
-                  <p className="text-gray-700">Cuando nadie te conoce, necesitas resultados medibles rapido. Destina la gran mayoria a campanas de conversion directa (Google Search, Meta lead gen) y una fraccion a awareness basico (Instagram stories, YouTube bumpers) para construir familiaridad.</p>
+                  <p className="text-gray-700">Cuando nadie te conoce, necesitas resultados medibles rápido. Destina la gran mayoria a campañas de conversion directa (Google Search, Meta lead gen) y una fraccion a awareness basico (Instagram stories, YouTube bumpers) para construir familiaridad.</p>
                 </div>
               </div>
 
@@ -395,7 +395,7 @@ export default function ArticlePage() {
                 <CheckCircle2 className="w-6 h-6 text-green-600 flex-shrink-0 mt-1" />
                 <div>
                   <h3 className="font-bold text-gray-900 mb-2">Marca establecida (5+ anos): 50% performance / 50% branding</h3>
-                  <p className="text-gray-700">Las marcas establecidas se benefician enormemente de mantener awareness alto. Estudios muestran que por cada 10% de aumento en awareness, el CPL de campanas de performance baja un 5-8%. El branding alimenta el performance.</p>
+                  <p className="text-gray-700">Las marcas establecidas se benefician enormemente de mantener awareness alto. Estudios muestran que por cada 10% de aumento en awareness, el CPL de campañas de performance baja un 5-8%. El branding alimenta el performance.</p>
                 </div>
               </div>
             </div>
@@ -407,13 +407,13 @@ export default function ArticlePage() {
             </h2>
 
             <p className="text-gray-700 leading-relaxed mb-6">
-              Despues de analizar cientos de presupuestos de marketing digital en Chile, estos son los errores que mas dinero desperdician.
+              Después de analizar cientos de presupuestos de marketing digital en Chile, estos son los errores que mas dinero desperdician.
             </p>
 
             <div className="space-y-4 mb-8">
               <div className="bg-red-50 border-l-4 border-red-500 p-5 rounded-r-xl">
                 <h3 className="font-bold text-gray-900 mb-2">Error 1: Copiar el presupuesto de la competencia</h3>
-                <p className="text-gray-700">Cada empresa tiene margenes, ticket promedio y capacidad comercial diferente. Lo que funciona para tu competidor puede no funcionar para ti. Calcula tu presupuesto basado en TUS numeros: ticket promedio, margen, tasa de cierre y CAC maximo aceptable.</p>
+                <p className="text-gray-700">Cada empresa tiene margenes, ticket promedio y capacidad comercial diferente. Lo que funciona para tu competidor puede no funcionar para ti. Calcula tu presupuesto basado en TUS números: ticket promedio, margen, tasa de cierre y CAC maximo aceptable.</p>
               </div>
 
               <div className="bg-red-50 border-l-4 border-red-500 p-5 rounded-r-xl">
@@ -428,7 +428,7 @@ export default function ArticlePage() {
 
               <div className="bg-red-50 border-l-4 border-red-500 p-5 rounded-r-xl">
                 <h3 className="font-bold text-gray-900 mb-2">Error 4: Evaluar demasiado pronto</h3>
-                <p className="text-gray-700">Las campanas digitales necesitan al menos 4-6 semanas para estabilizarse. Evaluar resultados en la semana 2 y tomar decisiones drasticas es el equivalente a plantar un arbol y arrancarlo a los 3 dias porque no dio frutos.</p>
+                <p className="text-gray-700">Las campañas digitales necesitan al menos 4-6 semanas para estabilizarse. Evaluar resultados en la semana 2 y tomar decisiones drasticas es el equivalente a plantar un arbol y arrancarlo a los 3 dias porque no dio frutos.</p>
               </div>
 
               <div className="bg-red-50 border-l-4 border-red-500 p-5 rounded-r-xl">
@@ -453,14 +453,14 @@ export default function ArticlePage() {
                 <p><strong>Paso 1:</strong> Define cuantos clientes nuevos necesitas al mes para que el negocio crezca. Ejemplo: 10 clientes/mes.</p>
                 <p><strong>Paso 2:</strong> Determina tu tasa de cierre de leads a clientes. Ejemplo: 20% (1 de cada 5 leads se convierte en cliente).</p>
                 <p><strong>Paso 3:</strong> Calcula cuantos leads necesitas: 10 clientes / 20% = 50 leads/mes.</p>
-                <p><strong>Paso 4:</strong> Estima tu CPL segun tu industria (usa nuestra tabla de arriba). Ejemplo: $18.000/lead.</p>
+                <p><strong>Paso 4:</strong> Estima tu CPL según tu industria (usa nuestra tabla de arriba). Ejemplo: $18.000/lead.</p>
                 <p><strong>Paso 5:</strong> Presupuesto en media = 50 leads x $18.000 = <strong>$900.000/mes</strong>.</p>
                 <p><strong>Paso 6:</strong> Presupuesto total = $900.000 x 1.5 (fee agencia + herramientas) = <strong>$1.350.000/mes</strong>.</p>
               </div>
             </div>
 
             <p className="text-gray-700 leading-relaxed mb-6">
-              Esta formula te da un punto de partida solido. Ajustala segun tus datos reales despues de los primeros 2-3 meses de campana. Para una calculadora interactiva, visita nuestro <Link href="/labs/predictor" className="text-blue-600 font-semibold hover:underline">Predictor de Campanas</Link> donde puedes simular diferentes escenarios de inversion y ver proyecciones de leads y revenue.
+              Esta formula te da un punto de partida solido. Ajustala según tus datos reales después de los primeros 2-3 meses de campaña. Para una calculadora interactiva, visita nuestro <Link href="/labs/predictor" className="text-blue-600 font-semibold hover:underline">Predictor de Campañas</Link> donde puedes simular diferentes escenarios de inversion y ver proyecciones de leads y revenue.
             </p>
 
             {/* Section 10 */}
@@ -470,7 +470,7 @@ export default function ArticlePage() {
             </h2>
 
             <p className="text-gray-700 leading-relaxed mb-6">
-              El mercado de publicidad digital en Chile sigue creciendo. Segun datos de la industria, la inversion total en publicidad digital en Chile alcanzara los USD $850 millones en 2026, un crecimiento del 14% respecto a 2025. Esto significa mas competencia, pero tambien mas oportunidades para las empresas que saben invertir estrategicamente.
+              El mercado de publicidad digital en Chile sigue creciendo. Según datos de la industria, la inversion total en publicidad digital en Chile alcanzara los USD $850 millones en 2026, un crecimiento del 14% respecto a 2025. Esto significa mas competencia, pero también mas oportunidades para las empresas que saben invertir estrategicamente.
             </p>
 
             <div className="space-y-4 mb-8">
@@ -486,15 +486,15 @@ export default function ArticlePage() {
                 <TrendingUp className="w-6 h-6 text-blue-600 flex-shrink-0 mt-1" />
                 <div>
                   <h3 className="font-bold text-gray-900 mb-2">TikTok madura como canal de performance</h3>
-                  <p className="text-gray-700">TikTok ya no es solo awareness. Su plataforma de ads ha mejorado significativamente en targeting y conversion tracking, permitiendo campanas de lead gen y e-commerce con resultados medibles. Los CPMs siguen siendo 40-60% menores que Meta.</p>
+                  <p className="text-gray-700">TikTok ya no es solo awareness. Su plataforma de ads ha mejorado significativamente en targeting y conversion tracking, permitiendo campañas de lead gen y e-commerce con resultados medibles. Los CPMs siguen siendo 40-60% menores que Meta.</p>
                 </div>
               </div>
 
               <div className="flex items-start gap-4">
                 <TrendingUp className="w-6 h-6 text-blue-600 flex-shrink-0 mt-1" />
                 <div>
-                  <h3 className="font-bold text-gray-900 mb-2">IA redefine la gestion de campanas</h3>
-                  <p className="text-gray-700">Performance Max de Google y Advantage+ de Meta concentran cada vez mas inversion. Estas campanas automatizadas requieren menos gestion manual pero mas habilidad en definir senales de conversion correctas y assets de calidad. Lee mas en nuestro articulo sobre <Link href="/blog/tendencias-marketing-digital-chile-2026" className="text-blue-600 font-semibold hover:underline">tendencias de marketing digital Chile 2026</Link>.</p>
+                  <h3 className="font-bold text-gray-900 mb-2">IA redefine la gestión de campañas</h3>
+                  <p className="text-gray-700">Performance Max de Google y Advantage+ de Meta concentran cada vez mas inversion. Estas campañas automatizadas requieren menos gestión manual pero mas habilidad en definir senales de conversion correctas y assets de calidad. Lee mas en nuestro artículo sobre <Link href="/blog/tendencias-marketing-digital-chile-2026" className="text-blue-600 font-semibold hover:underline">tendencias de marketing digital Chile 2026</Link>.</p>
                 </div>
               </div>
 
@@ -529,7 +529,7 @@ export default function ArticlePage() {
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="text-green-600 font-bold">4.</span>
-                  <span>Investiga los CPCs y CPLs de tu industria en Chile (usa las tablas de este articulo como referencia).</span>
+                  <span>Investiga los CPCs y CPLs de tu industria en Chile (usa las tablas de este artículo como referencia).</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="text-green-600 font-bold">5.</span>
@@ -552,7 +552,7 @@ export default function ArticlePage() {
             <div className="space-y-6 mb-12">
               <div className="bg-white border border-gray-200 rounded-xl p-6">
                 <h3 className="text-lg font-bold text-gray-900 mb-3">Cual es la inversion minima para empezar con publicidad digital en Chile?</h3>
-                <p className="text-gray-700">Depende de tu industria, pero como regla general: $500.000 CLP/mes en media es el minimo absoluto para obtener datos significativos en un solo canal. Para una estrategia multicanal basica (Google + Meta), necesitas al menos $1.200.000 - $1.500.000 CLP/mes en media, mas el costo de gestion.</p>
+                <p className="text-gray-700">Depende de tu industria, pero como regla general: $500.000 CLP/mes en media es el minimo absoluto para obtener datos significativos en un solo canal. Para una estrategia multicanal basica (Google + Meta), necesitas al menos $1.200.000 - $1.500.000 CLP/mes en media, mas el costo de gestión.</p>
               </div>
 
               <div className="bg-white border border-gray-200 rounded-xl p-6">
@@ -567,7 +567,7 @@ export default function ArticlePage() {
 
               <div className="bg-white border border-gray-200 rounded-xl p-6">
                 <h3 className="text-lg font-bold text-gray-900 mb-3">Cuanto deberia invertir en Google Ads vs Meta Ads?</h3>
-                <p className="text-gray-700">La proporcion tipica es 55-60% Google / 40-45% Meta para servicios y B2B (donde la busqueda activa domina), y 40-45% Google / 55-60% Meta para e-commerce y productos visuales (donde la generacion de demanda es clave). Nuestra <Link href="/blog/google-ads-vs-meta-ads-chile-2026" className="text-blue-600 font-semibold hover:underline">comparativa Google Ads vs Meta Ads</Link> detalla los escenarios optimos.</p>
+                <p className="text-gray-700">La proporcion tipica es 55-60% Google / 40-45% Meta para servicios y B2B (donde la búsqueda activa domina), y 40-45% Google / 55-60% Meta para e-commerce y productos visuales (donde la generacion de demanda es clave). Nuestra <Link href="/blog/google-ads-vs-meta-ads-chile-2026" className="text-blue-600 font-semibold hover:underline">comparativa Google Ads vs Meta Ads</Link> detalla los escenarios optimos.</p>
               </div>
 
               <div className="bg-white border border-gray-200 rounded-xl p-6">
@@ -577,7 +577,7 @@ export default function ArticlePage() {
 
               <div className="bg-white border border-gray-200 rounded-xl p-6">
                 <h3 className="text-lg font-bold text-gray-900 mb-3">Deberia invertir en TikTok Ads en 2026?</h3>
-                <p className="text-gray-700">Si tu audiencia tiene entre 18 y 40 anos y tu producto es visual o experiencial, TikTok ofrece CPMs 40-60% menores que Meta y una capacidad de viralidad unica. Para e-commerce de moda, belleza, food y entretenimiento, TikTok ya es imprescindible. Para B2B o servicios profesionales, aun no es prioritario.</p>
+                <p className="text-gray-700">Si tu audiencia tiene entre 18 y 40 anos y tu producto es visual o experiencial, TikTok ofrece CPMs 40-60% menores que Meta y una capacidad de viralidad única. Para e-commerce de moda, belleza, food y entretenimiento, TikTok ya es imprescindible. Para B2B o servicios profesionales, aun no es prioritario.</p>
               </div>
             </div>
 
@@ -608,7 +608,7 @@ export default function ArticlePage() {
 
           {/* Related Posts */}
           <nav className="mt-12 pt-8 border-t border-gray-200">
-            <h3 className="text-lg font-bold text-gray-900 mb-4">Articulos Relacionados</h3>
+            <h3 className="text-lg font-bold text-gray-900 mb-4">Artículos Relacionados</h3>
             <div className="flex flex-wrap gap-2">
               <Link href="/blog/cuanto-cuesta-google-ads-chile-2026" className="text-sm text-blue-600 hover:text-blue-800 bg-blue-50 px-3 py-1.5 rounded-lg">
                 Cuanto Cuesta Google Ads Chile 2026 &rarr;
@@ -623,7 +623,7 @@ export default function ArticlePage() {
                 Tendencias Marketing Digital Chile 2026 &rarr;
               </Link>
               <Link href="/labs/predictor" className="text-sm text-green-600 hover:text-green-800 bg-green-50 px-3 py-1.5 rounded-lg">
-                Predictor de Campanas &rarr;
+                Predictor de Campañas &rarr;
               </Link>
             </div>
           </nav>

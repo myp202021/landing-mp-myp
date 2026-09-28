@@ -93,7 +93,7 @@ export default function ArticlePage() {
 
           {/* Excerpt */}
           <p className="text-xl text-gray-600 mb-12 leading-relaxed">
-            Basado en data real de mas de 250 campanas activas que gestionamos en Muller y Perez, esta guia te muestra exactamente cuanto cuesta Google Ads en Chile en 2026: costos por clic, por lead, por industria, presupuestos recomendados y los costos ocultos que nadie te cuenta.
+            Basado en data real de mas de 250 campañas activas que gestionamos en Muller y Perez, esta guia te muestra exactamente cuanto cuesta Google Ads en Chile en 2026: costos por clic, por lead, por industria, presupuestos recomendados y los costos ocultos que nadie te cuenta.
           </p>
 
           {/* Content */}
@@ -106,7 +106,7 @@ export default function ArticlePage() {
             </h2>
 
             <p className="text-gray-700 leading-relaxed mb-6">
-              Antes de entrar en el detalle, aqui van los numeros clave que necesitas saber si estas evaluando invertir en Google Ads en Chile durante 2026. Estos datos provienen de campanas reales que gestionamos en industrias que van desde retail hasta servicios legales, pasando por educacion, salud y B2B.
+              Antes de entrar en el detalle, aqui van los números clave que necesitas saber si estas evaluando invertir en Google Ads en Chile durante 2026. Estos datos provienen de campañas reales que gestionamos en industrias que van desde retail hasta servicios legales, pasando por educacion, salud y B2B.
             </p>
 
             <div className="bg-blue-50 border-l-4 border-blue-600 p-6 rounded-r-xl mb-8">
@@ -122,7 +122,7 @@ export default function ArticlePage() {
             </div>
 
             <p className="text-gray-700 leading-relaxed mb-6">
-              Estos rangos son amplios porque los costos dependen de multiples factores: industria, competencia en tu nicho, calidad de tus anuncios, landing page, ubicacion geografica dentro de Chile y tipo de campana (Search, Display, Performance Max, YouTube). En las siguientes secciones desglosamos cada variable para que puedas estimar tu inversion con precision.
+              Estos rangos son amplios porque los costos dependen de multiples factores: industria, competencia en tu nicho, calidad de tus anuncios, landing page, ubicacion geografica dentro de Chile y tipo de campaña (Search, Display, Performance Max, YouTube). En las siguientes secciones desglosamos cada variable para que puedas estimar tu inversion con precision.
             </p>
 
             <p className="text-gray-700 leading-relaxed mb-6">
@@ -136,7 +136,7 @@ export default function ArticlePage() {
             </h2>
 
             <p className="text-gray-700 leading-relaxed mb-6">
-              El Costo Por Clic (CPC) es la metrica mas basica de Google Ads y varia enormemente segun la industria. En Chile, la competencia en Google Ads ha crecido un 18% respecto a 2025, lo que ha elevado los CPC en la mayoria de las verticales. Sin embargo, industrias con menor adopcion digital siguen ofreciendo CPCs atractivos.
+              El Costo Por Clic (CPC) es la metrica mas basica de Google Ads y varia enormemente según la industria. En Chile, la competencia en Google Ads ha crecido un 18% respecto a 2025, lo que ha elevado los CPC en la mayoria de las verticales. Sin embargo, industrias con menor adopcion digital siguen ofreciendo CPCs atractivos.
             </p>
 
             <div className="overflow-x-auto mb-8">
@@ -215,7 +215,7 @@ export default function ArticlePage() {
                     <td className="px-6 py-4 text-red-600">+20%</td>
                   </tr>
                   <tr className="hover:bg-gray-50">
-                    <td className="px-6 py-4 font-semibold text-gray-900">Tecnologia / SaaS</td>
+                    <td className="px-6 py-4 font-semibold text-gray-900">Tecnología / SaaS</td>
                     <td className="px-6 py-4 text-gray-700">$700 - $1.800</td>
                     <td className="px-6 py-4 text-gray-700">$18.000 - $48.000</td>
                     <td className="px-6 py-4 text-gray-700">3.0x - 5.8x</td>
@@ -240,7 +240,7 @@ export default function ArticlePage() {
             </div>
 
             <p className="text-gray-700 leading-relaxed mb-6">
-              Es importante entender que estos promedios contemplan campanas de Search (busqueda) que es donde se concentra la mayor parte de la inversion en Google Ads en Chile. Las campanas de Display tienen CPCs significativamente menores ($50 - $200) pero tambien tasas de conversion mucho mas bajas, por lo que el CPL final puede ser similar o incluso mayor.
+              Es importante entender que estos promedios contemplan campañas de Search (búsqueda) que es donde se concentra la mayor parte de la inversion en Google Ads en Chile. Las campañas de Display tienen CPCs significativamente menores ($50 - $200) pero también tasas de conversion mucho mas bajas, por lo que el CPL final puede ser similar o incluso mayor.
             </p>
 
             {/* Section 3 */}
@@ -303,11 +303,11 @@ export default function ArticlePage() {
             {/* Section 4 */}
             <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6 flex items-center gap-3">
               <Settings className="w-8 h-8 text-indigo-600" />
-              Agencia vs. in-house: analisis de costos reales
+              Agencia vs. in-house: análisis de costos reales
             </h2>
 
             <p className="text-gray-700 leading-relaxed mb-6">
-              Otra decision importante es si manejar Google Ads internamente o contratar una agencia. Ambas opciones tienen costos muy distintos y conviene analizarlos con numeros reales del mercado chileno 2026.
+              Otra decision importante es si manejar Google Ads internamente o contratar una agencia. Ambas opciones tienen costos muy distintos y conviene analizarlos con números reales del mercado chileno 2026.
             </p>
 
             <div className="grid md:grid-cols-2 gap-6 mb-8">
@@ -337,7 +337,7 @@ export default function ArticlePage() {
             </div>
 
             <p className="text-gray-700 leading-relaxed mb-6">
-              Para pymes con inversion en media bajo $5M/mes, la opcion agencia es casi siempre mas eficiente. El equipo de una agencia como M&P gestiona decenas de cuentas simultaneamente, lo que nos da acceso a benchmarks reales que un analista in-house simplemente no tiene. Ademas, el costo de un analista senior dedicado supera el fee mensual de la mayoria de las agencias.
+              Para pymes con inversion en media bajo $5M/mes, la opcion agencia es casi siempre mas eficiente. El equipo de una agencia como M&P gestiona decenas de cuentas simultaneamente, lo que nos da acceso a benchmarks reales que un analista in-house simplemente no tiene. Además, el costo de un analista senior dedicado supera el fee mensual de la mayoria de las agencias.
             </p>
 
             <p className="text-gray-700 leading-relaxed mb-6">
@@ -366,11 +366,11 @@ export default function ArticlePage() {
             </div>
 
             <p className="text-gray-700 leading-relaxed mb-6">
-              Los tres componentes del Quality Score son: relevancia del anuncio, experiencia en la pagina de destino y CTR esperado. En nuestra experiencia gestionando campanas en Chile, el factor que mas impacto tiene es la experiencia en la landing page. Una landing rapida (menos de 2 segundos de carga), responsive, con contenido alineado a la keyword y un formulario claro puede subir tu QS de 5 a 8 en cuestion de semanas.
+              Los tres componentes del Quality Score son: relevancia del anuncio, experiencia en la página de destino y CTR esperado. En nuestra experiencia gestionando campañas en Chile, el factor que mas impacto tiene es la experiencia en la landing page. Una landing rápida (menos de 2 segundos de carga), responsive, con contenido alineado a la keyword y un formulario claro puede subir tu QS de 5 a 8 en cuestion de semanas.
             </p>
 
             <p className="text-gray-700 leading-relaxed mb-6">
-              Si quieres entender mejor como funciona el Quality Score y su impacto en tu cuenta, te recomendamos leer nuestra <Link href="/blog/google-ads-vs-meta-ads-chile-2026" className="text-blue-600 font-semibold hover:underline">comparativa entre Google Ads y Meta Ads 2026</Link> donde analizamos como cada plataforma determina los costos de tus campanas.
+              Si quieres entender mejor como funciona el Quality Score y su impacto en tu cuenta, te recomendamos leer nuestra <Link href="/blog/google-ads-vs-meta-ads-chile-2026" className="text-blue-600 font-semibold hover:underline">comparativa entre Google Ads y Meta Ads 2026</Link> donde analizamos como cada plataforma determina los costos de tus campañas.
             </p>
 
             {/* Section 6 */}
@@ -380,7 +380,7 @@ export default function ArticlePage() {
             </h2>
 
             <p className="text-gray-700 leading-relaxed mb-6">
-              Performance Max (PMax) se ha convertido en el tipo de campana mas popular en Chile para e-commerce y generacion de leads. En 2026, Google ha mejorado significativamente la transparencia de PMax, permitiendo ver el desglose de rendimiento por canal (Search, Display, YouTube, Discover, Maps, Gmail).
+              Performance Max (PMax) se ha convertido en el tipo de campaña mas popular en Chile para e-commerce y generacion de leads. En 2026, Google ha mejorado significativamente la transparencia de PMax, permitiendo ver el desglose de rendimiento por canal (Search, Display, YouTube, Discover, Maps, Gmail).
             </p>
 
             <div className="grid md:grid-cols-2 gap-6 mb-8">
@@ -408,11 +408,11 @@ export default function ArticlePage() {
             </div>
 
             <p className="text-gray-700 leading-relaxed mb-6">
-              Un error comun que vemos en Chile es lanzar PMax sin tener conversion tracking correctamente implementado. PMax es una campana basada 100% en IA y necesita datos de conversion de calidad para funcionar. Si no tienes implementado offline conversion tracking o al menos eventos de conversion en tu CRM, PMax va a optimizar hacia conversiones de baja calidad (formularios incompletos, leads falsos).
+              Un error comun que vemos en Chile es lanzar PMax sin tener conversion tracking correctamente implementado. PMax es una campaña basada 100% en IA y necesita datos de conversion de calidad para funcionar. Si no tienes implementado offline conversion tracking o al menos eventos de conversion en tu CRM, PMax va a optimizar hacia conversiones de baja calidad (formularios incompletos, leads falsos).
             </p>
 
             <p className="text-gray-700 leading-relaxed mb-6">
-              En M&P siempre implementamos conversion tracking avanzado con valores de conversion diferenciados antes de lanzar cualquier campana PMax. Esto permite que el algoritmo entienda que un lead calificado vale mas que un simple envio de formulario, y optimice en consecuencia. Para saber mas sobre como estructuramos estas campanas, visita nuestra pagina de <Link href="/servicios" className="text-blue-600 font-semibold hover:underline">servicios de performance marketing</Link>.
+              En M&P siempre implementamos conversion tracking avanzado con valores de conversion diferenciados antes de lanzar cualquier campaña PMax. Esto permite que el algoritmo entienda que un lead calificado vale mas que un simple envio de formulario, y optimice en consecuencia. Para saber mas sobre como estructuramos estas campañas, visita nuestra página de <Link href="/servicios" className="text-blue-600 font-semibold hover:underline">servicios de performance marketing</Link>.
             </p>
 
             {/* Section 7 */}
@@ -430,7 +430,7 @@ export default function ArticlePage() {
                 <AlertTriangle className="w-6 h-6 text-red-600 flex-shrink-0 mt-1" />
                 <div>
                   <h3 className="font-bold text-gray-900 mb-2">1. Landing pages profesionales</h3>
-                  <p className="text-gray-700">Una landing page optimizada para conversion cuesta entre $300.000 y $1.500.000 CLP (pago unico). Sin una buena landing, tu Quality Score baja y tu CPC sube. Es la inversion con mayor retorno que puedes hacer antes de lanzar campanas.</p>
+                  <p className="text-gray-700">Una landing page optimizada para conversion cuesta entre $300.000 y $1.500.000 CLP (pago único). Sin una buena landing, tu Quality Score baja y tu CPC sube. Es la inversion con mayor retorno que puedes hacer antes de lanzar campañas.</p>
                 </div>
               </div>
 
@@ -454,7 +454,7 @@ export default function ArticlePage() {
                 <AlertTriangle className="w-6 h-6 text-red-600 flex-shrink-0 mt-1" />
                 <div>
                   <h3 className="font-bold text-gray-900 mb-2">4. Herramientas complementarias</h3>
-                  <p className="text-gray-700">SEMrush o Ahrefs para investigacion de keywords ($50.000 - $200.000/mes), herramientas de call tracking ($30.000 - $100.000/mes), CRM ($0 - $150.000/mes). Estas herramientas no son opcionales si quieres gestionar campanas profesionalmente.</p>
+                  <p className="text-gray-700">SEMrush o Ahrefs para investigacion de keywords ($50.000 - $200.000/mes), herramientas de call tracking ($30.000 - $100.000/mes), CRM ($0 - $150.000/mes). Estas herramientas no son opcionales si quieres gestionar campañas profesionalmente.</p>
                 </div>
               </div>
 
@@ -462,7 +462,7 @@ export default function ArticlePage() {
                 <AlertTriangle className="w-6 h-6 text-red-600 flex-shrink-0 mt-1" />
                 <div>
                   <h3 className="font-bold text-gray-900 mb-2">5. Costo de oportunidad del aprendizaje</h3>
-                  <p className="text-gray-700">Las primeras 4-8 semanas de cualquier campana son de aprendizaje. Estima que el 15-25% de tu presupuesto inicial se destina a testear audiencias, keywords y creatividades. Este &ldquo;desperdicio controlado&rdquo; es parte del proceso y no hay forma de evitarlo.</p>
+                  <p className="text-gray-700">Las primeras 4-8 semanas de cualquier campaña son de aprendizaje. Estima que el 15-25% de tu presupuesto inicial se destina a testear audiencias, keywords y creatividades. Este &ldquo;desperdicio controlado&rdquo; es parte del proceso y no hay forma de evitarlo.</p>
                 </div>
               </div>
             </div>
@@ -477,16 +477,16 @@ export default function ArticlePage() {
             {/* Section 8 */}
             <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6 flex items-center gap-3">
               <Search className="w-8 h-8 text-teal-600" />
-              Tipos de campana y sus costos comparados
+              Tipos de campaña y sus costos comparados
             </h2>
 
             <p className="text-gray-700 leading-relaxed mb-6">
-              Google Ads ofrece multiples tipos de campana, cada uno con estructuras de costos muy diferentes. En Chile en 2026, la distribucion tipica de inversion por tipo de campana para una cuenta bien optimizada es la siguiente.
+              Google Ads ofrece multiples tipos de campaña, cada uno con estructuras de costos muy diferentes. En Chile en 2026, la distribucion tipica de inversion por tipo de campaña para una cuenta bien optimizada es la siguiente.
             </p>
 
             <div className="grid md:grid-cols-2 gap-6 mb-8">
               <div className="bg-white border border-gray-200 rounded-xl p-6">
-                <h3 className="text-xl font-bold text-gray-900 mb-4">Search (Busqueda)</h3>
+                <h3 className="text-xl font-bold text-gray-900 mb-4">Search (Búsqueda)</h3>
                 <ul className="space-y-2 text-gray-700">
                   <li><strong>% del presupuesto tipico:</strong> 40-60%</li>
                   <li><strong>CPC:</strong> $300 - $3.000</li>
@@ -565,7 +565,7 @@ export default function ArticlePage() {
                 <CheckCircle2 className="w-6 h-6 text-green-600 flex-shrink-0 mt-1" />
                 <div>
                   <h3 className="font-bold text-gray-900 mb-2">4. Landing pages especificas por grupo de anuncios</h3>
-                  <p className="text-gray-700">Enviar todo el trafico a tu homepage es el error numero 1 en Chile. Crear landing pages especificas por servicio o producto mejora el QS y puede reducir CPC entre 20-40%.</p>
+                  <p className="text-gray-700">Enviar todo el trafico a tu homepage es el error número 1 en Chile. Crear landing pages especificas por servicio o producto mejora el QS y puede reducir CPC entre 20-40%.</p>
                 </div>
               </div>
 
@@ -585,7 +585,7 @@ export default function ArticlePage() {
             </h2>
 
             <p className="text-gray-700 leading-relaxed mb-6">
-              Para ayudarte a dimensionar que resultados puedes esperar, armamos esta proyeccion basada en datos reales de campanas en Chile. Estos numeros asumen una campana bien optimizada con al menos 3 meses de historial.
+              Para ayudarte a dimensionar que resultados puedes esperar, armamos esta proyeccion basada en datos reales de campañas en Chile. Estos números asumen una campaña bien optimizada con al menos 3 meses de historial.
             </p>
 
             <div className="grid md:grid-cols-3 gap-6 mb-8">
@@ -612,11 +612,11 @@ export default function ArticlePage() {
             </div>
 
             <p className="text-gray-700 leading-relaxed mb-6">
-              Es importante notar que el CPL tiende a mantenerse o incluso mejorar levemente al escalar, siempre que se mantenga la estructura de cuenta y se agreguen nuevos segmentos de forma progresiva. Sin embargo, escalar demasiado rapido (mas de 20-30% de incremento semanal) puede desestabilizar los algoritmos de Smart Bidding y elevar el CPL temporalmente.
+              Es importante notar que el CPL tiende a mantenerse o incluso mejorar levemente al escalar, siempre que se mantenga la estructura de cuenta y se agreguen nuevos segmentos de forma progresiva. Sin embargo, escalar demasiado rápido (mas de 20-30% de incremento semanal) puede desestabilizar los algoritmos de Smart Bidding y elevar el CPL temporalmente.
             </p>
 
             <p className="text-gray-700 leading-relaxed mb-6">
-              Para una estimacion mas precisa para tu negocio, te invitamos a usar nuestro <Link href="/labs/predictor" className="text-blue-600 font-semibold hover:underline">Predictor de Campanas Google Ads</Link>, donde puedes ingresar tu industria, presupuesto y ticket promedio para obtener una proyeccion personalizada.
+              Para una estimacion mas precisa para tu negocio, te invitamos a usar nuestro <Link href="/labs/predictor" className="text-blue-600 font-semibold hover:underline">Predictor de Campañas Google Ads</Link>, donde puedes ingresar tu industria, presupuesto y ticket promedio para obtener una proyeccion personalizada.
             </p>
 
             {/* Section 11 - Errores */}
@@ -626,18 +626,18 @@ export default function ArticlePage() {
             </h2>
 
             <p className="text-gray-700 leading-relaxed mb-6">
-              Despues de auditar mas de 150 cuentas de Google Ads de empresas chilenas, estos son los errores que mas dinero desperdician. Evitarlos puede representar un ahorro de entre 30% y 50% de tu presupuesto mensual.
+              Después de auditar mas de 150 cuentas de Google Ads de empresas chilenas, estos son los errores que mas dinero desperdician. Evitarlos puede representar un ahorro de entre 30% y 50% de tu presupuesto mensual.
             </p>
 
             <div className="space-y-4 mb-8">
               <div className="bg-red-50 border-l-4 border-red-500 p-5 rounded-r-xl">
                 <h3 className="font-bold text-gray-900 mb-2">Error 1: No usar listas de keywords negativas</h3>
-                <p className="text-gray-700">El 68% de las cuentas que auditamos no tienen una lista de negativas adecuada. Resultado: 25-40% del presupuesto se va en clics irrelevantes como &ldquo;gratis&rdquo;, &ldquo;empleo&rdquo;, &ldquo;practicas&rdquo; o busquedas informacionales.</p>
+                <p className="text-gray-700">El 68% de las cuentas que auditamos no tienen una lista de negativas adecuada. Resultado: 25-40% del presupuesto se va en clics irrelevantes como &ldquo;gratis&rdquo;, &ldquo;empleo&rdquo;, &ldquo;practicas&rdquo; o búsquedas informacionales.</p>
               </div>
 
               <div className="bg-red-50 border-l-4 border-red-500 p-5 rounded-r-xl">
                 <h3 className="font-bold text-gray-900 mb-2">Error 2: Landing page = homepage</h3>
-                <p className="text-gray-700">Enviar todo el trafico a la pagina de inicio en vez de landing pages especificas por servicio. Esto reduce el Quality Score a 4-5 y sube el CPC entre 30% y 60%. Es dinero literalmente tirado a la basura.</p>
+                <p className="text-gray-700">Enviar todo el trafico a la página de inicio en vez de landing pages especificas por servicio. Esto reduce el Quality Score a 4-5 y sube el CPC entre 30% y 60%. Es dinero literalmente tirado a la basura.</p>
               </div>
 
               <div className="bg-red-50 border-l-4 border-red-500 p-5 rounded-r-xl">
@@ -647,7 +647,7 @@ export default function ArticlePage() {
 
               <div className="bg-red-50 border-l-4 border-red-500 p-5 rounded-r-xl">
                 <h3 className="font-bold text-gray-900 mb-2">Error 4: Presupuesto insuficiente repartido en todo</h3>
-                <p className="text-gray-700">Invertir $500.000/mes distribuidos en 5 campanas significa $100.000 por campana, lo cual es insuficiente para que cualquier campana tenga datos significativos. Es mejor concentrar en 1-2 campanas y escalar despues.</p>
+                <p className="text-gray-700">Invertir $500.000/mes distribuidos en 5 campañas significa $100.000 por campaña, lo cual es insuficiente para que cualquier campaña tenga datos significativos. Es mejor concentrar en 1-2 campañas y escalar después.</p>
               </div>
 
               <div className="bg-red-50 border-l-4 border-red-500 p-5 rounded-r-xl">
@@ -667,17 +667,17 @@ export default function ArticlePage() {
 
               <div className="bg-white border border-gray-200 rounded-xl p-6">
                 <h3 className="text-lg font-bold text-gray-900 mb-3">Cuanto demora Google Ads en dar resultados?</h3>
-                <p className="text-gray-700">En nuestra experiencia con campanas en Chile, los primeros leads llegan en las primeras 24-48 horas. Sin embargo, los resultados optimizados (CPL estable, Smart Bidding entrenado) toman entre 4 y 8 semanas. Para alcanzar el rendimiento optimo de la cuenta, necesitas al menos 3 meses de data y optimizacion continua.</p>
+                <p className="text-gray-700">En nuestra experiencia con campañas en Chile, los primeros leads llegan en las primeras 24-48 horas. Sin embargo, los resultados optimizados (CPL estable, Smart Bidding entrenado) toman entre 4 y 8 semanas. Para alcanzar el rendimiento optimo de la cuenta, necesitas al menos 3 meses de data y optimización continua.</p>
               </div>
 
               <div className="bg-white border border-gray-200 rounded-xl p-6">
                 <h3 className="text-lg font-bold text-gray-900 mb-3">Es mejor Google Ads o Meta Ads para mi negocio?</h3>
-                <p className="text-gray-700">Depende de tu modelo de negocio. Google Ads funciona mejor para busquedas de alta intencion (servicios, B2B, urgencias). Meta Ads es superior para productos visuales, e-commerce y construccion de marca. La mayoria de las empresas se benefician de usar ambos. Lee nuestra <Link href="/blog/google-ads-vs-meta-ads-chile-2026" className="text-blue-600 font-semibold hover:underline">comparativa completa Google Ads vs Meta Ads 2026</Link>.</p>
+                <p className="text-gray-700">Depende de tu modelo de negocio. Google Ads funciona mejor para búsquedas de alta intencion (servicios, B2B, urgencias). Meta Ads es superior para productos visuales, e-commerce y construccion de marca. La mayoria de las empresas se benefician de usar ambos. Lee nuestra <Link href="/blog/google-ads-vs-meta-ads-chile-2026" className="text-blue-600 font-semibold hover:underline">comparativa completa Google Ads vs Meta Ads 2026</Link>.</p>
               </div>
 
               <div className="bg-white border border-gray-200 rounded-xl p-6">
                 <h3 className="text-lg font-bold text-gray-900 mb-3">Que porcentaje de mi presupuesto total deberia ir a Google Ads?</h3>
-                <p className="text-gray-700">Como regla general, recomendamos destinar entre un 35% y 45% de tu presupuesto total de marketing digital a Google Ads si tu negocio depende de busquedas de intencion. Si vendes productos visuales o de impulso, ese porcentaje puede bajar a 25-30% a favor de Meta o TikTok. Lee mas en nuestra <Link href="/blog/cuanto-invertir-publicidad-digital-chile-2026" className="text-blue-600 font-semibold hover:underline">guia de cuanto invertir en publicidad digital</Link>.</p>
+                <p className="text-gray-700">Como regla general, recomendamos destinar entre un 35% y 45% de tu presupuesto total de marketing digital a Google Ads si tu negocio depende de búsquedas de intencion. Si vendes productos visuales o de impulso, ese porcentaje puede bajar a 25-30% a favor de Meta o TikTok. Lee mas en nuestra <Link href="/blog/cuanto-invertir-publicidad-digital-chile-2026" className="text-blue-600 font-semibold hover:underline">guia de cuanto invertir en publicidad digital</Link>.</p>
               </div>
 
               <div className="bg-white border border-gray-200 rounded-xl p-6">
@@ -697,7 +697,7 @@ export default function ArticlePage() {
 
               <div className="bg-white border border-gray-200 rounded-xl p-6">
                 <h3 className="text-lg font-bold text-gray-900 mb-3">Como saber si mi inversion en Google Ads esta funcionando?</h3>
-                <p className="text-gray-700">Las metricas clave son: CPL (costo por lead), tasa de cierre de leads, CAC (costo de adquisicion de cliente) y ROAS (retorno sobre inversion publicitaria). Si tu ROAS es mayor a 3x, tu campana es rentable. Si tu CAC es menor que tu margen por cliente, estas generando beneficio. Usa nuestra <Link href="/utilidades/calculadora-cac" className="text-blue-600 font-semibold hover:underline">Calculadora CAC</Link> para verificar tus numeros.</p>
+                <p className="text-gray-700">Las métricas clave son: CPL (costo por lead), tasa de cierre de leads, CAC (costo de adquisicion de cliente) y ROAS (retorno sobre inversion publicitaria). Si tu ROAS es mayor a 3x, tu campaña es rentable. Si tu CAC es menor que tu margen por cliente, estas generando beneficio. Usa nuestra <Link href="/utilidades/calculadora-cac" className="text-blue-600 font-semibold hover:underline">Calculadora CAC</Link> para verificar tus números.</p>
               </div>
             </div>
 
@@ -707,7 +707,7 @@ export default function ArticlePage() {
                 Quieres saber exactamente cuanto deberia costar Google Ads para tu negocio?
               </h3>
               <p className="text-xl text-blue-100 mb-8">
-                En M&P gestionamos mas de $80M en inversion mensual para empresas chilenas. Agenda una auditoria gratuita y te mostramos cuanto puedes ahorrar en tus campanas actuales.
+                En M&P gestionamos mas de $80M en inversion mensual para empresas chilenas. Agenda una auditoria gratuita y te mostramos cuanto puedes ahorrar en tus campañas actuales.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link
@@ -728,7 +728,7 @@ export default function ArticlePage() {
 
           {/* Related Posts */}
           <nav className="mt-12 pt-8 border-t border-gray-200">
-            <h3 className="text-lg font-bold text-gray-900 mb-4">Articulos Relacionados</h3>
+            <h3 className="text-lg font-bold text-gray-900 mb-4">Artículos Relacionados</h3>
             <div className="flex flex-wrap gap-2">
               <Link href="/blog/cuanto-invertir-publicidad-digital-chile-2026" className="text-sm text-blue-600 hover:text-blue-800 bg-blue-50 px-3 py-1.5 rounded-lg">
                 Cuanto Invertir en Publicidad Digital Chile 2026 &rarr;
@@ -743,7 +743,7 @@ export default function ArticlePage() {
                 Ranking Agencias Marketing Digital Chile &rarr;
               </Link>
               <Link href="/labs/predictor" className="text-sm text-green-600 hover:text-green-800 bg-green-50 px-3 py-1.5 rounded-lg">
-                Predictor de Campanas &rarr;
+                Predictor de Campañas &rarr;
               </Link>
             </div>
           </nav>

@@ -84,11 +84,11 @@ export default function ArticlePage() {
           </div>
 
           <h1 className="text-4xl lg:text-5xl font-black text-gray-900 mb-6 leading-tight">
-            Google Ads vs Meta Ads en Chile 2026: Comparativa Completa con Data Real de +250 Campanas
+            Google Ads vs Meta Ads en Chile 2026: Comparativa Completa con Data Real de +250 Campañas
           </h1>
 
           <p className="text-xl text-gray-600 mb-12 leading-relaxed">
-            La eterna pregunta: Google Ads o Meta Ads? La respuesta en 2026 no es una u otra, sino entender cuando cada plataforma gana, como combinarlas y donde poner tu dinero segun tu industria, objetivos y presupuesto. Aqui esta la comparativa mas completa basada en data real del mercado chileno.
+            La eterna pregunta: Google Ads o Meta Ads? La respuesta en 2026 no es una u otra, sino entender cuando cada plataforma gana, como combinarlas y donde poner tu dinero según tu industria, objetivos y presupuesto. Aqui esta la comparativa mas completa basada en data real del mercado chileno.
           </p>
 
           <div className="prose prose-lg max-w-none">
@@ -100,18 +100,18 @@ export default function ArticlePage() {
             </h2>
 
             <p className="text-gray-700 leading-relaxed mb-6">
-              Antes de comparar metricas, hay que entender la diferencia de modelo entre ambas plataformas, porque esto define todo lo demas.
+              Antes de comparar métricas, hay que entender la diferencia de modelo entre ambas plataformas, porque esto define todo lo demas.
             </p>
 
             <div className="grid md:grid-cols-2 gap-6 mb-8">
               <div className="bg-blue-50 border-2 border-blue-300 rounded-xl p-6">
                 <h3 className="text-xl font-bold text-blue-800 mb-4">Google Ads = Captura de demanda</h3>
-                <p className="text-gray-700 mb-4">El usuario ya tiene una necesidad y la esta buscando activamente. Tu anuncio aparece cuando alguien busca &ldquo;abogado laboral Santiago&rdquo; o &ldquo;comprar zapatillas running&rdquo;. La intencion de compra es alta porque el usuario inicio la busqueda.</p>
+                <p className="text-gray-700 mb-4">El usuario ya tiene una necesidad y la esta buscando activamente. Tu anuncio aparece cuando alguien busca &ldquo;abogado laboral Santiago&rdquo; o &ldquo;comprar zapatillas running&rdquo;. La intencion de compra es alta porque el usuario inicio la búsqueda.</p>
                 <ul className="space-y-2 text-gray-700">
                   <li><strong>Modelo:</strong> Pull marketing (el usuario te encuentra)</li>
                   <li><strong>Momento:</strong> Consideracion y decision</li>
                   <li><strong>Fortaleza:</strong> Alta conversion, leads calificados</li>
-                  <li><strong>Debilidad:</strong> Limitado al volumen de busquedas existente</li>
+                  <li><strong>Debilidad:</strong> Limitado al volumen de búsquedas existente</li>
                 </ul>
               </div>
 
@@ -128,7 +128,7 @@ export default function ArticlePage() {
             </div>
 
             <p className="text-gray-700 leading-relaxed mb-6">
-              Esta diferencia fundamental es la razon por la que no tiene sentido preguntar &ldquo;cual es mejor&rdquo; de forma absoluta. Google captura demanda existente; Meta crea demanda nueva. Las empresas mas exitosas usan ambas plataformas en sinergia: Meta genera awareness y consideracion, Google captura la busqueda que esa awareness genera. Es un ciclo que se retroalimenta.
+              Esta diferencia fundamental es la razon por la que no tiene sentido preguntar &ldquo;cual es mejor&rdquo; de forma absoluta. Google captura demanda existente; Meta crea demanda nueva. Las empresas mas exitosas usan ambas plataformas en sinergia: Meta genera awareness y consideracion, Google captura la búsqueda que esa awareness genera. Es un ciclo que se retroalimenta.
             </p>
 
             {/* Section 2: Head-to-head comparison table */}
@@ -138,7 +138,7 @@ export default function ArticlePage() {
             </h2>
 
             <p className="text-gray-700 leading-relaxed mb-6">
-              Evaluamos ambas plataformas en 10 criterios fundamentales basados en data real de campanas activas en Chile durante 2026. El &ldquo;ganador&rdquo; de cada criterio puede variar segun tu industria, pero estos son los patrones generales que observamos.
+              Evaluamos ambas plataformas en 10 criterios fundamentales basados en data real de campañas activas en Chile durante 2026. El &ldquo;ganador&rdquo; de cada criterio puede variar según tu industria, pero estos son los patrones generales que observamos.
             </p>
 
             <div className="overflow-x-auto mb-8">
@@ -166,7 +166,7 @@ export default function ArticlePage() {
                   </tr>
                   <tr className="hover:bg-gray-50">
                     <td className="px-5 py-4 font-semibold text-gray-900">Calidad de leads</td>
-                    <td className="px-5 py-4 text-gray-700">Alta (busqueda activa)</td>
+                    <td className="px-5 py-4 text-gray-700">Alta (búsqueda activa)</td>
                     <td className="px-5 py-4 text-gray-700">Media-Baja (interrupcion)</td>
                     <td className="px-5 py-4 font-bold text-blue-600">Google</td>
                   </tr>
@@ -184,13 +184,13 @@ export default function ArticlePage() {
                   </tr>
                   <tr className="hover:bg-gray-50">
                     <td className="px-5 py-4 font-semibold text-gray-900">Escalabilidad</td>
-                    <td className="px-5 py-4 text-gray-700">Limitada por volumen de busqueda</td>
+                    <td className="px-5 py-4 text-gray-700">Limitada por volumen de búsqueda</td>
                     <td className="px-5 py-4 text-gray-700">Amplia (audiencias masivas)</td>
                     <td className="px-5 py-4 font-bold text-purple-600">Meta</td>
                   </tr>
                   <tr className="hover:bg-gray-50">
                     <td className="px-5 py-4 font-semibold text-gray-900">Atribucion</td>
-                    <td className="px-5 py-4 text-gray-700">Mas precisa (busqueda directa)</td>
+                    <td className="px-5 py-4 text-gray-700">Mas precisa (búsqueda directa)</td>
                     <td className="px-5 py-4 text-gray-700">Compleja (post-iOS 14.5)</td>
                     <td className="px-5 py-4 font-bold text-blue-600">Google</td>
                   </tr>
@@ -201,7 +201,7 @@ export default function ArticlePage() {
                     <td className="px-5 py-4 font-bold text-purple-600">Meta</td>
                   </tr>
                   <tr className="hover:bg-gray-50">
-                    <td className="px-5 py-4 font-semibold text-gray-900">Complejidad de gestion</td>
+                    <td className="px-5 py-4 font-semibold text-gray-900">Complejidad de gestión</td>
                     <td className="px-5 py-4 text-gray-700">Alta (keywords, negativas, match types)</td>
                     <td className="px-5 py-4 text-gray-700">Media (creatividades, audiencias)</td>
                     <td className="px-5 py-4 font-bold text-purple-600">Meta (mas simple)</td>
@@ -259,7 +259,7 @@ export default function ArticlePage() {
                 <CheckCircle2 className="w-6 h-6 text-blue-600 flex-shrink-0 mt-1" />
                 <div>
                   <h3 className="font-bold text-gray-900 mb-2">Google Shopping para e-commerce</h3>
-                  <p className="text-gray-700">Si vendes productos fisicos con precio competitivo, Google Shopping muestra tu producto directamente en los resultados de busqueda con foto, precio y tienda. El ROAS de Shopping en Chile promedia 4.5x - 8x para tiendas bien optimizadas.</p>
+                  <p className="text-gray-700">Si vendes productos fisicos con precio competitivo, Google Shopping muestra tu producto directamente en los resultados de búsqueda con foto, precio y tienda. El ROAS de Shopping en Chile promedia 4.5x - 8x para tiendas bien optimizadas.</p>
                 </div>
               </div>
 
@@ -267,7 +267,7 @@ export default function ArticlePage() {
                 <CheckCircle2 className="w-6 h-6 text-blue-600 flex-shrink-0 mt-1" />
                 <div>
                   <h3 className="font-bold text-gray-900 mb-2">Negocios locales con presencia fisica</h3>
-                  <p className="text-gray-700">Restaurantes, clinicas, tiendas fisicas. Google Maps Ads y campanas locales conectan directamente con personas buscando en tu zona. El CTR de resultados locales en Google es 5-8% en Chile, significativamente mayor que awareness en redes sociales.</p>
+                  <p className="text-gray-700">Restaurantes, clinicas, tiendas fisicas. Google Maps Ads y campañas locales conectan directamente con personas buscando en tu zona. El CTR de resultados locales en Google es 5-8% en Chile, significativamente mayor que awareness en redes sociales.</p>
                 </div>
               </div>
             </div>
@@ -287,7 +287,7 @@ export default function ArticlePage() {
                 <CheckCircle2 className="w-6 h-6 text-purple-600 flex-shrink-0 mt-1" />
                 <div>
                   <h3 className="font-bold text-gray-900 mb-2">E-commerce de moda, belleza y lifestyle</h3>
-                  <p className="text-gray-700">Productos que se venden por impulso visual: ropa, cosmeticos, accesorios, decoracion. El formato de Reels y Carousel de Instagram genera deseo de compra que no existe en una busqueda de Google. El ROAS de e-commerce fashion en Meta Chile promedia 3.5x - 7.0x.</p>
+                  <p className="text-gray-700">Productos que se venden por impulso visual: ropa, cosmeticos, accesorios, decoracion. El formato de Reels y Carousel de Instagram genera deseo de compra que no existe en una búsqueda de Google. El ROAS de e-commerce fashion en Meta Chile promedia 3.5x - 7.0x.</p>
                 </div>
               </div>
 
@@ -319,7 +319,7 @@ export default function ArticlePage() {
                 <CheckCircle2 className="w-6 h-6 text-purple-600 flex-shrink-0 mt-1" />
                 <div>
                   <h3 className="font-bold text-gray-900 mb-2">Generacion de leads de alto volumen</h3>
-                  <p className="text-gray-700">Los formularios de Lead Ads de Meta (sin salir de la app) generan leads a un CPL 40-60% menor que Google en muchas industrias. La calidad es menor, pero si tienes un equipo de ventas que puede filtrar y contactar rapido, el volumen compensa. Ideal para inmobiliarias, educacion y servicios masivos.</p>
+                  <p className="text-gray-700">Los formularios de Lead Ads de Meta (sin salir de la app) generan leads a un CPL 40-60% menor que Google en muchas industrias. La calidad es menor, pero si tienes un equipo de ventas que puede filtrar y contactar rápido, el volumen compensa. Ideal para inmobiliarias, educacion y servicios masivos.</p>
                 </div>
               </div>
             </div>
@@ -331,7 +331,7 @@ export default function ArticlePage() {
             </h2>
 
             <p className="text-gray-700 leading-relaxed mb-6">
-              Las empresas que mejores resultados obtienen en Chile son las que usan ambas plataformas en sinergia. Meta genera awareness y consideracion; Google captura la busqueda que ese awareness genera. Este ciclo se retroalimenta y multiplica los resultados de ambos canales.
+              Las empresas que mejores resultados obtienen en Chile son las que usan ambas plataformas en sinergia. Meta genera awareness y consideracion; Google captura la búsqueda que ese awareness genera. Este ciclo se retroalimenta y multiplica los resultados de ambos canales.
             </p>
 
             <div className="bg-gradient-to-r from-blue-50 to-purple-50 border-2 border-blue-200 rounded-xl p-8 mb-8">
@@ -367,7 +367,7 @@ export default function ArticlePage() {
             </h2>
 
             <p className="text-gray-700 leading-relaxed mb-6">
-              No existe una division unica que funcione para todos. Aqui van los escenarios que recomendamos segun tipo de negocio en Chile.
+              No existe una division única que funcione para todos. Aqui van los escenarios que recomendamos según tipo de negocio en Chile.
             </p>
 
             <div className="grid md:grid-cols-2 gap-6 mb-8">
@@ -398,7 +398,7 @@ export default function ArticlePage() {
                   <p><strong>Meta:</strong> 40% - Lead Ads + retargeting visual</p>
                   <p><strong>Portales:</strong> 10% - Portal Inmobiliario, TocToc</p>
                 </div>
-                <p className="text-sm text-gray-500 mt-4">Ejemplo: Proyecto nuevo. Meta genera leads masivos, Google captura busquedas de zona.</p>
+                <p className="text-sm text-gray-500 mt-4">Ejemplo: Proyecto nuevo. Meta genera leads masivos, Google captura búsquedas de zona.</p>
               </div>
 
               <div className="bg-white border border-gray-200 rounded-xl p-6">
@@ -408,7 +408,7 @@ export default function ArticlePage() {
                   <p><strong>Meta:</strong> 40% - Awareness + Lead Ads</p>
                   <p><strong>TikTok:</strong> 15% - Audiencia joven</p>
                 </div>
-                <p className="text-sm text-gray-500 mt-4">Ejemplo: Instituto tecnico. Google captura busquedas de carreras, Meta expande el funnel.</p>
+                <p className="text-sm text-gray-500 mt-4">Ejemplo: Instituto tecnico. Google captura búsquedas de carreras, Meta expande el funnel.</p>
               </div>
             </div>
 
@@ -419,7 +419,7 @@ export default function ArticlePage() {
             </h2>
 
             <p className="text-gray-700 leading-relaxed mb-6">
-              En 2026, tanto Google como Meta apuestan fuertemente por campanas impulsadas por IA. Performance Max (Google) y Advantage+ (Meta) son campanas donde la plataforma toma la mayoria de las decisiones de targeting, ubicacion y puja. Pero funcionan de forma muy diferente.
+              En 2026, tanto Google como Meta apuestan fuertemente por campañas impulsadas por IA. Performance Max (Google) y Advantage+ (Meta) son campañas donde la plataforma toma la mayoria de las decisiones de targeting, ubicacion y puja. Pero funcionan de forma muy diferente.
             </p>
 
             <div className="overflow-x-auto mb-8">
@@ -472,7 +472,7 @@ export default function ArticlePage() {
             </div>
 
             <p className="text-gray-700 leading-relaxed mb-6">
-              Nuestra recomendacion para Chile en 2026: usa PMax para e-commerce con catalogo de productos y para lead gen con alto volumen de conversiones (30+/mes). Usa Advantage+ para e-commerce de moda, belleza y productos visuales donde el creative testing es clave. Ambas campanas requieren conversion tracking impecable; sin datos de calidad, la IA optimiza hacia lo incorrecto.
+              Nuestra recomendacion para Chile en 2026: usa PMax para e-commerce con catalogo de productos y para lead gen con alto volumen de conversiones (30+/mes). Usa Advantage+ para e-commerce de moda, belleza y productos visuales donde el creative testing es clave. Ambas campañas requieren conversion tracking impecable; sin datos de calidad, la IA optimiza hacia lo incorrecto.
             </p>
 
             {/* Section 8: By industry */}
@@ -482,7 +482,7 @@ export default function ArticlePage() {
             </h2>
 
             <p className="text-gray-700 leading-relaxed mb-6">
-              Basado en nuestra data de mas de 250 campanas activas en Chile, este es el canal ganador por industria. &ldquo;Ganador&rdquo; se define como la plataforma que genera mejor ROAS de forma consistente.
+              Basado en nuestra data de mas de 250 campañas activas en Chile, este es el canal ganador por industria. &ldquo;Ganador&rdquo; se define como la plataforma que genera mejor ROAS de forma consistente.
             </p>
 
             <div className="grid md:grid-cols-2 gap-4 mb-8">
@@ -507,7 +507,7 @@ export default function ArticlePage() {
                 <p className="text-gray-700 text-sm">Ganador: <strong>Meta Ads</strong>. ROAS 6.0x vs 4.5x Google.</p>
               </div>
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                <p className="font-semibold text-blue-800 mb-1">B2B / Consultoria</p>
+                <p className="font-semibold text-blue-800 mb-1">B2B / Consultoría</p>
                 <p className="text-gray-700 text-sm">Ganador: <strong>Google Ads</strong>. ROAS 3.8x vs 1.5x Meta.</p>
               </div>
               <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
@@ -527,7 +527,7 @@ export default function ArticlePage() {
             </h2>
 
             <p className="text-gray-700 leading-relaxed mb-6">
-              Uno de los mayores retos al usar Google y Meta simultaneamente es la atribucion. Ambas plataformas se atribuyen conversiones que la otra tambien reclama. El usuario ve un anuncio en Instagram, busca en Google, hace clic en tu anuncio de Search y convierte. Google dice &ldquo;yo lo hice&rdquo;, Meta dice &ldquo;yo lo hice&rdquo;. La realidad es que ambos contribuyeron.
+              Uno de los mayores retos al usar Google y Meta simultaneamente es la atribucion. Ambas plataformas se atribuyen conversiones que la otra también reclama. El usuario ve un anuncio en Instagram, busca en Google, hace clic en tu anuncio de Search y convierte. Google dice &ldquo;yo lo hice&rdquo;, Meta dice &ldquo;yo lo hice&rdquo;. La realidad es que ambos contribuyeron.
             </p>
 
             <div className="bg-indigo-50 border-l-4 border-indigo-600 p-6 rounded-r-xl mb-8">
@@ -536,12 +536,12 @@ export default function ArticlePage() {
                 <li><strong>1. UTMs consistentes:</strong> Parametros UTM en cada anuncio de cada plataforma, trackeados en GA4.</li>
                 <li><strong>2. Modelo data-driven en GA4:</strong> Usamos el modelo de atribucion data-driven de GA4 que distribuye el credito entre todos los touchpoints.</li>
                 <li><strong>3. Conversion lift tests:</strong> Periodicamente pausamos un canal y medimos el impacto en el otro para entender la contribucion incremental real.</li>
-                <li><strong>4. Dashboard unificado:</strong> Un solo dashboard que muestra metricas de ambas plataformas lado a lado, con metricas de negocio (ventas reales, no solo leads reportados).</li>
+                <li><strong>4. Dashboard unificado:</strong> Un solo dashboard que muestra métricas de ambas plataformas lado a lado, con métricas de negocio (ventas reales, no solo leads reportados).</li>
               </ul>
             </div>
 
             <p className="text-gray-700 leading-relaxed mb-6">
-              La regla practica: si la suma de conversiones reportadas por Google + Meta es un 30-40% mayor que tus conversiones reales, estas en un rango normal de overlap. Si la diferencia es mayor al 50%, necesitas revisar tu tracking y modelo de atribucion. Para mas detalles sobre como medimos resultados, visita nuestra pagina de <Link href="/servicios" className="text-blue-600 font-semibold hover:underline">servicios de performance marketing</Link>.
+              La regla practica: si la suma de conversiones reportadas por Google + Meta es un 30-40% mayor que tus conversiones reales, estas en un rango normal de overlap. Si la diferencia es mayor al 50%, necesitas revisar tu tracking y modelo de atribucion. Para mas detalles sobre como medimos resultados, visita nuestra página de <Link href="/servicios" className="text-blue-600 font-semibold hover:underline">servicios de performance marketing</Link>.
             </p>
 
             {/* Section 10 */}
@@ -567,7 +567,7 @@ export default function ArticlePage() {
                   </ul>
                 </div>
                 <div>
-                  <h4 className="font-bold text-gray-900 mb-2">Despues (Meta + Google hibrido):</h4>
+                  <h4 className="font-bold text-gray-900 mb-2">Después (Meta + Google hibrido):</h4>
                   <ul className="space-y-1 text-gray-700">
                     <li>Inversion: $6.000.000/mes (Meta $3.5M + Google $2.5M)</li>
                     <li>Revenue: $33.000.000/mes</li>
@@ -577,7 +577,7 @@ export default function ArticlePage() {
                 </div>
               </div>
               <p className="text-gray-700 mt-4">
-                <strong>Resultado:</strong> Un 33% mas de inversion genero un 83% mas de revenue. El ROAS subio de 4.0x a 5.5x porque Google Shopping capturo busquedas generadas por el awareness de Meta, con tasa de conversion 3x mayor.
+                <strong>Resultado:</strong> Un 33% mas de inversion genero un 83% mas de revenue. El ROAS subio de 4.0x a 5.5x porque Google Shopping capturo búsquedas generadas por el awareness de Meta, con tasa de conversion 3x mayor.
               </p>
             </div>
 
@@ -588,7 +588,7 @@ export default function ArticlePage() {
             </h2>
 
             <p className="text-gray-700 leading-relaxed mb-6">
-              Despues de gestionar mas de $80M en inversion publicitaria mensual entre Google y Meta para empresas chilenas, estas son nuestras conclusiones para 2026:
+              Después de gestionar mas de $80M en inversion publicitaria mensual entre Google y Meta para empresas chilenas, estas son nuestras conclusiones para 2026:
             </p>
 
             <div className="space-y-4 mb-8">
@@ -602,7 +602,7 @@ export default function ArticlePage() {
               </div>
               <div className="flex items-start gap-4">
                 <CheckCircle2 className="w-6 h-6 text-green-600 flex-shrink-0 mt-1" />
-                <p className="text-gray-700"><strong>La IA domina ambas plataformas:</strong> PMax y Advantage+ son el presente. Aprende a alimentarlas con data de calidad en vez de luchar contra la automatizacion.</p>
+                <p className="text-gray-700"><strong>La IA domina ambas plataformas:</strong> PMax y Advantage+ son el presente. Aprende a alimentarlas con data de calidad en vez de luchar contra la automatización.</p>
               </div>
               <div className="flex items-start gap-4">
                 <CheckCircle2 className="w-6 h-6 text-green-600 flex-shrink-0 mt-1" />
@@ -616,17 +616,17 @@ export default function ArticlePage() {
             <div className="space-y-6 mb-12">
               <div className="bg-white border border-gray-200 rounded-xl p-6">
                 <h3 className="text-lg font-bold text-gray-900 mb-3">Que plataforma genera leads mas baratos en Chile?</h3>
-                <p className="text-gray-700">Meta Ads genera leads a un CPL 40-60% menor que Google en la mayoria de industrias. Sin embargo, los leads de Google tienen una tasa de cierre 2-3x mayor porque provienen de busquedas de alta intencion. El CPL mas bajo no siempre significa mejor resultado. Evalua el costo por cliente (CAC), no solo el costo por lead.</p>
+                <p className="text-gray-700">Meta Ads genera leads a un CPL 40-60% menor que Google en la mayoria de industrias. Sin embargo, los leads de Google tienen una tasa de cierre 2-3x mayor porque provienen de búsquedas de alta intencion. El CPL mas bajo no siempre significa mejor resultado. Evalua el costo por cliente (CAC), no solo el costo por lead.</p>
               </div>
 
               <div className="bg-white border border-gray-200 rounded-xl p-6">
-                <h3 className="text-lg font-bold text-gray-900 mb-3">Puedo empezar con un solo canal y agregar el otro despues?</h3>
+                <h3 className="text-lg font-bold text-gray-900 mb-3">Puedo empezar con un solo canal y agregar el otro después?</h3>
                 <p className="text-gray-700">Si, y es lo recomendable si tu presupuesto es limitado (bajo $2M/mes). Empieza con el canal que mejor se alinea con tu modelo de negocio (Google para servicios, Meta para productos visuales), estabiliza los resultados durante 2-3 meses, y luego agrega el segundo canal con un 25-30% del presupuesto total.</p>
               </div>
 
               <div className="bg-white border border-gray-200 rounded-xl p-6">
                 <h3 className="text-lg font-bold text-gray-900 mb-3">Como afecta el fin de las cookies de terceros a cada plataforma?</h3>
-                <p className="text-gray-700">Meta fue mas afectada por la privacidad (iOS 14.5) y ha reconstruido su modelo con Conversions API y modelado estadistico. Google mantiene ventaja porque sus datos son de primera parte (busquedas dentro de Google). Ambas plataformas funcionan bien en 2026 si implementas server-side tracking correctamente. Lee mas en nuestro articulo sobre <Link href="/blog/tendencias-marketing-digital-chile-2026" className="text-blue-600 font-semibold hover:underline">tendencias de marketing digital 2026</Link>.</p>
+                <p className="text-gray-700">Meta fue mas afectada por la privacidad (iOS 14.5) y ha reconstruido su modelo con Conversions API y modelado estadistico. Google mantiene ventaja porque sus datos son de primera parte (búsquedas dentro de Google). Ambas plataformas funcionan bien en 2026 si implementas server-side tracking correctamente. Lee mas en nuestro artículo sobre <Link href="/blog/tendencias-marketing-digital-chile-2026" className="text-blue-600 font-semibold hover:underline">tendencias de marketing digital 2026</Link>.</p>
               </div>
 
               <div className="bg-white border border-gray-200 rounded-xl p-6">
@@ -635,13 +635,13 @@ export default function ArticlePage() {
               </div>
 
               <div className="bg-white border border-gray-200 rounded-xl p-6">
-                <h3 className="text-lg font-bold text-gray-900 mb-3">Deberia usar TikTok Ads ademas de Google y Meta?</h3>
+                <h3 className="text-lg font-bold text-gray-900 mb-3">Deberia usar TikTok Ads además de Google y Meta?</h3>
                 <p className="text-gray-700">Si tu audiencia tiene 18-40 anos y tu producto es visual, TikTok es un excelente tercer canal. Los CPMs son 40-60% menores que Meta y la plataforma de ads ha madurado mucho en 2026. Asigna un 10-15% de tu presupuesto a TikTok como test inicial. Si funciona, escala. Si tu audiencia es 40+ o B2B, TikTok aun no es prioritario.</p>
               </div>
 
               <div className="bg-white border border-gray-200 rounded-xl p-6">
                 <h3 className="text-lg font-bold text-gray-900 mb-3">Cuanto presupuesto necesito para usar ambas plataformas efectivamente?</h3>
-                <p className="text-gray-700">Minimo $2.500.000 CLP/mes en media total. Distribuido en $1.500.000 Google + $1.000.000 Meta (o viceversa segun tu industria). Con menos de ese monto, es mejor concentrarse en un solo canal. Para una estrategia hibrida robusta con datos significativos, recomendamos $5M+ en media. Revisa nuestra <Link href="/blog/cuanto-invertir-publicidad-digital-chile-2026" className="text-blue-600 font-semibold hover:underline">guia de cuanto invertir en publicidad digital</Link>.</p>
+                <p className="text-gray-700">Minimo $2.500.000 CLP/mes en media total. Distribuido en $1.500.000 Google + $1.000.000 Meta (o viceversa según tu industria). Con menos de ese monto, es mejor concentrarse en un solo canal. Para una estrategia hibrida robusta con datos significativos, recomendamos $5M+ en media. Revisa nuestra <Link href="/blog/cuanto-invertir-publicidad-digital-chile-2026" className="text-blue-600 font-semibold hover:underline">guia de cuanto invertir en publicidad digital</Link>.</p>
               </div>
             </div>
 
@@ -672,7 +672,7 @@ export default function ArticlePage() {
 
           {/* Related Posts */}
           <nav className="mt-12 pt-8 border-t border-gray-200">
-            <h3 className="text-lg font-bold text-gray-900 mb-4">Articulos Relacionados</h3>
+            <h3 className="text-lg font-bold text-gray-900 mb-4">Artículos Relacionados</h3>
             <div className="flex flex-wrap gap-2">
               <Link href="/blog/cuanto-cuesta-google-ads-chile-2026" className="text-sm text-blue-600 hover:text-blue-800 bg-blue-50 px-3 py-1.5 rounded-lg">
                 Cuanto Cuesta Google Ads Chile 2026 &rarr;

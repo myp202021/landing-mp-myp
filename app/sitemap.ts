@@ -628,6 +628,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.9,
     },
     {
+      url: `${baseUrl}/agentes-ia`,
+      lastModified: new Date('2026-09-28'),
+      changeFrequency: 'weekly',
+      priority: 0.9,
+    },
+    {
       url: `${baseUrl}/servicios/geo-chile`,
       lastModified: new Date('2026-09-28'),
       changeFrequency: 'monthly',

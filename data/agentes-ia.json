@@ -7,7 +7,8 @@
     "frecuencia": "Todos los días",
     "repo": "myp202021/landing-mp-myp",
     "workflow": "blog-diario.yml",
-    "url_publica": "/blog"
+    "url_publica": "/blog",
+    "imagen": "/agentes/blog-diario.jpg"
   },
   {
     "id": "blog-geo",
@@ -17,7 +18,8 @@
     "frecuencia": "Lunes a viernes",
     "repo": "myp202021/landing-mp-myp",
     "workflow": "blog-geo-diario.yml",
-    "url_publica": "/blog"
+    "url_publica": "/blog",
+    "imagen": "/agentes/blog-geo.jpg"
   },
   {
     "id": "ranking-semanal",
@@ -27,7 +29,8 @@
     "frecuencia": "Jueves",
     "repo": "myp202021/landing-mp-myp",
     "workflow": "blog-rankings-semanal.yml",
-    "url_publica": "/blog"
+    "url_publica": "/blog",
+    "imagen": "/agentes/ranking-semanal.jpg"
   },
   {
     "id": "ranking-verificado",
@@ -37,7 +40,8 @@
     "frecuencia": "Día 1 de cada mes",
     "repo": "myp202021/landing-mp-myp",
     "workflow": "ranking-agencias-verificado.yml",
-    "url_publica": "/blog/ranking-agencias-marketing-digital-chile-verificado"
+    "url_publica": null,
+    "imagen": null
   },
   {
     "id": "columna",
@@ -47,7 +51,8 @@
     "frecuencia": "Lunes",
     "repo": "myp202021/landing-mp-myp",
     "workflow": "columna-semanal.yml",
-    "url_publica": "/blog"
+    "url_publica": "/blog",
+    "imagen": "/agentes/columna.jpg"
   },
   {
     "id": "termometro",
@@ -57,7 +62,8 @@
     "frecuencia": "Sábados",
     "repo": "myp202021/landing-mp-myp",
     "workflow": "indicadores-marketing.yml",
-    "url_publica": "/indicadores"
+    "url_publica": "/indicadores",
+    "imagen": "/agentes/termometro.jpg"
   },
   {
     "id": "revisor-editorial",
@@ -67,7 +73,8 @@
     "frecuencia": "En cada publicación",
     "repo": "myp202021/landing-mp-myp",
     "workflow": "blog-diario.yml",
-    "url_publica": null
+    "url_publica": null,
+    "imagen": null
   },
   {
     "id": "verificador-fuentes",
@@ -77,7 +84,8 @@
     "frecuencia": "En cada publicación",
     "repo": "myp202021/landing-mp-myp",
     "workflow": "ranking-agencias-verificado.yml",
-    "url_publica": null
+    "url_publica": null,
+    "imagen": null
   },
   {
     "id": "revisor-grillas",
@@ -87,7 +95,8 @@
     "frecuencia": "Mensual",
     "repo": "myp202021/landing-mp-myp",
     "workflow": "revisar-grillas.yml",
-    "url_publica": null
+    "url_publica": null,
+    "imagen": null
   },
   {
     "id": "auditoria-seo-geo",
@@ -97,7 +106,8 @@
     "frecuencia": "Bajo demanda",
     "repo": "myp202021/landing-mp-myp",
     "workflow": null,
-    "url_publica": "/servicios/geo-chile"
+    "url_publica": "/servicios/geo-chile",
+    "imagen": null
   },
   {
     "id": "blog-wms",
@@ -107,7 +117,8 @@
     "frecuencia": "Lunes a viernes",
     "repo": "myp202021/invas-wms-seo",
     "workflow": "invas-blog-diario.yml",
-    "url_publica": null
+    "url_publica": null,
+    "imagen": null
   },
   {
     "id": "ranking-wms",
@@ -117,7 +128,8 @@
     "frecuencia": "Jueves",
     "repo": "myp202021/invas-wms-seo",
     "workflow": "invas-rankings-semanal.yml",
-    "url_publica": null
+    "url_publica": null,
+    "imagen": null
   },
   {
     "id": "blog-importadora",
@@ -127,7 +139,8 @@
     "frecuencia": "Lunes a viernes",
     "repo": "myp202021/distec-seo",
     "workflow": "distec-blog-diario.yml",
-    "url_publica": null
+    "url_publica": null,
+    "imagen": null
   },
   {
     "id": "blog-industrial",
@@ -137,7 +150,8 @@
     "frecuencia": "Lunes a viernes",
     "repo": "myp202021/halterlift-panel",
     "workflow": "halterlift-blog-daily.yml",
-    "url_publica": null
+    "url_publica": null,
+    "imagen": null
   },
   {
     "id": "blog-outplacement",
@@ -147,7 +161,8 @@
     "frecuencia": "Lunes a viernes",
     "repo": "myp202021/lablab-seo",
     "workflow": "lablab-blog-diario.yml",
-    "url_publica": null
+    "url_publica": null,
+    "imagen": null
   },
   {
     "id": "ranking-outplacement",
@@ -157,7 +172,8 @@
     "frecuencia": "Viernes",
     "repo": "myp202021/lablab-seo",
     "workflow": "lablab-rankings-semanal.yml",
-    "url_publica": null
+    "url_publica": null,
+    "imagen": null
   },
   {
     "id": "blog-legal",
@@ -167,7 +183,8 @@
     "frecuencia": "Lunes a viernes",
     "repo": "myp202021/devuelvemipie-seo",
     "workflow": "dmp-blog-diario.yml",
-    "url_publica": null
+    "url_publica": null,
+    "imagen": null
   },
   {
     "id": "ranking-legal",
@@ -177,7 +194,8 @@
     "frecuencia": "Viernes",
     "repo": "myp202021/devuelvemipie-seo",
     "workflow": "dmp-blog-rankings-semanal.yml",
-    "url_publica": null
+    "url_publica": null,
+    "imagen": null
   },
   {
     "id": "blog-energia",
@@ -187,7 +205,8 @@
     "frecuencia": "Lunes a viernes",
     "repo": "myp202021/tritec-seo",
     "workflow": "blog-diario.yml",
-    "url_publica": null
+    "url_publica": null,
+    "imagen": null
   },
   {
     "id": "ranking-energia",
@@ -197,7 +216,8 @@
     "frecuencia": "Viernes",
     "repo": "myp202021/tritec-seo",
     "workflow": "ranking-semanal.yml",
-    "url_publica": null
+    "url_publica": null,
+    "imagen": null
   },
   {
     "id": "blog-finanzas",
@@ -207,7 +227,8 @@
     "frecuencia": "Lunes a viernes",
     "repo": "myp202021/wiseplan-seo",
     "workflow": "wiseplan-blog-diario.yml",
-    "url_publica": null
+    "url_publica": null,
+    "imagen": null
   },
   {
     "id": "ranking-finanzas",
@@ -217,17 +238,8 @@
     "frecuencia": "Viernes",
     "repo": "myp202021/wiseplan-seo",
     "workflow": "wiseplan-ranking-semanal.yml",
-    "url_publica": null
-  },
-  {
-    "id": "blog-sorteos",
-    "nombre": "Blog diario — cliente de sorteos",
-    "area": "Blog",
-    "que_hace": "Publica contenido diario para un cliente de sorteos y premios.",
-    "frecuencia": "Lunes a viernes",
-    "repo": "myp202021/premiosincreibles-seo",
-    "workflow": "pinc-blog-diario.yml",
-    "url_publica": null
+    "url_publica": null,
+    "imagen": null
   },
   {
     "id": "copilot",
@@ -237,7 +249,8 @@
     "frecuencia": "Lunes a viernes",
     "repo": "myp202021/landing-mp-myp",
     "workflow": "copilot-agentes-test.yml",
-    "url_publica": "/copilot"
+    "url_publica": null,
+    "imagen": null
   },
   {
     "id": "radar-competencia",
@@ -247,7 +260,8 @@
     "frecuencia": "Lunes a viernes",
     "repo": "myp202021/landing-mp-myp",
     "workflow": "competencia-genera.yml",
-    "url_publica": null
+    "url_publica": null,
+    "imagen": null
   },
   {
     "id": "competencia-transporte",
@@ -257,7 +271,8 @@
     "frecuencia": "Lunes a viernes",
     "repo": "myp202021/landing-mp-myp",
     "workflow": "competencia-hualpen.yml",
-    "url_publica": null
+    "url_publica": null,
+    "imagen": null
   },
   {
     "id": "clipping-prensa",
@@ -267,7 +282,8 @@
     "frecuencia": "Todos los días",
     "repo": "myp202021/landing-mp-myp",
     "workflow": "clipping-prensa-hualpen.yml",
-    "url_publica": null
+    "url_publica": null,
+    "imagen": null
   },
   {
     "id": "clipping-artistas",
@@ -277,7 +293,8 @@
     "frecuencia": "Todos los días",
     "repo": "myp202021/landing-mp-myp",
     "workflow": "clipping-swing-artistas.yml",
-    "url_publica": null
+    "url_publica": null,
+    "imagen": null
   },
   {
     "id": "radar-clipping",
@@ -287,7 +304,8 @@
     "frecuencia": "Diario, semanal y mensual",
     "repo": "myp202021/landing-mp-myp",
     "workflow": "radar-clipping-diario.yml",
-    "url_publica": null
+    "url_publica": null,
+    "imagen": null
   },
   {
     "id": "grillas",
@@ -297,7 +315,8 @@
     "frecuencia": "Mensual",
     "repo": "myp202021/landing-mp-myp",
     "workflow": "generar-grillas.yml",
-    "url_publica": null
+    "url_publica": null,
+    "imagen": null
   },
   {
     "id": "grilla-cliente",
@@ -307,7 +326,8 @@
     "frecuencia": "Día 15 de cada mes",
     "repo": "myp202021/landing-mp-myp",
     "workflow": "grilla-genera.yml",
-    "url_publica": null
+    "url_publica": null,
+    "imagen": null
   },
   {
     "id": "prospeccion",
@@ -317,7 +337,8 @@
     "frecuencia": "Semanal",
     "repo": "myp202021/landing-mp-myp",
     "workflow": "prospecting.yml",
-    "url_publica": null
+    "url_publica": null,
+    "imagen": null
   },
   {
     "id": "informe-seo",
@@ -327,7 +348,8 @@
     "frecuencia": "Lunes",
     "repo": "myp202021/myp-daily-agent",
     "workflow": "informe-semanal-clientes.yml",
-    "url_publica": null
+    "url_publica": null,
+    "imagen": null
   },
   {
     "id": "reportes-mensuales",
@@ -337,17 +359,19 @@
     "frecuencia": "Día 1 de cada mes",
     "repo": "myp202021/landing-mp-myp",
     "workflow": "reportes-mensuales.yml",
-    "url_publica": null
+    "url_publica": null,
+    "imagen": null
   },
   {
     "id": "reporte-diario",
-    "nombre": "Reporte diario de gestión",
+    "nombre": "Agente maestro",
     "area": "Paneles operativos",
-    "que_hace": "Resumen diario interno: leads por tipo, estado de campañas, pendientes y alertas.",
+    "que_hace": "Coordina a los demás agentes: revisa cada mañana que hayan corrido, dispara los que faltan y envía el resumen de gestión con leads por tipo, campañas, pendientes y alertas.",
     "frecuencia": "Lunes a viernes",
     "repo": "myp202021/myp-daily-agent",
     "workflow": "reporte-diario.yml",
-    "url_publica": null
+    "url_publica": null,
+    "imagen": null
   },
   {
     "id": "dashboard-cliente",
@@ -357,7 +381,8 @@
     "frecuencia": "Todos los días",
     "repo": "myp202021/premios-dashboard",
     "workflow": "update-data.yml",
-    "url_publica": null
+    "url_publica": null,
+    "imagen": null
   },
   {
     "id": "fiscalizacion-whatsapp",
@@ -367,7 +392,8 @@
     "frecuencia": "Lunes a viernes, cada hora",
     "repo": "myp202021/cym-dashboard",
     "workflow": "whatsapp-fiscalizacion.yml",
-    "url_publica": null
+    "url_publica": null,
+    "imagen": null
   },
   {
     "id": "whatsapp-agente",
@@ -377,7 +403,8 @@
     "frecuencia": "Siempre activo",
     "repo": "myp202021/myp-whatsapp-agent",
     "workflow": null,
-    "url_publica": null
+    "url_publica": null,
+    "imagen": null
   },
   {
     "id": "radar-inmobiliario",
@@ -387,7 +414,8 @@
     "frecuencia": "Todos los días",
     "repo": "myp202021/propiedades-bravo-muller",
     "workflow": "informe-propiedades.yml",
-    "url_publica": null
+    "url_publica": null,
+    "imagen": null
   },
   {
     "id": "cobros",
@@ -397,6 +425,7 @@
     "frecuencia": "Mensual",
     "repo": "myp202021/facturas-myp",
     "workflow": null,
-    "url_publica": null
+    "url_publica": null,
+    "imagen": null
   }
 ]

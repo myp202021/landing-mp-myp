@@ -81,7 +81,7 @@ var personLd = {
   alumniOf: [
     { '@type': 'CollegeOrUniversity', name: 'Universidad de Chile' },
   ],
-  description: 'Ingeniero Civil Industrial y MBA Universidad de Chile. 20+ años en tecnología, marketing digital e IA. Opera una agencia de 33 clientes 100% desde Claude Code.',
+  description: 'Ingeniero Civil Industrial y MBA Universidad de Chile. 20+ años en tecnología, marketing digital e IA. Opera una agencia de 40+ clientes 100% desde Claude Code.',
   knowsAbout: ['Claude Code', 'Inteligencia Artificial', 'Marketing Digital', 'Automatización', 'Performance Marketing'],
 }
 

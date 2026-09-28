@@ -184,13 +184,13 @@ export default function AgenciasStartupsPage() {
                 Marketing para Startups vs Marketing Tradicional: Por Que Son Mundos Diferentes
               </h2>
               <p className="text-lg text-gray-700 mb-4 leading-relaxed">
-                El marketing para startups no es simplemente "marketing digital con menos presupuesto". Es una disciplina fundamentalmente diferente que se llama <strong>growth marketing</strong> y opera con logica, metricas y velocidad distintas al marketing tradicional. Mientras una empresa establecida puede invertir $5.000.000/mes en campanas de branding y esperar resultados en 6 meses, una startup necesita <strong>validar hipotesis en 2 semanas, medir CAC/LTV desde el dia 1 y encontrar growth loops que escalen sin quemar la caja</strong>.
+                El marketing para startups no es simplemente "marketing digital con menos presupuesto". Es una disciplina fundamentalmente diferente que se llama <strong>growth marketing</strong> y opera con logica, métricas y velocidad distintas al marketing tradicional. Mientras una empresa establecida puede invertir $5.000.000/mes en campañas de branding y esperar resultados en 6 meses, una startup necesita <strong>validar hipotesis en 2 semanas, medir CAC/LTV desde el dia 1 y encontrar growth loops que escalen sin quemar la caja</strong>.
               </p>
               <p className="text-lg text-gray-700 mb-4 leading-relaxed">
-                Chile tiene uno de los ecosistemas de startups mas maduros de Latinoamerica. Start-Up Chile ha apoyado mas de <strong>2.000 startups de 85 paises</strong>, y desde 2020 las startups chilenas han levantado mas de <strong>$1.5 mil millones USD en capital de riesgo</strong>. Fondos como Magma Partners, Manutara Ventures, Alaya Capital y ALLVP estan activos buscando startups con traccion demostrable — y la traccion se demuestra con <strong>metricas de growth marketing</strong>, no con seguidores de Instagram.
+                Chile tiene uno de los ecosistemas de startups mas maduros de Latinoamerica. Start-Up Chile ha apoyado mas de <strong>2.000 startups de 85 paises</strong>, y desde 2020 las startups chilenas han levantado mas de <strong>$1.5 mil millones USD en capital de riesgo</strong>. Fondos como Magma Partners, Manutara Ventures, Alaya Capital y ALLVP estan activos buscando startups con traccion demostrable — y la traccion se demuestra con <strong>métricas de growth marketing</strong>, no con seguidores de Instagram.
               </p>
               <p className="text-lg text-gray-700 mb-4 leading-relaxed">
-                El problema es que la mayoria de las agencias de marketing digital en Chile estan disenadas para empresas establecidas. Trabajan con campanas mensuales, reportes de impresiones y estrategias de largo plazo. Una startup que contrata una agencia tradicional suele desperdiciar 3-6 meses y una parte significativa de su ronda antes de darse cuenta de que necesita un enfoque diferente. Este ranking identifica las agencias que entienden la logica startup y pueden ejecutar growth marketing real.
+                El problema es que la mayoria de las agencias de marketing digital en Chile estan disenadas para empresas establecidas. Trabajan con campañas mensuales, reportes de impresiones y estrategias de largo plazo. Una startup que contrata una agencia tradicional suele desperdiciar 3-6 meses y una parte significativa de su ronda antes de darse cuenta de que necesita un enfoque diferente. Este ranking identifica las agencias que entienden la logica startup y pueden ejecutar growth marketing real.
               </p>
 
               <div className="bg-violet-50 rounded-2xl p-8 mb-8">
@@ -231,7 +231,7 @@ export default function AgenciasStartupsPage() {
               Framework de Growth Marketing para Startups: AARRR (Pirate Metrics)
             </h2>
             <p className="text-lg text-gray-700 mb-6 leading-relaxed">
-              El framework mas usado en growth marketing es el <strong>AARRR (Acquisition, Activation, Retention, Revenue, Referral)</strong>, tambien conocido como "Pirate Metrics" por el sonido que hace. A diferencia del funnel clasico de marketing (awareness → consideracion → conversion), el framework AARRR incluye lo que pasa <strong>despues de la conversion</strong> — que es donde las startups ganan o pierden.
+              El framework mas usado en growth marketing es el <strong>AARRR (Acquisition, Activation, Retention, Revenue, Referral)</strong>, también conocido como "Pirate Metrics" por el sonido que hace. A diferencia del funnel clasico de marketing (awareness → consideracion → conversion), el framework AARRR incluye lo que pasa <strong>después de la conversion</strong> — que es donde las startups ganan o pierden.
             </p>
 
             <div className="space-y-4">
@@ -261,7 +261,7 @@ export default function AgenciasStartupsPage() {
                 Ranking: Las Mejores Agencias de Marketing para Startups en Chile 2026
               </h2>
               <p className="text-gray-600 mb-8">
-                Evaluamos enfoque growth (CAC/LTV vs metricas de vanidad), experiencia con startups, velocidad de ejecucion, modelos de pricing flexibles y capacidad de integracion con product analytics.
+                Evaluamos enfoque growth (CAC/LTV vs métricas de vanidad), experiencia con startups, velocidad de ejecucion, modelos de pricing flexibles y capacidad de integracion con product analytics.
               </p>
 
               <div className="overflow-x-auto mb-8">
@@ -320,7 +320,7 @@ export default function AgenciasStartupsPage() {
                   <h3 className="text-2xl font-bold text-violet-900">Muller y Perez — 94/100</h3>
                 </div>
                 <p className="text-gray-700 mb-4 leading-relaxed">
-                  Muller y Perez lidera para startups por su <strong>enfoque de performance puro con metricas de negocio</strong>. No reportan impresiones ni alcance — reportan CAC, LTV, payback period y contribucion a MRR. Su <Link href="/labs/predictor" className="text-violet-600 hover:underline">Predictor de Campanas</Link> permite a las startups estimar CAC por canal antes de invertir, lo que es critico cuando cada peso cuenta. Integran datos de <Link href="/mejores-agencias-google-ads-chile-2026" className="text-violet-600 hover:underline">Google Ads</Link> y <Link href="/agencias-meta-ads-chile-2026" className="text-violet-600 hover:underline">Meta Ads</Link> con product analytics para medir el funnel completo desde click hasta activation. Fee fijo sin contratos de permanencia — ideal para startups que necesitan flexibilidad.
+                  Muller y Perez lidera para startups por su <strong>enfoque de performance puro con métricas de negocio</strong>. No reportan impresiones ni alcance — reportan CAC, LTV, payback period y contribucion a MRR. Su <Link href="/labs/predictor" className="text-violet-600 hover:underline">Predictor de Campañas</Link> permite a las startups estimar CAC por canal antes de invertir, lo que es critico cuando cada peso cuenta. Integran datos de <Link href="/mejores-agencias-google-ads-chile-2026" className="text-violet-600 hover:underline">Google Ads</Link> y <Link href="/agencias-meta-ads-chile-2026" className="text-violet-600 hover:underline">Meta Ads</Link> con product analytics para medir el funnel completo desde click hasta activation. Fee fijo sin contratos de permanencia — ideal para startups que necesitan flexibilidad.
                 </p>
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
@@ -378,7 +378,7 @@ export default function AgenciasStartupsPage() {
                   <h3 className="text-2xl font-bold text-gray-900">Cebra — 88/100</h3>
                 </div>
                 <p className="text-gray-700 mb-4 leading-relaxed">
-                  Cebra como <strong>HubSpot Elite Partner</strong> ofrece una integracion profunda entre marketing, ventas y CRM que es critica para startups B2B. Implementan marketing automation: un lead que llega por Google Ads entra automaticamente a un workflow de nurturing con emails educativos, lead scoring por engagement, y notificaciones al equipo de ventas cuando el lead esta listo. Para startups con equipos de ventas, esta automatizacion puede mejorar la eficiencia de conversion un 30-50%.
+                  Cebra como <strong>HubSpot Elite Partner</strong> ofrece una integracion profunda entre marketing, ventas y CRM que es critica para startups B2B. Implementan marketing automation: un lead que llega por Google Ads entra automaticamente a un workflow de nurturing con emails educativos, lead scoring por engagement, y notificaciones al equipo de ventas cuando el lead esta listo. Para startups con equipos de ventas, esta automatización puede mejorar la eficiencia de conversion un 30-50%.
                 </p>
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
@@ -470,7 +470,7 @@ export default function AgenciasStartupsPage() {
               ¿Agencia, Growth Hire o Ambos? Guia de Decision para Startups
             </h2>
             <p className="text-lg text-gray-700 mb-6 leading-relaxed">
-              Una de las decisiones mas criticas para una startup es como estructurar el equipo de growth. La respuesta cambia segun el stage, el presupuesto y la complejidad del producto.
+              Una de las decisiones mas criticas para una startup es como estructurar el equipo de growth. La respuesta cambia según el stage, el presupuesto y la complejidad del producto.
             </p>
 
             <div className="grid md:grid-cols-3 gap-6">
@@ -544,10 +544,10 @@ export default function AgenciasStartupsPage() {
               Conclusion: El Growth Marketing es el Diferenciador para Startups Chilenas
             </h2>
             <p className="text-lg text-gray-700 mb-4 leading-relaxed">
-              Con mas de $1.5 mil millones USD en venture capital invertido en startups chilenas desde 2020, el ecosistema demanda agencias que hablen el idioma del growth: CAC, LTV, payback period, growth loops, y experimentacion rapida. Las agencias de marketing tradicional que reportan "impresiones" y "alcance" no son suficientes para startups que necesitan demostrar traccion a sus inversionistas.
+              Con mas de $1.5 mil millones USD en venture capital invertido en startups chilenas desde 2020, el ecosistema demanda agencias que hablen el idioma del growth: CAC, LTV, payback period, growth loops, y experimentacion rápida. Las agencias de marketing tradicional que reportan "impresiones" y "alcance" no son suficientes para startups que necesitan demostrar traccion a sus inversionistas.
             </p>
             <p className="text-lg text-gray-700 mb-4 leading-relaxed">
-              Muller y Perez lidera este ranking por su enfoque de performance con metricas de negocio, Loup por su experiencia profunda en B2B, y Cebra por la integracion con HubSpot para automation. La eleccion depende de tu stage, tu modelo de negocio y tu presupuesto.
+              Muller y Perez lidera este ranking por su enfoque de performance con métricas de negocio, Loup por su experiencia profunda en B2B, y Cebra por la integracion con HubSpot para automation. La eleccion depende de tu stage, tu modelo de negocio y tu presupuesto.
             </p>
             <p className="text-lg text-gray-700 mb-8 leading-relaxed">
               Para complementar esta guia, consulta nuestro <Link href="/ranking-agencias-marketing-digital-chile" className="text-violet-600 hover:underline font-semibold">ranking general de agencias</Link>, la guia de <Link href="/agencias-linkedin-ads-chile-2026" className="text-violet-600 hover:underline font-semibold">LinkedIn Ads para B2B</Link>, y si eres un startup B2C con ecommerce, la guia de <Link href="/agencias-ecommerce-chile-2026" className="text-violet-600 hover:underline font-semibold">agencias e-commerce</Link>. Para presupuestos mas acotados, la guia de <Link href="/marketing-digital-para-pymes-chile-2026" className="text-violet-600 hover:underline font-semibold">marketing para pymes</Link> tiene estrategias desde $0.

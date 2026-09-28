@@ -88,13 +88,13 @@ export default function ArticlePage() {
           </h1>
 
           <p className="text-xl text-gray-600 mb-12 leading-relaxed">
-            El marketing digital en Chile en 2026 esta definido por la inteligencia artificial, el video corto, la desaparicion de cookies de terceros y la consolidacion de WhatsApp como canal de marketing. Las empresas que adopten estas tendencias lideraran; las que no, quedaran atras. Aqui esta el analisis completo con data real del mercado chileno.
+            El marketing digital en Chile en 2026 esta definido por la inteligencia artificial, el video corto, la desaparicion de cookies de terceros y la consolidacion de WhatsApp como canal de marketing. Las empresas que adopten estas tendencias lideraran; las que no, quedaran atras. Aqui esta el análisis completo con data real del mercado chileno.
           </p>
 
           <div className="prose prose-lg max-w-none">
 
             <div className="bg-orange-50 border-l-4 border-orange-600 p-6 rounded-r-xl mb-12">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Contexto: el mercado digital chileno en numeros</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-4">Contexto: el mercado digital chileno en números</h3>
               <ul className="space-y-2 text-gray-700">
                 <li><strong>Inversion publicitaria digital Chile 2026:</strong> USD $850 millones (+14% vs 2025)</li>
                 <li><strong>Penetracion de internet:</strong> 92% de la poblacion</li>
@@ -107,15 +107,15 @@ export default function ArticlePage() {
             {/* Tendencia 1 */}
             <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6 flex items-center gap-3">
               <Brain className="w-8 h-8 text-purple-600" />
-              1. Campanas impulsadas por IA: Performance Max y Advantage+
+              1. Campañas impulsadas por IA: Performance Max y Advantage+
             </h2>
 
             <p className="text-gray-700 leading-relaxed mb-6">
-              La inteligencia artificial ya no es un complemento: es el motor central de las campanas publicitarias en 2026. Google Performance Max y Meta Advantage+ representan mas del 60% de la inversion publicitaria digital en Chile porque automatizan las decisiones que antes tomaban los analistas: a quien mostrar el anuncio, cuanto pujar, en que formato y en que momento.
+              La inteligencia artificial ya no es un complemento: es el motor central de las campañas publicitarias en 2026. Google Performance Max y Meta Advantage+ representan mas del 60% de la inversion publicitaria digital en Chile porque automatizan las decisiones que antes tomaban los analistas: a quien mostrar el anuncio, cuanto pujar, en que formato y en que momento.
             </p>
 
             <p className="text-gray-700 leading-relaxed mb-6">
-              Lo que cambia en 2026 respecto a anos anteriores es que estas campanas de IA ya son lo suficientemente maduras para ser confiables. Google PMax ahora ofrece desglose completo por canal, lo que permite entender donde va tu dinero. Meta Advantage+ ha mejorado su targeting post-iOS con modelos predictivos que compensan la perdida de senales de usuario.
+              Lo que cambia en 2026 respecto a anos anteriores es que estas campañas de IA ya son lo suficientemente maduras para ser confiables. Google PMax ahora ofrece desglose completo por canal, lo que permite entender donde va tu dinero. Meta Advantage+ ha mejorado su targeting post-iOS con modelos predictivos que compensan la perdida de senales de usuario.
             </p>
 
             <div className="grid md:grid-cols-2 gap-4 mb-8">
@@ -138,7 +138,7 @@ export default function ArticlePage() {
             </div>
 
             <p className="text-gray-700 leading-relaxed mb-6">
-              La implicancia para tu negocio: el rol del especialista en ads esta migrando de &ldquo;gestionar pujas y keywords&rdquo; a &ldquo;alimentar la IA con datos de calidad y creatividades ganadoras&rdquo;. Si quieres entender como estas campanas impactan tus costos, lee nuestra <Link href="/blog/cuanto-cuesta-google-ads-chile-2026" className="text-blue-600 font-semibold hover:underline">guia de costos de Google Ads 2026</Link>.
+              La implicancia para tu negocio: el rol del especialista en ads esta migrando de &ldquo;gestionar pujas y keywords&rdquo; a &ldquo;alimentar la IA con datos de calidad y creatividades ganadoras&rdquo;. Si quieres entender como estas campañas impactan tus costos, lee nuestra <Link href="/blog/cuanto-cuesta-google-ads-chile-2026" className="text-blue-600 font-semibold hover:underline">guia de costos de Google Ads 2026</Link>.
             </p>
 
             {/* Tendencia 2 */}
@@ -253,7 +253,7 @@ export default function ArticlePage() {
             </div>
 
             <p className="text-gray-700 leading-relaxed mb-6">
-              En M&P hemos implementado WhatsApp Business con chatbots de IA para varios clientes en inmobiliaria y servicios. El resultado: una reduccion del 35% en el tiempo de contacto del lead y un aumento del 22% en la tasa de cierre. El costo por mensaje via WhatsApp Business API es de $30-50 CLP (mensaje de sesion) y $80-120 CLP (mensaje template), significativamente menor que el costo de un follow-up telefonico.
+              En M&P hemos implementado WhatsApp Business con chatbots de IA para varios clientes en inmobiliaria y servicios. El resultado: una reduccion del 35% en el tiempo de contacto del lead y un aumento del 22% en la tasa de cierre. El costo por mensaje via WhatsApp Business API es de $30-50 CLP (mensaje de sesión) y $80-120 CLP (mensaje template), significativamente menor que el costo de un follow-up telefonico.
             </p>
 
             {/* Tendencia 6 */}
@@ -263,20 +263,20 @@ export default function ArticlePage() {
             </h2>
 
             <p className="text-gray-700 leading-relaxed mb-6">
-              Con la expansion de asistentes de IA como ChatGPT, Gemini y Siri mejorados, la forma en que los usuarios buscan informacion esta cambiando. Ya no solo escriben keywords en Google: hablan con asistentes de voz y esperan respuestas directas. Esto tiene implicancias profundas para el SEO y tambien para las campanas de paid media.
+              Con la expansion de asistentes de IA como ChatGPT, Gemini y Siri mejorados, la forma en que los usuarios buscan información esta cambiando. Ya no solo escriben keywords en Google: hablan con asistentes de voz y esperan respuestas directas. Esto tiene implicancias profundas para el SEO y también para las campañas de paid media.
             </p>
 
             <p className="text-gray-700 leading-relaxed mb-6">
-              La Answer Engine Optimization (AEO) es la evolucion del SEO: en vez de optimizar para rankings de busqueda, optimizas para que tu contenido sea la respuesta que los asistentes de IA entregan. Esto significa crear contenido que responda preguntas especificas de forma clara y concisa, con datos estructurados (schema markup) que faciliten la extraccion.
+              La Answer Engine Optimization (AEO) es la evolucion del SEO: en vez de optimizar para rankings de búsqueda, optimizas para que tu contenido sea la respuesta que los asistentes de IA entregan. Esto significa crear contenido que responda preguntas especificas de forma clara y concisa, con datos estructurados (schema markup) que faciliten la extraccion.
             </p>
 
             <div className="bg-yellow-50 border-l-4 border-yellow-600 p-6 rounded-r-xl mb-8">
               <h3 className="text-xl font-bold text-gray-900 mb-4">Como adaptarte a voice search y AEO</h3>
               <ul className="space-y-2 text-gray-700">
-                <li><strong>Contenido en formato pregunta-respuesta:</strong> Estructura tus paginas con preguntas claras (H2) y respuestas concisas en los primeros 2-3 parrafos.</li>
-                <li><strong>Schema markup:</strong> Implementa FAQ schema, HowTo schema y Article schema para facilitar la extraccion de informacion por asistentes de IA.</li>
-                <li><strong>Long-tail keywords conversacionales:</strong> Las busquedas por voz son mas largas y naturales: &ldquo;cuanto cuesta hacer publicidad en Google en Chile&rdquo; vs &ldquo;costo google ads chile&rdquo;.</li>
-                <li><strong>Google Business Profile optimizado:</strong> Las busquedas por voz locales (&ldquo;agencia de marketing cerca de mi&rdquo;) dependen del GBP.</li>
+                <li><strong>Contenido en formato pregunta-respuesta:</strong> Estructura tus páginas con preguntas claras (H2) y respuestas concisas en los primeros 2-3 parrafos.</li>
+                <li><strong>Schema markup:</strong> Implementa FAQ schema, HowTo schema y Article schema para facilitar la extraccion de información por asistentes de IA.</li>
+                <li><strong>Long-tail keywords conversacionales:</strong> Las búsquedas por voz son mas largas y naturales: &ldquo;cuanto cuesta hacer publicidad en Google en Chile&rdquo; vs &ldquo;costo google ads chile&rdquo;.</li>
+                <li><strong>Google Business Profile optimizado:</strong> Las búsquedas por voz locales (&ldquo;agencia de marketing cerca de mi&rdquo;) dependen del GBP.</li>
               </ul>
             </div>
 
@@ -287,11 +287,11 @@ export default function ArticlePage() {
             </h2>
 
             <p className="text-gray-700 leading-relaxed mb-6">
-              Los consumidores chilenos, especialmente los menores de 40 anos, cada vez valoran mas las marcas con proposito ambiental y social. Segun estudios recientes, el 62% de los consumidores chilenos prefiere comprar a marcas que demuestran compromiso con la sustentabilidad, y un 45% esta dispuesto a pagar hasta un 15% mas por productos sustentables.
+              Los consumidores chilenos, especialmente los menores de 40 anos, cada vez valoran mas las marcas con proposito ambiental y social. Según estudios recientes, el 62% de los consumidores chilenos prefiere comprar a marcas que demuestran compromiso con la sustentabilidad, y un 45% esta dispuesto a pagar hasta un 15% mas por productos sustentables.
             </p>
 
             <p className="text-gray-700 leading-relaxed mb-6">
-              Para el marketing digital, esto se traduce en que los mensajes de sustentabilidad genuinos (no greenwashing) generan mayor engagement, mejor CTR y mayor intencion de compra. Las campanas que incluyen mensajes de impacto positivo (reciclaje, huella de carbono, economia circular) obtienen un CTR 15-25% mayor en Meta Ads comparado con mensajes puramente comerciales.
+              Para el marketing digital, esto se traduce en que los mensajes de sustentabilidad genuinos (no greenwashing) generan mayor engagement, mejor CTR y mayor intencion de compra. Las campañas que incluyen mensajes de impacto positivo (reciclaje, huella de carbono, economia circular) obtienen un CTR 15-25% mayor en Meta Ads comparado con mensajes puramente comerciales.
             </p>
 
             <p className="text-gray-700 leading-relaxed mb-6">
@@ -407,8 +407,8 @@ export default function ArticlePage() {
                 <h3 className="text-xl font-bold text-gray-900 mb-4">Automatizaciones esenciales</h3>
                 <ul className="space-y-2 text-gray-700">
                   <li><strong>Lead nurturing por email:</strong> Secuencia automatica de 5-7 emails post-registro</li>
-                  <li><strong>Lead scoring:</strong> Puntaje automatico segun comportamiento (visitas, descargas, emails abiertos)</li>
-                  <li><strong>Segmentacion dinamica:</strong> Audiencias que se actualizan automaticamente segun acciones del usuario</li>
+                  <li><strong>Lead scoring:</strong> Puntaje automatico según comportamiento (visitas, descargas, emails abiertos)</li>
+                  <li><strong>Segmentacion dinamica:</strong> Audiencias que se actualizan automaticamente según acciones del usuario</li>
                   <li><strong>Reportes automatizados:</strong> Dashboards que se actualizan solos con data de todas las plataformas</li>
                 </ul>
               </div>
@@ -425,13 +425,13 @@ export default function ArticlePage() {
             </div>
 
             <p className="text-gray-700 leading-relaxed mb-6">
-              Si eres una pyme en Chile y aun no tienes automatizacion basica (al menos un email de bienvenida automatico y un flujo de follow-up para leads), estas perdiendo entre un 20% y 35% de tus leads potenciales. Nuestra <Link href="/blog/guia-marketing-digital-pymes-chile-2026" className="text-blue-600 font-semibold hover:underline">guia de marketing digital para pymes 2026</Link> detalla como implementar estas automatizaciones paso a paso.
+              Si eres una pyme en Chile y aun no tienes automatización basica (al menos un email de bienvenida automatico y un flujo de follow-up para leads), estas perdiendo entre un 20% y 35% de tus leads potenciales. Nuestra <Link href="/blog/guia-marketing-digital-pymes-chile-2026" className="text-blue-600 font-semibold hover:underline">guia de marketing digital para pymes 2026</Link> detalla como implementar estas automatizaciones paso a paso.
             </p>
 
             {/* Resumen visual */}
             <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6 flex items-center gap-3">
               <BarChart3 className="w-8 h-8 text-green-600" />
-              Resumen: prioridad de cada tendencia segun tu presupuesto
+              Resumen: prioridad de cada tendencia según tu presupuesto
             </h2>
 
             <div className="overflow-x-auto mb-8">
@@ -446,7 +446,7 @@ export default function ArticlePage() {
                 </thead>
                 <tbody className="divide-y divide-gray-100">
                   <tr className="hover:bg-gray-50">
-                    <td className="px-5 py-4 font-semibold text-gray-900">IA en campanas</td>
+                    <td className="px-5 py-4 font-semibold text-gray-900">IA en campañas</td>
                     <td className="px-5 py-4 text-green-600 font-bold">Critica</td>
                     <td className="px-5 py-4 text-green-600 font-bold">Critica</td>
                     <td className="px-5 py-4 text-green-600 font-bold">Critica</td>
@@ -515,22 +515,22 @@ export default function ArticlePage() {
             <div className="space-y-6 mb-12">
               <div className="bg-white border border-gray-200 rounded-xl p-6">
                 <h3 className="text-lg font-bold text-gray-900 mb-3">Cual es la tendencia mas importante para una pyme en Chile?</h3>
-                <p className="text-gray-700">Sin duda, la IA en campanas publicitarias (Performance Max, Advantage+) y WhatsApp Business como canal de seguimiento de leads. Estas dos tendencias tienen el mayor impacto en resultados con la menor inversion adicional. Lee nuestra <Link href="/blog/guia-marketing-digital-pymes-chile-2026" className="text-blue-600 font-semibold hover:underline">guia completa para pymes</Link>.</p>
+                <p className="text-gray-700">Sin duda, la IA en campañas publicitarias (Performance Max, Advantage+) y WhatsApp Business como canal de seguimiento de leads. Estas dos tendencias tienen el mayor impacto en resultados con la menor inversion adicional. Lee nuestra <Link href="/blog/guia-marketing-digital-pymes-chile-2026" className="text-blue-600 font-semibold hover:underline">guia completa para pymes</Link>.</p>
               </div>
 
               <div className="bg-white border border-gray-200 rounded-xl p-6">
                 <h3 className="text-lg font-bold text-gray-900 mb-3">Realmente necesito preocuparme por las cookies de terceros?</h3>
-                <p className="text-gray-700">Si. Sin cookies de terceros, tu retargeting clasico y medicion de conversiones se degrada. La solucion es implementar Conversions API (server-side tracking), enhanced conversions y first-party data strategies. Si aun no lo has hecho, hazlo ahora: es la prioridad tecnica numero 1.</p>
+                <p className="text-gray-700">Si. Sin cookies de terceros, tu retargeting clasico y medicion de conversiones se degrada. La solucion es implementar Conversions API (server-side tracking), enhanced conversions y first-party data strategies. Si aun no lo has hecho, hazlo ahora: es la prioridad tecnica número 1.</p>
               </div>
 
               <div className="bg-white border border-gray-200 rounded-xl p-6">
                 <h3 className="text-lg font-bold text-gray-900 mb-3">TikTok ya es viable para marketing de performance en Chile?</h3>
-                <p className="text-gray-700">Si, TikTok ha madurado significativamente como plataforma de performance en 2026. Su sistema de ads permite campanas de conversion, lead gen y e-commerce con resultados medibles. Los CPMs son 40-60% menores que Meta. Es especialmente efectivo para audiencias 18-35 y productos visuales.</p>
+                <p className="text-gray-700">Si, TikTok ha madurado significativamente como plataforma de performance en 2026. Su sistema de ads permite campañas de conversion, lead gen y e-commerce con resultados medibles. Los CPMs son 40-60% menores que Meta. Es especialmente efectivo para audiencias 18-35 y productos visuales.</p>
               </div>
 
               <div className="bg-white border border-gray-200 rounded-xl p-6">
                 <h3 className="text-lg font-bold text-gray-900 mb-3">Como afecta la IA al rol de los especialistas en marketing digital?</h3>
-                <p className="text-gray-700">La IA automatiza la ejecucion tactica (pujas, segmentacion, variantes de anuncios). El rol del especialista migra hacia la estrategia, la definicion de senales de conversion correctas, la produccion de creatividades de calidad y el analisis de resultados de negocio (no solo metricas de plataforma). Los especialistas que sigan haciendo solo ajustes manuales de pujas seran reemplazados por IA.</p>
+                <p className="text-gray-700">La IA automatiza la ejecucion tactica (pujas, segmentacion, variantes de anuncios). El rol del especialista migra hacia la estrategia, la definicion de senales de conversion correctas, la produccion de creatividades de calidad y el análisis de resultados de negocio (no solo métricas de plataforma). Los especialistas que sigan haciendo solo ajustes manuales de pujas seran reemplazados por IA.</p>
               </div>
 
               <div className="bg-white border border-gray-200 rounded-xl p-6">
@@ -571,7 +571,7 @@ export default function ArticlePage() {
 
           {/* Related Posts */}
           <nav className="mt-12 pt-8 border-t border-gray-200">
-            <h3 className="text-lg font-bold text-gray-900 mb-4">Articulos Relacionados</h3>
+            <h3 className="text-lg font-bold text-gray-900 mb-4">Artículos Relacionados</h3>
             <div className="flex flex-wrap gap-2">
               <Link href="/blog/cuanto-cuesta-google-ads-chile-2026" className="text-sm text-blue-600 hover:text-blue-800 bg-blue-50 px-3 py-1.5 rounded-lg">
                 Cuanto Cuesta Google Ads Chile 2026 &rarr;

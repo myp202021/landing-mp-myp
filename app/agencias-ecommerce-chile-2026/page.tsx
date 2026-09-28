@@ -192,13 +192,13 @@ export default function AgenciasEcommercePage() {
                 E-commerce en Chile 2026: Un Mercado de $15 Mil Millones USD
               </h2>
               <p className="text-lg text-gray-700 mb-4 leading-relaxed">
-                El e-commerce en Chile cerro 2025 con una facturacion superior a los <strong>$13 mil millones USD</strong> y las proyecciones para 2026 superan los <strong>$15 mil millones USD</strong>, con un crecimiento interanual del 18%. Chile es el <strong>tercer mercado de e-commerce mas grande de Latinoamerica</strong> despues de Brasil y Mexico, y el primero en penetracion per capita. El 72% de los chilenos mayores de 18 anos ha realizado al menos una compra online en los ultimos 12 meses.
+                El e-commerce en Chile cerro 2025 con una facturacion superior a los <strong>$13 mil millones USD</strong> y las proyecciones para 2026 superan los <strong>$15 mil millones USD</strong>, con un crecimiento interanual del 18%. Chile es el <strong>tercer mercado de e-commerce mas grande de Latinoamerica</strong> después de Brasil y Mexico, y el primero en penetracion per capita. El 72% de los chilenos mayores de 18 anos ha realizado al menos una compra online en los últimos 12 meses.
               </p>
               <p className="text-lg text-gray-700 mb-4 leading-relaxed">
-                Este crecimiento ha creado una demanda enorme de agencias de marketing especializadas en e-commerce. Pero hay una diferencia fundamental entre una <strong>agencia de marketing digital general</strong> y una <strong>agencia de marketing e-commerce</strong>: mientras la primera puede generar trafico y leads, la segunda entiende el ecosistema completo de la venta online — desde la optimizacion de feeds de producto hasta el email de carrito abandonado, pasando por CRO (Conversion Rate Optimization) y atribucion de ventas por SKU.
+                Este crecimiento ha creado una demanda enorme de agencias de marketing especializadas en e-commerce. Pero hay una diferencia fundamental entre una <strong>agencia de marketing digital general</strong> y una <strong>agencia de marketing e-commerce</strong>: mientras la primera puede generar trafico y leads, la segunda entiende el ecosistema completo de la venta online — desde la optimización de feeds de producto hasta el email de carrito abandonado, pasando por CRO (Conversion Rate Optimization) y atribucion de ventas por SKU.
               </p>
               <p className="text-lg text-gray-700 mb-4 leading-relaxed">
-                El error mas comun de las tiendas online chilenas es contratar una agencia que mide exito por <strong>clics y trafico</strong> en vez de por <strong>ROAS (Return on Ad Spend) y LTV (Lifetime Value)</strong>. Una agencia de ecommerce profesional no celebra que tu campana genero 10.000 clics — celebra que esos clics generaron $5.000.000 en ventas con una inversion de $1.000.000 en pauta (ROAS 5x). Este ranking identifica las agencias en Chile que piensan asi.
+                El error mas comun de las tiendas online chilenas es contratar una agencia que mide exito por <strong>clics y trafico</strong> en vez de por <strong>ROAS (Return on Ad Spend) y LTV (Lifetime Value)</strong>. Una agencia de ecommerce profesional no celebra que tu campaña genero 10.000 clics — celebra que esos clics generaron $5.000.000 en ventas con una inversion de $1.000.000 en pauta (ROAS 5x). Este ranking identifica las agencias en Chile que piensan asi.
               </p>
 
               <div className="bg-emerald-50 rounded-2xl p-8 mb-8">
@@ -293,7 +293,7 @@ export default function AgenciasEcommercePage() {
                 Ranking: Las Mejores Agencias de E-commerce en Chile 2026
               </h2>
               <p className="text-gray-600 mb-8">
-                Evaluamos experiencia en ecommerce demostrable, gestion de feeds, capacidad de CRO, resultados de ROAS verificables, y dominio de email marketing transaccional.
+                Evaluamos experiencia en ecommerce demostrable, gestión de feeds, capacidad de CRO, resultados de ROAS verificables, y dominio de email marketing transaccional.
               </p>
 
               <div className="overflow-x-auto mb-8">
@@ -352,7 +352,7 @@ export default function AgenciasEcommercePage() {
                   <h3 className="text-2xl font-bold text-emerald-900">Muller y Perez — 95/100</h3>
                 </div>
                 <p className="text-gray-700 mb-4 leading-relaxed">
-                  Muller y Perez lidera en ecommerce por su enfoque de <strong>performance medido por ROAS real a nivel de SKU</strong>. No reportan metricas de vanidad — reportan cuanto vendiste por cada peso invertido, desglosado por producto, categoria y canal. Integran <Link href="/mejores-agencias-google-ads-chile-2026" className="text-emerald-600 hover:underline">Google Shopping</Link> con <Link href="/agencias-meta-ads-chile-2026" className="text-emerald-600 hover:underline">Meta Catalog Ads</Link> en un dashboard unificado que muestra la rentabilidad real de cada producto publicitado. Su <Link href="/labs/predictor" className="text-emerald-600 hover:underline">Predictor de Campanas</Link> permite estimar el ROAS esperado antes de invertir. Tienen experiencia con Shopify y WooCommerce, y gestionan el feed de productos como parte del servicio.
+                  Muller y Perez lidera en ecommerce por su enfoque de <strong>performance medido por ROAS real a nivel de SKU</strong>. No reportan métricas de vanidad — reportan cuanto vendiste por cada peso invertido, desglosado por producto, categoria y canal. Integran <Link href="/mejores-agencias-google-ads-chile-2026" className="text-emerald-600 hover:underline">Google Shopping</Link> con <Link href="/agencias-meta-ads-chile-2026" className="text-emerald-600 hover:underline">Meta Catalog Ads</Link> en un dashboard unificado que muestra la rentabilidad real de cada producto publicitado. Su <Link href="/labs/predictor" className="text-emerald-600 hover:underline">Predictor de Campañas</Link> permite estimar el ROAS esperado antes de invertir. Tienen experiencia con Shopify y WooCommerce, y gestionan el feed de productos como parte del servicio.
                 </p>
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
@@ -382,7 +382,7 @@ export default function AgenciasEcommercePage() {
                   <h3 className="text-2xl font-bold text-gray-900">Rompecabeza Digital — 91/100</h3>
                 </div>
                 <p className="text-gray-700 mb-4 leading-relaxed">
-                  Rompecabeza Digital tiene la ventaja del tamano y la experiencia con <strong>retailers grandes</strong> como Falabella, Paris y Ripley. Su equipo de ~140 personas incluye especialistas en integracion ERP, gestion de catalogos masivos (+100.000 SKUs) y coordinacion omnicanal (tienda fisica + online). Para ecommerce enterprise con operaciones complejas, Rompecabeza ofrece la escala y experiencia que agencias mas pequenas no pueden igualar.
+                  Rompecabeza Digital tiene la ventaja del tamano y la experiencia con <strong>retailers grandes</strong> como Falabella, Paris y Ripley. Su equipo de ~140 personas incluye especialistas en integracion ERP, gestión de catalogos masivos (+100.000 SKUs) y coordinacion omnicanal (tienda fisica + online). Para ecommerce enterprise con operaciones complejas, Rompecabeza ofrece la escala y experiencia que agencias mas pequenas no pueden igualar.
                 </p>
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
@@ -410,7 +410,7 @@ export default function AgenciasEcommercePage() {
                   <h3 className="text-2xl font-bold text-gray-900">I.Com — 89/100</h3>
                 </div>
                 <p className="text-gray-700 mb-4 leading-relaxed">
-                  I.Com es la agencia mas <strong>verticalmente especializada en ecommerce</strong> del mercado chileno. Su enfoque exclusivo en tiendas online les da una profundidad que agencias generalistas no alcanzan. Destacan en CRO avanzado (test A/B, heatmaps, analisis de checkout), feed management para Google Shopping y gestion de Shopify como plataforma principal. Son la mejor opcion para tiendas medianas que necesitan un equipo 100% enfocado en ecommerce.
+                  I.Com es la agencia mas <strong>verticalmente especializada en ecommerce</strong> del mercado chileno. Su enfoque exclusivo en tiendas online les da una profundidad que agencias generalistas no alcanzan. Destacan en CRO avanzado (test A/B, heatmaps, análisis de checkout), feed management para Google Shopping y gestión de Shopify como plataforma principal. Son la mejor opcion para tiendas medianas que necesitan un equipo 100% enfocado en ecommerce.
                 </p>
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
@@ -480,7 +480,7 @@ export default function AgenciasEcommercePage() {
             <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-6">
               <h3 className="text-lg font-bold text-emerald-900 mb-2">Recomendacion para Pymes y Medianas</h3>
               <p className="text-gray-700 leading-relaxed">
-                Para la mayoria de tiendas online en Chile que facturan entre $5M y $100M/mes, <strong>Shopify es la mejor opcion</strong> por sus integraciones nativas con Google Shopping, Meta Catalog, TikTok Shop y Klaviyo (email marketing). Una agencia que trabaja con Shopify puede activar campanas de ecommerce completas en 2-3 semanas vs 6-8 semanas con WooCommerce o VTEX. Si ya tienes un sitio WordPress, WooCommerce es una opcion valida pero requiere mas mantenimiento tecnico. Para micro-empresas con presupuesto limitado, Jumpseller (empresa chilena) ofrece la mejor relacion costo-beneficio.
+                Para la mayoria de tiendas online en Chile que facturan entre $5M y $100M/mes, <strong>Shopify es la mejor opcion</strong> por sus integraciones nativas con Google Shopping, Meta Catalog, TikTok Shop y Klaviyo (email marketing). Una agencia que trabaja con Shopify puede activar campañas de ecommerce completas en 2-3 semanas vs 6-8 semanas con WooCommerce o VTEX. Si ya tienes un sitio WordPress, WooCommerce es una opcion valida pero requiere mas mantenimiento tecnico. Para micro-empresas con presupuesto limitado, Jumpseller (empresa chilena) ofrece la mejor relacion costo-beneficio.
               </p>
             </div>
           </section>
@@ -522,7 +522,7 @@ export default function AgenciasEcommercePage() {
             </div>
 
             <p className="text-sm text-gray-500 italic">
-              Datos referenciales del mercado de ecommerce chileno, agosto 2026. Los valores reales varian segun marca, margen de producto, competencia y calidad del sitio web. ROAS expresado como multiplo de la inversion publicitaria. Valores en CLP.
+              Datos referenciales del mercado de ecommerce chileno, agosto 2026. Los valores reales varian según marca, margen de producto, competencia y calidad del sitio web. ROAS expresado como multiplo de la inversion publicitaria. Valores en CLP.
             </p>
           </section>
 
@@ -578,7 +578,7 @@ export default function AgenciasEcommercePage() {
               Conclusion: Elegir la Agencia de E-commerce Correcta Puede Duplicar tus Ventas
             </h2>
             <p className="text-lg text-gray-700 mb-4 leading-relaxed">
-              En un mercado de $15 mil millones USD, la diferencia entre una agencia de ecommerce mediocre y una excelente puede significar duplicar o triplicar tus ventas online. La clave esta en elegir una agencia que mida ROAS real (no metricas de vanidad), domine feeds de producto, integre multiples canales y optimice la conversion del sitio ademas del trafico.
+              En un mercado de $15 mil millones USD, la diferencia entre una agencia de ecommerce mediocre y una excelente puede significar duplicar o triplicar tus ventas online. La clave esta en elegir una agencia que mida ROAS real (no métricas de vanidad), domine feeds de producto, integre multiples canales y optimice la conversion del sitio además del trafico.
             </p>
             <p className="text-lg text-gray-700 mb-4 leading-relaxed">
               Muller y Perez lidera este ranking por su enfoque de performance medido a nivel de SKU, integrando Google Shopping con Meta Catalog en un dashboard unificado. Rompecabeza Digital es la mejor opcion para retailers enterprise con operaciones complejas, e I.Com destaca por su especializacion vertical y CRO avanzado.

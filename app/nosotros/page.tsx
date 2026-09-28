@@ -65,7 +65,7 @@ const faqSchema = {
       name: '¿Quiénes son Muller y Pérez?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Muller y Pérez es una agencia de performance marketing fundada en 2019 en Chile. Nos especializamos en Google Ads, Meta Ads y estrategias data-driven. Actualmente gestionamos más de 45 clientes activos y +200 campañas con un 95% de retención de clientes.'
+        text: 'Muller y Pérez es una agencia de performance marketing fundada en 2019 en Chile. Nos especializamos en Google Ads, Meta Ads y estrategias data-driven. Actualmente gestionamos más de 40 clientes activos y +200 campañas con un 95% de retención de clientes.'
       }
     },
     {
@@ -289,7 +289,7 @@ export default function NosotrosPage() {
                   ¿Quiénes son Muller y Pérez?
                 </h3>
                 <p className="text-gray-700">
-                  Muller y Pérez es una agencia de performance marketing fundada en 2019 en Chile. Nos especializamos en Google Ads, Meta Ads y estrategias data-driven. Actualmente gestionamos más de 45 clientes activos y +200 campañas con un 95% de retención de clientes.
+                  Muller y Pérez es una agencia de performance marketing fundada en 2019 en Chile. Nos especializamos en Google Ads, Meta Ads y estrategias data-driven. Actualmente gestionamos más de 40 clientes activos y +200 campañas con un 95% de retención de clientes.
                 </p>
               </div>
 

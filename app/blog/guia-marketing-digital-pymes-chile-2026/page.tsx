@@ -102,7 +102,7 @@ export default function ArticlePage() {
                 <li><strong>Gerentes y duenos</strong> que quieren entender el marketing digital antes de contratar una agencia</li>
                 <li><strong>Equipos internos</strong> que manejan el marketing sin formacion especializada</li>
               </ul>
-              <p className="text-gray-700 mt-4">Esta guia asume que partes desde cero o que tienes una presencia digital basica que quieres mejorar. Si ya tienes campanas activas y quieres optimizarlas, te recomendamos nuestras guias especificas de <Link href="/blog/cuanto-cuesta-google-ads-chile-2026" className="text-blue-600 font-semibold hover:underline">costos Google Ads</Link> y <Link href="/blog/cuanto-invertir-publicidad-digital-chile-2026" className="text-blue-600 font-semibold hover:underline">presupuestos de publicidad digital</Link>.</p>
+              <p className="text-gray-700 mt-4">Esta guia asume que partes desde cero o que tienes una presencia digital basica que quieres mejorar. Si ya tienes campañas activas y quieres optimizarlas, te recomendamos nuestras guias especificas de <Link href="/blog/cuanto-cuesta-google-ads-chile-2026" className="text-blue-600 font-semibold hover:underline">costos Google Ads</Link> y <Link href="/blog/cuanto-invertir-publicidad-digital-chile-2026" className="text-blue-600 font-semibold hover:underline">presupuestos de publicidad digital</Link>.</p>
             </div>
 
             {/* Paso 1 */}
@@ -112,7 +112,7 @@ export default function ArticlePage() {
             </h2>
 
             <p className="text-gray-700 leading-relaxed mb-6">
-              El error numero 1 de las pymes chilenas en marketing digital es empezar a invertir sin saber que quieren lograr. &ldquo;Quiero mas ventas&rdquo; no es un objetivo: es un deseo. Un objetivo real es: &ldquo;Quiero generar 30 leads calificados al mes para cerrar 6 ventas con un ticket promedio de $500.000, invirtiendo maximo $1.500.000 en marketing&rdquo;.
+              El error número 1 de las pymes chilenas en marketing digital es empezar a invertir sin saber que quieren lograr. &ldquo;Quiero mas ventas&rdquo; no es un objetivo: es un deseo. Un objetivo real es: &ldquo;Quiero generar 30 leads calificados al mes para cerrar 6 ventas con un ticket promedio de $500.000, invirtiendo maximo $1.500.000 en marketing&rdquo;.
             </p>
 
             <div className="bg-white border-2 border-blue-200 rounded-xl p-6 mb-8">
@@ -138,7 +138,7 @@ export default function ArticlePage() {
             </div>
 
             <p className="text-gray-700 leading-relaxed mb-6">
-              Si no tienes claro tu margen por venta, tu ticket promedio y tu tasa de cierre historica, detente aqui y calculalos antes de seguir. Todo el marketing digital se construye sobre estos numeros. Sin ellos, cualquier inversion es una apuesta ciega. Puedes usar nuestra <Link href="/utilidades/calculadora-cac" className="text-blue-600 font-semibold hover:underline">Calculadora de CAC</Link> para estimar tus metricas.
+              Si no tienes claro tu margen por venta, tu ticket promedio y tu tasa de cierre historica, detente aqui y calculalos antes de seguir. Todo el marketing digital se construye sobre estos números. Sin ellos, cualquier inversion es una apuesta ciega. Puedes usar nuestra <Link href="/utilidades/calculadora-cac" className="text-blue-600 font-semibold hover:underline">Calculadora de CAC</Link> para estimar tus métricas.
             </p>
 
             {/* Paso 2 */}
@@ -156,7 +156,7 @@ export default function ArticlePage() {
                 <CheckCircle2 className="w-6 h-6 text-green-600 flex-shrink-0 mt-1" />
                 <div>
                   <h3 className="font-bold text-gray-900 mb-2">Sitio web profesional (no negociable)</h3>
-                  <p className="text-gray-700">No necesitas un sitio de $5M. Necesitas una pagina que cargue rapido (menos de 3 segundos), se vea bien en celular, explique claramente que haces y tenga un formulario de contacto o WhatsApp visible. Opciones accesibles: WordPress con tema premium ($150.000 - $500.000 todo incluido) o un landing page simple ($200.000 - $400.000). Si tu sitio carga lento o no es responsive, estas perdiendo el 60% de las visitas antes de que lean una sola linea.</p>
+                  <p className="text-gray-700">No necesitas un sitio de $5M. Necesitas una página que cargue rápido (menos de 3 segundos), se vea bien en celular, explique claramente que haces y tenga un formulario de contacto o WhatsApp visible. Opciones accesibles: WordPress con tema premium ($150.000 - $500.000 todo incluido) o un landing page simple ($200.000 - $400.000). Si tu sitio carga lento o no es responsive, estas perdiendo el 60% de las visitas antes de que lean una sola linea.</p>
                 </div>
               </div>
 
@@ -164,7 +164,7 @@ export default function ArticlePage() {
                 <CheckCircle2 className="w-6 h-6 text-green-600 flex-shrink-0 mt-1" />
                 <div>
                   <h3 className="font-bold text-gray-900 mb-2">Google Business Profile (gratis y esencial)</h3>
-                  <p className="text-gray-700">Si tienes un negocio local o de servicios, tu ficha de Google es tu activo digital mas importante despues de tu sitio web. Un GBP bien optimizado (fotos de calidad, horarios, descripcion con keywords, resenas) genera trafico gratuito de alta calidad. En Chile, el 46% de las busquedas de Google tienen intencion local. Completar tu GBP al 100% y conseguir al menos 10 resenas con 4.5+ estrellas es prioritario.</p>
+                  <p className="text-gray-700">Si tienes un negocio local o de servicios, tu ficha de Google es tu activo digital mas importante después de tu sitio web. Un GBP bien optimizado (fotos de calidad, horarios, descripcion con keywords, resenas) genera trafico gratuito de alta calidad. En Chile, el 46% de las búsquedas de Google tienen intencion local. Completar tu GBP al 100% y conseguir al menos 10 resenas con 4.5+ estrellas es prioritario.</p>
                 </div>
               </div>
 
@@ -196,14 +196,14 @@ export default function ArticlePage() {
             <div className="bg-green-50 border-l-4 border-green-600 p-6 rounded-r-xl mb-8">
               <p className="text-gray-800 font-semibold mb-2">Costo total de la base digital:</p>
               <p className="text-gray-700">
-                Sitio web basico ($200-500K) + GBP (gratis) + Instagram (gratis) + WhatsApp Business (gratis) + Tracking ($50-100K) = <strong>$250.000 - $600.000 de inversion inicial unica</strong>. Este costo se paga una vez y es la base sobre la que se construye todo lo demas.
+                Sitio web basico ($200-500K) + GBP (gratis) + Instagram (gratis) + WhatsApp Business (gratis) + Tracking ($50-100K) = <strong>$250.000 - $600.000 de inversion inicial única</strong>. Este costo se paga una vez y es la base sobre la que se construye todo lo demas.
               </p>
             </div>
 
             {/* Paso 3 */}
             <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6 flex items-center gap-3">
               <Megaphone className="w-8 h-8 text-purple-600" />
-              Paso 3: Elige tus canales (recomendaciones segun presupuesto)
+              Paso 3: Elige tus canales (recomendaciones según presupuesto)
             </h2>
 
             <p className="text-gray-700 leading-relaxed mb-6">
@@ -266,7 +266,7 @@ export default function ArticlePage() {
                 <ul className="space-y-2 text-gray-700">
                   <li>Vendes productos visuales (ropa, comida, deco)</li>
                   <li>Tu cliente no sabe que te necesita (aun)</li>
-                  <li>Quieres generar volumen de leads rapido</li>
+                  <li>Quieres generar volumen de leads rápido</li>
                   <li>Tu producto se vende mejor con fotos/video</li>
                   <li>Tu audiencia esta en Instagram</li>
                 </ul>
@@ -274,7 +274,7 @@ export default function ArticlePage() {
             </div>
 
             <p className="text-gray-700 leading-relaxed mb-6">
-              Si no sabes cual elegir, empieza con Google Search. Es mas predecible, mas facil de medir y genera leads de mayor calidad. Meta es excelente para escalar despues de que valides tu oferta con Google. Para una comparacion detallada, lee nuestro articulo <Link href="/blog/google-ads-vs-meta-ads-chile-2026" className="text-blue-600 font-semibold hover:underline">Google Ads vs Meta Ads Chile 2026</Link>.
+              Si no sabes cual elegir, empieza con Google Search. Es mas predecible, mas facil de medir y genera leads de mayor calidad. Meta es excelente para escalar después de que valides tu oferta con Google. Para una comparacion detallada, lee nuestro artículo <Link href="/blog/google-ads-vs-meta-ads-chile-2026" className="text-blue-600 font-semibold hover:underline">Google Ads vs Meta Ads Chile 2026</Link>.
             </p>
 
             {/* Paso 4 */}
@@ -307,8 +307,8 @@ export default function ArticlePage() {
               <div className="flex items-start gap-4">
                 <CheckCircle2 className="w-6 h-6 text-orange-600 flex-shrink-0 mt-1" />
                 <div>
-                  <h3 className="font-bold text-gray-900 mb-2">Blog basico: 2-4 articulos al mes</h3>
-                  <p className="text-gray-700">Un blog con articulos de 800-1.500 palabras que respondan las preguntas que tus clientes hacen frecuentemente. Esto mejora tu SEO (posicionamiento organico) y te da contenido para compartir en redes. Puedes escribirlos tu mismo o usar herramientas de IA para acelerar la produccion. El costo puede ser $0 si escribes tu, o $50.000-$100.000/articulo si externalizas.</p>
+                  <h3 className="font-bold text-gray-900 mb-2">Blog basico: 2-4 artículos al mes</h3>
+                  <p className="text-gray-700">Un blog con artículos de 800-1.500 palabras que respondan las preguntas que tus clientes hacen frecuentemente. Esto mejora tu SEO (posicionamiento organico) y te da contenido para compartir en redes. Puedes escribirlos tu mismo o usar herramientas de IA para acelerar la produccion. El costo puede ser $0 si escribes tu, o $50.000-$100.000/artículo si externalizas.</p>
                 </div>
               </div>
 
@@ -316,7 +316,7 @@ export default function ArticlePage() {
                 <CheckCircle2 className="w-6 h-6 text-orange-600 flex-shrink-0 mt-1" />
                 <div>
                   <h3 className="font-bold text-gray-900 mb-2">Testimonios y resenas: tu mejor contenido</h3>
-                  <p className="text-gray-700">Pide a cada cliente satisfecho un testimonio corto (texto o video de 30 segundos). Los testimonios son el contenido con mayor impacto en conversion: una pagina con testimonios convierte un 35% mas que una sin ellos. Manda un WhatsApp amable post-servicio pidiendo una resena en Google y un testimonio para tu Instagram.</p>
+                  <p className="text-gray-700">Pide a cada cliente satisfecho un testimonio corto (texto o video de 30 segundos). Los testimonios son el contenido con mayor impacto en conversion: una página con testimonios convierte un 35% mas que una sin ellos. Manda un WhatsApp amable post-servicio pidiendo una resena en Google y un testimonio para tu Instagram.</p>
                 </div>
               </div>
             </div>
@@ -401,7 +401,7 @@ export default function ArticlePage() {
               <div className="bg-indigo-50 border-2 border-indigo-200 rounded-xl p-6">
                 <h3 className="text-xl font-bold text-gray-900 mb-4">Email marketing para pymes</h3>
                 <ul className="space-y-2 text-gray-700">
-                  <li><strong>Secuencia de bienvenida:</strong> 3-5 emails automaticos despues de que alguien se registra. Presentate, muestra tu propuesta de valor, envia testimonios, haz una oferta.</li>
+                  <li><strong>Secuencia de bienvenida:</strong> 3-5 emails automaticos después de que alguien se registra. Presentate, muestra tu propuesta de valor, envía testimonios, haz una oferta.</li>
                   <li><strong>Newsletter quincenal:</strong> Tips, novedades y ofertas. No vendas en cada email: 80% valor, 20% venta.</li>
                   <li><strong>Herramientas:</strong> Mailchimp (gratis hasta 500 contactos), Brevo (gratis hasta 300 emails/dia)</li>
                   <li><strong>Tasa de apertura tipica Chile:</strong> 18-25%. Tasa de clic: 2-5%.</li>
@@ -411,7 +411,7 @@ export default function ArticlePage() {
               <div className="bg-green-50 border-2 border-green-200 rounded-xl p-6">
                 <h3 className="text-xl font-bold text-gray-900 mb-4">WhatsApp como canal de seguimiento</h3>
                 <ul className="space-y-2 text-gray-700">
-                  <li><strong>Respuesta inmediata:</strong> Contacta al lead dentro de los primeros 5 minutos. La tasa de contacto cae un 80% despues de 30 minutos.</li>
+                  <li><strong>Respuesta inmediata:</strong> Contacta al lead dentro de los primeros 5 minutos. La tasa de contacto cae un 80% después de 30 minutos.</li>
                   <li><strong>Mensajes predefinidos:</strong> Configura 5-10 respuestas rapidas en WhatsApp Business para las preguntas mas frecuentes.</li>
                   <li><strong>Follow-up sistematico:</strong> Si no responden, reintenta a las 24h, 48h y 7 dias.</li>
                   <li><strong>Tasa de respuesta:</strong> 40-60% (vs 2-5% en email para follow-up comercial).</li>
@@ -430,7 +430,7 @@ export default function ArticlePage() {
             </h2>
 
             <p className="text-gray-700 leading-relaxed mb-6">
-              La ventaja mas grande del marketing digital sobre el tradicional es que todo se puede medir. Pero medir por medir no sirve. Necesitas medir las metricas correctas y tomar acciones basadas en esos datos. Aqui estan las metricas que una pyme debe vigilar semanalmente.
+              La ventaja mas grande del marketing digital sobre el tradicional es que todo se puede medir. Pero medir por medir no sirve. Necesitas medir las métricas correctas y tomar acciones basadas en esos datos. Aqui estan las métricas que una pyme debe vigilar semanalmente.
             </p>
 
             <div className="grid md:grid-cols-2 gap-4 mb-8">
@@ -461,7 +461,7 @@ export default function ArticlePage() {
             </div>
 
             <p className="text-gray-700 leading-relaxed mb-6">
-              Revisa estas metricas semanalmente en un formato simple (puede ser una hoja de Excel o Google Sheets). No necesitas un dashboard de $500.000/mes para empezar. Lo importante es la consistencia: cada semana compara con la semana anterior, identifica que mejoro y que empeoro, y toma una accion concreta. Para herramientas mas avanzadas de tracking, usa nuestro <Link href="/labs/predictor" className="text-blue-600 font-semibold hover:underline">Predictor de Campanas</Link>.
+              Revisa estas métricas semanalmente en un formato simple (puede ser una hoja de Excel o Google Sheets). No necesitas un dashboard de $500.000/mes para empezar. Lo importante es la consistencia: cada semana compara con la semana anterior, identifica que mejoro y que empeoro, y toma una accion concreta. Para herramientas mas avanzadas de tracking, usa nuestro <Link href="/labs/predictor" className="text-blue-600 font-semibold hover:underline">Predictor de Campañas</Link>.
             </p>
 
             {/* Errores comunes */}
@@ -472,8 +472,8 @@ export default function ArticlePage() {
 
             <div className="space-y-4 mb-8">
               <div className="bg-red-50 border-l-4 border-red-500 p-5 rounded-r-xl">
-                <h3 className="font-bold text-gray-900 mb-2">1. No tener un sitio web rapido y mobile</h3>
-                <p className="text-gray-700">El 75% del trafico web en Chile es desde celular. Si tu sitio carga en mas de 3 segundos en celular, pierdes el 53% de las visitas. Antes de invertir un peso en ads, asegurate de que tu sitio carga rapido.</p>
+                <h3 className="font-bold text-gray-900 mb-2">1. No tener un sitio web rápido y mobile</h3>
+                <p className="text-gray-700">El 75% del trafico web en Chile es desde celular. Si tu sitio carga en mas de 3 segundos en celular, pierdes el 53% de las visitas. Antes de invertir un peso en ads, asegurate de que tu sitio carga rápido.</p>
               </div>
 
               <div className="bg-red-50 border-l-4 border-red-500 p-5 rounded-r-xl">
@@ -488,17 +488,17 @@ export default function ArticlePage() {
 
               <div className="bg-red-50 border-l-4 border-red-500 p-5 rounded-r-xl">
                 <h3 className="font-bold text-gray-900 mb-2">4. Invertir en SEO antes de validar tu oferta</h3>
-                <p className="text-gray-700">El SEO es excelente a largo plazo pero toma 6-12 meses en generar resultados. Si recien estas empezando, valida tu oferta con paid media (resultados en dias, no meses) y despues invierte en SEO cuando tengas data de que funciona.</p>
+                <p className="text-gray-700">El SEO es excelente a largo plazo pero toma 6-12 meses en generar resultados. Si recien estas empezando, valida tu oferta con paid media (resultados en dias, no meses) y después invierte en SEO cuando tengas data de que funciona.</p>
               </div>
 
               <div className="bg-red-50 border-l-4 border-red-500 p-5 rounded-r-xl">
                 <h3 className="font-bold text-gray-900 mb-2">5. Copiar la estrategia de una empresa grande</h3>
-                <p className="text-gray-700">Una pyme no puede (ni debe) copiar la estrategia de Falabella o de una multinacional. Tu ventaja es la agilidad, la personalizacion y el contacto directo. Enfocate en lo que puedes hacer mejor que los grandes: atencion personalizada, respuesta rapida, nicho especifico.</p>
+                <p className="text-gray-700">Una pyme no puede (ni debe) copiar la estrategia de Falabella o de una multinacional. Tu ventaja es la agilidad, la personalizacion y el contacto directo. Enfocate en lo que puedes hacer mejor que los grandes: atencion personalizada, respuesta rápida, nicho especifico.</p>
               </div>
 
               <div className="bg-red-50 border-l-4 border-red-500 p-5 rounded-r-xl">
                 <h3 className="font-bold text-gray-900 mb-2">6. Cambiar de estrategia cada 2 semanas</h3>
-                <p className="text-gray-700">Las campanas digitales necesitan al menos 4-6 semanas para estabilizarse. Cambiar de canal, de mensaje o de publico cada 2 semanas no permite que nada funcione. Elige una estrategia, dale 6-8 semanas y luego evalua con datos.</p>
+                <p className="text-gray-700">Las campañas digitales necesitan al menos 4-6 semanas para estabilizarse. Cambiar de canal, de mensaje o de publico cada 2 semanas no permite que nada funcione. Elige una estrategia, dale 6-8 semanas y luego evalua con datos.</p>
               </div>
 
               <div className="bg-red-50 border-l-4 border-red-500 p-5 rounded-r-xl">
@@ -508,7 +508,7 @@ export default function ArticlePage() {
 
               <div className="bg-red-50 border-l-4 border-red-500 p-5 rounded-r-xl">
                 <h3 className="font-bold text-gray-900 mb-2">8. No medir resultados reales (ventas, no likes)</h3>
-                <p className="text-gray-700">Los likes, followers e impresiones no pagan cuentas. Lo que importa son leads, ventas y revenue. Si tu agencia o community manager te reporta solo metricas de vanidad, exige que te muestren CPL, CAC y ROAS. Si no pueden, cambia de proveedor.</p>
+                <p className="text-gray-700">Los likes, followers e impresiones no pagan cuentas. Lo que importa son leads, ventas y revenue. Si tu agencia o community manager te reporta solo métricas de vanidad, exige que te muestren CPL, CAC y ROAS. Si no pueden, cambia de proveedor.</p>
               </div>
             </div>
 
@@ -571,7 +571,7 @@ export default function ArticlePage() {
                     <p><strong>Revenue:</strong> $12.000.000/mes (ticket $1.2M promedio)</p>
                   </div>
                 </div>
-                <p className="text-sm text-gray-500 mt-2">ROAS: 8.0x. La clave: Google Search para keywords de despido + Meta para retargeting + blog con articulos que posicionan en organico.</p>
+                <p className="text-sm text-gray-500 mt-2">ROAS: 8.0x. La clave: Google Search para keywords de despido + Meta para retargeting + blog con artículos que posicionan en organico.</p>
               </div>
             </div>
 
@@ -582,7 +582,7 @@ export default function ArticlePage() {
             </h2>
 
             <p className="text-gray-700 leading-relaxed mb-6">
-              Esta es una de las decisiones mas importantes para una pyme. La respuesta depende de tu presupuesto, tu tiempo disponible y la complejidad de tus campanas.
+              Esta es una de las decisiones mas importantes para una pyme. La respuesta depende de tu presupuesto, tu tiempo disponible y la complejidad de tus campañas.
             </p>
 
             <div className="grid md:grid-cols-2 gap-6 mb-8">
@@ -595,14 +595,14 @@ export default function ArticlePage() {
                   <li>Tu industria es poco competitiva</li>
                   <li>Estas dispuesto a invertir en cursos y aprendizaje</li>
                 </ul>
-                <p className="text-sm text-gray-500 mt-4">Costo: $0 en gestion + tu tiempo. Riesgo: aprendizaje lento, errores costosos.</p>
+                <p className="text-sm text-gray-500 mt-4">Costo: $0 en gestión + tu tiempo. Riesgo: aprendizaje lento, errores costosos.</p>
               </div>
 
               <div className="bg-white border-2 border-blue-200 rounded-xl p-6">
                 <h3 className="text-xl font-bold text-blue-800 mb-4">Contrata agencia si...</h3>
                 <ul className="space-y-2 text-gray-700">
                   <li>Tu presupuesto en media es mayor a $800K/mes</li>
-                  <li>No tienes tiempo para gestionar campanas</li>
+                  <li>No tienes tiempo para gestionar campañas</li>
                   <li>Usas 2+ canales que necesitan coordinacion</li>
                   <li>Tu industria es competitiva (legal, salud, inmob.)</li>
                   <li>Necesitas resultados rapidos y no puedes perder meses aprendiendo</li>
@@ -676,22 +676,22 @@ export default function ArticlePage() {
 
               <div className="bg-white border border-gray-200 rounded-xl p-6">
                 <h3 className="text-lg font-bold text-gray-900 mb-3">Es necesario tener sitio web o basta con Instagram?</h3>
-                <p className="text-gray-700">Instagram es un buen inicio pero no reemplaza un sitio web. Instagram es propiedad de Meta, no tuya: si cierran tu cuenta, pierdes todo. Ademas, Google Ads y SEO requieren un sitio web. Un sitio basico cuesta $200-500K como inversion unica. Es tu activo digital propio y permanente.</p>
+                <p className="text-gray-700">Instagram es un buen inicio pero no reemplaza un sitio web. Instagram es propiedad de Meta, no tuya: si cierran tu cuenta, pierdes todo. Además, Google Ads y SEO requieren un sitio web. Un sitio basico cuesta $200-500K como inversion única. Es tu activo digital propio y permanente.</p>
               </div>
 
               <div className="bg-white border border-gray-200 rounded-xl p-6">
                 <h3 className="text-lg font-bold text-gray-900 mb-3">Que hace una agencia de marketing digital exactamente?</h3>
-                <p className="text-gray-700">Una agencia de performance marketing como M&P gestiona tus campanas de Google y Meta Ads: crea los anuncios, define las audiencias, optimiza las pujas, crea landing pages, implementa tracking y te reporta resultados. Esencialmente, hace todo lo que esta guia describe, pero con la experiencia de gestionar decenas de cuentas simultaneamente y benchmarks por industria.</p>
+                <p className="text-gray-700">Una agencia de performance marketing como M&P gestiona tus campañas de Google y Meta Ads: crea los anuncios, define las audiencias, optimiza las pujas, crea landing pages, implementa tracking y te reporta resultados. Esencialmente, hace todo lo que esta guia describe, pero con la experiencia de gestionar decenas de cuentas simultaneamente y benchmarks por industria.</p>
               </div>
 
               <div className="bg-white border border-gray-200 rounded-xl p-6">
                 <h3 className="text-lg font-bold text-gray-900 mb-3">Como se si mi agencia actual esta haciendo un buen trabajo?</h3>
-                <p className="text-gray-700">Exige que te muestren: CPL, CAC, ROAS y tendencia mensual de cada metrica. Si solo te muestran impresiones, clics y CTR, no te estan dando la informacion relevante. Una buena agencia te explica en 5 minutos cuanto gastaste, cuantos leads generaste, cuantos se convirtieron en clientes y cual fue el retorno de tu inversion.</p>
+                <p className="text-gray-700">Exige que te muestren: CPL, CAC, ROAS y tendencia mensual de cada metrica. Si solo te muestran impresiones, clics y CTR, no te estan dando la información relevante. Una buena agencia te explica en 5 minutos cuanto gastaste, cuantos leads generaste, cuantos se convirtieron en clientes y cual fue el retorno de tu inversion.</p>
               </div>
 
               <div className="bg-white border border-gray-200 rounded-xl p-6">
                 <h3 className="text-lg font-bold text-gray-900 mb-3">El SEO todavia sirve o ya solo funciona la publicidad pagada?</h3>
-                <p className="text-gray-700">El SEO sigue siendo valioso, pero es una inversion a largo plazo (6-12 meses para ver resultados). Para una pyme, la prioridad es paid media para resultados inmediatos + SEO basico (GBP, blog, metas) como complemento. El SEO reduce tu dependencia de paid media a largo plazo. Para las tendencias actuales, lee nuestro articulo sobre <Link href="/blog/tendencias-marketing-digital-chile-2026" className="text-blue-600 font-semibold hover:underline">tendencias de marketing digital 2026</Link>.</p>
+                <p className="text-gray-700">El SEO sigue siendo valioso, pero es una inversion a largo plazo (6-12 meses para ver resultados). Para una pyme, la prioridad es paid media para resultados inmediatos + SEO basico (GBP, blog, metas) como complemento. El SEO reduce tu dependencia de paid media a largo plazo. Para las tendencias actuales, lee nuestro artículo sobre <Link href="/blog/tendencias-marketing-digital-chile-2026" className="text-blue-600 font-semibold hover:underline">tendencias de marketing digital 2026</Link>.</p>
               </div>
 
               <div className="bg-white border border-gray-200 rounded-xl p-6">
@@ -701,7 +701,7 @@ export default function ArticlePage() {
 
               <div className="bg-white border border-gray-200 rounded-xl p-6">
                 <h3 className="text-lg font-bold text-gray-900 mb-3">Como evitar estafas de agencias de marketing?</h3>
-                <p className="text-gray-700">Senales de alerta: (1) prometen resultados garantizados (&ldquo;100 leads en el primer mes seguro&rdquo;), (2) no te dan acceso a las cuentas de ads, (3) solo muestran metricas de vanidad, (4) cobran por adelantado 6-12 meses sin opcion de salida, (5) no pueden mostrar casos de clientes reales. Una agencia seria te muestra datos, te da acceso a todo y trabaja con contratos mensuales.</p>
+                <p className="text-gray-700">Senales de alerta: (1) prometen resultados garantizados (&ldquo;100 leads en el primer mes seguro&rdquo;), (2) no te dan acceso a las cuentas de ads, (3) solo muestran métricas de vanidad, (4) cobran por adelantado 6-12 meses sin opcion de salida, (5) no pueden mostrar casos de clientes reales. Una agencia seria te muestra datos, te da acceso a todo y trabaja con contratos mensuales.</p>
               </div>
             </div>
 
@@ -732,7 +732,7 @@ export default function ArticlePage() {
 
           {/* Related Posts */}
           <nav className="mt-12 pt-8 border-t border-gray-200">
-            <h3 className="text-lg font-bold text-gray-900 mb-4">Articulos Relacionados</h3>
+            <h3 className="text-lg font-bold text-gray-900 mb-4">Artículos Relacionados</h3>
             <div className="flex flex-wrap gap-2">
               <Link href="/blog/cuanto-cuesta-google-ads-chile-2026" className="text-sm text-blue-600 hover:text-blue-800 bg-blue-50 px-3 py-1.5 rounded-lg">
                 Cuanto Cuesta Google Ads Chile 2026 &rarr;
@@ -750,7 +750,7 @@ export default function ArticlePage() {
                 Ranking Agencias Marketing Digital Chile &rarr;
               </Link>
               <Link href="/labs/predictor" className="text-sm text-green-600 hover:text-green-800 bg-green-50 px-3 py-1.5 rounded-lg">
-                Predictor de Campanas &rarr;
+                Predictor de Campañas &rarr;
               </Link>
             </div>
           </nav>

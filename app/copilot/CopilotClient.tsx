@@ -164,7 +164,7 @@ export default function CopilotClient() {
       <section style={{ background: 'linear-gradient(180deg, #0F0A2E 0%, #1a1145 50%, #0F0A2E 100%)', padding: '120px 24px 80px', color: 'white' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto', textAlign: 'center' }}>
           <div className="reveal" style={{ display: 'inline-block', background: 'rgba(124,58,237,0.2)', border: '1px solid rgba(124,58,237,0.3)', borderRadius: 100, padding: '8px 24px', marginBottom: 28, fontSize: 13, fontWeight: 700, color: '#C4B5FD', letterSpacing: 2, textTransform: 'uppercase' as const }}>
-            Consultoria 1:1
+            Consultoría 1:1
           </div>
 
           <h1 className="reveal" style={{ fontSize: 48, fontWeight: 800, lineHeight: 1.1, margin: '0 0 24px', color: 'white', maxWidth: 800, marginLeft: 'auto', marginRight: 'auto' }}>
@@ -173,16 +173,16 @@ export default function CopilotClient() {
           </h1>
 
           <p className="reveal" style={{ fontSize: 19, lineHeight: 1.65, color: 'rgba(255,255,255,0.7)', margin: '0 auto 20px', maxWidth: 700 }}>
-            Una sola herramienta que lee archivos, envia mails, deploya sitios, genera PDFs, gestiona repos y conecta APIs — mientras tu duermes.
+            Una sola herramienta que lee archivos, envía mails, deploya sitios, genera PDFs, gestiona repos y conecta APIs — mientras tu duermes.
           </p>
 
           <p className="reveal" style={{ fontSize: 15, lineHeight: 1.6, color: 'rgba(255,255,255,0.45)', margin: '0 auto 36px', maxWidth: 680 }}>
-            Christopher Muller opera una agencia de 33 clientes y $80-100M CLP en pauta mensual 100% desde Claude Code. Ahora enseña como replicar este sistema.
+            Christopher Muller opera una agencia de 40+ clientes y $80-100M CLP en pauta mensual 100% desde Claude Code. Ahora enseña como replicar este sistema.
           </p>
 
           <div className="reveal" style={{ display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 48 }}>
             <a href={WA_LINK} target="_blank" rel="noopener noreferrer" className="btn-primary" style={{ padding: '16px 36px', fontSize: 17 }}>
-              Agendar sesion
+              Agendar sesión
             </a>
             <button className="btn-secondary" onClick={function() { scrollTo('programa') }} style={{ background: 'transparent', color: 'white', borderColor: 'rgba(255,255,255,0.2)' }}>
               Ver programa
@@ -363,9 +363,9 @@ export default function CopilotClient() {
         <div style={{ maxWidth: 1100, margin: '0 auto' }}>
           <div className="reveal" style={{ textAlign: 'center', marginBottom: 56 }}>
             <h2 style={{ fontSize: 36, fontWeight: 800, color: '#111827', margin: '0 0 16px' }}>
-              Programa de consultoria <span className="gradient-text">Claude Code</span>
+              Programa de consultoría <span className="gradient-text">Claude Code</span>
             </h2>
-            <p style={{ fontSize: 17, color: '#6B7280' }}>Tres niveles segun lo que necesitas. Precios + IVA.</p>
+            <p style={{ fontSize: 17, color: '#6B7280' }}>Tres niveles según lo que necesitas. Precios + IVA.</p>
           </div>
 
           <div className="plans-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 28, alignItems: 'start' }}>
@@ -501,7 +501,7 @@ export default function CopilotClient() {
 
           <div className="reveal" style={{ display: 'flex', gap: 40, alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center' }}>
             <div style={{ width: 160, height: 160, borderRadius: 20, overflow: 'hidden', flexShrink: 0, background: '#F3F4F6', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <img src="/logo-color.png" alt="Christopher Muller — Muller y Perez" style={{ width: '80%', height: 'auto', objectFit: 'contain' }} />
+              <img src="/logo-color.png" alt="Christopher Muller — Muller y Pérez" style={{ width: '80%', height: 'auto', objectFit: 'contain' }} />
             </div>
             <div style={{ flex: 1, minWidth: 300 }}>
               <h3 style={{ fontSize: 24, fontWeight: 800, color: '#111827', margin: '0 0 16px' }}>Christopher Muller</h3>
@@ -509,7 +509,7 @@ export default function CopilotClient() {
                 {[
                   'Ingeniero Civil Industrial + MBA Universidad de Chile',
                   '20+ años en tecnologia, marketing digital e IA',
-                  'Fundador de Muller y Perez (33 clientes, $80-100M pauta mensual)',
+                  'Fundador de Muller y Pérez (40+ clientes, $80-100M pauta mensual)',
                   'Opera 100% de su agencia con Claude Code',
                   'Referente en IA aplicada a marketing en Chile',
                 ].map(function(item, i) {
@@ -573,7 +573,7 @@ export default function CopilotClient() {
         <div style={{ maxWidth: 1000, margin: '0 auto' }}>
           <div className="reveal" style={{ textAlign: 'center', marginBottom: 48 }}>
             <h2 style={{ fontSize: 36, fontWeight: 800, color: '#111827', margin: '0 0 16px' }}>
-              Agenda tu sesion
+              Agenda tu sesión
             </h2>
           </div>
 
@@ -651,7 +651,7 @@ export default function CopilotClient() {
       {/* ================================================================= */}
       <footer style={{ padding: '40px 24px', background: '#111827', textAlign: 'center' }}>
         <p style={{ fontSize: 14, color: '#9CA3AF', margin: 0 }}>
-          Muller y Perez &middot; <a href="https://www.mulleryperez.cl" style={{ color: '#A5B4FC', textDecoration: 'none' }}>mulleryperez.cl</a> &middot; Badajoz 100 Of 523, Las Condes &middot; +56 9 9225 8137
+          Muller y Pérez &middot; <a href="https://www.mulleryperez.cl" style={{ color: '#A5B4FC', textDecoration: 'none' }}>mulleryperez.cl</a> &middot; Badajoz 100 Of 523, Las Condes &middot; +56 9 9225 8137
         </p>
       </footer>
     </div>

@@ -604,7 +604,7 @@ export default function ChatBot() {
                       <option value="">¿Que te interesa?</option>
                       <option value="Tips y consejos">Tips y consejos</option>
                       <option value="Herramientas gratuitas">Herramientas gratuitas</option>
-                      <option value="Cotizacion de servicios">Cotizacion de servicios</option>
+                      <option value="Cotizacion de servicios">Cotización de servicios</option>
                       <option value="Auditoria de marketing">Auditoria de marketing</option>
                       <option value="Consulta especifica">Consulta especifica</option>
                     </select>

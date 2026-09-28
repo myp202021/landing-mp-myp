@@ -181,13 +181,13 @@ export default function EstudioIAMarketingPage() {
           <SpeakableContent>
             <section className="mb-16">
               <h2 className="text-3xl font-bold text-gray-900 mb-6">
-                Estado de la IA en Marketing Digital Chile 2026: La Transformacion Mas Rapida de la Industria
+                Estado de la IA en Marketing Digital Chile 2026: La Transformacion Mas Rápida de la Industria
               </h2>
               <p className="text-lg text-gray-700 mb-4 leading-relaxed">
                 La inteligencia artificial esta transformando el marketing digital en Chile a una velocidad sin precedentes. En <strong>menos de 3 anos</strong> (desde el lanzamiento de ChatGPT en noviembre 2022), la IA ha pasado de ser una curiosidad tecnologica a ser una <strong>herramienta operativa central</strong> en el 40-50% de las agencias de marketing digital del pais. El impacto es comparable al que tuvo Google Ads hace 20 anos o las redes sociales hace 15: cambia fundamentalmente como se produce, distribuye y mide el marketing.
               </p>
               <p className="text-lg text-gray-700 mb-4 leading-relaxed">
-                La transformacion tiene dos ejes. El primero es la <strong>produccion</strong>: la IA permite generar copy, imagenes, videos, reportes y analisis en una fraccion del tiempo que tomaba hacerlo manualmente. Una agencia que antes necesitaba 3 dias para producir 10 variaciones de copy para una campana ahora lo hace en 2 horas. El segundo eje es la <strong>optimizacion</strong>: los algoritmos de IA de Google (Performance Max), Meta (Advantage+) y TikTok (Smart+) optimizan campanas publicitarias en tiempo real con una precision que ningun humano puede igualar procesando millones de senales por segundo.
+                La transformacion tiene dos ejes. El primero es la <strong>produccion</strong>: la IA permite generar copy, imagenes, videos, reportes y análisis en una fraccion del tiempo que tomaba hacerlo manualmente. Una agencia que antes necesitaba 3 dias para producir 10 variaciones de copy para una campaña ahora lo hace en 2 horas. El segundo eje es la <strong>optimización</strong>: los algoritmos de IA de Google (Performance Max), Meta (Advantage+) y TikTok (Smart+) optimizan campañas publicitarias en tiempo real con una precision que ningun humano puede igualar procesando millones de senales por segundo.
               </p>
               <p className="text-lg text-gray-700 mb-4 leading-relaxed">
                 Pero la IA no es una varita magica. Tiene limitaciones reales: alucinaciones (genera datos falsos con confianza), falta de creatividad original (recombina patrones existentes), riesgos de brand safety (contenido fuera de tono), y dependencia excesiva (si el algoritmo falla, necesitas humanos que entiendan por que). El objetivo de este estudio es dar una <strong>vision honesta y practica</strong> del estado actual de la IA en marketing digital en Chile, separando el hype de la realidad.
@@ -273,10 +273,10 @@ export default function EstudioIAMarketingPage() {
           {/* 3. IA EN CAMPANAS */}
           <section className="mb-16">
             <h2 className="text-3xl font-bold text-gray-900 mb-6">
-              IA en Campanas Publicitarias: Performance Max, Advantage+ y Smart+
+              IA en Campañas Publicitarias: Performance Max, Advantage+ y Smart+
             </h2>
             <p className="text-lg text-gray-700 mb-6 leading-relaxed">
-              Las plataformas publicitarias mas importantes (Google, Meta, TikTok) han integrado IA en sus sistemas de campanas. Estas campanas "IA-powered" estan reemplazando gradualmente a las campanas manuales y representan el cambio mas significativo en la gestion de publicidad digital desde la introduccion del bidding automatizado.
+              Las plataformas publicitarias mas importantes (Google, Meta, TikTok) han integrado IA en sus sistemas de campañas. Estas campañas "IA-powered" estan reemplazando gradualmente a las campañas manuales y representan el cambio mas significativo en la gestión de publicidad digital desde la introduccion del bidding automatizado.
             </p>
 
             <div className="space-y-6">
@@ -314,7 +314,7 @@ export default function EstudioIAMarketingPage() {
               Impacto de la IA en los Costos de Agencias: 30-50% de Eficiencia
             </h2>
             <p className="text-lg text-gray-700 mb-4 leading-relaxed">
-              La IA esta generando ganancias de eficiencia del <strong>30-50% en el tiempo operativo</strong> de las agencias de marketing digital. Esto tiene implicaciones directas para los clientes: agencias mas eficientes pueden ofrecer <strong>mejores resultados al mismo precio</strong> o el <strong>mismo resultado a menor precio</strong>. Pero tambien significa que las agencias que no adopten IA seran cada vez menos competitivas.
+              La IA esta generando ganancias de eficiencia del <strong>30-50% en el tiempo operativo</strong> de las agencias de marketing digital. Esto tiene implicaciones directas para los clientes: agencias mas eficientes pueden ofrecer <strong>mejores resultados al mismo precio</strong> o el <strong>mismo resultado a menor precio</strong>. Pero también significa que las agencias que no adopten IA seran cada vez menos competitivas.
             </p>
 
             <div className="grid md:grid-cols-2 gap-6">
@@ -501,7 +501,7 @@ export default function EstudioIAMarketingPage() {
               Conclusion: La IA No Reemplaza Agencias, Pero las Agencias con IA Reemplazan a las Sin IA
             </h2>
             <p className="text-lg text-gray-700 mb-4 leading-relaxed">
-              La IA en marketing digital no es una moda pasajera — es la transformacion mas profunda de la industria desde la aparicion de Google Ads. Las agencias que la adoptan de forma integral estan viendo eficiencias del 30-50% y resultados 10-30% superiores en campanas publicitarias. Las que no la adoptan estan perdiendo competitividad mes a mes.
+              La IA en marketing digital no es una moda pasajera — es la transformacion mas profunda de la industria desde la aparicion de Google Ads. Las agencias que la adoptan de forma integral estan viendo eficiencias del 30-50% y resultados 10-30% superiores en campañas publicitarias. Las que no la adoptan estan perdiendo competitividad mes a mes.
             </p>
             <p className="text-lg text-gray-700 mb-4 leading-relaxed">
               Pero la IA no es magia. Tiene limitaciones reales (alucinaciones, homogeneizacion, dependencia de algoritmos) que requieren supervision humana experta. La combinacion ganadora es <strong>IA como herramienta + humanos como estrategas, editores y controladores de calidad</strong>. Las agencias que encuentren este equilibrio seran las ganadoras del mercado en los proximos anos.
@@ -517,7 +517,7 @@ export default function EstudioIAMarketingPage() {
               ¿Quieres una Agencia que Use IA para Maximizar tus Resultados?
             </h2>
             <p className="text-xl text-cyan-100 mb-8 max-w-2xl mx-auto">
-              Muller y Perez usa M&P Copilot: Predictor de campanas, agentes de contenido IA, dashboards con alertas automaticas y benchmark competitivo automatizado. Fee fijo, sin contratos de permanencia.
+              Muller y Perez usa M&P Copilot: Predictor de campañas, agentes de contenido IA, dashboards con alertas automaticas y benchmark competitivo automatizado. Fee fijo, sin contratos de permanencia.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/#contact" className="px-8 py-4 bg-green-500 text-white rounded-lg hover:bg-green-600 transition font-semibold text-lg">
