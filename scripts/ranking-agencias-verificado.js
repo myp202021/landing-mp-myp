@@ -1606,12 +1606,7 @@ async function main() {
     return;
   }
 
-  var titulo =
-    "Ranking de agencias de marketing digital en Chile " +
-    hoy.getFullYear() +
-    ": verificado con fuentes (" +
-    fechaTxt +
-    ")";
+  var titulo = "Ranking de agencias de marketing digital en Chile: " + fechaTxt + " (verificado)";
   var post = {
     slug: SLUG,
     title: titulo,
