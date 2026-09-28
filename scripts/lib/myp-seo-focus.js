@@ -507,6 +507,7 @@ async function pulirArticulo(html, opts) {
 }
 
 module.exports = {
+  acentuarTexto,
   pulirArticulo,
   faltasOrtografia,
   limpiarHtml,

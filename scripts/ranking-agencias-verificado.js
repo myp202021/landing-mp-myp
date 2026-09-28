@@ -383,6 +383,7 @@ async function urlsDelSitio(web) {
   // Prioridad: páginas de servicios/tecnología primero; blog al final (habla de IA en general, no de lo propio)
   var puntaje = function (u) { return (PRIORIDAD_URL.test(u) ? 0 : 1) + (/\/blog\/|\/noticias\/|\/\d{4}\//.test(u) ? 2 : 0); };
   urls.sort(function (a, b) { return puntaje(a) - puntaje(b) || a.length - b.length; });
+  todasLasUrls[web] = urls.slice();
   return [base + "/"].concat(urls.filter(function (u) { return u.replace(/\/+$/, "") !== base; })).slice(0, 30);
 }
 
@@ -403,6 +404,7 @@ function frasesDe(html) {
 }
 
 var cacheSitios = {};
+var todasLasUrls = {};
 async function frasesDelSitio(web) {
   if (cacheSitios[web]) return cacheSitios[web];
   var urls = await urlsDelSitio(web);
@@ -454,6 +456,61 @@ async function confirmarDesdeSitio(agencia, campo, frases) {
   var c = candidatas[(j.indice || 0) - 1];
   if (!c) return { valor: false, descripcion: null, fuente: null };
   return { valor: true, descripcion: j.descripcion, fuente: c.url, cita: c.frase, comprobado: "frase publicada en el sitio de la agencia" };
+}
+
+// ═══ PASO 2D: ESPECIALIDADES, CASOS Y TRAYECTORIA DESDE EL SITIO (sin IA, iguales en cada corrida) ═══
+var PALABRAS_ESPECIALIDAD = {
+  performance: /performance|google ads|meta ads|campañas pagadas|pauta digital|paid media|publicidad (digital|pagada)|\bsem\b/i,
+  contenido: /marketing de contenidos?|contenidos? para redes|redes sociales|community manager|copywriting|gestión de redes/i,
+  creatividad: /creatividad|diseño gráfico|branding|producción audiovisual|dirección de arte|piezas gráficas/i,
+  seo: /\bseo\b|posicionamiento (web|orgánico|en google)/i,
+  ecommerce: /e-?commerce|tiendas? (online|virtual(es)?)|comercio electr[oó]nico/i,
+  b2b: /\bb2b\b|empresa a empresa|clientes (industriales|corporativos)/i,
+};
+var URL_CASO = /\/(casos?(-de-exito)?|case-stud(y|ies)|cases?|portafolio|portfolio|proyectos?|clientes)\/[^/?#]+/i;
+
+// Blog, noticias y páginas de rankings/listados de agencias (hablan de otras agencias)
+var URL_BLOG = /\/(blog|noticias|news|articulos?|recursos|insights|prensa)\/|\/(19|20)\d{2}\/|\/tag\/|\/category\/|ranking|mejores-|top-?\d|agencias-de-/i;
+var AUTORREFERENCIA = /\b(somos|nuestr[oa]s?|nosotros|ofrecemos|contamos|tenemos|trabajamos|nacimos|fundamos|la agencia|nuestra agencia)\b/i;
+
+function evidenciaDelSitio(web, todas, datos, nombreAgencia) {
+  var otras = AGENCIAS.filter(function (a) { return a.nombre !== nombreAgencia; }).map(function (a) { return normalizarTexto(a.nombre); });
+  var n = 0;
+  // Solo páginas institucionales y de servicios: el blog habla de todo y no prueba lo que la agencia ofrece
+  var frases = todas.filter(function (x) { return !URL_BLOG.test(x.url); });
+  // Especialidades: la frase publicada en el sitio es la evidencia
+  datos.especialidades = {};
+  Object.keys(PALABRAS_ESPECIALIDAD).forEach(function (k) {
+    var f = frases.filter(function (x) { return PALABRAS_ESPECIALIDAD[k].test(x.frase); })[0];
+    datos.especialidades[k] = f ? { valor: true, fuente: f.url, cita: f.frase } : { valor: false, fuente: null };
+    if (f) n++;
+  });
+  // Casos: páginas individuales de casos o portafolio en el sitemap
+  var casos = Array.from(new Set((todasLasUrls[web] || []).filter(function (u) { return URL_CASO.test(u); }))).slice(0, 5);
+  if (casos.length) {
+    datos.casos_exito = casos.map(function (u) {
+      var nombre = decodeURIComponent(u.replace(/\/+$/, "").split("/").pop()).replace(/-/g, " ");
+      return { cliente: nombre, resultado: null, fuente: u };
+    });
+  }
+  // Trayectoria: "desde 2015", "fundada en 2015", "10 años de experiencia"
+  var anios = [];
+  frases.forEach(function (x) {
+    if (!AUTORREFERENCIA.test(x.frase) && !/fundad[ao]/i.test(x.frase)) return;
+    var fn = normalizarTexto(x.frase);
+    if (otras.some(function (o) { return o.length > 3 && fn.indexOf(o) >= 0; })) return; // habla de otra agencia
+    var m = x.frase.match(/(fundad[ao]s?|naci(mos|ó)|desde|cread[ao]s?|comenzamos|partimos)\s+(en\s+(el\s+)?(año\s+)?)?((19|20)\d{2})/i);
+    if (m && +m[6] >= 1980 && +m[6] <= ANIO) anios.push({ anio: +m[6], fuente: x.url, cita: x.frase });
+    var e = x.frase.match(/(más de\s+)?(\d{1,2})\s+años de (experiencia|trayectoria)/i);
+    if (e && +e[2] >= 1 && +e[2] <= 40 && /(somos|tenemos|contamos|con más de|agencia|nuestra)/i.test(x.frase)) anios.push({ anio: ANIO - +e[2], fuente: x.url, cita: x.frase });
+  });
+  if (anios.length) {
+    // Se usa la mediana para no depender de una sola frase
+    anios.sort(function (a, b) { return a.anio - b.anio; });
+    var med = anios[Math.floor(anios.length / 2)];
+    datos.anio_fundacion = { valor: med.anio, fuente: med.fuente, cita: med.cita };
+  }
+  return { especialidades: n, casos: casos.length, anio: anios.length ? datos.anio_fundacion.valor : null };
 }
 
 async function confirmarTecnologia(agencia, datos) {
@@ -1241,6 +1298,11 @@ async function main() {
         }
       }
       var cambios = await confirmarTecnologia(ag, datos);
+      var webAg = ag.web || (datos.sitio_web && datos.sitio_web.valor);
+      if (webAg && cacheSitios[webAg] && cacheSitios[webAg].length >= 100) {
+        var evs = evidenciaDelSitio(webAg, cacheSitios[webAg], datos, ag.nombre);
+        console.log("   Desde el sitio: " + evs.especialidades + " especialidades, " + evs.casos + " páginas de casos, fundación " + (evs.anio || "sin dato"));
+      }
       if (cambios.length) console.log("   confirmación con cita: " + cambios.join(" | "));
       var heredados = await heredarDelMesAnterior(datos, previo, ag.nombre);
       if (heredados) console.log("   " + heredados + " datos heredados del mes anterior (fuente re-verificada)");
@@ -1282,7 +1344,7 @@ async function main() {
   });
 
   var anterior = snapshotAnterior(mes);
-  var html = await redactar(evaluadas, anterior, fechaTxt);
+  var html = focus.acentuarTexto(await redactar(evaluadas, anterior, fechaTxt));
 
   // QA
   var chars = html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").length;
