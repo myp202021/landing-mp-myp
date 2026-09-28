@@ -364,9 +364,9 @@ export default function LandingClient() {
     },
     aggregateRating: {
       '@type': 'AggregateRating',
-      ratingValue: '4.9',
+      ratingValue: '5.0',
       bestRating: '5',
-      ratingCount: '47'
+      ratingCount: '115'
     }
   }
 
@@ -2111,8 +2111,8 @@ export default function LandingClient() {
               ],
               "aggregateRating": {
                 "@type": "AggregateRating",
-                "ratingValue": "4.9",
-                "reviewCount": "47",
+                "ratingValue": "5.0",
+                "reviewCount": "115",
                 "bestRating": "5"
               }
             })

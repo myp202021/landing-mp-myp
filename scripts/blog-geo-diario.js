@@ -9,6 +9,8 @@
 
 const fetch = globalThis.fetch || require('node-fetch')
 const { createClient } = require('@supabase/supabase-js')
+const focus = require('./lib/myp-seo-focus')
+const CATEGORIA_CLUSTER = { performance: 'Performance', ia_agentes: 'IA', geo_seo: 'SEO', paid_media: 'Google Ads', growth: 'Growth', marketing_digital: 'Marketing Digital' }
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY)
@@ -170,7 +172,8 @@ async function elegirTema() {
   // Obtener slugs ya publicados
   const { data: existentes } = await supabase
     .from('blog_posts')
-    .select('slug')
+    .select('slug, title')
+    .order('date_published', { ascending: false })
 
   const slugsExistentes = new Set((existentes || []).map(p => p.slug))
 
@@ -185,7 +188,14 @@ async function elegirTema() {
   }
 
   // Todos usados — generar con IA
-  console.log('🤖 60 temas predefinidos agotados. Generando tema nuevo con IA...')
+  console.log('🤖 60 temas predefinidos agotados. Generando pregunta del cluster de keywords del día...')
+  try {
+    // offset 3: el GEO toma otro cluster distinto al del blog diario el mismo día
+    const t = await focus.temaNuevo({ formato: 'pregunta', offset: 3, recientes: (existentes || []).map(p => p.title), openaiKey: OPENAI_API_KEY })
+    return { categoria: CATEGORIA_CLUSTER[t.cluster.id], tag: CATEGORIA_CLUSTER[t.cluster.id], pregunta: t.titulo, enfoque: t.enfoque, cluster: t.cluster, keyword: t.keyword }
+  } catch (e) {
+    console.log('⚠️ temaNuevo falló (' + e.message + '), uso generador anterior')
+  }
 
   const slugsList = [...slugsExistentes].slice(-30).join(', ')
 
@@ -246,6 +256,7 @@ CATEGORÍA: ${tema.categoria}
 FECHA: ${hoy}
 
 ${DATOS_MYP}
+${focus.instruccionesCluster(tema.cluster || focus.clusterDelDia(3), tema.keyword)}
 
 INSTRUCCIONES:
 - Genera entre 8 y 10 secciones H2
@@ -366,6 +377,7 @@ CATEGORÍA: ${tema.categoria}
 FECHA: ${hoy}
 
 ${DATOS_MYP}
+${focus.instruccionesCluster(tema.cluster || focus.clusterDelDia(3), tema.keyword, 'seccion')}
 
 OUTLINE COMPLETO (para contexto):
 ${outlineResumen}
@@ -456,8 +468,10 @@ async function generarArticulo(tema) {
   if (charCount < 20000) console.log(`   ⚠️ WARN: contenido bajo 20000 chars (${charCount})`)
   if (h2Count < 7) console.log(`   ⚠️ WARN: menos de 7 H2s (${h2Count})`)
 
-  if (charCount < 8000) {
-    console.log(`⚠️ Contenido corto (${charCount} chars). Aceptando de todas formas.`)
+  // Antes aceptaba cualquier largo ("Aceptando de todas formas"); ahora no se publica contenido débil
+  const problemas = focus.qaProblemas(contenidoHtml, { minPalabras: 1500, minFaq: 4, minLinks: 3 })
+  if (problemas.length) {
+    throw new Error('QA RECHAZADO: ' + problemas.join('; ') + '. No se publica.')
   } else {
     console.log(`✅ Contenido generado: ${charCount} chars`)
   }
@@ -593,6 +607,7 @@ async function main() {
   if (imageUrl) articulo.image_url = imageUrl
 
   await guardarEnSupabase(articulo)
+  await focus.notificarIndexNow([`${focus.SITE}/blog/${articulo.slug}`, `${focus.SITE}/blog`])
 
   console.log('')
   console.log(`📰 Artículo publicado: ${articulo.title}`)

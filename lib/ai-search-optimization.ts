@@ -335,9 +335,9 @@ export const generateAISearchSchema = () => {
     // Social Proof
     aggregateRating: {
       '@type': 'AggregateRating',
-      ratingValue: '4.9',
+      ratingValue: '5.0',
       bestRating: '5',
-      ratingCount: '47'
+      ratingCount: '115'
     },
 
     // knowsAbout ya cubre expertise; FAQs se sirven como FAQPage separado

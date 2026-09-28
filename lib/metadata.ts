@@ -407,10 +407,10 @@ export function createOrganizationSchema() {
     // Rating y reseñas
     aggregateRating: {
       '@type': 'AggregateRating',
-      ratingValue: '4.9',
+      ratingValue: '5.0',
       bestRating: '5',
       worstRating: '1',
-      ratingCount: '47'
+      ratingCount: '115'
     },
 
     // Información adicional
@@ -728,9 +728,9 @@ export function createLocalBusinessSchema(city: {
     // Rating
     aggregateRating: {
       '@type': 'AggregateRating',
-      ratingValue: '4.9',
+      ratingValue: '5.0',
       bestRating: '5',
-      ratingCount: '47'
+      ratingCount: '115'
     },
 
     // Horarios

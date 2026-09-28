@@ -6,6 +6,8 @@
 
 const fetch = globalThis.fetch || require('node-fetch')
 const { createClient } = require('@supabase/supabase-js')
+const focus = require('./lib/myp-seo-focus')
+const CATEGORIA_CLUSTER = { performance: 'Performance', ia_agentes: 'IA', geo_seo: 'SEO', paid_media: 'Google Ads', growth: 'Growth', marketing_digital: 'Marketing Digital' }
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY)
@@ -210,7 +212,8 @@ async function elegirTema() {
   // Obtener slugs ya publicados
   const { data: existentes } = await supabase
     .from('blog_posts')
-    .select('slug')
+    .select('slug, title')
+    .order('date_published', { ascending: false })
 
   const slugsExistentes = new Set((existentes || []).map(p => p.slug))
 
@@ -222,8 +225,14 @@ async function elegirTema() {
     return disponibles[Math.floor(Math.random() * disponibles.length)]
   }
 
-  // Todos los temas predefinidos ya se usaron — generar uno nuevo con IA
-  console.log('🤖 Temas predefinidos agotados. Generando tema nuevo con IA...')
+  // Todos los temas predefinidos ya se usaron — tema nuevo dentro del cluster de keywords del día
+  console.log('🤖 Temas predefinidos agotados. Generando tema del cluster de keywords del día...')
+  try {
+    const t = await focus.temaNuevo({ formato: 'guia', recientes: (existentes || []).map(p => p.title), openaiKey: OPENAI_API_KEY })
+    return { categoria: CATEGORIA_CLUSTER[t.cluster.id], tag: CATEGORIA_CLUSTER[t.cluster.id], tema: t.titulo, enfoque: t.enfoque, cluster: t.cluster, keyword: t.keyword }
+  } catch (e) {
+    console.log('⚠️ temaNuevo falló (' + e.message + '), uso generador anterior')
+  }
 
   const slugsList = [...slugsExistentes].join(', ')
   const categorias = ['Google Ads', 'Meta Ads', 'Performance', 'LinkedIn Ads', 'SEO', 'Automatización', 'Estrategia', 'Industrias', 'Analytics', 'CRO']
@@ -281,6 +290,7 @@ async function generarOutline(tema) {
 TEMA: ${tema.tema}
 CATEGORÍA: ${tema.categoria}
 FECHA: ${hoy}
+${tema.cluster ? focus.instruccionesCluster(tema.cluster, tema.keyword) : focus.factsTexto()}
 
 INSTRUCCIONES:
 - Genera entre 8 y 10 secciones H2
@@ -384,6 +394,7 @@ ${seccion.links_internos && seccion.links_internos.length > 0 ? `Incluir estos l
 TEMA GENERAL: ${tema.tema}
 CATEGORÍA: ${tema.categoria}
 FECHA: ${hoy}
+${tema.cluster ? focus.instruccionesCluster(tema.cluster, tema.keyword, 'seccion') : focus.factsTexto()}
 
 OUTLINE COMPLETO DEL ARTÍCULO (para contexto):
 ${outlineResumen}
@@ -495,6 +506,8 @@ async function generarArticulo(tema) {
   if (h2Count < 5) {
     throw new Error(`Contenido con pocas secciones (${h2Count} H2s, mínimo 5). No se publica.`)
   }
+  const problemas = focus.qaProblemas(contenidoHtml, { minPalabras: 2000, minFaq: 4, minLinks: 3 })
+  if (problemas.length) throw new Error('QA RECHAZADO: ' + problemas.join('; ') + '. No se publica.')
   console.log(`✓ QA Gate: contenido OK (${charCount} chars, ${h2Count} H2s, sin refusal)`)
 
   // Generar metadata
@@ -616,6 +629,7 @@ CREATE POLICY "Service role can manage blog posts" ON blog_posts FOR ALL USING (
   const tema = await elegirTema()
   const articulo = await generarArticulo(tema)
   await guardarEnSupabase(articulo)
+  await focus.notificarIndexNow([`${focus.SITE}/blog/${articulo.slug}`, `${focus.SITE}/blog`])
 
   console.log('')
   console.log(`📰 Artículo publicado: ${articulo.title}`)

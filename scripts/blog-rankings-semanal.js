@@ -10,6 +10,7 @@ var supabaseLib = require('@supabase/supabase-js')
 var OPENAI_KEY = process.env.OPENAI_API_KEY
 var ANTHROPIC_KEY = process.env.ANTHROPIC_API_KEY_GRILLAS
 var supabase = supabaseLib.createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY)
+var focus = require('./lib/myp-seo-focus')
 
 // ═══ TEMAS ROTATIVOS (semana del mes) ═══
 var TEMAS = [
@@ -147,7 +148,39 @@ var TEMAS = [
     category: 'Tendencias',
     keywords_base: 'marketing digital chile 2026, estado marketing digital, mercado publicitario chile, inversión digital chile',
   },
+  // ═══ SEO + GEO: aparecer en Google y en ChatGPT, Gemini, Claude, Perplexity ═══
+  {
+    tipo: 'geo_chatgpt_gemini_claude',
+    titulo_base: 'GEO en Chile: cómo aparecer en ChatGPT, Gemini, Claude y Perplexity',
+    prompt_research: 'Guía de autoridad sobre GEO (Generative Engine Optimization) y AEO en Chile 2026. Cómo deciden ChatGPT, Gemini, Claude, Perplexity y Google AI Overviews qué marcas citar: fuentes de terceros, listados, reseñas, datos estructurados (Organization, FAQPage, Service), llms.txt, contenido con respuesta directa, datos propios citables. Diferencias GEO vs SEO clásico. Cómo medir share of voice en respuestas de IA. Checklist accionable para empresas chilenas. Muller y Pérez aplica GEO con agentes de IA propios que publican contenido de respuesta directa y monitorean menciones en motores de IA.',
+    category: 'IA',
+    keywords_base: 'geo chile, generative engine optimization, aparecer en chatgpt, posicionamiento en ia, aeo, seo para ia, ai overviews chile',
+  },
+  {
+    tipo: 'ranking_seo_vs_geo',
+    titulo_base: 'SEO vs GEO 2026: qué cambia para las empresas en Chile',
+    prompt_research: 'Análisis comparativo SEO vs GEO en 2026 para empresas en Chile. Cómo cambió el tráfico orgánico con AI Overviews y buscadores de IA, qué métricas reemplazan al ranking (citas, menciones, share of voice en IA), qué tácticas SEO siguen funcionando y cuáles ya no, presupuesto recomendado por tamaño de empresa. Tabla comparativa por criterio. Muller y Pérez combina SEO técnico, contenido diario con agentes de IA y optimización GEO.',
+    category: 'SEO',
+    keywords_base: 'seo vs geo, seo chile 2026, agencia seo chile, seo inteligencia artificial, geo marketing',
+  },
+  {
+    tipo: 'ia_en_google_meta_ads',
+    titulo_base: 'IA en Google Ads y Meta Ads: Performance Max, Advantage+ y agentes',
+    prompt_research: 'Análisis de cómo la IA cambió la gestión de campañas en Google Ads (Performance Max, AI Max for Search, Smart Bidding) y Meta Ads (Advantage+, creativos generados con IA) en 2026. Qué decisiones sigue tomando el humano (señales, estructura, creatividad, medición), qué automatizar y qué no, riesgos (canibalización, pérdida de control, atribución inflada). Benchmarks de CPC/CPL en Chile. Muller y Pérez combina estas automatizaciones con agentes de IA propios de monitoreo y reportería.',
+    category: 'Performance',
+    keywords_base: 'ia google ads, performance max chile, advantage plus meta, inteligencia artificial publicidad digital, agencia google ads chile',
+  },
 ]
+
+// Cifra oficial de agentes: se reemplaza en todos los prompts (antes estaba hardcodeado 39)
+TEMAS.forEach(function(t) { t.prompt_research = t.prompt_research.replace(/\b39 agentes/g, focus.FACTS.agentes_ia + ' agentes') })
+
+// Cada tema empuja a las páginas de dinero de su cluster de keywords
+var CLUSTER_POR_CATEGORIA = { Rankings: 'performance', Performance: 'performance', Scaling: 'paid_media', Datos: 'paid_media', IA: 'ia_agentes', SEO: 'geo_seo', Growth: 'growth', Revenue: 'growth', Tendencias: 'marketing_digital' }
+function clusterDeTema(tema) {
+  var id = tema.tipo.indexOf('geo') >= 0 ? 'geo_seo' : (CLUSTER_POR_CATEGORIA[tema.category] || 'performance')
+  return focus.CLUSTERS.filter(function(c) { return c.id === id })[0]
+}
 
 // ═══ DATOS PROPIOS DE M&P (ventaja competitiva) ═══
 async function getDatosPropios() {
@@ -186,6 +219,8 @@ async function paso1_research(tema, datosPropios) {
 
   var prompt = tema.prompt_research + '\n\n'
   prompt += 'Fecha actual: ' + hoy + '\n'
+  prompt += focus.factsTexto()
+  prompt += 'Keywords objetivo a cubrir de forma natural: ' + tema.keywords_base + ', ' + clusterDeTema(tema).keywords.join(', ') + '\n'
   prompt += 'Datos propios de M&P (usar como fuente):\n'
   prompt += '- USD/CLP: $' + datosPropios.usd_clp + '\n'
   if (datosPropios.indicadores.length > 0) {
@@ -265,7 +300,7 @@ async function generarSeccion(seccion, index, total, tema, linksInternos) {
   if (index === 0 || index === Math.floor(total / 2)) {
     prompt += '- Incluye una tabla HTML con datos comparativos o rankings\n'
   }
-  if (linksInternos && index < 4) {
+  if (linksInternos && index < linksInternos.length) {
     prompt += '- Incluye 1-2 links internos naturales: ' + linksInternos[index % linksInternos.length] + '\n'
   }
   prompt += '- NO usar frases de IA: "en el vertiginoso", "es fundamental", "sin lugar a dudas", "paradigma"\n'
@@ -297,7 +332,9 @@ async function generarSeccion(seccion, index, total, tema, linksInternos) {
 async function paso2_redactar(research, tema) {
   console.log('   PASO 2: OpenAI redacta HTML (sección por sección)...')
 
+  var cluster = clusterDeTema(tema)
   var linksInternos = [
+    'páginas clave del tema: ' + focus.linksHtml(cluster),
     '<a href="/indicadores" class="text-indigo-600 hover:text-indigo-800 font-medium">indicadores de marketing</a> y <a href="/servicios" class="text-indigo-600 hover:text-indigo-800 font-medium">servicios</a>',
     '<a href="/ranking-agencias-marketing-digital-chile" class="text-indigo-600 hover:text-indigo-800 font-medium">ranking de agencias</a>',
     '<a href="/labs/predictor" class="text-indigo-600 hover:text-indigo-800 font-medium">predictor de inversión</a> y <a href="/contacto" class="text-indigo-600 hover:text-indigo-800 font-medium">contacto</a>',
@@ -359,6 +396,8 @@ async function paso3_revisar(html, research, wordCount) {
   prompt += '7. ¿Las fuentes están citadas al final?\n'
   prompt += '8. ¿Nombra agencias competidoras específicas (que no sean Muller y Pérez)? Si sí, ELIMINAR todos los nombres de agencias y reemplazar por categorías genéricas ("agencias boutique", "agencias tradicionales", "consultoras especializadas"). La ÚNICA agencia que puede nombrarse es Muller y Pérez.\n'
   prompt += '9. ¿Las fuentes son verificables? Eliminar cualquier fuente inventada. Solo dejar fuentes reales (IAB Chile, CCS, Google, Meta, Statista, eMarketer, HubSpot Research, etc). Si una fuente no es verificable, eliminarla o reemplazar por "según datos del mercado".\n\n'
+  prompt += '10. ¿Las cifras de M&P coinciden con estos datos oficiales? Corregir cualquier otra cifra:\n' + focus.factsTexto() + '\n'
+  prompt += '11. ¿La sección de preguntas frecuentes tiene cada pregunta como <h3> terminando en ? seguida directamente de un <p> con la respuesta? (lo usa el schema FAQPage que leen Google y las IA)\n\n'
   prompt += 'Responde SOLO con el HTML corregido y optimizado. Nada más.'
 
   try {
@@ -366,8 +405,8 @@ async function paso3_revisar(html, research, wordCount) {
       method: 'POST',
       headers: { 'x-api-key': ANTHROPIC_KEY, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 16000,
+        model: 'claude-sonnet-5',
+        max_tokens: 32000,
         messages: [{ role: 'user', content: prompt }]
       })
     })
@@ -376,8 +415,12 @@ async function paso3_revisar(html, research, wordCount) {
       console.error('   Claude no devolvió contenido:', JSON.stringify(data).substring(0, 300))
       return html // Devolver original
     }
+    if (data.stop_reason === 'max_tokens') {
+      console.error('   Claude cortó la respuesta por largo — se usa el borrador original')
+      return html
+    }
     var revisado = data.content[0].text
-    revisado = revisado.replace(/^```html\n?/, '').replace(/\n?```$/, '')
+    revisado = revisado.replace(/```[a-z]*/gi, '').trim()
     var newWordCount = revisado.replace(/<[^>]*>/g, ' ').split(/\s+/).filter(function(w) { return w.length > 0 }).length
     console.log('   Revisión: ' + newWordCount + ' palabras (antes: ' + wordCount + ')')
     return revisado
@@ -420,7 +463,7 @@ async function generarImagenRanking(titulo) {
 }
 
 // ═══ PASO 4: PUBLICAR EN SUPABASE ═══
-async function paso4_publicar(research, htmlFinal, imageUrl) {
+async function paso4_publicar(research, htmlFinal, imageUrl, tema) {
   console.log('   PASO 4: Publicando en Supabase...')
 
   var hoy = new Date().toISOString().split('T')[0]
@@ -442,8 +485,8 @@ async function paso4_publicar(research, htmlFinal, imageUrl) {
     description: research.descripcion || research.titulo,
     keywords: research.keywords || '',
     excerpt: (research.descripcion || '').substring(0, 200),
-    category: 'Rankings',
-    tag: 'Rankings',
+    category: tema.category,
+    tag: tema.category,
     read_time: readTime,
     content_html: htmlFinal,
     date_published: hoy,
@@ -476,10 +519,13 @@ async function main() {
   console.log('BLOG RANKINGS SEMANAL | ' + new Date().toISOString().split('T')[0])
 
   // Determinar tema de esta semana (rotación por semana del mes)
-  var weekOfMonth = Math.ceil(new Date().getDate() / 7)
-  var temaIdx = (weekOfMonth - 1) % TEMAS.length
+  // Antes: semana del mes → solo rotaba los 5 primeros temas. Ahora: semana absoluta sobre todos.
+  var semana = Math.floor(Date.now() / (7 * 86400000))
+  var temaIdx = semana % TEMAS.length
+  if (process.env.TEMA) temaIdx = TEMAS.findIndex(function(t) { return t.tipo === process.env.TEMA })
   var tema = TEMAS[temaIdx]
-  console.log('Tema: ' + tema.tipo + ' (semana ' + weekOfMonth + ')\n')
+  if (!tema) throw new Error('Tema no encontrado: ' + process.env.TEMA)
+  console.log('Tema: ' + tema.tipo + ' (' + (temaIdx + 1) + '/' + TEMAS.length + ')\n')
 
   // Datos propios de M&P
   var datosPropios = await getDatosPropios()
@@ -487,10 +533,10 @@ async function main() {
 
   // Pipeline
   var research = await paso1_research(tema, datosPropios)
-  if (!research) { console.error('Research falló — abortando'); return }
+  if (!research) throw new Error('Research falló — no se publica')
 
   var draft = await paso2_redactar(research, tema)
-  if (!draft) { console.error('Redacción falló — abortando'); return }
+  if (!draft) throw new Error('Redacción falló — no se publica')
 
   var htmlFinal = draft.html
   if (draft.wordCount < 1500) {
@@ -511,15 +557,19 @@ async function main() {
   if (tableCount < 1) {
     throw new Error('QA RECHAZADO: artículo sin tablas (' + tableCount + ', mínimo 1). No se publica.')
   }
+  var problemas = focus.qaProblemas(htmlFinal, { minPalabras: 2500, minFaq: 4, minLinks: 3 })
+  if (problemas.length) throw new Error('QA RECHAZADO: ' + problemas.join('; ') + '. No se publica.')
   console.log('   QA Gate OK: ' + finalWordCount + ' palabras, ' + h2Count + ' H2s, ' + tableCount + ' tablas')
 
   // Generar imagen
   var imageUrl = await generarImagenRanking(research.titulo)
 
-  var slug = await paso4_publicar(research, htmlFinal, imageUrl)
+  var slug = await paso4_publicar(research, htmlFinal, imageUrl, tema)
+  if (!slug) throw new Error('Publicación en Supabase falló')
   if (slug) {
     var url = 'https://www.mulleryperez.cl/blog/' + slug
     console.log('\n✅ Publicado: ' + url)
+    await focus.notificarIndexNow([url, focus.SITE + '/blog'])
 
     // Notificar a contacto@
     var RESEND_KEY = process.env.RESEND || process.env.RESEND_API_KEY
