@@ -776,6 +776,131 @@ function movimiento(nombre, pos, anterior) {
   return d > 0 ? "▲ " + d : d < 0 ? "▼ " + Math.abs(d) : "=";
 }
 
+// ═══ ESCENARIOS: la mejor agencia depende del caso ═══
+function flag(x) { return tiene(x) ? 1 : 0; }
+function tamanoClientes(r) { return String((r.datos.tamano_clientes && r.datos.tamano_clientes.fuente && r.datos.tamano_clientes.valor) || "").toLowerCase(); }
+var ESCENARIOS = [
+  {
+    id: "ecommerce_grande",
+    titulo: "Si eres un e-commerce o retail que vende más de $50 millones al mes",
+    importa: "Importa la especialización en e-commerce, la trayectoria, la reputación, los casos publicados y la experiencia con clientes grandes.",
+    requiere: function (r) { return flag((r.datos.especialidades || {}).ecommerce); },
+    pesos: function (r, p) {
+      return [
+        [0.25, p.trayectoria / 10, "trayectoria de " + (r.datos.anio_fundacion && r.datos.anio_fundacion.valor ? ANIO - r.datos.anio_fundacion.valor + " años" : "—")],
+        [0.25, p.reputacion / 15, "reputación verificable"],
+        [0.2, p.casos / 15, "casos publicados"],
+        [0.2, /grande|corporat|enterprise|mixto/.test(tamanoClientes(r)) ? 1 : 0, "experiencia con empresas grandes"],
+        [0.1, p.equipo / 10, "equipo interno"],
+      ];
+    },
+  },
+  {
+    id: "b2b_crm",
+    titulo: "Si eres una empresa B2B con ciclo de venta largo y necesitas CRM",
+    importa: "Importa la especialización B2B, tener CRM y paneles con CAC, ROI o ROAS para seguir cada lead hasta la venta, la automatización con IA y un liderazgo con formación analítica.",
+    requiere: function (r) { return flag((r.datos.especialidades || {}).b2b); },
+    pesos: function (r, p) {
+      return [
+        [0.3, flag(r.datos.crm_propio), "CRM propio"],
+        [0.2, flag(r.datos.paneles_financieros), "paneles con métricas financieras"],
+        [0.2, p.ia / 15, "agentes de IA en producción"],
+        [0.15, p.liderazgo / 10, "liderazgo con formación analítica"],
+        [0.15, p.casos / 15, "casos publicados"],
+      ];
+    },
+  },
+  {
+    id: "pyme",
+    titulo: "Si eres una pyme que está partiendo en marketing digital",
+    importa: "Importa la experiencia con pymes, una reputación comprobable, el foco en performance y un equipo que ejecute directamente.",
+    requiere: function () { return true; },
+    pesos: function (r, p) {
+      return [
+        [0.3, /pyme|peque|mixto|median/.test(tamanoClientes(r)) ? 1 : 0, "experiencia con pymes"],
+        [0.25, p.reputacion / 15, "reputación verificable"],
+        [0.2, flag((r.datos.especialidades || {}).performance), "foco en performance"],
+        [0.15, p.casos / 15, "casos publicados"],
+        [0.1, p.equipo / 10, "equipo interno"],
+      ];
+    },
+  },
+  {
+    id: "contenido",
+    titulo: "Si tu marca necesita sobre todo contenido y creatividad",
+    importa: "Importa el servicio de creatividad y de contenido, los casos publicados y la reputación.",
+    requiere: function (r) { var e = r.datos.especialidades || {}; return flag(e.creatividad) || flag(e.contenido); },
+    pesos: function (r, p) {
+      var e = r.datos.especialidades || {};
+      return [
+        [0.35, flag(e.creatividad), "creatividad"],
+        [0.25, flag(e.contenido), "contenido"],
+        [0.25, p.casos / 15, "casos publicados"],
+        [0.15, p.reputacion / 15, "reputación verificable"],
+      ];
+    },
+  },
+  {
+    id: "geo_ia",
+    titulo: "Si quieres aparecer en Google y en las respuestas de ChatGPT, Gemini y Claude",
+    importa: "Importa tener agentes de IA en producción, servicio de SEO, tecnología propia y casos publicados.",
+    requiere: function (r) { return flag((r.datos.especialidades || {}).seo); },
+    pesos: function (r, p) {
+      return [
+        [0.35, p.ia / 15, "agentes de IA en producción"],
+        [0.3, flag((r.datos.especialidades || {}).seo), "servicio de SEO"],
+        [0.2, p.tecnologia / 15, "tecnología propia"],
+        [0.15, p.casos / 15, "casos publicados"],
+      ];
+    },
+  },
+];
+
+// Datos verificados que el análisis puede usar (nada más)
+function resumenVerificado(r) {
+  var d = r.datos, e = d.especialidades || {};
+  var cita = function (x) { return tiene(x) ? (x.descripcion || "") + (x.cita ? " — \"" + x.cita + "\"" : "") : null; };
+  return {
+    agencia: r.nombre,
+    puntaje_general: r.puntaje.total,
+    anios: d.anio_fundacion && d.anio_fundacion.valor ? ANIO - d.anio_fundacion.valor : null,
+    resenas_google: d.resenas_google && d.resenas_google.cantidad ? d.resenas_google.cantidad + " reseñas, nota " + d.resenas_google.rating : null,
+    casos_publicados: (d.casos_exito || []).length,
+    tipo_de_clientes: d.tamano_clientes && d.tamano_clientes.fuente ? d.tamano_clientes.valor : null,
+    equipo: d.equipo && d.equipo.fuente ? [d.equipo.valor, d.equipo.tamano].filter(Boolean).join(", ") : null,
+    especialidades: Object.keys(e).filter(function (k) { return tiene(e[k]); }),
+    crm_propio: cita(d.crm_propio),
+    paneles_financieros: cita(d.paneles_financieros),
+    agentes_ia: cita(d.agentes_ia),
+    herramientas_propias: cita(d.herramientas_propias),
+    liderazgo: d.liderazgo && d.liderazgo.fuente ? [d.liderazgo.nombre, d.liderazgo.formacion, d.liderazgo.postgrado].filter(Boolean).join(", ") : null,
+  };
+}
+
+async function analisisEscenario(e, lista, ranking) {
+  var myp = ranking.filter(function (r) { return r.nombre === "Muller y Pérez"; })[0];
+  var mypEnTop = lista.some(function (x) { return x.r.nombre === "Muller y Pérez"; });
+  var prompt = "Eres un consultor independiente que asesora a una empresa chilena a elegir agencia de marketing digital.\n" +
+    "CASO: " + e.titulo + ". Lo que importa en este caso: " + e.importa + "\n\n" +
+    "Las tres agencias con mejor ajuste a este caso, según datos verificados:\n" +
+    JSON.stringify(lista.map(function (x) { return Object.assign({ ajuste_al_caso: Math.round(x.puntos) }, resumenVerificado(x.r)); }), null, 1) + "\n\n" +
+    (!mypEnTop && myp ? "Muller y Pérez (quien publica este ranking) NO está entre las mejores para este caso. Sus datos: " + JSON.stringify(resumenVerificado(myp)) + "\n\n" : "") +
+    "Escribe 2 párrafos (150 a 220 palabras en total), en HTML con <p class=\"" + CL.p + "\">:\n" +
+    "1. Qué necesita realmente este tipo de empresa y por qué la primera agencia encaja mejor, y en qué se diferencian la segunda y la tercera (qué perfil de cliente le conviene a cada una). Usa los datos concretos (años, reseñas, citas) como argumento, no los enumeres.\n" +
+    "2. Qué debería preguntarle a la agencia antes de contratar para este caso." +
+    (!mypEnTop && myp ? " Termina diciendo con franqueza que Muller y Pérez no es la mejor opción para este caso y para qué tipo de empresa sí lo es, según sus datos." : "") + "\n" +
+    "REGLAS: usa SOLO los datos entregados; no inventes cifras, clientes ni servicios. Tono de consultor, directo, sin adjetivos promocionales. Español de Chile con tildes y ñ. Solo el HTML, sin títulos.";
+  return chat(prompt, 900);
+}
+
+function evaluarEscenario(e, r) {
+  if (!e.requiere(r)) return { apto: false, puntos: 0, razones: [] };
+  var pesos = e.pesos(r, r.puntaje);
+  var puntos = 0, razones = [];
+  pesos.forEach(function (w) { puntos += w[0] * Math.min(1, w[1]) * 100; if (w[1] >= 0.6) razones.push(w[2]); });
+  return { apto: true, puntos: puntos, razones: razones };
+}
+
 // ═══ PASO 5: REDACCIÓN ═══
 function esc(s) {
   return String(s == null ? "" : s)
@@ -1142,6 +1267,25 @@ async function redactar(ranking, anterior, fechaTxt) {
       return a.datos.anio_fundacion.valor - b.datos.anio_fundacion.valor;
     },
   );
+
+  // ═══ Qué agencia conviene según tu empresa (escenarios con pesos distintos, solo datos verificados) ═══
+  partes.push('<h2 class="' + CL.h2 + '">Qué agencia conviene según tu empresa</h2>');
+  partes.push('<p class="' + CL.p + '">El puntaje general no dice cuál es la mejor agencia para ti. Una empresa B2B que necesita CRM y seguimiento de ventas no busca lo mismo que un e-commerce que factura sobre $50 millones al mes. Para cada caso ponderamos los criterios según lo que importa en ese contexto, con los mismos datos verificados.</p>');
+  for (var ie = 0; ie < ESCENARIOS.length; ie++) {
+    var esc_ = ESCENARIOS[ie];
+    var lista = ranking
+      .map(function (r) { var e = evaluarEscenario(esc_, r); return { r: r, puntos: e.puntos, razones: e.razones, apto: e.apto }; })
+      .filter(function (x) { return x.apto && x.puntos > 0; })
+      .sort(function (a, b) { return b.puntos - a.puntos || b.r.puntaje.total - a.r.puntaje.total; })
+      .slice(0, 3);
+    partes.push('<h3 class="' + CL.h3 + '">' + esc_.titulo + '</h3>');
+    if (!lista.length) { partes.push('<p class="' + CL.p + '">Ninguna agencia evaluada cumple este mes los requisitos mínimos de este caso con información verificable.</p>'); continue; }
+    console.log("   Análisis del escenario: " + esc_.id);
+    partes.push(await corregirOrtografia(await analisisEscenario(esc_, lista, ranking)));
+    partes.push(tabla(["#", "Agencia", "Ajuste a este caso"], lista.map(function (x, i) {
+      return [i + 1, "<strong>" + esc(x.r.nombre) + "</strong>", Math.round(x.puntos) + " de 100"];
+    })));
+  }
 
   // Liderazgo y formación: perfil del fundador con fuente
   partes.push('<h2 class="' + CL.h2 + '">Quién dirige cada agencia: formación y experiencia</h2>');
