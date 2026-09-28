@@ -59,6 +59,7 @@ var ESQUEMA = `{
   "sitio_web": {"valor": "https://...", "fuente": "https://..."},
   "anio_fundacion": {"valor": 2015, "fuente": "https://..."},
   "fundador": {"valor": "nombre(s) y perfil profesional breve (cargo, experiencia previa)", "fuente": "https://..."},
+  "liderazgo": {"nombre": "fundador o gerente general", "formacion": "título de pregrado y universidad", "postgrado": "MBA o magíster y universidad, o null", "anios_experiencia": 20, "experiencia_previa": "cargos de gestión, finanzas, datos o consultoría antes de la agencia, o null", "fuente": "URL de LinkedIn o de la página de equipo donde aparece"},
   "equipo": {"valor": "interno | mixto | freelance", "tamano": "p.ej. 25 personas", "fuente": "https://..."},
   "especialidades": {
     "performance": {"valor": true, "fuente": "https://..."},
@@ -146,6 +147,7 @@ async function investigar(agencia) {
     '- "fuente" es UNA sola URL completa, sin comentarios ni citas, con guiones normales (-). Cada dato DEBE llevar en "fuente" la URL exacta donde aparece. Si no encuentras una URL que lo respalde, pon null en ese campo.\n' +
     '- No infieras ni estimes. "La agencia ofrece SEO" solo es true si una página lo dice.\n' +
     "- casos_exito: solo casos publicados con cliente identificable. Máximo 5.\n" +
+    "- liderazgo: busca al fundador o gerente general en LinkedIn y en la página de equipo o nosotros del sitio; su formación, postgrado, años de experiencia y cargos previos.\n" +
     "- herramientas_propias / crm_propio / paneles_financieros / agentes_ia: solo si la agencia los desarrolló o los opera ella misma y lo publica; revender HubSpot o usar ChatGPT no cuenta.\n" +
     "- Escribe en español de Chile con tildes y ñ correctas.\n\n" +
     "Responde SOLO con este JSON:\n" +
@@ -194,7 +196,7 @@ async function urlResponde(url) {
     });
     clearTimeout(t);
     // 403/429: el sitio bloquea bots pero la URL existe → se acepta. 404/410/5xx/DNS → se descarta.
-    ok = r.status < 400 || r.status === 403 || r.status === 429;
+    ok = r.status < 400 || r.status === 403 || r.status === 429 || r.status === 999; // 999 = LinkedIn bloquea bots
   } catch (e) {
     ok = false;
   }
@@ -232,7 +234,8 @@ async function verificar(obj) {
             v.valor !== undefined &&
             v.valor !== false &&
             v.valor !== "") ||
-          v.cantidad;
+          v.cantidad ||
+          v.nombre;
         if (!tieneValor) continue;
         v.fuente = normalizarUrl(v.fuente);
         if (await urlResponde(v.fuente)) stats.verificados++;
@@ -578,12 +581,12 @@ function puntaje(a) {
   if (g.cantidad && g.rating && g.fuente)
     rep +=
       Math.min(Math.log10(g.cantidad + 1) / Math.log10(301), 1) *
-      12 *
+      9 *
       (g.rating / 5);
   var dirs = (a.directorios || []).filter(function (d) {
     return d.fuente && DIRECTORIOS_VALIDOS.test((d.sitio || "") + " " + d.fuente);
   });
-  rep += Math.min(dirs.length, 4) * 2;
+  rep += Math.min(dirs.length, 3) * 2;
   p.reputacion = Math.round(rep * 10) / 10;
 
   p.casos = Math.min((a.casos_exito || []).length, 5) * 3;
@@ -618,7 +621,17 @@ function puntaje(a) {
   ].filter(function (k) {
     return tiene(esp[k]);
   }).length;
-  p.especialidades = n * 2.5;
+  p.especialidades = Math.round(((n * 10) / 6) * 10) / 10;
+
+  // Liderazgo y formación del equipo directivo (10 pts), solo con fuente
+  var l = a.liderazgo || {};
+  p.liderazgo = 0;
+  if (l.fuente && l.nombre) {
+    if (/ingenier|econom|administraci|comercial|negocios|finanzas|estad[ií]stic|matem[aá]tic|contador|auditor/i.test(l.formacion || "")) p.liderazgo += 3;
+    if (l.postgrado && /mba|mag[ií]ster|master|doctor|phd|diplomado en (gesti|direcci|negocios)/i.test(l.postgrado)) p.liderazgo += 3;
+    if (Number(l.anios_experiencia) >= 10) p.liderazgo += 2;
+    if (l.experiencia_previa && !NEGATIVO.test(String(l.experiencia_previa))) p.liderazgo += 2;
+  }
 
   p.total =
     Math.round(
@@ -628,7 +641,8 @@ function puntaje(a) {
         p.tecnologia +
         p.ia +
         p.equipo +
-        p.especialidades) *
+        p.especialidades +
+        p.liderazgo) *
         10,
     ) / 10;
   return p;
@@ -638,8 +652,8 @@ var METODOLOGIA = [
   ["Trayectoria", 10, "Años desde la fundación (tope 15 años), con fuente."],
   [
     "Reputación verificable",
-    20,
-    "Reseñas de Google leídas directamente de la ficha de Google Maps de cada agencia (cantidad en escala logarítmica × nota) hasta 12 pts + 2 pts por directorio con reseñas (Clutch, Sortlist, GoodFirms, DesignRush), tope 8.",
+    15,
+    "Reseñas de Google leídas directamente de la ficha de Google Maps de cada agencia (cantidad en escala logarítmica × nota) hasta 9 pts + 2 pts por directorio con reseñas (Clutch, Sortlist, GoodFirms, DesignRush, The Manifest), tope 6.",
   ],
   [
     "Casos de éxito publicados",
@@ -663,8 +677,13 @@ var METODOLOGIA = [
   ],
   [
     "Especialidades",
-    15,
-    "2,5 pts por especialidad publicada: performance, contenido, creatividad, SEO, e-commerce, B2B.",
+    10,
+    "Puntaje proporcional a las especialidades publicadas: performance, contenido, creatividad, SEO, e-commerce, B2B.",
+  ],
+  [
+    "Liderazgo y formación",
+    10,
+    "Perfil verificable del fundador o gerente general: formación universitaria analítica o de negocios 3 pts, postgrado (MBA o magíster) 3 pts, 10 o más años de experiencia 2 pts, experiencia previa en gestión, finanzas o datos 2 pts.",
   ],
 ];
 
@@ -908,6 +927,7 @@ async function redactar(ranking, anterior, fechaTxt) {
         if (r.puntaje.casos >= 9) f.push("casos publicados");
         if (r.puntaje.reputacion >= 12) f.push("reputación");
         if (r.puntaje.trayectoria >= 7) f.push("trayectoria");
+        if (r.puntaje.liderazgo >= 6) f.push("liderazgo con formación en negocios");
         return [
           r.posicion,
           "<strong>" + esc(r.nombre) + "</strong>",
@@ -1062,6 +1082,21 @@ async function redactar(ranking, anterior, fechaTxt) {
       return a.datos.anio_fundacion.valor - b.datos.anio_fundacion.valor;
     },
   );
+
+  // Liderazgo y formación: perfil del fundador con fuente
+  partes.push('<h2 class="' + CL.h2 + '">Quién dirige cada agencia: formación y experiencia</h2>');
+  partes.push('<p class="' + CL.p + '">En performance marketing lo que se contrata es capacidad de análisis y de decisión con datos. Por eso el ranking mide el perfil verificable de quien dirige cada agencia: formación, postgrado, años de experiencia y cargos previos.</p>');
+  var conLider = ranking.filter(function (r) { return r.datos.liderazgo && r.datos.liderazgo.fuente && r.datos.liderazgo.nombre; })
+    .sort(function (a, b) { return b.puntaje.liderazgo - a.puntaje.liderazgo || b.puntaje.total - a.puntaje.total; });
+  if (conLider.length) {
+    partes.push(tabla(["Agencia", "Quién dirige", "Formación", "Postgrado", "Experiencia", "Fuente"], conLider.map(function (r) {
+      var l = r.datos.liderazgo;
+      return [esc(r.nombre), esc(l.nombre), esc(l.formacion || "Sin información pública"), esc(l.postgrado || "—"),
+        l.anios_experiencia ? esc(l.anios_experiencia) + " años" : "—", link(l.fuente)];
+    })));
+  } else {
+    partes.push('<p class="' + CL.p + '">Este mes ninguna agencia publica un perfil verificable de su equipo directivo.</p>');
+  }
 
   // Por tamaño de empresa
   partes.push(
