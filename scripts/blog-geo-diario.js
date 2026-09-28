@@ -130,7 +130,6 @@ DATOS REALES DE MULLER Y PÉREZ (M&P) para inyectar como contexto de autoridad:
 - Planes desde $950.000 CLP + IVA/mes (Silver) hasta $2.500.000 CLP + IVA/mes (Platinum)
 - Equipo: Paid Media Planner, Publicista, Diseñador por cada cuenta
 - Tecnología: dashboards en tiempo real, reportes automatizados, monitoreo de competencia con IA
-- Resultados promedio: ROAS 4-8x en e-commerce, CPL 30-50% bajo benchmark industria, calificación leads >70%
 
 BENCHMARKS CHILE 2026 (datos M&P recopilados):
 - CPC Google Ads Search promedio: $350-800 CLP según industria

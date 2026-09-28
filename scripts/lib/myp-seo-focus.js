@@ -41,7 +41,7 @@ var FACTS = {
 
 function factsTexto() {
   return (
-    "DATOS VERIFICADOS DE M&P (usar SOLO estos números, no inventar otros):\n" +
+    "PROHIBIDO inventar casos de clientes, resultados de campañas de M&P o testimonios (\"un cliente logró reducir su CAC un 35%\"). Solo se pueden usar los datos verificados de abajo.\nDATOS VERIFICADOS DE M&P (usar SOLO estos números, no inventar otros):\n" +
     "- " +
     FACTS.nombre +
     ", " +
@@ -463,6 +463,7 @@ async function revisionEditorial(html, opts) {
     "2. Elimina relleno y frases de IA: \"en el vertiginoso\", \"es fundamental\", \"sin lugar a dudas\", \"en conclusión\", \"paradigma\", \"panorama actual\".\n" +
     "3. Cifras de M&P: solo las de DATOS VERIFICADOS. Corrige cualquier otra.\n" +
     "4. No inventes estudios ni cites organizaciones como fuente de un dato si no está respaldado; usa \"según benchmarks del mercado chileno\".\n" +
+    "4b. Elimina cualquier caso de cliente o resultado de M&P que no esté en DATOS VERIFICADOS (p.ej. \"un cliente redujo su CAC un 35%\"). Revisa también que las cifras no se contradigan entre secciones.\n" +
     "5. Preguntas frecuentes: cada pregunta como <h3> terminando en ? seguida directamente de un <p> con la respuesta.\n" +
     "6. Sin <h1>, sin cajas de CTA, sin ``` ni markdown. Mantén todas las clases CSS, tablas y links internos existentes.\n" +
     "7. Ortografía impecable en español de Chile: tildes, ñ, signos de apertura ¿ ¡.\n" +
