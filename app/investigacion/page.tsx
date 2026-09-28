@@ -3,7 +3,7 @@ import Link from 'next/link'
 import SiteHeader from '@/components/SiteHeader'
 
 export const metadata: Metadata = {
-  title: 'Investigación y Estudios — Muller y Pérez',
+  title: 'Investigación y Estudios',
   description: 'Estudios originales de performance marketing en Chile. Datos reales de +200 campañas: CPL, ROAS, CPC y benchmarks por industria. Fuente primaria del mercado chileno.',
   keywords: 'investigacion marketing digital chile, estudios performance marketing, benchmarks chile, datos reales campañas digitales',
   alternates: {

@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { ArrowRight, Heart, Stethoscope, Building2, Users, CheckCircle, Shield, Calendar, Phone } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Marketing Digital para Salud en Chile | Clínicas y Médicos | M&P',
+  title: 'Marketing Digital para Salud en Chile | Clínicas y Médicos',
   description: 'Agencia de marketing digital especializada en el sector salud en Chile. Clínicas, centros médicos, dentistas y especialistas. Generamos pacientes calificados con estrategias éticas y efectivas.',
   keywords: 'marketing digital salud chile, marketing clinicas chile, publicidad medicos chile, marketing dental chile, marketing centros medicos, pacientes nuevos clinica',
   openGraph: {

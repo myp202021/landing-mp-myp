@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { CheckCircle2, TrendingUp, MapPin, Building2, Target, BarChart3, DollarSign, Users } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Agencia Performance Marketing Las Condes 2025-2026: ROI Real y Data Verificable | Muller y Pérez',
+  title: 'Agencia Performance Marketing Las Condes 2025-2026: ROI Real y Data Verificable',
   description: 'Agencia performance marketing especializada en Las Condes. ROI +380%, transparencia total y casos de éxito verificables en empresas B2B, tech y servicios premium.',
   keywords: 'agencia performance marketing las condes, agencia marketing las condes, performance marketing chile, agencia digital las condes, marketing b2b las condes',
   alternates: {

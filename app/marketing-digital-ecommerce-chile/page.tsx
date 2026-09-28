@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { ArrowRight, ShoppingCart, TrendingUp, Target, BarChart3, Zap, CheckCircle, DollarSign, Users, Package } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Marketing Digital para Ecommerce en Chile | Agencia Especializada | M&P',
+  title: 'Marketing Digital para Ecommerce en Chile | Agencia Especializada',
   description: 'Agencia de marketing digital especializada en ecommerce en Chile. Aumentamos ventas online con Google Shopping, Meta Ads, remarketing y estrategias de conversión. ROAS promedio 8.5x.',
   keywords: 'marketing digital ecommerce chile, agencia ecommerce chile, google shopping chile, publicidad ecommerce, aumentar ventas online chile, marketing tienda online',
   openGraph: {

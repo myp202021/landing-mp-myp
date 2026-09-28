@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import AgentesClient from './AgentesClient'
 
 export const metadata: Metadata = {
-  title: 'Agentes IA para Posicionamiento en Google y Buscadores de IA | Muller y Pérez',
+  title: 'Agentes IA para Posicionamiento en Google y Buscadores de IA',
   description: 'Agentes IA para posicionamiento en Google y buscadores de inteligencia artificial. Blog automático, rankings SEO y visibilidad GEO.',
   alternates: { canonical: 'https://www.mulleryperez.cl/agentes' },
   openGraph: {

@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { ArrowRight, CreditCard, Shield, Target, BarChart3, Users, CheckCircle, TrendingUp, Lock, Building2 } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Marketing Digital para Fintech en Chile | Adquisición de Clientes | M&P',
+  title: 'Marketing Digital para Fintech en Chile | Adquisición de Clientes',
   description: 'Agencia especializada en marketing para fintech y servicios financieros en Chile. Generamos clientes con campañas que cumplen regulaciones CMF. CAC optimizado para unit economics.',
   keywords: 'marketing fintech chile, marketing digital servicios financieros, publicidad fintech, adquisicion clientes fintech, marketing banca digital chile, growth fintech',
   openGraph: {

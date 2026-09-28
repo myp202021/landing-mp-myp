@@ -3,7 +3,7 @@ import Link from 'next/link'
 import SiteHeader from '@/components/SiteHeader'
 
 export const metadata: Metadata = {
-  title: 'Casos de Éxito Marketing Digital Chile 2026 | Muller y Pérez',
+  title: 'Casos de Éxito Marketing Digital Chile 2026',
   description:
     'Resultados reales de clientes de Muller y Pérez. 5 casos de éxito: CPL -65%, CPA -95%, SEO #1, dashboards en tiempo real y automatización IA. Casos verificables.',
   keywords: [

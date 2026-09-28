@@ -3,7 +3,8 @@ import { ArrowRight, CheckCircle, MapPin, Phone, TrendingUp, Users, Target, BarC
 import { createLocalBusinessSchema, cityData } from '@/lib/metadata'
 
 export const metadata = {
-  title: 'Agencia de Marketing Digital en La Dehesa | M&P',
+  alternates: { canonical: '/agencia-marketing-digital-la-dehesa' },
+  title: 'Agencia de Marketing Digital en La Dehesa',
   description: 'Agencia de marketing digital en La Dehesa especializada en Google Ads, SEO y estrategias digitales para servicios profesionales, salud y educación del sector alto de Santiago.',
   keywords: ['marketing digital La Dehesa', 'agencia marketing La Dehesa', 'Google Ads La Dehesa', 'SEO La Dehesa', 'publicidad digital Lo Barnechea'],
 }

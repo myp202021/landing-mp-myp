@@ -411,7 +411,9 @@ async function paso3_revisar(html, research, wordCount) {
       })
     })
     var data = await r.json()
-    if (!data.content || !data.content[0] || !data.content[0].text) {
+    // Sonnet 5 devuelve primero un bloque "thinking": hay que tomar el bloque de tipo "text"
+    var bloqueTexto = (data.content || []).filter(function(b) { return b.type === 'text' && b.text })[0]
+    if (!bloqueTexto) {
       console.error('   Claude no devolvió contenido:', JSON.stringify(data).substring(0, 300))
       return html // Devolver original
     }
@@ -419,10 +421,14 @@ async function paso3_revisar(html, research, wordCount) {
       console.error('   Claude cortó la respuesta por largo — se usa el borrador original')
       return html
     }
-    var revisado = data.content[0].text
+    var revisado = bloqueTexto.text
     revisado = revisado.replace(/```[a-z]*/gi, '').trim()
     var newWordCount = revisado.replace(/<[^>]*>/g, ' ').split(/\s+/).filter(function(w) { return w.length > 0 }).length
     console.log('   Revisión: ' + newWordCount + ' palabras (antes: ' + wordCount + ')')
+    if (newWordCount < wordCount * 0.7) {
+      console.error('   Claude recortó demasiado el artículo — se usa el borrador original')
+      return html
+    }
     return revisado
   } catch (e) {
     console.error('   Revisión error:', e.message)

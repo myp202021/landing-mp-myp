@@ -4,7 +4,7 @@ import PortfolioGrid from '@/components/PortfolioGrid'
 import SiteHeader from '@/components/SiteHeader'
 
 export const metadata: Metadata = {
-  title: 'Portfolio de Marketing Digital y Diseño en Chile | Muller y Pérez',
+  title: 'Portfolio de Marketing Digital y Diseño en Chile',
   description:
     'Portfolio de trabajos de diseño, campañas digitales y performance marketing para más de 20 industrias en Chile. Eventos, tecnología, inmobiliaria, producto e industria.',
   keywords: [

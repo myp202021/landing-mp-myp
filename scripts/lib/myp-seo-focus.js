@@ -95,10 +95,10 @@ var CLUSTERS = [
       "escalar campañas",
     ],
     links: [
-      "/mejores-agencias-performance-marketing-chile",
-      "/servicios",
+      "/servicios/performance-marketing",
       "/indicadores",
       "/labs/predictor",
+      "/casos-de-exito",
     ],
   },
   {
@@ -117,7 +117,7 @@ var CLUSTERS = [
       "/agentes",
       "/copilot",
       "/estudio-ia-marketing-digital-chile-2026",
-      "/servicios",
+      "/servicios/performance-marketing",
     ],
   },
   {
@@ -133,7 +133,11 @@ var CLUSTERS = [
       "seo para ia",
       "ai overviews",
     ],
-    links: ["/servicios", "/agentes", "/blog"],
+    links: [
+      "/servicios/geo-chile",
+      "/servicios/seo-chile",
+      "/agentes",
+    ],
   },
   {
     id: "paid_media",
@@ -148,8 +152,8 @@ var CLUSTERS = [
       "costo google ads chile",
     ],
     links: [
-      "/mejores-agencias-google-ads-chile-2026",
-      "/agencias-meta-ads-chile-2026",
+      "/servicios/google-ads-chile",
+      "/servicios/meta-ads-chile",
       "/indicadores",
       "/labs/predictor",
     ],
@@ -165,7 +169,11 @@ var CLUSTERS = [
       "unit economics",
       "ltv cac",
     ],
-    links: ["/servicios", "/casos-de-exito", "/labs/predictor"],
+    links: [
+      "/servicios/growth-marketing",
+      "/casos-de-exito",
+      "/labs/predictor",
+    ],
   },
   {
     id: "marketing_digital",
@@ -179,7 +187,7 @@ var CLUSTERS = [
     ],
     links: [
       "/agencia-marketing-digital-chile",
-      "/ranking-agencias-marketing-digital-chile",
+      "/servicios",
       "/casos-de-exito",
     ],
   },
@@ -223,7 +231,7 @@ function linksHtml(cluster) {
 }
 
 // ═══ INDEXNOW ═══
-var INDEXNOW_KEY = "f4b3a2c1d5e6f7g8h9i0j1k2l3m4n5o6"; // publicada en /public/<key>.txt
+var INDEXNOW_KEY = "272d893a828539aeac2e5cb3d64cbde9"; // publicada en /public/<key>.txt
 
 async function notificarIndexNow(urls) {
   try {

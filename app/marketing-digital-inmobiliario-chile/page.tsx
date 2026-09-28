@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { ArrowRight, Building, Home, TrendingUp, Target, Users, CheckCircle, MapPin, Camera, BarChart3 } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Marketing Digital Inmobiliario en Chile | Agencia Especializada | M&P',
+  title: 'Marketing Digital Inmobiliario en Chile | Agencia Especializada',
   description: 'Agencia de marketing digital especializada en inmobiliarias y corredoras de propiedades en Chile. Google Ads, Meta Ads, portales y estrategias para vender más propiedades. CPL desde $8.000.',
   keywords: 'marketing digital inmobiliario chile, publicidad inmobiliaria chile, google ads inmobiliarias, marketing corredora propiedades, leads inmobiliarios chile, publicidad propiedades',
   openGraph: {

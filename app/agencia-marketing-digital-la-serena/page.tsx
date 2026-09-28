@@ -3,7 +3,8 @@ import { ArrowRight, CheckCircle, MapPin, Phone, TrendingUp, Users, Target, BarC
 import { createLocalBusinessSchema, cityData } from '@/lib/metadata'
 
 export const metadata = {
-  title: 'Agencia de Marketing Digital en La Serena | M&P',
+  alternates: { canonical: '/agencia-marketing-digital-la-serena' },
+  title: 'Agencia de Marketing Digital en La Serena',
   description: 'Agencia de marketing digital en La Serena especializada en Google Ads, SEO y estrategias digitales para empresas de la Región de Coquimbo. Turismo, astronomía y comercio.',
   keywords: ['marketing digital La Serena', 'agencia marketing La Serena', 'Google Ads La Serena', 'SEO La Serena', 'publicidad digital Coquimbo'],
 }

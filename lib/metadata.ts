@@ -14,12 +14,11 @@ export const defaultMetadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
     default: siteConfig.name,
-    template: `%s | ${siteConfig.name}`
+    // Antes `%s | Muller y Pérez — Agencia de Performance Marketing Chile` (+55 chars): 440/449 titles pasaban 60 chars
+    template: '%s | M&P'
   },
   description: siteConfig.description,
-  alternates: {
-    canonical: '/'
-  },
+  // Sin canonical global: las páginas que no declaran uno heredaban canonical '/' y se canonicalizaban a la home
   verification: {
     google: 'N1_98JB2O8f-9p49ys1CL0bu-_kijxbjs3aSRIZ7Syw'
   },

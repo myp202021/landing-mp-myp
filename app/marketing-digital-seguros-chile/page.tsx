@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { ArrowRight, Shield, FileCheck, Users, Phone, Heart, Car, Home, Umbrella, CheckCircle, TrendingUp, Building2, Briefcase } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Marketing Digital para Seguros y Corredores en Chile | M&P',
+  title: 'Marketing Digital para Seguros y Corredores en Chile',
   description: 'Agencia de marketing digital especializada en seguros en Chile. Generamos leads calificados para corredores de seguros, aseguradoras y agentes con Google Ads y SEO.',
   keywords: 'marketing digital seguros chile, marketing corredores de seguros, publicidad seguros, SEO seguros chile, google ads seguros, leads seguros',
   openGraph: {

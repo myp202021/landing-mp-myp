@@ -3,7 +3,8 @@ import { ArrowRight, CheckCircle, MapPin, Phone, TrendingUp, Users, Target, BarC
 import { createLocalBusinessSchema, cityData } from '@/lib/metadata'
 
 export const metadata = {
-  title: 'Agencia de Marketing Digital en Las Condes | M&P',
+  alternates: { canonical: '/agencia-marketing-digital-las-condes' },
+  title: 'Agencia de Marketing Digital en Las Condes',
   description: 'Agencia de marketing digital en Las Condes especializada en Google Ads, SEO y estrategias digitales para empresas del sector oriente. Oficinas en Badajoz 100.',
   keywords: ['marketing digital Las Condes', 'agencia marketing Las Condes', 'Google Ads Las Condes', 'SEO Las Condes', 'publicidad digital sector oriente'],
 }

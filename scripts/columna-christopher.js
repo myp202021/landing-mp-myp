@@ -174,7 +174,15 @@ RESPONDE SOLO con el HTML del contenido.`
 
   if (!res.ok) throw new Error('OpenAI error: ' + res.status)
   const data = await res.json()
-  const html = data.choices[0].message.content
+  const html = data.choices[0].message.content.replace(/```[a-z]*/gi, '').trim()
+
+  // QA: entre jun y sep 2026 se publicaron 7 columnas cuyo cuerpo era la negativa de la IA ("I'm sorry, I can't assist")
+  const texto = html.replace(/<[^>]*>/g, ' ')
+  const palabras = texto.split(/\s+/).filter(Boolean).length
+  if (/i'm sorry|i can.?t assist|i cannot|as an ai|lo siento, no puedo|no puedo cumplir|no puedo ayudar/i.test(texto)) {
+    throw new Error('QA RECHAZADO: la IA se negó a escribir la columna. No se publica.')
+  }
+  if (palabras < 450) throw new Error('QA RECHAZADO: columna de ' + palabras + ' palabras (mínimo 450). No se publica.')
 
   // Metadata
   const metaRes = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -240,6 +248,7 @@ async function main() {
   if (error) throw new Error('Supabase: ' + error.message)
 
   console.log('Publicado: ' + articulo.slug)
+  await require('./lib/myp-seo-focus').notificarIndexNow(['https://www.mulleryperez.cl/blog/' + articulo.slug])
   console.log('URL: https://www.mulleryperez.cl/blog/' + articulo.slug)
 
   await notificar(

@@ -5,7 +5,7 @@ import Script from 'next/script'
 import { CheckCircle2, MessageSquare, ArrowRight, Download, Star } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Gracias por Contactarnos | Muller y Pérez',
+  title: 'Gracias por Contactarnos',
   description: 'Hemos recibido tu mensaje. Nuestro equipo te contactará en menos de 24 horas.',
   robots: {
     index: false,

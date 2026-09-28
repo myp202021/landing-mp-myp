@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { ArrowRight, Scale, FileText, Users, Shield, Search, Phone, CheckCircle, TrendingUp, Award, Building2, Briefcase } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Marketing Digital para Abogados y Estudios Jurídicos en Chile | M&P',
+  title: 'Marketing Digital para Abogados y Estudios Jurídicos en Chile',
   description: 'Agencia de marketing digital especializada en el sector legal en Chile. Generamos leads calificados para abogados, estudios jurídicos y servicios legales con Google Ads y SEO.',
   keywords: 'marketing digital abogados chile, marketing estudios jurídicos, publicidad abogados, SEO abogados chile, google ads abogados, leads abogados',
   openGraph: {

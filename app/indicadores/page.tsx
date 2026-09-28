@@ -6,7 +6,7 @@ import { ArrowLeft, TrendingUp, TrendingDown, Minus, BarChart2, DollarSign, Help
 export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
-  title: 'CPC y CPA por Industria en Chile 2026 — Google Ads y Meta Ads | Muller y Pérez',
+  title: 'CPC y CPA por Industria en Chile 2026 — Google Ads y Meta Ads',
   description: 'Benchmarks semanales de CPC y CPA para Google Ads y Meta Ads en 22 industrias en Chile. E-commerce, salud, inmobiliaria, fintech y más. Actualizado cada sábado con tipo de cambio USD real.',
   keywords: [
     'CPC Chile 2026', 'CPA Chile publicidad digital', 'Google Ads Chile costo por click',

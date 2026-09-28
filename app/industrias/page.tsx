@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { ArrowRight, ShoppingCart, Building2, Cloud, Home, Heart, GraduationCap, CreditCard, Briefcase, Scale, Shield, Plane, Factory } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Marketing Digital por Industria en Chile | Soluciones Especializadas | M&P',
+  title: 'Marketing Digital por Industria en Chile | Soluciones Especializadas',
   description: 'Estrategias de marketing digital especializadas por industria en Chile. Ecommerce, B2B, SaaS, Inmobiliario, Salud y Educación. Benchmarks y casos de éxito por sector.',
   keywords: 'marketing digital por industria chile, marketing especializado, marketing ecommerce, marketing b2b, marketing saas, marketing inmobiliario, marketing salud, marketing educacion',
   openGraph: {

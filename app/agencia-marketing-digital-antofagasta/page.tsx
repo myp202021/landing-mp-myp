@@ -5,7 +5,8 @@ import { createLocalBusinessSchema, cityData } from '@/lib/metadata'
 
 // Metadata para SEO
 export const metadata = {
-  title: 'Agencia de Marketing Digital en Antofagasta | M&P',
+  alternates: { canonical: '/agencia-marketing-digital-antofagasta' },
+  title: 'Agencia de Marketing Digital en Antofagasta',
   description: 'Agencia de marketing digital en Antofagasta especializada en Google Ads, SEO y estrategias digitales para empresas mineras, comercio y servicios del Norte Grande.',
   keywords: ['marketing digital Antofagasta', 'agencia marketing Antofagasta', 'Google Ads Antofagasta', 'SEO Antofagasta', 'publicidad digital norte de Chile'],
   openGraph: {

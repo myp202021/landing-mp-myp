@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { ArrowRight, Building2, Users, CheckCircle, X, DollarSign, Clock, TrendingUp, Target } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Agencia de Marketing Digital vs Equipo In-House | Comparativa Chile 2025 | M&P',
+  title: 'Agencia de Marketing Digital vs Equipo In-House | Comparativa Chile 2025',
   description: 'Comparativa entre contratar una agencia de marketing digital o un equipo interno en Chile. Costos reales, ventajas, desventajas y cuándo elegir cada opción.',
   keywords: 'agencia marketing digital vs inhouse, contratar agencia o equipo interno, equipo marketing interno vs externo, agencia vs freelance, outsourcing marketing digital',
   openGraph: {

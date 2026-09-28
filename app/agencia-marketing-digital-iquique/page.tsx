@@ -3,7 +3,8 @@ import { ArrowRight, CheckCircle, MapPin, Phone, TrendingUp, Users, Target, BarC
 import { createLocalBusinessSchema, cityData } from '@/lib/metadata'
 
 export const metadata = {
-  title: 'Agencia de Marketing Digital en Iquique | M&P',
+  alternates: { canonical: '/agencia-marketing-digital-iquique' },
+  title: 'Agencia de Marketing Digital en Iquique',
   description: 'Agencia de marketing digital en Iquique especializada en Google Ads, SEO y estrategias digitales. Zona Franca, minería, comercio y turismo en la I Región de Tarapacá.',
   keywords: ['marketing digital Iquique', 'agencia marketing Iquique', 'Google Ads Iquique', 'SEO Iquique', 'publicidad digital Tarapacá', 'Zona Franca Iquique'],
 }

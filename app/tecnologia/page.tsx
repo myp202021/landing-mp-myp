@@ -3,7 +3,7 @@ import Link from 'next/link'
 import SiteHeader from '@/components/SiteHeader'
 
 export const metadata: Metadata = {
-  title: 'Tecnología Propia para Marketing Digital | Muller y Pérez',
+  title: 'Tecnología Propia para Marketing Digital',
   description:
     'CRM propio, agentes de IA, predictor de campañas, monitor de competencia y dashboard para clientes. Desarrollo propio que conecta marketing con resultados comerciales.',
   keywords: [

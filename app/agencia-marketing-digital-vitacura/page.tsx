@@ -3,7 +3,8 @@ import { ArrowRight, CheckCircle, MapPin, Phone, TrendingUp, Users, Target, BarC
 import { createLocalBusinessSchema, cityData } from '@/lib/metadata'
 
 export const metadata = {
-  title: 'Agencia de Marketing Digital en Vitacura | M&P',
+  alternates: { canonical: '/agencia-marketing-digital-vitacura' },
+  title: 'Agencia de Marketing Digital en Vitacura',
   description: 'Agencia de marketing digital en Vitacura especializada en Google Ads, SEO y estrategias digitales para marcas premium, retail de lujo y servicios exclusivos.',
   keywords: ['marketing digital Vitacura', 'agencia marketing Vitacura', 'Google Ads Vitacura', 'SEO Vitacura', 'publicidad digital premium'],
 }

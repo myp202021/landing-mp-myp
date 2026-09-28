@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { ArrowRight, Briefcase, Users, Target, BarChart3, Building2, CheckCircle, TrendingUp, Award, BookOpen } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Marketing Digital para Servicios Profesionales Chile | Consultoras, Contadores | M&P',
+  title: 'Marketing Digital para Servicios Profesionales Chile | Consultoras, Contadores',
   description: 'Agencia de marketing digital para servicios profesionales B2B en Chile. Generamos leads para consultoras, contadores, arquitectos y estudios profesionales. CPL desde $12.000.',
   keywords: 'marketing servicios profesionales chile, marketing consultoras, marketing contadores, marketing arquitectos, publicidad estudios profesionales, leads b2b servicios',
   openGraph: {

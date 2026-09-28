@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { ArrowRight, Search, Users, CheckCircle, X, TrendingUp, Target, DollarSign, BarChart3 } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Google Ads vs Meta Ads en Chile 2025-2026 | Comparativa Completa | M&P',
+  title: 'Google Ads vs Meta Ads en Chile 2025-2026 | Comparativa Completa',
   description: 'Comparativa detallada entre Google Ads y Meta Ads para empresas en Chile. Cuál elegir según tu industria, presupuesto y objetivos. CPL, ROAS y casos de uso reales.',
   keywords: 'google ads vs meta ads, google ads o facebook ads, cual es mejor google o facebook ads, comparacion google ads meta ads chile, publicidad google vs facebook',
   openGraph: {

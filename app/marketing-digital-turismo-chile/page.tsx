@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { ArrowRight, Plane, MapPin, Camera, Hotel, Mountain, Compass, CheckCircle, TrendingUp, Star, Calendar, Users, Globe } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Marketing Digital para Turismo y Agencias de Viajes en Chile | M&P',
+  title: 'Marketing Digital para Turismo y Agencias de Viajes en Chile',
   description: 'Agencia de marketing digital especializada en turismo en Chile. Aumentamos reservas para hoteles, agencias de viajes, tours y destinos turísticos con Google Ads, Meta Ads y SEO.',
   keywords: 'marketing digital turismo chile, marketing agencias de viajes, publicidad hoteles chile, SEO turismo, google ads turismo, marketing destinos turisticos',
   openGraph: {

@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { ArrowRight, Factory, Cog, Package, Truck, BarChart3, Users, CheckCircle, TrendingUp, Phone, Globe, Building2, Wrench } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Marketing Digital para Manufactura e Industria en Chile | M&P',
+  title: 'Marketing Digital para Manufactura e Industria en Chile',
   description: 'Agencia de marketing digital especializada en manufactura e industria en Chile. Generamos leads B2B para fábricas, distribuidores industriales y empresas manufactureras.',
   keywords: 'marketing digital manufactura chile, marketing industrial, publicidad fabricas, marketing B2B industrial, leads manufactura, marketing sector industrial',
   openGraph: {

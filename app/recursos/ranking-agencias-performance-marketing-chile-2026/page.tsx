@@ -537,13 +537,7 @@ export default function RankingPage() {
                 "@type": "Organization",
                 "name": agencia.nombre,
                 "description": agencia.descripcion,
-                ...(agencia.url && { "url": agencia.url }),
-                "aggregateRating": {
-                  "@type": "AggregateRating",
-                  "ratingValue": (agencia.score / 20).toFixed(1),
-                  "bestRating": "5",
-                  "ratingCount": "1"
-                }
+                ...(agencia.url && { "url": agencia.url })
               }
             }))
           })

@@ -3,7 +3,8 @@ import { ArrowRight, CheckCircle, MapPin, Phone, TrendingUp, Users, Target, BarC
 import { createLocalBusinessSchema, cityData } from '@/lib/metadata'
 
 export const metadata = {
-  title: 'Agencia de Marketing Digital en Puerto Montt | M&P',
+  alternates: { canonical: '/agencia-marketing-digital-puerto-montt' },
+  title: 'Agencia de Marketing Digital en Puerto Montt',
   description: 'Agencia de marketing digital en Puerto Montt especializada en Google Ads, SEO y estrategias digitales para empresas de la Región de Los Lagos. Acuicultura, turismo y comercio.',
   keywords: ['marketing digital Puerto Montt', 'agencia marketing Puerto Montt', 'Google Ads Puerto Montt', 'SEO Puerto Montt', 'publicidad digital sur de Chile'],
 }

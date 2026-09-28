@@ -3,7 +3,8 @@ import { ArrowRight, CheckCircle, MapPin, Phone, TrendingUp, Users, Target, BarC
 import { createLocalBusinessSchema, cityData } from '@/lib/metadata'
 
 export const metadata = {
-  title: 'Agencia de Marketing Digital en Talca | M&P',
+  alternates: { canonical: '/agencia-marketing-digital-talca' },
+  title: 'Agencia de Marketing Digital en Talca',
   description: 'Agencia de marketing digital en Talca especializada en Google Ads, SEO y estrategias digitales para empresas de la Región del Maule. Agricultura, vinos y comercio.',
   keywords: ['marketing digital Talca', 'agencia marketing Talca', 'Google Ads Talca', 'SEO Talca', 'publicidad digital Maule'],
 }

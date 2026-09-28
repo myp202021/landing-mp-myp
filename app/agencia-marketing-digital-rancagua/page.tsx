@@ -3,7 +3,8 @@ import { ArrowRight, CheckCircle, MapPin, Phone, TrendingUp, Users, Target, BarC
 import { createLocalBusinessSchema, cityData } from '@/lib/metadata'
 
 export const metadata = {
-  title: 'Agencia de Marketing Digital en Rancagua | M&P',
+  alternates: { canonical: '/agencia-marketing-digital-rancagua' },
+  title: 'Agencia de Marketing Digital en Rancagua',
   description: 'Agencia de marketing digital en Rancagua especializada en Google Ads, SEO y estrategias digitales para empresas de la Región de O\'Higgins. Minería, agricultura y comercio.',
   keywords: ['marketing digital Rancagua', 'agencia marketing Rancagua', 'Google Ads Rancagua', 'SEO Rancagua', 'publicidad digital O\'Higgins'],
 }

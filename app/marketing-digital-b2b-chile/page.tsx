@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { ArrowRight, Building2, Users, Target, BarChart3, Linkedin, CheckCircle, TrendingUp, Mail, Phone } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Marketing Digital B2B en Chile | Generación de Leads Empresariales | M&P',
+  title: 'Marketing Digital B2B en Chile | Generación de Leads Empresariales',
   description: 'Agencia especializada en marketing B2B en Chile. Generamos leads calificados para empresas con LinkedIn Ads, Google Ads, ABM y estrategias de contenido. CPL promedio $15.000.',
   keywords: 'marketing b2b chile, marketing digital empresas chile, generacion leads b2b, linkedin ads chile, abm chile, marketing industrial chile',
   openGraph: {

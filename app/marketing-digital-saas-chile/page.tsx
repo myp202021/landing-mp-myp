@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { ArrowRight, Code2, Rocket, Target, BarChart3, Users, CheckCircle, TrendingUp, Zap, Globe } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Marketing Digital para SaaS en Chile | Adquisición de Usuarios | M&P',
+  title: 'Marketing Digital para SaaS en Chile | Adquisición de Usuarios',
   description: 'Agencia especializada en marketing para empresas SaaS y tecnología en Chile. Generamos trials, demos y usuarios con Google Ads, LinkedIn y Content Marketing. CAC promedio -40% vs industria.',
   keywords: 'marketing saas chile, marketing digital tecnologia, growth marketing chile, adquisicion usuarios saas, marketing b2b saas, demand generation saas chile',
   openGraph: {

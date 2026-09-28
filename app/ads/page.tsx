@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import AdsLanding from './AdsLanding'
 
 export const metadata: Metadata = {
-  title: 'Agencia de Marketing Digital y Performance | Muller y Pérez',
+  title: 'Agencia de Marketing Digital y Performance',
   description:
     'Agencia de marketing digital en Chile especializada en Google Ads, Meta Ads y performance marketing. Equipo dedicado, métricas de negocio reales y sin contrato de permanencia.',
   keywords: [

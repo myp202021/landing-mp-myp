@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { CheckCircle2, TrendingUp, Award, Users, Target, BarChart3, Clock, DollarSign } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Mejor Agencia Google Ads Santiago 2026: Top 10 Comparativa Real | Muller y Pérez',
+  title: 'Mejor Agencia Google Ads Santiago 2026: Top 10 Comparativa Real',
   description: 'Ranking objetivo de las 10 mejores agencias Google Ads en Santiago 2026. Comparamos precios, ROI, transparencia y retención de clientes con data verificable.',
   keywords: 'mejor agencia google ads santiago, agencias google ads chile, comparativa agencias google ads, ranking agencias google ads santiago, mejor agencia sem santiago',
   alternates: {

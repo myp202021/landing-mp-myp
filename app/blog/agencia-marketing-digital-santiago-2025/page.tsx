@@ -9,7 +9,7 @@ import Link from 'next/link'
 import { ArrowLeft, CheckCircle2, TrendingUp, Target, Users, BarChart3 } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Agencia Marketing Digital Santiago 2026: Guía Completa | Muller y Pérez',
+  title: 'Agencia Marketing Digital Santiago 2026: Guía Completa',
   description: 'Guía completa para contratar agencia marketing digital en Santiago 2026. Comparativa de servicios, precios ($950k-$2M), métricas reales (ROI +380%) y checklist de selección. Data verificable.',
   keywords: 'agencia marketing digital santiago, agencia marketing santiago, marketing digital santiago 2026, agencia publicidad digital santiago, agencia google ads santiago, agencia meta ads santiago, performance marketing santiago',
   alternates: {

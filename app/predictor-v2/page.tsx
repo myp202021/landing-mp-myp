@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 import PredictorV2Client from './PredictorV2Client'
 
 export const metadata: Metadata = {
-  title: 'Predictor v2 - Diagnóstico Consultivo | Muller y Pérez',
+  title: 'Predictor v2 - Diagnóstico Consultivo',
   description: 'Sistema de diagnóstico consultivo para marketing digital. Analiza tu negocio y recibe recomendaciones personalizadas de plataformas y campañas.',
   robots: 'noindex, nofollow', // URL de prueba, no indexar
   alternates: {

@@ -198,6 +198,25 @@ const categories = [
         ]
       },
       {
+        slug: 'geo-chile',
+        title: 'GEO',
+        subtitle: 'Que ChatGPT, Gemini y Claude recomienden tu empresa',
+        description: 'GEO (Generative Engine Optimization): optimizamos tu marca para que los motores de IA como ChatGPT, Gemini, Claude, Perplexity y Google AI Overviews la citen cuando tus clientes preguntan por tu categoría. Auditoría SEO + GEO, datos estructurados, contenido de respuesta directa publicado por agentes de IA y medición mensual de menciones.',
+        icon: '🤖',
+        features: [
+          { label: 'Servicios', value: 'Auditoría GEO, schemas, llms.txt, contenido citeable, fuentes de terceros' },
+          { label: 'Resultados', value: 'Primeras menciones en semanas, consolidación en 2 a 4 meses' },
+          { label: 'Ideal para', value: 'Empresas B2B y B2C cuyos clientes investigan con IA antes de comprar' },
+          { label: 'Equipo asignado', value: 'Especialista SEO/GEO + agentes de IA de contenido, revisión e informes' }
+        ],
+        benefits: [
+          'Presencia medida en ChatGPT, Gemini, Claude y Perplexity',
+          'Contenido de respuesta directa con schema FAQPage',
+          'Informe GEO mensual con competidores',
+          'Integrado con SEO técnico y campañas pagadas'
+        ]
+      },
+      {
         slug: 'analitica-atribucion',
         title: 'Analítica & Atribución',
         subtitle: 'Dashboards, tracking avanzado y modelos de atribución',

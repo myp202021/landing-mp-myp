@@ -9,7 +9,7 @@ import LandingClient from './LandingClient'
 
 // Usa el metadata centralizado de /lib/metadata.ts
 // Incluye: 55+ keywords, og:image JPG, Schema.org completo
-export const metadata = defaultMetadata
+export const metadata = { ...defaultMetadata, alternates: { canonical: '/' } }
 
 export default function LandingPage() {
   return <LandingClient />

@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { ArrowRight, GraduationCap, BookOpen, Users, Target, CheckCircle, TrendingUp, Globe, Award } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Marketing Digital para Educación en Chile | Universidades, Institutos y Colegios | M&P',
+  title: 'Marketing Digital para Educación en Chile | Universidades, Institutos y Colegios',
   description: 'Agencia de marketing digital especializada en el sector educación en Chile. Universidades, institutos, colegios y cursos online. Captamos estudiantes calificados con estrategias de performance.',
   keywords: 'marketing digital educacion chile, marketing universidades chile, publicidad institutos chile, captar estudiantes, marketing colegios chile, marketing cursos online',
   openGraph: {
