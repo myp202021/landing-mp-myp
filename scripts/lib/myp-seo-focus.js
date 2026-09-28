@@ -17,24 +17,18 @@ var FACTS = {
   rating_google: "5.0",
   fundada: 2020,
   clientes_activos: "40+",
-  agentes_ia: 40, // cifra oficial (Christopher, 28 sept 2026): usar siempre 40
-  // Áreas que cubren los 40 agentes (Christopher, 28 sept 2026). Sin cifras por área: no inventarlas.
+  agentes_ia: 27, // agentes corriendo con evidencia comprobada en /agentes-ia (Christopher, 28 sept 2026)
+  // Áreas que cubren los agentes (Christopher, 28 sept 2026). Sin cifras por área: no inventarlas.
   areas_agentes: [
-    "auditoría SEO",
-    "revisores de calidad (QA de contenido y campañas)",
+    "blog y artículos SEO diarios",
     "GEO (visibilidad en ChatGPT, Gemini, Claude y Perplexity)",
-    "contenido y grillas para redes",
-    "blog automático",
-    "cobros y facturación",
-    "prospección B2B",
-    "informes SEO",
-    "informes GEO",
-    "informes de marketing digital",
+    "revisores de calidad y verificación de fuentes",
+    "monitoreo de competencia y clipping de prensa",
+    "indicadores de mercado",
+    "reportes de marketing digital",
     "dashboards por cliente",
-    "paneles operativos",
-    "monitoreo de competencia (Copilot)",
-    "reportería de campañas",
-    "chatbots y WhatsApp",
+    "agente maestro de gestión",
+    "fiscalización de leads por WhatsApp",
   ],
   diferenciales: [
     "agentes de IA propios corriendo en producción (monitoreo de competencia, contenido, prospección, reportería, SEO y GEO)",

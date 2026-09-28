@@ -712,7 +712,7 @@ export default function ConsultoraMarketingDigitalChilePage() {
                   4. Conocimiento Profundo del Mercado Chileno
                 </h3>
                 <p className="text-lg text-gray-700 leading-relaxed">
-                  Trabajamos exclusivamente con empresas en Chile desde 2019. Conocemos la competencia local, comportamiento
+                  Trabajamos exclusivamente con empresas en Chile desde 2020. Conocemos la competencia local, comportamiento
                   del consumidor chileno, estacionalidades del mercado, regulaciones específicas y mejores prácticas que
                   funcionan en Santiago, Valparaíso, Concepción y todo Chile. No aplicamos recetas internacionales genéricas.
                 </p>

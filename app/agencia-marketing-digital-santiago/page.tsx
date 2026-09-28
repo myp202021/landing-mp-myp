@@ -319,7 +319,7 @@ export default function AgenciaMarketingDigitalSantiagoPage() {
                   2. Conocimiento Profundo del Mercado Santiaguino
                 </h3>
                 <p className="text-lg text-gray-700 leading-relaxed">
-                  Trabajamos con empresas en <strong>Santiago, Las Condes, Providencia, Vitacura y toda la RM</strong> desde 2019.
+                  Trabajamos con empresas en <strong>Santiago, Las Condes, Providencia, Vitacura y toda la RM</strong> desde 2020.
                   Conocemos el comportamiento del consumidor local, los mejores horarios para campañas por comuna, la competencia
                   específica de cada sector y las particularidades de hacer marketing digital en Santiago.
                 </p>

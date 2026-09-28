@@ -18,7 +18,7 @@ import {
 
 export const metadata: Metadata = createMetadata({
   title: 'Empresa Marketing Digital Chile | Líderes en Performance y Resultados',
-  description: 'Empresa de marketing digital establecida en Chile desde 2019. Equipo profesional especializado, infraestructura propia y casos de éxito corporativos. Desde $590.000/mes.',
+  description: 'Empresa de marketing digital establecida en Chile desde 2020. Equipo profesional especializado, infraestructura propia y casos de éxito corporativos. Desde $590.000/mes.',
   keywords: [
     'empresa marketing digital chile',
     'empresa publicidad digital chile',
@@ -127,7 +127,7 @@ export default function EmpresaMarketingDigitalChilePage() {
             <div className="grid lg:grid-cols-2 gap-12 items-center">
               <div>
                 <div className="inline-block bg-blue-500 text-white px-4 py-2 rounded-full text-sm font-semibold mb-6">
-                  Empresa Establecida desde 2019
+                  Empresa Establecida desde 2020
                 </div>
                 <h1 className="text-5xl md:text-6xl font-bold mb-6 leading-tight">
                   Empresa de Marketing Digital en Chile
@@ -204,7 +204,7 @@ export default function EmpresaMarketingDigitalChilePage() {
                 y capacidad para manejar presupuestos grandes sin riesgo operacional.
               </p>
               <p className="text-lg text-gray-700 mb-6 leading-relaxed">
-                Como <strong>empresa de publicidad digital establecida desde 2019</strong>, nos especializamos en <strong>performance
+                Como <strong>empresa de publicidad digital establecida desde 2020</strong>, nos especializamos en <strong>performance
                 marketing corporativo</strong>, lo que significa que trabajamos exclusivamente con datos reales y resultados medibles,
                 no con métricas de vanidad como impresiones o alcance.
               </p>
@@ -1014,7 +1014,7 @@ export default function EmpresaMarketingDigitalChilePage() {
           <section className="bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 rounded-3xl p-12 text-center text-white shadow-2xl">
             <div className="max-w-3xl mx-auto">
               <div className="inline-block bg-green-500 text-white px-6 py-2 rounded-full text-sm font-bold mb-6">
-                Empresa Establecida desde 2019 | +$50M Gestionados
+                Empresa Establecida desde 2020 | +$50M Gestionados
               </div>
               <h2 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
                 ¿Listo para Trabajar con una Empresa de Marketing Digital Profesional?
@@ -1088,7 +1088,7 @@ export default function EmpresaMarketingDigitalChilePage() {
               <div>
                 <h3 className="text-xl font-bold mb-4">Muller y Pérez</h3>
                 <p className="text-gray-400 text-sm leading-relaxed">
-                  Empresa de marketing digital establecida en Chile desde 2019. Equipo profesional, infraestructura propia
+                  Empresa de marketing digital establecida en Chile desde 2020. Equipo profesional, infraestructura propia
                   y resultados medibles.
                 </p>
               </div>

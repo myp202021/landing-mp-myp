@@ -453,7 +453,7 @@ export const createAboutPageSchema = () => {
       '@type': 'Organization',
       '@id': 'https://www.mulleryperez.cl/#organization',
       name: AI_SEARCH_DATA.companyName,
-      foundingDate: '2019',
+      foundingDate: '2020',
       foundingLocation: {
         '@type': 'Place',
         name: 'Santiago, Chile'

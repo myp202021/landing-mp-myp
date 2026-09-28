@@ -377,7 +377,7 @@ export default function LandingClient() {
     url: 'https://www.mulleryperez.cl',
     logo: 'https://www.mulleryperez.cl/logo-color.png',
     description: 'Agencia de marketing digital y performance marketing con más de 6 años de experiencia en Chile',
-    foundingDate: '2019',
+    foundingDate: '2020',
     address: {
       '@type': 'PostalAddress',
       streetAddress: 'Badajoz 100, Of 523',
@@ -2297,48 +2297,34 @@ export default function LandingClient() {
             </a>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {/* Video 1 - CRM M&P */}
-            <div className="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all">
-              <div className="aspect-video">
-                <YouTubeLite
-                  videoId="Zxwm-4SUGDw"
-                  title="CRM: M&P Agencia Digital"
-                  thumbnailQuality="hqdefault"
-                />
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            {/* Todas las cápsulas del canal de YouTube (videos + shorts). Testimonios van en Casos de Éxito y los videos IA en #videos-ia */}
+            {[
+              { videoId: 'GoY57zf1I28', title: 'Todos quieren resultados. Pocos tienen la estrategia.' },
+              { videoId: '7kjkRWKq5Vw', title: 'Cómo optimizar el CPA de tu empresa con estrategias efectivas' },
+              { videoId: 'jwTkYDkNYmo', title: 'M&P Labs' },
+              { videoId: 'Zxwm-4SUGDw', title: 'CRM: M&P Agencia Digital' },
+              { videoId: 'yn4QrZP9ZlU', title: 'Predictor de campañas' },
+              { videoId: 'T36AtNUnsc0', title: 'Leads' },
+              { videoId: 'bdB7ysX5TwQ', title: 'Plan de acción' },
+              { videoId: 'g29oRYkhios', title: 'Árbol de decisión' },
+              { videoId: 'qBhfeLY-pPo', title: '¿Cuándo usar IA?' },
+              { videoId: '_lYfOmPxx7E', title: 'Más leads ≠ vender más' },
+              { videoId: 'qhc0bY2Wc5A', title: '¿Baja en tu campaña?' },
+              { videoId: 'uQpV08CVjgc', title: '¿Hacia dónde van las agencias de marketing digital?' },
+              { videoId: '0jpmxlxjLkE', title: 'El cliente llegó a la reunión… pero la agencia no' },
+              { videoId: 'qqJkKX85WqY', title: 'Todos prometen. Nosotros cumplimos.' },
+              { videoId: 'btXmX0Jk9as', title: 'Tu marca no necesita suerte, necesita un plan' },
+            ].map(v => (
+              <div key={v.videoId} className="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all">
+                <div className="aspect-video">
+                  <YouTubeLite videoId={v.videoId} title={`${v.title} — M&P Agencia Digital`} thumbnailQuality="hqdefault" />
+                </div>
+                <div className="p-4">
+                  <p className="text-sm text-gray-600 font-semibold">{v.title}</p>
+                </div>
               </div>
-              <div className="p-4">
-                <p className="text-sm text-gray-600 font-semibold">CRM: M&P Agencia Digital</p>
-              </div>
-            </div>
-
-            {/* Video 2 - Plan de acción */}
-            <div className="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all">
-              <div className="aspect-video">
-                <YouTubeLite
-                  videoId="bdB7ysX5TwQ"
-                  title="Plan de acción: M&P Agencia Digital"
-                  thumbnailQuality="hqdefault"
-                />
-              </div>
-              <div className="p-4">
-                <p className="text-sm text-gray-600 font-semibold">Plan de acción: M&P Agencia Digital</p>
-              </div>
-            </div>
-
-            {/* Video 3 - Árbol de decisión */}
-            <div className="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all">
-              <div className="aspect-video">
-                <YouTubeLite
-                  videoId="g29oRYkhios"
-                  title="Árbol de decisión: M&P Agencia Digital"
-                  thumbnailQuality="hqdefault"
-                />
-              </div>
-              <div className="p-4">
-                <p className="text-sm text-gray-600 font-semibold">Árbol de decisión: M&P Agencia Digital</p>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>
@@ -2471,7 +2457,7 @@ export default function LandingClient() {
               Resultados <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Comprobables</span>
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              +500 campañas optimizadas en Chile, USA, México, Perú y Australia desde 2019
+              +500 campañas optimizadas en Chile, USA, México, Perú y Australia desde 2020
             </p>
           </div>
 
@@ -2506,7 +2492,7 @@ export default function LandingClient() {
                 6+
               </div>
               <div className="text-gray-700 font-semibold text-lg">Años</div>
-              <div className="text-sm text-gray-500 mt-2">Desde 2019</div>
+              <div className="text-sm text-gray-500 mt-2">Desde 2020</div>
             </div>
           </div>
 

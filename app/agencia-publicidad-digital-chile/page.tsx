@@ -586,7 +586,7 @@ export default function AgenciaPublicidadDigitalChilePage() {
                     6. Experiencia Comprobada en el Mercado Chileno
                   </h3>
                   <p className="text-lg text-gray-700 leading-relaxed">
-                    Trabajamos con empresas chilenas desde 2019. Conocemos el comportamiento del consumidor local, horarios
+                    Trabajamos con empresas chilenas desde 2020. Conocemos el comportamiento del consumidor local, horarios
                     comerciales de Chile, regulaciones, competencia específica y particularidades del mercado chileno en
                     <strong> Santiago, Las Condes, Providencia y todo Chile</strong>. Soporte en horario chileno y facturación en CLP.
                   </p>

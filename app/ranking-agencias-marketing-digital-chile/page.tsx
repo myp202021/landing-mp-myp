@@ -1798,7 +1798,7 @@ export default function RankingAgenciasPage() {
                     },
                     {
                       name: "M&P Copilot",
-                      desc: "Sistema de 40 agentes de IA interconectados que generan contenido, brief creativo, auditoría competitiva, benchmark y reportes automáticos para cada cliente.",
+                      desc: "Sistema de 27 agentes de IA interconectados que generan contenido, brief creativo, auditoría competitiva, benchmark y reportes automáticos para cada cliente.",
                       tag: "IA Avanzada",
                       color: "purple",
                     },
@@ -1897,7 +1897,7 @@ export default function RankingAgenciasPage() {
                         false,
                       ],
                       [
-                        "Sistema de agentes IA (40 agentes)",
+                        "Sistema de agentes IA (27 agentes)",
                         true,
                         false,
                         false,

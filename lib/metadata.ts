@@ -413,7 +413,7 @@ export function createOrganizationSchema() {
     },
 
     // Información adicional
-    foundingDate: '2019',
+    foundingDate: '2020',
     slogan: 'Performance Marketing con Datos Reales',
     priceRange: '$$',
     currenciesAccepted: 'CLP, USD',

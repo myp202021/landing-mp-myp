@@ -31,7 +31,7 @@ const personSchema = {
     '@type': 'Organization',
     name: 'Muller y Pérez',
     url: 'https://www.mulleryperez.cl',
-    foundingDate: '2019'
+    foundingDate: '2020'
   },
   knowsAbout: [
     'Performance Marketing',

@@ -122,7 +122,7 @@ export default function GEOChilePage() {
               <div>
                 <div className="inline-block px-4 py-2 bg-purple-500/20 border border-purple-400/30 rounded-full mb-6">
                   <span className="text-purple-200 font-semibold">
-                    SEO + GEO con 40 agentes de IA
+                    SEO + GEO con 27 agentes de IA
                   </span>
                 </div>
                 <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
@@ -294,9 +294,9 @@ export default function GEOChilePage() {
                 performance marketing
               </Link>{" "}
               e inteligencia artificial con{" "}
-              <strong>40 agentes de IA propios en producción</strong>: auditoría
-              SEO, revisores de calidad, GEO, contenido, blog, prospección,
-              informes SEO, GEO y de marketing digital, dashboards y paneles. No
+              <Link href="/agentes-ia" className="text-indigo-600 hover:text-indigo-800 font-medium"><strong>27 agentes de IA en producción con evidencia pública</strong></Link>:
+              blog y GEO diarios, revisores de calidad, verificación de fuentes, monitoreo de
+              competencia, reportes, dashboards y un agente maestro que coordina a los demás. No
               revendemos una herramienta: aplicamos a tu marca el mismo sistema
               que usamos para posicionar la nuestra.
             </p>
