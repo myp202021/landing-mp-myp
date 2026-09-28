@@ -12,6 +12,10 @@ on:
       limit:
         description: "Cantidad de agencias (0 = todas)"
         default: "0"
+      usar_apify:
+        description: "Leer reseñas de Google Maps con Apify (gasta créditos compartidos con Hualpén)"
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -37,6 +41,8 @@ jobs:
           # En el cron mensual inputs viene vacío → publica. A mano, dry_run por defecto.
           DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run && '1' || '0' }}
           LIMIT: ${{ inputs.limit || '0' }}
+          # Cron mensual: Apify sí. Corrida manual: solo si se marca usar_apify
+          SIN_APIFY: ${{ github.event_name == 'workflow_dispatch' && !inputs.usar_apify && '1' || '0' }}
 
       - name: Guardar snapshot mensual en el repo (auditoría pública del ranking)
         if: success() && !(github.event_name == 'workflow_dispatch' && inputs.dry_run)

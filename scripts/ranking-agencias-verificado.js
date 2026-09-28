@@ -568,6 +568,7 @@ async function resenasGoogleMaps(agencias) {
   if (!token) { console.log("Sin APIFY_TOKEN: reseñas de Google desde la búsqueda web"); return {}; }
   // Los créditos de Apify se comparten con otros clientes (Hualpén): las pruebas nunca lo usan
   if (DRY_RUN && process.env.APIFY_EN_PRUEBA !== "1") { console.log("Prueba: se omite Apify (ahorro de créditos)"); return {}; }
+  if (process.env.SIN_APIFY === "1") { console.log("Corrida manual sin Apify: reseñas desde la búsqueda web"); return {}; }
   var busquedas = agencias.map(function (a) { return a.nombre + " agencia marketing digital"; });
   try {
     var r = await fetch("https://api.apify.com/v2/acts/compass~crawler-google-places/run-sync-get-dataset-items?token=" + token + "&timeout=600", {
