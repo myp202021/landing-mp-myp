@@ -271,6 +271,8 @@ function qaProblemas(html, opts) {
   var internos = (html.match(/href="\/[^"]*"/g) || []).length;
   if (internos < (opts.minLinks || 3))
     problemas.push("solo " + internos + " links internos");
+  var faltas = faltasOrtografia(html);
+  if (faltas.length) problemas.push("sin tilde/ñ: " + faltas.join(", "));
   if (/como modelo de lenguaje|as an ai|no puedo ayudar/i.test(texto))
     problemas.push("respuesta de rechazo de la IA");
   return problemas;
@@ -329,7 +331,164 @@ function instruccionesCluster(cluster, keyword, modo) {
   )
 }
 
+// ═══ PULIDO FINAL COMÚN (blog diario, GEO diario, ranking semanal) ═══
+
+// Palabras que la IA a veces escribe sin tilde o sin ñ
+var SIN_TILDE = ["tecnologia", "compania", "informacion", "metodologia", "analisis", "busqueda", "pagina", "numero",
+  "ultimo", "unico", "publico", "estrategico", "tambien", "ademas", "diseno", "campana", "campanas", "pequenas",
+  "segun", "despues", "rapido", "economico", "metricas", "optimizacion", "automatizacion", "conversion", "inversion",
+  "organico", "anos de", "espanol", "senal", "tecnica", "grafico", "estadisticas", "rentabilidad maxima"];
+function faltasOrtografia(html) {
+  var t = " " + String(html).replace(/<[^>]*>/g, " ").toLowerCase() + " ";
+  return SIN_TILDE.filter(function (w) {
+    return new RegExp("[^a-záéíóúñü]" + w + "[^a-záéíóúñü]").test(t);
+  });
+}
+
+async function corregirOrtografia(html, openaiKey) {
+  var faltas = faltasOrtografia(html);
+  if (!faltas.length) return html;
+  console.log("   Corrigiendo tildes/ñ: " + faltas.join(", "));
+  var r = await fetch("https://api.openai.com/v1/chat/completions", {
+    method: "POST",
+    headers: { Authorization: "Bearer " + openaiKey, "Content-Type": "application/json" },
+    body: JSON.stringify({
+      model: "gpt-4o",
+      temperature: 0,
+      max_tokens: 16000,
+      messages: [{ role: "user", content: "Corrige SOLO la ortografía (tildes y ñ) de este HTML en español de Chile. No cambies ninguna otra palabra, cifra, etiqueta ni atributo. Devuelve solo el HTML.\n\n" + html }],
+    }),
+  });
+  var data = await r.json();
+  var out = data.choices && data.choices[0] ? data.choices[0].message.content.replace(/```[a-z]*/gi, "").trim() : "";
+  // Si la corrección recorta el artículo, se mantiene el original
+  return out.length > html.length * 0.9 ? out : html;
+}
+
+function limpiarHtml(html) {
+  return String(html)
+    .replace(/```[a-z]*/gi, "")
+    .replace(/<h1([^>]*)>([\s\S]*?)<\/h1>/gi, "<h2$1>$2</h2>")
+    // caja CTA: la plantilla del blog ya trae el CTA "Conversemos"
+    .replace(/<div class="bg-gradient-to-r[^"]*"[^>]*>[\s\S]*?<\/a>\s*<\/div>/gi, "")
+    .trim();
+}
+
+async function urlResponde(url) {
+  try {
+    var ctrl = new AbortController();
+    var t = setTimeout(function () { ctrl.abort(); }, 12000);
+    var r = await fetch(url, { redirect: "follow", signal: ctrl.signal, headers: { "User-Agent": "Mozilla/5.0 (compatible; MPSourceVerifier/1.0; +https://www.mulleryperez.cl)" } });
+    clearTimeout(t);
+    return r.status < 400 || r.status === 403 || r.status === 429;
+  } catch (e) {
+    return false;
+  }
+}
+
+// Busca en la web fuentes reales para el tema y devuelve solo las que responden.
+async function buscarFuentes(tema, openaiKey) {
+  var prompt = "Busca en la web entre 4 y 6 fuentes reales y actuales (estudios, informes, documentación oficial, estadísticas) " +
+    "que respalden un artículo sobre: \"" + tema + "\" en Chile o Latinoamérica. Prioriza IAB Chile, Cámara de Comercio de Santiago, " +
+    "Google, Meta, Statista, Kantar, CEPAL, INE, Subtel, HubSpot Research, Think with Google.\n" +
+    'Responde SOLO JSON: {"fuentes": [{"nombre": "título exacto del estudio o página", "organizacion": "quién lo publica", "anio": 2026, "url": "URL exacta"}]}';
+  var herramientas = ["web_search", "web_search_preview"];
+  for (var i = 0; i < herramientas.length; i++) {
+    try {
+      var r = await fetch("https://api.openai.com/v1/responses", {
+        method: "POST",
+        headers: { Authorization: "Bearer " + openaiKey, "Content-Type": "application/json" },
+        body: JSON.stringify({ model: "gpt-4.1", input: prompt, tools: [{ type: herramientas[i] }] }),
+      });
+      if (!r.ok) continue;
+      var data = await r.json();
+      var texto = [];
+      (data.output || []).forEach(function (it) {
+        if (it.type === "message") (it.content || []).forEach(function (c) { if (c.type === "output_text") texto.push(c.text); });
+      });
+      var raw = texto.join("\n").replace(/```json|```/g, "");
+      var j = JSON.parse(raw.slice(raw.indexOf("{"), raw.lastIndexOf("}") + 1));
+      var ok = [];
+      for (var k = 0; k < (j.fuentes || []).length; k++) {
+        var f = j.fuentes[k];
+        var url = String(f.url || "").replace(/[‐-―−]/g, "-").match(/https?:\/\/[^\s"“”'<>()]+/);
+        if (url && (await urlResponde(url[0]))) { f.url = url[0]; ok.push(f); }
+      }
+      console.log("   Fuentes: " + ok.length + " verificadas de " + (j.fuentes || []).length);
+      return ok;
+    } catch (e) {
+      console.log("   buscarFuentes (" + herramientas[i] + ") falló: " + e.message);
+    }
+  }
+  return [];
+}
+
+function fuentesHtml(fuentes) {
+  if (!fuentes || !fuentes.length) return "";
+  var esc = function (x) { return String(x == null ? "" : x).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;"); };
+  return '<div class="mt-12 pt-8 border-t border-gray-200"><h3 class="text-lg font-semibold text-gray-900 mb-4">Fuentes</h3><ul class="list-disc pl-6 mb-6 space-y-2">' +
+    fuentes.map(function (f) {
+      return '<li class="text-sm text-gray-600"><a href="' + esc(f.url) + '" target="_blank" rel="noopener nofollow" class="text-indigo-600 hover:text-indigo-800 font-medium">' +
+        esc(f.nombre) + "</a>" + (f.organizacion ? " — " + esc(f.organizacion) : "") + (f.anio ? " (" + esc(f.anio) + ")" : "") + "</li>";
+    }).join("") + "</ul></div>";
+}
+
+// Revisión editorial final con Claude. Devuelve el original si algo sale mal.
+async function revisionEditorial(html, opts) {
+  if (!opts.anthropicKey) { console.log("   Sin ANTHROPIC key: se omite revisión editorial"); return html; }
+  var palabras = function (h) { return h.replace(/<[^>]*>/g, " ").split(/\s+/).filter(Boolean).length; };
+  var antes = palabras(html);
+  var prompt = "Eres el editor jefe del blog de Muller y Pérez. Revisa este artículo (" + antes + " palabras) titulado \"" + opts.titulo + "\" y devuélvelo corregido.\n\n" +
+    factsTexto() + "\nCHECKLIST (aplica todo):\n" +
+    "1. Elimina repeticiones: ideas, definiciones o párrafos que se repiten entre secciones. Cada sección aporta algo nuevo.\n" +
+    "2. Elimina relleno y frases de IA: \"en el vertiginoso\", \"es fundamental\", \"sin lugar a dudas\", \"en conclusión\", \"paradigma\", \"panorama actual\".\n" +
+    "3. Cifras de M&P: solo las de DATOS VERIFICADOS. Corrige cualquier otra.\n" +
+    "4. No inventes estudios ni cites organizaciones como fuente de un dato si no está respaldado; usa \"según benchmarks del mercado chileno\".\n" +
+    "5. Preguntas frecuentes: cada pregunta como <h3> terminando en ? seguida directamente de un <p> con la respuesta.\n" +
+    "6. Sin <h1>, sin cajas de CTA, sin ``` ni markdown. Mantén todas las clases CSS, tablas y links internos existentes.\n" +
+    "7. Ortografía impecable en español de Chile: tildes, ñ, signos de apertura ¿ ¡.\n" +
+    "8. NO acortes el artículo: mantén su extensión (mínimo " + Math.round(antes * 0.9) + " palabras).\n\n" +
+    "Responde SOLO con el HTML final.\n\n" + html;
+  try {
+    var r = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: { "x-api-key": opts.anthropicKey, "anthropic-version": "2023-06-01", "content-type": "application/json" },
+      body: JSON.stringify({ model: "claude-sonnet-5", max_tokens: 32000, messages: [{ role: "user", content: prompt }] }),
+    });
+    var data = await r.json();
+    // Sonnet 5 puede devolver primero un bloque "thinking": se toma el bloque de texto
+    var bloque = (data.content || []).filter(function (b) { return b.type === "text" && b.text; })[0];
+    if (!bloque) { console.log("   Revisión editorial sin texto: " + JSON.stringify(data).substring(0, 200)); return html; }
+    if (data.stop_reason === "max_tokens") { console.log("   Revisión editorial cortada por largo: se mantiene el original"); return html; }
+    var out = limpiarHtml(bloque.text);
+    var despues = palabras(out);
+    if (despues < antes * 0.85) { console.log("   Revisión editorial recortó " + antes + "→" + despues + " palabras: se mantiene el original"); return html; }
+    console.log("   Revisión editorial OK: " + antes + " → " + despues + " palabras");
+    return out;
+  } catch (e) {
+    console.log("   Revisión editorial falló: " + e.message);
+    return html;
+  }
+}
+
+// Orquesta el pulido: limpieza → revisión editorial → ortografía → fuentes verificadas
+async function pulirArticulo(html, opts) {
+  var out = limpiarHtml(html);
+  out = await revisionEditorial(out, opts);
+  out = await corregirOrtografia(out, opts.openaiKey);
+  var fuentes = await buscarFuentes(opts.titulo, opts.openaiKey);
+  // quitar cualquier bloque "Fuentes" previo sin links y poner el verificado
+  out = out.replace(/<div class="mt-12 pt-8 border-t border-gray-200"><h3[^>]*>Fuentes<\/h3>[\s\S]*?<\/div>\s*$/i, "");
+  var cierre = out.lastIndexOf("</div>");
+  var bloque = fuentesHtml(fuentes);
+  if (bloque) out = /^<div class="prose/.test(out) && cierre > 0 ? out.slice(0, cierre) + bloque + "\n</div>" : out + bloque;
+  return out;
+}
+
 module.exports = {
+  pulirArticulo,
+  faltasOrtografia,
+  limpiarHtml,
   temaNuevo,
   instruccionesCluster,
   SITE,

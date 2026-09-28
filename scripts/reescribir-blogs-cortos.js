@@ -182,7 +182,7 @@ async function main() {
       }
 
       // Step 3: Join + CTA
-      var newContent = '<div class="prose prose-lg max-w-none">\n' + sections.join('\n\n') + '\n\n' + CTA_BLOCK + '\n</div>'
+      var newContent = '<div class="prose prose-lg max-w-none">\n' + sections.join('\n\n') + '\n</div>'
       var newChars = newContent.length
       var h2Count = (newContent.match(/<h2/g) || []).length
 

@@ -381,8 +381,7 @@ async function generarSeccion(tema, outline, seccion, index, total) {
 - Cada pregunta seguida de un párrafo <p class="text-gray-700 mb-4"> con respuesta completa (mínimo 50 palabras)
 - Esto es CRÍTICO para el schema FAQ automático
 
-DESPUÉS del FAQ, incluir este CTA final:
-<div class="bg-gradient-to-r from-blue-900 to-purple-900 rounded-2xl p-8 text-center mt-12 mb-8"><h2 class="text-2xl font-bold text-white mb-4">¿Necesitas resultados reales en marketing digital?</h2><p class="text-blue-100 mb-6">En Muller y Pérez trabajamos con datos, no con suposiciones. Agenda una reunión estratégica sin costo.</p><a href="/contacto" class="inline-block bg-white text-blue-900 font-bold px-8 py-3 rounded-lg hover:bg-blue-50 transition">Solicitar propuesta →</a></div>`
+NO agregues CTA ni caja de contacto al final: la plantilla del blog ya la incluye.`
   } else {
     instruccionesSeccion = `Genera 400-600 palabras de contenido HTML para esta sección.
 ${seccion.incluye_tabla ? 'INCLUIR una tabla HTML con datos reales/benchmarks de Chile.' : ''}
@@ -481,7 +480,10 @@ async function generarArticulo(tema) {
   }
 
   // Step 3: Join
-  const contenidoHtml = `<div class="prose prose-lg max-w-none">\n${secciones.join('\n\n')}\n</div>`
+  let contenidoHtml = `<div class="prose prose-lg max-w-none">\n${secciones.join('\n\n')}\n</div>`
+
+  // Pulido final: revisión editorial (Claude), tildes/ñ, fuentes verificadas con link
+  contenidoHtml = await focus.pulirArticulo(contenidoHtml, { titulo: tema.tema, openaiKey: OPENAI_API_KEY, anthropicKey: process.env.ANTHROPIC_API_KEY_GRILLAS })
 
   // QA Log
   const charCount = contenidoHtml.length

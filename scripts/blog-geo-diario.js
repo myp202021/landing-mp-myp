@@ -459,6 +459,9 @@ async function generarArticulo(tema) {
   // Limpiar markdown wrappers residuales
   contenidoHtml = contenidoHtml.replace(/^```html\n?/g, '').replace(/\n?```$/g, '').trim()
 
+  // Pulido final: revisión editorial (Claude), tildes/ñ, fuentes verificadas con link
+  contenidoHtml = await focus.pulirArticulo(contenidoHtml, { titulo: tema.pregunta, openaiKey: OPENAI_API_KEY, anthropicKey: process.env.ANTHROPIC_API_KEY_GRILLAS })
+
   // QA Log
   const charCount = contenidoHtml.length
   const h2Count = (contenidoHtml.match(/<h2/g) || []).length

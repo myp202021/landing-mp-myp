@@ -354,16 +354,9 @@ async function paso2_redactar(research, tema) {
       partes.push(secHtml)
     }
 
-    // Agregar CTA final
-    partes.push('<div class="bg-gradient-to-r from-blue-900 to-purple-900 rounded-2xl p-8 text-center mt-12 mb-8"><h2 class="text-2xl font-bold text-white mb-4">¿Necesitas resultados reales en marketing digital?</h2><p class="text-blue-100 mb-6">En Muller y Pérez trabajamos con datos, no con suposiciones. Agenda una reunión estratégica sin costo.</p><a href="/contacto" class="inline-block bg-white text-blue-900 font-bold px-8 py-3 rounded-lg hover:bg-blue-50 transition">Solicitar propuesta →</a></div>')
+    // Sin CTA propio: la plantilla del blog ya agrega el CTA "Conversemos" al final
 
-    // Agregar fuentes si existen
-    if (research.fuentes && research.fuentes.length > 0) {
-      var fuentesHtml = '<div class="mt-12 pt-8 border-t border-gray-200"><h3 class="text-lg font-semibold text-gray-900 mb-4">Fuentes</h3>'
-      research.fuentes.forEach(function(f) { fuentesHtml += '<p class="text-sm text-gray-500 mb-1">' + f + '</p>' })
-      fuentesHtml += '</div>'
-      partes.push(fuentesHtml)
-    }
+    // Fuentes: las agrega pulirArticulo con URLs verificadas (antes eran nombres sin link)
 
     var html = '<div class="prose prose-lg max-w-none">\n' + partes.join('\n\n') + '\n</div>'
     var wordCount = html.replace(/<[^>]*>/g, ' ').split(/\s+/).filter(function(w) { return w.length > 0 }).length
@@ -549,6 +542,8 @@ async function main() {
     console.log('   Artículo corto (' + draft.wordCount + ' palabras) — Claude va a expandir')
   }
   htmlFinal = await paso3_revisar(htmlFinal, research, draft.wordCount)
+  // Pulido final sin segunda revisión de Claude (ya la hizo paso3): limpieza, tildes/ñ y fuentes verificadas
+  htmlFinal = await focus.pulirArticulo(htmlFinal, { titulo: research.titulo, openaiKey: OPENAI_KEY })
 
   // QA Gate: rechazar artículos demasiado cortos o genéricos
   var finalWordCount = htmlFinal.replace(/<[^>]*>/g, ' ').split(/\s+/).filter(function(w) { return w.length > 0 }).length
