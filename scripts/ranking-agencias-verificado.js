@@ -150,8 +150,14 @@ async function investigar(agencia) {
     "- Escribe en español de Chile con tildes y ñ correctas.\n\n" +
     "Responde SOLO con este JSON:\n" +
     ESQUEMA;
-  var data = await llamarResponses({ model: MODEL, input: prompt });
-  var json = extraerJson(textoDeRespuesta(data));
+  var json;
+  try {
+    json = extraerJson(textoDeRespuesta(await llamarResponses({ model: MODEL, input: prompt })));
+  } catch (e) {
+    // A veces la respuesta no trae JSON (así falló "Relevant"): un reintento
+    console.log("   " + e.message + " → reintento");
+    json = extraerJson(textoDeRespuesta(await llamarResponses({ model: MODEL, input: prompt })));
+  }
   json.nombre = agencia.nombre;
   return json;
 }
@@ -328,12 +334,133 @@ async function confirmarCriterio(agencia, campo) {
   return { valor: false, descripcion: null, fuente: null, descartado: "cita no encontrada en " + j.fuente };
 }
 
+// ═══ PASO 2C: RECORRER EL SITIO DE LA AGENCIA ═══
+// La búsqueda web varía entre corridas (M&P salió con 0 en tecnología una vez; Bigbuda con 0 en IA otra).
+// Por eso primero se lee el propio sitio de cada agencia (sitemap, hasta 30 páginas priorizadas), se extraen
+// las frases que hablan de cada criterio y el juez elige, entre frases REALES, la que lo demuestra.
+// Mismo sitio → mismas frases → mismo resultado cada mes. Sin Apify.
+var PALABRAS_CRITERIO = {
+  agentes_ia: /agentes? de (ia|inteligencia artificial)|agentes? (ia|inteligentes|aut[oó]nomos)|inteligencia artificial|ia generativa|automatizaci[oó]n(es)? con ia|chatbot|machine learning/i,
+  herramientas_propias: /plataforma propia|herramientas? propias?|software propio|desarrollamos|desarrollo propio|nuestra plataforma|nuestro software|predictor|dashboard|tecnolog[ií]a propia/i,
+  crm_propio: /\bcrm\b/i,
+  paneles_financieros: /\b(roas|cac|roi|ltv)\b|margen|dashboard|panel(es)? de (control|resultados)|reporter[ií]a/i,
+};
+var PRIORIDAD_URL = /servicio|nosotros|about|quienes|tecnolog|agente|\bia\b|inteligencia|herramient|plataforma|crm|dashboard|soluciones|producto|labs|predictor|metodolog|como-trabajamos|casos/i;
+
+async function htmlDe(url) {
+  try {
+    var ctrl = new AbortController();
+    var t = setTimeout(function () { ctrl.abort(); }, 15000);
+    var r = await fetch(url, { redirect: "follow", signal: ctrl.signal, headers: { "User-Agent": "Mozilla/5.0 (compatible; MPRankingVerifier/1.0; +https://www.mulleryperez.cl)" } });
+    clearTimeout(t);
+    return r.ok ? await r.text() : "";
+  } catch (e) { return ""; }
+}
+
+async function urlsDelSitio(web) {
+  var base = web.replace(/\/+$/, "");
+  var host = hostDe(base);
+  var urls = [];
+  var mapas = [base + "/sitemap.xml", base + "/sitemap_index.xml", base + "/wp-sitemap.xml", base + "/page-sitemap.xml"];
+  for (var i = 0; i < mapas.length && urls.length < 400; i++) {
+    var xml = await htmlDe(mapas[i]);
+    var locs = (xml.match(/<loc>([^<]+)<\/loc>/g) || []).map(function (l) { return l.replace(/<\/?loc>/g, "").trim(); });
+    for (var k = 0; k < locs.length; k++) {
+      if (/\.xml(\?|$)/.test(locs[k]) && urls.length < 400) {
+        // índice de sitemaps: se abren los sub-sitemaps de páginas (no de imágenes)
+        if (!/image|attachment|media|product_cat|tag/i.test(locs[k])) {
+          var sub = await htmlDe(locs[k]);
+          (sub.match(/<loc>([^<]+)<\/loc>/g) || []).forEach(function (l) { urls.push(l.replace(/<\/?loc>/g, "").trim()); });
+        }
+      } else urls.push(locs[k]);
+    }
+    if (urls.length) break;
+  }
+  urls = Array.from(new Set(urls.filter(function (u) { return hostDe(u) === host; })));
+  // Prioridad: páginas de servicios/tecnología primero; blog al final (habla de IA en general, no de lo propio)
+  var puntaje = function (u) { return (PRIORIDAD_URL.test(u) ? 0 : 1) + (/\/blog\/|\/noticias\/|\/\d{4}\//.test(u) ? 2 : 0); };
+  urls.sort(function (a, b) { return puntaje(a) - puntaje(b) || a.length - b.length; });
+  return [base + "/"].concat(urls.filter(function (u) { return u.replace(/\/+$/, "") !== base; })).slice(0, 30);
+}
+
+function frasesDe(html) {
+  var texto = html
+    .replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>|<noscript[\s\S]*?<\/noscript>|<nav[\s\S]*?<\/nav>|<footer[\s\S]*?<\/footer>/gi, " ")
+    .replace(/<\/(p|li|h[1-6]|div|section|td|br)>|<br\s*\/?>/gi, "\n")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&nbsp;/g, " ").replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&#39;|&rsquo;/g, "'").replace(/&[a-z#0-9]+;/gi, " ");
+  var out = [];
+  texto.split(/\n+/).forEach(function (bloque) {
+    bloque.replace(/\s+/g, " ").trim().split(/(?<=[.!?])\s+/).forEach(function (f) {
+      var n = f.split(" ").length;
+      if (n >= 8 && n <= 70) out.push(f.trim());
+    });
+  });
+  return out;
+}
+
+var cacheSitios = {};
+async function frasesDelSitio(web) {
+  if (cacheSitios[web]) return cacheSitios[web];
+  var urls = await urlsDelSitio(web);
+  var frases = [];
+  for (var i = 0; i < urls.length; i++) {
+    var html = await htmlDe(urls[i]);
+    frasesDe(html).forEach(function (f) { frases.push({ frase: f, url: urls[i] }); });
+  }
+  console.log("   Sitio recorrido: " + urls.length + " páginas, " + frases.length + " frases");
+  cacheSitios[web] = frases;
+  return frases;
+}
+
+async function confirmarDesdeSitio(agencia, campo, frases) {
+  var vistos = {};
+  var candidatas = frases.filter(function (x) {
+    if (!PALABRAS_CRITERIO[campo].test(x.frase) || vistos[x.frase]) return false;
+    vistos[x.frase] = 1;
+    return true;
+  })
+    // Primero las frases que afirman algo propio ("desarrollamos", "nuestro CRM"), no las que hablan del tema en general
+    .map(function (x) {
+      var f = x.frase.toLowerCase();
+      var fuerza = (/(propi[oa]s?|desarroll(amos|ado|o)|nuestr[oa]s?|creamos|construimos|operamos)/.test(f) ? 2 : 0) +
+        (f.match(new RegExp(PALABRAS_CRITERIO[campo].source, "gi")) || []).length;
+      return { frase: x.frase, url: x.url, fuerza: fuerza };
+    })
+    .sort(function (a, b) { return b.fuerza - a.fuerza; })
+    .slice(0, 20);
+  if (!candidatas.length) return { valor: false, descripcion: null, fuente: null };
+  var r = await fetch("https://api.openai.com/v1/chat/completions", {
+    method: "POST",
+    headers: { Authorization: "Bearer " + OPENAI_KEY, "Content-Type": "application/json" },
+    body: JSON.stringify({
+      model: MODEL,
+      temperature: 0,
+      response_format: { type: "json_object" },
+      max_tokens: 200,
+      messages: [{
+        role: "user",
+        content: "Criterio: " + DEFINICION_ESTRICTA[campo] + "\n\nFrases publicadas en el sitio de " + agencia.nombre + ":\n" +
+          candidatas.map(function (c, i) { return i + 1 + ". " + c.frase; }).join("\n") +
+          '\n\n¿Alguna frase, por sí sola, demuestra que se cumple el criterio? Responde SOLO JSON: {"indice": número de la frase que mejor lo demuestra o 0 si ninguna, "descripcion": "qué es, en una frase breve"}',
+      }],
+    }),
+  });
+  var data = await r.json();
+  var j = JSON.parse(data.choices[0].message.content);
+  var c = candidatas[(j.indice || 0) - 1];
+  if (!c) return { valor: false, descripcion: null, fuente: null };
+  return { valor: true, descripcion: j.descripcion, fuente: c.url, cita: c.frase, comprobado: "frase publicada en el sitio de la agencia" };
+}
+
 async function confirmarTecnologia(agencia, datos) {
+  var web = agencia.web || (datos.sitio_web && datos.sitio_web.valor);
+  var frases = web ? await frasesDelSitio(web) : [];
   var cambios = [];
   for (var campo in CRITERIOS_TEC) {
     try {
-      // 2 intentos: la búsqueda web no siempre encuentra la misma página; el juez filtra los falsos positivos
-      var c = await confirmarCriterio(agencia, campo);
+      // 1º el propio sitio (estable); 2º búsqueda web (prensa, directorios), con el mismo juez
+      var c = frases.length ? await confirmarDesdeSitio(agencia, campo, frases) : { valor: false };
       if (!c.valor) c = await confirmarCriterio(agencia, campo);
       var antes = tiene(datos[campo]);
       datos[campo] = c;
