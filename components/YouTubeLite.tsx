@@ -52,6 +52,7 @@ export default function YouTubeLite({
         src={thumbnailUrl}
         alt={title}
         fill
+        sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
         className="object-cover"
         loading="lazy"
         quality={85}

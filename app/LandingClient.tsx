@@ -2309,8 +2309,6 @@ export default function LandingClient() {
               { videoId: 'bdB7ysX5TwQ', title: 'Plan de acción' },
               { videoId: 'g29oRYkhios', title: 'Árbol de decisión' },
               { videoId: 'qBhfeLY-pPo', title: '¿Cuándo usar IA?' },
-              { videoId: '_lYfOmPxx7E', title: 'Más leads ≠ vender más' },
-              { videoId: 'qhc0bY2Wc5A', title: '¿Baja en tu campaña?' },
               { videoId: 'uQpV08CVjgc', title: '¿Hacia dónde van las agencias de marketing digital?' },
               { videoId: '0jpmxlxjLkE', title: 'El cliente llegó a la reunión… pero la agencia no' },
               { videoId: 'qqJkKX85WqY', title: 'Todos prometen. Nosotros cumplimos.' },
@@ -2343,6 +2341,8 @@ export default function LandingClient() {
           <div className="grid md:grid-cols-3 gap-8">
             {[
               { videoId: 'R5zpS3j_wYs', title: "Cortometraje Influencer's — creado con IA" },
+              { videoId: 'qhc0bY2Wc5A', title: '¿Baja en tu campaña? — influencer virtual creada con IA' },
+              { videoId: '_lYfOmPxx7E', title: 'Más leads ≠ vender más — influencer virtual creada con IA' },
             ].map(v => (
               <div key={v.videoId} className="bg-white/5 rounded-xl overflow-hidden border border-white/10 hover:border-white/30 transition-all">
                 <div className="aspect-video">

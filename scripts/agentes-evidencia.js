@@ -59,15 +59,23 @@ async function main() {
           runs = runs.concat(d.workflow_runs || []);
           if (!d.workflow_runs || d.workflow_runs.length < 100) break;
         }
-        var exitosas = runs.filter(function (r) {
-          return r.conclusion === "success";
+        var exitosas = runs.filter(function (r) { return r.conclusion === "success" });
+        // Última exitosa = la más reciente por fecha (no confiar en el orden de la API)
+        var ultima = exitosas.map(function (r) { return r.updated_at }).sort().pop() || null;
+        // Registro por día (hora de Chile): "ok" si hubo al menos una ejecución exitosa, "fallo" si solo fallas
+        var dias = {};
+        runs.forEach(function (r) {
+          if (!r.conclusion) return;
+          var d = new Date(r.created_at).toLocaleDateString("sv-SE", { timeZone: "America/Santiago" });
+          if (r.conclusion === "success") dias[d] = "ok";
+          else if (!dias[d]) dias[d] = "fallo";
         });
-        var ultima = exitosas[0] || null;
         cache[clave] = {
           tipo: "workflow",
           ejecuciones_30d: runs.length,
           exitosas_30d: exitosas.length,
-          ultima_exitosa: ultima ? ultima.updated_at : null,
+          ultima_exitosa: ultima,
+          dias: dias,
         };
       }
       out.agentes[a.id] = cache[clave];
