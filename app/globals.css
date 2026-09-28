@@ -24,6 +24,12 @@
 .prose a { color: #4f46e5; text-decoration: underline; }
 .prose a:hover { color: #3730a3; }
 
+/* Tablas de los artículos: en celular mantienen un ancho legible y se desplazan de lado dentro de su contenedor */
+.prose .overflow-x-auto { -webkit-overflow-scrolling: touch; }
+.prose .overflow-x-auto table { min-width: 40rem; }
+.prose td, .prose th { vertical-align: top; }
+@media (max-width: 640px) { .prose td, .prose th { font-size: 0.9rem; padding: 0.6rem 0.75rem; } }
+
 /* CTA que los agentes insertaban dentro del artículo (div con gradiente): duplicaba el CTA "Conversemos"
    que ya trae la plantilla del blog. Se oculta en los posts existentes; los agentes ya no lo generan. */
 .prose [class*="bg-gradient"] { display: none; }

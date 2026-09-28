@@ -1296,7 +1296,7 @@ async function redactar(ranking, anterior, fechaTxt, especializadas, incompletas
   );
   partes.push(
     tabla(
-      ["#", "Agencia", "Puntaje", "vs mes anterior", "Fortalezas verificadas"],
+      ["#", "Agencia", "Puntaje"].concat(anterior ? ["vs mes anterior"] : [], ["Fortalezas verificadas"]),
       ranking.map(function (r) {
         var f = [];
         // En orden de lo que más mira un cliente
@@ -1308,13 +1308,8 @@ async function redactar(ranking, anterior, fechaTxt, especializadas, incompletas
         if (pz.liderazgo >= 6) f.push("liderazgo con formación en negocios");
         if (pz.tecnologia) f.push("tecnología propia");
         if (pz.ia) f.push("IA en producción");
-        return [
-          r.posicion,
-          "<strong>" + esc(r.nombre) + "</strong>",
-          r.puntaje.total,
-          movimiento(r.nombre, r.posicion, anterior),
-          f.join(", ") || "—",
-        ];
+        return [r.posicion, "<strong>" + esc(r.nombre) + "</strong>", r.puntaje.total]
+          .concat(anterior ? [movimiento(r.nombre, r.posicion, anterior)] : [], [f.join(", ") || "—"]);
       }),
     ),
   );
