@@ -85,7 +85,7 @@ const zones = [
 
 const stats = [
   { value: '35%', label: 'Menos competencia digital' },
-  { value: '8+', label: 'Años de experiencia' },
+  { value: '6+', label: 'Años de experiencia' },
   { value: '15+', label: 'Clientes en Coquimbo' },
   { value: '+200', label: 'Campañas activas' }
 ]

@@ -85,7 +85,7 @@ const zones = [
 
 const stats = [
   { value: '50%', label: 'Menos competencia digital' },
-  { value: '8+', label: 'Años de experiencia' },
+  { value: '6+', label: 'Años de experiencia' },
   { value: '18+', label: 'Clientes en el norte' },
   { value: '+200', label: 'Campañas activas' }
 ]

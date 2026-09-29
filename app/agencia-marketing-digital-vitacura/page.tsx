@@ -85,7 +85,7 @@ const zones = [
 
 const stats = [
   { value: '35%', label: 'Mayor ticket promedio' },
-  { value: '8+', label: 'Años de experiencia' },
+  { value: '6+', label: 'Años de experiencia' },
   { value: '30+', label: 'Marcas premium' },
   { value: '+200', label: 'Campañas activas' }
 ]

@@ -85,7 +85,7 @@ const zones = [
 
 const stats = [
   { value: '45%', label: 'Menos competencia digital' },
-  { value: '8+', label: 'Años de experiencia' },
+  { value: '6+', label: 'Años de experiencia' },
   { value: '15+', label: 'Clientes en O\'Higgins' },
   { value: '+200', label: 'Campañas activas' }
 ]

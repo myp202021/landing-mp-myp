@@ -555,40 +555,13 @@ export default function AgenciaMarketingDigitalChilePage() {
           {/* ============================================================ */}
           <section className="mb-16">
             <h2 className="text-3xl font-bold text-gray-900 mb-6">
-              Resultados Reales de Nuestros Clientes
+              Resultados de Nuestros Clientes
             </h2>
             <p className="text-lg text-gray-700 mb-8 leading-relaxed">
-              No hablamos de promesas. Estos son resultados reales medidos en las cuentas publicitarias de nuestros clientes:
+              No hablamos de promesas. Nuestros casos de éxito son de clientes con nombre y apellido:
+              Genera, Power Energy, Invas WMS, CyM Propiedades y DevuelveMiPie, con el detalle de qué
+              hicimos y qué cambió en cada uno.
             </p>
-
-            <div className="grid md:grid-cols-3 gap-6 mb-8">
-              <div className="bg-gray-50 rounded-xl p-6">
-                <p className="text-sm text-blue-600 font-semibold mb-2">B2B / Servicios Profesionales</p>
-                <p className="text-2xl font-bold text-gray-900 mb-2">Reducción de CAC en 42%</p>
-                <p className="text-gray-700 text-sm leading-relaxed">
-                  Empresa de servicios B2B. Combinación de Google Search + LinkedIn Ads con landing pages
-                  optimizadas. El costo de adquisición bajó de $85.000 a $49.000 en 3 meses.
-                </p>
-              </div>
-
-              <div className="bg-gray-50 rounded-xl p-6">
-                <p className="text-sm text-blue-600 font-semibold mb-2">SaaS / Tecnología</p>
-                <p className="text-2xl font-bold text-gray-900 mb-2">+340% en leads calificados</p>
-                <p className="text-gray-700 text-sm leading-relaxed">
-                  Startup SaaS chilena. Reestructuración completa de cuenta Google Ads, nuevas campañas
-                  de Performance Max y remarketing en Meta. De 12 a 53 leads calificados por mes.
-                </p>
-              </div>
-
-              <div className="bg-gray-50 rounded-xl p-6">
-                <p className="text-sm text-blue-600 font-semibold mb-2">Inmobiliaria</p>
-                <p className="text-2xl font-bold text-gray-900 mb-2">CPL de $4.200 en promedio</p>
-                <p className="text-gray-700 text-sm leading-relaxed">
-                  Inmobiliaria con proyectos en Santiago y regiones. Campañas de Meta Ads + Google Search
-                  con formularios nativos y seguimiento de lead-a-visita. CPL 35% bajo el benchmark de la industria.
-                </p>
-              </div>
-            </div>
 
             <div className="bg-blue-50 rounded-xl p-6 text-center">
               <p className="text-lg text-gray-800 mb-3">

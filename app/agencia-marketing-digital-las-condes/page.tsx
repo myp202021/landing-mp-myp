@@ -85,7 +85,7 @@ const zones = [
 
 const stats = [
   { value: 'Badajoz 100', label: 'Oficinas propias' },
-  { value: '8+', label: 'Años en el mercado' },
+  { value: '6+', label: 'Años en el mercado' },
   { value: '50+', label: 'Clientes sector oriente' },
   { value: '5.0★', label: 'Valoración Google' }
 ]

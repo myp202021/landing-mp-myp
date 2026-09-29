@@ -491,47 +491,11 @@ export default function GoogleAdsChilePage() {
             <h2 className="text-3xl font-bold text-gray-900 mb-4">
               Resultados Reales con Google Ads en Chile
             </h2>
-            <p className="text-gray-700 mb-8">
-              Estos son ejemplos de resultados obtenidos por clientes gestionados por nuestro equipo. Los datos son reales, aunque omitimos nombres por confidencialidad.
+            <p className="text-gray-700">
+              Gestionamos más de 200 campañas activas. Los casos con nombre de cliente, qué hicimos y qué cambió
+              están en{' '}
+              <Link href="/casos-de-exito" className="text-blue-600 hover:underline font-semibold">casos de éxito</Link>.
             </p>
-
-            <div className="grid md:grid-cols-3 gap-6">
-              <div className="bg-white rounded-xl p-6 shadow-sm">
-                <div className="text-sm font-semibold text-blue-600 mb-2">Inmobiliaria en Santiago</div>
-                <h3 className="text-lg font-bold text-gray-900 mb-3">CPA reducido de $12.000 a $4.800 en 90 días</h3>
-                <p className="text-gray-700 text-sm mb-4">
-                  Reestructuramos las campañas Search segmentando por comuna y tipo de propiedad. Implementamos extensiones de ubicación y optimizamos landing pages específicas por proyecto.
-                </p>
-                <div className="flex gap-4 text-sm">
-                  <div className="bg-green-100 text-green-800 px-3 py-1 rounded-full font-semibold">-60% CPA</div>
-                  <div className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full font-semibold">+140% leads</div>
-                </div>
-              </div>
-
-              <div className="bg-white rounded-xl p-6 shadow-sm">
-                <div className="text-sm font-semibold text-green-600 mb-2">Clínica Dental en Providencia</div>
-                <h3 className="text-lg font-bold text-gray-900 mb-3">De 15 a 48 agendamientos mensuales</h3>
-                <p className="text-gray-700 text-sm mb-4">
-                  Implementamos campañas Search con keywords de alta intención (&quot;dentista urgencia providencia&quot;) y remarketing Display para pacientes que visitaron el sitio sin agendar.
-                </p>
-                <div className="flex gap-4 text-sm">
-                  <div className="bg-green-100 text-green-800 px-3 py-1 rounded-full font-semibold">+220% leads</div>
-                  <div className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full font-semibold">CPA $6.200</div>
-                </div>
-              </div>
-
-              <div className="bg-white rounded-xl p-6 shadow-sm">
-                <div className="text-sm font-semibold text-orange-600 mb-2">SaaS B2B (Software de Gestión)</div>
-                <h3 className="text-lg font-bold text-gray-900 mb-3">CAC reducido en 45% en 4 meses</h3>
-                <p className="text-gray-700 text-sm mb-4">
-                  Combinamos Search de alta intención con remarketing en YouTube. Implementamos conversiones offline importando datos del CRM para optimizar hacia leads calificados, no solo formularios.
-                </p>
-                <div className="flex gap-4 text-sm">
-                  <div className="bg-green-100 text-green-800 px-3 py-1 rounded-full font-semibold">-45% CAC</div>
-                  <div className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full font-semibold">+85% MQLs</div>
-                </div>
-              </div>
-            </div>
           </section>
 
           {/* Cuánto Cuesta Google Ads en Chile */}

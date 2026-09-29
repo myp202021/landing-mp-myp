@@ -85,7 +85,7 @@ const zones = [
 
 const stats = [
   { value: '40%', label: 'Menos competencia digital vs Santiago' },
-  { value: '8+', label: 'Años de experiencia' },
+  { value: '6+', label: 'Años de experiencia' },
   { value: '20+', label: 'Clientes en el sur' },
   { value: '+200', label: 'Campañas activas' }
 ]
