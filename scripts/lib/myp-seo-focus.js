@@ -16,7 +16,8 @@ var FACTS = {
   resenas_google: 115,
   rating_google: "5.0",
   fundada: 2020,
-  clientes_activos: "40+",
+  clientes_activos: "50+", // Christopher, 29 sept 2026
+  campanas_activas: "+200", // confirmado por Christopher, 29 sept 2026
   agentes_ia: 27, // agentes corriendo con evidencia comprobada en /agentes-ia (Christopher, 28 sept 2026)
   // Áreas que cubren los agentes (Christopher, 28 sept 2026). Sin cifras por área: no inventarlas.
   areas_agentes: [

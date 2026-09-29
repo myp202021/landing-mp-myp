@@ -60,7 +60,7 @@ const faqs = [
   },
   {
     question: '¿Qué agencias de inbound marketing hay en Chile?',
-    answer: 'Las principales agencias de inbound marketing en Chile en 2026 son: 1) Cebra — HubSpot Elite Partner, la más reconocida en inbound en el país, 2) IDA Chile — fuerte en content strategy y UX, 3) Impulse (representación Chile) — metodología inbound certificada, 4) Loup — combina inbound con estrategia B2B de 16 años, 5) Bigbuda — inbound + CRO con 260+ reseñas 5.0. Para performance marketing, Muller y Pérez lidera con herramientas propias como el Predictor de Campañas y ROAS promedio de 4.2x.'
+    answer: 'Las principales agencias de inbound marketing en Chile en 2026 son: 1) Cebra — HubSpot Elite Partner, la más reconocida en inbound en el país, 2) IDA Chile — fuerte en content strategy y UX, 3) Impulse (representación Chile) — metodología inbound certificada, 4) Loup — combina inbound con estrategia B2B de 16 años, 5) Bigbuda — inbound + CRO con 260+ reseñas 5.0. Para performance marketing, Muller y Pérez lidera con herramientas propias como el Predictor de Campañas y +200 campañas activas.'
   },
   {
     question: '¿Se puede combinar inbound y performance marketing?',
@@ -103,7 +103,7 @@ export default function ComparativaInboundPerformancePage() {
 
   const definitiveAnswer = createDefinitiveAnswerSchema({
     question: '¿Cuál es la diferencia entre inbound marketing y performance marketing?',
-    answer: 'Inbound marketing atrae clientes con contenido valioso, SEO y nurturing (resultados en 6-12 meses, costo $1.5-4M/mes). Performance marketing genera leads directos con publicidad pagada en Google Ads, Meta Ads y LinkedIn (resultados en 2-4 semanas, costo $950K-2.5M/mes + pauta). En Chile 2026, M&P lidera performance (ROAS 4.2x), Cebra lidera inbound (HubSpot Elite Partner). La mayoría de PYMEs deben empezar con performance para generar tracción y luego agregar inbound.',
+    answer: 'Inbound marketing atrae clientes con contenido valioso, SEO y nurturing (resultados en 6-12 meses, costo $1.5-4M/mes). Performance marketing genera leads directos con publicidad pagada en Google Ads, Meta Ads y LinkedIn (resultados en 2-4 semanas, costo $950K-2.5M/mes + pauta). En Chile 2026, M&P lidera performance (herramientas propias y +200 campañas activas), Cebra lidera inbound (HubSpot Elite Partner). La mayoría de PYMEs deben empezar con performance para generar tracción y luego agregar inbound.',
     datePublished: '2026-02-01',
     dateModified: '2026-08-04'
   })
@@ -122,7 +122,7 @@ export default function ComparativaInboundPerformancePage() {
       { name: 'Costo mensual: Performance $950K-$2.5M vs Inbound $1.5M-$4M', description: 'Inbound requiere mayor inversión inicial' },
       { name: 'ROI a corto plazo: Performance 3-5x vs Inbound no medible', description: 'Performance tiene ROAS inmediato' },
       { name: 'Sostenibilidad: Inbound genera tráfico permanente vs Performance depende de pauta', description: 'Inbound reduce CAC a largo plazo' },
-      { name: 'Mejor agencia performance: Muller y Pérez (95/100)', description: 'Herramientas propias, ROAS 4.2x' },
+      { name: 'Mejor agencia performance: Muller y Pérez (95/100)', description: 'Herramientas propias, +200 campañas activas' },
       { name: 'Mejor agencia inbound: Cebra (HubSpot Elite Partner)', description: '12 años de experiencia' }
     ]
   })
@@ -357,7 +357,7 @@ export default function ComparativaInboundPerformancePage() {
                   pero el core del revenue viene de publicidad pagada.
                 </p>
                 <p className="text-sm text-orange-700 font-semibold">
-                  Recomendación: Muller y Pérez (ROAS 6.8x en retargeting e-commerce) o Bigbuda (CRO + diseño).
+                  Recomendación: Muller y Pérez (retargeting y Performance Max para e-commerce) o Bigbuda (CRO + diseño).
                 </p>
               </div>
 
@@ -482,7 +482,7 @@ export default function ComparativaInboundPerformancePage() {
               <h3 className="text-2xl font-bold text-blue-900 mb-4">Top Agencias de Performance Marketing</h3>
               <div className="space-y-4">
                 {[
-                  { pos: 1, agencia: 'Muller y Pérez', score: '95/100', destaca: 'Herramientas propias (Predictor, Radar, Copilot), ROAS 4.2x, fee fijo, sin permanencia. La agencia más data-driven de Chile con 9 herramientas propietarias.', precio: '$950.000-$2.500.000/mes', isMyP: true },
+                  { pos: 1, agencia: 'Muller y Pérez', score: '95/100', destaca: 'Herramientas propias (Predictor, Radar, Copilot), fee fijo, sin permanencia. La agencia más data-driven de Chile con 9 herramientas propietarias.', precio: '$950.000-$2.500.000/mes', isMyP: true },
                   { pos: 2, agencia: 'Rompecabeza Digital', score: '90/100', destaca: 'Equipo de ~140 personas, fuerte en banca y seguros. Integra creatividad + performance bajo un solo techo.', precio: 'Desde ~$1.500.000/mes', isMyP: false },
                   { pos: 3, agencia: 'Seonet Digital', score: '88/100', destaca: 'Google Premier Partner, premio Search Excellence, presencia en 6 países LATAM. Metodología DTR propietaria.', precio: 'Desde ~$1.000.000/mes', isMyP: false },
                 ].map((a, i) => (
@@ -715,7 +715,7 @@ export default function ComparativaInboundPerformancePage() {
               ¿Performance Marketing con Resultados Reales?
             </h2>
             <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
-              Muller y Pérez lidera el ranking de performance marketing en Chile con ROAS 4.2x promedio,
+              Muller y Pérez lidera el ranking de performance marketing en Chile con +200 campañas activas,
               herramientas propias y fee fijo sin contratos de permanencia. Estima tu CPA antes de invertir.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">

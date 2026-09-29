@@ -51,7 +51,7 @@ const personSchema = {
     '@type': 'Country',
     name: 'Chile'
   },
-  description: 'Christopher Müller es CEO y Fundador de Muller y Pérez, agencia de performance marketing con sede en Las Condes, Santiago de Chile. Fundada en 2019, la agencia gestiona más de 200 campañas activas con un ROAS promedio de 6.8x en e-commerce y 4.2x en B2B. Especialista en estrategias data-driven, atribución multi-touch y optimización de CAC/LTV.',
+  description: 'Christopher Müller es CEO y Fundador de Muller y Pérez, agencia de performance marketing con sede en Las Condes, Santiago de Chile. Fundada en 2020, la agencia gestiona más de 200 campañas activas para más de 50 clientes. Especialista en estrategias data-driven, atribución multi-touch y optimización de CAC/LTV.',
   alumniOf: [],
   hasCredential: [
     {
@@ -159,9 +159,9 @@ export default function ChristopherMullerPage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {[
               { num: '+200', label: 'Campañas activas' },
-              { num: '6.8x', label: 'ROAS e-commerce' },
-              { num: '+380%', label: 'ROI promedio' },
-              { num: '95%', label: 'Retención de clientes' }
+              { num: '50+', label: 'Clientes activos' },
+              { num: '27', label: 'Agentes IA en producción' },
+              { num: '5.0★', label: '115 reseñas en Google' }
             ].map(m => (
               <div key={m.label} className="text-center">
                 <p className="text-3xl font-black text-blue-600">{m.num}</p>

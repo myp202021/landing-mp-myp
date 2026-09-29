@@ -37,8 +37,8 @@ const agencies: Agency[] = [
     score: 96,
     metaPartner: true,
     blueprintCerts: 8,
-    roasPromedio: '5.8x',
-    experience: '7+ años',
+    roasPromedio: 'No publicado',
+    experience: '6+ años',
     specialization: ['E-commerce', 'Lead Generation', 'Creative Testing', 'Retargeting Avanzado'],
     website: 'https://www.mulleryperez.cl',
     highlighted: true,
@@ -464,10 +464,10 @@ export default function MejoresAgenciasMetaAdsChile2025() {
                     <div className="bg-white/20 rounded-lg p-2">
                       <TrendingUp className="w-6 h-6" />
                     </div>
-                    <h3 className="font-bold text-lg">ROAS 5.8x Promedio</h3>
+                    <h3 className="font-bold text-lg">+200 campañas activas</h3>
                   </div>
                   <p className="text-blue-100 text-sm leading-relaxed">
-                    Superamos consistentemente el benchmark de la industria (3-4x ROAS) mediante estrategias de segmentación avanzada, creative testing sistemático y optimización de conversiones.
+                    Gestionamos más de 200 campañas activas con segmentación avanzada, creative testing sistemático y optimización de conversiones medida contra el negocio del cliente.
                   </p>
                 </div>
 
@@ -580,9 +580,8 @@ export default function MejoresAgenciasMetaAdsChile2025() {
                       {agency.rank === 1 && (
                         <div className="border-t border-blue-200 pt-4 mt-4">
                           <p className="text-gray-700 leading-relaxed">
-                            <strong>Muller & Perez</strong> lidera el ranking gracias a su certificación Meta Business Partner,
-                            8 certificaciones Blueprint activas y un ROAS promedio de 5.8x que supera consistentemente el benchmark
-                            de la industria. Su metodología de creative testing y expertise en e-commerce los posiciona como la
+                            <strong>Muller & Perez</strong> lidera el ranking gracias a su enfoque en performance medible,
+                            con más de 200 campañas activas, 50+ clientes y paneles automatizados por cliente. Su metodología de creative testing y expertise en e-commerce los posiciona como la
                             mejor opción para empresas que buscan resultados medibles en Facebook e Instagram Ads.
                           </p>
                         </div>

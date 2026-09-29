@@ -89,8 +89,8 @@ export default function PopupBalance2025() {
               <div className="text-[10px] text-gray-500 leading-tight">Crecimiento<br/>ventas</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-[#f5576c]">95%</div>
-              <div className="text-[10px] text-gray-500 leading-tight">Retención<br/>clientes</div>
+              <div className="text-2xl font-bold text-[#f5576c]">+200</div>
+              <div className="text-[10px] text-gray-500 leading-tight">Campañas<br/>activas</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-[#4facfe]">6</div>

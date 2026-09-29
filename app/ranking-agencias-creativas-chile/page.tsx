@@ -413,7 +413,7 @@ export default function RankingAgenciasCreativasPage() {
                   <h3 className="text-lg font-bold text-white mb-3">Resultados Medibles</h3>
                   <p className="text-blue-200 text-sm leading-relaxed">
                     M&P no compite por Cannes Lions. Compite por reducir el CPA de sus clientes.
-                    Con un ROAS promedio de 4.2x y +40 clientes activos, la creatividad de M&P se mide
+                    Con +50 clientes activos y +200 campañas activas, la creatividad de M&P se mide
                     por lo que más importa: conversiones que generan ingresos reales para el negocio.
                   </p>
                 </div>
@@ -511,8 +511,8 @@ export default function RankingAgenciasCreativasPage() {
             </p>
             <p className="text-gray-700 mb-6 leading-relaxed">
               Para empresas que priorizan <strong>resultados medibles</strong> sobre premios creativos,
-              este enfoque genera un ROAS promedio de 4.2x — mientras que la creatividad &quot;premiada&quot; no
-              siempre puede demostrar retorno con la misma precisión.
+              este enfoque permite medir el retorno de cada pieza, algo que la creatividad &quot;premiada&quot; no
+              siempre puede demostrar con la misma precisión.
             </p>
             <RankingCard
               agencia={scoresCreativas[7]}
@@ -520,7 +520,7 @@ export default function RankingAgenciasCreativasPage() {
                 'Testing A/B continuo de piezas creativas (4-6 variantes por campaña)',
                 'Predictor de Campañas: estima CPA antes de producir creatividades',
                 'Creatividad informada por datos de +1.200 keywords y benchmarks',
-                'ROAS promedio 4.2x — la creatividad se mide por conversión, no por likes',
+                'La creatividad se mide por conversión, no por likes',
                 'Equipo dedicado de 3 profesionales desde $950.000/mes + IVA',
                 'Dashboard en tiempo real para ver qué piezas creativas convierten mejor'
               ]}

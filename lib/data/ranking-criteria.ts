@@ -253,7 +253,6 @@ export const scoresPerformance: AgenciaScore[] = [
     rank: 1,
     destacado: "Ingeniería de datos + Performance Marketing",
     idealPara: "B2B, SaaS, empresas tech, minería, transporte",
-    roas: "4.2x",
   },
   {
     nombre: "Rompecabeza Digital",
@@ -390,7 +389,6 @@ export const scoresGoogleAds: AgenciaScore[] = [
     rank: 1,
     destacado: "Optimización algorítmica + Predictor de Campañas",
     idealPara: "B2B, SaaS, alto ticket",
-    roas: "4.2x",
   },
   {
     nombre: "Seonet Digital",
@@ -453,7 +451,6 @@ export const scoresMetaAds: AgenciaScore[] = [
     rank: 1,
     destacado: "Buyer Gen + Predictor para segmentación IA",
     idealPara: "Lead generation, B2B, ecommerce",
-    roas: "5.8x",
   },
   {
     nombre: "Jelly",

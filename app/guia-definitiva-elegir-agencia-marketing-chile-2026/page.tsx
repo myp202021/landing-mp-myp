@@ -175,7 +175,7 @@ export default function GuiaElegirAgenciaPage() {
               <p className="text-lg text-gray-700 mb-4 leading-relaxed">
                 Esta guía existe para que no te pase eso. No es un contenido comercial de Muller y Pérez
                 (aunque somos una agencia y tenemos nuestro sesgo, que declaramos abiertamente). Es una guía
-                práctica basada en 6 años de experiencia gestionando campañas, más de 40 clientes activos
+                práctica basada en 6 años de experiencia gestionando campañas, más de 50 clientes activos
                 y conversaciones con cientos de empresas que han pasado por 2, 3 o 4 agencias antes de
                 encontrar la correcta.
               </p>
@@ -374,9 +374,9 @@ export default function GuiaElegirAgenciaPage() {
               <div className="bg-blue-50 rounded-xl p-6 border border-blue-200">
                 <h3 className="text-xl font-bold text-blue-900 mb-3">¿Qué Ofrece M&P en Este Paso?</h3>
                 <p className="text-gray-700 text-sm leading-relaxed">
-                  Muller y Pérez tiene +40 clientes activos en 12+ industrias, 9 herramientas propietarias
+                  Muller y Pérez tiene +50 clientes activos en 12+ industrias, 9 herramientas propietarias
                   de acceso público (Predictor, Radar, Buyer Gen, Labs), dashboard de cliente accesible 24/7,
-                  y tasa de retención del 95%. Puedes probar las herramientas en{' '}
+                  y trabaja sin contratos de permanencia. Puedes probar las herramientas en{' '}
                   <Link href="/labs" className="text-blue-600 hover:underline font-semibold">M&P Labs</Link>{' '}
                   sin hablar con nadie antes de decidir.
                 </p>
@@ -465,7 +465,7 @@ export default function GuiaElegirAgenciaPage() {
                 },
                 {
                   flag: 'Piden contrato de permanencia mayor a 3 meses',
-                  porque: 'Las agencias que confían en sus resultados no necesitan contratos largos. M&P no tiene contrato de permanencia y tiene retención del 95%. Si una agencia pide 12 meses mínimo, pregúntate qué pasa si a los 3 meses no funciona.'
+                  porque: 'Las agencias que confían en sus resultados no necesitan contratos largos. M&P no tiene contrato de permanencia: los clientes se quedan por resultados. Si una agencia pide 12 meses mínimo, pregúntate qué pasa si a los 3 meses no funciona.'
                 },
                 {
                   flag: 'Garantizan resultados específicos sin conocer tu negocio',
@@ -693,7 +693,7 @@ export default function GuiaElegirAgenciaPage() {
             </h2>
             <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
               Muller y Pérez cumple los 8 pasos de esta guía: fee fijo, sin permanencia, acceso total
-              a cuentas, equipo dedicado de 3 personas, herramientas propias y ROAS 4.2x promedio.
+              a cuentas, equipo dedicado de 3 personas, herramientas propias y +200 campañas activas.
               Prueba nuestras herramientas gratis antes de hablar con nadie.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">

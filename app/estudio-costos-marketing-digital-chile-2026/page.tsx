@@ -61,7 +61,7 @@ const faqs = [
   },
   {
     question: '¿Qué ROI puedo esperar del marketing digital en Chile?',
-    answer: 'El ROI esperado depende del canal y la industria. En Google Ads Search el ROAS promedio en Chile 2026 es de 3.5-5x para B2B y 4-8x para e-commerce. En Meta Ads el ROAS promedio es 2.5-4x para generación de leads y 3-6x para e-commerce con retargeting. LinkedIn Ads tiene ROAS de 2-3.5x pero con tickets promedio mucho más altos ($5-50M CLP). Muller y Pérez reporta un ROAS promedio de 4.2x en campañas B2B y 6.8x en retargeting e-commerce. Los resultados varían según la calidad del producto, el ciclo de venta y la optimización de landing pages.'
+    answer: 'El ROI esperado depende del canal y la industria. En Google Ads Search el ROAS promedio en Chile 2026 es de 3.5-5x para B2B y 4-8x para e-commerce. En Meta Ads el ROAS promedio es 2.5-4x para generación de leads y 3-6x para e-commerce con retargeting. LinkedIn Ads tiene ROAS de 2-3.5x pero con tickets promedio mucho más altos ($5-50M CLP). Los resultados varían según la calidad del producto, el ciclo de venta y la optimización de landing pages.'
   },
   {
     question: '¿Cuáles son los costos ocultos del marketing digital?',
@@ -650,16 +650,10 @@ export default function EstudioCostosPage() {
               </div>
 
               <div className="bg-blue-50 rounded-xl p-6 border border-blue-200">
-                <h3 className="text-xl font-bold text-blue-900 mb-3">ROAS M&P Verificado</h3>
+                <h3 className="text-xl font-bold text-blue-900 mb-3">ROAS M&P por Industria</h3>
                 <ul className="space-y-3">
                   <li className="text-gray-700">
-                    <strong>ROAS promedio general:</strong> 4.2x (+200 campañas)
-                  </li>
-                  <li className="text-gray-700">
-                    <strong>E-commerce retargeting:</strong> 6.8x
-                  </li>
-                  <li className="text-gray-700">
-                    <strong>B2B servicios profesionales:</strong> 4.2x
+                    <strong>Base:</strong> +200 campañas activas gestionadas por M&P
                   </li>
                   <li className="text-gray-700">
                     <strong>Inmobiliario:</strong> 8-15x (por ticket alto)

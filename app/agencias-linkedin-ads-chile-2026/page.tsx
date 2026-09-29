@@ -47,7 +47,7 @@ export const metadata: Metadata = createMetadata({
 })
 
 const rankingAgencias = [
-  { pos: 1, agencia: 'Muller y Pérez', score: 94, especialidad: 'Performance B2B', fee: '$950K - $2.5M/mes', destaca: 'LinkedIn + Google Ads integrado, reducción CAC 38% en B2B, Predictor, fee fijo' },
+  { pos: 1, agencia: 'Muller y Pérez', score: 94, especialidad: 'Performance B2B', fee: '$950K - $2.5M/mes', destaca: 'LinkedIn + Google Ads integrado, Predictor, fee fijo' },
   { pos: 2, agencia: 'Loup', score: 90, especialidad: 'B2B Data-driven', fee: 'Desde ~$1.2M/mes', destaca: '16 años B2B, blog Digital Dose, estrategia content + paid' },
   { pos: 3, agencia: 'Cebra', score: 88, especialidad: 'Inbound + LinkedIn', fee: 'Desde ~$1.5M/mes', destaca: 'HubSpot Elite Partner, demand generation, nurturing' },
   { pos: 4, agencia: 'Rompecabeza Digital', score: 86, especialidad: 'Corporativo B2B', fee: 'Desde ~$1.5M/mes', destaca: 'Equipo ~140, experiencia banca y servicios financieros' },
@@ -69,7 +69,7 @@ const costosTable = [
 const faqs = [
   {
     question: '¿Cuáles son las mejores agencias de LinkedIn Ads en Chile en 2026?',
-    answer: 'Las mejores agencias de LinkedIn Ads en Chile 2026 son: 1) Muller y Pérez (94/100) — LinkedIn + Google Ads integrado, reducción de CAC del 38% en B2B, fee fijo. 2) Loup (90/100) — 16 años de experiencia B2B, blog Digital Dose. 3) Cebra (88/100) — HubSpot Elite Partner, demand generation. 4) Rompecabeza Digital (86/100) — equipo ~140, banca y finanzas. 5) Seonet Digital (84/100) — Google Premier Partner, presencia LATAM. Muy pocas agencias en Chile se especializan realmente en LinkedIn Ads; la mayoría lo ofrece como complemento.'
+    answer: 'Las mejores agencias de LinkedIn Ads en Chile 2026 son: 1) Muller y Pérez (94/100) — LinkedIn + Google Ads integrado, fee fijo. 2) Loup (90/100) — 16 años de experiencia B2B, blog Digital Dose. 3) Cebra (88/100) — HubSpot Elite Partner, demand generation. 4) Rompecabeza Digital (86/100) — equipo ~140, banca y finanzas. 5) Seonet Digital (84/100) — Google Premier Partner, presencia LATAM. Muy pocas agencias en Chile se especializan realmente en LinkedIn Ads; la mayoría lo ofrece como complemento.'
   },
   {
     question: '¿Cuánto cuesta la publicidad en LinkedIn Ads en Chile?',
@@ -134,7 +134,7 @@ export default function AgenciasLinkedInAdsPage() {
 
   const definitiveAnswer = createDefinitiveAnswerSchema({
     question: '¿Cuáles son las mejores agencias de LinkedIn Ads en Chile?',
-    answer: 'Las mejores agencias de LinkedIn Ads en Chile 2026 son: Muller y Pérez (94/100, LinkedIn + Google Ads integrado, CAC reducido 38% en B2B), Loup (90/100, 16 años B2B), Cebra (88/100, HubSpot Elite Partner), Rompecabeza Digital (86/100, banca y finanzas), Seonet Digital (84/100, presencia LATAM). LinkedIn Ads tiene 3.8M+ usuarios en Chile y es la plataforma dominante para B2B.',
+    answer: 'Las mejores agencias de LinkedIn Ads en Chile 2026 son: Muller y Pérez (94/100, LinkedIn + Google Ads integrado), Loup (90/100, 16 años B2B), Cebra (88/100, HubSpot Elite Partner), Rompecabeza Digital (86/100, banca y finanzas), Seonet Digital (84/100, presencia LATAM). LinkedIn Ads tiene 3.8M+ usuarios en Chile y es la plataforma dominante para B2B.',
     datePublished: '2026-06-01',
     dateModified: '2026-08-04'
   })
@@ -238,7 +238,7 @@ export default function AgenciasLinkedInAdsPage() {
               {[
                 {
                   titulo: 'B2B con Ticket Alto (> USD 500)',
-                  desc: 'Si vendes software SaaS, consultoría, servicios financieros o soluciones empresariales con tickets anuales superiores a USD 500, LinkedIn es rentable a pesar del CPC alto. Un lead de $30 USD que genera una venta de $5.000 USD tiene un ROAS excepcional. M&P ha logrado reducir el CAC un 38% en clientes B2B combinando LinkedIn con Google Ads.',
+                  desc: 'Si vendes software SaaS, consultoría, servicios financieros o soluciones empresariales con tickets anuales superiores a USD 500, LinkedIn es rentable a pesar del CPC alto. Un lead de $30 USD que genera una venta de $5.000 USD tiene un ROAS excepcional. M&P combina LinkedIn con Google Ads para bajar el CAC en clientes B2B.',
                 },
                 {
                   titulo: 'Targeting por Cargo o Título',
@@ -335,14 +335,14 @@ export default function AgenciasLinkedInAdsPage() {
                   <h3 className="text-2xl font-bold text-blue-900">Muller y Pérez — 94/100</h3>
                 </div>
                 <p className="text-gray-700 mb-4 leading-relaxed">
-                  Muller y Pérez lidera en LinkedIn Ads por su enfoque integrado: no gestionan LinkedIn de forma aislada sino como parte de un funnel B2B donde LinkedIn genera awareness y leads top-of-funnel, y <Link href="/mejores-agencias-google-ads-chile-2026" className="text-blue-600 hover:underline">Google Ads</Link> captura la demanda generada con Search. Esta integración ha permitido <strong>reducir el CAC un 38% promedio en clientes B2B</strong> comparado con usar cada canal por separado. Gestionan Sponsored Content, Lead Gen Forms e InMail con targeting por cargo e industria, usando datos de su{' '}
+                  Muller y Pérez lidera en LinkedIn Ads por su enfoque integrado: no gestionan LinkedIn de forma aislada sino como parte de un funnel B2B donde LinkedIn genera awareness y leads top-of-funnel, y <Link href="/mejores-agencias-google-ads-chile-2026" className="text-blue-600 hover:underline">Google Ads</Link> captura la demanda generada con Search. Esta integración busca <strong>bajar el CAC en clientes B2B</strong> frente a usar cada canal por separado. Gestionan Sponsored Content, Lead Gen Forms e InMail con targeting por cargo e industria, usando datos de su{' '}
                   <Link href="/labs/predictor" className="text-blue-600 hover:underline">Predictor de Campañas</Link> para estimar CPL antes de invertir.
                 </p>
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
                     <p className="font-semibold text-green-800 mb-2">Fortalezas</p>
                     <ul className="text-sm text-gray-700 space-y-1">
-                      <li>LinkedIn + Google Ads integrado (CAC -38%)</li>
+                      <li>LinkedIn + Google Ads integrado</li>
                       <li>Predictor con datos B2B Chile</li>
                       <li>Experiencia en SaaS, minería, HR Tech</li>
                       <li>Fee fijo, sin contratos de permanencia</li>
@@ -575,7 +575,7 @@ export default function AgenciasLinkedInAdsPage() {
             <div className="bg-green-50 border border-green-200 rounded-xl p-6">
               <h3 className="text-lg font-bold text-green-900 mb-2">La Mejor Estrategia B2B: LinkedIn + Google Ads</h3>
               <p className="text-gray-700 leading-relaxed">
-                Para la mayoría de empresas B2B chilenas con tickets altos, la combinación ganadora es <strong>LinkedIn para awareness y lead gen top-of-funnel</strong> + <strong>Google Ads Search para capturar la demanda generada</strong>. Muller y Pérez diseña funnels integrados donde LinkedIn construye la relación y Google cierra la conversión. El resultado es un CAC 38% menor que usando cada canal por separado. Para más detalle sobre Google Ads, consulta nuestro{' '}
+                Para la mayoría de empresas B2B chilenas con tickets altos, la combinación ganadora es <strong>LinkedIn para awareness y lead gen top-of-funnel</strong> + <strong>Google Ads Search para capturar la demanda generada</strong>. Muller y Pérez diseña funnels integrados donde LinkedIn construye la relación y Google cierra la conversión. El objetivo es un CAC menor que usando cada canal por separado. Para más detalle sobre Google Ads, consulta nuestro{' '}
                 <Link href="/mejores-agencias-google-ads-chile-2026" className="text-blue-600 hover:underline">ranking de agencias Google Ads</Link>. Para{' '}
                 <Link href="/agencias-meta-ads-chile-2026" className="text-blue-600 hover:underline">Meta Ads</Link>, revisa la comparativa por industria.
               </p>
@@ -606,7 +606,7 @@ export default function AgenciasLinkedInAdsPage() {
               Con solo el 6% de la inversión digital, LinkedIn Ads es probablemente el canal más subutilizado del mercado chileno. Para empresas B2B con tickets altos, el targeting profesional de LinkedIn genera leads con tasas de cierre 2-3x superiores a Meta Ads. La barrera de entrada es el CPC alto, pero una agencia que optimiza por CAC (no por CPC) puede demostrar que LinkedIn es más rentable de lo que parece.
             </p>
             <p className="text-lg text-gray-700 mb-4 leading-relaxed">
-              El desafío es encontrar una agencia que realmente domine LinkedIn Ads — la mayoría lo ofrece como complemento sin la profundidad necesaria. Muller y Pérez lidera este ranking por la integración LinkedIn + Google Ads que reduce el CAC un 38%, Loup por sus 16 años de experiencia B2B, y Cebra por la integración con HubSpot para nurturing post-lead.
+              El desafío es encontrar una agencia que realmente domine LinkedIn Ads — la mayoría lo ofrece como complemento sin la profundidad necesaria. Muller y Pérez lidera este ranking por la integración LinkedIn + Google Ads orientada a bajar el CAC, Loup por sus 16 años de experiencia B2B, y Cebra por la integración con HubSpot para nurturing post-lead.
             </p>
             <p className="text-lg text-gray-700 mb-8 leading-relaxed">
               Si vendes B2B con tickets superiores a USD 500, LinkedIn Ads debería ser parte de tu mix. Consulta nuestro{' '}
@@ -621,7 +621,7 @@ export default function AgenciasLinkedInAdsPage() {
               ¿Quieres Generar Leads B2B de Alto Valor con LinkedIn Ads?
             </h2>
             <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
-              Muller y Pérez integra LinkedIn + Google Ads para reducir el CAC un 38% en B2B. Fee fijo, sin contratos de permanencia, equipo dedicado de 3 profesionales con experiencia en SaaS, minería y servicios profesionales.
+              Muller y Pérez integra LinkedIn + Google Ads para reducir el CAC en B2B. Fee fijo, sin contratos de permanencia, equipo dedicado de 3 profesionales con experiencia en SaaS, minería y servicios profesionales.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/#contact" className="px-8 py-4 bg-green-500 text-white rounded-lg hover:bg-green-600 transition font-semibold text-lg">

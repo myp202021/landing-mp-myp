@@ -27,13 +27,11 @@ const agencias = [
     certificacion: 'Google Partner',
     idealPara: 'B2B, SaaS, alto ticket',
     url: 'https://www.mulleryperez.cl',
-    roas: '4.2x promedio',
+    roas: 'No publicado',
     diferenciadores: [
       'Optimización algorítmica con machine learning',
       'Gestión de +200 campañas Google Ads activas',
-      'ROAS promedio 4.2x (vs 2.8x industria)',
       'Dashboards en tiempo real (no reportes mensuales)',
-      'Reducción CAC 38% promedio en B2B',
       'Especialización en Performance Max y Shopping'
     ],
     servicios: ['Search Ads', 'Performance Max', 'Google Shopping', 'Display', 'YouTube Ads', 'Discovery'],

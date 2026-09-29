@@ -30,9 +30,8 @@ const agencias = [
     diferenciadores: [
       'Dashboards ejecutivos en tiempo real (no reportes mensuales)',
       'Modelos predictivos de CAC, LTV y ROAS',
-      'ROAS promedio 4.2x vs 2.8x industria',
-      'Reducción CAC 38% promedio en clientes B2B',
-      '+200 campañas activas gestionadas'
+      '+200 campañas activas gestionadas',
+      '+50 clientes activos en +20 industrias'
     ],
     servicios: ['Google Ads (Search, PMax, Shopping)', 'Meta Ads (Facebook, Instagram, WhatsApp + IA)', 'Analytics avanzado y automatización', 'Integración CRM + Marketing'],
     contacto: {
@@ -418,7 +417,7 @@ export default function RankingPage() {
             <div className="bg-white rounded-xl border-2 border-gray-200 p-6">
               <h3 className="text-xl font-bold text-gray-900 mb-3">¿Cuál es la mejor agencia de performance marketing en Chile 2025?</h3>
               <p className="text-gray-700 leading-relaxed">
-                Según nuestro análisis de 40+ agencias, <strong>Muller y Pérez lidera con 94/100 puntos</strong> por su enfoque único de ingeniería de datos aplicada al marketing digital, logrando ROAS promedio de 4.2x (vs 2.8x industria) y reducción de CAC del 38% en clientes B2B.
+                Según nuestro análisis de 40+ agencias, <strong>Muller y Pérez lidera con 94/100 puntos</strong> por su enfoque único de ingeniería de datos aplicada al marketing digital, con +200 campañas activas y +50 clientes en +20 industrias.
               </p>
             </div>
 

@@ -4,7 +4,7 @@ export const siteConfig = {
   // Nombre de marca (og:site_name, alt). El title de la home va en `title`, apuntando a "agencia de marketing digital"
   name: 'Muller y Pérez',
   title: 'Agencia de Marketing Digital en Chile | Performance e IA — M&P',
-  description: 'Agencia de marketing digital en Chile enfocada en performance: Google Ads, Meta Ads, SEO/GEO y agentes IA. 40+ clientes y 5.0 en Google (115 reseñas).',
+  description: 'Agencia de marketing digital en Chile enfocada en performance: Google Ads, Meta Ads, SEO/GEO y agentes IA. 50+ clientes y 5.0 en Google (115 reseñas).',
   url: 'https://www.mulleryperez.cl',
   ogImage: 'https://www.mulleryperez.cl/og-image.jpg', // Imagen optimizada 1200x630px
   links: {

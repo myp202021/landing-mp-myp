@@ -18,7 +18,7 @@ import {
 
 export const metadata: Metadata = createMetadata({
   title: 'Agencia de Marketing Digital en Chile',
-  description: 'Agencia de marketing digital y performance marketing en Chile. Google Ads, Meta Ads, LinkedIn Ads. +40 clientes, ROAS promedio 4.2x. Equipo dedicado.',
+  description: 'Agencia de marketing digital y performance marketing en Chile. Google Ads, Meta Ads, LinkedIn Ads. +50 clientes, +200 campañas activas. Equipo dedicado.',
   keywords: [
     'agencia marketing digital chile',
     'agencia de marketing digital',
@@ -58,7 +58,7 @@ const faqs = [
   },
   {
     question: '¿Cómo saber si una agencia de marketing digital es confiable?',
-    answer: 'Verifica estos 7 indicadores: 1) ¿Te dan acceso completo a tus cuentas de Google Ads y Meta? 2) ¿Tienen clientes activos verificables? 3) ¿Ofrecen dashboard o reportería en tiempo real? 4) ¿Su fee es transparente (fijo vs comisión sobre pauta)? 5) ¿Cuántas personas trabajan realmente en tu cuenta? 6) ¿Tienen certificaciones verificables? 7) ¿Tienen tecnología o metodología propia? Muller y Pérez cumple los 7 criterios con más de 40 clientes activos verificables y 6 herramientas propietarias.'
+    answer: 'Verifica estos 7 indicadores: 1) ¿Te dan acceso completo a tus cuentas de Google Ads y Meta? 2) ¿Tienen clientes activos verificables? 3) ¿Ofrecen dashboard o reportería en tiempo real? 4) ¿Su fee es transparente (fijo vs comisión sobre pauta)? 5) ¿Cuántas personas trabajan realmente en tu cuenta? 6) ¿Tienen certificaciones verificables? 7) ¿Tienen tecnología o metodología propia? Muller y Pérez cumple los 7 criterios con más de 50 clientes activos verificables y 6 herramientas propietarias.'
   },
   {
     question: '¿Es mejor contratar una agencia o un equipo interno de marketing?',
@@ -157,7 +157,7 @@ export default function AgenciaMarketingDigitalChilePage() {
 
   const webPageSchema = createWebPageSchema(
     'Agencia de Marketing Digital en Chile — Muller y Pérez',
-    'Agencia de marketing digital y performance marketing en Chile. Google Ads, Meta Ads, LinkedIn Ads. +40 clientes, ROAS promedio 4.2x. Equipo dedicado.',
+    'Agencia de marketing digital y performance marketing en Chile. Google Ads, Meta Ads, LinkedIn Ads. +50 clientes, +200 campañas activas. Equipo dedicado.',
     'https://www.mulleryperez.cl/agencia-marketing-digital-chile'
   )
 
@@ -255,8 +255,8 @@ export default function AgenciaMarketingDigitalChilePage() {
                 <p className="text-blue-200 text-sm mt-1">Clientes activos</p>
               </div>
               <div className="text-center">
-                <p className="text-4xl font-bold text-green-400">4.2x</p>
-                <p className="text-blue-200 text-sm mt-1">ROAS promedio</p>
+                <p className="text-4xl font-bold text-green-400">+200</p>
+                <p className="text-blue-200 text-sm mt-1">Campañas activas</p>
               </div>
               <div className="text-center">
                 <p className="text-4xl font-bold text-green-400">+15</p>

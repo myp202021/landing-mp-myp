@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Agencia de Marketing Digital y Performance | Muller y Pérez',
     description:
-      'Equipo dedicado, métricas de negocio reales, sin contrato de permanencia. +40 clientes activos en +15 industrias.',
+      'Equipo dedicado, métricas de negocio reales, sin contrato de permanencia. +50 clientes activos en +15 industrias.',
     url: 'https://www.mulleryperez.cl/ads',
     siteName: 'Muller y Pérez',
     locale: 'es_CL',

@@ -434,7 +434,7 @@ export default function LandingClient() {
         name: '¿Requieren contrato de permanencia?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'No, en Muller y Pérez no trabajamos con contratos de permanencia. Si no funciona, te vas cuando quieras. Nuestra retención del 95% se basa en resultados, no en obligaciones contractuales.'
+          text: 'No, en Muller y Pérez no trabajamos con contratos de permanencia. Si no funciona, te vas cuando quieras. Los clientes se quedan por resultados, no por obligaciones contractuales.'
         }
       },
       {
@@ -852,7 +852,7 @@ export default function LandingClient() {
               { value: '100%', label: 'Transparencia de datos' },
               { value: '950k', label: 'Desde $950.000/mes' },
               { value: '+200', label: 'Campañas activas' },
-              { value: '95%', label: 'Retención de clientes' },
+              { value: '50+', label: 'Clientes activos' },
               { value: '5.0★', label: '115 reseñas en Google' }
             ].map((stat, idx) => (
               <div key={idx} className="text-center">
@@ -988,11 +988,6 @@ export default function LandingClient() {
                   <div className="text-sm text-gray-600">CAC Promedio</div>
                   <div className="text-3xl font-bold text-gray-900">$47.200</div>
                   <div className="text-sm text-green-600">↓ 18% vs mes anterior</div>
-                </div>
-                <div className="border-l-4 border-purple-600 pl-4">
-                  <div className="text-sm text-gray-600">ROAS (Return on Ad Spend)</div>
-                  <div className="text-3xl font-bold text-gray-900">4.2x</div>
-                  <div className="text-sm text-green-600">↑ +0.8x vs mes anterior</div>
                 </div>
                 <div className="border-l-4 border-green-600 pl-4">
                   <div className="text-sm text-gray-600">Clientes Proyectados (próximo mes)</div>

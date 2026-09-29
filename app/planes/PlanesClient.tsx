@@ -148,7 +148,7 @@ export default function PlanesClient() {
               <div className="text-sm text-gray-600">Planes Premium</div>
             </div>
             <div className="bg-white rounded-xl p-6 shadow-lg">
-              <div className="text-3xl font-bold text-green-600 mb-2">+40</div>
+              <div className="text-3xl font-bold text-green-600 mb-2">+50</div>
               <div className="text-sm text-gray-600">Clientes Activos</div>
             </div>
             <div className="bg-white rounded-xl p-6 shadow-lg">

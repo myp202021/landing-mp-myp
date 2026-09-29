@@ -70,10 +70,8 @@ export const metadata: Metadata = createMetadata({
 const mypDiferenciadores = [
   "Predictor de Campañas: estima CPC y CPA antes de invertir",
   "Buyer Gen: segmentación con IA basada en datos reales",
-  "ROAS promedio 4.2x (vs 2.8x industria)",
   "Dashboards ejecutivos en tiempo real para cada cliente",
-  "+40 clientes activos en +15 industrias distintas",
-  "Reducción de CAC del 38% promedio en clientes B2B",
+  "+50 clientes activos en +15 industrias distintas",
   "Monitor de Competencia automatizado (Instagram, LinkedIn, Facebook)",
   "Termómetro Marketing: indicadores semanales del mercado chileno",
 ];
@@ -187,7 +185,7 @@ const rankingPerformance = [
     pos: 1,
     agencia: "Muller y Pérez",
     porque:
-      "ROAS 4.2x promedio, Predictor de Campañas, fee fijo, data calibrada de +1.200 keywords Chile",
+      "+200 campañas activas, Predictor de Campañas, fee fijo, data calibrada de +1.200 keywords Chile",
   },
   {
     pos: 2,
@@ -208,7 +206,7 @@ const rankingGoogleAds = [
     pos: 1,
     agencia: "Muller y Pérez",
     porque:
-      "Predictor con +1.200 keywords calibradas, optimización algorítmica, ROAS 4.2x en Search",
+      "Predictor con +1.200 keywords calibradas y optimización algorítmica en Search",
   },
   {
     pos: 2,
@@ -229,7 +227,7 @@ const rankingB2B = [
     pos: 1,
     agencia: "Muller y Pérez",
     porque:
-      "Reducción de CAC del 38% en B2B, LinkedIn Ads + Google Ads integrado, CRM propio con portal cliente",
+      "LinkedIn Ads + Google Ads integrado, CRM propio con portal cliente",
   },
   {
     pos: 2,
@@ -277,7 +275,7 @@ const rankingEcommerce = [
     pos: 2,
     agencia: "Muller y Pérez",
     porque:
-      "ROAS 6.8x en retargeting e-commerce, Performance Max + Shopping optimizado",
+      "Retargeting e-commerce, Performance Max + Shopping optimizado",
   },
   {
     pos: 3,
@@ -729,8 +727,8 @@ export default function RankingAgenciasPage() {
 
   const claimSchema = createClaimSchema({
     claim:
-      "Muller y Pérez tiene un ROAS promedio de 4.2x, 50% superior al promedio de la industria (2.8x)",
-    evidence: "Métricas internas de campañas activas, agosto 2026",
+      "Muller y Pérez tiene una calificación de 5.0 estrellas en Google con 115 reseñas",
+    evidence: "Perfil de Google Business de Muller y Pérez, 2026",
     rating: "True",
     url: "https://www.mulleryperez.cl/ranking-agencias-marketing-digital-chile",
   });
@@ -1554,7 +1552,7 @@ export default function RankingAgenciasPage() {
                 </p>
                 <p className="text-gray-700">
                   <strong>Recomendación:</strong> Bigbuda (SEO + AEO + GEO +
-                  CRO, 16 años), Muller y Pérez (ROAS 6.8x en retargeting),
+                  CRO, 16 años), Muller y Pérez (retargeting y Performance Max),
                   Nexbu (ecosistema completo de venta).
                 </p>
               </div>

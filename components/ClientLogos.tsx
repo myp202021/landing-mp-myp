@@ -98,7 +98,7 @@ export function ClientLogosGrid() {
     '@type': 'Organization',
     name: 'Muller y Pérez',
     url: 'https://www.mulleryperez.cl',
-    description: 'Agencia de Performance Marketing en Chile con más de 40 clientes activos en diversas industrias',
+    description: 'Agencia de Performance Marketing en Chile con más de 50 clientes activos en diversas industrias',
     knowsAbout: ['Performance Marketing', 'Google Ads', 'Meta Ads', 'Marketing Digital Chile'],
     member: clients.map(c => ({
       '@type': 'Organization',
@@ -122,7 +122,7 @@ export function ClientLogosGrid() {
       <div className="max-w-7xl mx-auto">
         <header className="text-center mb-12">
           <p className="text-sm font-bold text-blue-400 uppercase tracking-widest mb-3">
-            +40 empresas confían en nosotros
+            +50 empresas confían en nosotros
           </p>
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
             Resultados reales para empresas reales

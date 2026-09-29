@@ -146,12 +146,12 @@ export default function AgenciaMarketingDigitalVinaDelMarPage() {
                 <div className="text-gray-700 font-semibold">Clientes V Región</div>
               </div>
               <div>
-                <div className="text-4xl font-bold text-blue-600 mb-2">+380%</div>
-                <div className="text-gray-700 font-semibold">ROI Promedio</div>
+                <div className="text-4xl font-bold text-blue-600 mb-2">+200</div>
+                <div className="text-gray-700 font-semibold">Campañas activas</div>
               </div>
               <div>
-                <div className="text-4xl font-bold text-blue-600 mb-2">95%</div>
-                <div className="text-gray-700 font-semibold">Retención Clientes</div>
+                <div className="text-4xl font-bold text-blue-600 mb-2">5.0★</div>
+                <div className="text-gray-700 font-semibold">115 reseñas Google</div>
               </div>
               <div>
                 <div className="text-4xl font-bold text-blue-600 mb-2">24/7</div>

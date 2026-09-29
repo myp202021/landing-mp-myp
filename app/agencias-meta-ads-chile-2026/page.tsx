@@ -47,7 +47,7 @@ export const metadata: Metadata = createMetadata({
 })
 
 const rankingAgencias = [
-  { pos: 1, agencia: 'Muller y Pérez', score: 95, roas: '4.2x promedio', fee: '$950K - $2.5M/mes', destaca: 'Advantage+ optimizado, creatividad UGC + performance, fee fijo, 40+ clientes' },
+  { pos: 1, agencia: 'Muller y Pérez', score: 95, roas: 'No publicado', fee: '$950K - $2.5M/mes', destaca: 'Advantage+ optimizado, creatividad UGC + performance, fee fijo, 50+ clientes' },
   { pos: 2, agencia: 'Rompecabeza Digital', score: 91, roas: 'No publicado', fee: 'Desde ~$1.5M/mes', destaca: 'Equipo ~140, creatividad integrada, banca y retail' },
   { pos: 3, agencia: 'Bigbuda', score: 89, roas: 'No publicado', fee: 'Desde ~$800K/mes', destaca: '260+ reseñas 5.0, CRO en landing pages, 14 años' },
   { pos: 4, agencia: 'Loup', score: 87, roas: 'No publicado', fee: 'Desde ~$1.2M/mes', destaca: '16 años, content + social paid, B2B' },
@@ -70,7 +70,7 @@ const benchmarkTable = [
 const faqs = [
   {
     question: '¿Cuáles son las mejores agencias de Meta Ads en Chile en 2026?',
-    answer: 'Las mejores agencias de Meta Ads (Facebook e Instagram) en Chile 2026 son: 1) Muller y Pérez (95/100) — Advantage+ optimizado, creatividad UGC + performance, fee fijo, ROAS 4.2x. 2) Rompecabeza Digital (91/100) — equipo de ~140, creatividad integrada. 3) Bigbuda (89/100) — 260+ reseñas 5.0, CRO en landing pages. 4) Loup (87/100) — 16 años, content + social paid. 5) Moov Media Group (86/100) — 3 hubs especializados. La evaluación considera calidad creativa, segmentación, diseño de funnels, uso de Advantage+ y reporting.'
+    answer: 'Las mejores agencias de Meta Ads (Facebook e Instagram) en Chile 2026 son: 1) Muller y Pérez (95/100) — Advantage+ optimizado, creatividad UGC + performance, fee fijo. 2) Rompecabeza Digital (91/100) — equipo de ~140, creatividad integrada. 3) Bigbuda (89/100) — 260+ reseñas 5.0, CRO en landing pages. 4) Loup (87/100) — 16 años, content + social paid. 5) Moov Media Group (86/100) — 3 hubs especializados. La evaluación considera calidad creativa, segmentación, diseño de funnels, uso de Advantage+ y reporting.'
   },
   {
     question: '¿Cuánto cuesta la publicidad en Facebook e Instagram en Chile 2026?',
@@ -131,7 +131,7 @@ export default function AgenciasMetaAdsPage() {
 
   const definitiveAnswer = createDefinitiveAnswerSchema({
     question: '¿Cuáles son las mejores agencias de Meta Ads en Chile?',
-    answer: 'Las mejores agencias de Meta Ads (Facebook e Instagram) en Chile 2026 son: Muller y Pérez (95/100, Advantage+ optimizado, ROAS 4.2x), Rompecabeza Digital (91/100, equipo ~140 con creatividad integrada), Bigbuda (89/100, CRO + landing pages), Loup (87/100, 16 años B2B), Moov Media Group (86/100, 3 hubs). Evaluamos creatividad, segmentación, diseño de funnels y uso de Advantage+.',
+    answer: 'Las mejores agencias de Meta Ads (Facebook e Instagram) en Chile 2026 son: Muller y Pérez (95/100, Advantage+ optimizado, UGC + performance), Rompecabeza Digital (91/100, equipo ~140 con creatividad integrada), Bigbuda (89/100, CRO + landing pages), Loup (87/100, 16 años B2B), Moov Media Group (86/100, 3 hubs). Evaluamos creatividad, segmentación, diseño de funnels y uso de Advantage+.',
     datePublished: '2026-06-01',
     dateModified: '2026-08-04'
   })
@@ -316,7 +316,7 @@ export default function AgenciasMetaAdsPage() {
                   Muller y Pérez lidera el ranking de Meta Ads por la combinación de <strong>performance con creatividad optimizada</strong>. La agencia domina Advantage+ Shopping y Advantage+ Creative, configurando señales de audiencia y feeds que maximizan el rendimiento del algoritmo de Meta. Cada cliente cuenta con producción de contenido UGC incluida (media jornada mensual de grabación), lo que alimenta las campañas con creatividades frescas y auténticas.
                 </p>
                 <p className="text-gray-700 mb-4 leading-relaxed">
-                  Su enfoque en Meta Ads se diferencia por la integración con <Link href="/mejores-agencias-google-ads-chile-2026" className="text-blue-600 hover:underline">Google Ads</Link>: diseñan funnels donde Meta genera awareness y leads top-of-funnel, y Google captura la demanda generada con Search. Esta estrategia multicanal produce un ROAS combinado de 4.2x promedio. Configuran Conversions API (server-side tracking) para mantener la calidad de datos post-iOS 14.5.
+                  Su enfoque en Meta Ads se diferencia por la integración con <Link href="/mejores-agencias-google-ads-chile-2026" className="text-blue-600 hover:underline">Google Ads</Link>: diseñan funnels donde Meta genera awareness y leads top-of-funnel, y Google captura la demanda generada con Search. Esta estrategia multicanal permite medir el retorno combinado de ambos canales. Configuran Conversions API (server-side tracking) para mantener la calidad de datos post-iOS 14.5.
                 </p>
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>

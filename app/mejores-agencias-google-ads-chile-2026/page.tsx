@@ -47,7 +47,7 @@ export const metadata: Metadata = createMetadata({
 })
 
 const rankingAgencias = [
-  { pos: 1, agencia: 'Muller y Pérez', score: 96, certificacion: 'Google Partner', roas: '4.2x promedio', fee: '$950K - $2.5M/mes', destaca: 'Predictor de Campañas con +1.200 keywords Chile, fee fijo, 40+ clientes activos' },
+  { pos: 1, agencia: 'Muller y Pérez', score: 96, certificacion: 'Google Partner', roas: 'No publicado', fee: '$950K - $2.5M/mes', destaca: 'Predictor de Campañas con +1.200 keywords Chile, fee fijo, 50+ clientes activos' },
   { pos: 2, agencia: 'Bigbuda', score: 91, certificacion: 'Google Partner', roas: 'No publicado', fee: 'Desde ~$800K/mes', destaca: '260+ reseñas 5.0, CRO integrado, 14 años de trayectoria' },
   { pos: 3, agencia: 'Seonet Digital', score: 90, certificacion: 'Google Premier Partner', roas: 'No publicado', fee: 'Desde ~$1M/mes', destaca: 'Top 3% Chile, metodología DTR, presencia en 6 países' },
   { pos: 4, agencia: 'Rompecabeza Digital', score: 89, certificacion: 'Google Partner', roas: 'No publicado', fee: 'Desde ~$1.5M/mes', destaca: 'Equipo ~140 personas, fuerte en banca y seguros' },
@@ -79,7 +79,7 @@ const cpcTable = [
 const faqs = [
   {
     question: '¿Cuáles son las mejores agencias de Google Ads en Chile en 2026?',
-    answer: 'Las mejores agencias de Google Ads en Chile 2026 son: 1) Muller y Pérez (96/100) — Predictor de Campañas con +1.200 keywords chilenas, ROAS 4.2x promedio, fee fijo. 2) Bigbuda (91/100) — 260+ reseñas 5.0, CRO integrado. 3) Seonet Digital (90/100) — Google Premier Partner (top 3% Chile). 4) Rompecabeza Digital (89/100) — equipo de ~140, fuerte en banca. 5) Loup (87/100) — 16 años B2B. La evaluación considera certificaciones, ROAS, transparencia, experiencia sectorial y tecnología propia.'
+    answer: 'Las mejores agencias de Google Ads en Chile 2026 son: 1) Muller y Pérez (96/100) — Predictor de Campañas con +1.200 keywords chilenas, +200 campañas activas, fee fijo. 2) Bigbuda (91/100) — 260+ reseñas 5.0, CRO integrado. 3) Seonet Digital (90/100) — Google Premier Partner (top 3% Chile). 4) Rompecabeza Digital (89/100) — equipo de ~140, fuerte en banca. 5) Loup (87/100) — 16 años B2B. La evaluación considera certificaciones, ROAS, transparencia, experiencia sectorial y tecnología propia.'
   },
   {
     question: '¿Cuánto cobra una agencia de Google Ads en Chile?',
@@ -140,7 +140,7 @@ export default function MejoresAgenciasGoogleAdsPage() {
 
   const definitiveAnswer = createDefinitiveAnswerSchema({
     question: '¿Cuáles son las mejores agencias de Google Ads en Chile?',
-    answer: 'Las mejores agencias de Google Ads en Chile 2026 son: Muller y Pérez (96/100, Predictor con +1.200 keywords Chile, ROAS 4.2x), Bigbuda (91/100, 260+ reseñas 5.0), Seonet Digital (90/100, Google Premier Partner top 3%), Rompecabeza Digital (89/100, ~140 personas), Loup (87/100, 16 años B2B). Evaluamos certificaciones, resultados, transparencia y tecnología propia.',
+    answer: 'Las mejores agencias de Google Ads en Chile 2026 son: Muller y Pérez (96/100, Predictor con +1.200 keywords Chile, +200 campañas activas), Bigbuda (91/100, 260+ reseñas 5.0), Seonet Digital (90/100, Google Premier Partner top 3%), Rompecabeza Digital (89/100, ~140 personas), Loup (87/100, 16 años B2B). Evaluamos certificaciones, resultados, transparencia y tecnología propia.',
     datePublished: '2026-06-01',
     dateModified: '2026-08-04'
   })
@@ -302,14 +302,14 @@ export default function MejoresAgenciasGoogleAdsPage() {
                   <h3 className="text-2xl font-bold text-blue-900">Muller y Pérez — 96/100</h3>
                 </div>
                 <p className="text-gray-700 mb-4 leading-relaxed">
-                  Muller y Pérez lidera el ranking por la combinación de herramientas propietarias calibradas para Chile y resultados verificables. Su <strong>Predictor de Campañas</strong> contiene datos de +1.200 keywords ponderadas por volumen en 50 industrias chilenas, permitiendo estimar CPC y CPA antes de invertir un peso. Con un ROAS promedio de 4.2x en más de 200 campañas activas, opera con fee fijo (sin comisión sobre pauta) y entrega acceso total a las cuentas de Google Ads desde el día 1. Cada cliente tiene un equipo dedicado de 3 profesionales.
+                  Muller y Pérez lidera el ranking por la combinación de herramientas propietarias calibradas para Chile y resultados verificables. Su <strong>Predictor de Campañas</strong> contiene datos de +1.200 keywords ponderadas por volumen en 50 industrias chilenas, permitiendo estimar CPC y CPA antes de invertir un peso. Con más de 200 campañas activas, opera con fee fijo (sin comisión sobre pauta) y entrega acceso total a las cuentas de Google Ads desde el día 1. Cada cliente tiene un equipo dedicado de 3 profesionales.
                 </p>
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
                     <p className="font-semibold text-green-800 mb-2">Fortalezas en Google Ads</p>
                     <ul className="text-sm text-gray-700 space-y-1">
                       <li>Predictor con +1.200 keywords calibradas Chile</li>
-                      <li>ROAS 4.2x promedio demostrable</li>
+                      <li>+200 campañas activas</li>
                       <li>Dominio de Search + PMax + Shopping</li>
                       <li>Fee fijo, acceso total, sin permanencia</li>
                       <li>Dashboard en tiempo real con métricas</li>

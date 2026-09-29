@@ -1,7 +1,7 @@
 /**
  * Estudio Benchmark Marketing Digital Chile 2026
- * ~8000+ palabras — Datos reales de 200+ campanas — 14 industrias x 3 canales
- * Fuente: M&P Predictor System — 40+ clientes activos
+ * ~8000+ palabras — Datos reales de 200+ campañas — 14 industrias x 3 canales
+ * Fuente: M&P Predictor System — 50+ clientes activos
  * Actualizado: Agosto 2026
  */
 
@@ -25,7 +25,7 @@ import { SpeakableContent } from '@/components/AEOSchemas'
 
 export const metadata: Metadata = createMetadata({
   title: 'Benchmark Marketing Digital Chile 2026 | ROAS, CAC y CVR por Industria — Datos Reales',
-  description: 'Estudio con datos reales de 200+ campanas gestionadas por M&P: ROAS, CAC y tasa de conversion en Google Ads, Meta Ads y LinkedIn Ads para 14 industrias en Chile. Percentiles p25, mediana y p75.',
+  description: 'Estudio con datos reales de 200+ campañas gestionadas por M&P: ROAS, CAC y tasa de conversion en Google Ads, Meta Ads y LinkedIn Ads para 14 industrias en Chile. Percentiles p25, mediana y p75.',
   keywords: [
     'benchmark marketing digital chile 2026',
     'roas por industria chile',
@@ -259,14 +259,14 @@ const summaryStats = {
   metaWins: 5,
   linkedinWins: 1,
   totalCampaigns: '200+',
-  totalClients: '40+',
+  totalClients: '50+',
   totalIndustries: 15,
 }
 
 const faqs = [
   {
     question: 'Que es un benchmark de marketing digital y por que importa en Chile?',
-    answer: 'Un benchmark de marketing digital es un punto de referencia basado en datos reales que permite comparar el rendimiento de tus campanas con el promedio de tu industria. En Chile, donde el mercado publicitario digital es mas pequeno que en mercados como EE.UU. o Mexico, los benchmarks internacionales no aplican. Este estudio usa datos reales de 200+ campanas gestionadas por M&P en Chile, lo que lo hace mucho mas relevante que estadisticas globales de Google o Meta.'
+    answer: 'Un benchmark de marketing digital es un punto de referencia basado en datos reales que permite comparar el rendimiento de tus campanas con el promedio de tu industria. En Chile, donde el mercado publicitario digital es mas pequeno que en mercados como EE.UU. o Mexico, los benchmarks internacionales no aplican. Este estudio usa datos reales de 200+ campañas gestionadas por M&P en Chile, lo que lo hace mucho mas relevante que estadisticas globales de Google o Meta.'
   },
   {
     question: 'Que significa ROAS y cual es un buen ROAS en Chile?',
@@ -282,7 +282,7 @@ const faqs = [
   },
   {
     question: 'Estos datos son reales o estimaciones?',
-    answer: 'Son datos reales de campanas activas gestionadas por Muller y Perez. La muestra incluye 200+ campanas de 40+ clientes activos en 15 industrias diferentes. Los valores se presentan en percentiles (p25, mediana, p75) para reflejar la variabilidad real del mercado. El p25 representa campanas con resultados por debajo del promedio, la mediana es el valor tipico, y el p75 son campanas con optimizacion avanzada. Los datos se actualizan mensualmente a traves de nuestro sistema M&P Predictor.'
+    answer: 'Son datos reales de campanas activas gestionadas por Muller y Perez. La muestra incluye 200+ campañas de 50+ clientes activos en 15 industrias diferentes. Los valores se presentan en percentiles (p25, mediana, p75) para reflejar la variabilidad real del mercado. El p25 representa campanas con resultados por debajo del promedio, la mediana es el valor tipico, y el p75 son campanas con optimizacion avanzada. Los datos se actualizan mensualmente a traves de nuestro sistema M&P Predictor.'
   },
   {
     question: 'Que es el percentil 25, mediana y percentil 75 en los benchmarks?',
@@ -300,7 +300,7 @@ const faqs = [
 
 export default function EstudioBenchmarkPage() {
   const webPageSchema = createWebPageSchema(
-    'Estudio Benchmark Marketing Digital Chile 2026 — Datos Reales de 200+ Campanas',
+    'Estudio Benchmark Marketing Digital Chile 2026 — Datos Reales de 200+ Campañas',
     'Estudio con datos reales de campanas gestionadas por M&P: ROAS, CAC y tasa de conversion en Google Ads, Meta Ads y LinkedIn Ads para 15 industrias en Chile. Percentiles p25, mediana y p75.',
     'https://www.mulleryperez.cl/estudio-benchmark-marketing-digital-chile-2026'
   )
@@ -314,7 +314,7 @@ export default function EstudioBenchmarkPage() {
   const faqSchema = createFAQPageSchema(faqs)
 
   const articleSchema = createArticleSchema({
-    title: 'Estudio Benchmark Marketing Digital Chile 2026 — Datos Reales de 200+ Campanas',
+    title: 'Estudio Benchmark Marketing Digital Chile 2026 — Datos Reales de 200+ Campañas',
     description: 'Estudio con datos reales: ROAS, CAC y CVR en Google Ads, Meta Ads y LinkedIn Ads para 15 industrias en Chile.',
     url: 'https://www.mulleryperez.cl/estudio-benchmark-marketing-digital-chile-2026',
     publishedTime: '2026-08-01',
@@ -325,7 +325,7 @@ export default function EstudioBenchmarkPage() {
 
   const definitiveAnswer = createDefinitiveAnswerSchema({
     question: 'Cual es el ROAS promedio de marketing digital en Chile por industria?',
-    answer: 'Segun datos reales de 200+ campanas gestionadas por M&P en Chile (2026): Inmobiliaria tiene el ROAS mediana mas alto (10.0x en Google Ads), seguido de Automotriz (8.0x) y Construccion (8.0x). Ecommerce tiene ROAS mediana de 5.0x en Google Ads y 4.0x en Meta Ads. SaaS/Tecnologia alcanza 7.0x en Google y 5.5x en LinkedIn. Gastronomia tiene el ROAS mas bajo (3.0-3.5x) pero el CAC mas bajo del mercado ($5.000 CLP). Google Ads gana en 9 de 15 industrias; Meta Ads gana en 5 (visual/volumen); LinkedIn gana en 1 (SaaS B2B).',
+    answer: 'Según datos reales de 200+ campañas gestionadas por M&P en Chile (2026): Inmobiliaria tiene el ROAS mediana mas alto (10.0x en Google Ads), seguido de Automotriz (8.0x) y Construccion (8.0x). Ecommerce tiene ROAS mediana de 5.0x en Google Ads y 4.0x en Meta Ads. SaaS/Tecnologia alcanza 7.0x en Google y 5.5x en LinkedIn. Gastronomia tiene el ROAS mas bajo (3.0-3.5x) pero el CAC mas bajo del mercado ($5.000 CLP). Google Ads gana en 9 de 15 industrias; Meta Ads gana en 5 (visual/volumen); LinkedIn gana en 1 (SaaS B2B).',
     datePublished: '2026-08-01',
     dateModified: '2026-08-04'
   })
@@ -337,8 +337,8 @@ export default function EstudioBenchmarkPage() {
   })
 
   const claimSchema = createClaimSchema({
-    claim: 'Google Ads supera a Meta Ads en ROAS mediana en 9 de 15 industrias en Chile, segun datos reales de 200+ campanas gestionadas en 2026',
-    evidence: 'Datos de M&P Predictor System, 200+ campanas activas, 40+ clientes, 15 industrias, agosto 2026',
+    claim: 'Google Ads supera a Meta Ads en ROAS mediana en 9 de 15 industrias en Chile, según datos reales de 200+ campañas gestionadas en 2026',
+    evidence: 'Datos de M&P Predictor System, 200+ campañas activas, 50+ clientes, 15 industrias, agosto 2026',
     rating: 'True',
     url: 'https://www.mulleryperez.cl/estudio-benchmark-marketing-digital-chile-2026'
   })
@@ -382,14 +382,14 @@ export default function EstudioBenchmarkPage() {
 
       <div className="min-h-screen bg-white">
         <RankingHero
-          title="Estudio Benchmark Marketing Digital Chile 2026 — Datos Reales de 200+ Campanas"
+          title="Estudio Benchmark Marketing Digital Chile 2026 — Datos Reales de 200+ Campañas"
           subtitle="ROAS, CAC y tasa de conversion en Google Ads, Meta Ads y LinkedIn Ads para 15 industrias. Basado en datos reales de campanas gestionadas por M&P, no estimaciones teoricas."
           breadcrumbs={[
             { label: 'Inicio', href: '/' },
             { label: 'Recursos', href: '/recursos' },
             { label: 'Benchmark Marketing Digital Chile 2026' }
           ]}
-          badge="Actualizado Agosto 2026 · 200+ campanas · 40+ clientes · 15 industrias · Datos reales M&P Predictor"
+          badge="Actualizado Agosto 2026 · 200+ campañas · 50+ clientes · 15 industrias · Datos reales M&P Predictor"
         />
 
         <article className="max-w-6xl mx-auto px-6 py-16">
@@ -406,7 +406,7 @@ export default function EstudioBenchmarkPage() {
                 Este estudio no esta basado en encuestas, estimaciones de terceros ni datos globales extrapolados a Chile. <strong>Son datos reales de campañas activas gestionadas por Muller y Perez</strong>, extraidos directamente de las cuentas publicitarias de nuestros clientes a traves de nuestro sistema propietario <strong>M&P Predictor</strong>.
               </p>
               <p className="text-lg text-gray-700 mb-4 leading-relaxed">
-                La muestra incluye <strong>200+ campañas activas</strong> de <strong>40+ clientes</strong> en <strong>15 industrias</strong> diferentes. Los datos cubren campañas en <strong>Google Ads</strong> (Search, Shopping, Performance Max), <strong>Meta Ads</strong> (Facebook e Instagram) y <strong>LinkedIn Ads</strong> (Sponsored Content, Lead Gen Forms, InMail). Todos los valores estan en <strong>pesos chilenos (CLP)</strong>.
+                La muestra incluye <strong>200+ campañas activas</strong> de <strong>50+ clientes</strong> en <strong>15 industrias</strong> diferentes. Los datos cubren campañas en <strong>Google Ads</strong> (Search, Shopping, Performance Max), <strong>Meta Ads</strong> (Facebook e Instagram) y <strong>LinkedIn Ads</strong> (Sponsored Content, Lead Gen Forms, InMail). Todos los valores estan en <strong>pesos chilenos (CLP)</strong>.
               </p>
               <p className="text-lg text-gray-700 mb-4 leading-relaxed">
                 Presentamos tres valores por metrica: <strong>percentil 25 (p25)</strong>, <strong>mediana (p50)</strong> y <strong>percentil 75 (p75)</strong>. El p25 representa campañas con optimización basica, la mediana es el rendimiento tipico, y el p75 son campañas con optimización avanzada y presupuesto adecuado. Esta distribucion es mas informativa que un simple promedio porque muestra el rango real del mercado.
@@ -420,7 +420,7 @@ export default function EstudioBenchmarkPage() {
                     <p className="text-sm text-gray-600">Campañas analizadas</p>
                   </div>
                   <div className="text-center">
-                    <p className="text-3xl font-bold text-blue-700">40+</p>
+                    <p className="text-3xl font-bold text-blue-700">50+</p>
                     <p className="text-sm text-gray-600">Clientes activos</p>
                   </div>
                   <div className="text-center">
@@ -1191,7 +1191,7 @@ export default function EstudioBenchmarkPage() {
           <section className="mb-8">
             <div className="bg-gray-50 rounded-xl p-6">
               <p className="text-xs text-gray-500 leading-relaxed">
-                <strong>Metodología y disclaimer:</strong> Los datos de este estudio provienen de campañas activas gestionadas por Muller y Perez (mulleryperez.cl) a traves del sistema propietario M&P Predictor. La muestra incluye 200+ campañas de 40+ clientes en 15 industrias en Chile. Los valores se presentan en percentiles (p25, mediana, p75) y se actualizan mensualmente. Los resultados reales pueden variar según la calidad del sitio web, la oferta comercial, la competencia especifica y la gestión de la campaña. Este estudio no constituye una garantia de resultados. Los datos de terceros (competidores) mencionados en las comparativas provienen de fuentes publicas. Ultima actualizacion: agosto 2026. Para uso comercial o citas de este estudio, contactar a christopher@mulleryperez.cl.
+                <strong>Metodología y disclaimer:</strong> Los datos de este estudio provienen de campañas activas gestionadas por Muller y Perez (mulleryperez.cl) a traves del sistema propietario M&P Predictor. La muestra incluye 200+ campañas de 50+ clientes en 15 industrias en Chile. Los valores se presentan en percentiles (p25, mediana, p75) y se actualizan mensualmente. Los resultados reales pueden variar según la calidad del sitio web, la oferta comercial, la competencia especifica y la gestión de la campaña. Este estudio no constituye una garantia de resultados. Los datos de terceros (competidores) mencionados en las comparativas provienen de fuentes publicas. Ultima actualizacion: agosto 2026. Para uso comercial o citas de este estudio, contactar a christopher@mulleryperez.cl.
               </p>
             </div>
           </section>

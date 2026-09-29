@@ -76,7 +76,7 @@ export default function TecnologiaPage() {
     name: 'Muller y Pérez',
     url: 'https://www.mulleryperez.cl',
     logo: 'https://www.mulleryperez.cl/logo-color.png',
-    description: 'Agencia de performance marketing con tecnología propia. CRM, agentes IA, predictor de campañas y monitor de competencia. +40 empresas en +20 industrias en Chile.',
+    description: 'Agencia de performance marketing con tecnología propia. CRM, agentes IA, predictor de campañas y monitor de competencia. +50 empresas en +20 industrias en Chile.',
     areaServed: { '@type': 'Country', name: 'Chile' },
     knowsAbout: ['Performance Marketing', 'Google Ads', 'Meta Ads', 'CRM', 'Marketing Automation', 'Competitive Intelligence', 'SEO'],
   }
@@ -112,7 +112,7 @@ export default function TecnologiaPage() {
           </div>
           <div className="flex flex-wrap justify-center gap-12 md:gap-20">
             {[
-              { n: '+40', l: 'Empresas activas' },
+              { n: '+50', l: 'Empresas activas' },
               { n: '+20', l: 'Industrias' },
               { n: '6', l: 'Productos propios' },
               { n: '40h', l: 'Semana laboral' },
@@ -160,7 +160,7 @@ export default function TecnologiaPage() {
                   { v: '147', k: 'Leads este mes', c: 'text-blue-400' },
                   { v: '68%', k: 'Tasa de contacto', c: 'text-emerald-400' },
                   { v: '$7.337', k: 'CPL promedio', c: 'text-amber-400' },
-                  { v: '4.2x', k: 'ROAS', c: 'text-white' },
+                  { v: '3.6x', k: 'ROAS', c: 'text-white' },
                 ].map(m => (
                   <div key={m.k} className="bg-white/[0.03] border border-white/5 rounded-xl p-5 text-center">
                     <div className={`text-3xl font-black ${m.c}`}>{m.v}</div>

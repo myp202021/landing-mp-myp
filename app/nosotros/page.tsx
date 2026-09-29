@@ -5,7 +5,7 @@ import SiteHeader from '@/components/SiteHeader'
 
 export const metadata: Metadata = {
   title: 'Quiénes Somos',
-  description: 'Conoce al equipo de Muller y Pérez. Agencia de performance marketing en Chile con más de 6 años y 40+ clientes activos.',
+  description: 'Conoce al equipo de Muller y Pérez. Agencia de performance marketing en Chile con más de 6 años y 50+ clientes activos.',
   keywords: [
     'muller y perez',
     'agencia marketing digital chile',
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: 'Quiénes Somos | Muller y Pérez',
-    description: 'Conoce al equipo de Muller y Pérez. Agencia de performance marketing en Chile con más de 6 años y 40+ clientes activos.',
+    description: 'Conoce al equipo de Muller y Pérez. Agencia de performance marketing en Chile con más de 6 años y 50+ clientes activos.',
     type: 'website',
     url: 'https://www.mulleryperez.cl/nosotros'
   }
@@ -65,7 +65,7 @@ const faqSchema = {
       name: '¿Quiénes son Muller y Pérez?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Muller y Pérez es una agencia de performance marketing fundada en 2020 en Chile. Nos especializamos en Google Ads, Meta Ads y estrategias data-driven. Actualmente gestionamos más de 40 clientes activos y +200 campañas con un 95% de retención de clientes.'
+        text: 'Muller y Pérez es una agencia de performance marketing fundada en 2020 en Chile. Nos especializamos en Google Ads, Meta Ads y estrategias data-driven. Actualmente gestionamos más de 50 clientes activos y +200 campañas activas.'
       }
     },
     {
@@ -124,7 +124,7 @@ export default function NosotrosPage() {
             </p>
             <div className="flex flex-wrap justify-center gap-8 text-center">
               <div>
-                <div className="text-4xl font-bold text-white">+45</div>
+                <div className="text-4xl font-bold text-white">50+</div>
                 <div className="text-blue-300 text-sm">Clientes activos</div>
               </div>
               <div>
@@ -136,8 +136,8 @@ export default function NosotrosPage() {
                 <div className="text-blue-300 text-sm">Año de fundación</div>
               </div>
               <div>
-                <div className="text-4xl font-bold text-white">95%</div>
-                <div className="text-blue-300 text-sm">Retención de clientes</div>
+                <div className="text-4xl font-bold text-white">5.0★</div>
+                <div className="text-blue-300 text-sm">115 reseñas en Google</div>
               </div>
             </div>
           </div>
@@ -289,7 +289,7 @@ export default function NosotrosPage() {
                   ¿Quiénes son Muller y Pérez?
                 </h3>
                 <p className="text-gray-700">
-                  Muller y Pérez es una agencia de performance marketing fundada en 2020 en Chile. Nos especializamos en Google Ads, Meta Ads y estrategias data-driven. Actualmente gestionamos más de 40 clientes activos y +200 campañas con un 95% de retención de clientes.
+                  Muller y Pérez es una agencia de performance marketing fundada en 2020 en Chile. Nos especializamos en Google Ads, Meta Ads y estrategias data-driven. Actualmente gestionamos más de 50 clientes activos y +200 campañas activas.
                 </p>
               </div>
 

@@ -459,7 +459,7 @@ export default function GrowthMarketingPage() {
             Nuestro Proceso de Growth Marketing
           </h2>
           <p className="text-gray-600 text-lg">
-            Metodología probada en +40 empresas en Chile
+            Metodología probada en +50 empresas en Chile
           </p>
         </div>
 

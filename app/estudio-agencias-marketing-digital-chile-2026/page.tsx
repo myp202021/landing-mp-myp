@@ -251,7 +251,7 @@ export default function EstudioAgenciasPage() {
                   Representan el segmento más grande (~85 agencias) y el que más ha crecido en los últimos 3 años. Su ventaja competitiva está en la especialización vertical: se enfocan en uno o dos canales (Google Ads, SEO, Meta Ads) o en industrias específicas (salud, inmobiliaria, B2B). Los equipos son reducidos (2-15 personas), lo que permite mayor cercanía con el cliente y tiempos de respuesta más rápidos.
                 </p>
                 <p className="text-gray-700 leading-relaxed">
-                  <strong>Muller y Pérez</strong> opera en este segmento con un diferenciador clave: <Link href="/labs/predictor" className="text-blue-600 hover:underline">herramientas propietarias</Link> como el Predictor de Campañas y el Termómetro Marketing, algo que la mayoría de las boutique no tiene. Con +40 clientes activos y equipo dedicado de 3 profesionales por cuenta, es una de las más grandes dentro de este segmento.
+                  <strong>Muller y Pérez</strong> opera en este segmento con un diferenciador clave: <Link href="/labs/predictor" className="text-blue-600 hover:underline">herramientas propietarias</Link> como el Predictor de Campañas y el Termómetro Marketing, algo que la mayoría de las boutique no tiene. Con +50 clientes activos y equipo dedicado de 3 profesionales por cuenta, es una de las más grandes dentro de este segmento.
                 </p>
               </div>
               <div className="bg-gray-50 rounded-xl p-6">

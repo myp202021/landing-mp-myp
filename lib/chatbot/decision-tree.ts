@@ -32,7 +32,7 @@ export const chatTree: Record<string, ChatNode> = {
     type: 'menu',
     text: `Hola! Soy **Mutante**, tu asistente de marketing digital con IA.
 
-Tengo acceso a data de +200 campanas activas en Chile, benchmarks actualizados 2025 y estrategias probadas.
+Tengo acceso a data de +200 campañas activas en Chile, benchmarks actualizados 2025 y estrategias probadas.
 
 ¿En que te ayudo?`,
     options: [
@@ -2270,7 +2270,7 @@ Simula el rendimiento de tus campanas antes de invertir.
 ✅ Ajusta por industria
 
 **Basado en:**
-• Data de +200 campanas activas
+• Data de +200 campañas activas
 • Benchmarks Chile 2025
 • Ajustado por industria y modelo
 
@@ -2297,7 +2297,7 @@ Simula el rendimiento de tus campanas antes de invertir.
     type: 'menu',
     text: `**Benchmarks Chile 2025**
 
-Metricas reales por industria. Data de +200 campanas.`,
+Metricas reales por industria. Data de +200 campañas.`,
     options: [
       { id: 'bench_tech', label: 'Tecnologia / SaaS', emoji: '💻', nextNodeId: 'bench_tech' },
       { id: 'bench_ecommerce', label: 'E-commerce', emoji: '🛒', nextNodeId: 'bench_ecommerce' },
@@ -2580,7 +2580,7 @@ Metricas reales por industria. Data de +200 campanas.`,
     text: `**Servicios M&P**
 
 Agencia de marketing digital enfocada en performance.
-+200 campanas activas | 95% retencion | ROI +380%`,
++200 campañas activas | 50+ clientes | 5.0★ en Google`,
     options: [
       { id: 'planes', label: 'Planes y precios', emoji: '💰', nextNodeId: 'planes_menu' },
       { id: 'metodologia', label: 'Como trabajamos', emoji: '🔧', nextNodeId: 'metodologia_info' },
@@ -2903,7 +2903,7 @@ No hay cajas negras.
 **✅ SIN CONTRATOS DE PERMANENCIA**
 Si no funciona, te vas.
 Mes a mes. Sin letras chicas.
-(Por eso tenemos 95% de retencion)
+(Los clientes se quedan por resultados, no por contrato)
 
 **✅ EQUIPO DEDICADO**
 3 profesionales trabajando TU cuenta.
@@ -2920,10 +2920,10 @@ Cada mes te mostramos que hace tu competencia.
 En que canales estan, que mensajes usan, como les va.
 
 **NUMEROS M&P:**
-• +200 campanas activas
-• 95% retencion de clientes
-• ROI promedio +380%
-• NPS +70
+• +200 campañas activas
+• 50+ clientes activos
+• 5.0★ · 115 reseñas en Google
+• 27 agentes IA en producción
 
 **CLIENTES:**
 Empresas de todos los tamanos: startups, pymes, grandes empresas.
