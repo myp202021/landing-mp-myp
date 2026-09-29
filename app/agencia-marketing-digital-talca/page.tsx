@@ -87,7 +87,7 @@ const stats = [
   { value: '50%', label: 'Menos competencia digital' },
   { value: '8+', label: 'Años de experiencia' },
   { value: '12+', label: 'Clientes en el Maule' },
-  { value: '4.8x', label: 'ROAS promedio comercio' }
+  { value: '+200', label: 'Campañas activas' }
 ]
 
 export default function AgenciaMarketingTalca() {

@@ -561,16 +561,7 @@ export default function AgenciaMarketingDigitalChilePage() {
               No hablamos de promesas. Estos son resultados reales medidos en las cuentas publicitarias de nuestros clientes:
             </p>
 
-            <div className="grid md:grid-cols-2 gap-6 mb-8">
-              <div className="bg-gray-50 rounded-xl p-6">
-                <p className="text-sm text-blue-600 font-semibold mb-2">E-commerce / Retail</p>
-                <p className="text-2xl font-bold text-gray-900 mb-2">ROAS 5.8x en Google Shopping</p>
-                <p className="text-gray-700 text-sm leading-relaxed">
-                  Cliente de retail con catálogo de +2.000 SKUs. Optimización de feed, segmentación por margen
-                  y pujas automatizadas. Inversión mensual de $3.5M en pauta con retorno de $20.3M en ventas atribuidas.
-                </p>
-              </div>
-
+            <div className="grid md:grid-cols-3 gap-6 mb-8">
               <div className="bg-gray-50 rounded-xl p-6">
                 <p className="text-sm text-blue-600 font-semibold mb-2">B2B / Servicios Profesionales</p>
                 <p className="text-2xl font-bold text-gray-900 mb-2">Reducción de CAC en 42%</p>
@@ -665,77 +656,6 @@ export default function AgenciaMarketingDigitalChilePage() {
                 </p>
               </div>
             </div>
-          </section>
-
-          {/* ============================================================ */}
-          {/* 9. CASOS DE EXITO POR INDUSTRIA */}
-          {/* ============================================================ */}
-          <section className="mb-16 bg-gray-50 rounded-2xl p-8">
-            <h2 className="text-3xl font-bold text-gray-900 mb-6">
-              Casos de Exito por Industria
-            </h2>
-            <p className="text-lg text-gray-700 mb-8 leading-relaxed">
-              Trabajamos con empresas de multiples sectores en Chile. Estos son resultados representativos
-              por industria, medidos directamente en las plataformas publicitarias de nuestros clientes:
-            </p>
-
-            <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse">
-                <thead>
-                  <tr className="bg-blue-900 text-white">
-                    <th className="px-4 py-3 rounded-tl-lg font-semibold">Industria</th>
-                    <th className="px-4 py-3 font-semibold">Canal Principal</th>
-                    <th className="px-4 py-3 font-semibold">Resultado Clave</th>
-                    <th className="px-4 py-3 rounded-tr-lg font-semibold">Periodo</th>
-                  </tr>
-                </thead>
-                <tbody className="text-gray-700">
-                  <tr className="border-b border-gray-200 bg-white">
-                    <td className="px-4 py-3 font-medium">
-                      <Link href="/marketing-digital-inmobiliario-chile" className="text-blue-600 hover:underline">Inmobiliario</Link>
-                    </td>
-                    <td className="px-4 py-3">Meta Ads + Google Search</td>
-                    <td className="px-4 py-3">Reduccion CPA 40% vs benchmark</td>
-                    <td className="px-4 py-3">4 meses</td>
-                  </tr>
-                  <tr className="border-b border-gray-200 bg-gray-50">
-                    <td className="px-4 py-3 font-medium">
-                      <Link href="/marketing-digital-salud-chile" className="text-blue-600 hover:underline">Salud</Link>
-                    </td>
-                    <td className="px-4 py-3">Google Ads + Landing</td>
-                    <td className="px-4 py-3">ROAS 4.2x en captacion de pacientes</td>
-                    <td className="px-4 py-3">6 meses</td>
-                  </tr>
-                  <tr className="border-b border-gray-200 bg-white">
-                    <td className="px-4 py-3 font-medium">
-                      <Link href="/marketing-digital-saas-chile" className="text-blue-600 hover:underline">SaaS</Link>
-                    </td>
-                    <td className="px-4 py-3">Google + LinkedIn Ads</td>
-                    <td className="px-4 py-3">+340% leads calificados MoM</td>
-                    <td className="px-4 py-3">3 meses</td>
-                  </tr>
-                  <tr className="border-b border-gray-200 bg-gray-50">
-                    <td className="px-4 py-3 font-medium">Transporte</td>
-                    <td className="px-4 py-3">Meta Ads + Google Display</td>
-                    <td className="px-4 py-3">CPL bajo $3.500 en zona centro-sur</td>
-                    <td className="px-4 py-3">5 meses</td>
-                  </tr>
-                  <tr className="bg-white">
-                    <td className="px-4 py-3 font-medium">
-                      <Link href="/marketing-digital-educacion-chile" className="text-blue-600 hover:underline">Educacion</Link>
-                    </td>
-                    <td className="px-4 py-3">Meta Ads + Performance Max</td>
-                    <td className="px-4 py-3">ROAS 3.8x en matriculas online</td>
-                    <td className="px-4 py-3">4 meses</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
-            <p className="text-sm text-gray-500 mt-4">
-              Los resultados varian según industria, presupuesto y condiciones de mercado. Cifras basadas en datos
-              reales de campañas gestionadas por M&P entre 2024 y 2026.
-            </p>
           </section>
 
           {/* ============================================================ */}

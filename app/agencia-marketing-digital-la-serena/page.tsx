@@ -87,7 +87,7 @@ const stats = [
   { value: '35%', label: 'Menos competencia digital' },
   { value: '8+', label: 'Años de experiencia' },
   { value: '15+', label: 'Clientes en Coquimbo' },
-  { value: '5.8x', label: 'ROAS promedio turismo' }
+  { value: '+200', label: 'Campañas activas' }
 ]
 
 export default function AgenciaMarketingLaSerena() {

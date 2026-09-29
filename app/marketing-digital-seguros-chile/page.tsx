@@ -161,9 +161,14 @@ export default function MarketingSegurosPage() {
                 </div>
                 <div className="bg-white/10 backdrop-blur px-6 py-3 rounded-lg">
                   <div className="text-3xl font-bold text-emerald-300">5.8x</div>
-                  <div className="text-sm text-emerald-200">ROI Promedio</div>
+                  <div className="text-sm text-emerald-200">ROI promedio estimado</div>
                 </div>
               </div>
+              <p className="text-xs opacity-75 -mt-8 mb-12 max-w-2xl mx-auto">
+                Cifras promedio estimadas con el{' '}
+                <Link href="/labs/predictor" className="underline hover:opacity-100">Predictor M&amp;P</Link>{' '}
+                para la industria (mulleryperez.cl/labs/predictor). Son referencias, no resultados garantizados.
+              </p>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link

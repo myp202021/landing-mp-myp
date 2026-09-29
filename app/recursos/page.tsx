@@ -96,9 +96,9 @@ const recursos = {
       icon: Trophy,
     },
     {
-      titulo: 'Mejores Agencias Meta Ads 2025',
+      titulo: 'Agencias Meta Ads Chile 2026',
       descripcion: 'Top agencias especializadas en Facebook e Instagram.',
-      href: '/recursos/mejores-agencias-meta-ads-chile-2025',
+      href: '/agencias-meta-ads-chile-2026',
       icon: Trophy,
     },
   ],

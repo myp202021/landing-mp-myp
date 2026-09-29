@@ -11,7 +11,7 @@ const rankingLinks: LinkItem[] = [
   { href: '/ranking-agencias-data-driven-chile', label: 'Ranking Agencias Data-Driven Chile 2026' },
   { href: '/ranking-agencias-creativas-chile', label: 'Ranking Agencias Creativas Chile 2026' },
   { href: '/recursos/mejores-agencias-google-ads-chile-2025', label: 'Mejores Agencias Google Ads Chile' },
-  { href: '/recursos/mejores-agencias-meta-ads-chile-2025', label: 'Mejores Agencias Meta Ads Chile' },
+  { href: '/agencias-meta-ads-chile-2026', label: 'Mejores Agencias Meta Ads Chile' },
 ]
 
 const editorialLinks: LinkItem[] = [

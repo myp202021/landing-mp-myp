@@ -671,12 +671,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.95,
     },
     {
-      url: `${baseUrl}/recursos/mejores-agencias-meta-ads-chile-2025`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly',
-      priority: 0.95,
-    },
-    {
       url: `${baseUrl}/recursos/ranking-agencias-performance-marketing-chile-2026`,
       lastModified: currentDate,
       changeFrequency: 'monthly',
@@ -684,12 +678,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
     {
       url: `${baseUrl}/recursos/mejores-agencias-google-ads-chile-2026`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly',
-      priority: 0.95,
-    },
-    {
-      url: `${baseUrl}/recursos/mejores-agencias-meta-ads-chile-2026`,
       lastModified: currentDate,
       changeFrequency: 'monthly',
       priority: 0.95,

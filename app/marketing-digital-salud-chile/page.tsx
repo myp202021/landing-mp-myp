@@ -94,7 +94,7 @@ const jsonLd = {
           name: '¿Qué resultados puedo esperar?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'En promedio, nuestros clientes de salud ven: +150% en consultas agendadas, -40% en costo por paciente nuevo, 4-6 semanas para ver resultados iniciales, y ROI de 5-10x considerando el valor de vida del paciente.',
+            text: 'Según las estimaciones del Predictor M&P para salud: +150% en consultas agendadas, -40% en costo por paciente nuevo, 4-6 semanas para ver resultados iniciales y ROI de 5-10x considerando el valor de vida del paciente. Son referencias, no resultados garantizados.',
           },
         },
         {
@@ -157,9 +157,14 @@ export default function MarketingSaludPage() {
                 </div>
                 <div className="bg-white/10 backdrop-blur px-6 py-3 rounded-lg">
                   <div className="text-3xl font-bold text-red-400">8x</div>
-                  <div className="text-sm text-red-200">ROI Promedio</div>
+                  <div className="text-sm text-red-200">ROI promedio estimado</div>
                 </div>
               </div>
+              <p className="text-xs opacity-75 -mt-8 mb-12 max-w-2xl mx-auto">
+                Cifras promedio estimadas con el{' '}
+                <Link href="/labs/predictor" className="underline hover:opacity-100">Predictor M&amp;P</Link>{' '}
+                para la industria (mulleryperez.cl/labs/predictor). Son referencias, no resultados garantizados.
+              </p>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link
@@ -389,7 +394,7 @@ export default function MarketingSaludPage() {
                       <td className="px-6 py-4 text-center">3-6%</td>
                     </tr>
                     <tr className="bg-red-50 font-bold">
-                      <td className="px-6 py-4">M&P Promedio</td>
+                      <td className="px-6 py-4">Estimación Predictor M&P</td>
                       <td className="px-6 py-4 text-center text-red-600">$25.000</td>
                       <td className="px-6 py-4 text-center text-red-600">9.5%</td>
                     </tr>

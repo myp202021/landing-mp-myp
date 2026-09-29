@@ -160,6 +160,11 @@ export default function MarketingEducacionPage() {
                   <div className="text-sm text-indigo-200">Lead-to-Matrícula</div>
                 </div>
               </div>
+              <p className="text-xs opacity-75 -mt-8 mb-12 max-w-2xl mx-auto">
+                Cifras promedio estimadas con el{' '}
+                <Link href="/labs/predictor" className="underline hover:opacity-100">Predictor M&amp;P</Link>{' '}
+                para la industria (mulleryperez.cl/labs/predictor). Son referencias, no resultados garantizados.
+              </p>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link
@@ -378,7 +383,7 @@ export default function MarketingEducacionPage() {
                       <td className="px-6 py-4 text-center">3-8%</td>
                     </tr>
                     <tr className="bg-indigo-50 font-bold">
-                      <td className="px-6 py-4">M&P Promedio</td>
+                      <td className="px-6 py-4">Estimación Predictor M&P</td>
                       <td className="px-6 py-4 text-center text-indigo-600">$25.000</td>
                       <td className="px-6 py-4 text-center text-indigo-600">12%</td>
                     </tr>

@@ -4,7 +4,7 @@ import { ArrowRight, ShoppingCart, Building2, Cloud, Home, Heart, GraduationCap,
 
 export const metadata: Metadata = {
   title: 'Marketing Digital por Industria en Chile | Soluciones Especializadas',
-  description: 'Estrategias de marketing digital especializadas por industria en Chile. Ecommerce, B2B, SaaS, Inmobiliario, Salud y Educación. Benchmarks y casos de éxito por sector.',
+  description: 'Estrategias de marketing digital especializadas por industria en Chile. Ecommerce, B2B, SaaS, Inmobiliario, Salud y Educación. Benchmarks y estimaciones por sector.',
   keywords: 'marketing digital por industria chile, marketing especializado, marketing ecommerce, marketing b2b, marketing saas, marketing inmobiliario, marketing salud, marketing educacion',
   openGraph: {
     title: 'Marketing Digital por Industria | M&P',
@@ -176,7 +176,7 @@ export default function IndustriasPage() {
                     </p>
                     <div className="flex items-center justify-between">
                       <div>
-                        <div className="text-sm text-gray-500">{industria.stats.label}</div>
+                        <div className="text-sm text-gray-500">{industria.stats.label} · estimado</div>
                         <div className={`text-2xl font-bold ${colors.icon}`}>{industria.stats.value}</div>
                       </div>
                       <ArrowRight className="w-6 h-6 text-gray-400 group-hover:text-blue-600 group-hover:translate-x-2 transition-all" />
@@ -185,6 +185,11 @@ export default function IndustriasPage() {
                 )
               })}
             </div>
+            <p className="text-sm text-gray-500 text-center mt-8">
+              Cifras promedio estimadas con el{' '}
+              <Link href="/labs/predictor" className="text-blue-600 hover:underline">Predictor M&amp;P</Link>{' '}
+              para cada industria (mulleryperez.cl/labs/predictor). Son referencias, no resultados garantizados.
+            </p>
           </div>
         </div>
       </section>

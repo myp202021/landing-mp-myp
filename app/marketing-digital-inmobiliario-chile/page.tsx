@@ -158,9 +158,14 @@ export default function MarketingInmobiliarioPage() {
                 </div>
                 <div className="bg-white/10 backdrop-blur px-6 py-3 rounded-lg">
                   <div className="text-3xl font-bold text-emerald-400">15x</div>
-                  <div className="text-sm text-emerald-200">ROI Promedio</div>
+                  <div className="text-sm text-emerald-200">ROI promedio estimado</div>
                 </div>
               </div>
+              <p className="text-xs opacity-75 -mt-8 mb-12 max-w-2xl mx-auto">
+                Cifras promedio estimadas con el{' '}
+                <Link href="/labs/predictor" className="underline hover:opacity-100">Predictor M&amp;P</Link>{' '}
+                para la industria (mulleryperez.cl/labs/predictor). Son referencias, no resultados garantizados.
+              </p>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link
@@ -395,7 +400,7 @@ export default function MarketingInmobiliarioPage() {
                       <td className="px-6 py-4 text-center">1-3%</td>
                     </tr>
                     <tr className="bg-emerald-50 font-bold">
-                      <td className="px-6 py-4">M&P Promedio</td>
+                      <td className="px-6 py-4">Estimación Predictor M&P</td>
                       <td className="px-6 py-4 text-center text-emerald-600">$12.000</td>
                       <td className="px-6 py-4 text-center text-emerald-600">5.2%</td>
                     </tr>
@@ -421,7 +426,7 @@ export default function MarketingInmobiliarioPage() {
                   </h3>
                   <p className="text-gray-600">
                     El CPL varía según el tipo: <strong>Departamentos $8.000-15.000</strong>, Casas $12.000-25.000,
-                    Proyectos nuevos $15.000-35.000, Lujo $25.000-50.000. En M&P logramos <strong>CPL promedio de $12.000</strong>.
+                    Proyectos nuevos $15.000-35.000, Lujo $25.000-50.000. El Predictor M&P estima un <strong>CPL promedio de $12.000</strong>.
                   </p>
                 </div>
 

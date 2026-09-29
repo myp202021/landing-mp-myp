@@ -87,7 +87,7 @@ const stats = [
   { value: '35%', label: 'Mayor ticket promedio' },
   { value: '8+', label: 'Años de experiencia' },
   { value: '30+', label: 'Marcas premium' },
-  { value: '5.2x', label: 'ROAS promedio lujo' }
+  { value: '+200', label: 'Campañas activas' }
 ]
 
 export default function AgenciaMarketingVitacura() {

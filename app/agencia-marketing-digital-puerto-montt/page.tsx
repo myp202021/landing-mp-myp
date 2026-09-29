@@ -87,7 +87,7 @@ const stats = [
   { value: '40%', label: 'Menos competencia digital vs Santiago' },
   { value: '8+', label: 'Años de experiencia' },
   { value: '20+', label: 'Clientes en el sur' },
-  { value: '4.5x', label: 'ROAS promedio turismo' }
+  { value: '+200', label: 'Campañas activas' }
 ]
 
 export default function AgenciaMarketingPuertoMontt() {

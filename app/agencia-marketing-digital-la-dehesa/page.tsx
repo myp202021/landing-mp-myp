@@ -87,7 +87,7 @@ const stats = [
   { value: '45%', label: 'Más consultas médicas' },
   { value: '8+', label: 'Años de experiencia' },
   { value: '35+', label: 'Clínicas y consultas' },
-  { value: '3.8x', label: 'ROAS promedio salud' }
+  { value: '+200', label: 'Campañas activas' }
 ]
 
 export default function AgenciaMarketingLaDehesa() {

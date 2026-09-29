@@ -55,7 +55,7 @@ const jsonLd = {
           name: '¿Cuánto cuesta un lead B2B en Chile?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'El CPL B2B en Chile varía según la industria: Tecnología/SaaS $12.000-25.000 CLP, Servicios profesionales $8.000-18.000 CLP, Industrial $15.000-35.000 CLP. En M&P logramos CPL promedio de $15.000 con alta calificación.',
+            text: 'El CPL B2B en Chile varía según la industria: Tecnología/SaaS $12.000-25.000 CLP, Servicios profesionales $8.000-18.000 CLP, Industrial $15.000-35.000 CLP. El Predictor M&P estima un CPL promedio de $15.000 con alta calificación.',
           },
         },
         {
@@ -118,9 +118,14 @@ export default function MarketingB2BPage() {
                 </div>
                 <div className="bg-white/10 backdrop-blur px-6 py-3 rounded-lg">
                   <div className="text-3xl font-bold text-blue-400">3.2x</div>
-                  <div className="text-sm text-slate-300">ROI Promedio</div>
+                  <div className="text-sm text-slate-300">ROI promedio estimado</div>
                 </div>
               </div>
+              <p className="text-xs opacity-75 -mt-8 mb-12 max-w-2xl mx-auto">
+                Cifras promedio estimadas con el{' '}
+                <Link href="/labs/predictor" className="underline hover:opacity-100">Predictor M&amp;P</Link>{' '}
+                para la industria (mulleryperez.cl/labs/predictor). Son referencias, no resultados garantizados.
+              </p>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link
@@ -413,7 +418,7 @@ export default function MarketingB2BPage() {
                       <td className="px-6 py-4 text-center">3-6 meses</td>
                     </tr>
                     <tr className="bg-blue-50 font-bold">
-                      <td className="px-6 py-4">M&P Promedio</td>
+                      <td className="px-6 py-4">Estimación Predictor M&P</td>
                       <td className="px-6 py-4 text-center text-blue-600">$15.000</td>
                       <td className="px-6 py-4 text-center text-blue-600">42%</td>
                       <td className="px-6 py-4 text-center text-blue-600">-30% vs industria</td>
@@ -441,7 +446,7 @@ export default function MarketingB2BPage() {
                   <p className="text-gray-600">
                     El CPL B2B varía según industria: <strong>Tecnología/SaaS $12.000-25.000</strong>,
                     Servicios profesionales $8.000-18.000, Industrial $15.000-35.000.
-                    En M&P logramos CPL promedio de <strong>$15.000 con 42% de tasa de calificación</strong>.
+                    El Predictor M&P estima un CPL promedio de <strong>$15.000 con 42% de tasa de calificación</strong>.
                   </p>
                 </div>
 

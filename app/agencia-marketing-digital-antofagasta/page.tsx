@@ -103,7 +103,7 @@ const stats = [
   { value: '45%', label: 'Menos competencia digital vs Santiago' },
   { value: '8+', label: 'Años de experiencia' },
   { value: '25+', label: 'Clientes en el Norte Grande' },
-  { value: '3.2x', label: 'ROAS promedio sector minero' }
+  { value: '+200', label: 'Campañas activas' }
 ]
 
 export default function AgenciaMarketingAntofagasta() {

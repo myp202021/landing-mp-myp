@@ -118,9 +118,14 @@ export default function MarketingServiciosProfesionalesPage() {
                 </div>
                 <div className="bg-white/10 backdrop-blur px-6 py-3 rounded-lg">
                   <div className="text-3xl font-bold text-indigo-300">5.2x</div>
-                  <div className="text-sm text-slate-300">ROI Promedio</div>
+                  <div className="text-sm text-slate-300">ROI promedio estimado</div>
                 </div>
               </div>
+              <p className="text-xs opacity-75 -mt-8 mb-12 max-w-2xl mx-auto">
+                Cifras promedio estimadas con el{' '}
+                <Link href="/labs/predictor" className="underline hover:opacity-100">Predictor M&amp;P</Link>{' '}
+                para la industria (mulleryperez.cl/labs/predictor). Son referencias, no resultados garantizados.
+              </p>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link
@@ -391,7 +396,7 @@ export default function MarketingServiciosProfesionalesPage() {
                       <td className="px-6 py-4 text-center">$8.000.000+</td>
                     </tr>
                     <tr className="bg-indigo-50 font-bold">
-                      <td className="px-6 py-4">M&P Promedio</td>
+                      <td className="px-6 py-4">Estimación Predictor M&P</td>
                       <td className="px-6 py-4 text-center text-indigo-600">$15.000</td>
                       <td className="px-6 py-4 text-center text-indigo-600">+8pp vs industria</td>
                       <td className="px-6 py-4 text-center text-indigo-600">ROI 5.2x</td>

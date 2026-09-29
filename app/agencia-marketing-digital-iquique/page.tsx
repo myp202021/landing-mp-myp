@@ -87,7 +87,7 @@ const stats = [
   { value: '50%', label: 'Menos competencia digital' },
   { value: '8+', label: 'Años de experiencia' },
   { value: '18+', label: 'Clientes en el norte' },
-  { value: '7.2x', label: 'ROAS promedio ecommerce' }
+  { value: '+200', label: 'Campañas activas' }
 ]
 
 export default function AgenciaMarketingIquique() {

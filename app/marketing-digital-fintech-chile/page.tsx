@@ -121,6 +121,11 @@ export default function MarketingFintechPage() {
                   <div className="text-sm text-teal-200">Compliance CMF</div>
                 </div>
               </div>
+              <p className="text-xs opacity-75 -mt-8 mb-12 max-w-2xl mx-auto">
+                Cifras promedio estimadas con el{' '}
+                <Link href="/labs/predictor" className="underline hover:opacity-100">Predictor M&amp;P</Link>{' '}
+                para la industria (mulleryperez.cl/labs/predictor). Son referencias, no resultados garantizados.
+              </p>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link
@@ -463,7 +468,7 @@ export default function MarketingFintechPage() {
                       <td className="px-6 py-4 text-center">1-3 días</td>
                     </tr>
                     <tr className="bg-emerald-50 font-bold">
-                      <td className="px-6 py-4">M&P Promedio</td>
+                      <td className="px-6 py-4">Estimación Predictor M&P</td>
                       <td className="px-6 py-4 text-center text-emerald-600">-35% vs benchmark</td>
                       <td className="px-6 py-4 text-center text-emerald-600">+20% activación</td>
                       <td className="px-6 py-4 text-center text-emerald-600">-40% tiempo</td>

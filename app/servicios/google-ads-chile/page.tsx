@@ -495,7 +495,7 @@ export default function GoogleAdsChilePage() {
               Estos son ejemplos de resultados obtenidos por clientes gestionados por nuestro equipo. Los datos son reales, aunque omitimos nombres por confidencialidad.
             </p>
 
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid md:grid-cols-3 gap-6">
               <div className="bg-white rounded-xl p-6 shadow-sm">
                 <div className="text-sm font-semibold text-blue-600 mb-2">Inmobiliaria en Santiago</div>
                 <h3 className="text-lg font-bold text-gray-900 mb-3">CPA reducido de $12.000 a $4.800 en 90 días</h3>
@@ -505,18 +505,6 @@ export default function GoogleAdsChilePage() {
                 <div className="flex gap-4 text-sm">
                   <div className="bg-green-100 text-green-800 px-3 py-1 rounded-full font-semibold">-60% CPA</div>
                   <div className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full font-semibold">+140% leads</div>
-                </div>
-              </div>
-
-              <div className="bg-white rounded-xl p-6 shadow-sm">
-                <div className="text-sm font-semibold text-purple-600 mb-2">E-commerce de Moda</div>
-                <h3 className="text-lg font-bold text-gray-900 mb-3">ROAS de 2.1x a 5.8x con Shopping + PMax</h3>
-                <p className="text-gray-700 text-sm mb-4">
-                  Migramos de campañas Search genéricas a Shopping segmentado por categoría combinado con Performance Max. Optimizamos el feed de productos y creamos audiencias de remarketing.
-                </p>
-                <div className="flex gap-4 text-sm">
-                  <div className="bg-green-100 text-green-800 px-3 py-1 rounded-full font-semibold">ROAS 5.8x</div>
-                  <div className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full font-semibold">+176% ventas</div>
                 </div>
               </div>
 

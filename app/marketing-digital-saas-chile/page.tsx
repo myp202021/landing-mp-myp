@@ -121,6 +121,11 @@ export default function MarketingSaaSPage() {
                   <div className="text-sm text-purple-200">LTV:CAC Ratio</div>
                 </div>
               </div>
+              <p className="text-xs opacity-75 -mt-8 mb-12 max-w-2xl mx-auto">
+                Cifras promedio estimadas con el{' '}
+                <Link href="/labs/predictor" className="underline hover:opacity-100">Predictor M&amp;P</Link>{' '}
+                para la industria (mulleryperez.cl/labs/predictor). Son referencias, no resultados garantizados.
+              </p>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link
@@ -416,7 +421,7 @@ export default function MarketingSaaSPage() {
                       <td className="px-6 py-4 text-center">12-18 meses</td>
                     </tr>
                     <tr className="bg-violet-50 font-bold">
-                      <td className="px-6 py-4">M&P Promedio</td>
+                      <td className="px-6 py-4">Estimación Predictor M&P</td>
                       <td className="px-6 py-4 text-center text-violet-600">-40% vs benchmark</td>
                       <td className="px-6 py-4 text-center text-violet-600">+3pp vs benchmark</td>
                       <td className="px-6 py-4 text-center text-violet-600">-25% vs industria</td>

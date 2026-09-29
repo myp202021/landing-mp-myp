@@ -117,6 +117,16 @@ const nextConfig = {
       // Old URLs
       // ========================================
       {
+        source: '/recursos/mejores-agencias-meta-ads-chile-2025',
+        destination: '/agencias-meta-ads-chile-2026',
+        permanent: true,
+      },
+      {
+        source: '/recursos/mejores-agencias-meta-ads-chile-2026',
+        destination: '/agencias-meta-ads-chile-2026',
+        permanent: true,
+      },
+      {
         source: '/predictor-unicornio',
         destination: '/predictor',
         permanent: true,

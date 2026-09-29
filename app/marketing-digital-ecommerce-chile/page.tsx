@@ -4,11 +4,11 @@ import { ArrowRight, ShoppingCart, TrendingUp, Target, BarChart3, Zap, CheckCirc
 
 export const metadata: Metadata = {
   title: 'Marketing Digital para Ecommerce en Chile | Agencia Especializada',
-  description: 'Agencia de marketing digital especializada en ecommerce en Chile. Aumentamos ventas online con Google Shopping, Meta Ads, remarketing y estrategias de conversión. ROAS promedio 8.5x.',
+  description: 'Agencia de marketing digital especializada en ecommerce en Chile. Aumentamos ventas online con Google Shopping, Meta Ads, remarketing y estrategias de conversión. ROAS estimado de 8.5x según el Predictor M&P.',
   keywords: 'marketing digital ecommerce chile, agencia ecommerce chile, google shopping chile, publicidad ecommerce, aumentar ventas online chile, marketing tienda online',
   openGraph: {
     title: 'Marketing Digital para Ecommerce en Chile | M&P',
-    description: 'Especialistas en hacer crecer tiendas online. ROAS promedio 8.5x en campañas de ecommerce.',
+    description: 'Especialistas en hacer crecer tiendas online. ROAS estimado de 8.5x según el Predictor M&P.',
     url: 'https://www.mulleryperez.cl/marketing-digital-ecommerce-chile',
     siteName: 'Müller & Pérez',
     locale: 'es_CL',
@@ -70,7 +70,7 @@ const jsonLd = {
           name: '¿Qué ROAS puedo esperar en mi tienda online?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'El ROAS promedio en ecommerce chileno es de 4-6x. En M&P logramos ROAS promedio de 8.5x gracias a estrategias de segmentación avanzada y optimización continua.',
+            text: 'El ROAS promedio en ecommerce chileno es de 4-6x. Para una tienda bien optimizada, el Predictor M&P estima un ROAS promedio de 8.5x con segmentación avanzada y optimización continua (estimación, no resultado garantizado).',
           },
         },
         {
@@ -117,7 +117,7 @@ export default function MarketingEcommercePage() {
               <div className="flex flex-wrap justify-center gap-4 mb-12">
                 <div className="bg-white/10 backdrop-blur px-6 py-3 rounded-lg">
                   <div className="text-3xl font-bold text-yellow-400">8.5x</div>
-                  <div className="text-sm text-blue-200">ROAS Promedio</div>
+                  <div className="text-sm text-blue-200">ROAS promedio estimado</div>
                 </div>
                 <div className="bg-white/10 backdrop-blur px-6 py-3 rounded-lg">
                   <div className="text-3xl font-bold text-yellow-400">+120%</div>
@@ -128,6 +128,11 @@ export default function MarketingEcommercePage() {
                   <div className="text-sm text-blue-200">Reducción CAC</div>
                 </div>
               </div>
+              <p className="text-xs opacity-75 -mt-8 mb-12 max-w-2xl mx-auto">
+                Cifras promedio estimadas con el{' '}
+                <Link href="/labs/predictor" className="underline hover:opacity-100">Predictor M&amp;P</Link>{' '}
+                para la industria (mulleryperez.cl/labs/predictor). Son referencias, no resultados garantizados.
+              </p>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link
@@ -362,10 +367,12 @@ export default function MarketingEcommercePage() {
                   </div>
                   <div>
                     <h3 className="text-xl font-bold text-gray-900 mb-2">
-                      Nuestros Resultados en Ecommerce
+                      Estimación del Predictor M&P para Ecommerce
                     </h3>
                     <p className="text-gray-700 mb-4">
-                      En M&P superamos consistentemente los benchmarks del mercado:
+                      Promedios estimados con el{' '}
+                      <Link href="/labs/predictor" className="text-blue-600 hover:underline">Predictor M&P</Link>{' '}
+                      para una tienda optimizada, comparados con el benchmark del mercado (referencia, no resultado garantizado):
                     </p>
                     <div className="grid sm:grid-cols-3 gap-4">
                       <div>
@@ -413,8 +420,9 @@ export default function MarketingEcommercePage() {
                     ¿Qué ROAS puedo esperar en mi tienda online?
                   </h3>
                   <p className="text-gray-600">
-                    El ROAS promedio en ecommerce chileno es de <strong>4-6x</strong>. En M&P logramos ROAS promedio de
-                    <strong> 8.5x</strong> gracias a estrategias de segmentación avanzada y optimización continua.
+                    El ROAS promedio en ecommerce chileno es de <strong>4-6x</strong>. Para una tienda bien optimizada, el{' '}
+                    <Link href="/labs/predictor" className="text-blue-600 hover:underline">Predictor M&P</Link> estima un ROAS promedio de
+                    <strong> 8.5x</strong> con segmentación avanzada y optimización continua (estimación, no resultado garantizado).
                     El ROAS varía según la industria: moda 5-8x, tecnología 4-6x, hogar 6-10x.
                   </p>
                 </div>

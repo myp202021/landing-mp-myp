@@ -87,7 +87,7 @@ const stats = [
   { value: '45%', label: 'Menos competencia digital' },
   { value: '8+', label: 'Años de experiencia' },
   { value: '15+', label: 'Clientes en O\'Higgins' },
-  { value: '5.5x', label: 'ROAS promedio B2B' }
+  { value: '+200', label: 'Campañas activas' }
 ]
 
 export default function AgenciaMarketingRancagua() {
