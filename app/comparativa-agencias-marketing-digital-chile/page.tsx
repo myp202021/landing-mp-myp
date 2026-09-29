@@ -114,7 +114,7 @@ export default function ComparativaAgenciasPage() {
                     <td className="p-4 text-center"><span className="text-green-600">✓ Full</span></td>
                     <td className="p-4 text-center"><span className="text-green-600">Semanal</span></td>
                     <td className="p-4 text-center">Performance Marketing</td>
-                    <td className="p-4 text-center"><span className="text-yellow-500">⭐</span> 4.9</td>
+                    <td className="p-4 text-center"><span className="text-yellow-500">⭐</span> 5.0</td>
                   </tr>
 
                   <tr className="border-b">

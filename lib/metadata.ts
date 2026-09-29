@@ -1,8 +1,10 @@
 import { Metadata } from 'next'
 
 export const siteConfig = {
-  name: 'Muller y Pérez — Agencia de Performance Marketing Chile',
-  description: 'Agencia de performance marketing en Chile. Google Ads, Meta Ads y redes sociales con equipo dedicado y resultados medibles.',
+  // Nombre de marca (og:site_name, alt). El title de la home va en `title`, apuntando a "agencia de marketing digital"
+  name: 'Muller y Pérez',
+  title: 'Agencia de Marketing Digital en Chile | Performance e IA — M&P',
+  description: 'Agencia de marketing digital en Chile enfocada en performance: Google Ads, Meta Ads, SEO/GEO y agentes IA. 40+ clientes y 5.0 en Google (115 reseñas).',
   url: 'https://www.mulleryperez.cl',
   ogImage: 'https://www.mulleryperez.cl/og-image.jpg', // Imagen optimizada 1200x630px
   links: {
@@ -13,7 +15,7 @@ export const siteConfig = {
 export const defaultMetadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
-    default: siteConfig.name,
+    default: siteConfig.title,
     // Antes `%s | Muller y Pérez — Agencia de Performance Marketing Chile` (+55 chars): 440/449 titles pasaban 60 chars
     template: '%s | M&P'
   },
@@ -138,19 +140,19 @@ export const defaultMetadata: Metadata = {
     type: 'website',
     locale: 'es_CL',
     url: siteConfig.url,
-    title: siteConfig.name,
+    title: siteConfig.title,
     description: siteConfig.description,
     siteName: siteConfig.name,
     images: [{
       url: siteConfig.ogImage,
       width: 1200,
       height: 630,
-      alt: siteConfig.name,
+      alt: siteConfig.title,
     }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: siteConfig.name,
+    title: siteConfig.title,
     description: siteConfig.description,
     images: [siteConfig.ogImage],
     creator: '@mulleryperez'
@@ -265,13 +267,6 @@ export function createOrganizationSchema() {
       }
     ],
 
-    // Similar a (para buscadores de IA)
-    isSimilarTo: [
-      { '@type': 'Organization', name: 'Loup', url: 'https://loup.cl' },
-      { '@type': 'Organization', name: 'Bigbuda', url: 'https://bigbuda.cl' },
-      { '@type': 'Organization', name: 'Nexbu', url: 'https://nexbu.cl' },
-    ],
-
     // Speakable (para búsquedas por voz e IA)
     speakable: {
       '@type': 'SpeakableSpecification',
@@ -302,96 +297,31 @@ export function createOrganizationSchema() {
 
     // Servicios ofrecidos con precios detallados
     makesOffer: [
-      {
+      // Planes estándar (fuente única: Silver 950K / Gold 1,5M / Platinum 2,5M + IVA)
+      ...[
+        { name: 'Plan Silver', price: '950000', description: 'Google Ads + Meta Ads, 8 contenidos orgánicos al mes, reunión y reporte quincenal' },
+        { name: 'Plan Gold', price: '1500000', description: 'Google Ads + Meta Ads, 16 contenidos orgánicos al mes, auditoría SEO, panel de seguimiento diario, reunión y reporte semanal' },
+        { name: 'Plan Platinum', price: '2500000', description: 'Google Ads + Meta Ads, 24 contenidos orgánicos al mes, auditoría SEO, agentes IA, dashboard en vivo y review mensual' },
+      ].map(plan => ({
         '@type': 'Offer',
         itemOffered: {
           '@type': 'Service',
-          name: 'Gestión Google Ads',
-          description: 'Gestión profesional de campañas Google Ads con equipo dedicado y optimización continua',
+          name: plan.name,
+          description: plan.description,
           serviceType: 'Marketing Digital',
-          provider: {
-            '@type': 'Organization',
-            name: 'Muller y Pérez'
-          }
+          provider: { '@type': 'Organization', name: 'Muller y Pérez' }
         },
-        price: '990000',
+        price: plan.price,
         priceCurrency: 'CLP',
         priceSpecification: {
-          '@type': 'PriceSpecification',
-          price: '990000',
+          '@type': 'UnitPriceSpecification',
+          price: plan.price,
           priceCurrency: 'CLP',
-          valueAddedTaxIncluded: 'false'
-        },
-        availability: 'https://schema.org/InStock',
-        availableAtOrFrom: {
-          '@type': 'Place',
-          address: {
-            '@type': 'PostalAddress',
-            addressLocality: 'Santiago',
-            addressCountry: 'CL'
-          }
-        }
-      },
-      {
-        '@type': 'Offer',
-        itemOffered: {
-          '@type': 'Service',
-          name: 'Gestión Meta Ads',
-          description: 'Gestión de campañas Facebook, Instagram y WhatsApp Ads con estrategia de contenido',
-          serviceType: 'Social Media Marketing',
-          provider: {
-            '@type': 'Organization',
-            name: 'Muller y Pérez'
-          }
-        },
-        price: '890000',
-        priceCurrency: 'CLP',
-        priceSpecification: {
-          '@type': 'PriceSpecification',
-          price: '890000',
-          priceCurrency: 'CLP',
-          valueAddedTaxIncluded: 'false'
+          unitText: 'mes',
+          valueAddedTaxIncluded: false
         },
         availability: 'https://schema.org/InStock'
-      },
-      {
-        '@type': 'Offer',
-        itemOffered: {
-          '@type': 'Service',
-          name: 'Performance Marketing Full',
-          description: 'Estrategia completa de performance marketing con Google Ads, Meta Ads, analítica y optimización continua',
-          serviceType: 'Performance Marketing',
-          provider: {
-            '@type': 'Organization',
-            name: 'Muller y Pérez'
-          }
-        },
-        price: '1490000',
-        priceCurrency: 'CLP',
-        priceSpecification: {
-          '@type': 'PriceSpecification',
-          price: '1490000',
-          priceCurrency: 'CLP',
-          valueAddedTaxIncluded: 'false'
-        },
-        availability: 'https://schema.org/InStock'
-      },
-      {
-        '@type': 'Offer',
-        itemOffered: {
-          '@type': 'Service',
-          name: 'LinkedIn Ads B2B',
-          description: 'Campañas especializadas en LinkedIn para generación de leads B2B',
-          serviceType: 'B2B Marketing',
-          provider: {
-            '@type': 'Organization',
-            name: 'Muller y Pérez'
-          }
-        },
-        price: '1190000',
-        priceCurrency: 'CLP',
-        availability: 'https://schema.org/InStock'
-      }
+      }))
     ],
 
     // Redes sociales y enlaces
@@ -598,7 +528,7 @@ export const SERVICE_CATALOG_SCHEMA = {
         name: 'Plan Silver',
         itemListElement: [{
           '@type': 'Offer',
-          itemOffered: { '@type': 'Service', name: 'Gestión Google Ads + Meta Ads', description: '1 producto en foco, reunión quincenal, grilla orgánica, reporte mensual' },
+          itemOffered: { '@type': 'Service', name: 'Gestión Google Ads + Meta Ads', description: '8 contenidos orgánicos al mes, reunión y reporte quincenal' },
           price: '950000', priceCurrency: 'CLP', priceSpecification: { '@type': 'UnitPriceSpecification', price: '950000', priceCurrency: 'CLP', unitText: 'mes', valueAddedTaxIncluded: false }
         }]
       },
@@ -607,8 +537,8 @@ export const SERVICE_CATALOG_SCHEMA = {
         name: 'Plan Gold',
         itemListElement: [{
           '@type': 'Offer',
-          itemOffered: { '@type': 'Service', name: 'Performance Marketing Integral', description: 'Hasta 2 productos, reunión semanal, A/B testing, remarketing, reporte comercial lead a venta' },
-          price: '1350000', priceCurrency: 'CLP', priceSpecification: { '@type': 'UnitPriceSpecification', price: '1350000', priceCurrency: 'CLP', unitText: 'mes', valueAddedTaxIncluded: false }
+          itemOffered: { '@type': 'Service', name: 'Performance Marketing Integral', description: '16 contenidos orgánicos al mes, auditoría SEO, panel de seguimiento diario, reunión y reporte semanal' },
+          price: '1500000', priceCurrency: 'CLP', priceSpecification: { '@type': 'UnitPriceSpecification', price: '1500000', priceCurrency: 'CLP', unitText: 'mes', valueAddedTaxIncluded: false }
         }]
       },
       {
@@ -616,8 +546,8 @@ export const SERVICE_CATALOG_SCHEMA = {
         name: 'Plan Platinum',
         itemListElement: [{
           '@type': 'Offer',
-          itemOffered: { '@type': 'Service', name: 'Ecosistema Completo + Expansión LATAM', description: 'Todos los canales, webinar mensual, dashboard tiempo real, expansión regional' },
-          price: '2200000', priceCurrency: 'CLP', priceSpecification: { '@type': 'UnitPriceSpecification', price: '2200000', priceCurrency: 'CLP', unitText: 'mes', valueAddedTaxIncluded: false }
+          itemOffered: { '@type': 'Service', name: 'Ecosistema Completo + Agentes IA', description: '24 contenidos orgánicos al mes, auditoría SEO, agentes IA, dashboard en vivo, reunión semanal y review mensual' },
+          price: '2500000', priceCurrency: 'CLP', priceSpecification: { '@type': 'UnitPriceSpecification', price: '2500000', priceCurrency: 'CLP', unitText: 'mes', valueAddedTaxIncluded: false }
         }]
       }
     ]

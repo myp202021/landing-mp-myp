@@ -147,7 +147,7 @@ export default function GraciasPage() {
             {[1, 2, 3, 4, 5].map((i) => (
               <Star key={i} className="w-5 h-5 text-yellow-400 fill-yellow-400" />
             ))}
-            <span className="font-semibold text-gray-800 ml-2">4.9/5</span>
+            <span className="font-semibold text-gray-800 ml-2">5.0/5 · 115 reseñas en Google</span>
           </div>
           <p className="text-gray-600 text-center italic">
             &ldquo;M&P nos ayudó a reducir nuestro costo por lead en un 45%. Su enfoque basado en datos realmente funciona.&rdquo;

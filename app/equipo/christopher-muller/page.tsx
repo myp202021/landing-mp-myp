@@ -102,7 +102,7 @@ export default function ChristopherMullerPage() {
           </h1>
           <p className="text-xl text-blue-600 font-semibold mb-6">CEO & Founder</p>
           <p className="text-lg text-gray-600 leading-relaxed mb-8">
-            Fundador de Muller y Pérez en 2019. Especialista en performance marketing data-driven:
+            Fundador de Muller y Pérez en 2020. Especialista en performance marketing data-driven:
             Google Ads, Meta Ads, atribución multi-touch y optimización de CAC/LTV para empresas en Chile.
             Más de 6 años gestionando campañas con resultados medibles en e-commerce, B2B, SaaS, salud e inmobiliario.
           </p>

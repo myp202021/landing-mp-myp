@@ -601,8 +601,8 @@ export default function AgenciaMarketingDigitalChilePage() {
 
             <div className="bg-blue-50 rounded-xl p-6 text-center">
               <p className="text-lg text-gray-800 mb-3">
-                <strong>4.9/5 estrellas</strong> en satisfacción de clientes
-                <span className="text-gray-500 ml-2">(47 evaluaciones)</span>
+                <strong>5.0/5 estrellas</strong> en Google
+                <span className="text-gray-500 ml-2">(115 reseñas)</span>
               </p>
               <Link href="/casos-de-exito" className="text-blue-600 hover:underline font-semibold">
                 Ver todos los casos de éxito

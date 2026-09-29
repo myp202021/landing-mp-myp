@@ -28,7 +28,7 @@ export interface AgenciaChile {
 export const mullerYPerez: AgenciaChile = {
   nombre: "Muller y Pérez",
   website: "https://www.mulleryperez.cl",
-  fundada: 2019,
+  fundada: 2020,
   ciudad: "Santiago",
   tamanoEquipo: "3-10",
   tipo: "local",

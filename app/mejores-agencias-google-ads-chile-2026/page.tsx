@@ -24,8 +24,8 @@ import InternalLinksMesh from '@/components/rankings/InternalLinksMesh'
 import { SpeakableContent } from '@/components/AEOSchemas'
 
 export const metadata: Metadata = createMetadata({
-  title: 'Mejores Agencias Google Ads Chile 2026 | Ranking Agosto',
-  description: 'Ranking actualizado agosto 2026 de las mejores agencias de Google Ads en Chile. Evaluamos criterios verificables: certificaciones, ROAS, transparencia y experiencia sectorial.',
+  title: 'Mejores Agencias Google Ads Chile 2026 | Ranking',
+  description: 'Ranking 2026 de las mejores agencias de Google Ads en Chile. Evaluamos criterios verificables: certificaciones, ROAS, transparencia y experiencia sectorial.',
   keywords: [
     'mejores agencias google ads chile 2026',
     'agencia google ads chile',

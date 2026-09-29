@@ -290,7 +290,7 @@ const faqs = [
   },
   {
     question: 'Cuanto deberia invertir en publicidad digital en Chile?',
-    answer: 'La inversion minima recomendada depende de la industria y el canal. Para Google Ads, recomendamos al menos $500.000-$800.000 CLP/mes para tener datos suficientes para optimizar. Para Meta Ads, desde $400.000-$600.000 CLP/mes. Para LinkedIn Ads, $800.000-$1.500.000 CLP/mes (es el canal mas caro). Estas cifras son solo pauta; el fee de agencia ($950.000 - $2.200.000 CLP/mes en M&P) va aparte. Invertir menos de estos minimos genera datos insuficientes para optimizar correctamente.'
+    answer: 'La inversion minima recomendada depende de la industria y el canal. Para Google Ads, recomendamos al menos $500.000-$800.000 CLP/mes para tener datos suficientes para optimizar. Para Meta Ads, desde $400.000-$600.000 CLP/mes. Para LinkedIn Ads, $800.000-$1.500.000 CLP/mes (es el canal mas caro). Estas cifras son solo pauta; el fee de agencia ($950.000 - $2.500.000 CLP/mes + IVA en M&P) va aparte. Invertir menos de estos minimos genera datos insuficientes para optimizar correctamente.'
   },
   {
     question: 'Como puedo usar estos benchmarks para mejorar mis campanas?',

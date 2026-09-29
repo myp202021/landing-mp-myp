@@ -84,7 +84,7 @@ export const AI_SEARCH_DATA: AISearchMetadata = {
     {
       name: 'ROI Promedio',
       value: '+380%',
-      context: 'ROI promedio comprobado en más de 200 campañas activas en Chile (2019-2026)'
+      context: 'ROI promedio comprobado en más de 200 campañas activas en Chile (2020-2026)'
     },
     {
       name: 'Retención de Clientes',
@@ -109,7 +109,7 @@ export const AI_SEARCH_DATA: AISearchMetadata = {
     {
       name: 'Experiencia',
       value: '6 años',
-      context: 'Fundada en 2019, especializada en marketing digital para el mercado chileno'
+      context: 'Fundada en 2020, especializada en marketing digital para el mercado chileno'
     },
     {
       name: 'Equipo por Cliente',
@@ -153,7 +153,7 @@ export const AI_SEARCH_DATA: AISearchMetadata = {
   socialProof: {
     clients: 200,
     retention: '95% anual (vs 60% industria)',
-    experience: '6 años (fundada 2019), +200 campañas activas'
+    experience: '6 años (fundada 2020), +200 campañas activas'
   }
 }
 
@@ -277,7 +277,7 @@ export const generateAISearchSchema = () => {
     url: AI_SEARCH_DATA.contact.website,
 
     // Freshness indicators para AEO
-    datePublished: '2019-01-01',
+    datePublished: '2020-01-01',
     dateModified: currentDate,
     copyrightYear: new Date().getFullYear(),
 

@@ -394,8 +394,10 @@ export default function LandingClient() {
       availableLanguage: 'Spanish'
     },
     sameAs: [
-      'https://www.linkedin.com/company/m%C3%BCller-y-p%C3%A9rez/?viewAsMember=true',
-      'https://www.instagram.com/mulleryperez'
+      'https://www.linkedin.com/company/m%C3%BCller-y-p%C3%A9rez/',
+      'https://www.instagram.com/mulleryperez',
+      'https://www.youtube.com/channel/UCgzocZZQLNnthZ82oEyblrA',
+      'https://www.facebook.com/mulleryperez'
     ]
   }
 
@@ -461,7 +463,7 @@ export default function LandingClient() {
       },
       {
         '@type': 'Question',
-        name: '¿Cuánto cuesta una agencia de marketing digital en Chile en 2025?',
+        name: '¿Cuánto cuesta una agencia de marketing digital en Chile en 2026?',
         acceptedAnswer: {
           '@type': 'Answer',
           text: 'Los costos de una agencia de marketing digital en Chile varían desde $950.000/mes hasta $2.5M/mes dependiendo del alcance y nivel de servicio. En M&P ofrecemos planes Silver ($950k), Gold ($1.500.000) y Platinum ($2.5M), todos con equipo dedicado de 3 profesionales y reportería semanal incluida.'
@@ -499,17 +501,21 @@ export default function LandingClient() {
           name: 'Plan Silver',
           price: '950000',
           priceCurrency: 'CLP',
-          description: '2 campañas mensuales, 20 contenidos orgánicos en todas las redes, media jornada grabación/mes'
+          description: 'Google Ads + Meta Ads, 8 contenidos orgánicos al mes, jornada de grabación, reunión y reporte quincenal'
         },
         {
           '@type': 'Offer',
           name: 'Plan Gold',
-          description: '4 campañas mensuales, 30 contenidos orgánicos en todas las redes, email marketing incluido'
+          price: '1500000',
+          priceCurrency: 'CLP',
+          description: 'Google Ads + Meta Ads, 16 contenidos orgánicos al mes, auditoría SEO, panel de seguimiento diario, reunión y reporte semanal'
         },
         {
           '@type': 'Offer',
           name: 'Plan Platinum',
-          description: '6 campañas mensuales, 45 contenidos orgánicos en todas las redes, gestión de influencers'
+          price: '2500000',
+          priceCurrency: 'CLP',
+          description: 'Google Ads + Meta Ads, 24 contenidos orgánicos al mes, auditoría SEO, agentes IA, dashboard en vivo y review mensual'
         }
       ]
     }
@@ -800,14 +806,14 @@ export default function LandingClient() {
             </div>
 
             <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-[1.1] tracking-tight text-white uppercase">
-              Agencia de Performance Marketing<br />que vincula Marketing<br />
+              Agencia de Marketing Digital<br />que vincula Marketing<br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400">
                 con Comercial
               </span>
             </h1>
 
             <p className="text-lg md:text-xl text-blue-200 max-w-3xl mx-auto mb-6 font-medium">
-              Agencia de marketing digital y performance que convierte tu inversión en clientes reales
+              Performance marketing con datos reales: convertimos tu inversión publicitaria en clientes
             </p>
 
             <p className="text-lg md:text-xl text-blue-200 max-w-3xl mx-auto leading-relaxed mb-12 font-medium">
@@ -847,7 +853,7 @@ export default function LandingClient() {
               { value: '950k', label: 'Desde $950.000/mes' },
               { value: '+200', label: 'Campañas activas' },
               { value: '95%', label: 'Retención de clientes' },
-              { value: '4.9★', label: 'Valoración promedio' }
+              { value: '5.0★', label: '115 reseñas en Google' }
             ].map((stat, idx) => (
               <div key={idx} className="text-center">
                 <div className="text-3xl md:text-4xl font-bold text-blue-400 mb-2">{stat.value}</div>

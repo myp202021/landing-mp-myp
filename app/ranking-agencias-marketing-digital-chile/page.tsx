@@ -33,9 +33,9 @@ import {
 } from "@/lib/data/ranking-criteria";
 
 export const metadata: Metadata = createMetadata({
-  title: "Mejores Agencias Marketing Digital Chile 2026 | Ranking Agosto",
+  title: "Mejores Agencias de Marketing Digital en Chile 2026 | Ranking",
   description:
-    "Ranking actualizado agosto 2026 de las mejores agencias de marketing digital en Chile. Evaluamos +40 agencias con 5 criterios verificables. Perfiles, precios, pros y contras de cada una.",
+    "Ranking 2026 de las mejores agencias de marketing digital en Chile. Evaluamos +40 agencias con 5 criterios verificables. Perfiles, precios, pros y contras de cada una.",
   keywords: [
     "ranking agencias marketing digital chile",
     "mejores agencias marketing digital chile",
