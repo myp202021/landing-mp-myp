@@ -1094,6 +1094,8 @@ function esc(s) {
     .replace(/>/g, "&gt;");
 }
 function link(url, texto) {
+  // Sin URL válida (null, "null", vacía) no se enlaza: evita links rotos como /blog/null
+  if (!url || url === "null" || !/^https?:\/\//.test(String(url))) return esc(texto || "fuente");
   return (
     '<a href="' +
     esc(url) +

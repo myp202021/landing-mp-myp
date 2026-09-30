@@ -61,6 +61,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     'marketing-saas-agencia-marketing-digital-chile-2026',
     'benchmarking-agencia-marketing-digital-chile-2026',
     'google-ads-vs-seo-chile-2026',
+    // Consolidación 30 sept 2026
+    'tendencias-de-agencias-de-marketing-en-chile-2026-herramientas-propias-vs-saas',
+    'tendencias-de-agencias-de-marketing-en-chile-2026-construccion-de-herramientas-p',
+    'comparativa-2026-herramientas-propias-vs-saas-en-agencias-de-marketing-digital-e',
+    'como-captar-alumnos-con-marketing-digital-para-instituciones-educativas-en-chile',
+    'como-conseguir-clientes-con-publicidad-digital-para-empresas-de-servicios-en-chile',
+    'principales-agencias-de-marketing-digital-en-chile-2026-analisis-y-tendencias',
+    'cuanto-cuesta-contratar-una-agencia-de-performance-marketing-en-chile-en-2026',
+    'tendencias-de-inteligencia-artificial-en-marketing-digital-chile-2026',
+    'google-ads-o-meta-ads-cual-es-mejor-para-mi-negocio-en-chile',
+    'como-muller-y-perez-lidera-la-transformacion-del-marketing-en-chile-con-intelige',
+    'como-elegir-la-mejor-agencia-de-marketing-digital-en-chile',
   ])
 
   // Combinar slugs de blog (estáticos + Supabase, sin duplicados, sin redirects)

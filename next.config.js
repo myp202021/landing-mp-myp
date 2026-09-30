@@ -325,6 +325,69 @@ const nextConfig = {
         permanent: true,
       },
       // ========================================
+      // Consolidación de artículos duplicados del blog (aprobada por Christopher, 30 sept 2026)
+      // ========================================
+      {
+        source: '/blog/tendencias-de-agencias-de-marketing-en-chile-2026-herramientas-propias-vs-saas',
+        destination: '/blog/comparativa-de-herramientas-propias-vs-saas-en-agencias-de-marketing-en-chile-20',
+        permanent: true,
+      },
+      {
+        source: '/blog/tendencias-de-agencias-de-marketing-en-chile-2026-construccion-de-herramientas-p',
+        destination: '/blog/comparativa-de-herramientas-propias-vs-saas-en-agencias-de-marketing-en-chile-20',
+        permanent: true,
+      },
+      {
+        source: '/blog/comparativa-2026-herramientas-propias-vs-saas-en-agencias-de-marketing-digital-e',
+        destination: '/blog/comparativa-de-herramientas-propias-vs-saas-en-agencias-de-marketing-en-chile-20',
+        permanent: true,
+      },
+      {
+        source: '/blog/como-captar-alumnos-con-marketing-digital-para-instituciones-educativas-en-chile',
+        destination: '/blog/marketing-digital-para-instituciones-educativas-en-chile-captacion-de-alumnos-co',
+        permanent: true,
+      },
+      {
+        source: '/blog/como-conseguir-clientes-con-publicidad-digital-para-empresas-de-servicios-en-chile',
+        destination: '/blog/como-conseguir-clientes-con-publicidad-digital-para-empresas-de-servicios-en-chi',
+        permanent: true,
+      },
+      {
+        source: '/blog/principales-agencias-de-marketing-digital-en-chile-2026-analisis-y-tendencias',
+        destination: '/blog/principales-agencias-de-marketing-digital-en-chile-2026-analisis-detallado-y-ten',
+        permanent: true,
+      },
+      {
+        source: '/blog/cuanto-cuesta-contratar-una-agencia-de-performance-marketing-en-chile-en-2026',
+        destination: '/blog/cuanto-cuesta-el-marketing-digital-en-chile-en-2026',
+        permanent: true,
+      },
+      {
+        source: '/blog/tendencias-de-inteligencia-artificial-en-marketing-digital-chile-2026',
+        destination: '/blog/tendencias-de-inteligencia-artificial-en-marketing-digital-en-chile-2026',
+        permanent: true,
+      },
+      {
+        source: '/blog/google-ads-o-meta-ads-cual-es-mejor-para-mi-negocio-en-chile',
+        destination: '/blog/que-tipo-de-campana-de-google-ads-es-mejor-para-mi-negocio-en-chile',
+        permanent: true,
+      },
+      {
+        source: '/blog/como-muller-y-perez-lidera-la-transformacion-del-marketing-en-chile-con-intelige',
+        destination: '/blog/como-la-inteligencia-artificial-esta-transformando-las-agencias-de-marketing-en-',
+        permanent: true,
+      },
+      {
+        source: '/blog/como-elegir-la-mejor-agencia-de-marketing-digital-en-chile',
+        destination: '/blog/agencia-de-marketing-digital-en-santiago-como-elegir-la-mejor-para-tu-empresa-en',
+        permanent: true,
+      },
+      {
+        source: '/equipo',
+        destination: '/nosotros',
+        permanent: true,
+      },
+      // ========================================
       // Trailing slash fixes
       // ========================================
       {

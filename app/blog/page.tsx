@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { Calendar, ArrowRight, Tag } from 'lucide-react'
 import { createClient } from '@supabase/supabase-js'
 import SiteHeader from '@/components/SiteHeader'
+import blogConsolidados from '@/lib/blog-consolidados.json'
 
 export const metadata: Metadata = {
   title: 'Blog Marketing Digital 2026 - Guías Google Ads y Performance',
@@ -475,7 +476,8 @@ async function getSupabasePosts() {
       .select('slug, title, excerpt, date_published, category, read_time, tag, image_url')
       .order('date_published', { ascending: false })
 
-    return (data || []).map((p: any) => ({
+    // Artículos consolidados (redirigidos con 301 en next.config.js): no se listan
+    return (data || []).filter((p: any) => !(blogConsolidados as string[]).includes(p.slug)).map((p: any) => ({
       slug: p.slug,
       title: p.title,
       excerpt: p.excerpt || '',
