@@ -17,7 +17,7 @@ import {
 export const metadata: Metadata = createMetadata({
   title: "Agencia CRO en Chile: optimización de conversión B2B y B2C",
   description:
-    "Optimización de la tasa de conversión (CRO) en Chile: auditoría del embudo, Microsoft Clarity, landing pages, formularios, medición en GA4 y Ads y seguimiento del lead hasta tu CRM.",
+    "CRO en Chile con resultados reales: CPA de $17.100 a $826 en Power Energy y CPL de $21.048 a $7.337 en Genera. Clarity, landing pages, formularios y seguimiento hasta tu CRM.",
   keywords: [
     "agencia cro chile",
     "optimización de conversión",
@@ -31,7 +31,7 @@ export const metadata: Metadata = createMetadata({
 });
 
 const RESPUESTA_DIRECTA =
-  "El CRO (optimización de la tasa de conversión) consiste en lograr que una mayor parte de las visitas que ya llegan a tu sitio se conviertan en leads o ventas. Se hace midiendo bien cada conversión, observando cómo navegan las personas, corrigiendo lo que las frena en landing pages y formularios, y probando cambios con datos. En Muller y Pérez lo conectamos con tus campañas y con tu CRM, para optimizar sobre ventas reales y no solo sobre formularios enviados.";
+  "El CRO (optimización de la tasa de conversión) consiste en lograr que una mayor parte de las visitas que ya llegan a tu sitio se conviertan en leads o ventas. Se hace midiendo bien cada conversión, observando cómo navegan las personas, corrigiendo lo que las frena en landing pages y formularios, y probando cambios con datos. En Muller y Pérez lo conectamos con tus campañas y con tu CRM, para optimizar sobre ventas reales y no solo sobre formularios enviados. Con este método bajamos el costo por conversión de Power Energy de $17.100 a $826 y el costo por lead de Genera en Meta Ads de $21.048 a $7.337.";
 
 const QUE_HACEMOS = [
   {
@@ -63,6 +63,49 @@ const QUE_HACEMOS = [
     titulo: "Pruebas A/B",
     texto:
       "Cuando hay tráfico suficiente, probamos variantes de página o de formulario y dejamos la que convierte más, con criterios definidos antes de empezar.",
+  },
+];
+
+// Resultados reales publicados en /casos-de-exito (datos extraídos de las plataformas de cada cliente)
+const RESULTADOS = [
+  {
+    cliente: "Power Energy",
+    rubro: "Iluminación industrial · B2B + B2C · 15 meses",
+    cifra: "-95%",
+    etiqueta: "costo por conversión",
+    antes: "$17.100",
+    despues: "$826",
+    detalle: [
+      "327 conversiones al mes",
+      "Mejor tasa de conversión: 56,79% (Meta, post orgánico potenciado)",
+      "Google Ads: 81,44% de impresiones sobre el pliegue",
+    ],
+  },
+  {
+    cliente: "Genera",
+    rubro: "Software B2B · 15 meses",
+    cifra: "-65%",
+    etiqueta: "costo por lead en Meta Ads",
+    antes: "$21.048",
+    despues: "$7.337",
+    detalle: [
+      "374 leads al mes",
+      "Mejor tasa de conversión: 10,85% (Meta \"Leads Oferta\")",
+      "Remarketing Performance Max: CPL $6.459",
+    ],
+  },
+  {
+    cliente: "CyM Propiedades",
+    rubro: "Corredora de propiedades · 3 meses",
+    cifra: "95%",
+    etiqueta: "de leads incrementales",
+    antes: null,
+    despues: null,
+    detalle: [
+      "Solo 5% de leads duplicados",
+      "Seguimiento automático por WhatsApp 24 horas después de cada lead",
+      "Panel de inversión y leads por comuna en tiempo real",
+    ],
   },
 ];
 
@@ -179,6 +222,52 @@ export default function CROChilePage() {
               <p className="text-indigo-100 leading-relaxed">
                 {RESPUESTA_DIRECTA}
               </p>
+            </div>
+          </div>
+        </section>
+
+        {/* Resultados reales */}
+        <section className="px-6 py-20 bg-white">
+          <div className="max-w-6xl mx-auto">
+            <h2 className="text-3xl md:text-4xl font-black tracking-tight mb-3">
+              Resultados reales de clientes
+            </h2>
+            <p className="text-slate-600 max-w-2xl mb-12">
+              Datos tomados directamente de las plataformas de cada cliente,
+              publicados con detalle en{" "}
+              <Link href="/casos-de-exito" className="text-[#4F46E5] font-semibold underline">
+                casos de éxito
+              </Link>
+              .
+            </p>
+            <div className="grid gap-6 lg:grid-cols-3">
+              {RESULTADOS.map((r) => (
+                <div
+                  key={r.cliente}
+                  className="bg-[#F7F7FB] rounded-2xl p-7 ring-1 ring-slate-200 flex flex-col"
+                >
+                  <p className="text-sm font-semibold text-[#4F46E5]">{r.rubro}</p>
+                  <h3 className="text-xl font-black mt-1 mb-5">{r.cliente}</h3>
+                  <p className="text-5xl font-black text-[#1B1740] leading-none">{r.cifra}</p>
+                  <p className="text-sm text-slate-600 mt-2 mb-5">{r.etiqueta}</p>
+                  {r.antes && r.despues && (
+                    <div className="flex items-center gap-3 mb-5 text-sm">
+                      <span className="px-3 py-1.5 rounded-lg bg-slate-200 text-slate-700 line-through">
+                        {r.antes}
+                      </span>
+                      <span aria-hidden="true">→</span>
+                      <span className="px-3 py-1.5 rounded-lg bg-emerald-100 text-emerald-800 font-bold">
+                        {r.despues}
+                      </span>
+                    </div>
+                  )}
+                  <ul className="text-sm text-slate-700 space-y-2 border-t border-slate-200 pt-4 mt-auto">
+                    {r.detalle.map((d) => (
+                      <li key={d}>• {d}</li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
             </div>
           </div>
         </section>

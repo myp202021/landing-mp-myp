@@ -4,7 +4,7 @@ import { ArrowRight, Building2, Users, Target, BarChart3, Linkedin, CheckCircle,
 
 export const metadata: Metadata = {
   title: 'Marketing Digital B2B en Chile | Generación de Leads Empresariales',
-  description: 'Agencia especializada en marketing B2B en Chile. Generamos leads calificados para empresas con LinkedIn Ads, Google Ads, ABM y estrategias de contenido. CPL promedio $15.000.',
+  description: 'Agencia especializada en marketing B2B en Chile. Generamos leads calificados para empresas con LinkedIn Ads, Google Ads, ABM y estrategias de contenido. Caso real: CPL de $21.048 a $7.337 en Genera (software B2B).',
   keywords: 'marketing b2b chile, marketing digital empresas chile, generacion leads b2b, linkedin ads chile, abm chile, marketing industrial chile',
   openGraph: {
     title: 'Marketing Digital B2B en Chile | M&P',
@@ -55,7 +55,7 @@ const jsonLd = {
           name: '¿Cuánto cuesta un lead B2B en Chile?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'El CPL B2B en Chile varía según la industria: Tecnología/SaaS $12.000-25.000 CLP, Servicios profesionales $8.000-18.000 CLP, Industrial $15.000-35.000 CLP. El Predictor M&P estima un CPL promedio de $15.000 con alta calificación.',
+            text: 'El CPL B2B en Chile varía según la industria: Tecnología/SaaS $12.000-25.000 CLP, Servicios profesionales $8.000-18.000 CLP, Industrial $15.000-35.000 CLP. En un caso real de M&P, Genera (software B2B) bajó su CPL en Meta Ads de $21.048 a $7.337 en 15 meses.',
           },
         },
         {
@@ -109,12 +109,12 @@ export default function MarketingB2BPage() {
 
               <div className="flex flex-wrap justify-center gap-4 mb-12">
                 <div className="bg-white/10 backdrop-blur px-6 py-3 rounded-lg">
-                  <div className="text-3xl font-bold text-blue-400">$15.000</div>
-                  <div className="text-sm text-slate-300">CPL Promedio</div>
+                  <div className="text-3xl font-bold text-blue-400">$7.337</div>
+                  <div className="text-sm text-slate-300">CPL Genera (software B2B)</div>
                 </div>
                 <div className="bg-white/10 backdrop-blur px-6 py-3 rounded-lg">
-                  <div className="text-3xl font-bold text-blue-400">42%</div>
-                  <div className="text-sm text-slate-300">Tasa Calificación</div>
+                  <div className="text-3xl font-bold text-blue-400">-95%</div>
+                  <div className="text-sm text-slate-300">CPA Power Energy</div>
                 </div>
                 <div className="bg-white/10 backdrop-blur px-6 py-3 rounded-lg">
                   <div className="text-3xl font-bold text-blue-400">3.2x</div>
@@ -417,12 +417,6 @@ export default function MarketingB2BPage() {
                       <td className="px-6 py-4 text-center">30-40%</td>
                       <td className="px-6 py-4 text-center">3-6 meses</td>
                     </tr>
-                    <tr className="bg-blue-50 font-bold">
-                      <td className="px-6 py-4">Estimación Predictor M&P</td>
-                      <td className="px-6 py-4 text-center text-blue-600">$15.000</td>
-                      <td className="px-6 py-4 text-center text-blue-600">42%</td>
-                      <td className="px-6 py-4 text-center text-blue-600">-30% vs industria</td>
-                    </tr>
                   </tbody>
                 </table>
               </div>
@@ -483,7 +477,7 @@ export default function MarketingB2BPage() {
                   <p className="text-gray-600">
                     El CPL B2B varía según industria: <strong>Tecnología/SaaS $12.000-25.000</strong>,
                     Servicios profesionales $8.000-18.000, Industrial $15.000-35.000.
-                    El Predictor M&P estima un CPL promedio de <strong>$15.000 con 42% de tasa de calificación</strong>.
+                    En un caso real de M&P, <strong>Genera (software B2B) bajó su CPL en Meta Ads de $21.048 a $7.337</strong> en 15 meses.
                   </p>
                 </div>
 
