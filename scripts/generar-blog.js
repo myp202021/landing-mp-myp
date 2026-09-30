@@ -14,6 +14,28 @@ const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SER
 
 // Temas organizados por categoría — se rotan automáticamente
 const TEMAS = [
+
+  // IA y educación (prioridad desde 30 sept 2026, pedido de Christopher: menos rankings de agencias, más IA y contenido educativo)
+  { categoria: 'IA y educación', tag: 'Inteligencia Artificial', tema: 'Curso práctico de Claude para equipos de marketing: de cero a tu primer agente' },
+  { categoria: 'IA y educación', tag: 'Inteligencia Artificial', tema: 'Cómo usar Claude para analizar campañas de Google Ads: guía paso a paso con prompts' },
+  { categoria: 'IA y educación', tag: 'Inteligencia Artificial', tema: 'Prompts para marketing B2B: plantillas probadas para generar y calificar leads' },
+  { categoria: 'IA y educación', tag: 'Inteligencia Artificial', tema: 'Qué es un agente de IA y cómo automatiza los reportes de marketing: ejemplos reales' },
+  { categoria: 'IA y educación', tag: 'Inteligencia Artificial', tema: 'Cómo automatizar un informe semanal de SEO con IA: guía práctica' },
+  { categoria: 'IA y educación', tag: 'Inteligencia Artificial', tema: 'ChatGPT, Claude y Gemini para marketing: qué herramienta usar en cada tarea' },
+  { categoria: 'IA y educación', tag: 'Inteligencia Artificial', tema: 'Cómo aparecer en las respuestas de ChatGPT y Gemini: guía GEO para empresas chilenas' },
+  { categoria: 'IA y educación', tag: 'Inteligencia Artificial', tema: 'Microsoft Clarity para principiantes: mapas de calor y grabaciones para mejorar la conversión' },
+  { categoria: 'IA y educación', tag: 'Inteligencia Artificial', tema: 'Cómo construir un dashboard de marketing con IA conectado a tu CRM' },
+  { categoria: 'IA y educación', tag: 'Inteligencia Artificial', tema: 'IA para pymes en Chile: tareas de marketing que puedes automatizar esta semana' },
+  { categoria: 'IA y educación', tag: 'Inteligencia Artificial', tema: 'Cómo escribir briefs creativos con IA sin perder la voz de tu marca' },
+  { categoria: 'IA y educación', tag: 'Inteligencia Artificial', tema: 'Análisis de datos de marketing con IA: de la planilla a las decisiones' },
+  { categoria: 'IA y educación', tag: 'Inteligencia Artificial', tema: 'Cómo usar IA para investigar palabras clave y planificar contenido SEO' },
+  { categoria: 'IA y educación', tag: 'Inteligencia Artificial', tema: 'Seguimiento de leads con IA y WhatsApp: guía práctica para equipos comerciales' },
+  { categoria: 'IA y educación', tag: 'Inteligencia Artificial', tema: 'Qué es MCP (Model Context Protocol) y por qué importa a los equipos de marketing' },
+  { categoria: 'IA y educación', tag: 'Inteligencia Artificial', tema: 'Cómo saber si tu contenido hecho con IA es útil para Google' },
+  { categoria: 'IA y educación', tag: 'Inteligencia Artificial', tema: 'Glosario de IA para marketers: términos clave explicados en simple' },
+  { categoria: 'IA y educación', tag: 'Inteligencia Artificial', tema: 'Cómo capacitar a tu equipo de marketing en IA: plan de 30 días' },
+  { categoria: 'IA y educación', tag: 'Inteligencia Artificial', tema: 'Casos de uso de IA en marketing inmobiliario, educación y salud en Chile' },
+  { categoria: 'IA y educación', tag: 'Inteligencia Artificial', tema: 'Cómo medir el retorno de las herramientas de IA en marketing' },
   // Google Ads
   { categoria: 'Google Ads', tag: 'Google Ads', tema: 'Cómo reducir el CPC en Google Ads en Chile: técnicas avanzadas de Quality Score y estructura de campañas' },
   { categoria: 'Google Ads', tag: 'Google Ads', tema: 'Google Ads para empresas B2B en Chile: estrategia de keywords, landing pages y ciclos de venta largos' },
@@ -276,8 +298,10 @@ async function elegirTemaBase() {
   const disponibles = TEMAS.filter(t => !slugsExistentes.has(slugify(t.tema)) && !temaPublicado(t.tema, titulosExistentes))
 
   if (disponibles.length > 0) {
-    // Hay temas predefinidos disponibles
-    return disponibles[Math.floor(Math.random() * disponibles.length)]
+    // Primero IA y educación; luego el resto
+    var prioritarios = disponibles.filter(t => t.categoria === 'IA y educación')
+    var pool = prioritarios.length ? prioritarios : disponibles
+    return pool[Math.floor(Math.random() * pool.length)]
   }
 
   // Todos los temas predefinidos ya se usaron — tema nuevo dentro del cluster de keywords del día

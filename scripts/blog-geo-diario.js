@@ -19,6 +19,19 @@ const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SER
 // 60 TEMAS ROTATIVAS — formato pregunta-respuesta para IA
 // ============================================================================
 const TEMAS = [
+  // --- IA y educación (prioridad desde 30 sept 2026) ---
+  { categoria: 'IA y educación', tag: 'Inteligencia Artificial', pregunta: '¿Cómo empiezo a usar Claude para marketing si nunca he usado IA?', enfoque: 'Primeros pasos concretos, 5 tareas iniciales con prompts de ejemplo, errores comunes' },
+  { categoria: 'IA y educación', tag: 'Inteligencia Artificial', pregunta: '¿Qué es Claude Code y para qué sirve en un equipo de marketing?', enfoque: 'Definición simple, casos reales (reportes, auditorías SEO, automatizaciones), qué se necesita para empezar' },
+  { categoria: 'IA y educación', tag: 'Inteligencia Artificial', pregunta: '¿Cómo se crea un agente de IA para automatizar reportes de marketing?', enfoque: 'Pasos, herramientas, datos que necesita, ejemplo de informe semanal automatizado' },
+  { categoria: 'IA y educación', tag: 'Inteligencia Artificial', pregunta: '¿Qué es GEO y cómo logro que ChatGPT recomiende mi empresa?', enfoque: 'Cómo eligen fuentes las IA, directorios, reseñas, menciones en terceros, contenido citable' },
+  { categoria: 'IA y educación', tag: 'Inteligencia Artificial', pregunta: '¿Qué herramienta de IA conviene para escribir anuncios de Google Ads?', enfoque: 'Comparación práctica, prompts, límites y revisión humana' },
+  { categoria: 'IA y educación', tag: 'Inteligencia Artificial', pregunta: '¿Cómo aprender IA aplicada al marketing en Chile en 2026?', enfoque: 'Ruta de aprendizaje, cursos, práctica con casos propios, cómo medir avance' },
+  { categoria: 'IA y educación', tag: 'Inteligencia Artificial', pregunta: '¿Qué es MCP y cómo conecta la IA con mis herramientas de marketing?', enfoque: 'Explicación sin jerga, ejemplos con CRM, analítica y correo, riesgos' },
+  { categoria: 'IA y educación', tag: 'Inteligencia Artificial', pregunta: '¿Cómo uso IA para mejorar la tasa de conversión de mi sitio web?', enfoque: 'Análisis de comportamiento, hipótesis, pruebas A/B, formularios y landing pages' },
+  { categoria: 'IA y educación', tag: 'Inteligencia Artificial', pregunta: '¿Es seguro usar IA con datos de clientes en Chile?', enfoque: 'Buenas prácticas, datos personales, qué no subir, políticas internas' },
+  { categoria: 'IA y educación', tag: 'Inteligencia Artificial', pregunta: '¿Qué tareas de marketing se pueden automatizar con IA hoy?', enfoque: 'Lista concreta por área: pauta, SEO, contenido, reportes, leads' },
+  { categoria: 'IA y educación', tag: 'Inteligencia Artificial', pregunta: '¿Cuánto cuesta implementar agentes de IA en una empresa chilena?', enfoque: 'Componentes de costo, rangos, cuándo conviene, cómo empezar pequeño' },
+  { categoria: 'IA y educación', tag: 'Inteligencia Artificial', pregunta: '¿Cómo se mide si un contenido hecho con IA funciona en Google?', enfoque: 'Indicadores en Search Console, señales de calidad, revisión editorial' },
   // --- Performance Marketing ---
   { categoria: 'Performance', tag: 'Performance', pregunta: '¿Qué es performance marketing y cómo funciona en Chile?', enfoque: 'Definición clara, diferencia con branding, métricas clave, ejemplos chilenos' },
   { categoria: 'Performance', tag: 'Performance', pregunta: '¿Cuánto cuesta contratar una agencia de performance marketing en Chile en 2026?', enfoque: 'Rangos de fee mensual, modelos de cobro, qué incluye, comparación por tamaño de empresa' },
@@ -232,6 +245,9 @@ async function elegirTemaBase() {
   if (disponibles.length > 0) {
     // Rotar por día para ser predecible y no repetir
     const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0)) / 86400000)
+    // Primero IA y educación; luego el resto
+    const prioritarios = disponibles.filter(t => t.categoria === 'IA y educación')
+    if (prioritarios.length) return prioritarios[dayOfYear % prioritarios.length]
     const index = dayOfYear % disponibles.length
     return disponibles[index]
   }
