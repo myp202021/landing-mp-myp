@@ -3,8 +3,8 @@ import Link from 'next/link'
 import { ArrowLeft, TrendingUp, BarChart2, Target, CheckCircle2, AlertCircle, Info, Layers, GitBranch, Zap } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Google Meridian en Chile: Marketing Mix Modeling para agencias de performance',
-  description: 'Qué es Google Meridian, cómo funciona el MMM bayesiano, por qué supera la atribución por clic y cómo las agencias de performance en Chile lo aplican para distribuir presupuesto con datos reales.',
+  title: 'Google Meridian en Chile: Marketing Mix Modeling',
+  description: 'Qué es Google Meridian, cómo funciona el MMM bayesiano y cómo las agencias de performance en Chile lo usan para distribuir presupuesto con datos.',
   keywords: 'google meridian chile, marketing mix modeling chile, mmm atribución marketing, atribución bayesiana publicidad chile, meridian google open source, marketing mix modeling agencia chile',
   alternates: {
     canonical: 'https://www.mulleryperez.cl/investigacion/google-meridian-marketing-mix-modeling-chile'

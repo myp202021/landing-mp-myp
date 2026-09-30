@@ -15,8 +15,8 @@ import {
 } from '@/lib/metadata'
 
 export const metadata: Metadata = createMetadata({
-  title: 'Agencia Marketing Digital Viña del Mar | Google Ads y Performance',
-  description: 'Agencia marketing digital en Viña del Mar especializada en Google Ads, Meta Ads y performance marketing. Atendemos V Región: Viña, Valparaíso, Con Con, Quilpué y Reñaca.',
+  title: 'Agencia de Marketing Digital en Viña del Mar',
+  description: 'Agencia de marketing digital en Viña del Mar: Google Ads, Meta Ads y performance para la V Región: Viña, Valparaíso, Concón y Quilpué.',
   keywords: [
     'agencia marketing digital viña del mar',
     'marketing digital viña del mar',

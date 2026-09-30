@@ -3,8 +3,8 @@ import CopilotClient from './CopilotClient'
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Consultoría Claude Code — Instalamos tu Sistema Operativo con IA',
-  description: 'Sesiones 1:1 para instalar Claude Code como sistema operativo de tu negocio. Agentes automáticos, SEO diario, dashboards, CRM, cotizaciones con IA. Christopher Müller — Ing. Civil Industrial + MBA U. Chile, 20+ años.',
+  title: 'Consultoría Claude Code: tu sistema operativo con IA',
+  description: 'Sesiones 1:1 para instalar Claude Code en tu negocio: agentes automáticos, SEO diario, dashboards, CRM y cotizaciones con IA, con Christopher Müller.',
   keywords: [
     'consultoría claude code chile',
     'claude code para empresas',

@@ -4,7 +4,7 @@ import SiteHeader from '@/components/SiteHeader'
 
 export const metadata: Metadata = {
   title: 'Christopher Müller — CEO & Founder',
-  description: 'Christopher Müller es CEO y Fundador de Muller y Pérez, agencia de performance marketing en Chile. Especialista en Google Ads, Meta Ads y estrategia digital data-driven con más de 6 años de experiencia.',
+  description: 'Christopher Müller, CEO y fundador de Muller y Pérez, agencia de performance marketing en Chile. Especialista en Google Ads, Meta Ads y estrategia digital.',
   alternates: {
     canonical: 'https://www.mulleryperez.cl/equipo/christopher-muller'
   },

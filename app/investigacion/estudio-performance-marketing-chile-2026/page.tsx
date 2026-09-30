@@ -3,8 +3,8 @@ import Link from 'next/link'
 import { ArrowLeft, TrendingUp, BarChart2, Target, DollarSign, CheckCircle2, AlertCircle, Info } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Estudio: Benchmarks de Performance Marketing en Chile 2026 — Datos de +200 Campañas Reales',
-  description: 'CPL, ROAS y CPC reales por industria en Chile 2026. Datos de +200 campañas activas: e-commerce ROAS 5x, inmobiliaria CPL $55k, fintech CPC $479. Metodología verificada.',
+  title: 'Benchmarks de Performance Marketing Chile 2026',
+  description: 'CPL, ROAS y CPC reales por industria en Chile 2026, con datos de más de 200 campañas activas: e-commerce, inmobiliaria, fintech y más.',
   keywords: 'benchmarks marketing digital chile 2026, cpl promedio chile, roas chile, cpc chile por industria, performance marketing chile, estudio marketing digital chile, datos reales campañas digitales',
   alternates: {
     canonical: 'https://www.mulleryperez.cl/investigacion/estudio-performance-marketing-chile-2026'

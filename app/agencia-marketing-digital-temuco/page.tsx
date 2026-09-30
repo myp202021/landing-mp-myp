@@ -15,8 +15,8 @@ import {
 } from '@/lib/metadata'
 
 export const metadata: Metadata = createMetadata({
-  title: 'Agencia Marketing Digital Temuco | Google Ads y Performance',
-  description: 'Agencia marketing digital en Temuco especializada en Google Ads, Meta Ads y performance marketing. Atendemos IX Región: Temuco, Padre Las Casas, Villarrica, Pucón y Angol.',
+  title: 'Agencia de Marketing Digital en Temuco',
+  description: 'Agencia de marketing digital en Temuco: Google Ads, Meta Ads y performance para la IX Región: Temuco, Padre Las Casas, Villarrica y Pucón.',
   keywords: [
     'agencia marketing digital temuco',
     'marketing digital temuco',

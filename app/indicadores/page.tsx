@@ -7,8 +7,8 @@ export const dynamic = 'force-dynamic'
 export const fetchCache = 'force-no-store'
 
 export const metadata: Metadata = {
-  title: 'CPC y CPA por Industria en Chile 2026 — Google Ads y Meta Ads',
-  description: 'Benchmarks semanales de CPC y CPA para Google Ads y Meta Ads en 22 industrias en Chile. E-commerce, salud, inmobiliaria, fintech y más. Actualizado cada sábado con tipo de cambio USD real.',
+  title: 'CPC y CPA por Industria en Chile 2026',
+  description: 'Benchmarks semanales de CPC y CPA en Google Ads y Meta Ads para 22 industrias en Chile. Se actualiza cada sábado con el tipo de cambio real.',
   keywords: [
     'CPC Chile 2026', 'CPA Chile publicidad digital', 'Google Ads Chile costo por click',
     'Meta Ads Chile benchmark', 'costo pauta digital Chile', 'benchmark marketing digital Chile',

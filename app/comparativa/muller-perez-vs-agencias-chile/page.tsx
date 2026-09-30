@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { CheckCircle2, XCircle, ArrowRight, Users, Target, BarChart3, Award } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Muller y Pérez vs Otras Agencias de Marketing Digital Chile 2025',
+  title: 'Muller y Pérez vs otras agencias de marketing 2026',
   description: 'Comparativa objetiva de Muller y Pérez frente a otras agencias de marketing digital en Chile. Diferencias en metodología, precios, resultados y enfoque.',
   keywords: [
     'muller y perez vs cebra',

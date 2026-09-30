@@ -3,8 +3,8 @@ import Link from 'next/link'
 import { ArrowRight, Trophy, DollarSign, FileText, GitCompare, BarChart3, BookOpen, Calculator, Briefcase, Users, Building2, GraduationCap, Heart, Home, ShoppingCart, Wrench } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Recursos de Marketing Digital Chile | Guías, Rankings y Comparativas',
-  description: 'Recursos gratuitos de marketing digital para Chile. Rankings de agencias, guías de precios, comparativas de plataformas y estadísticas del mercado chileno 2025.',
+  title: 'Recursos de Marketing Digital en Chile',
+  description: 'Recursos gratuitos de marketing digital para Chile: rankings de agencias, guías de precios, comparativas de plataformas y estadísticas del mercado.',
   keywords: 'recursos marketing digital chile, guias marketing digital, ranking agencias chile, precios agencias marketing, comparativas google ads meta ads, estadisticas marketing chile',
   openGraph: {
     title: 'Recursos de Marketing Digital Chile | M&P',

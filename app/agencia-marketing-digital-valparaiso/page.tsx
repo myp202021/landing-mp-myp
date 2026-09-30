@@ -15,8 +15,8 @@ import {
 } from '@/lib/metadata'
 
 export const metadata: Metadata = createMetadata({
-  title: 'Agencia Marketing Digital Valparaíso | Google Ads y Performance',
-  description: 'Agencia marketing digital en Valparaíso especializada en Google Ads, Meta Ads y performance marketing. Atendemos V Región: Valparaíso, Viña del Mar, Quilpué, Villa Alemana y Con Con.',
+  title: 'Agencia de Marketing Digital en Valparaíso',
+  description: 'Agencia de marketing digital en Valparaíso: Google Ads, Meta Ads y performance para la V Región: Valparaíso, Viña del Mar, Quilpué y Concón.',
   keywords: [
     'agencia marketing digital valparaiso',
     'marketing digital valparaiso',

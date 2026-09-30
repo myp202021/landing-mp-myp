@@ -15,8 +15,8 @@ import {
 } from '@/lib/metadata'
 
 export const metadata: Metadata = createMetadata({
-  title: 'Agencia Marketing Digital Concepción | Google Ads y Performance',
-  description: 'Agencia marketing digital en Concepción especializada en Google Ads, Meta Ads y performance marketing. Atendemos VIII Región: Concepción, Talcahuano, San Pedro, Chiguayante y Coronel.',
+  title: 'Agencia de Marketing Digital en Concepción',
+  description: 'Agencia de marketing digital en Concepción: Google Ads, Meta Ads y performance para la VIII Región: Concepción, Talcahuano, San Pedro y Coronel.',
   keywords: [
     'agencia marketing digital concepcion',
     'marketing digital concepcion',

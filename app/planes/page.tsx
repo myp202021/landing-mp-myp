@@ -3,7 +3,7 @@ import PlanesClient from './PlanesClient'
 
 export const metadata: Metadata = {
   title: 'Planes de Marketing Digital Chile 2026',
-  description: 'Planes de marketing digital en Chile desde $950.000+IVA: Silver, Gold y Platinum. Google Ads, Meta Ads, contenido, email marketing y equipo dedicado. Diagnóstico inicial incluido.',
+  description: 'Planes de marketing digital en Chile desde $950.000+IVA: Silver, Gold y Platinum. Google Ads, Meta Ads, contenido y equipo dedicado.',
   keywords: 'planes marketing digital chile, precios agencia marketing, plan paid media, plan redes sociales, agencia marketing precios 2026',
   alternates: {
     canonical: 'https://www.mulleryperez.cl/planes'

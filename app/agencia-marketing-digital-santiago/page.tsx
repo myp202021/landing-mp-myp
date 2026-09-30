@@ -16,8 +16,8 @@ import {
 } from '@/lib/metadata'
 
 export const metadata: Metadata = createMetadata({
-  title: 'Agencia Marketing Digital Santiago | Expertos Google Ads y Performance',
-  description: 'Agencia marketing digital en Santiago especializada en performance marketing, Google Ads y Meta Ads. Oficinas en Las Condes. Equipo dedicado, datos reales y resultados medibles.',
+  title: 'Agencia de Marketing Digital en Santiago',
+  description: 'Agencia de marketing digital en Santiago especializada en performance: Google Ads y Meta Ads, equipo dedicado y resultados medibles.',
   keywords: [
     'agencia marketing digital santiago',
     'marketing digital santiago',
