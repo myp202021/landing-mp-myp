@@ -146,6 +146,22 @@ const TEMAS = [
   { categoria: 'Agencias', tag: 'Agencias', tema: 'Las agencias de marketing digital más innovadoras de Chile en 2026' },
   { categoria: 'Agencias', tag: 'Agencias', tema: 'Agencia de marketing digital para pymes en Chile: planes desde $500.000 mensuales' },
   { categoria: 'Agencias', tag: 'Agencias', tema: 'Consultora de marketing digital vs agencia: diferencias y cuál necesita tu empresa' },
+  // Ampliación 30 sept 2026: temas dirigidos a búsquedas comerciales donde M&P aún no está en el top 10
+  { categoria: 'Google Ads', tag: 'Google Ads', tema: 'Performance Max en Chile: cuándo sirve, cuándo quema presupuesto y cómo auditarla' },
+  { categoria: 'Google Ads', tag: 'Google Ads', tema: 'Google Ads para servicios profesionales en Santiago: abogados, clínicas y consultoras' },
+  { categoria: 'Meta Ads', tag: 'Meta Ads', tema: 'Advantage+ en Meta Ads: qué automatizar y qué controlar a mano en cuentas chilenas' },
+  { categoria: 'Meta Ads', tag: 'Meta Ads', tema: 'Formularios instantáneos de Meta: cómo filtrar leads basura sin perder volumen' },
+  { categoria: 'Performance', tag: 'Performance', tema: 'Presupuesto mínimo para pauta digital en Chile según industria y objetivo' },
+  { categoria: 'Performance', tag: 'Performance', tema: 'Cómo auditar una cuenta de Google Ads heredada de otra agencia en 30 días' },
+  { categoria: 'Analytics', tag: 'Analytics', tema: 'Conversiones offline: cómo conectar el CRM con Google Ads y Meta para optimizar por ventas' },
+  { categoria: 'Analytics', tag: 'Analytics', tema: 'Server-side tracking y Consent Mode v2: qué cambia para la medición en Chile' },
+  { categoria: 'Estrategia', tag: 'Estrategia', tema: 'Fee fijo vs porcentaje de inversión: cómo cobran las agencias de performance y qué conviene' },
+  { categoria: 'Estrategia', tag: 'Estrategia', tema: 'Checklist para cambiar de agencia de marketing digital sin perder resultados' },
+  { categoria: 'Industrias', tag: 'Industrias', tema: 'Marketing digital para educación superior y diplomados: captación de alumnos con pauta' },
+  { categoria: 'Industrias', tag: 'Industrias', tema: 'Marketing digital para turismo receptivo: captar viajeros de Brasil, EE.UU. y Europa' },
+  { categoria: 'Industrias', tag: 'Industrias', tema: 'Pauta digital para empresas industriales B2B: maquinaria, insumos y distribución' },
+  { categoria: 'CRO', tag: 'CRO', tema: 'Landing pages que convierten en Chile: estructura, velocidad y formularios cortos' },
+  { categoria: 'Automatización', tag: 'Automatización', tema: 'Agentes de IA en marketing: qué tareas ya se pueden delegar en una agencia' },
 ]
 
 function slugify(text) {
@@ -208,7 +224,45 @@ async function generarImagen(titulo, categoria) {
   }
 }
 
+// ═══ ANTI-DUPLICADOS (30 sept 2026) ═══
+// GPT reescribe los títulos ("Liderazgo en crisis..." → "Liderazgo Crisis Chile 2026: Retener Talento"), así que comparar
+// títulos exactos o slugs deja pasar el mismo tema. Se compara por raíces (5 letras) de las palabras relevantes:
+// si un título publicado contiene 2/3 o más de las raíces del tema (mínimo 2), el tema ya está cubierto.
+var VACIAS_DUP = 'para como cual cuales guia completa clave claves chile 2026 2025 2024 2023 tus sus los las del con que mejores mejor top ranking todo debes saber paso'.split(' ')
+// En el blog de una agencia estas palabras están en casi todos los títulos: no sirven para distinguir temas
+VACIAS_DUP = VACIAS_DUP.concat('marketing digital agencia agencias publicidad empresa empresas negocio negocios campana campanas google meta chilenas chilenos chileno chilena estrategia estrategias'.split(' '))
+function raicesTema(t) {
+  return String(t || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9 ]/g, ' ').split(/\s+/)
+    .filter(function(w) { return w.length > 3 && !/^\d+$/.test(w) && VACIAS_DUP.indexOf(w) === -1 })
+    .map(function(w) { return w.substring(0, 5) })
+    .filter(function(w, i, a) { return a.indexOf(w) === i })
+}
+function temaPublicado(texto, titulosExistentes) {
+  var r = raicesTema(texto)
+  if (r.length < 2) return null
+  for (var i = 0; i < titulosExistentes.length; i++) {
+    var e = raicesTema(titulosExistentes[i])
+    var comunes = r.filter(function(w) { return e.indexOf(w) !== -1 }).length
+    // Cubierto si el existente contiene 2/3 del tema, o si el tema contiene 2/3 de un existente de 3+ raíces
+    if (comunes >= 2 && (comunes / r.length >= 0.66 || (e.length >= 3 && comunes / e.length >= 0.66))) return titulosExistentes[i]
+  }
+  return null
+}
+
+// Envoltorio anti-duplicados: el tema elegido (predefinido o generado por IA) no puede repetir uno publicado
 async function elegirTema() {
+  const { data: pubs } = await supabase.from('blog_posts').select('title')
+  const titulos = (pubs || []).map(p => p.title)
+  for (let intento = 0; intento < 4; intento++) {
+    const t = await elegirTemaBase()
+    const repetido = temaPublicado(t.tema, titulos)
+    if (!repetido) return t
+    console.log('⚠️ Tema ya publicado ("' + t.tema + '" ≈ "' + repetido + '"). Probando otro...')
+  }
+  throw new Error('No se encontró tema nuevo tras 4 intentos: no se publica para evitar duplicados')
+}
+
+async function elegirTemaBase() {
   // Obtener slugs ya publicados
   const { data: existentes } = await supabase
     .from('blog_posts')
@@ -218,7 +272,8 @@ async function elegirTema() {
   const slugsExistentes = new Set((existentes || []).map(p => p.slug))
 
   // Filtrar temas no usados
-  const disponibles = TEMAS.filter(t => !slugsExistentes.has(slugify(t.tema)))
+  const titulosExistentes = (existentes || []).map(p => p.title)
+  const disponibles = TEMAS.filter(t => !slugsExistentes.has(slugify(t.tema)) && !temaPublicado(t.tema, titulosExistentes))
 
   if (disponibles.length > 0) {
     // Hay temas predefinidos disponibles
