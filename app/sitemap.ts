@@ -640,6 +640,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.9,
     },
     {
+      url: `${baseUrl}/servicios/cro-chile`,
+      lastModified: new Date('2026-09-30'),
+      changeFrequency: 'monthly',
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/por-que-muller-y-perez`,
+      lastModified: new Date('2026-09-30'),
+      changeFrequency: 'monthly',
+      priority: 0.9,
+    },
+    {
       url: `${baseUrl}/servicios/facebook-ads-chile`,
       lastModified: currentDate,
       changeFrequency: 'monthly',

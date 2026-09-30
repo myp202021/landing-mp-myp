@@ -360,6 +360,12 @@ export default function NosotrosPage() {
                 Contactar por WhatsApp
               </a>
             </div>
+            <p className="mt-8 text-blue-100">
+              ¿Comparando agencias?{' '}
+              <Link href="/por-que-muller-y-perez" className="font-semibold text-white underline">
+                Por qué elegir Muller y Pérez
+              </Link>
+            </p>
           </div>
         </section>
 

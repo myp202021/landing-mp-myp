@@ -8,6 +8,9 @@ import Link from 'next/link'
 import { createMetadata, createFAQPageSchema, createWebPageSchema } from '@/lib/metadata'
 import SiteHeader from '@/components/SiteHeader'
 
+// Servicios con página propia en /servicios/<slug>
+const PAGINAS_PROPIAS = ['google-ads-chile', 'meta-ads-chile', 'instagram-ads-chile', 'performance-marketing', 'seo-chile', 'geo-chile', 'cro-chile']
+
 export const metadata: Metadata = createMetadata({
   title: 'Servicios Marketing Digital Chile | Google Ads, Meta Ads, SEO, IA',
   description: 'Google Ads, Meta Ads, LinkedIn Ads, TikTok Ads, SEO, Performance Marketing e IA. Agencia data-driven con equipo dedicado y resultados medibles en Chile.',
@@ -214,6 +217,25 @@ const categories = [
           'Contenido de respuesta directa con schema FAQPage',
           'Informe GEO mensual con competidores',
           'Integrado con SEO técnico y campañas pagadas'
+        ]
+      },
+      {
+        slug: 'cro-chile',
+        title: 'CRO',
+        subtitle: 'Más leads y ventas con el mismo tráfico',
+        description: 'Optimización de la tasa de conversión para empresas B2B y B2C: auditoría del embudo, mapas de calor y grabaciones con Microsoft Clarity, mejoras en landing pages y formularios, medición de conversiones en GA4 y Ads, seguimiento del lead hasta el CRM y pruebas A/B.',
+        icon: '🎯',
+        features: [
+          { label: 'Servicios', value: 'Auditoría de embudo, Microsoft Clarity, landing pages, formularios, pruebas A/B' },
+          { label: 'Medición', value: 'Conversiones en GA4, Google Ads y Meta Ads conectadas a tu CRM' },
+          { label: 'Ideal para', value: 'Empresas que ya invierten en pauta y quieren más resultados del mismo tráfico' },
+          { label: 'Equipo asignado', value: 'Especialista en performance + diseño de landing pages' }
+        ],
+        benefits: [
+          'Diagnóstico de dónde se pierde la gente en tu embudo',
+          'Landing pages y formularios ajustados con datos',
+          'Leads medidos hasta la venta en tu CRM',
+          'Integrado con tus campañas de Google Ads y Meta Ads'
         ]
       },
       {
@@ -566,6 +588,14 @@ export default function ServiciosPage() {
                         >
                           Consultar por WhatsApp
                         </a>
+                        {PAGINAS_PROPIAS.includes(service.slug) && (
+                          <Link
+                            href={`/servicios/${service.slug}`}
+                            className="ml-3 inline-flex items-center gap-2 px-5 py-2.5 border border-blue-600 text-blue-700 hover:bg-blue-50 font-semibold rounded-lg transition-colors text-sm"
+                          >
+                            Ver el servicio
+                          </Link>
+                        )}
                       </div>
                     </div>
                   </div>

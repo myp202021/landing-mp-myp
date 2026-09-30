@@ -430,6 +430,43 @@ export default function MarketingB2BPage() {
           </div>
         </section>
 
+        {/* Casos B2B reales (solo datos publicados en /casos-de-exito) */}
+        <section className="py-20 bg-white">
+          <div className="container mx-auto px-4">
+            <div className="max-w-6xl mx-auto">
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 text-center">
+                Casos B2B reales
+              </h2>
+              <p className="text-gray-600 text-center max-w-2xl mx-auto mb-12">
+                Resultados tomados de las plataformas de cada cliente y publicados en nuestros casos de éxito.
+              </p>
+              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {[
+                  { cliente: 'Genera', rubro: 'Software B2B', dato: 'CPL en Meta Ads de $21.048 a $7.337 (-65%) en 15 meses, con 374 leads al mes' },
+                  { cliente: 'Power Energy', rubro: 'Iluminación industrial, B2B + B2C', dato: 'CPA de $17.100 a $826 (-95%) en 15 meses, con 327 conversiones al mes' },
+                  { cliente: 'Invas WMS', rubro: 'Software logístico (SEO + blog IA)', dato: '#1 en Google para “mejor WMS Chile 2026” y 113 artículos publicados por un agente de IA' },
+                  { cliente: 'Distec Chile', rubro: 'Importadora mayorista de tecnología', dato: 'Testimonio en video del cliente sobre el trabajo con Muller y Pérez' },
+                ].map((c) => (
+                  <Link
+                    key={c.cliente}
+                    href="/casos-de-exito"
+                    className="block bg-gray-50 rounded-xl p-6 border border-gray-200 hover:border-blue-500 transition"
+                  >
+                    <div className="text-sm font-semibold text-blue-600 mb-1">{c.rubro}</div>
+                    <h3 className="text-xl font-bold text-gray-900 mb-3">{c.cliente}</h3>
+                    <p className="text-sm text-gray-600 leading-relaxed">{c.dato}</p>
+                  </Link>
+                ))}
+              </div>
+              <div className="text-center mt-10">
+                <Link href="/casos-de-exito" className="inline-flex items-center gap-2 text-blue-600 font-semibold hover:underline">
+                  Ver todos los casos de éxito <ArrowRight className="w-4 h-4" />
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* FAQ */}
         <section className="py-20 bg-gray-50">
           <div className="container mx-auto px-4">
