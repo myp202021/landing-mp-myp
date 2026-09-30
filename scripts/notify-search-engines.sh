@@ -5,7 +5,7 @@
 
 SITE_URL="https://www.mulleryperez.cl"
 SITEMAP_URL="https://www.mulleryperez.cl/sitemap.xml"
-INDEXNOW_KEY="a8f2c9e1b4d6f8a2c5e7b9d1f3a5c7e9"
+INDEXNOW_KEY="272d893a828539aeac2e5cb3d64cbde9"
 
 echo "🚀 Notificando a buscadores..."
 

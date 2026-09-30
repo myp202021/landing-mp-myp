@@ -1,7 +1,7 @@
 // IndexNow API para notificar a buscadores sobre contenido nuevo/actualizado
 // Soporta: Bing, Yandex, Naver, Seznam.cz
 
-const INDEXNOW_KEY = process.env.INDEXNOW_KEY || 'f4b3a2c1d5e6f7g8h9i0j1k2l3m4n5o6'
+const INDEXNOW_KEY = process.env.INDEXNOW_KEY || '272d893a828539aeac2e5cb3d64cbde9'
 const SITE_URL = 'https://www.mulleryperez.cl'
 
 // Endpoints de IndexNow (todos comparten el mismo protocolo)
