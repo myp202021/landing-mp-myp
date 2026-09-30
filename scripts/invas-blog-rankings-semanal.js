@@ -23,10 +23,52 @@ var TEMAS_RANKING = [
   { titulo: 'invasWMS vs SAP EWM: comparativa para operaciones en LATAM', keywords: 'invasWMS vs SAP, SAP EWM alternativa, WMS vs SAP', tipo: 'comparativo' },
   { titulo: 'Top 7 soluciones WMS cloud disponibles en Chile', keywords: 'WMS cloud Chile, soluciones WMS nube Chile', tipo: 'ranking' },
   { titulo: 'Cómo se comparan los WMS open source vs comerciales en 2026', keywords: 'WMS open source, WMS gratis, WMS comercial vs libre', tipo: 'comparativo' },
-  { titulo: 'Las 10 funcionalidades que todo WMS moderno debe tener', keywords: 'funcionalidades WMS, features WMS, qué debe tener un WMS', tipo: 'ranking' },
   { titulo: 'Ranking de proveedores WMS por industria en Latinoamérica', keywords: 'proveedores WMS, ranking WMS por industria LATAM', tipo: 'ranking' },
   { titulo: 'Guía de precios WMS 2026: cuánto cuesta implementar un sistema', keywords: 'precio WMS, cuánto cuesta WMS, costo implementación WMS', tipo: 'guía' },
+  // Ampliación 30 sept 2026
+  { titulo: 'Mejores WMS para operadores 3PL en Chile 2026', keywords: 'WMS 3PL Chile, software operador logístico, WMS multi-cliente', tipo: 'ranking' },
+  { titulo: 'Ranking de WMS para centros de distribución en Chile', keywords: 'WMS centros de distribución, software CD Chile', tipo: 'ranking' },
+  { titulo: 'Mejores software de inventario para bodegas en Chile 2026', keywords: 'software de inventario bodega, sistema inventario Chile', tipo: 'ranking' },
+  { titulo: 'Mejores WMS para e-commerce en Latinoamérica 2026', keywords: 'WMS ecommerce LATAM, fulfillment ecommerce software', tipo: 'ranking' },
+  { titulo: 'Ranking de WMS con mejor integración a ERP en Chile', keywords: 'WMS integración ERP, WMS SAP Business One, WMS Defontana', tipo: 'ranking' },
+  { titulo: 'Mejores terminales y pistolas RF para bodega 2026', keywords: 'pistola RF bodega, terminal radiofrecuencia, lector código barras', tipo: 'ranking' },
+  { titulo: 'Ranking de WMS para la industria farmacéutica en LATAM', keywords: 'WMS farmacéutico, software bodega farmacia', tipo: 'ranking' },
+  { titulo: 'Mejores TMS para complementar un WMS en Chile', keywords: 'TMS Chile, software transporte, WMS y TMS', tipo: 'ranking' },
 ]
+
+// ═══ ANTI-DUPLICADOS (30 sept 2026) ═══
+// GPT reescribe los títulos ("Liderazgo en crisis..." → "Liderazgo Crisis Chile 2026: Retener Talento"), así que comparar
+// títulos exactos o slugs deja pasar el mismo tema. Se compara por raíces (5 letras) de las palabras relevantes:
+// si un título publicado contiene 2/3 o más de las raíces del tema (mínimo 2), el tema ya está cubierto.
+var VACIAS_DUP = 'para como cual cuales guia completa clave claves chile 2026 2025 2024 2023 tus sus los las del con que mejores mejor top ranking todo debes saber paso'.split(' ')
+function raicesTema(t) {
+  return String(t || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9 ]/g, ' ').split(/\s+/)
+    .filter(function(w) { return w.length > 3 && !/^\d+$/.test(w) && VACIAS_DUP.indexOf(w) === -1 })
+    .map(function(w) { return w.substring(0, 5) })
+    .filter(function(w, i, a) { return a.indexOf(w) === i })
+}
+function temaPublicado(texto, titulosExistentes) {
+  var r = raicesTema(texto)
+  if (r.length < 2) return null
+  for (var i = 0; i < titulosExistentes.length; i++) {
+    var e = raicesTema(titulosExistentes[i])
+    var comunes = r.filter(function(w) { return e.indexOf(w) !== -1 }).length
+    // Cubierto si el existente contiene 2/3 del tema, o si el tema contiene 2/3 de un existente de 3+ raíces
+    if (comunes >= 2 && (comunes / r.length >= 0.66 || (e.length >= 3 && comunes / e.length >= 0.66))) return titulosExistentes[i]
+  }
+  return null
+}
+async function todosLosPosts(url, headers) {
+  var todos = []
+  for (var pag = 1; pag <= 10; pag++) {
+    var r = await fetch(url + (url.indexOf('?') === -1 ? '?' : '&') + 'per_page=100&page=' + pag + '&_fields=title,slug', { headers: headers })
+    var lote = await r.json()
+    if (!Array.isArray(lote) || !lote.length) break
+    todos = todos.concat(lote)
+    if (lote.length < 100) break
+  }
+  return todos
+}
 
 async function main() {
   console.log('═══════════════════════════════════════════')
@@ -35,15 +77,17 @@ async function main() {
   console.log('═══════════════════════════════════════════\n')
 
   // Obtener posts existentes para no repetir
-  var res = await fetch(WP_URL + '/wp-json/wp/v2/posts?per_page=50&_fields=title', { headers: { 'Authorization': AUTH } })
-  var posts = await res.json()
-  var existentes = posts.map(function(p) { return p.title.rendered.toLowerCase() })
+  var posts = await todosLosPosts(WP_URL + '/wp-json/wp/v2/posts', { 'Authorization': AUTH })
+  var existentes = posts.map(function(p) { return p.title.rendered })
 
-  // Seleccionar tema no repetido
-  var disponibles = TEMAS_RANKING.filter(function(t) {
-    return !existentes.some(function(e) { return e.includes(t.titulo.substring(0, 25).toLowerCase()) })
-  })
-  if (disponibles.length === 0) disponibles = TEMAS_RANKING
+  // Seleccionar tema no repetido (antes: 25 caracteres + reinicio de la lista al agotarse → rankings duplicados)
+  var disponibles = TEMAS_RANKING.filter(function(t) { return !temaPublicado(t.titulo, existentes) })
+  console.log('Temas disponibles: ' + disponibles.length + '/' + TEMAS_RANKING.length)
+  if (!disponibles.length) {
+    console.log('⚠️ Todos los rankings ya están publicados. Agregar temas nuevos a TEMAS_RANKING.')
+    process.exitCode = 1
+    return
+  }
   var tema = disponibles[Math.floor(Math.random() * disponibles.length)]
 
   console.log('Tema: ' + tema.titulo)
@@ -103,6 +147,14 @@ async function main() {
   var data = await genRes.json()
   var content = data.choices[0].message.content.trim().replace(/^```json?\n?/, '').replace(/\n?```$/, '')
   var articulo = JSON.parse(content)
+  // Nunca años viejos en el título (salieron "Top 7 WMS Cloud Chile 2023", "Ranking omnicanal 2023")
+  articulo.titulo_seo = String(articulo.titulo_seo || '').replace(/\b20(1\d|2[0-5])\b/g, '2026')
+  var repetido = temaPublicado(articulo.titulo_seo, existentes)
+  if (repetido) {
+    console.log('⚠️ El título generado repite un tema publicado ("' + articulo.titulo_seo + '" ≈ "' + repetido + '"). No se publica.')
+    process.exitCode = 1
+    return
+  }
 
   console.log('Título: ' + articulo.titulo_seo)
   console.log('HTML: ' + (articulo.contenido_html || '').length + ' chars')

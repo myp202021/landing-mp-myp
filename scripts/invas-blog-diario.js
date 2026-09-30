@@ -82,11 +82,66 @@ var TEMAS = [
   { titulo: 'Guía paso a paso: cómo implementar un WMS en menos de 30 días', categoria: 'Guías', keywords: 'implementar WMS, guía implementación WMS, WMS rápido', tipo: 'guía' },
   { titulo: 'Capacitación de equipos en WMS: mejores prácticas', categoria: 'Guías', keywords: 'capacitación WMS, entrenar equipo WMS, adopción tecnología', tipo: 'guía' },
   { titulo: 'Migración de WMS: cómo cambiar de sistema sin perder datos', categoria: 'Guías', keywords: 'migración WMS, cambiar sistema WMS, migrar datos almacén', tipo: 'guía' },
+
+  // Ampliación 30 sept 2026: temas aún no publicados, con foco comercial (centros de distribución, 3PL, compra de software)
+  { titulo: 'Software WMS en Chile: qué preguntar antes de comprar', categoria: 'Guías', keywords: 'software WMS Chile, comprar software WMS, proveedor WMS', tipo: 'guía' },
+  { titulo: 'WMS para centros de distribución: funciones que sí importan', categoria: 'WMS', keywords: 'WMS centros de distribución, software centro de distribución, CD WMS', tipo: 'guía' },
+  { titulo: 'Cuánto cuesta un WMS: licencias, implementación y costos ocultos', categoria: 'WMS', keywords: 'precio WMS, cuánto cuesta un WMS, costo software almacén', tipo: 'guía' },
+  { titulo: 'Integración WMS con ERP: SAP Business One, Defontana y Softland', categoria: 'WMS', keywords: 'integración WMS ERP, WMS SAP Business One, WMS Defontana, WMS Softland', tipo: 'guía' },
+  { titulo: 'Integración WMS con e-commerce: Shopify, VTEX y WooCommerce', categoria: 'Industria', keywords: 'WMS Shopify, WMS VTEX, integración ecommerce bodega', tipo: 'guía' },
+  { titulo: 'Control de lotes y series en bodega: guía práctica', categoria: 'Operaciones', keywords: 'control de lotes, número de serie bodega, trazabilidad lotes', tipo: 'guía' },
+  { titulo: 'Recepción de mercadería: cómo evitar errores desde el andén', categoria: 'Operaciones', keywords: 'recepción de mercadería, proceso recepción bodega, andén', tipo: 'guía' },
+  { titulo: 'Layout de bodega: cómo diseñar pasillos y zonas para rendir más', categoria: 'Operaciones', keywords: 'layout de bodega, diseño de almacén, distribución bodega', tipo: 'guía' },
+  { titulo: 'Picking con radiofrecuencia vs picking por voz vs papel', categoria: 'Operaciones', keywords: 'picking radiofrecuencia, picking por voz, pistola RF bodega', tipo: 'comparativo' },
+  { titulo: 'Código de barras vs RFID en almacenes: cuál conviene', categoria: 'Operaciones', keywords: 'código de barras vs RFID, RFID almacén, etiquetado bodega', tipo: 'comparativo' },
+  { titulo: 'Inventario descuadrado: causas y cómo cerrarlo con un WMS', categoria: 'Operaciones', keywords: 'inventario descuadrado, diferencias de inventario, exactitud inventario', tipo: 'educativo' },
+  { titulo: 'WMS para farmacéuticas: trazabilidad y normativa ISP', categoria: 'Industria', keywords: 'WMS farmacéutico, bodega farmacéutica, trazabilidad ISP', tipo: 'industria' },
+  { titulo: 'WMS para repuestos y ferreterías: miles de SKU sin perder stock', categoria: 'Industria', keywords: 'WMS repuestos, bodega ferretería, gestión SKU', tipo: 'industria' },
+  { titulo: 'WMS para bodegas de vino y bebidas', categoria: 'Industria', keywords: 'WMS vino, bodega bebidas, logística vitivinícola', tipo: 'industria' },
+  { titulo: 'WMS para minería y bodegas de insumos industriales', categoria: 'Industria', keywords: 'WMS minería, bodega insumos mineros, logística minera', tipo: 'industria' },
+  { titulo: 'Almacenaje dirigido: cómo el WMS decide dónde guardar cada producto', categoria: 'Operaciones', keywords: 'almacenaje dirigido, putaway, ubicación automática', tipo: 'educativo' },
+  { titulo: 'Reabastecimiento de picking: cuándo y cuánto mover desde reserva', categoria: 'Operaciones', keywords: 'reabastecimiento picking, reposición de ubicaciones, replenishment', tipo: 'guía' },
+  { titulo: 'Despacho a regiones desde Santiago: cómo organizar la bodega', categoria: 'LATAM', keywords: 'despacho a regiones, logística regiones Chile, distribución nacional', tipo: 'guía' },
+  { titulo: 'Checklist para evaluar proveedores de WMS', categoria: 'Guías', keywords: 'checklist proveedores WMS, evaluar WMS, RFP WMS', tipo: 'guía' },
+  { titulo: 'Bodega propia vs operador 3PL: cómo decidir', categoria: 'Industria', keywords: 'bodega propia vs 3PL, tercerizar bodega, outsourcing logístico', tipo: 'comparativo' },
 ]
 
 // ═══════════════════════════════════════════
 // FUNCIONES
 // ═══════════════════════════════════════════
+// ═══ ANTI-DUPLICADOS (30 sept 2026) ═══
+// GPT reescribe los títulos ("Liderazgo en crisis..." → "Liderazgo Crisis Chile 2026: Retener Talento"), así que comparar
+// títulos exactos o slugs deja pasar el mismo tema. Se compara por raíces (5 letras) de las palabras relevantes:
+// si un título publicado contiene 2/3 o más de las raíces del tema (mínimo 2), el tema ya está cubierto.
+var VACIAS_DUP = 'para como cual cuales guia completa clave claves chile 2026 2025 2024 2023 tus sus los las del con que mejores mejor top ranking todo debes saber paso'.split(' ')
+function raicesTema(t) {
+  return String(t || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9 ]/g, ' ').split(/\s+/)
+    .filter(function(w) { return w.length > 3 && !/^\d+$/.test(w) && VACIAS_DUP.indexOf(w) === -1 })
+    .map(function(w) { return w.substring(0, 5) })
+    .filter(function(w, i, a) { return a.indexOf(w) === i })
+}
+function temaPublicado(texto, titulosExistentes) {
+  var r = raicesTema(texto)
+  if (r.length < 2) return null
+  for (var i = 0; i < titulosExistentes.length; i++) {
+    var e = raicesTema(titulosExistentes[i])
+    var comunes = r.filter(function(w) { return e.indexOf(w) !== -1 }).length
+    // Cubierto si el existente contiene 2/3 del tema, o si el tema contiene 2/3 de un existente de 3+ raíces
+    if (comunes >= 2 && (comunes / r.length >= 0.66 || (e.length >= 3 && comunes / e.length >= 0.66))) return titulosExistentes[i]
+  }
+  return null
+}
+async function todosLosPosts(url, headers) {
+  var todos = []
+  for (var pag = 1; pag <= 10; pag++) {
+    var r = await fetch(url + (url.indexOf('?') === -1 ? '?' : '&') + 'per_page=100&page=' + pag + '&_fields=title,slug', { headers: headers })
+    var lote = await r.json()
+    if (!Array.isArray(lote) || !lote.length) break
+    todos = todos.concat(lote)
+    if (lote.length < 100) break
+  }
+  return todos
+}
 
 async function verificarPublicadoHoy() {
   var hoy = new Date().toISOString().split('T')[0]
@@ -98,29 +153,23 @@ async function verificarPublicadoHoy() {
 }
 
 async function obtenerPostsExistentes() {
-  var res = await fetch(WP_URL + '/wp-json/wp/v2/posts?per_page=50&_fields=title,slug', {
-    headers: { 'Authorization': AUTH }
-  })
-  var posts = await res.json()
-  return posts.map(function(p) { return p.title.rendered.toLowerCase() })
+  // Todos los posts (antes solo 50 y hay más de 170)
+  var posts = await todosLosPosts(WP_URL + '/wp-json/wp/v2/posts', { 'Authorization': AUTH })
+  return posts.map(function(p) { return p.title.rendered })
 }
 
-function seleccionarTema(existentes) {
-  // Filtrar temas ya publicados
-  var disponibles = TEMAS.filter(function(t) {
-    return !existentes.some(function(e) {
-      return e.includes(t.titulo.substring(0, 30).toLowerCase())
-    })
+function temasDisponibles(existentes) {
+  // Antes: comparaba los primeros 30 caracteres y, si no quedaba ninguno, reiniciaba la lista → duplicados
+  return TEMAS.filter(function(t) {
+    return !temaPublicado(t.titulo, existentes) && !temaPublicado(t.keywords.split(',')[0], existentes)
   })
-  if (disponibles.length === 0) disponibles = TEMAS // Si ya se publicaron todos, reiniciar
-  // Aleatorio
-  return disponibles[Math.floor(Math.random() * disponibles.length)]
 }
 
 async function generarArticulo(tema) {
   var systemPrompt = `Eres un periodista especializado en logística y supply chain con 15 años de experiencia en Latinoamérica. Escribes para el blog de invasWMS (software WMS 100% cloud). Tu escritura es directa, con datos concretos, ejemplos reales y opinión fundamentada. NUNCA escribes contenido genérico ni relleno.
 
 REGLAS DE ESCRITURA OBLIGATORIAS:
+- El año actual es 2026. NUNCA pongas 2023, 2024 o 2025 en el título ni presentes esos años como actuales.
 - Párrafos cortos (3-4 oraciones máximo). El lector escanea, no lee todo.
 - Cada H2 debe prometer algo concreto y cumplirlo en esa sección.
 - Datos duros: cifras, porcentajes, estudios reales, nombres de empresas. Si no tienes el dato exacto, da un rango realista con fuente ("según Gartner, entre 15% y 25%").
@@ -432,15 +481,31 @@ async function main() {
   var existentes = await obtenerPostsExistentes()
   console.log('Posts existentes: ' + existentes.length)
 
-  // 3. Seleccionar tema
-  var tema = seleccionarTema(existentes)
-  console.log('Tema seleccionado: ' + tema.titulo)
-  console.log('Keywords: ' + tema.keywords)
-  console.log('Tipo: ' + tema.tipo)
+  // 3. Seleccionar tema no publicado y validar el título generado (GPT reescribe y puede caer en un tema existente)
+  var disponibles = temasDisponibles(existentes)
+  console.log('Temas disponibles: ' + disponibles.length + '/' + TEMAS.length)
+  if (disponibles.length <= 5) console.log('⚠️ Quedan pocos temas sin publicar: agregar nuevos a TEMAS.')
+  var tema, articulo
+  for (var intento = 0; intento < 3 && disponibles.length; intento++) {
+    tema = disponibles.splice(Math.floor(Math.random() * disponibles.length), 1)[0]
+    console.log('Tema seleccionado: ' + tema.titulo)
+    console.log('Keywords: ' + tema.keywords)
+    console.log('Tipo: ' + tema.tipo)
 
-  // 4. Generar artículo con OpenAI
-  console.log('\nGenerando artículo con GPT-4o...')
-  var articulo = await generarArticulo(tema)
+    // 4. Generar artículo con OpenAI
+    console.log('\nGenerando artículo con GPT-4o...')
+    articulo = await generarArticulo(tema)
+    articulo.titulo_seo = String(articulo.titulo_seo || '').replace(/\b20(1\d|2[0-5])\b/g, '2026')
+    var repetido = temaPublicado(articulo.titulo_seo, existentes)
+    if (!repetido) break
+    console.log('  ⚠️ Tema ya publicado ("' + articulo.titulo_seo + '" ≈ "' + repetido + '"). Probando otro...')
+    articulo = null
+  }
+  if (!articulo) {
+    console.log('⚠️ No hay tema nuevo sin repetir. No se publica para evitar duplicados.')
+    process.exitCode = 1
+    return
+  }
   console.log('Artículo generado: ' + articulo.titulo_seo)
   console.log('Slug: ' + articulo.slug)
   console.log('Largo HTML: ' + (articulo.contenido_html || '').length + ' chars')
