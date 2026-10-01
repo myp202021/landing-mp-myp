@@ -60,12 +60,12 @@ export default function SiteHeader() {
             Agentes
           </Link>
 
-          {/* Copilot */}
+          {/* Boost SEO + IA */}
           <Link
             href="/copilot"
             className="hidden md:block text-sm font-semibold text-gray-700 hover:text-blue-600 transition-all duration-200"
           >
-            Copilot
+            Boost SEO + IA
           </Link>
 
           {/* M&P Labs Dropdown */}

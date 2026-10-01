@@ -1,125 +1,187 @@
-import SiteHeader from '@/components/SiteHeader'
-import CopilotClient from './CopilotClient'
-import { Metadata } from 'next'
+import SiteHeader from "@/components/SiteHeader";
+import CopilotClient from "./CopilotClient";
+import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: 'Consultoría Claude Code: tu sistema operativo con IA',
-  description: 'Sesiones 1:1 para instalar Claude Code en tu negocio: agentes automáticos, SEO diario, dashboards, CRM y cotizaciones con IA, con Christopher Müller.',
+  title: "Boost SEO + IA: aparece en Google y en ChatGPT",
+  description:
+    "Setup SEO + GEO por $490.000 + IVA (H1, H2, schemas, FAQ, indexación, Google Business) y agentes IA por $99.990 + IVA al mes con 8 artículos e informe semanal.",
   keywords: [
-    'consultoría claude code chile',
-    'claude code para empresas',
-    'automatización con IA chile',
-    'agentes IA negocio',
-    'sistema operativo IA',
-    'consultoría IA marketing chile',
-    'claude code setup',
-    'asesoría inteligencia artificial',
+    "seo y geo chile",
+    "posicionamiento en chatgpt",
+    "aparecer en chatgpt empresa",
+    "generative engine optimization chile",
+    "agentes ia seo",
+    "seo con inteligencia artificial chile",
+    "auditoría seo geo",
+    "blog automatizado con ia",
   ],
-  alternates: { canonical: 'https://www.mulleryperez.cl/copilot' },
+  alternates: { canonical: "https://www.mulleryperez.cl/copilot" },
   openGraph: {
-    title: 'Consultoría Claude Code — Sistema Operativo con IA para tu Negocio',
-    description: 'Sesiones 1:1 para instalar Claude Code. Agentes automáticos, SEO diario, dashboards, CRM, cotizaciones con IA. Christopher Müller — 20+ años en tecnología.',
-    url: 'https://www.mulleryperez.cl/copilot',
-    siteName: 'Muller y Pérez',
-    type: 'website',
-    locale: 'es_CL',
-    images: [{ url: 'https://www.mulleryperez.cl/og-image.jpg', width: 1200, height: 630, alt: 'Consultoría Claude Code — Muller y Pérez' }],
+    title: "Boost SEO + IA — Que Google y ChatGPT recomienden tu empresa",
+    description:
+      "Setup SEO + GEO por $490.000 + IVA y agentes IA por $99.990 + IVA al mes: 8 artículos e informe semanal de Google y ChatGPT.",
+    url: "https://www.mulleryperez.cl/copilot",
+    siteName: "Muller y Pérez",
+    type: "website",
+    locale: "es_CL",
+    images: [
+      {
+        url: "https://www.mulleryperez.cl/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Boost SEO + IA — Muller y Pérez",
+      },
+    ],
   },
   twitter: {
-    card: 'summary_large_image',
-    title: 'Consultoría Claude Code — Sistema Operativo con IA',
-    description: 'Sesiones 1:1 para instalar Claude Code como sistema operativo de tu negocio. Agentes, SEO, dashboards, CRM, cotizaciones.',
-    images: ['https://www.mulleryperez.cl/og-image.jpg'],
+    card: "summary_large_image",
+    title: "Boost SEO + IA — Muller y Pérez",
+    description:
+      "Setup SEO + GEO por $490.000 + IVA y agentes IA por $99.990 + IVA al mes.",
+    images: ["https://www.mulleryperez.cl/og-image.jpg"],
   },
   robots: {
     index: true,
     follow: true,
-    googleBot: { index: true, follow: true, 'max-video-preview': -1, 'max-image-preview': 'large', 'max-snippet': -1 },
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
   },
-}
+};
 
 // Schema FAQPage
 var faqLd = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
   mainEntity: [
-    { '@type': 'Question', name: '¿Necesito saber programar para usar Claude Code?', acceptedAnswer: { '@type': 'Answer', text: 'No. Claude Code programa por ti. Tú describes lo que necesitas en lenguaje natural y Claude Code ejecuta: crea archivos, instala dependencias, conecta APIs, deploya sitios. No necesitas experiencia técnica previa.' } },
-    { '@type': 'Question', name: '¿Qué es Claude Code?', acceptedAnswer: { '@type': 'Answer', text: 'Claude Code es la herramienta CLI de Anthropic que lee archivos, ejecuta comandos, conecta APIs y tiene memoria persistente. Es un sistema operativo con IA que puede gestionar repositorios, enviar emails, generar PDFs, publicar contenido y automatizar procesos de negocio.' } },
-    { '@type': 'Question', name: '¿En qué se diferencia Claude Code de ChatGPT?', acceptedAnswer: { '@type': 'Answer', text: 'ChatGPT es un chat que genera texto. Claude Code es un sistema operativo que ejecuta acciones reales en tu computador: lee tu disco, crea archivos, conecta APIs, tiene memoria persistente que recuerda tu contexto, y corre agentes en segundo plano que trabajan mientras duermes.' } },
-    { '@type': 'Question', name: '¿Cuánto dura cada sesión de consultoría?', acceptedAnswer: { '@type': 'Answer', text: 'Cada sesión dura 90 minutos por videollamada. En el programa Completo son 4 sesiones de 90 minutos cada una. El programa Agencia incluye además una sesión presencial de 4 horas en Santiago.' } },
-    { '@type': 'Question', name: '¿Puedo hacer las sesiones de consultoría Claude Code online?', acceptedAnswer: { '@type': 'Answer', text: 'Sí, todas las sesiones son por videollamada. El programa Agencia incluye opción presencial en Santiago para la sesión intensiva con tu equipo.' } },
-    { '@type': 'Question', name: '¿Qué resultados puedo esperar de la consultoría?', acceptedAnswer: { '@type': 'Answer', text: 'Desde la primera sesión tendrás un agente funcionando — ya sea un blog diario automatizado, un generador de reportes, o el que elijas según tu negocio. Al terminar el programa Completo tendrás un sistema operativo con IA que gestiona tareas repetitivas de forma autónoma.' } },
-    { '@type': 'Question', name: '¿La consultoría Claude Code funciona para cualquier industria?', acceptedAnswer: { '@type': 'Answer', text: 'Sí. Tenemos clientes en educación, salud, inmobiliario, energía, legal, retail, logística, tecnología y más. Claude Code se adapta a cualquier negocio que tenga procesos repetitivos que puedan automatizarse.' } },
-    { '@type': 'Question', name: '¿La consultoría incluye soporte después de las sesiones?', acceptedAnswer: { '@type': 'Answer', text: 'El programa Completo incluye soporte por WhatsApp entre sesiones. El programa Agencia incluye 1 mes de soporte post-implementación para asegurar que todo funcione correctamente en producción.' } },
+    {
+      "@type": "Question",
+      name: "¿Qué es GEO?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "GEO (Generative Engine Optimization) es lograr que las inteligencias artificiales como ChatGPT, Gemini o Perplexity mencionen y recomienden tu empresa cuando alguien pregunta por tu rubro. Se trabaja con contenido propio, datos estructurados y presencia coherente en directorios y medios.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "¿Qué incluye el setup de $490.000?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Auditoría SEO + GEO con línea base; H1, H2, títulos, meta descripciones, textos alternativos y enlaces internos; schemas Organization o LocalBusiness, FAQPage, servicios y breadcrumbs; Search Console, Bing Webmaster, sitemap, robots, canonical e IndexNow; Google Business Profile y directorios; y 5 artículos iniciales.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "¿Qué hacen los agentes por $99.990 al mes?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Escriben y publican 8 artículos al mes con control de calidad, envían cada publicación a Google y Bing, hacen ajustes menores y envían cada lunes un informe con las posiciones en Google y las menciones en ChatGPT.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "¿Hay permanencia mínima?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Sí, 3 meses para los agentes. El setup es un pago único.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "¿Qué necesito para empezar?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Acceso de administrador a tu sitio. En WordPress funciona directo. Otros sistemas quedan sujetos a una revisión técnica previa y, si el servidor bloquea las cargas, se coordina con tu desarrollador.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "¿Necesito tener campañas pagadas con M&P?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "No. Boost SEO + IA se contrata solo.",
+      },
+    },
   ],
-}
+};
 
 // Schema Service
 var serviceLd = {
-  '@context': 'https://schema.org',
-  '@type': 'Service',
-  name: 'Consultoría Claude Code',
-  description: 'Sesiones 1:1 para instalar Claude Code como sistema operativo de tu negocio. Agentes automáticos, SEO diario, dashboards, CRM, cotizaciones con IA.',
-  provider: { '@type': 'Organization', name: 'Muller y Pérez', url: 'https://www.mulleryperez.cl' },
-  url: 'https://www.mulleryperez.cl/copilot',
-  areaServed: { '@type': 'Country', name: 'Chile' },
-  serviceType: 'Consultoría en Inteligencia Artificial',
+  "@context": "https://schema.org",
+  "@type": "Service",
+  name: "Boost SEO + IA",
+  description:
+    "Setup SEO + GEO para aparecer en Google y en las respuestas de ChatGPT, Gemini y Perplexity, más agentes IA que publican 8 artículos al mes y entregan un informe semanal.",
+  provider: {
+    "@type": "Organization",
+    name: "Muller y Pérez",
+    url: "https://www.mulleryperez.cl",
+  },
+  url: "https://www.mulleryperez.cl/copilot",
+  areaServed: { "@type": "Country", name: "Chile" },
+  serviceType: "SEO y GEO con inteligencia artificial",
   offers: [
-    { '@type': 'Offer', name: 'Setup', price: '200000', priceCurrency: 'CLP', description: '1 sesión de 90 minutos. Instalación Claude Code, memoria persistente, hooks, primer agente funcional.' },
-    { '@type': 'Offer', name: 'Completo', price: '700000', priceCurrency: 'CLP', description: '4 sesiones 1:1. Agentes diarios, integraciones, cotizaciones/PDFs, Master Agent, soporte WhatsApp.' },
-    { '@type': 'Offer', name: 'Agencia', price: '1500000', priceCurrency: 'CLP', description: 'Sesión presencial 4 horas, setup multi-usuario, repos por cliente, dashboard operativo, 1 mes soporte.' },
+    {
+      "@type": "Offer",
+      name: "Setup SEO + GEO",
+      price: "490000",
+      priceCurrency: "CLP",
+      description:
+        "Pago único más IVA. Auditoría SEO + GEO, H1 y H2, schemas, FAQ, indexación, Google Business Profile, directorios y 5 artículos iniciales.",
+    },
+    {
+      "@type": "Offer",
+      name: "Agentes IA",
+      price: "99990",
+      priceCurrency: "CLP",
+      description:
+        "Mensual más IVA, permanencia mínima 3 meses. 8 artículos al mes, indexación e informe semanal de Google y ChatGPT.",
+    },
   ],
-}
-
-// Schema Person
-var personLd = {
-  '@context': 'https://schema.org',
-  '@type': 'Person',
-  name: 'Christopher Müller',
-  jobTitle: 'Fundador y Director',
-  worksFor: { '@type': 'Organization', name: 'Muller y Pérez', url: 'https://www.mulleryperez.cl' },
-  alumniOf: [
-    { '@type': 'CollegeOrUniversity', name: 'Universidad de Chile' },
-  ],
-  description: 'Ingeniero Civil Industrial y MBA Universidad de Chile. 20+ años en tecnología, marketing digital e IA. Opera una agencia de 40+ clientes 100% desde Claude Code.',
-  knowsAbout: ['Claude Code', 'Inteligencia Artificial', 'Marketing Digital', 'Automatización', 'Performance Marketing'],
-}
-
-// Schema Course
-var courseLd = {
-  '@context': 'https://schema.org',
-  '@type': 'Course',
-  name: 'Programa de Consultoría Claude Code',
-  description: '4 sesiones 1:1 para instalar Claude Code como sistema operativo de tu negocio. Agentes automáticos, integraciones, cotizaciones con IA, Master Agent.',
-  provider: { '@type': 'Organization', name: 'Muller y Pérez', url: 'https://www.mulleryperez.cl' },
-  instructor: { '@type': 'Person', name: 'Christopher Müller' },
-  numberOfCredits: '4',
-  educationalCredentialAwarded: 'Sistema operativo con IA implementado',
-  courseMode: 'online',
-  inLanguage: 'es',
-  offers: { '@type': 'Offer', price: '700000', priceCurrency: 'CLP', availability: 'https://schema.org/InStock' },
-}
+};
 
 // BreadcrumbList
 var breadcrumbLd = {
-  '@context': 'https://schema.org',
-  '@type': 'BreadcrumbList',
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
   itemListElement: [
-    { '@type': 'ListItem', position: 1, name: 'Muller y Pérez', item: 'https://www.mulleryperez.cl' },
-    { '@type': 'ListItem', position: 2, name: 'Consultoría Claude Code', item: 'https://www.mulleryperez.cl/copilot' },
+    {
+      "@type": "ListItem",
+      position: 1,
+      name: "Muller y Pérez",
+      item: "https://www.mulleryperez.cl",
+    },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: "Boost SEO + IA",
+      item: "https://www.mulleryperez.cl/copilot",
+    },
   ],
-}
+};
 
 export default function CopilotPage() {
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(personLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(courseLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
+      />
       <SiteHeader />
       <CopilotClient />
     </>
-  )
+  );
 }
