@@ -24,7 +24,7 @@ const recursos = {
     {
       titulo: 'Ranking Agencias Marketing Digital Chile',
       descripcion: 'Las mejores agencias de marketing digital en Chile según métricas de rendimiento.',
-      href: '/ranking-agencias-marketing-digital-chile',
+      href: '/mejores-agencias-marketing-digital-chile',
       icon: Trophy,
     },
     {

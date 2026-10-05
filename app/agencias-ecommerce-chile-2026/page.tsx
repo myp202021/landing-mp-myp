@@ -584,7 +584,7 @@ export default function AgenciasEcommercePage() {
               Muller y Perez lidera este ranking por su enfoque de performance medido a nivel de SKU, integrando Google Shopping con Meta Catalog en un dashboard unificado. Rompecabeza Digital es la mejor opcion para retailers enterprise con operaciones complejas, e I.Com destaca por su especializacion vertical y CRO avanzado.
             </p>
             <p className="text-lg text-gray-700 mb-8 leading-relaxed">
-              Para entender el contexto completo del marketing digital en Chile, consulta nuestro <Link href="/estudio-agencias-marketing-digital-chile-2026" className="text-emerald-600 hover:underline font-semibold">estudio del mercado de agencias</Link>, el <Link href="/ranking-agencias-marketing-digital-chile" className="text-emerald-600 hover:underline font-semibold">ranking general</Link>, y las guias especializadas de <Link href="/mejores-agencias-google-ads-chile-2026" className="text-emerald-600 hover:underline font-semibold">Google Ads</Link> y <Link href="/agencias-meta-ads-chile-2026" className="text-emerald-600 hover:underline font-semibold">Meta Ads</Link>.
+              Para entender el contexto completo del marketing digital en Chile, consulta nuestro <Link href="/estudio-agencias-marketing-digital-chile-2026" className="text-emerald-600 hover:underline font-semibold">estudio del mercado de agencias</Link>, el <Link href="/mejores-agencias-marketing-digital-chile" className="text-emerald-600 hover:underline font-semibold">ranking general</Link>, y las guias especializadas de <Link href="/mejores-agencias-google-ads-chile-2026" className="text-emerald-600 hover:underline font-semibold">Google Ads</Link> y <Link href="/agencias-meta-ads-chile-2026" className="text-emerald-600 hover:underline font-semibold">Meta Ads</Link>.
             </p>
           </section>
 
@@ -610,7 +610,7 @@ export default function AgenciasEcommercePage() {
           <section className="mb-16">
             <h3 className="text-lg font-bold text-gray-900 mb-4">Recursos Relacionados</h3>
             <div className="grid md:grid-cols-3 gap-4">
-              <Link href="/ranking-agencias-marketing-digital-chile" className="block p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition">
+              <Link href="/mejores-agencias-marketing-digital-chile" className="block p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition">
                 <p className="font-semibold text-gray-900 text-sm">Ranking General Agencias Chile</p>
                 <p className="text-xs text-gray-500">Top 10 agencias de marketing digital</p>
               </Link>

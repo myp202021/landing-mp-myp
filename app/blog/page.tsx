@@ -602,6 +602,7 @@ export default async function BlogPage() {
             <Link href="/" className="hover:text-blue-600 transition-colors">Inicio</Link>
             <Link href="/labs" className="hover:text-blue-600 transition-colors">M&P Labs</Link>
             <Link href="/utilidades" className="hover:text-blue-600 transition-colors">Utilidades</Link>
+            <Link href="/mejores-agencias-marketing-digital-chile" className="hover:text-blue-600 transition-colors">Mejores agencias de marketing digital en Chile</Link>
           </div>
         </div>
       </footer>

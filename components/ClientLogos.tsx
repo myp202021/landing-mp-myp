@@ -151,7 +151,7 @@ export function ClientLogosGrid() {
             Ver nuestro portfolio de trabajos ↓
           </a>
           <Link
-            href="/ranking-agencias-marketing-digital-chile"
+            href="/mejores-agencias-marketing-digital-chile"
             className="text-blue-400 hover:text-blue-300 font-semibold transition-colors"
           >
             Ranking Agencias Marketing Digital Chile 2026 →

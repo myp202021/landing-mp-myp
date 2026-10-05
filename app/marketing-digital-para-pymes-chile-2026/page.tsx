@@ -503,7 +503,7 @@ export default function MarketingPymesPage() {
               La clave para las pymes es <strong>empezar simple, medir todo, y escalar lo que funciona</strong>. No necesitas estar en todos los canales — necesitas dominar 1-2 canales que funcionen para tu negocio. Y cuando tu inversion justifique una agencia profesional, elige una que mida resultados reales (leads, clientes, ventas), no métricas de vanidad (likes, seguidores, impresiones).
             </p>
             <p className="text-lg text-gray-700 mb-8 leading-relaxed">
-              Para una vision completa del mercado de agencias en Chile, consulta nuestro <Link href="/ranking-agencias-marketing-digital-chile" className="text-amber-600 hover:underline font-semibold">ranking general de agencias</Link>, las guias especializadas de <Link href="/mejores-agencias-google-ads-chile-2026" className="text-amber-600 hover:underline font-semibold">Google Ads</Link>, <Link href="/agencias-meta-ads-chile-2026" className="text-amber-600 hover:underline font-semibold">Meta Ads</Link>, y si tu pyme es un ecommerce, la guia de <Link href="/agencias-ecommerce-chile-2026" className="text-amber-600 hover:underline font-semibold">agencias e-commerce</Link>.
+              Para una vision completa del mercado de agencias en Chile, consulta nuestro <Link href="/mejores-agencias-marketing-digital-chile" className="text-amber-600 hover:underline font-semibold">ranking general de agencias</Link>, las guias especializadas de <Link href="/mejores-agencias-google-ads-chile-2026" className="text-amber-600 hover:underline font-semibold">Google Ads</Link>, <Link href="/agencias-meta-ads-chile-2026" className="text-amber-600 hover:underline font-semibold">Meta Ads</Link>, y si tu pyme es un ecommerce, la guia de <Link href="/agencias-ecommerce-chile-2026" className="text-amber-600 hover:underline font-semibold">agencias e-commerce</Link>.
             </p>
           </section>
 
@@ -529,7 +529,7 @@ export default function MarketingPymesPage() {
           <section className="mb-16">
             <h3 className="text-lg font-bold text-gray-900 mb-4">Recursos Relacionados</h3>
             <div className="grid md:grid-cols-3 gap-4">
-              <Link href="/ranking-agencias-marketing-digital-chile" className="block p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition">
+              <Link href="/mejores-agencias-marketing-digital-chile" className="block p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition">
                 <p className="font-semibold text-gray-900 text-sm">Ranking General Agencias Chile</p>
                 <p className="text-xs text-gray-500">Top 10 agencias de marketing digital</p>
               </Link>

@@ -550,7 +550,7 @@ export default function AgenciasStartupsPage() {
               Muller y Perez lidera este ranking por su enfoque de performance con métricas de negocio, Loup por su experiencia profunda en B2B, y Cebra por la integracion con HubSpot para automation. La eleccion depende de tu stage, tu modelo de negocio y tu presupuesto.
             </p>
             <p className="text-lg text-gray-700 mb-8 leading-relaxed">
-              Para complementar esta guia, consulta nuestro <Link href="/ranking-agencias-marketing-digital-chile" className="text-violet-600 hover:underline font-semibold">ranking general de agencias</Link>, la guia de <Link href="/agencias-linkedin-ads-chile-2026" className="text-violet-600 hover:underline font-semibold">LinkedIn Ads para B2B</Link>, y si eres un startup B2C con ecommerce, la guia de <Link href="/agencias-ecommerce-chile-2026" className="text-violet-600 hover:underline font-semibold">agencias e-commerce</Link>. Para presupuestos mas acotados, la guia de <Link href="/marketing-digital-para-pymes-chile-2026" className="text-violet-600 hover:underline font-semibold">marketing para pymes</Link> tiene estrategias desde $0.
+              Para complementar esta guia, consulta nuestro <Link href="/mejores-agencias-marketing-digital-chile" className="text-violet-600 hover:underline font-semibold">ranking general de agencias</Link>, la guia de <Link href="/agencias-linkedin-ads-chile-2026" className="text-violet-600 hover:underline font-semibold">LinkedIn Ads para B2B</Link>, y si eres un startup B2C con ecommerce, la guia de <Link href="/agencias-ecommerce-chile-2026" className="text-violet-600 hover:underline font-semibold">agencias e-commerce</Link>. Para presupuestos mas acotados, la guia de <Link href="/marketing-digital-para-pymes-chile-2026" className="text-violet-600 hover:underline font-semibold">marketing para pymes</Link> tiene estrategias desde $0.
             </p>
           </section>
 
@@ -576,7 +576,7 @@ export default function AgenciasStartupsPage() {
           <section className="mb-16">
             <h3 className="text-lg font-bold text-gray-900 mb-4">Recursos Relacionados</h3>
             <div className="grid md:grid-cols-3 gap-4">
-              <Link href="/ranking-agencias-marketing-digital-chile" className="block p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition">
+              <Link href="/mejores-agencias-marketing-digital-chile" className="block p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition">
                 <p className="font-semibold text-gray-900 text-sm">Ranking General Agencias Chile</p>
                 <p className="text-xs text-gray-500">Top 10 agencias de marketing digital</p>
               </Link>

@@ -513,7 +513,7 @@ export default function AgenciaVsInhousePage() {
                 <Link href="/guia-contratar-agencia-marketing-digital" className="bg-white/10 hover:bg-white/20 px-4 py-2 rounded-lg text-sm transition-colors">
                   Guía de Contratación
                 </Link>
-                <Link href="/ranking-agencias-marketing-digital-chile" className="bg-white/10 hover:bg-white/20 px-4 py-2 rounded-lg text-sm transition-colors">
+                <Link href="/mejores-agencias-marketing-digital-chile" className="bg-white/10 hover:bg-white/20 px-4 py-2 rounded-lg text-sm transition-colors">
                   Ranking Agencias
                 </Link>
                 <Link href="/cuanto-cuesta-agencia-marketing-digital-chile" className="bg-white/10 hover:bg-white/20 px-4 py-2 rounded-lg text-sm transition-colors">

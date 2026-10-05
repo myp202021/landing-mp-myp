@@ -507,7 +507,7 @@ export default function EstudioIAMarketingPage() {
               Pero la IA no es magia. Tiene limitaciones reales (alucinaciones, homogeneizacion, dependencia de algoritmos) que requieren supervision humana experta. La combinacion ganadora es <strong>IA como herramienta + humanos como estrategas, editores y controladores de calidad</strong>. Las agencias que encuentren este equilibrio seran las ganadoras del mercado en los proximos anos.
             </p>
             <p className="text-lg text-gray-700 mb-8 leading-relaxed">
-              Muller y Perez ha apostado por esta vision con M&P Copilot: herramientas propias de IA (Predictor, agentes de contenido, benchmark automatizado) combinadas con un equipo humano que define estrategia, edita contenido, supervisa algoritmos y toma decisiones que la IA no puede tomar. Consulta nuestro <Link href="/ranking-agencias-marketing-digital-chile" className="text-cyan-600 hover:underline font-semibold">ranking general de agencias</Link> para ver como evaluamos cada agencia, o explora las guias de <Link href="/mejores-agencias-google-ads-chile-2026" className="text-cyan-600 hover:underline font-semibold">Google Ads</Link>, <Link href="/agencias-meta-ads-chile-2026" className="text-cyan-600 hover:underline font-semibold">Meta Ads</Link>, <Link href="/agencias-tiktok-ads-chile-2026" className="text-cyan-600 hover:underline font-semibold">TikTok Ads</Link> y <Link href="/agencias-linkedin-ads-chile-2026" className="text-cyan-600 hover:underline font-semibold">LinkedIn Ads</Link>.
+              Muller y Perez ha apostado por esta vision con M&P Copilot: herramientas propias de IA (Predictor, agentes de contenido, benchmark automatizado) combinadas con un equipo humano que define estrategia, edita contenido, supervisa algoritmos y toma decisiones que la IA no puede tomar. Consulta nuestro <Link href="/mejores-agencias-marketing-digital-chile" className="text-cyan-600 hover:underline font-semibold">ranking general de agencias</Link> para ver como evaluamos cada agencia, o explora las guias de <Link href="/mejores-agencias-google-ads-chile-2026" className="text-cyan-600 hover:underline font-semibold">Google Ads</Link>, <Link href="/agencias-meta-ads-chile-2026" className="text-cyan-600 hover:underline font-semibold">Meta Ads</Link>, <Link href="/agencias-tiktok-ads-chile-2026" className="text-cyan-600 hover:underline font-semibold">TikTok Ads</Link> y <Link href="/agencias-linkedin-ads-chile-2026" className="text-cyan-600 hover:underline font-semibold">LinkedIn Ads</Link>.
             </p>
           </section>
 
@@ -533,7 +533,7 @@ export default function EstudioIAMarketingPage() {
           <section className="mb-16">
             <h3 className="text-lg font-bold text-gray-900 mb-4">Recursos Relacionados</h3>
             <div className="grid md:grid-cols-3 gap-4">
-              <Link href="/ranking-agencias-marketing-digital-chile" className="block p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition">
+              <Link href="/mejores-agencias-marketing-digital-chile" className="block p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition">
                 <p className="font-semibold text-gray-900 text-sm">Ranking General Agencias Chile</p>
                 <p className="text-xs text-gray-500">Top 10 agencias de marketing digital</p>
               </Link>

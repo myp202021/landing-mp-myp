@@ -6,7 +6,7 @@ interface LinkItem {
 }
 
 const rankingLinks: LinkItem[] = [
-  { href: '/ranking-agencias-marketing-digital-chile', label: 'Ranking Agencias Marketing Digital Chile 2026' },
+  { href: '/mejores-agencias-marketing-digital-chile', label: 'Ranking Agencias Marketing Digital Chile 2026' },
   { href: '/mejores-agencias-performance-marketing-chile', label: 'Mejores Agencias Performance Marketing Chile' },
   { href: '/ranking-agencias-data-driven-chile', label: 'Ranking Agencias Data-Driven Chile 2026' },
   { href: '/ranking-agencias-creativas-chile', label: 'Ranking Agencias Creativas Chile 2026' },

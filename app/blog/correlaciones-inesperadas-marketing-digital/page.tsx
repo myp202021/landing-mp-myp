@@ -354,7 +354,7 @@ export default function ArticlePage() {
         <nav className="mt-12 pt-8 border-t border-gray-200">
           <h3 className="text-lg font-bold text-gray-900 mb-4">Artículos Relacionados</h3>
           <div className="flex flex-wrap gap-2">
-            <Link href="/ranking-agencias-marketing-digital-chile" className="text-sm text-blue-600 hover:text-blue-800 bg-blue-50 px-3 py-1.5 rounded-lg">
+            <Link href="/mejores-agencias-marketing-digital-chile" className="text-sm text-blue-600 hover:text-blue-800 bg-blue-50 px-3 py-1.5 rounded-lg">
               Ranking Agencias Marketing Digital Chile 2026 →
             </Link>
             <Link href="/mejores-agencias-performance-marketing-chile" className="text-sm text-blue-600 hover:text-blue-800 bg-blue-50 px-3 py-1.5 rounded-lg">

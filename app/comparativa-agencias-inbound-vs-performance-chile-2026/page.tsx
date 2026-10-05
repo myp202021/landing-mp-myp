@@ -732,7 +732,7 @@ export default function ComparativaInboundPerformancePage() {
           <section className="mb-16">
             <h3 className="text-lg font-bold text-gray-900 mb-4">Recursos Relacionados</h3>
             <div className="grid md:grid-cols-3 gap-4">
-              <Link href="/ranking-agencias-marketing-digital-chile" className="block p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition">
+              <Link href="/mejores-agencias-marketing-digital-chile" className="block p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition">
                 <p className="font-semibold text-gray-900 text-sm">Ranking Agencias Marketing Chile 2026</p>
                 <p className="text-xs text-gray-500">Top 10 agencias evaluadas con 5 criterios</p>
               </Link>

@@ -585,7 +585,7 @@ export default function ArticlePage() {
               <Link href="/blog/guia-marketing-digital-pymes-chile-2026" className="text-sm text-blue-600 hover:text-blue-800 bg-blue-50 px-3 py-1.5 rounded-lg">
                 Guia Marketing Digital Pymes Chile 2026 &rarr;
               </Link>
-              <Link href="/ranking-agencias-marketing-digital-chile" className="text-sm text-blue-600 hover:text-blue-800 bg-blue-50 px-3 py-1.5 rounded-lg">
+              <Link href="/mejores-agencias-marketing-digital-chile" className="text-sm text-blue-600 hover:text-blue-800 bg-blue-50 px-3 py-1.5 rounded-lg">
                 Ranking Agencias Marketing Digital Chile &rarr;
               </Link>
             </div>

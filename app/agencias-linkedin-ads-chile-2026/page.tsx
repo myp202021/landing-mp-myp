@@ -611,7 +611,7 @@ export default function AgenciasLinkedInAdsPage() {
             <p className="text-lg text-gray-700 mb-8 leading-relaxed">
               Si vendes B2B con tickets superiores a USD 500, LinkedIn Ads debería ser parte de tu mix. Consulta nuestro{' '}
               <Link href="/estudio-agencias-marketing-digital-chile-2026" className="text-blue-600 hover:underline font-semibold">estudio completo del mercado de agencias</Link> para entender el contexto y nuestro{' '}
-              <Link href="/ranking-agencias-marketing-digital-chile" className="text-blue-600 hover:underline font-semibold">ranking general</Link> para una visión más amplia.
+              <Link href="/mejores-agencias-marketing-digital-chile" className="text-blue-600 hover:underline font-semibold">ranking general</Link> para una visión más amplia.
             </p>
           </section>
 
@@ -637,7 +637,7 @@ export default function AgenciasLinkedInAdsPage() {
           <section className="mb-16">
             <h3 className="text-lg font-bold text-gray-900 mb-4">Recursos Relacionados</h3>
             <div className="grid md:grid-cols-3 gap-4">
-              <Link href="/ranking-agencias-marketing-digital-chile" className="block p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition">
+              <Link href="/mejores-agencias-marketing-digital-chile" className="block p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition">
                 <p className="font-semibold text-gray-900 text-sm">Ranking General Agencias Chile</p>
                 <p className="text-xs text-gray-500">Top 10 agencias de marketing digital</p>
               </Link>

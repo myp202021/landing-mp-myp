@@ -194,7 +194,7 @@ export default function MejoresAgenciasGoogleAdsPage() {
               </p>
               <p className="text-lg text-gray-700 mb-4 leading-relaxed">
                 Este ranking evalúa exclusivamente la capacidad de las agencias para gestionar Google Ads con resultados medibles. No consideramos otros servicios (SEO, social media, diseño web) porque esos merecen evaluaciones separadas. Si buscas un ranking general, consulta nuestro{' '}
-                <Link href="/ranking-agencias-marketing-digital-chile" className="text-blue-600 hover:underline">Ranking de Agencias de Marketing Digital en Chile</Link>.
+                <Link href="/mejores-agencias-marketing-digital-chile" className="text-blue-600 hover:underline">Ranking de Agencias de Marketing Digital en Chile</Link>.
               </p>
               <p className="text-lg text-gray-700 mb-4 leading-relaxed">
                 <strong>Nota de transparencia:</strong> Muller y Pérez es nuestra agencia y lidera este ranking. Reconocemos el posible sesgo, pero los datos que presentamos son verificables: nuestro{' '}
@@ -620,7 +620,7 @@ export default function MejoresAgenciasGoogleAdsPage() {
           <section className="mb-16">
             <h3 className="text-lg font-bold text-gray-900 mb-4">Recursos Relacionados</h3>
             <div className="grid md:grid-cols-3 gap-4">
-              <Link href="/ranking-agencias-marketing-digital-chile" className="block p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition">
+              <Link href="/mejores-agencias-marketing-digital-chile" className="block p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition">
                 <p className="font-semibold text-gray-900 text-sm">Ranking General Agencias Chile</p>
                 <p className="text-xs text-gray-500">Top 10 agencias de marketing digital</p>
               </Link>

@@ -45,6 +45,10 @@ jobs:
           SIN_APIFY: ${{ github.event_name == 'workflow_dispatch' && !inputs.usar_apify && '1' || '0' }}
           APIFY_EN_PRUEBA: ${{ inputs.usar_apify && '1' || '0' }}
 
+      - name: Datos de la página pilar /mejores-agencias-marketing-digital-chile (mismo snapshot)
+        if: success() && !(github.event_name == 'workflow_dispatch' && inputs.dry_run)
+        run: node scripts/ranking-pilar.js
+
       - name: Guardar snapshot mensual en el repo (auditoría pública del ranking)
         if: success() && !(github.event_name == 'workflow_dispatch' && inputs.dry_run)
         run: |

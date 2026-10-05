@@ -107,6 +107,8 @@ const nextConfig = {
   // Redirects for URL changes
   async redirects() {
     return [
+      // Pilar antiguo del ranking (datos sin verificar) → pilar nuevo con datos verificados mensualmente
+      { source: '/ranking-agencias-marketing-digital-chile', destination: '/mejores-agencias-marketing-digital-chile', permanent: true },
       // ========================================
       // Query param redirects moved to middleware.ts
       // (page_id, trk, p, m, cat, s, layout_sidebar)

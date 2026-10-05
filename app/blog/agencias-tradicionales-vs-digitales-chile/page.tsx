@@ -509,7 +509,7 @@ export default function AgenciasTradicionalVsDigitalPage() {
               <Link href="/indicadores" className="text-blue-600 hover:underline font-medium">
                 Termómetro Marketing Digital
               </Link>{' '}y nuestro sistema de{' '}
-              <Link href="/ranking-agencias-marketing-digital-chile" className="text-blue-600 hover:underline font-medium">
+              <Link href="/mejores-agencias-marketing-digital-chile" className="text-blue-600 hover:underline font-medium">
                 benchmarking de la industria
               </Link>.
             </p>

@@ -562,7 +562,7 @@ export default function EjecucionVsEstrategiaPage() {
 
                 <div>
                   <h3 className="text-lg font-bold text-gray-900 mb-2">
-                    <Link href="/ranking-agencias-marketing-digital-chile" className="text-indigo-600 hover:underline">
+                    <Link href="/mejores-agencias-marketing-digital-chile" className="text-indigo-600 hover:underline">
                       Benchmarking de la industria
                     </Link>
                   </h3>
@@ -779,7 +779,7 @@ export default function EjecucionVsEstrategiaPage() {
                   Termómetro Marketing Digital
                 </Link>
                 <Link
-                  href="/ranking-agencias-marketing-digital-chile"
+                  href="/mejores-agencias-marketing-digital-chile"
                   className="inline-block px-6 py-3 bg-white/10 hover:bg-white/20 text-white rounded-lg font-semibold transition-colors border border-white/20"
                 >
                   Ranking Agencias Chile

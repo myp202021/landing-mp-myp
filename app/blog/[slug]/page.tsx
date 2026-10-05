@@ -36,7 +36,8 @@ export async function generateMetadata({ params }: { params: { slug: string } })
       description: post.description,
       type: 'article',
       url: `https://www.mulleryperez.cl/blog/${post.slug}`,
-      publishedTime: `${post.date_published}T00:00:00.000Z`,
+      publishedTime: fechasPost(post).publicado,
+      modifiedTime: fechasPost(post).modificado,
       images: [
         {
           url: post.image_url || 'https://www.mulleryperez.cl/og-image.jpg',
@@ -51,13 +52,27 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 
 export const revalidate = 3600 // Revalidar cada 1 hora
 
+const SLUG_RANKING = 'ranking-agencias-marketing-digital-chile-verificado'
+
+// Fecha de publicación estable (la primera vez que existió el post) y fecha de modificación aparte.
+// Los posts que se regeneran (ej. el ranking mensual) actualizan date_published, pero created_at no cambia.
+function fechasPost(post: { date_published: string; created_at?: string }) {
+  const pub = `${post.date_published}T00:00:00.000Z`
+  const creado = post.created_at ? new Date(post.created_at).toISOString() : pub
+  return creado < pub ? { publicado: creado, modificado: pub } : { publicado: pub, modificado: pub }
+}
+
 export default async function BlogPostPage({ params }: { params: { slug: string } }) {
   const post = await getPost(params.slug)
   if (!post) notFound()
 
-  const fechaFormateada = new Date(post.date_published + 'T12:00:00').toLocaleDateString('es-CL', {
+  const fechas = fechasPost(post)
+  const fmtFecha = (iso: string) => new Date(iso.slice(0, 10) + 'T12:00:00').toLocaleDateString('es-CL', {
     year: 'numeric', month: 'long', day: 'numeric'
   })
+  const fechaFormateada = fechas.publicado === fechas.modificado
+    ? fmtFecha(fechas.publicado)
+    : `Publicado el ${fmtFecha(fechas.publicado)} · Actualizado el ${fmtFecha(fechas.modificado)}`
 
   const articleSchema = {
     '@context': 'https://schema.org',
@@ -65,8 +80,8 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
     headline: post.title,
     description: post.description,
     url: `https://www.mulleryperez.cl/blog/${post.slug}`,
-    datePublished: `${post.date_published}T00:00:00.000Z`,
-    dateModified: `${post.date_published}T00:00:00.000Z`,
+    datePublished: fechas.publicado,
+    dateModified: fechas.modificado,
     author: {
       '@type': 'Person',
       name: 'Christopher Müller',
@@ -172,6 +187,16 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
                 className="w-full h-auto object-cover"
                 loading="eager"
               />
+            </div>
+          )}
+
+          {post.slug === SLUG_RANKING && (
+            <div className="mb-10 border-l-4 border-indigo-600 bg-indigo-50 p-5 rounded-r-lg">
+              <p className="text-gray-800">
+                <strong>Versión resumida:</strong> el top del ranking, para quién conviene cada agencia y los precios publicados están en{' '}
+                <Link href="/mejores-agencias-marketing-digital-chile" className="text-indigo-700 underline font-semibold">Las mejores agencias de marketing digital en Chile (2026)</Link>.
+                Este informe es la metodología y la evidencia completa.
+              </p>
             </div>
           )}
 

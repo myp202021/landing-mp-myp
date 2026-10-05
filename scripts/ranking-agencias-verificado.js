@@ -1737,6 +1737,7 @@ async function main() {
     tag: "Rankings",
     read_time: Math.max(10, Math.ceil(chars / 1200)) + " min",
     content_html: html,
+    // date_published funciona como "última actualización"; la fecha de publicación original sale de created_at (no se pisa)
     date_published: hoy.toISOString().split("T")[0],
     author: "Christopher Müller",
   };
@@ -1750,7 +1751,11 @@ async function main() {
   if (error) throw new Error("Supabase: " + error.message);
   var url = focus.SITE + "/blog/" + SLUG;
   console.log("✅ Publicado: " + url);
-  await focus.notificarIndexNow([url, focus.SITE + "/blog"]);
+  await focus.notificarIndexNow([
+    url,
+    focus.SITE + "/mejores-agencias-marketing-digital-chile",
+    focus.SITE + "/blog",
+  ]);
 
   var RESEND_KEY = process.env.RESEND;
   if (RESEND_KEY) {
@@ -1802,7 +1807,12 @@ async function main() {
   }
 }
 
-main().catch(function (e) {
-  console.error("❌ " + e.message);
-  process.exit(1);
-});
+// Permite reutilizar el cálculo de perfiles (scripts/ranking-pilar.js) sin correr la investigación
+if (require.main === module) {
+  main().catch(function (e) {
+    console.error("❌ " + e.message);
+    process.exit(1);
+  });
+}
+
+module.exports = { ESCENARIOS: ESCENARIOS, evaluarEscenario: evaluarEscenario, METODOLOGIA: typeof METODOLOGIA !== "undefined" ? METODOLOGIA : null, SLUG: SLUG };

@@ -329,7 +329,7 @@ export default function AgenciaMarketingDigitalChilePage() {
             <p className="text-lg text-gray-700 mb-8 leading-relaxed">
               En un mercado con más de 500 agencias de marketing digital en Chile, elegir la correcta puede significar
               la diferencia entre generar clientes reales y perder tu inversión. Estos son los diferenciadores que
-              nos posicionan como una de las <Link href="/ranking-agencias-marketing-digital-chile" className="text-blue-600 hover:underline font-semibold">mejores agencias de marketing digital en Chile</Link>:
+              nos posicionan como una de las <Link href="/mejores-agencias-marketing-digital-chile" className="text-blue-600 hover:underline font-semibold">mejores agencias de marketing digital en Chile</Link>:
             </p>
 
             <div className="space-y-8">
@@ -876,7 +876,7 @@ export default function AgenciaMarketingDigitalChilePage() {
           <section className="mb-16">
             <h2 className="text-xl font-bold text-gray-900 mb-4">Recursos Relacionados</h2>
             <div className="grid md:grid-cols-2 gap-3">
-              <Link href="/ranking-agencias-marketing-digital-chile" className="text-blue-600 hover:underline text-sm">
+              <Link href="/mejores-agencias-marketing-digital-chile" className="text-blue-600 hover:underline text-sm">
                 Ranking Agencias Marketing Digital Chile 2026
               </Link>
               <Link href="/precios-agencia-marketing-digital-chile" className="text-blue-600 hover:underline text-sm">

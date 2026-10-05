@@ -612,7 +612,7 @@ export default function ArticlePage() {
             </div>
 
             <p className="text-gray-700 leading-relaxed mb-6">
-              Si decides contratar una agencia, busca una que: (1) muestre resultados con data real, no solo promesas, (2) cobre un fee fijo, no un porcentaje de tu inversion, (3) te de acceso completo a las cuentas de ads (son TUYAS), (4) tenga experiencia en tu industria o similar, y (5) te entregue reportes claros que puedas entender sin ser experto. Revisa nuestro <Link href="/ranking-agencias-marketing-digital-chile" className="text-blue-600 font-semibold hover:underline">ranking de agencias de marketing digital en Chile</Link> para comparar opciones.
+              Si decides contratar una agencia, busca una que: (1) muestre resultados con data real, no solo promesas, (2) cobre un fee fijo, no un porcentaje de tu inversion, (3) te de acceso completo a las cuentas de ads (son TUYAS), (4) tenga experiencia en tu industria o similar, y (5) te entregue reportes claros que puedas entender sin ser experto. Revisa nuestro <Link href="/mejores-agencias-marketing-digital-chile" className="text-blue-600 font-semibold hover:underline">ranking de agencias de marketing digital en Chile</Link> para comparar opciones.
             </p>
 
             {/* Tabla resumen canales por presupuesto */}
@@ -746,7 +746,7 @@ export default function ArticlePage() {
               <Link href="/blog/tendencias-marketing-digital-chile-2026" className="text-sm text-blue-600 hover:text-blue-800 bg-blue-50 px-3 py-1.5 rounded-lg">
                 Tendencias Marketing Digital Chile 2026 &rarr;
               </Link>
-              <Link href="/ranking-agencias-marketing-digital-chile" className="text-sm text-blue-600 hover:text-blue-800 bg-blue-50 px-3 py-1.5 rounded-lg">
+              <Link href="/mejores-agencias-marketing-digital-chile" className="text-sm text-blue-600 hover:text-blue-800 bg-blue-50 px-3 py-1.5 rounded-lg">
                 Ranking Agencias Marketing Digital Chile &rarr;
               </Link>
               <Link href="/labs/predictor" className="text-sm text-green-600 hover:text-green-800 bg-green-50 px-3 py-1.5 rounded-lg">

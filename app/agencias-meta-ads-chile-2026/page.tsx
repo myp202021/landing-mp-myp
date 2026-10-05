@@ -559,7 +559,7 @@ export default function AgenciasMetaAdsPage() {
             </p>
             <p className="text-lg text-gray-700 mb-8 leading-relaxed">
               Para elegir la agencia correcta, pregunta: ¿dominan Advantage+?, ¿producen contenido UGC?, ¿tienen Conversions API configurada?, ¿diseñan funnels integrados con Google Ads? Muller y Pérez lidera este ranking porque cumple los 5 criterios, pero Rompecabeza es excelente para creatividad a escala y Bigbuda para CRO integrado. Consulta también nuestro{' '}
-              <Link href="/ranking-agencias-marketing-digital-chile" className="text-blue-600 hover:underline font-semibold">ranking general de agencias</Link> y el{' '}
+              <Link href="/mejores-agencias-marketing-digital-chile" className="text-blue-600 hover:underline font-semibold">ranking general de agencias</Link> y el{' '}
               <Link href="/estudio-agencias-marketing-digital-chile-2026" className="text-blue-600 hover:underline font-semibold">estudio del mercado digital chileno</Link>.
             </p>
           </section>
@@ -586,7 +586,7 @@ export default function AgenciasMetaAdsPage() {
           <section className="mb-16">
             <h3 className="text-lg font-bold text-gray-900 mb-4">Recursos Relacionados</h3>
             <div className="grid md:grid-cols-3 gap-4">
-              <Link href="/ranking-agencias-marketing-digital-chile" className="block p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition">
+              <Link href="/mejores-agencias-marketing-digital-chile" className="block p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition">
                 <p className="font-semibold text-gray-900 text-sm">Ranking General Agencias Chile</p>
                 <p className="text-xs text-gray-500">Top 10 agencias de marketing digital</p>
               </Link>

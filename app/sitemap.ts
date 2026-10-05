@@ -334,7 +334,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
     // Páginas GEO - Rankings y Estadísticas
     {
-      url: `${baseUrl}/ranking-agencias-marketing-digital-chile`,
+      url: `${baseUrl}/mejores-agencias-marketing-digital-chile`,
       lastModified: currentDate,
       changeFrequency: 'monthly',
       priority: 0.95,

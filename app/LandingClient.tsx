@@ -713,7 +713,7 @@ export default function LandingClient() {
                     <div className="font-semibold">Benchmarks 2026</div>
                     <div className="text-xs text-gray-500 mt-0.5">Datos de industria Chile</div>
                   </Link>
-                  <Link href="/ranking-agencias-marketing-digital-chile" className="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+                  <Link href="/mejores-agencias-marketing-digital-chile" className="block px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
                     <div className="font-semibold">Ranking Agencias 2026</div>
                     <div className="text-xs text-gray-500 mt-0.5">Top 10 agencias por categoría</div>
                   </Link>
@@ -2580,6 +2580,7 @@ export default function LandingClient() {
                 <li><Link href="/servicios/performance-marketing" className="text-blue-200 hover:text-white transition-colors">Performance</Link></li>
                 <li><Link href="/servicios/seo-chile" className="text-blue-200 hover:text-white transition-colors">SEO</Link></li>
                 <li><Link href="/agencia-marketing-digital-chile" className="text-blue-200 hover:text-white transition-colors">Marketing Digital Chile</Link></li>
+                <li><Link href="/mejores-agencias-marketing-digital-chile" className="text-blue-200 hover:text-white transition-colors">Mejores agencias de Chile 2026</Link></li>
                 <li className="pt-1"><Link href="/servicios" className="text-blue-400 hover:text-white transition-colors font-medium">Ver todos →</Link></li>
               </ul>
             </div>

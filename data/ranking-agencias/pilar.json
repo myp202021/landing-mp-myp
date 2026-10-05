@@ -1,0 +1,1358 @@
+{
+  "mes": "2026-10",
+  "actualizado": "2026-10-01T17:33:55.428Z",
+  "metodologia": [
+    [
+      "Reputación verificable",
+      20,
+      "Reseñas de Google (cantidad en escala logarítmica × nota) hasta 12 pts + 2 pts por directorio con reseñas (Clutch, Sortlist, GoodFirms, DesignRush, The Manifest), tope 8."
+    ],
+    [
+      "Casos de éxito",
+      20,
+      "3 pts por caso publicado con cliente identificable (tope 5) + 1 pt por caso con resultados en cifras (tope 5)."
+    ],
+    [
+      "Trayectoria",
+      10,
+      "Años desde la fundación, con fuente (tope 15 años)."
+    ],
+    [
+      "Equipo",
+      10,
+      "Equipo interno 5 pts (mixto 3, freelance 1) + tamaño del equipo publicado hasta 5 pts."
+    ],
+    [
+      "Clientes destacados",
+      15,
+      "Clientes que la agencia publica en su sitio (casos o logos), con fuente (tope 8). No cuentan insignias de partners ni logos de herramientas."
+    ],
+    [
+      "Especialidades",
+      5,
+      "Proporcional a las especialidades publicadas en sus páginas de servicios: performance, contenido, creatividad, SEO, e-commerce, B2B."
+    ],
+    [
+      "Tecnología propia",
+      5,
+      "Software, dashboards o CRM desarrollados por la agencia. Integrarse con el CRM del cliente no cuenta."
+    ],
+    [
+      "IA en producción",
+      5,
+      "Agentes o automatizaciones de IA propios operando para clientes, respaldados por una frase de su sitio."
+    ],
+    [
+      "Liderazgo y formación",
+      10,
+      "Perfil verificable del fundador o gerente general: formación analítica o de negocios 3, postgrado 3, 10 o más años de experiencia 2, experiencia previa en gestión, finanzas o datos 2."
+    ]
+  ],
+  "ranking": [
+    {
+      "posicion": 1,
+      "nombre": "Muller y Pérez",
+      "total": 82.5,
+      "puntaje": {
+        "trayectoria": 4,
+        "reputacion": 16,
+        "casos": 16,
+        "equipo": 8.5,
+        "clientes": 15,
+        "especialidades": 5,
+        "tecnologia": 5,
+        "ia": 5,
+        "liderazgo": 8,
+        "total": 82.5
+      },
+      "sitio": "https://www.mulleryperez.cl",
+      "anio": 2020,
+      "ubicacion": "oficina principal en Las Condes, Santiago, y cobertura nacional digital",
+      "equipo": "15+ especialistas tiempo completo",
+      "tipo_clientes": "mixto",
+      "resenas": {
+        "cantidad": 115,
+        "nota": 5,
+        "fuente": "https://www.google.com/maps/search/?api=1&query=M%C3%BCller%20y%20P%C3%A9rez%20Agencia%20Digital&query_place_id=ChIJv5_N0orPYpYRNdP4PXlxNKM"
+      },
+      "precios": {
+        "valor": "planes desde $950.000 CLP mensuales",
+        "fuente": "https://www.mulleryperez.cl"
+      },
+      "clientes": [
+        "Dezar",
+        "Antartic",
+        "Charriot",
+        "Adimac"
+      ],
+      "casos": [
+        {
+          "cliente": "retail (catálogo +2.000 SKUs)",
+          "resultado": "ROAS 5.8x, inversión mensual $3.5M CLP",
+          "fuente": "https://www.mulleryperez.cl/agencia-marketing-digital-chile"
+        }
+      ],
+      "liderazgo": {
+        "nombre": "Christopher Müller",
+        "formacion": "Ingeniero Civil Industrial, Universidad de Chile",
+        "postgrado": "MBA, Universidad de Chile"
+      },
+      "ia": "Sistema propietario que monitorea automáticamente la actividad digital de competidores usando inteligencia artificial.",
+      "tecnologia": "Afirma que desarrollaron un CRM completo que conecta con campañas, indicando que es propio y desarrollado por la agencia.",
+      "fuentes_verificadas": 57,
+      "mejor_para": [
+        {
+          "perfil": "Empresas B2B que buscan leads calificados",
+          "lugar": 1
+        },
+        {
+          "perfil": "Empresas B2B pequeñas",
+          "lugar": 1
+        },
+        {
+          "perfil": "Servicios B2C que viven de leads",
+          "lugar": 1
+        },
+        {
+          "perfil": "Empresas que parten en digital",
+          "lugar": 2
+        },
+        {
+          "perfil": "Aparecer en Google y en las IA",
+          "lugar": 3
+        }
+      ]
+    },
+    {
+      "posicion": 2,
+      "nombre": "Bigbuda",
+      "total": 77.8,
+      "puntaje": {
+        "trayectoria": 10,
+        "reputacion": 19.8,
+        "casos": 8,
+        "equipo": 10,
+        "clientes": 15,
+        "especialidades": 5,
+        "tecnologia": 0,
+        "ia": 5,
+        "liderazgo": 5,
+        "total": 77.8
+      },
+      "sitio": "https://bigbuda.cl/",
+      "anio": 2010,
+      "ubicacion": "oficina en Santiago, Chile (Av. Las Condes)",
+      "equipo": "21–50 personas (en Sortlist indica 40 personas)",
+      "tipo_clientes": "mixto",
+      "resenas": {
+        "cantidad": 268,
+        "nota": 5,
+        "fuente": "https://www.google.com/maps/search/?api=1&query=Bigbuda%20%E2%80%93%20Agencia%20de%20Marketing%20Digital%20y%20CRO&query_place_id=ChIJg7OPNN_OYpYRdEfz1lDamF4"
+      },
+      "precios": {
+        "valor": "planes SEO + AEO + GEO desde $590.000 mensuales más IVA",
+        "fuente": "https://bigbuda.cl/landings/agencia-geo-chile"
+      },
+      "clientes": [
+        "Falabella",
+        "Bsale",
+        "Agrosuper",
+        "UAI"
+      ],
+      "casos": [
+        {
+          "cliente": "Goitanich",
+          "resultado": "+139%",
+          "fuente": "https://bigbuda.cl/"
+        }
+      ],
+      "liderazgo": {
+        "nombre": "Marcel Acunis Zuker",
+        "formacion": "Ingeniería Comercial, Universidad Adolfo Ibáñez; Ingeniería Civil en Informática y Telecomunicaciones, Universidad Diego Portales",
+        "postgrado": null
+      },
+      "ia": "Afirma que implementan agentes de IA y modelos de aprendizaje automático que ejecutan tareas de punta a punta y mejoran con cada dato.",
+      "tecnologia": null,
+      "fuentes_verificadas": 54,
+      "mejor_para": [
+        {
+          "perfil": "Marcas grandes que buscan notoriedad",
+          "lugar": 1
+        },
+        {
+          "perfil": "Empresas que parten en digital",
+          "lugar": 1
+        },
+        {
+          "perfil": "E-commerce grandes",
+          "lugar": 2
+        }
+      ]
+    },
+    {
+      "posicion": 3,
+      "nombre": "Rompecabeza",
+      "total": 74.1,
+      "puntaje": {
+        "trayectoria": 6.7,
+        "reputacion": 12.4,
+        "casos": 15,
+        "equipo": 10,
+        "clientes": 15,
+        "especialidades": 5,
+        "tecnologia": 0,
+        "ia": 0,
+        "liderazgo": 10,
+        "total": 74.1
+      },
+      "sitio": "https://www.rompecabeza.cl/",
+      "anio": 2016,
+      "ubicacion": "oficina en Las Condes, Santiago, Chile",
+      "equipo": "114 personas (en blog de 4 años) / 140 personas (LinkedIn)",
+      "tipo_clientes": "medianas y grandes",
+      "resenas": {
+        "cantidad": 24,
+        "nota": 4.7,
+        "fuente": "https://www.google.com/maps/search/?api=1&query=Rompecabeza%20Agencia%20Digital%20%7C%20The%20Marketing%20Company&query_place_id=ChIJY4hpJEDPYpYRpH0EjeUKWw0"
+      },
+      "precios": null,
+      "clientes": [
+        "Seguros sura",
+        "Habitat",
+        "Anda",
+        "Ad grey"
+      ],
+      "casos": [],
+      "liderazgo": {
+        "nombre": "Ariel Jeria Cánovas",
+        "formacion": "Ingeniero Comercial, Universidad de Chile",
+        "postgrado": "MBA, Pontificia Universidad Católica de Chile"
+      },
+      "ia": null,
+      "tecnologia": null,
+      "fuentes_verificadas": 41,
+      "mejor_para": [
+        {
+          "perfil": "Servicios B2C que viven de leads",
+          "lugar": 2
+        }
+      ]
+    },
+    {
+      "posicion": 4,
+      "nombre": "Lagencia",
+      "total": 69.3,
+      "puntaje": {
+        "trayectoria": 10,
+        "reputacion": 15.8,
+        "casos": 15,
+        "equipo": 8.5,
+        "clientes": 15,
+        "especialidades": 5,
+        "tecnologia": 0,
+        "ia": 0,
+        "liderazgo": 0,
+        "total": 69.3
+      },
+      "sitio": "https://lagencia.cl",
+      "anio": 2009,
+      "ubicacion": "oficina en Santiago de Chile",
+      "equipo": "de 2 a 10 empleados (actualmente 15 segun LinkedIn/Sortlist)",
+      "tipo_clientes": "mixto",
+      "resenas": {
+        "cantidad": 39,
+        "nota": 5,
+        "fuente": "https://www.google.com/maps/search/?api=1&query=LaGencia%20-%20Agencia%20de%20Marketing%20Digital%20en%20Santiago&query_place_id=ChIJi5KLXPLPYpYRExMPxiQueh8"
+      },
+      "precios": null,
+      "clientes": [
+        "Banmédica",
+        "Turavion",
+        "Vidas Tres",
+        "Municipalidad de Providencia"
+      ],
+      "casos": [
+        {
+          "cliente": "",
+          "resultado": "$328M CLP en ventas con $32,8M CLP inversión — ROAS 10x en e‑commerce B2C",
+          "fuente": "https://lagencia.cl/casos-de-exito/"
+        },
+        {
+          "cliente": "",
+          "resultado": "$499M CLP en valor de conversión con $28,3M CLP inversión — ROAS 17,66x en e‑commerce B2C",
+          "fuente": "https://lagencia.cl/casos-de-exito/"
+        }
+      ],
+      "liderazgo": {
+        "nombre": "Andrés Araya Romano",
+        "formacion": null,
+        "postgrado": null
+      },
+      "ia": null,
+      "tecnologia": null,
+      "fuentes_verificadas": 52,
+      "mejor_para": []
+    },
+    {
+      "posicion": 5,
+      "nombre": "Metrix",
+      "total": 67.7,
+      "puntaje": {
+        "trayectoria": 0.7,
+        "reputacion": 2,
+        "casos": 19,
+        "equipo": 10,
+        "clientes": 15,
+        "especialidades": 5,
+        "tecnologia": 5,
+        "ia": 5,
+        "liderazgo": 6,
+        "total": 67.7
+      },
+      "sitio": "https://www.metrix.digital",
+      "anio": 2025,
+      "ubicacion": "oficina en Santiago, Las Condes, Chile",
+      "equipo": "entre 11 y 50 personas",
+      "tipo_clientes": null,
+      "resenas": null,
+      "precios": null,
+      "clientes": [
+        "Data Slayer",
+        "Web marley coffee",
+        "Huawei Ads",
+        "Santa"
+      ],
+      "casos": [
+        {
+          "cliente": "CIC",
+          "resultado": "superó meta en Cyber Day 2024 en 116%, más de 130.000 sesiones, 6.162.154 impresiones, 1.648.236 interacciones",
+          "fuente": "https://www.metrix.digital/casos-de-estudio/exito-en-cyber-con-cic/"
+        },
+        {
+          "cliente": "Bubba",
+          "resultado": "cumplió meta comercial en 119%, ingresos +50%, conversión +23%",
+          "fuente": "https://www.metrix.digital/cual-es-el-secreto-para-tener-exito-en-el-cyber/"
+        }
+      ],
+      "liderazgo": {
+        "nombre": "Ignacio Miranda",
+        "formacion": "Ingeniero Comercial, Pontificia Universidad Católica de Chile (2007-2011)",
+        "postgrado": "MBA, Northwestern University Kellogg"
+      },
+      "ia": "Afirma que Metrix desarrolló agentes de IA propios que ejecutan tareas tradicionalmente humanas.",
+      "tecnologia": "Herramienta propia de medición de citabilidad en plataformas de IA desarrollada por la agencia.",
+      "fuentes_verificadas": 35,
+      "mejor_para": [
+        {
+          "perfil": "E-commerce pequeños y medianos",
+          "lugar": 1
+        },
+        {
+          "perfil": "Aparecer en Google y en las IA",
+          "lugar": 2
+        },
+        {
+          "perfil": "Empresas B2B que buscan leads calificados",
+          "lugar": 3
+        },
+        {
+          "perfil": "E-commerce grandes",
+          "lugar": 3
+        }
+      ]
+    },
+    {
+      "posicion": 6,
+      "nombre": "Moov",
+      "total": 62.9,
+      "puntaje": {
+        "trayectoria": 10,
+        "reputacion": 7.4,
+        "casos": 18,
+        "equipo": 10,
+        "clientes": 7.5,
+        "especialidades": 5,
+        "tecnologia": 0,
+        "ia": 0,
+        "liderazgo": 5,
+        "total": 62.9
+      },
+      "sitio": "https://www.moov.cl/",
+      "anio": 2010,
+      "ubicacion": "oficina en Las Condes, Santiago",
+      "equipo": "De 201 a 500 empleados",
+      "tipo_clientes": "mixto",
+      "resenas": {
+        "cantidad": 16,
+        "nota": 4.5,
+        "fuente": "https://www.google.com/maps/search/?api=1&query=MMG%20-%20Moov%20Media%20Group%20%7C%20Agencia%20de%20Growth%20Marketing&query_place_id=ChIJV-T8QqjIYpYRmGRDEDwL1SU"
+      },
+      "precios": null,
+      "clientes": [
+        "Caja Los Andes",
+        "Fundación Down Up",
+        "Chilexpress"
+      ],
+      "casos": [
+        {
+          "cliente": "Caja Los Andes",
+          "resultado": "aumentó la participación en un 31% y sentimiento positivo del 51%",
+          "fuente": "https://www.moov.cl/"
+        },
+        {
+          "cliente": "Fundación Down Up",
+          "resultado": "más de 3 millones de visualizaciones",
+          "fuente": "https://au.linkedin.com/company/moov-digital"
+        }
+      ],
+      "liderazgo": {
+        "nombre": "Rodrigo Andrade Herrera",
+        "formacion": "Ingeniero Comercial, Pontificia Universidad Católica de Chile (2007-2012)",
+        "postgrado": "M.S. in Technology Management, Georgetown University"
+      },
+      "ia": null,
+      "tecnologia": null,
+      "fuentes_verificadas": 37,
+      "mejor_para": [
+        {
+          "perfil": "E-commerce grandes",
+          "lugar": 1
+        },
+        {
+          "perfil": "Servicios B2C que viven de leads",
+          "lugar": 3
+        }
+      ]
+    },
+    {
+      "posicion": 7,
+      "nombre": "Cebra",
+      "total": 62.5,
+      "puntaje": {
+        "trayectoria": 8,
+        "reputacion": 7.5,
+        "casos": 6,
+        "equipo": 8,
+        "clientes": 15,
+        "especialidades": 5,
+        "tecnologia": 5,
+        "ia": 0,
+        "liderazgo": 8,
+        "total": 62.5
+      },
+      "sitio": "https://www.cebra.com",
+      "anio": 2014,
+      "ubicacion": "oficina en Chile (Las Condes, Santiago)",
+      "equipo": "más de 70 personas (actualmente casi 100)",
+      "tipo_clientes": "mixto",
+      "resenas": {
+        "cantidad": 15,
+        "nota": 4.7,
+        "fuente": "https://www.google.com/maps/search/?api=1&query=Cebra%20%7C%20Agencia%20de%20Marketing%20Digital&query_place_id=ChIJEx-MSt_OYpYRR0VYKDXX5bc"
+      },
+      "precios": null,
+      "clientes": [
+        "Yandex",
+        "Carozzi",
+        "Entel Empresas",
+        "NISSAN- TIPO"
+      ],
+      "casos": [],
+      "liderazgo": {
+        "nombre": "Héctor Lascar",
+        "formacion": "Ingeniería Comercial, Universidad Adolfo Ibáñez (2005-2009)",
+        "postgrado": "Magíster en Dirección Estratégica de Ventas, Universidad Adolfo Ibáñez (2010); Babson Entrepreneurship Program, Babson College (2011)"
+      },
+      "ia": null,
+      "tecnologia": "Herramienta propia de la agencia para auditorías técnicas y análisis de frecuencia semántica.",
+      "fuentes_verificadas": 40,
+      "mejor_para": []
+    },
+    {
+      "posicion": 8,
+      "nombre": "Nexbu",
+      "total": 61.9,
+      "puntaje": {
+        "trayectoria": 10,
+        "reputacion": 6.4,
+        "casos": 15,
+        "equipo": 10,
+        "clientes": 11.3,
+        "especialidades": 4.2,
+        "tecnologia": 0,
+        "ia": 0,
+        "liderazgo": 5,
+        "total": 61.9
+      },
+      "sitio": "https://nexbu.com",
+      "anio": 2011,
+      "ubicacion": "oficina en Santiago de Chile (y también en Madrid, España)",
+      "equipo": "11-50 personas",
+      "tipo_clientes": "mixto (pymes y grandes empresas)",
+      "resenas": {
+        "cantidad": 40,
+        "nota": 4.1,
+        "fuente": "https://www.google.com/maps/search/?api=1&query=Nexbu%20Chile&query_place_id=ChIJ79Y0Ht3PYpYR8fcVB0zjLqA"
+      },
+      "precios": {
+        "valor": "planes desde $1.890.000 (corporativo avanzado)",
+        "fuente": "https://go.nexbu.com/"
+      },
+      "clientes": [
+        "Kuzacorp",
+        "RIHE",
+        "Ópticas Schilling",
+        "IVECO"
+      ],
+      "casos": [],
+      "liderazgo": {
+        "nombre": "Mario Vera G.",
+        "formacion": "Ingeniero Comercial, Universidad Adolfo Ibáñez (minor en Ciencia Política y Gobierno)",
+        "postgrado": "MSc in Marketing, Universidad Adolfo Ibáñez; Brand Management Programme, ESADE"
+      },
+      "ia": null,
+      "tecnologia": null,
+      "fuentes_verificadas": 54,
+      "mejor_para": [
+        {
+          "perfil": "Marcas grandes que buscan notoriedad",
+          "lugar": 2
+        },
+        {
+          "perfil": "E-commerce pequeños y medianos",
+          "lugar": 3
+        },
+        {
+          "perfil": "Empresas que parten en digital",
+          "lugar": 3
+        }
+      ]
+    },
+    {
+      "posicion": 9,
+      "nombre": "Postedin",
+      "total": 59.9,
+      "puntaje": {
+        "trayectoria": 9.3,
+        "reputacion": 3.8,
+        "casos": 10,
+        "equipo": 10,
+        "clientes": 11.3,
+        "especialidades": 2.5,
+        "tecnologia": 5,
+        "ia": 0,
+        "liderazgo": 8,
+        "total": 59.9
+      },
+      "sitio": "https://www.postedin.com",
+      "anio": 2012,
+      "ubicacion": "sede en Santiago, Chile",
+      "equipo": "de 11 a 50 empleados",
+      "tipo_clientes": "medianas y grandes",
+      "resenas": {
+        "cantidad": 5,
+        "nota": 5,
+        "fuente": "https://www.google.com/maps/search/?api=1&query=Postedin%20%7C%20Agencia%20de%20Marketing%20Digital%20Org%C3%A1nico&query_place_id=ChIJq8K5i67PYpYRMxMl1pYWI2U"
+      },
+      "precios": null,
+      "clientes": [
+        "BBVA",
+        "Ikea",
+        "Home Depot",
+        "Derco"
+      ],
+      "casos": [
+        {
+          "cliente": "Acer (Netnow / Acer Chile)",
+          "resultado": "mejora de posiciones en palabras clave estratégicas (más de 3 años juntos)",
+          "fuente": "https://www.postedin.com/agencia-de-marketing-digital/"
+        }
+      ],
+      "liderazgo": {
+        "nombre": "Rodrigo Farcas Capetillo",
+        "formacion": "Ingeniero Comercial, Universidad Adolfo Ibáñez",
+        "postgrado": "Master of Science en Marketing (universidad no indicada)"
+      },
+      "ia": null,
+      "tecnologia": "Afirma que la agencia desarrolló un stack de herramientas propias para su servicio.",
+      "fuentes_verificadas": 34,
+      "mejor_para": []
+    },
+    {
+      "posicion": 10,
+      "nombre": "Marketboost",
+      "total": 59,
+      "puntaje": {
+        "trayectoria": 7.3,
+        "reputacion": 0,
+        "casos": 20,
+        "equipo": 6,
+        "clientes": 7.5,
+        "especialidades": 4.2,
+        "tecnologia": 5,
+        "ia": 5,
+        "liderazgo": 4,
+        "total": 59
+      },
+      "sitio": "https://agenciamarketboost.com",
+      "anio": 2015,
+      "ubicacion": "sede en Santiago de Chile",
+      "equipo": "de 2 a 10 empleados",
+      "tipo_clientes": "pymes y medianas",
+      "resenas": null,
+      "precios": {
+        "valor": "fee mensual entre $400.000 y $1.000.000 CLP en Chile; en USA desde USD 700/mes",
+        "fuente": "https://agenciamarketboost.com/faq"
+      },
+      "clientes": [
+        "Boxes Car Center",
+        "Masterson's",
+        "Rincón Fotográfico"
+      ],
+      "casos": [
+        {
+          "cliente": "Clínica de Cirugía Plástica · Dallas",
+          "resultado": "+340% en citas agendadas, 8.4x ROAS, -62% CPA",
+          "fuente": "https://agenciamarketboost.com"
+        },
+        {
+          "cliente": "Clínica Urológica · Santiago",
+          "resultado": "1.099 leads activos en 90 días, CPL $3.812",
+          "fuente": "https://agenciamarketboost.com"
+        }
+      ],
+      "liderazgo": {
+        "nombre": "André Autran Orellana",
+        "formacion": null,
+        "postgrado": null
+      },
+      "ia": "Desarrollan y operan chatbots de IA propios que califican leads, agendan reuniones y registran la trazabilidad en el CRM del cliente.",
+      "tecnologia": "Marketboost afirma ser un CRM propio con WhatsApp, scoring y dashboard en vivo, desarrollado y operado por la agencia para sus clientes.",
+      "fuentes_verificadas": 46,
+      "mejor_para": [
+        {
+          "perfil": "Aparecer en Google y en las IA",
+          "lugar": 1
+        },
+        {
+          "perfil": "Empresas B2B que buscan leads calificados",
+          "lugar": 2
+        },
+        {
+          "perfil": "Empresas B2B pequeñas",
+          "lugar": 3
+        }
+      ]
+    },
+    {
+      "posicion": 11,
+      "nombre": "Milimetrix",
+      "total": 57.5,
+      "puntaje": {
+        "trayectoria": 2,
+        "reputacion": 4.3,
+        "casos": 15,
+        "equipo": 10,
+        "clientes": 15,
+        "especialidades": 4.2,
+        "tecnologia": 0,
+        "ia": 0,
+        "liderazgo": 7,
+        "total": 57.5
+      },
+      "sitio": "https://www.milimetrix.com",
+      "anio": 2023,
+      "ubicacion": "operación en Santiago de Chile",
+      "equipo": "11‑50 personas",
+      "tipo_clientes": "marcas de retail y e‑commerce con operación digital y presupuesto activo",
+      "resenas": {
+        "cantidad": 2,
+        "nota": 5,
+        "fuente": "https://www.google.com/maps/search/?api=1&query=Milimetrix&query_place_id=ChIJZWHIGfzPYpYRRKqvKchp8PY"
+      },
+      "precios": null,
+      "clientes": [
+        "Victorinox",
+        "Victoria's Secret",
+        "Limonada",
+        "The North Face"
+      ],
+      "casos": [],
+      "liderazgo": {
+        "nombre": "Tomás Varela Yuraszeck",
+        "formacion": "Ingeniero Comercial, Universidad de los Andes",
+        "postgrado": null
+      },
+      "ia": null,
+      "tecnologia": null,
+      "fuentes_verificadas": 38,
+      "mejor_para": []
+    },
+    {
+      "posicion": 12,
+      "nombre": "Wolf BCPP",
+      "total": 57,
+      "puntaje": {
+        "trayectoria": 7.3,
+        "reputacion": 5.7,
+        "casos": 16,
+        "equipo": 10,
+        "clientes": 11.3,
+        "especialidades": 1.7,
+        "tecnologia": 0,
+        "ia": 0,
+        "liderazgo": 5,
+        "total": 57
+      },
+      "sitio": "https://wolfbcpp.com",
+      "anio": 2015,
+      "ubicacion": "oficina en Providencia, Santiago, Chile",
+      "equipo": "51‑200 personas",
+      "tipo_clientes": "mixto",
+      "resenas": {
+        "cantidad": 15,
+        "nota": 4.9,
+        "fuente": "https://www.google.com/maps/search/?api=1&query=Wolf%20BCPP&query_place_id=ChIJZYFSMTfPYpYRgN93Q5D5amo"
+      },
+      "precios": null,
+      "clientes": [
+        "Samsonite",
+        "JB",
+        "Fox Sports",
+        "World Vision"
+      ],
+      "casos": [
+        {
+          "cliente": "Uber",
+          "resultado": "más de 260 000 firmas y evitar que más del 50% de conductores perdiera ingresos",
+          "fuente": "https://effie.cl/wp-content/uploads/2024/09/Effie-Awards-Chile-Folleto-de-Ganadores-2024.pdf"
+        }
+      ],
+      "liderazgo": {
+        "nombre": "Diego Perry",
+        "formacion": "Publicista con mención en Marketing, Universidad del Pacífico",
+        "postgrado": "Magíster en Innovación, Universidad Adolfo Ibáñez; diplomados en Marketing Estratégico (Universidad de Chile) y Marketing Integrado (UAI)"
+      },
+      "ia": null,
+      "tecnologia": null,
+      "fuentes_verificadas": 37,
+      "mejor_para": []
+    },
+    {
+      "posicion": 13,
+      "nombre": "Focus Ads",
+      "total": 51.6,
+      "puntaje": {
+        "trayectoria": 1.3,
+        "reputacion": 2.3,
+        "casos": 20,
+        "equipo": 8,
+        "clientes": 15,
+        "especialidades": 5,
+        "tecnologia": 0,
+        "ia": 0,
+        "liderazgo": 0,
+        "total": 51.6
+      },
+      "sitio": "https://focus-ads.cl",
+      "anio": 2024,
+      "ubicacion": "oficina en Viña del Mar y operación en Chile y LATAM",
+      "equipo": "2-10 personas",
+      "tipo_clientes": "mixto",
+      "resenas": {
+        "cantidad": 2,
+        "nota": 5,
+        "fuente": "https://www.google.com/maps/search/?api=1&query=Focus%20Ads%20-%20Agencia%20de%20Performance%20%26%20Growth%20Marketing&query_place_id=ChIJs4c9gfwQh00RK2u_K0asFH4"
+      },
+      "precios": {
+        "valor": "fee bajo + revenue share (modelo de revenue share)",
+        "fuente": "https://focus-ads.cl/dev/"
+      },
+      "clientes": [
+        "Abogadas Chile",
+        "Vidrios Larraín",
+        "Blitz Nutrition",
+        "Cultiva"
+      ],
+      "casos": [
+        {
+          "cliente": "Vidrios Larraín",
+          "resultado": "CPA −40%",
+          "fuente": "https://focus-ads.cl/"
+        },
+        {
+          "cliente": "Abogadas Chile",
+          "resultado": "0 → 6/día leads generados",
+          "fuente": "https://focus-ads.cl/"
+        }
+      ],
+      "liderazgo": {
+        "nombre": "Felipe Meza Corredoira",
+        "formacion": null,
+        "postgrado": null
+      },
+      "ia": null,
+      "tecnologia": null,
+      "fuentes_verificadas": 45,
+      "mejor_para": [
+        {
+          "perfil": "Empresas B2B pequeñas",
+          "lugar": 2
+        },
+        {
+          "perfil": "E-commerce pequeños y medianos",
+          "lugar": 2
+        }
+      ]
+    },
+    {
+      "posicion": 14,
+      "nombre": "Seonet",
+      "total": 43.4,
+      "puntaje": {
+        "trayectoria": 0,
+        "reputacion": 9.7,
+        "casos": 8,
+        "equipo": 7.6,
+        "clientes": 13.1,
+        "especialidades": 5,
+        "tecnologia": 0,
+        "ia": 0,
+        "liderazgo": 0,
+        "total": 43.4
+      },
+      "sitio": "https://www.seonetdigital.cl",
+      "anio": null,
+      "ubicacion": "sucursal local en Chile (Vitacura, equipo local mencionado)",
+      "equipo": "35 personas (sucursal Chile)",
+      "tipo_clientes": "mixto",
+      "resenas": {
+        "cantidad": 53,
+        "nota": 4.6,
+        "fuente": "https://www.google.com/maps/search/?api=1&query=SEOnet&query_place_id=ChIJX_Xog0m_vJURdU8lY2zwXD8"
+      },
+      "precios": {
+        "valor": "rangos desde $150.000 CLP mensuales hasta $15.000.000 CLP o más",
+        "fuente": "https://www.seonetdigital.cl/cuanto-cuesta-contratar-agencia-de-marketing-en-chile"
+      },
+      "clientes": [
+        "Alamo",
+        "Richs",
+        "Fliphaus",
+        "Newsan"
+      ],
+      "casos": [
+        {
+          "cliente": "Newsan",
+          "resultado": "ROAS de 9,19, 46 millones de impresiones y más de 600 000 USD en ingresos post‑clic",
+          "fuente": "https://es.linkedin.com/posts/pablomsuarez_otro-de-nuestros-casos-de-%C3%A9xito-en-la-implementaci%C3%B3n-activity-7242559255587762177-Bo4A"
+        },
+        {
+          "cliente": "Arquitecno",
+          "resultado": "71 % incremento en ventas; 172 % incremento de ROAS; 45 % mejora en tasa de conversión",
+          "fuente": "https://www.seonet.com.ar/arquitecno-caso-de-exito.php"
+        }
+      ],
+      "liderazgo": {
+        "nombre": "Pablo Suárez",
+        "formacion": null,
+        "postgrado": null
+      },
+      "ia": null,
+      "tecnologia": null,
+      "fuentes_verificadas": 30,
+      "mejor_para": []
+    },
+    {
+      "posicion": 15,
+      "nombre": "Loup",
+      "total": 29.9,
+      "puntaje": {
+        "trayectoria": 7.3,
+        "reputacion": 4.7,
+        "casos": 3,
+        "equipo": 8,
+        "clientes": 1.9,
+        "especialidades": 5,
+        "tecnologia": 0,
+        "ia": 0,
+        "liderazgo": 0,
+        "total": 29.9
+      },
+      "sitio": "https://loup.cl",
+      "anio": 2015,
+      "ubicacion": "oficina en Providencia, Santiago, Chile",
+      "equipo": "De 2 a 10 empleados",
+      "tipo_clientes": "mixto",
+      "resenas": {
+        "cantidad": 3,
+        "nota": 4.7,
+        "fuente": "https://www.google.com/maps/search/?api=1&query=Loup%20-%20Consultora%20de%20Marketing%20Digital&query_place_id=ChIJ73SRzZ7FYpYREIrLQUgFIbQ"
+      },
+      "precios": null,
+      "clientes": [
+        "Grido Chile"
+      ],
+      "casos": [],
+      "liderazgo": {
+        "nombre": "Sebastián Ruiz Arredondo",
+        "formacion": null,
+        "postgrado": null
+      },
+      "ia": null,
+      "tecnologia": null,
+      "fuentes_verificadas": 31,
+      "mejor_para": []
+    }
+  ],
+  "especializadas": [
+    {
+      "posicion": null,
+      "nombre": "MEAT Group",
+      "total": 74.6,
+      "puntaje": {
+        "trayectoria": 8,
+        "reputacion": 12.4,
+        "casos": 15,
+        "equipo": 10,
+        "clientes": 15,
+        "especialidades": 4.2,
+        "tecnologia": 5,
+        "ia": 5,
+        "liderazgo": 0,
+        "total": 74.6
+      },
+      "sitio": "https://www.meat.cl",
+      "anio": 2014,
+      "ubicacion": "sede en Santiago de Chile",
+      "equipo": "más de 150 personas",
+      "tipo_clientes": "mixto",
+      "resenas": {
+        "cantidad": 23,
+        "nota": 4.8,
+        "fuente": "https://www.google.com/maps/search/?api=1&query=Agencias%20de%20Marketing%20y%20Publicidad%3A%20MEAT%20Group%20-%20Marketing%20digital%2C%20desarrollo%20web%2C%20performance%2C%20audiovisual%20y%20ciberseguridad&query_place_id=ChIJQZWukmjPYpYRmqxejZzeVpM"
+      },
+      "precios": null,
+      "clientes": [
+        "Header",
+        "Meatagency",
+        "Meatcode",
+        "Digitalgrill"
+      ],
+      "casos": [],
+      "liderazgo": {
+        "nombre": "Nicolás Buzeta",
+        "formacion": "Pontificia Universidad Católica de Chile (carrera no visible)",
+        "postgrado": null
+      },
+      "ia": "Afirma que desarrollan e integran soluciones propias de IA como chatbots inteligentes, herramientas de seguimiento automatizado y sistemas de análisis predictivo para clientes.",
+      "tecnologia": "Soluciones propias que integran chatbots inteligentes, herramientas de seguimiento automatizado y sistemas de análisis predictivo desarrollados por la agencia para sus servicios.",
+      "fuentes_verificadas": null,
+      "mejor_para": [
+        {
+          "perfil": "Marcas grandes que buscan notoriedad",
+          "lugar": 3
+        }
+      ],
+      "tipo": "creativa"
+    },
+    {
+      "posicion": null,
+      "nombre": "Adinfluence",
+      "total": 73.5,
+      "puntaje": {
+        "trayectoria": 0,
+        "reputacion": 7.5,
+        "casos": 16,
+        "equipo": 10,
+        "clientes": 15,
+        "especialidades": 5,
+        "tecnologia": 5,
+        "ia": 5,
+        "liderazgo": 10,
+        "total": 73.5
+      },
+      "sitio": "https://www.adinfluence.cl",
+      "anio": null,
+      "ubicacion": "oficina en Las Condes, Santiago, Chile",
+      "equipo": "De 51 a 200 empleados",
+      "tipo_clientes": "mixto",
+      "resenas": {
+        "cantidad": 40,
+        "nota": 4.8,
+        "fuente": "https://www.google.com/maps/search/?api=1&query=Adinfluence&query_place_id=ChIJMcRpr6beEWIR1fd_MGDXu3A"
+      },
+      "precios": null,
+      "clientes": [
+        "Disney",
+        "Samsonite",
+        "Block",
+        "Ibis"
+      ],
+      "casos": [
+        {
+          "cliente": "Blockstore",
+          "resultado": "ROAS promedio > 20x; +50 % crecimiento en ventas",
+          "fuente": "https://www.adinfluence.cl"
+        },
+        {
+          "cliente": "Copec Pay",
+          "resultado": "alcance 9 480 599 cuentas impactadas; 876 643 interacciones; CPA $3,4",
+          "fuente": "https://www.adinfluence.cl"
+        }
+      ],
+      "liderazgo": {
+        "nombre": "David Caro Benado",
+        "formacion": "Licenciado en Administración de Empresas / Ingeniero Comercial, Universidad del Desarrollo (2010-2014)",
+        "postgrado": "Diplomado en Control de Gestión, Pontificia Universidad Católica de Chile (no es magíster)"
+      },
+      "ia": "Adinfluence desarrolló su propia plataforma con apoyo de inteligencia artificial para que los clientes hagan seguimiento de campañas en tiempo real.",
+      "tecnologia": "Plataforma propia de Adinfluence integrada con la API de Instagram/Tiktok para recolección automática de datos.",
+      "fuentes_verificadas": null,
+      "mejor_para": [],
+      "tipo": "influencers"
+    }
+  ],
+  "incompletas": [
+    {
+      "nombre": "Relevant",
+      "total": 49.2,
+      "sitio": "https://relevantmkt.com/marketing-digital-chile/"
+    },
+    {
+      "nombre": "Agencia Los Navegantes",
+      "total": 35.8,
+      "sitio": "https://www.agencialosnavegantes.cl"
+    },
+    {
+      "nombre": "OneDigital",
+      "total": 36.5,
+      "sitio": "https://www.onedigital.cl"
+    }
+  ],
+  "perfiles": [
+    {
+      "id": "b2b_leads",
+      "corto": "Empresas B2B que buscan leads calificados",
+      "pregunta": "¿Cuál es la mejor agencia de marketing digital B2B en Chile?",
+      "titulo": "Empresa B2B mediana o grande que necesita leads calificados",
+      "importa": "El ciclo de venta es largo y lo que importa es cuántos leads terminan en venta, no cuántos clics hubo. Por eso pesan el CRM con trazabilidad del lead a la venta, los paneles con CAC y ROI, la experiencia en Google Search y LinkedIn (donde está el comprador B2B), los casos B2B con cifras y un liderazgo con formación analítica.",
+      "top": [
+        {
+          "nombre": "Muller y Pérez",
+          "ajuste": 82,
+          "razones": [
+            "CRM propio con trazabilidad del lead",
+            "paneles con CAC, ROI o ROAS",
+            "Google Search y LinkedIn",
+            "liderazgo con formación analítica",
+            "agentes de IA en producción"
+          ]
+        },
+        {
+          "nombre": "Marketboost",
+          "ajuste": 59,
+          "razones": [
+            "paneles con CAC, ROI o ROAS",
+            "casos B2B con resultados en cifras",
+            "agentes de IA en producción"
+          ]
+        },
+        {
+          "nombre": "Metrix",
+          "ajuste": 54,
+          "razones": [
+            "paneles con CAC, ROI o ROAS",
+            "Google Search y LinkedIn",
+            "liderazgo con formación analítica",
+            "agentes de IA en producción"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b2b_pequena",
+      "corto": "Empresas B2B pequeñas",
+      "pregunta": "¿Qué agencia de marketing conviene a una empresa B2B pequeña en Chile?",
+      "titulo": "Empresa B2B pequeña (servicios profesionales o industrial)",
+      "importa": "El presupuesto es acotado y cada peso tiene que traer oportunidades comerciales. Pesan el foco en performance, los precios publicados, un equipo propio que ejecute sin subcontratar, los casos y reportes que se entiendan sin ser analista.",
+      "top": [
+        {
+          "nombre": "Muller y Pérez",
+          "ajuste": 97,
+          "razones": [
+            "foco en performance",
+            "precios publicados",
+            "equipo propio",
+            "casos B2B publicados",
+            "reportes con métricas de negocio"
+          ]
+        },
+        {
+          "nombre": "Focus Ads",
+          "ajuste": 96,
+          "razones": [
+            "foco en performance",
+            "precios publicados",
+            "equipo propio",
+            "casos B2B publicados",
+            "reportes con métricas de negocio"
+          ]
+        },
+        {
+          "nombre": "Marketboost",
+          "ajuste": 92,
+          "razones": [
+            "foco en performance",
+            "precios publicados",
+            "equipo propio",
+            "casos B2B publicados",
+            "reportes con métricas de negocio"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ecommerce_grande",
+      "corto": "E-commerce grandes",
+      "pregunta": "¿Cuál es la mejor agencia para un e-commerce grande en Chile?",
+      "titulo": "E-commerce grande (ventas sobre $50 millones al mes)",
+      "importa": "A esa escala un punto de conversión o de ROAS vale millones. Pesan la experiencia comprobada en e-commerce con Shopping y Performance Max, la optimización de conversión del sitio, un equipo grande que soporte el volumen, clientes grandes publicados y la trayectoria.",
+      "top": [
+        {
+          "nombre": "Moov",
+          "ajuste": 87,
+          "razones": [
+            "Shopping y Performance Max",
+            "equipo grande",
+            "clientes grandes publicados",
+            "trayectoria",
+            "optimización de conversión"
+          ]
+        },
+        {
+          "nombre": "Bigbuda",
+          "ajuste": 80,
+          "razones": [
+            "equipo grande",
+            "clientes grandes publicados",
+            "trayectoria",
+            "optimización de conversión",
+            "reputación verificable"
+          ]
+        },
+        {
+          "nombre": "Metrix",
+          "ajuste": 77,
+          "razones": [
+            "Shopping y Performance Max",
+            "equipo grande",
+            "clientes grandes publicados",
+            "optimización de conversión"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ecommerce_pyme",
+      "corto": "E-commerce pequeños y medianos",
+      "pregunta": "¿Qué agencia conviene a un e-commerce pequeño o mediano en Chile?",
+      "titulo": "E-commerce pequeño o mediano",
+      "importa": "Hay que vender rápido con presupuesto acotado. Pesan la gestión conjunta de Meta y Google, los precios accesibles y publicados, los casos de e-commerce y un equipo propio que ejecute rápido.",
+      "top": [
+        {
+          "nombre": "Metrix",
+          "ajuste": 99,
+          "razones": [
+            "Meta y Google Ads",
+            "precios publicados",
+            "casos publicados",
+            "equipo propio"
+          ]
+        },
+        {
+          "nombre": "Focus Ads",
+          "ajuste": 95,
+          "razones": [
+            "Meta y Google Ads",
+            "precios publicados",
+            "casos publicados",
+            "equipo propio"
+          ]
+        },
+        {
+          "nombre": "Nexbu",
+          "ajuste": 94,
+          "razones": [
+            "Meta y Google Ads",
+            "precios publicados",
+            "casos publicados",
+            "equipo propio"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b2c_servicios",
+      "corto": "Servicios B2C que viven de leads",
+      "pregunta": "¿Qué agencia de marketing conviene a clínicas, inmobiliarias o instituciones educativas en Chile?",
+      "titulo": "Empresa B2C de servicios que vive de leads (clínicas, inmobiliarias, educación)",
+      "importa": "El negocio depende de que cada lead se contacte a tiempo. Pesan el performance, la gestión de leads con CRM o WhatsApp, los casos en rubros similares y las reseñas de clientes reales.",
+      "top": [
+        {
+          "nombre": "Muller y Pérez",
+          "ajuste": 92,
+          "razones": [
+            "foco en performance",
+            "gestión de leads con CRM o WhatsApp",
+            "casos publicados",
+            "reputación verificable",
+            "reportes con costo por lead"
+          ]
+        },
+        {
+          "nombre": "Rompecabeza",
+          "ajuste": 87,
+          "razones": [
+            "foco en performance",
+            "gestión de leads con CRM o WhatsApp",
+            "casos publicados",
+            "reputación verificable",
+            "reportes con costo por lead"
+          ]
+        },
+        {
+          "nombre": "Moov",
+          "ajuste": 85,
+          "razones": [
+            "foco en performance",
+            "gestión de leads con CRM o WhatsApp",
+            "casos publicados",
+            "reportes con costo por lead"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "branding",
+      "corto": "Marcas grandes que buscan notoriedad",
+      "pregunta": "¿Cuál es la mejor agencia de branding y creatividad en Chile?",
+      "titulo": "Marca grande que busca notoriedad (branding)",
+      "importa": "El objetivo es que la marca se recuerde, no una conversión inmediata. Pesan la creatividad y la producción audiovisual, los premios de la industria, los clientes grandes, la experiencia en medios masivos e influencers y la trayectoria.",
+      "top": [
+        {
+          "nombre": "Bigbuda",
+          "ajuste": 100,
+          "razones": [
+            "producción audiovisual",
+            "premios de la industria",
+            "clientes grandes publicados",
+            "medios e influencers",
+            "trayectoria"
+          ]
+        },
+        {
+          "nombre": "Nexbu",
+          "ajuste": 100,
+          "razones": [
+            "producción audiovisual",
+            "premios de la industria",
+            "clientes grandes publicados",
+            "medios e influencers",
+            "trayectoria"
+          ]
+        },
+        {
+          "nombre": "MEAT Group",
+          "ajuste": 97,
+          "razones": [
+            "producción audiovisual",
+            "premios de la industria",
+            "clientes grandes publicados",
+            "medios e influencers",
+            "trayectoria"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "parte_digital",
+      "corto": "Empresas que parten en digital",
+      "pregunta": "¿Qué agencia de marketing digital conviene a una empresa que recién empieza?",
+      "titulo": "Empresa que parte en digital con presupuesto acotado",
+      "importa": "Lo primero es no equivocarse de agencia. Pesan las reseñas de clientes reales, los precios transparentes, el foco en resultados y un equipo propio que acompañe.",
+      "top": [
+        {
+          "nombre": "Bigbuda",
+          "ajuste": 94,
+          "razones": [
+            "reseñas comprobables",
+            "precios publicados",
+            "foco en resultados",
+            "equipo propio"
+          ]
+        },
+        {
+          "nombre": "Muller y Pérez",
+          "ajuste": 90,
+          "razones": [
+            "reseñas comprobables",
+            "precios publicados",
+            "foco en resultados",
+            "equipo propio",
+            "casos publicados"
+          ]
+        },
+        {
+          "nombre": "Nexbu",
+          "ajuste": 77,
+          "razones": [
+            "precios publicados",
+            "foco en resultados",
+            "equipo propio",
+            "casos publicados"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "seo_geo",
+      "corto": "Aparecer en Google y en las IA",
+      "pregunta": "¿Qué agencia en Chile ayuda a aparecer en ChatGPT, Gemini y Google?",
+      "titulo": "Empresa que quiere aparecer en Google y en las respuestas de ChatGPT, Gemini y Claude",
+      "importa": "Hay que publicar contenido de calidad de forma constante y tener la base técnica que leen Google y los motores de IA. Pesan el SEO, los agentes de IA en producción, la tecnología propia y los casos.",
+      "top": [
+        {
+          "nombre": "Marketboost",
+          "ajuste": 100,
+          "razones": [
+            "agentes de IA en producción",
+            "servicio de SEO",
+            "tecnología propia",
+            "casos publicados"
+          ]
+        },
+        {
+          "nombre": "Metrix",
+          "ajuste": 99,
+          "razones": [
+            "agentes de IA en producción",
+            "servicio de SEO",
+            "tecnología propia",
+            "casos publicados"
+          ]
+        },
+        {
+          "nombre": "Muller y Pérez",
+          "ajuste": 96,
+          "razones": [
+            "agentes de IA en producción",
+            "servicio de SEO",
+            "tecnología propia",
+            "casos publicados"
+          ]
+        }
+      ]
+    }
+  ]
+}

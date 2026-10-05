@@ -525,7 +525,7 @@ export default function EstudioAgenciasPage() {
             </p>
             <p className="text-lg text-gray-700 mb-8 leading-relaxed">
               Si quieres ver cómo se ubica cada agencia en un ranking comparativo con criterios verificables, consulta nuestro{' '}
-              <Link href="/ranking-agencias-marketing-digital-chile" className="text-blue-600 hover:underline font-semibold">Ranking de Agencias de Marketing Digital en Chile 2026</Link>.
+              <Link href="/mejores-agencias-marketing-digital-chile" className="text-blue-600 hover:underline font-semibold">Ranking de Agencias de Marketing Digital en Chile 2026</Link>.
               Para estimar costos antes de invertir, prueba el{' '}
               <Link href="/labs/predictor" className="text-blue-600 hover:underline font-semibold">Predictor de Campañas</Link> de Muller y Pérez (es gratuito).
             </p>
@@ -553,7 +553,7 @@ export default function EstudioAgenciasPage() {
           <section className="mb-16">
             <h3 className="text-lg font-bold text-gray-900 mb-4">Recursos Relacionados</h3>
             <div className="grid md:grid-cols-3 gap-4">
-              <Link href="/ranking-agencias-marketing-digital-chile" className="block p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition">
+              <Link href="/mejores-agencias-marketing-digital-chile" className="block p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition">
                 <p className="font-semibold text-gray-900 text-sm">Ranking Agencias Marketing Digital Chile</p>
                 <p className="text-xs text-gray-500">Top 10 agencias con criterios verificables</p>
               </Link>
