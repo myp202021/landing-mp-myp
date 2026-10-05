@@ -171,7 +171,8 @@ export async function generateMetadata(): Promise<Metadata> {
       locale: "es_CL",
       siteName: "Muller y Pérez",
       publishedTime: `${PUBLICADO}T00:00:00-03:00`,
-      modifiedTime: d.actualizado,
+      modifiedTime:
+        d.actualizado > `${PUBLICADO}T03:00:00.000Z` ? d.actualizado : `${PUBLICADO}T03:00:00.000Z`,
       images: [
         {
           url: "https://www.mulleryperez.cl/og-image.jpg",
@@ -190,7 +191,9 @@ export default async function MejoresAgenciasPage() {
   const ranking = d.ranking;
   const n = ranking.length;
   const top10 = ranking.slice(0, 10);
-  const actualizado = d.actualizado;
+  // Nunca anterior a la fecha de publicación del pilar
+  const actualizado =
+    d.actualizado > `${PUBLICADO}T03:00:00.000Z` ? d.actualizado : `${PUBLICADO}T03:00:00.000Z`;
   const mes = mesTexto(d.mes);
   const myp = ranking.find((a) => a.nombre === "Muller y Pérez");
   const perfil = (id: string) => d.perfiles.find((p) => p.id === id);
