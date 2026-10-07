@@ -11,7 +11,10 @@ export const TEST_CLAUDE_NOTA = 'CAMPAÑA TEST (Claude) — la gestiona Christop
 export const TEST_CLAUDE_AVISO = 'christopher@mulleryperez.cl'
 
 /** Formularios instantáneos de las campañas TEST (form_id → variante). */
-export const TEST_CLAUDE_FORMS: Record<string, 'A' | 'B'> = {}
+export const TEST_CLAUDE_FORMS: Record<string, 'A' | 'B'> = {
+  '1405287565120379': 'A', // TEST Claude A — Boost SEO + IA — Formulario
+  '28954715627524107': 'B', // TEST Claude B — Diagnóstico IA — Formulario
+}
 
 /** Devuelve 'A' | 'B' si el lead viene de una campaña TEST de Claude, por formulario o por nombre. */
 export function varianteTestClaude(...textos: (string | null | undefined)[]): 'A' | 'B' | null {
