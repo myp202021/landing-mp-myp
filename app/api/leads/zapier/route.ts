@@ -138,7 +138,7 @@ export async function POST(req: NextRequest) {
     }
     if (varianteTest) {
       // Respuestas del formulario (cargo, rubro, presupuesto, etc.): todo campo no estándar va a observaciones
-      const estandar = new Set(['client_id','full_name','first_name','last_name','name','nombre','email','phone_number','phone','telefono','company','company_name','empresa','form_id','form_name','campaign_name','campaign_id','ad_name','ad_id','adset_name','adset_id','lead_id','leadgen_id','id','created_time','page_id','platform','is_organic'])
+      const estandar = new Set(['client_id','mail','correo','name','full_name','first_name','last_name','name','nombre','email','phone_number','phone','telefono','company','company_name','empresa','form_id','form_name','campaign_name','campaign_id','ad_name','ad_id','adset_name','adset_id','lead_id','leadgen_id','id','created_time','page_id','platform','is_organic'])
       const extras = Object.entries(body)
         .filter(([k, v]) => !estandar.has(k.toLowerCase()) && v !== null && v !== '' && typeof v !== 'object')
         .map(([k, v]) => `${k.replace(/_/g, ' ')}: ${v}`)
