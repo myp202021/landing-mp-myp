@@ -1596,7 +1596,7 @@ ${window.location.href}`
                       email: contactForm.email,
                       telefono: contactForm.telefono,
                       solicitud: contactForm.solicitud,
-                      destinatario: 'contacto@mulleryperez.com'
+                      destinatario: 'contacto@mulleryperez.cl'
                     })
                   })
 

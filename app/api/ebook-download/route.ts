@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
+import { guardarLeadMP } from '@/lib/crm/guardar-lead-mp';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -59,12 +60,22 @@ export async function POST(request: Request) {
       // No fallar si Google Sheets falla
     }
     */
-    console.log('📝 Lead capturado (solo email por ahora):', { name, email, companyText });
+    console.log('📝 Lead capturado:', { name, email, companyText });
+
+    // Guardar en el CRM (cliente M&P). Si falla, alerta por correo; no bloquea la descarga.
+    await guardarLeadMP({
+      nombre: name,
+      email,
+      empresa: company || null,
+      fuente: 'ebook_download',
+      form_nombre: 'eBook: Marketing con Datos 2025',
+      observaciones: 'Descargó eBook Marketing con Datos 2025 desde /recursos/ebook-marketing-datos-2025',
+    }, 'eBook (/api/ebook-download)');
 
     // 2. Enviar email de notificación a contacto@mulleryperez.com
     try {
       await resend.emails.send({
-        from: 'Muller y Pérez <onboarding@resend.dev>',
+        from: 'Muller y Pérez <noreply@mulleryperez.cl>',
         to: 'contacto@mulleryperez.cl',
         subject: '📥 Nueva descarga: Ebook Marketing de Datos 2025',
         html: `
@@ -91,7 +102,7 @@ export async function POST(request: Request) {
     // 3. Enviar email de confirmación al usuario
     try {
       await resend.emails.send({
-        from: 'Muller y Pérez <onboarding@resend.dev>',
+        from: 'Muller y Pérez <noreply@mulleryperez.cl>',
         to: email,
         subject: '📚 Tu Ebook: La Guía Definitiva del Marketing de Datos 2025',
         html: `

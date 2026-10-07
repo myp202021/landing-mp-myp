@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { Resend } from 'resend'
+import { guardarLeadMP } from '@/lib/crm/guardar-lead-mp'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 
@@ -48,7 +49,17 @@ export async function POST(request: Request) {
       )
     }
 
-    const industryLabel = industryLabels[data.formData.industry] || data.formData.industry
+    const industryLabel = industryLabels[data.formData?.industry] || data.formData?.industry || 'No especificada'
+
+    // Guardar en el CRM (cliente M&P). Si falla, alerta por correo; no bloquea la respuesta.
+    await guardarLeadMP({
+      nombre: data.nombre,
+      email: data.email,
+      empresa: data.empresa || null,
+      fuente: 'buyer_gen',
+      form_nombre: 'Buyer Gen - M&P Labs',
+      observaciones: `Industria: ${industryLabel} | Modelo: ${data.formData?.businessModel || '—'} | Tamaño: ${data.formData?.companySize || '—'} | Objetivo: ${data.formData?.mainGoal || '—'} | Presupuesto: ${data.formData?.monthlyBudget || '—'}`,
+    }, 'Buyer Gen (/api/buyer-gen/lead)')
 
     // Email a M&P
     const emailHtml = `

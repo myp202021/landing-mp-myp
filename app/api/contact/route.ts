@@ -13,7 +13,7 @@ const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { nombre, empresa, email, telefono, solicitud, destinatario, fuente } = body
+    const { nombre, empresa, email, telefono, solicitud, fuente } = body
 
     // Capturar IP del remitente
     const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
@@ -230,7 +230,7 @@ IP: ${ip}
     // Enviar email
     const { data, error } = await resend.emails.send({
       from: 'Formulario M&P <noreply@mulleryperez.cl>',
-      to: destinatario || 'contacto@mulleryperez.cl',
+      to: 'contacto@mulleryperez.cl', // fijo: no aceptar destinatario del cliente (se podía usar para enviar correos a terceros)
       cc: ['arturo@mulleryperez.cl'],
       subject: `🎯 Nueva solicitud: ${empresa} - ${nombre}`,
       text: emailText,
