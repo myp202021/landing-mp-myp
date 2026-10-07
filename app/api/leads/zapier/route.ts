@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { alertarLeadFallido } from '@/lib/crm/alerta-lead-fallido'
+import { claveZapierValida } from '@/lib/crm/clave-zapier'
 import { TEST_CLAUDE_AVISO, TEST_CLAUDE_CLIENTE_ID, TEST_CLAUDE_NOTA, fuenteTestClaude, varianteTestClaude } from '@/lib/crm/meta-test'
 
 export const dynamic = 'force-dynamic'
@@ -28,6 +29,12 @@ export async function POST(req: NextRequest) {
   let crmProcesado = false
   try {
     body = await req.json()
+    // Clave del webhook (?key=): rechaza envíos que no vienen de nuestros Zaps
+    const clave = claveZapierValida(req)
+    if (!clave.ok) {
+      if (clave.motivo?.startsWith('Falta')) await alertarLeadFallido({ fuente: 'Zapier (/api/leads/zapier)', motivo: clave.motivo + ': agregar ?key= a la URL del Zap', datos: body })
+      return NextResponse.json({ error: clave.motivo }, { status: 401 })
+    }
 
     console.log('📥 Webhook recibido de Zapier:', JSON.stringify(body, null, 2))
 
