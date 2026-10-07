@@ -9,6 +9,7 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { alertarLeadFallido } from '@/lib/crm/alerta-lead-fallido'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -61,16 +62,20 @@ export async function GET(req: NextRequest) {
 
     if (clientesError) {
       console.error('❌ [META SYNC] Error obteniendo clientes:', clientesError)
+      await alertarLeadFallido({ fuente: 'Cron sync Meta Lead Ads (/api/cron/sync-meta-leads)', motivo: clientesError, datos: { detalle: 'No se pudo leer la lista de clientes: el cron no sincronizó nada' } })
       return NextResponse.json({ error: clientesError.message }, { status: 500 })
     }
 
     console.log(`📋 [META SYNC] Procesando ${clientes?.length || 0} clientes`)
 
     const results = []
+    // Fallas de todo el cron: se alertan juntas al final (un solo correo)
+    const fallidos: Record<string, unknown>[] = []
     const metaAccessToken = process.env.META_ACCESS_TOKEN
 
     if (!metaAccessToken) {
       console.error('❌ [META SYNC] META_ACCESS_TOKEN no configurado')
+      await alertarLeadFallido({ fuente: 'Cron sync Meta Lead Ads (/api/cron/sync-meta-leads)', motivo: 'META_ACCESS_TOKEN no configurado', datos: { detalle: 'El cron no sincronizó nada' } })
       return NextResponse.json(
         { error: 'META_ACCESS_TOKEN no configurado en variables de entorno' },
         { status: 500 }
@@ -91,7 +96,7 @@ export async function GET(req: NextRequest) {
 
         // 3. Llamar a Meta API para obtener leads
         const metaUrl = `https://graph.facebook.com/v18.0/${cliente.meta_form_id}/leads?` +
-          `access_token=${metaAccessToken}&` +
+          `access_token=${metaAccessToken}&limit=500&` + // sin limit Meta devuelve solo 25 y el resto se perdía
           `filtering=[{"field":"time_created","operator":"GREATER_THAN","value":${yesterday}}]`
 
         console.log(`🔍 [META SYNC] Consultando Meta API...`)
@@ -102,6 +107,7 @@ export async function GET(req: NextRequest) {
         if (data.error) {
           errores = `Meta API Error: ${data.error.message}`
           console.error(`❌ [META SYNC] ${errores}`)
+          fallidos.push({ cliente: cliente.nombre, motivo: `${errores} (no se pudieron leer los leads de las últimas 25 h)` })
 
           // Guardar log de error
           await supabase.from('sync_meta_logs').insert({
@@ -129,7 +135,8 @@ export async function GET(req: NextRequest) {
               .from('leads')
               .select('id')
               .eq('meta_lead_id', lead.id)
-              .single()
+              .limit(1)
+              .maybeSingle()
 
             if (existente) {
               leadsDuplicados++
@@ -163,21 +170,31 @@ export async function GET(req: NextRequest) {
             }
 
             // Insertar lead
-            const { error: insertError } = await supabase.from('leads').insert({
+            const fechaLead = new Date(lead.created_time)
+            const fechaValida = isNaN(fechaLead.getTime()) ? new Date() : fechaLead
+            const nuevoLead = {
               cliente_id: cliente.id,
               meta_lead_id: lead.id,
               nombre: getNombre(lead.field_data),
               email: getEmail(lead.field_data),
               telefono: getTelefono(lead.field_data),
               fuente: 'meta_lead_ads',
-              fecha_ingreso: new Date(lead.created_time),
+              fecha_ingreso: fechaValida.toISOString(),
+              mes_ingreso: fechaValida.toISOString().substring(0, 7),
               contactado: false,
               vendido: false
-            })
+            }
+            const { error: insertError } = await supabase.from('leads').insert(nuevoLead)
 
             if (insertError) {
+              // 23505 = meta_lead_id ya existe (índice único): duplicado, no es falla
+              if (insertError.code === '23505') {
+                leadsDuplicados++
+                continue
+              }
               console.error(`❌ [META SYNC] Error insertando lead ${lead.id}:`, insertError)
               if (!errores) errores = insertError.message
+              fallidos.push({ cliente: cliente.nombre, ...nuevoLead, motivo: insertError.message })
             } else {
               leadsNuevos++
             }
@@ -185,6 +202,7 @@ export async function GET(req: NextRequest) {
           } catch (leadError: any) {
             console.error(`❌ [META SYNC] Error procesando lead:`, leadError)
             if (!errores) errores = leadError.message
+            fallidos.push({ cliente: cliente.nombre, meta_lead_id: lead.id, motivo: leadError.message })
           }
         }
 
@@ -213,6 +231,7 @@ export async function GET(req: NextRequest) {
 
       } catch (clienteError: any) {
         console.error(`❌ [META SYNC] Error procesando cliente ${cliente.nombre}:`, clienteError)
+        fallidos.push({ cliente: cliente.nombre, motivo: `Error procesando cliente: ${clienteError.message}` })
 
         await supabase.from('sync_meta_logs').insert({
           cliente_id: cliente.id,
@@ -228,6 +247,14 @@ export async function GET(req: NextRequest) {
       }
     }
 
+    if (fallidos.length > 0) {
+      await alertarLeadFallido({
+        fuente: 'Cron sync Meta Lead Ads (/api/cron/sync-meta-leads)',
+        motivo: `${fallidos.length} falla(s) en la sincronización diaria: hay leads que no quedaron en el CRM`,
+        datos: Object.fromEntries(fallidos.map((f, i) => [`Falla ${i + 1}`, f]))
+      })
+    }
+
     const duration = Date.now() - startTime
     console.log(`\n✅ [META SYNC] Sincronización completada en ${duration}ms`)
 
@@ -240,6 +267,11 @@ export async function GET(req: NextRequest) {
 
   } catch (error: any) {
     console.error('❌ [META SYNC] Error general:', error)
+    await alertarLeadFallido({
+      fuente: 'Cron sync Meta Lead Ads (/api/cron/sync-meta-leads)',
+      motivo: error,
+      datos: { detalle: 'El cron se cortó con una excepción; puede haber leads de Meta sin sincronizar' }
+    })
     return NextResponse.json(
       { error: error.message },
       { status: 500 }

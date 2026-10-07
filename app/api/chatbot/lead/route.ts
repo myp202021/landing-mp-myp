@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { Resend } from 'resend'
 import { createClient } from '@supabase/supabase-js'
 import { MP_CLIENTE_ID } from '@/lib/crm/leads-pipeline'
+import { alertarLeadFallido } from '@/lib/crm/alerta-lead-fallido'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 
@@ -63,11 +64,11 @@ export async function POST(request: Request) {
     let leadCreated = null
     try {
       // Buscar cliente Muller y Perez
-      const { data: clienteData } = await supabaseAdmin
+      const { data: clienteData, error: clienteError } = await supabaseAdmin
         .from('clientes')
         .select('id')
         .eq('id', MP_CLIENTE_ID) // ID fijo: buscar por nombre falla si otro cliente contiene "M&P"
-        .single()
+        .maybeSingle()
 
       if (clienteData) {
         // Determinar fuente clasificada basada en tracking
@@ -134,13 +135,26 @@ export async function POST(request: Request) {
 
         if (leadError) {
           console.error('Error creando lead en CRM:', leadError)
+          await alertarLeadFallido({ fuente: 'ChatBot (/api/chatbot/lead)', motivo: leadError, datos: leadData })
         } else {
           leadCreated = leadInserted
           console.log('✅ Lead ChatBot guardado en CRM:', leadInserted.id)
         }
+      } else {
+        console.warn('⚠️ Cliente Muller y Perez no encontrado en CRM')
+        await alertarLeadFallido({
+          fuente: 'ChatBot (/api/chatbot/lead)',
+          motivo: clienteError || `Cliente M&P (${MP_CLIENTE_ID}) no encontrado en tabla clientes`,
+          datos: { nombre: data.nombre, email: data.email, telefono: data.telefono, empresa: data.empresa, interes: data.interes }
+        })
       }
     } catch (crmError) {
       console.error('Error guardando en CRM:', crmError)
+      await alertarLeadFallido({
+        fuente: 'ChatBot (/api/chatbot/lead)',
+        motivo: crmError,
+        datos: { nombre: data.nombre, email: data.email, telefono: data.telefono, empresa: data.empresa, interes: data.interes }
+      })
     }
 
     // 2. Enviar email a M&P

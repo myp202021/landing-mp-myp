@@ -1,6 +1,7 @@
 import { createClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server'
 import { MP_CLIENTE_ID } from '@/lib/crm/leads-pipeline'
+import { alertarLeadFallido } from '@/lib/crm/alerta-lead-fallido'
 
 export const dynamic = 'force-dynamic'
 
@@ -111,14 +112,14 @@ export async function POST(request: Request) {
 
       if (!existingLead) {
         // Buscar cliente M&P para asignar
-        const { data: mypCliente } = await supabase
+        const { data: mypCliente, error: clienteError } = await supabase
           .from('clientes')
           .select('id')
           .eq('id', MP_CLIENTE_ID) // ID fijo: buscar por nombre falla si otro cliente contiene "M&P"
-          .single()
+          .maybeSingle()
 
         if (mypCliente) {
-          await supabase.from('leads').insert({
+          const nuevoLead = {
             cliente_id: mypCliente.id,
             nombre: contact.contact_name || company.name,
             email: contact.contact_email,
@@ -129,6 +130,17 @@ export async function POST(request: Request) {
             contactado: true,
             vendido: false,
             fecha_ingreso: new Date().toISOString(),
+          }
+          const { error: leadError } = await supabase.from('leads').insert(nuevoLead)
+          if (leadError) {
+            console.error('Error creando lead outbound:', leadError)
+            await alertarLeadFallido({ fuente: 'Prospección outbound (/api/webhooks/resend)', motivo: leadError, datos: nuevoLead })
+          }
+        } else {
+          await alertarLeadFallido({
+            fuente: 'Prospección outbound (/api/webhooks/resend)',
+            motivo: clienteError || `Cliente M&P (${MP_CLIENTE_ID}) no encontrado en tabla clientes`,
+            datos: { nombre: contact.contact_name || company.name, email: contact.contact_email, empresa: company.name, evento: eventType }
           })
         }
       }

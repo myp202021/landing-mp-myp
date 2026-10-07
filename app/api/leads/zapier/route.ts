@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { alertarLeadFallido } from '@/lib/crm/alerta-lead-fallido'
 import { TEST_CLAUDE_AVISO, TEST_CLAUDE_CLIENTE_ID, TEST_CLAUDE_NOTA, fuenteTestClaude, varianteTestClaude } from '@/lib/crm/meta-test'
 
 export const dynamic = 'force-dynamic'
@@ -23,13 +24,16 @@ function extractField(body: any, ...possibleNames: string[]): string | null {
 }
 
 export async function POST(req: NextRequest) {
+  let body: any = null
+  let crmProcesado = false
   try {
-    const body = await req.json()
+    body = await req.json()
 
     console.log('📥 Webhook recibido de Zapier:', JSON.stringify(body, null, 2))
 
     // Validar datos requeridos
     if (!body.client_id) {
+      await alertarLeadFallido({ fuente: 'Zapier (/api/leads/zapier)', motivo: 'Webhook sin client_id: revisar configuración del Zap', datos: body })
       return NextResponse.json(
         { error: 'client_id es requerido' },
         { status: 400 }
@@ -45,6 +49,11 @@ export async function POST(req: NextRequest) {
 
     if (clienteError || !clienteData) {
       console.error('❌ Cliente no encontrado:', body.client_id)
+      await alertarLeadFallido({
+        fuente: 'Zapier (/api/leads/zapier)',
+        motivo: clienteError || `Cliente ${body.client_id} no encontrado en tabla clientes`,
+        datos: body
+      })
       return NextResponse.json(
         { error: 'Cliente no encontrado' },
         { status: 404 }
@@ -165,12 +174,14 @@ export async function POST(req: NextRequest) {
 
     if (leadError) {
       console.error('❌ Error insertando lead:', leadError)
+      await alertarLeadFallido({ fuente: `Zapier (/api/leads/zapier) — ${clienteData.nombre}`, motivo: leadError, datos: leadData })
       return NextResponse.json(
         { error: 'Error creando lead', details: leadError.message },
         { status: 500 }
       )
     }
 
+    crmProcesado = true
     console.log('✅ Lead creado exitosamente:', leadInserted.id)
 
     // Enviar notificación email al cliente (no bloquea la respuesta)
@@ -250,6 +261,9 @@ export async function POST(req: NextRequest) {
 
   } catch (error: any) {
     console.error('❌ Error en webhook Zapier:', error)
+    if (body && !crmProcesado) {
+      await alertarLeadFallido({ fuente: 'Zapier (/api/leads/zapier)', motivo: error, datos: body })
+    }
     return NextResponse.json(
       { error: 'Error interno del servidor', details: error.message },
       { status: 500 }

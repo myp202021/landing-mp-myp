@@ -287,7 +287,8 @@ export async function POST(req: NextRequest) {
       .select('id, filename, creado_en')
       .eq('cliente_id', clientId)
       .eq('checksum_sha256', checksum)
-      .single()
+      .limit(1) // con 2+ cargas iguales .single() fallaba y dejaba pasar el duplicado
+      .maybeSingle()
 
     if (existingCarga) {
       return NextResponse.json({

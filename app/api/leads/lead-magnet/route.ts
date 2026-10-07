@@ -7,6 +7,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { Resend } from 'resend'
 import { MP_CLIENTE_ID } from '@/lib/crm/leads-pipeline'
+import { alertarLeadFallido } from '@/lib/crm/alerta-lead-fallido'
 
 export const dynamic = 'force-dynamic'
 
@@ -31,8 +32,10 @@ const LEAD_MAGNET_INFO: Record<string, { title: string, pdfUrl: string }> = {
 }
 
 export async function POST(req: NextRequest) {
+  let body: LeadMagnetRequest | null = null
+  let crmProcesado = false
   try {
-    const body: LeadMagnetRequest = await req.json()
+    body = (await req.json()) as LeadMagnetRequest
     const { email, lead_magnet, source } = body
 
     if (!email) {
@@ -42,11 +45,11 @@ export async function POST(req: NextRequest) {
     const magnetInfo = LEAD_MAGNET_INFO[lead_magnet] || LEAD_MAGNET_INFO.ebook
 
     // Buscar cliente M&P
-    const { data: clienteData } = await supabase
+    const { data: clienteData, error: clienteError } = await supabase
       .from('clientes')
       .select('id')
       .eq('id', MP_CLIENTE_ID) // ID fijo: buscar por nombre falla si otro cliente contiene "M&P"
-      .single()
+      .maybeSingle()
 
     if (clienteData) {
       // Guardar en leads
@@ -71,8 +74,18 @@ export async function POST(req: NextRequest) {
 
       if (leadError) {
         console.error('Error guardando lead:', leadError)
+        await alertarLeadFallido({ fuente: 'Lead Magnet (/api/leads/lead-magnet)', motivo: leadError, datos: leadData })
       }
+    } else {
+      console.warn('⚠️ Cliente M&P no encontrado en CRM')
+      await alertarLeadFallido({
+        fuente: 'Lead Magnet (/api/leads/lead-magnet)',
+        motivo: clienteError || `Cliente M&P (${MP_CLIENTE_ID}) no encontrado en tabla clientes`,
+        datos: { email, lead_magnet, source }
+      })
     }
+    // Guardado (o ya alertado): evitar doble alerta en el catch
+    crmProcesado = true
 
     // Enviar email con el PDF
     try {
@@ -163,6 +176,14 @@ export async function POST(req: NextRequest) {
 
   } catch (error: any) {
     console.error('Error en lead magnet:', error)
+    // Si la excepción ocurrió antes de guardar el lead, avisar
+    if (body?.email && !crmProcesado) {
+      await alertarLeadFallido({
+        fuente: 'Lead Magnet (/api/leads/lead-magnet)',
+        motivo: error,
+        datos: { email: body.email, lead_magnet: body.lead_magnet, source: body.source }
+      })
+    }
     return NextResponse.json(
       { error: error.message || 'Error interno' },
       { status: 500 }

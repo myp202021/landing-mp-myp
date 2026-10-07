@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { MP_CLIENTE_ID } from '@/lib/crm/leads-pipeline'
+import { alertarLeadFallido } from '@/lib/crm/alerta-lead-fallido'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
@@ -65,15 +66,36 @@ export async function POST(req: Request) {
     let finalClienteId = cliente_id
 
     // Si no hay cliente_id pero hay nombre, buscar por nombre
+    // (antes: ilike parcial + .single() fallaba en silencio con 0 o 2+ coincidencias y
+    // las métricas terminaban asignadas al cliente M&P por defecto)
     if (!finalClienteId && cliente_nombre) {
-      const { data: cliente } = await supabase
+      // 1) Coincidencia exacta (sin distinguir mayúsculas)
+      const { data: exactos } = await supabase
         .from('clientes')
-        .select('id')
-        .ilike('nombre', `%${cliente_nombre}%`)
-        .single()
+        .select('id, nombre')
+        .ilike('nombre', String(cliente_nombre))
+        .limit(2)
 
-      if (cliente) {
-        finalClienteId = cliente.id
+      // 2) Si no hay exacta, coincidencia parcial
+      let candidatos = exactos || []
+      if (candidatos.length === 0) {
+        const { data: parciales } = await supabase
+          .from('clientes')
+          .select('id, nombre')
+          .ilike('nombre', `%${cliente_nombre}%`)
+          .limit(2)
+        candidatos = parciales || []
+      }
+
+      if (candidatos.length === 1) {
+        finalClienteId = candidatos[0].id
+      } else {
+        const motivo = candidatos.length === 0
+          ? `Ningún cliente coincide con cliente_nombre "${cliente_nombre}"`
+          : `cliente_nombre "${cliente_nombre}" es ambiguo: coincide con ${candidatos.map(c => c.nombre).join(', ')}. Envía cliente_id`
+        console.error('❌', motivo)
+        await alertarLeadFallido({ fuente: 'Webhook Google Ads métricas (/api/webhooks/google-ads)', motivo, datos: body })
+        return NextResponse.json({ error: motivo }, { status: 404 })
       }
     }
 
@@ -83,7 +105,7 @@ export async function POST(req: Request) {
         .from('clientes')
         .select('id')
         .eq('id', MP_CLIENTE_ID) // ID fijo: buscar por nombre falla si otro cliente contiene "M&P"
-        .single()
+        .maybeSingle()
 
       if (clienteDefault) {
         finalClienteId = clienteDefault.id
@@ -103,7 +125,8 @@ export async function POST(req: Request) {
       .select('id')
       .eq('plataforma', 'google_ads')
       .eq('active', true)
-      .single()
+      .limit(1) // con 2+ integraciones activas .single() fallaba y creaba otra más
+      .maybeSingle()
 
     if (!integration) {
       // Crear integración si no existe
@@ -135,7 +158,8 @@ export async function POST(req: Request) {
       .select('id')
       .eq('cliente_id', finalClienteId)
       .eq('integration_id', integration.id)
-      .single()
+      .limit(1)
+      .maybeSingle()
 
     if (!existingMapping) {
       await supabase

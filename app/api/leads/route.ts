@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { MP_CLIENTE_ID } from '@/lib/crm/leads-pipeline'
+import { alertarLeadFallido } from '@/lib/crm/alerta-lead-fallido'
 
 export const dynamic = 'force-dynamic'
 
@@ -10,7 +12,7 @@ const supabase = createClient(
 )
 
 // Cliente ID para leads internos de M&P (predictor, landing, etc.)
-const MYP_INTERNAL_CLIENT_ID = '1ecabf3e-27a1-4715-bfa7-eb54b078d7d3'
+const MYP_INTERNAL_CLIENT_ID = MP_CLIENTE_ID
 
 /**
  * API para captura de leads del Predictor y otras herramientas M&P
@@ -18,8 +20,9 @@ const MYP_INTERNAL_CLIENT_ID = '1ecabf3e-27a1-4715-bfa7-eb54b078d7d3'
  * Integra directamente con el CRM existente en Supabase
  */
 export async function POST(request: NextRequest) {
+  let body: any = null
   try {
-    const body = await request.json()
+    body = await request.json()
 
     const { email, name, phone, source, data } = body
 
@@ -71,6 +74,12 @@ export async function POST(request: NextRequest) {
         timestamp: new Date().toISOString()
       })
 
+      await alertarLeadFallido({
+        fuente: `Predictor / herramientas (/api/leads) — ${source || 'predictor_v2'}`,
+        motivo: error,
+        datos: { nombre: name, email, telefono: phone, empresa: data?.empresa, fuente: source, observaciones: observaciones.trim() }
+      })
+
       return NextResponse.json({
         success: true,
         message: 'Lead registrado (modo offline)',
@@ -111,6 +120,15 @@ export async function POST(request: NextRequest) {
 
   } catch (error: any) {
     console.error('❌ Error capturando lead:', error)
+
+    // Solo alertar si alcanzó a llegar un lead con datos (no por JSON inválido)
+    if (body && (body.email || body.name || body.phone)) {
+      await alertarLeadFallido({
+        fuente: `Predictor / herramientas (/api/leads) — ${body.source || 'predictor_v2'}`,
+        motivo: error,
+        datos: { nombre: body.name, email: body.email, telefono: body.phone, empresa: body.data?.empresa, fuente: body.source }
+      })
+    }
 
     return NextResponse.json(
       { error: 'Error al registrar lead', details: error.message },

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { alertarLeadFallido } from '@/lib/crm/alerta-lead-fallido'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -70,6 +71,14 @@ export async function POST(req: NextRequest) {
         console.error(`Error con formulario ${formId}:`, error)
         errors.push(`Formulario ${formId}: ${error.message}`)
       }
+    }
+
+    if (errors.length > 0) {
+      await alertarLeadFallido({
+        fuente: 'Sync Facebook Lead Ads (/api/facebook/sync-leads)',
+        motivo: `${errors.length} error(es) en la sincronización: hay leads que no quedaron en el CRM`,
+        datos: { cliente_id, fb_page_id, fb_form_id, errores: errors.join('\n') }
+      })
     }
 
     return NextResponse.json({
@@ -166,7 +175,8 @@ async function saveLead(leadData: any, clienteId: string, pageId: string, formId
     .eq('cliente_id', clienteId)
     .eq('email', leadInfo.email)
     .eq('form_nombre', formId)
-    .single()
+    .limit(1) // con 2+ coincidencias .single() fallaba y se volvía a insertar
+    .maybeSingle()
 
   if (existing) {
     console.log(`Lead ${leadData.id} ya existe, saltando...`)

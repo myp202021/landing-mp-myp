@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
 import { createClient } from '@supabase/supabase-js'
 import { MP_CLIENTE_ID } from '@/lib/crm/leads-pipeline'
+import { alertarLeadFallido } from '@/lib/crm/alerta-lead-fallido'
 
 // Force dynamic rendering for this route
 export const dynamic = 'force-dynamic'
@@ -156,11 +157,11 @@ IP: ${ip}
       const supabase = createClient(supabaseUrl, supabaseKey)
 
       // Buscar cliente Muller y Perez (cliente principal de la web)
-      const { data: clienteData } = await supabase
+      const { data: clienteData, error: clienteError } = await supabase
         .from('clientes')
         .select('id')
         .eq('id', MP_CLIENTE_ID) // ID fijo: buscar por nombre falla si otro cliente contiene "M&P"
-        .single()
+        .maybeSingle()
 
       if (clienteData) {
         // Crear el lead
@@ -187,16 +188,27 @@ IP: ${ip}
 
         if (leadError) {
           console.error('⚠️ Error creando lead en CRM:', leadError)
+          await alertarLeadFallido({ fuente: 'Formulario web (/api/contact)', motivo: leadError, datos: leadData })
         } else {
           leadCreated = leadInserted
           console.log('✅ Lead creado en CRM:', leadInserted.id)
         }
       } else {
         console.warn('⚠️ Cliente Muller y Perez no encontrado en CRM')
+        await alertarLeadFallido({
+          fuente: 'Formulario web (/api/contact)',
+          motivo: clienteError || `Cliente M&P (${MP_CLIENTE_ID}) no encontrado en tabla clientes`,
+          datos: { nombre, empresa, email, telefono, solicitud, fuente: fuente || 'formulario_web' }
+        })
       }
     } catch (crmError) {
       console.error('⚠️ Error conectando con CRM:', crmError)
       // No fallar si el CRM falla, seguir con el email
+      await alertarLeadFallido({
+        fuente: 'Formulario web (/api/contact)',
+        motivo: crmError,
+        datos: { nombre, empresa, email, telefono, solicitud, fuente: fuente || 'formulario_web' }
+      })
     }
 
     // Verificar si hay API key configurada

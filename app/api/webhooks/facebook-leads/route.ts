@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import crypto from 'crypto'
+import { alertarLeadFallido } from '@/lib/crm/alerta-lead-fallido'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -83,6 +84,8 @@ export async function POST(req: NextRequest) {
 // =====================================================
 // PROCESAR LEAD
 // =====================================================
+const FUENTE_ALERTA = 'Webhook Facebook Lead Ads (/api/webhooks/facebook-leads)'
+
 async function processLead(leadData: any) {
   try {
     console.log('🔄 Procesando lead:', leadData)
@@ -90,30 +93,39 @@ async function processLead(leadData: any) {
     const { leadgen_id, page_id, form_id, adgroup_id, ad_id, created_time } = leadData
 
     // Buscar la página y su conexión para obtener el token y cliente_id
-    const { data: metaPage } = await supabase
+    const { data: metaPage, error: metaPageError } = await supabase
       .from('meta_pages')
-      .select(`
-        id,
-        page_access_token,
-        meta_connections!inner(cliente_id)
-      `)
+      .select('id, page_access_token, cliente_id')
       .eq('page_id', page_id)
       .eq('sync_enabled', true)
-      .single()
+      .limit(1) // si la página quedó conectada más de una vez, .single() fallaba
+      .maybeSingle()
 
-    if (!metaPage || !metaPage.meta_connections) {
+    // meta_pages tiene cliente_id propio y no tiene FK a meta_connections:
+    // el join meta_connections!inner(...) fallaba y el lead se perdía en silencio
+    if (!metaPage || !metaPage.cliente_id) {
       console.error(`❌ No se encontró página activa para page_id: ${page_id}`)
+      await alertarLeadFallido({
+        fuente: FUENTE_ALERTA,
+        motivo: metaPageError || `No se encontró página activa (sync_enabled) con cliente asignado para page_id ${page_id}`,
+        datos: { leadgen_id, page_id, form_id, ad_id, created_time }
+      })
       return
     }
 
     const pageAccessToken = metaPage.page_access_token
-    const clienteId = (metaPage.meta_connections as any).cliente_id
+    const clienteId = metaPage.cliente_id
 
     // Obtener datos completos del lead usando la Graph API
     const leadDetails = await fetchLeadDetails(leadgen_id, pageAccessToken)
 
     if (!leadDetails) {
       console.error('❌ No se pudieron obtener los detalles del lead')
+      await alertarLeadFallido({
+        fuente: FUENTE_ALERTA,
+        motivo: 'No se pudieron obtener los detalles del lead desde la Graph API (token de página vencido o sin permisos)',
+        datos: { cliente_id: clienteId, leadgen_id, page_id, form_id, ad_id, created_time }
+      })
       return
     }
 
@@ -158,39 +170,47 @@ async function processLead(leadData: any) {
       }
     }
 
+    // Fecha del lead: si Meta no envía created_time válido, usar ahora (antes lanzaba RangeError)
+    const fechaLead = created_time && !isNaN(Number(created_time))
+      ? new Date(Number(created_time) * 1000)
+      : new Date()
+
     // Insertar lead en Supabase
+    const nuevoLead = {
+      cliente_id: clienteId,
+      rubro: 'Facebook Lead Ads',
+      campana_nombre,
+      adset_nombre,
+      ad_nombre,
+      form_nombre: form_id,
+      fecha_ingreso: fechaLead.toISOString(),
+      mes_ingreso: fechaLead.toISOString().substring(0, 7),
+      nombre: leadInfo.nombre,
+      empresa: leadInfo.empresa,
+      telefono: leadInfo.telefono,
+      email: leadInfo.email,
+      ciudad: leadInfo.ciudad,
+      mensaje: leadInfo.mensaje,
+      contactado: false,
+      vendido: false,
+      // Guardar datos raw en observaciones
+      observaciones: `Lead de Facebook Lead Ads. Lead ID: ${leadgen_id}`,
+    }
     const { data: insertedLead, error } = await supabase
       .from('leads')
-      .insert({
-        cliente_id: clienteId,
-        rubro: 'Facebook Lead Ads',
-        campana_nombre,
-        adset_nombre,
-        ad_nombre,
-        form_nombre: form_id,
-        fecha_ingreso: new Date(created_time * 1000).toISOString(),
-        mes_ingreso: new Date(created_time * 1000).toISOString().substring(0, 7),
-        nombre: leadInfo.nombre,
-        empresa: leadInfo.empresa,
-        telefono: leadInfo.telefono,
-        email: leadInfo.email,
-        ciudad: leadInfo.ciudad,
-        mensaje: leadInfo.mensaje,
-        contactado: false,
-        vendido: false,
-        // Guardar datos raw en observaciones
-        observaciones: `Lead de Facebook Lead Ads. Lead ID: ${leadgen_id}`,
-      })
+      .insert(nuevoLead)
       .select()
 
     if (error) {
       console.error('❌ Error guardando lead:', error)
+      await alertarLeadFallido({ fuente: FUENTE_ALERTA, motivo: error, datos: nuevoLead })
       return
     }
 
     console.log('✅ Lead guardado exitosamente:', insertedLead)
   } catch (error: any) {
     console.error('❌ Error en processLead:', error)
+    await alertarLeadFallido({ fuente: FUENTE_ALERTA, motivo: error, datos: leadData })
   }
 }
 
