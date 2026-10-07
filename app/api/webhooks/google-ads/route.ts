@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { MP_CLIENTE_ID } from '@/lib/crm/leads-pipeline'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
@@ -81,7 +82,7 @@ export async function POST(req: Request) {
       const { data: clienteDefault } = await supabase
         .from('clientes')
         .select('id')
-        .or('nombre.ilike.%muller%,nombre.ilike.%m&p%,nombre.ilike.%myp%')
+        .eq('id', MP_CLIENTE_ID) // ID fijo: buscar por nombre falla si otro cliente contiene "M&P"
         .single()
 
       if (clienteDefault) {

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { Resend } from 'resend'
 import { createClient } from '@supabase/supabase-js'
+import { MP_CLIENTE_ID } from '@/lib/crm/leads-pipeline'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 
@@ -65,7 +66,7 @@ export async function POST(request: Request) {
       const { data: clienteData } = await supabaseAdmin
         .from('clientes')
         .select('id')
-        .or('nombre.ilike.%muller%,nombre.ilike.%m&p%,nombre.ilike.%myp%')
+        .eq('id', MP_CLIENTE_ID) // ID fijo: buscar por nombre falla si otro cliente contiene "M&P"
         .single()
 
       if (clienteData) {

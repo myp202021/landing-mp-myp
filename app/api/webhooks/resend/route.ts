@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server'
+import { MP_CLIENTE_ID } from '@/lib/crm/leads-pipeline'
 
 export const dynamic = 'force-dynamic'
 
@@ -113,7 +114,7 @@ export async function POST(request: Request) {
         const { data: mypCliente } = await supabase
           .from('clientes')
           .select('id')
-          .or('nombre.ilike.%muller%,nombre.ilike.%m&p%,nombre.ilike.%myp%')
+          .eq('id', MP_CLIENTE_ID) // ID fijo: buscar por nombre falla si otro cliente contiene "M&P"
           .single()
 
         if (mypCliente) {
