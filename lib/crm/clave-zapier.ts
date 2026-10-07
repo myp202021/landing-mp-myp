@@ -10,7 +10,7 @@ import type { NextRequest } from 'next/server'
  * Una vez que todos los Zaps envían la clave, pasar a true.
  */
 const HUELLA_CLAVE = 'a4fd093fdc010c2b3f0e8a510af69f0fbc76d2307c8cd596b4ca15b1982b73ab'
-const ESTRICTO = false
+const ESTRICTO = true
 
 export function claveZapierValida(req: NextRequest): { ok: boolean; motivo?: string } {
   const clave = req.nextUrl.searchParams.get('key') || req.headers.get('x-webhook-key') || ''
