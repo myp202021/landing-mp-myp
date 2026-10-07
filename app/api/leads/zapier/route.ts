@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { TEST_CLAUDE_AVISO, TEST_CLAUDE_CLIENTE_ID, TEST_CLAUDE_NOTA, fuenteTestClaude, varianteTestClaude } from '@/lib/crm/meta-test'
 
 export const dynamic = 'force-dynamic'
 
@@ -117,17 +118,30 @@ export async function POST(req: NextRequest) {
     if (facturacion) observacionesParts.push(`Facturación: ${facturacion}`)
 
     // Insertar el lead - SOLO campos que existen en la tabla
-    const leadData = {
-      cliente_id: body.client_id,
+    // Campañas TEST de Claude: van a su propio cliente (no al de M&P que ve Arturo) y avisan solo a Christopher
+    const varianteTest = varianteTestClaude(
+      extractField(body, 'form_id'), formName, campaignName,
+      extractField(body, 'adset_name', 'adsetName'), adName,
+    )
+
+    const leadData: Record<string, any> = {
+      cliente_id: varianteTest ? TEST_CLAUDE_CLIENTE_ID : body.client_id,
       nombre: nombreCompleto.trim(),
       email: email,
       telefono: telefono,
       empresa: empresa,
-      fuente: 'zapier',
+      fuente: varianteTest ? fuenteTestClaude(varianteTest) : 'zapier',
       contactado: false,
       vendido: false,
       observaciones: observacionesParts.length > 0 ? observacionesParts.join(' | ') : null,
       fecha_ingreso: new Date().toISOString()
+    }
+    if (varianteTest) {
+      leadData.notas = TEST_CLAUDE_NOTA
+      leadData.campana_nombre = campaignName
+      leadData.form_nombre = formName
+      leadData.ad_nombre = adName
+      leadData.meta_lead_id = extractField(body, 'lead_id', 'leadgen_id', 'id')
     }
 
     console.log('📝 Datos del lead a insertar:', {
@@ -159,9 +173,9 @@ export async function POST(req: NextRequest) {
 
     if (RESEND_KEY) {
       // Siempre enviar a contacto@ como principal. CC a arturo@ + email del cliente si existe.
-      const toList = ['contacto@mulleryperez.cl']
-      const ccList: string[] = ['arturo@mulleryperez.cl']
-      if (notifyEmail && notifyEmail !== 'contacto@mulleryperez.cl' && notifyEmail !== 'arturo@mulleryperez.cl') {
+      const toList = varianteTest ? [TEST_CLAUDE_AVISO] : ['contacto@mulleryperez.cl']
+      const ccList: string[] = varianteTest ? [] : ['arturo@mulleryperez.cl']
+      if (!varianteTest && notifyEmail && notifyEmail !== 'contacto@mulleryperez.cl' && notifyEmail !== 'arturo@mulleryperez.cl') {
         ccList.push(notifyEmail)
       }
 
@@ -176,8 +190,8 @@ export async function POST(req: NextRequest) {
         body: JSON.stringify({
           from: 'contacto@mulleryperez.cl',
           to: toList,
-          cc: ccList,
-          subject: `🔔 Nuevo lead: ${leadData.nombre} — ${clienteData.nombre}`,
+          ...(ccList.length ? { cc: ccList } : {}),
+          subject: varianteTest ? `🧪 Lead TEST Claude ${varianteTest}: ${leadData.nombre}` : `🔔 Nuevo lead: ${leadData.nombre} — ${clienteData.nombre}`,
           html: `
             <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;">
               <div style="background:linear-gradient(135deg,#1e3a5f,#2563eb);padding:24px;border-radius:12px 12px 0 0;">
