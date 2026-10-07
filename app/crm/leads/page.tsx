@@ -30,6 +30,7 @@ import {
   empresaDe,
 } from "@/app/components/crm/leads/types";
 import { whatsappUrl } from "@/app/components/crm/leads/types";
+import { esLeadTestChristopher, TEST_CLAUDE_BADGE, TEST_CLAUDE_NOTA } from "@/lib/crm/meta-test";
 import LeadsResumen from "@/app/components/crm/leads/LeadsResumen";
 import LeadDrawer from "@/app/components/crm/leads/LeadDrawer";
 import NuevoLeadModal from "@/app/components/crm/leads/NuevoLeadModal";
@@ -530,6 +531,9 @@ function LeadsMP() {
                               <div className="font-medium text-gray-900">
                                 {nombreCompleto(lead)}
                               </div>
+                              {esLeadTestChristopher(lead) && (
+                                <div><span className="inline-block mt-0.5 px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 text-[10px] font-bold" title={TEST_CLAUDE_NOTA}>🧪 {TEST_CLAUDE_BADGE}</span></div>
+                              )}
                               {empresaDe(lead) && (
                                 <div className="text-xs text-gray-500">
                                   {empresaDe(lead)}

@@ -10,6 +10,7 @@ import {
   canalDeLead,
   type Estado,
 } from "@/lib/crm/leads-pipeline";
+import { esLeadTestChristopher, TEST_CLAUDE_BADGE } from "@/lib/crm/meta-test";
 import { type Lead, nombreCompleto, empresaDe, whatsappUrl } from "./types";
 
 interface Historial {
@@ -183,6 +184,11 @@ export default function LeadDrawer({
             <h2 className="text-lg font-bold text-gray-900 truncate">
               {nombreCompleto(lead)}
             </h2>
+            {esLeadTestChristopher(lead) && (
+              <p className="mt-1 text-xs font-semibold text-amber-800 bg-amber-50 border border-amber-200 rounded px-2 py-1">
+                🧪 {TEST_CLAUDE_BADGE} — la gestiona Christopher
+              </p>
+            )}
             {empresaDe(lead) && (
               <p className="text-sm text-gray-600 truncate">
                 {empresaDe(lead)}

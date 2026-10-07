@@ -6,6 +6,7 @@ import { useSimpleAuth, esComercial } from '@/lib/auth/simple-auth'
 
 const links = [
   { href: '/crm/leads', label: 'Leads', comercial: true },
+  { href: '/crm/campanas-meta', label: 'Campañas Meta', comercial: true },
   { href: '/crm/prospeccion-2026', label: 'Prospección', comercial: true },
   { href: '/crm/benchmark', label: 'Benchmark', comercial: false },
   { href: '/crm/reportes', label: 'Reportes', comercial: false },

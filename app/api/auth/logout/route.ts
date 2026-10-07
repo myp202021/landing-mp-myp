@@ -1,18 +1,8 @@
-/**
- * AUTH LOGOUT API
- * POST: Cerrar sesión
- */
+import { NextResponse } from 'next/server'
+import { CRM_COOKIE } from '@/lib/crm/session'
 
-import { NextRequest, NextResponse } from 'next/server'
-
-export const runtime = 'edge'
-export const dynamic = 'force-dynamic'
-
-export async function POST(req: NextRequest) {
-  const response = NextResponse.json({ success: true })
-
-  // Eliminar cookie de sesión
-  response.cookies.delete('mp_session')
-
-  return response
+export async function POST() {
+  const res = NextResponse.json({ ok: true })
+  res.cookies.set(CRM_COOKIE, '', { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'lax', path: '/', maxAge: 0 })
+  return res
 }

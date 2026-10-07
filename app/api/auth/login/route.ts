@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import bcrypt from 'bcryptjs'
+import { crearCookieSesion } from '@/lib/crm/session'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -60,10 +61,14 @@ export async function POST(req: NextRequest) {
       debe_cambiar_password: usuario.debe_cambiar_password
     }
 
-    return NextResponse.json({
+    const res = NextResponse.json({
       success: true,
       user
     })
+    // Sesión de servidor (cookie httpOnly firmada) para rutas API con datos sensibles
+    const c = crearCookieSesion({ id: String(usuario.id), role: usuario.rol, cliente_id: usuario.cliente_id })
+    res.cookies.set(c.name, c.value, c.options)
+    return res
   } catch (error: any) {
     console.error('Error en POST /api/auth/login:', error)
     return NextResponse.json(

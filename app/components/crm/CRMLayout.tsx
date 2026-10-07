@@ -29,6 +29,7 @@ export default function CRMLayout({ children, title, authenticated = true, onRef
       { href: '/crm', label: 'CRM Admin', icon: '🏠' },
       { href: '/crm/dashboard-myp', label: 'Dashboard M&P', icon: '📊' },
       { href: '/crm/leads', label: 'Leads M&P', icon: '📋' },
+      { href: '/crm/campanas-meta', label: 'Campañas Meta', icon: '🧪' },
       { href: '/crm/clientes', label: 'Clientes', icon: '👥' },
       { href: '/crm/integraciones', label: 'Integraciones', icon: '🔌' },
       { href: '/crm/benchmark', label: 'Benchmark', icon: '📊' },
@@ -39,6 +40,7 @@ export default function CRMLayout({ children, title, authenticated = true, onRef
     ],
     equipo: [
       { href: '/crm/leads', label: 'Leads', icon: '📋', comercial: true },
+      { href: '/crm/campanas-meta', label: 'Campañas Meta', icon: '🧪', comercial: true },
       { href: '/crm/prospeccion-2026', label: 'Prospección 2026', icon: '🔍', comercial: true },
       { href: '/crm/benchmark', label: 'Benchmark', icon: '📊' },
       { href: '/crm/reportes', label: 'Reportes', icon: '📈' },

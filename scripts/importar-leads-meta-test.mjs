@@ -6,8 +6,8 @@
 import { createClient } from '@supabase/supabase-js'
 import fs from 'fs'
 
-const TEST_CLAUDE_CLIENTE_ID = 'db2bd241-6a62-497b-a7b9-aac9229913be'
-const NOTA = 'CAMPAÑA TEST (Claude) — la gestiona Christopher, no Arturo'
+const TEST_CLAUDE_CLIENTE_ID = '1ecabf3e-27a1-4715-bfa7-eb54b078d7d3' // cliente M&P (CRM único; 7 oct)
+const NOTA = 'Campaña TEST de Christopher — la gestiona Christopher'
 
 const env = Object.fromEntries(
   fs.readFileSync(new URL('../.env.local', import.meta.url), 'utf8')

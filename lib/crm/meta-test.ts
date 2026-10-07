@@ -1,12 +1,24 @@
+import { MP_CLIENTE_ID } from '@/lib/crm/leads-pipeline'
+
 /**
- * Campañas TEST de Meta gestionadas por Claude (octubre 2026).
- * Sus leads van al cliente "M&P · TEST Claude (Meta)" (no al cliente M&P que ve Arturo)
- * y avisan solo a Christopher.
+ * Campañas TEST de Meta de Christopher, operadas por Claude (octubre 2026).
+ * Criterio (Christopher, 7 oct): el CRM es uno solo → sus leads entran al cliente M&P (Arturo los ve),
+ * marcados como campaña de Christopher; el aviso por correo va solo a Christopher y no se asignan a Arturo.
  */
 
-export const TEST_CLAUDE_CLIENTE_ID = 'db2bd241-6a62-497b-a7b9-aac9229913be'
+export const TEST_CLAUDE_CLIENTE_ID = MP_CLIENTE_ID
 
-export const TEST_CLAUDE_NOTA = 'CAMPAÑA TEST (Claude) — la gestiona Christopher, no Arturo'
+/** Cliente separado usado hasta el 7 oct (quedó vacío; se mantiene solo como referencia). */
+export const TEST_CLAUDE_CLIENTE_ID_ANTIGUO = 'db2bd241-6a62-497b-a7b9-aac9229913be'
+
+export const TEST_CLAUDE_NOTA = 'Campaña TEST de Christopher — la gestiona Christopher'
+
+export const TEST_CLAUDE_BADGE = 'Campaña TEST de Christopher'
+
+/** true si el lead viene de las campañas TEST de Christopher (por fuente, campaña o nota). */
+export function esLeadTestChristopher(l: { fuente?: string | null; campana_nombre?: string | null; notas?: string | null }): boolean {
+  return /TEST\s*Claude/i.test(l.fuente || '') || /TEST\s*Claude/i.test(l.campana_nombre || '') || /campa[ñn]a\s*TEST/i.test(l.notas || '')
+}
 
 export const TEST_CLAUDE_AVISO = 'christopher@mulleryperez.cl'
 

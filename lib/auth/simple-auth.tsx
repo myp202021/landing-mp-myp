@@ -160,6 +160,7 @@ export function SimpleAuthProvider({ children }: { children: ReactNode }) {
   const logout = () => {
     setUser(null)
     localStorage.removeItem('crm_user')
+    fetch('/api/auth/logout', { method: 'POST' }).catch(() => {})
     router.push('/crm/login')
   }
 

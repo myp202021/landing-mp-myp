@@ -118,7 +118,7 @@ export async function POST(req: NextRequest) {
     if (facturacion) observacionesParts.push(`Facturación: ${facturacion}`)
 
     // Insertar el lead - SOLO campos que existen en la tabla
-    // Campañas TEST de Claude: van a su propio cliente (no al de M&P que ve Arturo) y avisan solo a Christopher
+    // Campañas TEST de Christopher (operadas por Claude): entran al cliente M&P (CRM único) marcadas como suyas; aviso solo a Christopher
     const varianteTest = varianteTestClaude(
       extractField(body, 'form_id'), formName, campaignName,
       extractField(body, 'adset_name', 'adsetName'), adName,
