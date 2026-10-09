@@ -8,7 +8,7 @@ export default function PrivacyPage() {
 
         <div className="prose prose-gray max-w-none">
           <p className="text-gray-600 mb-4">
-            Última actualización: Noviembre 2025
+            Última actualización: Octubre 2026
           </p>
 
           <section className="mb-6">
@@ -56,14 +56,46 @@ export default function PrivacyPage() {
 
           <section className="mb-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-3">
-              4. Contacto
+              4. Mensajes de Instagram y Messenger de nuestros clientes
+            </h2>
+            <p className="text-gray-700 mb-2">
+              Cuando una empresa cliente nos autoriza expresamente, nuestra aplicación lee los mensajes
+              directos que las personas envían a la cuenta de Instagram o a la página de Facebook de esa
+              empresa, a través de las APIs oficiales de Meta. Usamos esa información solo para:
+            </p>
+            <ul className="list-disc pl-6 text-gray-700 space-y-1">
+              <li>Registrar cada consulta como un contacto (lead) en el sistema de seguimiento del cliente</li>
+              <li>Medir si la empresa respondió cada consulta y en cuánto tiempo</li>
+              <li>Identificar la propiedad, producto o servicio consultado, para reportes agregados</li>
+            </ul>
+            <p className="text-gray-700 mt-2">
+              No vendemos ni compartimos esta información con terceros, no la usamos para publicidad propia
+              y solo la ven la empresa cliente y el equipo de Muller y Pérez que atiende su cuenta. Los datos
+              se conservan mientras dure el servicio con el cliente y se eliminan al terminarlo o cuando la
+              persona lo solicite.
+            </p>
+          </section>
+
+          <section className="mb-6">
+            <h2 className="text-xl font-semibold text-gray-900 mb-3">
+              5. Eliminación de datos
+            </h2>
+            <p className="text-gray-700">
+              Puedes pedir que eliminemos tus datos en cualquier momento. Las instrucciones están en{' '}
+              <a href="/eliminacion-de-datos" className="text-blue-600 hover:underline">mulleryperez.cl/eliminacion-de-datos</a>.
+            </p>
+          </section>
+
+          <section className="mb-6">
+            <h2 className="text-xl font-semibold text-gray-900 mb-3">
+              6. Contacto
             </h2>
             <p className="text-gray-700">
               Para preguntas sobre esta política de privacidad, contáctanos en:
             </p>
             <p className="text-gray-700 mt-2">
-              Email: <a href="mailto:marcela@mulleryperez.com" className="text-blue-600 hover:underline">
-                marcela@mulleryperez.com
+              Email: <a href="mailto:contacto@mulleryperez.cl" className="text-blue-600 hover:underline">
+                contacto@mulleryperez.cl
               </a>
             </p>
           </section>
