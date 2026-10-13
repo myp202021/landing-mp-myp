@@ -341,20 +341,22 @@ async function validarYReintentar(articulo, rawContent, sysPrompt, usrPrompt, ty
 
 async function generarImagen(titulo) {
   try {
-    console.log('  🎨 Generando imagen con DALL-E...')
+    console.log('  🎨 Generando imagen (gpt-image-1)...')
     var prompt = 'Professional, modern blog header image about: ' + titulo + '. Warehouse management, logistics and supply chain context. Clean minimalist design, industrial blue tones, warehouse and technology elements. NO text, NO words, NO letters, NO numbers in the image.'
     var r = await fetch('https://api.openai.com/v1/images/generations', {
       method: 'POST',
       headers: { 'Authorization': 'Bearer ' + OPENAI_KEY, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ model: 'dall-e-3', prompt: prompt, n: 1, size: '1792x1024', quality: 'standard' })
+      // dall-e-3 fue retirado por OpenAI (oct 2026: "The model 'dall-e-3' does not exist"); gpt-image-1 devuelve b64_json
+      body: JSON.stringify({ model: 'gpt-image-1', prompt: prompt, n: 1, size: '1536x1024', quality: 'medium' })
     })
     var data = await r.json()
-    if (!data.data || !data.data[0] || !data.data[0].url) {
-      console.log('  ⚠️ DALL-E no retornó imagen:', JSON.stringify(data).substring(0, 200))
+    var img = data.data && data.data[0]
+    if (!img || !(img.b64_json || img.url)) {
+      console.log('  ⚠️ No se generó imagen:', JSON.stringify(data).substring(0, 200))
       return null
     }
     console.log('  ✅ Imagen generada')
-    return data.data[0].url
+    return img.b64_json ? Buffer.from(img.b64_json, 'base64') : img.url
   } catch(e) {
     console.log('  ⚠️ Error generando imagen (no crítico): ' + e.message)
     return null
@@ -364,8 +366,7 @@ async function generarImagen(titulo) {
 async function subirImagenWP(dalleUrl, titulo) {
   try {
     console.log('  📤 Subiendo imagen a WordPress...')
-    var imgRes = await fetch(dalleUrl)
-    var imgBuffer = await imgRes.buffer()
+    var imgBuffer = Buffer.isBuffer(dalleUrl) ? dalleUrl : await (await fetch(dalleUrl)).buffer()
     var slug = (titulo || 'blog').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').substring(0, 50)
     var filename = slug + '-' + Date.now() + '.png'
     var uploadRes = await fetch(WP_URL + '/wp-json/wp/v2/media', {
@@ -539,6 +540,12 @@ async function main() {
     console.log('::set-output name=category::' + articulo.categoria)
   } else {
     console.error('❌ Error publicando:', JSON.stringify(post).substring(0, 200))
+    // Diagnóstico: con qué usuario y rol está entrando el agente (sin datos sensibles)
+    try {
+      var yo = await (await fetch(WP_URL + '/wp-json/wp/v2/users/me?context=edit', { headers: { 'Authorization': AUTH } })).json()
+      console.error('   Usuario WP: ' + (yo.username || yo.slug || '?') + ' · roles: ' + JSON.stringify(yo.roles || yo.code || yo) .substring(0, 200) +
+        ' · publish_posts: ' + !!(yo.capabilities && yo.capabilities.publish_posts) + ' · upload_files: ' + !!(yo.capabilities && yo.capabilities.upload_files))
+    } catch (e) { console.error('   (no se pudo leer users/me: ' + e.message + ')') }
     process.exit(1)
   }
 }
