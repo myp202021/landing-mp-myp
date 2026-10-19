@@ -10,6 +10,7 @@
 const fetch = globalThis.fetch || require('node-fetch')
 const { createClient } = require('@supabase/supabase-js')
 const focus = require('./lib/myp-seo-focus')
+var largo = require('./lib/largo')
 const CATEGORIA_CLUSTER = { performance: 'Performance', ia_agentes: 'IA', geo_seo: 'SEO', paid_media: 'Google Ads', growth: 'Growth', marketing_digital: 'Marketing Digital' }
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY
@@ -650,6 +651,9 @@ async function generarImagenGeo(titulo) {
 async function guardarEnSupabase(articulo) {
   console.log(`💾 Guardando en Supabase: ${articulo.slug}`)
 
+  // M&P 19 oct 2026, regla para TODOS los agentes de blog: mínimo 3.000 palabras; si falta, se escribe por secciones y se une (lib/largo.js).
+  articulo.content_html = await largo.asegurarLargo(articulo.content_html, { tema: articulo.title, sistema: 'Escribes para Muller y Pérez, agencia de performance marketing en Chile.' })
+  largo.exigirLargo(articulo.content_html)
   const { data, error } = await supabase
     .from('blog_posts')
     .upsert(articulo, { onConflict: 'slug' })

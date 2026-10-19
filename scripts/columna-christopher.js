@@ -7,6 +7,7 @@
 
 const fetch = globalThis.fetch || require('node-fetch')
 const { createClient } = require('@supabase/supabase-js')
+const largo = require('./lib/largo')
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY
 const RESEND_KEY = process.env.RESEND
@@ -153,7 +154,7 @@ ESTRUCTURA HTML (clases Tailwind):
 - Callout dato: <div class="bg-emerald-50 border-l-4 border-emerald-600 p-6 rounded-r-xl mb-8"><p class="text-gray-700">...</p></div>
 
 CONTENIDO:
-- Mínimo 1800 palabras
+- Mínimo 3.000 palabras
 - Al menos 5 H2
 - Arranca con un gancho brutal — algo que pasó, un error, una verdad incómoda
 - Mínimo 2 anécdotas o casos reales (pueden ser anónimos: "un cliente del rubro inmobiliario", "una clínica en zona oriente")
@@ -166,15 +167,21 @@ CONTENIDO:
 NO incluir: H1, header, footer, imágenes, metadata.
 RESPONDE SOLO con el HTML del contenido.`
 
-  const res = await fetch('https://api.openai.com/v1/chat/completions', {
-    method: 'POST',
-    headers: { 'Authorization': 'Bearer ' + OPENAI_API_KEY, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ model: 'gpt-4o', messages: [{ role: 'user', content: prompt }], max_tokens: 4096, temperature: 0.8 })
-  })
-
-  if (!res.ok) throw new Error('OpenAI error: ' + res.status)
-  const data = await res.json()
-  const html = data.choices[0].message.content.replace(/```[a-z]*/gi, '').trim()
+  // 19 oct 2026: pedía 1.800 palabras pero aceptaba 450 y salían columnas de 500-700. Ahora gpt-4.1 con más espacio,
+  // una ampliación por secciones si queda corta y nunca se publica bajo 3.000 (regla para todos los agentes de blog).
+  async function pedir(messages) {
+    const res = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + OPENAI_API_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model: 'gpt-4.1', messages, max_tokens: 10000, temperature: 0.8 })
+    })
+    if (!res.ok) throw new Error('OpenAI error: ' + res.status)
+    const data = await res.json()
+    return data.choices[0].message.content.replace(/```[a-z]*/gi, '').trim()
+  }
+  let html = await pedir([{ role: 'user', content: prompt }])
+  // Mínimo 3.000 palabras: si falta, se amplía por secciones y se une (lib/largo.js)
+  html = await largo.asegurarLargo(html, { tema: 'columna de opinión de Christopher Müller (Muller y Pérez)', sistema: 'Escribes la columna semanal de Christopher Müller, socio de Muller y Pérez, en primera persona y con su voz. ' })
 
   // QA: entre jun y sep 2026 se publicaron 7 columnas cuyo cuerpo era la negativa de la IA ("I'm sorry, I can't assist")
   const texto = html.replace(/<[^>]*>/g, ' ')
@@ -182,7 +189,7 @@ RESPONDE SOLO con el HTML del contenido.`
   if (/i'm sorry|i can.?t assist|i cannot|as an ai|lo siento, no puedo|no puedo cumplir|no puedo ayudar/i.test(texto)) {
     throw new Error('QA RECHAZADO: la IA se negó a escribir la columna. No se publica.')
   }
-  if (palabras < 450) throw new Error('QA RECHAZADO: columna de ' + palabras + ' palabras (mínimo 450). No se publica.')
+  largo.exigirLargo(html)
 
   // Metadata
   const metaRes = await fetch('https://api.openai.com/v1/chat/completions', {

@@ -8,6 +8,7 @@ require('./lib/correo') // correos por Gmail (ver scripts/lib/correo.js)
 // Requiere: OPENAI_API_KEY, INVAS_WP_USER, INVAS_WP_APP_PASSWORD, INVAS_WP_URL
 
 var fetch = globalThis.fetch || require('node-fetch')
+var largo = require('./lib/largo')
 
 var WP_URL = process.env.INVAS_WP_URL || 'https://www.invaswms.com'
 var WP_USER = process.env.INVAS_WP_USER || 'Ad-invas-miN'
@@ -415,6 +416,9 @@ async function publicarEnWordPress(articulo, mediaId) {
   // También agregar categoría específica si existe
   var catExtra = await obtenerOCrearCategoria(articulo.categoria)
 
+  // M&P 19 oct 2026, regla para TODOS los agentes de blog: mínimo 3.000 palabras; si falta, se escribe por secciones y se une (lib/largo.js).
+  articulo.contenido_html = await largo.asegurarLargo(articulo.contenido_html, { tema: articulo.titulo_seo, sistema: 'Escribes para invasWMS (software WMS de gestión de bodegas, Chile).' })
+  largo.exigirLargo(articulo.contenido_html)
   var postBody = {
     title: articulo.titulo_seo,
     slug: articulo.slug,
