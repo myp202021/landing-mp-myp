@@ -163,8 +163,10 @@ export async function POST(req: NextRequest) {
       leadData.campana_nombre = campaignName
       leadData.form_nombre = formName
       leadData.ad_nombre = adName
-      leadData.meta_lead_id = extractField(body, 'lead_id', 'leadgen_id', 'id')
     }
+    // 21-oct-2026: el ID del lead de Meta se guarda SIEMPRE (antes solo en las campañas TEST): sin él, leads-meta-myp.js
+    // no reconoce el lead como cargado y lo vuelve a crear cada 15 minutos
+    leadData.meta_lead_id = extractField(body, 'lead_id', 'leadgen_id') || (body.created_time ? extractField(body, 'id') : null)
 
     console.log('📝 Datos del lead a insertar:', {
       nombre: leadData.nombre,
