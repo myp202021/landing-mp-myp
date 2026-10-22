@@ -1,65 +1,71 @@
-import { NextResponse } from 'next/server'
-import { Resend } from 'resend'
-import { guardarLeadMP } from '@/lib/crm/guardar-lead-mp'
+import { NextResponse } from "next/server";
+import { Resend } from "resend";
+import { guardarLeadMP } from "@/lib/crm/guardar-lead-mp";
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 interface LeadData {
-  nombre: string
-  email: string
-  empresa?: string
+  nombre: string;
+  email: string;
+  empresa?: string;
   formData: {
-    industry: string
-    businessModel: string
-    companySize: string
-    mainGoal: string
-    monthlyBudget: string
-  }
+    industry: string;
+    businessModel: string;
+    companySize: string;
+    mainGoal: string;
+    monthlyBudget: string;
+  };
   personas: Array<{
-    nombre: string
-    score: number
-    motivaciones: string
-    puntosDolor: string
-  }>
+    nombre: string;
+    score: number;
+    motivaciones: string;
+    puntosDolor: string;
+  }>;
 }
 
 const industryLabels: { [key: string]: string } = {
-  tecnologia: 'Tecnologia & Software',
-  salud: 'Salud & Medicina',
-  educacion: 'Educacion & E-learning',
-  finanzas: 'Finanzas & Fintech',
-  retail: 'Retail & E-commerce',
-  servicios: 'Servicios Profesionales',
-  inmobiliaria: 'Inmobiliaria',
-  automotriz: 'Automotriz',
-  gastronomia: 'Gastronomia & Restaurantes',
-  turismo: 'Turismo & Hoteleria',
-  construccion: 'Construccion & Remodelacion',
-  legal: 'Legal & Abogados'
-}
+  tecnologia: "Tecnologia & Software",
+  salud: "Salud & Medicina",
+  educacion: "Educacion & E-learning",
+  finanzas: "Finanzas & Fintech",
+  retail: "Retail & E-commerce",
+  servicios: "Servicios Profesionales",
+  inmobiliaria: "Inmobiliaria",
+  automotriz: "Automotriz",
+  gastronomia: "Gastronomia & Restaurantes",
+  turismo: "Turismo & Hoteleria",
+  construccion: "Construccion & Remodelacion",
+  legal: "Legal & Abogados",
+};
 
 export async function POST(request: Request) {
   try {
-    const data: LeadData = await request.json()
+    const data: LeadData = await request.json();
 
     if (!data.nombre || !data.email) {
       return NextResponse.json(
-        { error: 'Nombre y email son requeridos' },
-        { status: 400 }
-      )
+        { error: "Nombre y email son requeridos" },
+        { status: 400 },
+      );
     }
 
-    const industryLabel = industryLabels[data.formData?.industry] || data.formData?.industry || 'No especificada'
+    const industryLabel =
+      industryLabels[data.formData?.industry] ||
+      data.formData?.industry ||
+      "No especificada";
 
     // Guardar en el CRM (cliente M&P). Si falla, alerta por correo; no bloquea la respuesta.
-    await guardarLeadMP({
-      nombre: data.nombre,
-      email: data.email,
-      empresa: data.empresa || null,
-      fuente: 'buyer_gen',
-      form_nombre: 'Buyer Gen - M&P Labs',
-      observaciones: `Industria: ${industryLabel} | Modelo: ${data.formData?.businessModel || '—'} | Tamaño: ${data.formData?.companySize || '—'} | Objetivo: ${data.formData?.mainGoal || '—'} | Presupuesto: ${data.formData?.monthlyBudget || '—'}`,
-    }, 'Buyer Gen (/api/buyer-gen/lead)')
+    await guardarLeadMP(
+      {
+        nombre: data.nombre,
+        email: data.email,
+        empresa: data.empresa || null,
+        fuente: "buyer_gen",
+        form_nombre: "Buyer Gen - M&P Labs",
+        observaciones: `Industria: ${industryLabel} | Modelo: ${data.formData?.businessModel || "—"} | Tamaño: ${data.formData?.companySize || "—"} | Objetivo: ${data.formData?.mainGoal || "—"} | Presupuesto: ${data.formData?.monthlyBudget || "—"}`,
+      },
+      "Buyer Gen (/api/buyer-gen/lead)",
+    );
 
     // Email a M&P
     const emailHtml = `
@@ -102,12 +108,16 @@ export async function POST(request: Request) {
         <div class="value"><a href="mailto:${data.email}">${data.email}</a></div>
       </div>
 
-      ${data.empresa ? `
+      ${
+        data.empresa
+          ? `
       <div class="field">
         <div class="label">Empresa</div>
         <div class="value">${data.empresa}</div>
       </div>
-      ` : ''}
+      `
+          : ""
+      }
 
       <div class="field">
         <div class="label">Industria</div>
@@ -136,17 +146,21 @@ export async function POST(request: Request) {
 
       <div class="field">
         <div class="label">Buyer Personas Generadas</div>
-        ${data.personas.map(p => `
+        ${data.personas
+          .map(
+            (p) => `
           <div class="persona-card">
             <strong>${p.nombre}</strong> - Score: ${p.score}%<br>
             <small style="color: #666;">${p.motivaciones.substring(0, 100)}...</small>
           </div>
-        `).join('')}
+        `,
+          )
+          .join("")}
       </div>
 
       <div class="field">
         <div class="label">Fecha</div>
-        <div class="value">${new Date().toLocaleString('es-CL', { timeZone: 'America/Santiago' })}</div>
+        <div class="value">${new Date().toLocaleString("es-CL", { timeZone: "America/Santiago" })}</div>
       </div>
 
       <a href="mailto:${data.email}?subject=Buyer%20Personas%20-%20${encodeURIComponent(data.nombre)}" class="cta">
@@ -159,18 +173,19 @@ export async function POST(request: Request) {
   </div>
 </body>
 </html>
-    `
+    `;
 
     const { error: emailError } = await resend.emails.send({
-      from: 'M&P Labs <noreply@mulleryperez.cl>',
-      to: ['contacto@mulleryperez.cl'],
+      from: "M&P Labs <noreply@mulleryperez.cl>",
+      to: ["contacto@mulleryperez.cl"],
+      cc: ["arturo@mulleryperez.cl"],
       reply_to: data.email,
       subject: `Nuevo Lead Buyer Gen: ${data.nombre} - ${industryLabel}`,
-      html: emailHtml
-    })
+      html: emailHtml,
+    });
 
     if (emailError) {
-      console.error('Error sending email:', emailError)
+      console.error("Error sending email:", emailError);
     }
 
     // Email de confirmacion al lead
@@ -232,25 +247,24 @@ export async function POST(request: Request) {
   </div>
 </body>
 </html>
-    `
+    `;
 
     await resend.emails.send({
-      from: 'M&P <noreply@mulleryperez.cl>',
+      from: "M&P <noreply@mulleryperez.cl>",
       to: [data.email],
-      subject: 'Tus Buyer Personas - M&P Labs',
-      html: confirmationHtml
-    })
+      subject: "Tus Buyer Personas - M&P Labs",
+      html: confirmationHtml,
+    });
 
     return NextResponse.json({
       success: true,
-      message: 'Lead guardado y emails enviados'
-    })
-
+      message: "Lead guardado y emails enviados",
+    });
   } catch (error) {
-    console.error('Error processing buyer gen lead:', error)
+    console.error("Error processing buyer gen lead:", error);
     return NextResponse.json(
-      { error: 'Error procesando el lead' },
-      { status: 500 }
-    )
+      { error: "Error procesando el lead" },
+      { status: 500 },
+    );
   }
 }
