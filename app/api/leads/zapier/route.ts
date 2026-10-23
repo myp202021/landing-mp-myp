@@ -193,7 +193,8 @@ export async function POST(req: NextRequest) {
     crmProcesado = true
     console.log('✅ Lead creado exitosamente:', leadInserted.id)
 
-    // Enviar notificación email al cliente (no bloquea la respuesta)
+    // Enviar notificación email al cliente. Se espera el envío (máx. 10 s): en Vercel la función se congela al
+    // responder y un fetch sin await se cortaba a veces (23 oct 2026: 4 de 5 leads Meta sin aviso a contacto@/Arturo)
     const RESEND_KEY = process.env.RESEND_API_KEY || process.env.RESEND
     const notifyEmail = clienteData.contacto_email
 
@@ -207,8 +208,9 @@ export async function POST(req: NextRequest) {
 
       console.log('📧 Enviando notificación a:', toList, 'CC:', ccList)
 
-      fetch('https://api.resend.com/emails', {
+      await fetch('https://api.resend.com/emails', {
         method: 'POST',
+        signal: AbortSignal.timeout(10000),
         headers: {
           'Authorization': `Bearer ${RESEND_KEY}`,
           'Content-Type': 'application/json'
