@@ -55,7 +55,7 @@ async function main() {
       var imgRes = await fetch('https://api.openai.com/v1/images/generations', {
         method: 'POST',
         headers: { 'Authorization': 'Bearer ' + OPENAI, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ model: 'gpt-image-1', prompt: prompt, n: 1, size: '1536x1024', quality: 'low' })
+        body: JSON.stringify({ model: 'gpt-image-1.5', prompt: prompt, n: 1, size: '1536x1024', quality: 'low' })
       })
       var imgData = await imgRes.json()
 

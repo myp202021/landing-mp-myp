@@ -620,7 +620,7 @@ async function generarImagenGeo(titulo) {
     const r = await fetch('https://api.openai.com/v1/images/generations', {
       method: 'POST',
       headers: { 'Authorization': `Bearer ${OPENAI_API_KEY}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ model: 'gpt-image-1', prompt, n: 1, size: '1536x1024', quality: 'low' })
+      body: JSON.stringify({ model: 'gpt-image-1.5', prompt, n: 1, size: '1536x1024', quality: 'low' })
     })
     const data = await r.json()
     if (!data.data?.[0]) return null

@@ -348,7 +348,7 @@ async function generarImagen(titulo) {
       method: 'POST',
       headers: { 'Authorization': 'Bearer ' + OPENAI_KEY, 'Content-Type': 'application/json' },
       // dall-e-3 fue retirado por OpenAI (oct 2026: "The model 'dall-e-3' does not exist"); gpt-image-1 devuelve b64_json
-      body: JSON.stringify({ model: 'gpt-image-1', prompt: prompt, n: 1, size: '1536x1024', quality: 'medium' })
+      body: JSON.stringify({ model: 'gpt-image-1.5', prompt: prompt, n: 1, size: '1536x1024', quality: 'medium' })
     })
     var data = await r.json()
     var img = data.data && data.data[0]
