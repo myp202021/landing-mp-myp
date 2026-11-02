@@ -40,11 +40,11 @@ export const metadata: Metadata = {
 const articles = [
   {
     slug: 'chatgpt-ads-chile-guia-agencia',
-    title: 'ChatGPT Ads en Chile: cómo anunciar y cómo se compara con Google Ads',
+    title: 'ChatGPT Ads en Chile: guía completa para anunciar y compararlo con Google Ads',
     excerpt: 'Guía con fuentes oficiales de OpenAI: quién puede anunciar en Chile, paso a paso, rubros prohibidos, comparación con Google Ads y metodología de prueba de 4 semanas.',
     date: '2026-11-02',
     category: 'Paid Media',
-    readTime: '12 min',
+    readTime: '21 min',
     tag: 'ChatGPT Ads'
   },
   {
