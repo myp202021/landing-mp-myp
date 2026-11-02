@@ -39,6 +39,15 @@ export const metadata: Metadata = {
 
 const articles = [
   {
+    slug: 'chatgpt-ads-chile-guia-agencia',
+    title: 'ChatGPT Ads en Chile: cómo anunciar y cómo se compara con Google Ads',
+    excerpt: 'Guía con fuentes oficiales de OpenAI: quién puede anunciar en Chile, paso a paso, rubros prohibidos, comparación con Google Ads y metodología de prueba de 4 semanas.',
+    date: '2026-11-02',
+    category: 'Paid Media',
+    readTime: '15 min',
+    tag: 'ChatGPT Ads'
+  },
+  {
     slug: 'whatsapp-business-ia-chile-2025',
     title: 'WhatsApp Business + IA en Chile 2026: Cómo Reducir el CAC con Flujos de Lead Scoring',
     excerpt: 'Aprende cómo usar WhatsApp Business + IA en Chile 2026 para reducir CAC con flujos de lead scoring y nurturing automatizado. Casos y playbook.',
