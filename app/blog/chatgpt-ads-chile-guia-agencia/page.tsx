@@ -189,7 +189,7 @@ export default function ChatGPTAdsChilePage() {
             <div className="flex flex-wrap items-center gap-4 text-sm text-slate-400">
               <span>2 de noviembre de 2026</span>
               <span>&middot;</span>
-              <span>15 min de lectura</span>
+              <span>12 min de lectura</span>
               <span>&middot;</span>
               <span>Por Christopher Muller</span>
             </div>

@@ -44,7 +44,7 @@ const articles = [
     excerpt: 'Guía con fuentes oficiales de OpenAI: quién puede anunciar en Chile, paso a paso, rubros prohibidos, comparación con Google Ads y metodología de prueba de 4 semanas.',
     date: '2026-11-02',
     category: 'Paid Media',
-    readTime: '15 min',
+    readTime: '12 min',
     tag: 'ChatGPT Ads'
   },
   {
