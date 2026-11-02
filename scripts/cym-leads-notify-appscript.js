@@ -1,7 +1,7 @@
 // ===== CONFIGURACION DE CORREDORES POR ZONA =====
 var CORREDORES = {
   'la dehesa':  { nombre: 'Eugenia Olave',     email: 'eolave@cympropiedades.cl' },
-  'vitacura':   { nombre: 'Daniela Penafiel',  email: 'dpenafiel@cympropiedades.cl', cc: 'acy@cympropiedades.cl' },
+  'vitacura':   { nombre: 'Alejandro Ceballos', email: 'acy@cympropiedades.cl' },
   'las condes': { nombre: 'Anita Hernandez',   email: 'anamaria@cympropiedades.cl' },
   'la reina':   { nombre: 'James Robeson',     email: 'jrobeson@cympropiedades.cl' },
   'sca':        { nombre: 'Benjamin Ceballos', email: 'Bcf@cympropiedades.cl' },
