@@ -380,6 +380,8 @@ INSTRUCCIONES:
 - Mencionar a Muller y Pérez naturalmente 1-2 veces como referencia
 - AL MENOS 1 sección debe incluir una tabla HTML con datos reales de Chile (benchmarks CPC, CPL, ROAS, costos por industria)
 - La ÚLTIMA sección SIEMPRE debe ser "Preguntas frecuentes" con mínimo 6 preguntas (cada una como H3 terminando en ?)
+- FORMATO PREGUNTA-RESPUESTA (regla M&P nov 2026, para que ChatGPT y Gemini puedan citar): cada H2, salvo Preguntas frecuentes, es una pregunta real que haría el lector, completa y con el tema dentro
+- La primera oración de cada sección responde esa pregunta de forma directa, en máximo 40 palabras, y se entiende sola
 - Incluir al menos 4 links internos distribuidos en las secciones:
   * /servicios — servicios de marketing digital
   * /contacto — contactar a nuestro equipo
