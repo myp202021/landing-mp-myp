@@ -330,6 +330,8 @@ INSTRUCCIONES:
 - Cada sección debe tener 3-5 puntos clave a desarrollar
 - AL MENOS 1 sección debe incluir una tabla comparativa con datos numéricos de Chile
 - La ÚLTIMA sección SIEMPRE debe ser "Preguntas frecuentes" con mínimo 5 preguntas derivadas
+- FORMATO PREGUNTA-RESPUESTA (regla M&P nov 2026, para que ChatGPT y Gemini puedan citar): cada título H2, salvo Preguntas frecuentes, es una pregunta real que haría el lector, completa y con el tema dentro
+- La primera oración de cada sección responde esa pregunta de forma directa, en máximo 40 palabras, y se entiende sola
 - Incluir datos numéricos concretos de Chile (CPC, CPL, ROAS, precios, benchmarks)
 - Mencionar Muller y Pérez 1-2 veces naturalmente como fuente de datos
 
