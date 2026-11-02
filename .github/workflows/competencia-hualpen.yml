@@ -131,15 +131,12 @@ jobs:
           check_and_trigger "$R" "blog-geo-diario.yml" "Blog GEO" 11 "daily"
           check_and_trigger "$R" "clipping-prensa-hualpen.yml" "Clipping Hualpen" 10 "daily"
           check_and_trigger "$R" "clipping-swing-artistas.yml" "Clipping Swing" 11 "daily"
-          check_and_trigger "$R" "invas-blog-diario.yml" "Invas Blog" 11 "weekdays"
           check_and_trigger "$R" "columna-semanal.yml" "Columna Semanal" 11 "weekdays"
           check_and_trigger "myp202021/devuelvemipie-seo" "dmp-blog-diario.yml" "DMP Blog" 11 "weekdays"
           check_and_trigger "myp202021/lablab-seo" "lablab-blog-diario.yml" "LabLab Blog" 11 "weekdays"
-          check_and_trigger "myp202021/premiosincreibles-seo" "pinc-blog-diario.yml" "Premios Blog" 12 "daily"
 
           if [ "$DOW" = "4" ]; then
             check_and_trigger "$R" "blog-rankings-semanal.yml" "Rankings M&P" 12 "weekdays"
-            check_and_trigger "$R" "invas-blog-rankings-semanal.yml" "Rankings Invas" 12 "weekdays"
           fi
           # Agente maestro: los crons de GitHub en myp-daily-agent casi no se disparan
           D="myp202021/myp-daily-agent"
