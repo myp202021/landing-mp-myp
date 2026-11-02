@@ -1,9 +1,6 @@
 name: Blog Diario M&P
 
 on:
-  schedule:
-    - cron: '0 9 * * *'     # 06:00 AM Chile (UTC-3) — todos los días L-D
-    - cron: '30 9 * * *'    # 06:30 AM Chile — respaldo
   workflow_dispatch:
 
 jobs:

@@ -1,9 +1,6 @@
 name: Blog GEO Diario — Respuesta Directa IA
 
 on:
-  schedule:
-    - cron: '0 12 * * 1-5'    # 08:00 AM Chile (UTC-4) — L-V
-    - cron: '30 12 * * 1-5'   # 08:30 AM Chile — respaldo
   workflow_dispatch:
 
 jobs:
