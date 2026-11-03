@@ -2024,7 +2024,7 @@ export default function LandingClient() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 gap-8">
             {/* Testimonio 2 — Cristian Pregiata, Pregiata SPA */}
             <div className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all p-8 border border-gray-100 flex flex-col">
               <div className="flex items-center gap-4 mb-6">
