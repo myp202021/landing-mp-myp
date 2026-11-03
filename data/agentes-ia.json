@@ -132,17 +132,6 @@
     "imagen": null
   },
   {
-    "id": "blog-importadora",
-    "nombre": "Blog diario — cliente importador mayorista de tecnología",
-    "area": "Blog",
-    "que_hace": "Publica guías de compra y comparativas B2B para retailers.",
-    "frecuencia": "Lunes a viernes",
-    "repo": "myp202021/distec-seo",
-    "workflow": "distec-blog-diario.yml",
-    "url_publica": null,
-    "imagen": null
-  },
-  {
     "id": "blog-industrial",
     "nombre": "Blog diario — cliente de equipamiento industrial",
     "area": "Blog",

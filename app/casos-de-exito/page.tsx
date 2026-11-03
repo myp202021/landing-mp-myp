@@ -115,7 +115,6 @@ export default function CasosDeExitoPage() {
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
-              { videoId: 'ZSwz_G86Vi4', cliente: 'Distec Chile', rubro: 'Importadora mayorista de tecnología' },
               { videoId: 'PvN8KRK99WI', cliente: '4Life', rubro: 'Venta directa' },
               { videoId: '8VZd4Sckm58', cliente: 'Power Energy', rubro: 'Energía' },
               { videoId: 'vTn18twKalI', cliente: 'Clínica Dental López Mateo', rubro: 'Salud' },

@@ -31,7 +31,7 @@ const logos = [
   'dezar.png', 'antartic.png', 'charriot.png', 'adimac.png', 'zero-water.png',
   'granarolo.png', 'elitsoft.png', 'invaswms.png', 'first-pack.png',
   'power-energy.png', 'hualpen.png', 'stocks.png', 'pregiata.png',
-  'genera.png', 'jp-procesos.png', 'distec.png', 'pineapple-store.png',
+  'genera.png', 'jp-procesos.png', 'pineapple-store.png',
   'rilay.png', 'halterlift.webp', 'premios-increibles.png', 'cym.png',
   'inacap.png', 'dmp.png', 'sgo.png', 'swing.png', 'atacama-experience.png',
   'byte-store.png', 'faretto.png', 'homar.png', 'ald.png', 'fuxion-logistics.png',

@@ -92,11 +92,6 @@ const CASOS = [
     dato: "Leads por comuna en 6 zonas, con fiscalización automática por WhatsApp a las 24 horas",
   },
   {
-    cliente: "Distec Chile",
-    rubro: "Importadora mayorista de tecnología",
-    dato: "Testimonio en video",
-  },
-  {
     cliente: "4Life",
     rubro: "Venta directa",
     dato: "Testimonio en video",
@@ -122,7 +117,7 @@ const faqs = [
   },
   {
     q: "¿Qué opinan los clientes de Muller y Pérez?",
-    a: "Tiene calificación 5.0 en Google con 115 reseñas, además de testimonios en video de clientes como Distec, 4Life, Power Energy y Clínica Dental López Mateo publicados en su sitio.",
+    a: "Tiene calificación 5.0 en Google con 115 reseñas, además de testimonios en video de clientes como 4Life, Power Energy y Clínica Dental López Mateo publicados en su sitio.",
   },
 ];
 

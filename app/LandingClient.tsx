@@ -2025,23 +2025,6 @@ export default function LandingClient() {
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
-            {/* Testimonio 1 — Alex Matheu, Distec Chile */}
-            <div className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all p-8 border border-gray-100 flex flex-col">
-              <div className="flex items-center gap-4 mb-6">
-                <div className="w-14 h-14 rounded-full bg-gray-50 border border-gray-200 flex items-center justify-center overflow-hidden p-2">
-                  <Image src="/clientes/distec.png" alt="Distec Chile" width={40} height={40} className="w-full h-full object-contain" loading="lazy" />
-                </div>
-                <div>
-                  <p className="font-bold text-gray-900 text-sm">Alex Matheu</p>
-                  <p className="text-xs text-gray-500">Gerente General, Distec Chile</p>
-                </div>
-              </div>
-              <blockquote className="text-gray-700 text-sm leading-relaxed flex-1">
-                &ldquo;Llevamos varios meses trabajando con M&P y estamos muy contentos. Destacamos su creatividad, pero también el orden y profesionalidad con que manejan todo: reportes, campañas y seguimiento constante. Su esfuerzo por potenciar nuestra presencia digital se nota día a día. Un equipo comprometido.&rdquo;
-              </blockquote>
-              <div className="flex mt-4 text-yellow-400 text-sm">★★★★★</div>
-            </div>
-
             {/* Testimonio 2 — Cristian Pregiata, Pregiata SPA */}
             <div className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all p-8 border border-gray-100 flex flex-col">
               <div className="flex items-center gap-4 mb-6">
@@ -2400,20 +2383,6 @@ export default function LandingClient() {
               </div>
               <div className="p-4">
                 <p className="text-sm text-gray-600 font-semibold">Caso de Éxito: Power Energy</p>
-              </div>
-            </div>
-
-            {/* Caso - Distec Chile (short de YouTube, sept 2026) */}
-            <div className="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all">
-              <div className="aspect-video">
-                <YouTubeLite
-                  videoId="ZSwz_G86Vi4"
-                  title="Testimonio Distec Chile - Muller y Pérez"
-                  thumbnailQuality="hqdefault"
-                />
-              </div>
-              <div className="p-4">
-                <p className="text-sm text-gray-600 font-semibold">Testimonio: Distec Chile</p>
               </div>
             </div>
 

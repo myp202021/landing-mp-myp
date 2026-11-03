@@ -24,7 +24,6 @@ const clients = [
   { name: 'Genera', industry: 'Recursos Humanos', logo: '/clientes/genera.png' },
   { name: 'JP Procesos', industry: 'Agroindustria', logo: '/clientes/jp-procesos.png' },
   { name: 'Forcmin', industry: 'Minería', logo: '/clientes/logo-forcmin-c.png' },
-  { name: 'Distec', industry: 'Distribución Tecnológica', logo: '/clientes/distec.png' },
   { name: 'Pineapple Store', industry: 'Accesorios Apple', logo: '/clientes/pineapple-store.png' },
   { name: 'Byte Store', industry: 'Tecnología Refurbished', logo: '/clientes/byte-store.png' },
   { name: 'Rilay', industry: 'Inmobiliaria', logo: '/clientes/rilay.png' },

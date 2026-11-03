@@ -439,7 +439,6 @@ export default function MarketingB2BPage() {
                   { cliente: 'Genera', rubro: 'Software B2B', dato: 'CPL en Meta Ads de $21.048 a $7.337 (-65%) en 15 meses, con 374 leads al mes' },
                   { cliente: 'Power Energy', rubro: 'Iluminación industrial, B2B + B2C', dato: 'CPA de $17.100 a $826 (-95%) en 15 meses, con 327 conversiones al mes' },
                   { cliente: 'Invas WMS', rubro: 'Software logístico (SEO + blog IA)', dato: '#1 en Google para “mejor WMS Chile 2026” y 113 artículos publicados por un agente de IA' },
-                  { cliente: 'Distec Chile', rubro: 'Importadora mayorista de tecnología', dato: 'Testimonio en video del cliente sobre el trabajo con Muller y Pérez' },
                 ].map((c) => (
                   <Link
                     key={c.cliente}
