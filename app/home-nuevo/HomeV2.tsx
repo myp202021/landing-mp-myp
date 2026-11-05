@@ -10,7 +10,7 @@ import React, { useState } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
 import {
   ArrowRight,
   Calendar,
@@ -62,10 +62,10 @@ const Marquee3D = dynamic(() => import("@/components/home-v2/Marquee3D"), {
 });
 
 const CHIPS = [
-  { t: 'Costo por lead', v: 'Medido por campaña', c: 'text-cyan-300', pos: 'left-0 top-10 lg:left-4' },
-  { t: 'ChatGPT y Gemini', v: '¿Te recomiendan?', c: 'text-violet-300', pos: 'right-0 top-24' },
-  { t: 'CRM conectado', v: 'Hasta la venta', c: 'text-emerald-300', pos: 'left-6 bottom-16' },
-  { t: 'Agentes IA', v: '27 en producción', c: 'text-amber-300', pos: 'right-6 bottom-6' },
+  { t: 'Costo por lead', v: 'Medido por campaña', c: 'text-blue-600', pos: 'left-0 top-10 lg:left-4' },
+  { t: 'ChatGPT y Gemini', v: '¿Te recomiendan?', c: 'text-violet-600', pos: 'right-0 top-24' },
+  { t: 'CRM conectado', v: 'Hasta la venta', c: 'text-emerald-600', pos: 'left-6 bottom-16' },
+  { t: 'Agentes IA', v: '27 en producción', c: 'text-amber-600', pos: 'right-6 bottom-6' },
 ]
 
 const WA =
@@ -80,7 +80,7 @@ const fade = {
 
 function Eyebrow({ children }: { children: React.ReactNode }) {
   return (
-    <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-cyan-400/25 bg-cyan-400/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-cyan-300">
+    <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-blue-600">
       <span className="h-1.5 w-1.5 rounded-full bg-cyan-300" /> {children}
     </div>
   );
@@ -451,7 +451,7 @@ function Nav() {
     <header className="fixed inset-x-0 top-4 z-50 px-4">
       <nav
         aria-label="Navegación principal"
-        className="mx-auto flex max-w-6xl items-center justify-between rounded-2xl border border-white/10 bg-slate-950/60 px-4 py-2.5 backdrop-blur-xl"
+        className="mx-auto flex max-w-6xl items-center justify-between rounded-2xl border border-slate-200 bg-white/85 px-4 py-2.5 backdrop-blur-xl"
       >
         <Link
           href="/"
@@ -460,43 +460,43 @@ function Nav() {
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/logo-blanco.png"
+            src="/logo-color.png"
             alt="Muller y Pérez"
             className="h-8 w-auto"
             onError={(e) => {
               (e.target as HTMLImageElement).style.display = "none";
             }}
           />
-          <span className="font-bold tracking-tight text-white">M&amp;P</span>
+          <span className="font-bold tracking-tight text-slate-900">M&amp;P</span>
         </Link>
-        <div className="hidden items-center gap-6 text-sm text-slate-300 md:flex">
-          <a href="#areas" className="hover:text-white">
+        <div className="hidden items-center gap-6 text-sm text-slate-600 md:flex">
+          <a href="#areas" className="hover:text-slate-900">
             Cómo trabajamos
           </a>
-          <Link href="/agentes-ia" className="hover:text-white">
+          <Link href="/agentes-ia" className="hover:text-slate-900">
             Agentes IA
           </Link>
-          <Link href="/copilot" className="hover:text-white">
+          <Link href="/copilot" className="hover:text-slate-900">
             Boost SEO + IA
           </Link>
-          <a href="#planes" className="hover:text-white">
+          <a href="#planes" className="hover:text-slate-900">
             Planes
           </a>
-          <a href="#casos" className="hover:text-white">
+          <a href="#casos" className="hover:text-slate-900">
             Casos
           </a>
-          <Link href="/blog" className="hover:text-white">
+          <Link href="/blog" className="hover:text-slate-900">
             Blog
           </Link>
           <div className="group relative">
-            <button type="button" className="hover:text-white">Más ▾</button>
-            <div className="invisible absolute right-0 top-full z-50 mt-3 grid w-[760px] grid-cols-5 gap-4 rounded-2xl border border-white/10 bg-slate-950/95 p-5 opacity-0 shadow-2xl backdrop-blur-xl transition group-hover:visible group-hover:opacity-100">
+            <button type="button" className="hover:text-slate-900">Más ▾</button>
+            <div className="invisible absolute right-0 top-full z-50 mt-3 grid w-[760px] grid-cols-5 gap-4 rounded-2xl border border-slate-200 bg-white p-5 opacity-0 shadow-2xl backdrop-blur-xl transition group-hover:visible group-hover:opacity-100">
               {MENU_MAS.map(([titulo, links]) => (
                 <div key={titulo}>
-                  <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-cyan-300">{titulo}</p>
+                  <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-blue-600">{titulo}</p>
                   <ul className="space-y-1.5">
                     {links.map(([href, t]) => (
-                      <li key={href}><Link href={href} className="text-xs text-slate-400 hover:text-white">{t}</Link></li>
+                      <li key={href}><Link href={href} className="text-xs text-slate-500 hover:text-slate-900">{t}</Link></li>
                     ))}
                   </ul>
                 </div>
@@ -506,7 +506,7 @@ function Nav() {
         </div>
         <a
           href="#contacto"
-          className="rounded-xl bg-white px-4 py-2 text-sm font-semibold text-slate-900 hover:bg-cyan-100"
+          className="rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700"
         >
           Agendar reunión
         </a>
@@ -516,26 +516,14 @@ function Nav() {
 }
 
 function Hero() {
-  const { scrollY } = useScroll();
-  const y = useTransform(scrollY, [0, 600], [0, 120]);
-  const op = useTransform(scrollY, [0, 500], [1, 0.2]);
   return (
     <section
       aria-label="Sección principal"
-      className="relative min-h-[100svh] overflow-hidden bg-slate-950 pt-32 text-white"
+      className="relative min-h-[100svh] overflow-hidden bg-white pt-32 text-slate-900"
     >
-      <DesktopOnly><video
-        src="/hero-bg.mp4"
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="metadata"
-        aria-hidden="true"
-        className="absolute inset-0 h-full w-full object-cover opacity-[0.10]"
-      /></DesktopOnly>
+      
       <div
-        className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(37,99,235,0.35),transparent_60%)]"
+        className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(37,99,235,0.10),transparent_60%)]"
         aria-hidden="true"
       />
       <div className="v2-grid absolute inset-0" aria-hidden="true" />
@@ -545,7 +533,7 @@ function Hero() {
       />
 
       <div className="relative z-10 mx-auto grid max-w-7xl items-center gap-6 px-6 lg:grid-cols-[1.1fr_1fr]">
-        <motion.div style={{ y, opacity: op }}>
+        <div>
           <div className="hero-fade">
             <Eyebrow>
               Performance marketing con datos reales · desde 2020
@@ -555,10 +543,10 @@ function Hero() {
             Agencia de Marketing Digital que vincula Marketing{" "}
             <span className="v2-shimmer">con Comercial</span>
           </h1>
-          <p className="mt-7 max-w-xl text-lg text-slate-300 md:text-xl">
+          <p className="mt-7 max-w-xl text-lg text-slate-600 md:text-xl">
             Convertimos tu inversión publicitaria en clientes. El primer paso es
             tener un número:{" "}
-            <strong className="text-white">
+            <strong className="text-slate-900">
               el costo de adquisición por tipo de campaña.
             </strong>{" "}
             Con ese dato puedes proyectar ventas y corregir errores.
@@ -566,7 +554,7 @@ function Hero() {
           <div className="hero-fade mt-10 flex flex-col gap-4 [--d:200ms] sm:flex-row">
             <a
               href="#contacto"
-              className="v2-btn group inline-flex items-center justify-center gap-2 rounded-2xl bg-white px-7 py-4 font-semibold text-slate-900"
+              className="v2-btn group inline-flex items-center justify-center gap-2 rounded-2xl bg-blue-600 px-7 py-4 font-semibold text-white"
             >
               <Calendar className="h-5 w-5" /> Agenda tu reunión con M&amp;P
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -578,24 +566,24 @@ function Hero() {
               onClick={() =>
                 trackWhatsAppClick({ page: "hero", servicio: "general" })
               }
-              className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/15 bg-white/5 px-7 py-4 font-semibold backdrop-blur hover:bg-white/10"
+              className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-slate-50 px-7 py-4 font-semibold backdrop-blur hover:bg-slate-100"
             >
-              <MessageSquare className="h-5 w-5 text-emerald-400" /> Conversemos
+              <MessageSquare className="h-5 w-5 text-emerald-600" /> Conversemos
               por WhatsApp
             </a>
           </div>
-        </motion.div>
+        </div>
 
         <div className="relative h-[420px] [perspective:1200px] lg:h-[640px]" aria-hidden="true">
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="absolute h-72 w-72 rounded-full bg-gradient-to-br from-cyan-400/25 via-blue-600/30 to-violet-600/25 blur-3xl lg:hidden" />
+            <div className="absolute h-72 w-72 rounded-full bg-gradient-to-br from-blue-200/60 via-indigo-200/50 to-violet-200/50 blur-3xl lg:hidden" />
             <div className="w-[min(600px,92vw)]"><DesktopOnly><Globe /></DesktopOnly></div>
           </div>
           {CHIPS.map((c, k) => (
             <motion.div key={c.t} className={`v2-glass absolute rounded-2xl px-4 py-3 shadow-2xl ${c.pos}`}
-              initial={{ opacity: 0, scale: 0.8, rotateY: -25 }} animate={{ opacity: 1, scale: 1, rotateY: -12, y: [0, -12, 0] }}
-              transition={{ opacity: { delay: 0.6 + k * 0.15 }, scale: { delay: 0.6 + k * 0.15 }, y: { duration: 4 + k, repeat: Infinity, ease: 'easeInOut' } }}>
-              <p className="text-[11px] uppercase tracking-wider text-slate-400">{c.t}</p>
+              initial={{ opacity: 0, scale: 0.8, rotateY: -25 }} animate={{ opacity: 1, scale: 1, rotateY: -10 }}
+              transition={{ opacity: { delay: 0.6 + k * 0.15 }, scale: { delay: 0.6 + k * 0.15 }, }}>
+              <p className="text-[11px] uppercase tracking-wider text-slate-500">{c.t}</p>
               <p className={`text-xl font-black ${c.c}`}>{c.v}</p>
             </motion.div>
           ))}
@@ -610,10 +598,10 @@ function Hero() {
               key={s.l}
               className="v2-glass rounded-2xl px-4 py-5 text-center"
             >
-              <div className="text-3xl font-black tabular-nums text-white md:text-4xl">
+              <div className="text-3xl font-black tabular-nums text-slate-900 md:text-4xl">
                 <CountUp value={s.v} />
               </div>
-              <div className="mt-1 text-xs font-medium text-slate-400 md:text-sm">
+              <div className="mt-1 text-xs font-medium text-slate-500 md:text-sm">
                 {s.l}
               </div>
             </div>
@@ -638,7 +626,7 @@ function Logos() {
   return (
     <section
       aria-label="Clientes"
-      className="relative overflow-hidden border-y border-white/5 bg-slate-950 py-10"
+      className="relative overflow-hidden border-y border-slate-100 bg-white py-10"
     >
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(clientesSchema) }} />
       <p className="mb-6 text-center text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
@@ -668,7 +656,7 @@ function Verdad() {
   return (
     <section
       aria-labelledby="verdad"
-      className="relative overflow-hidden bg-slate-950 py-28 text-white"
+      className="relative overflow-hidden bg-white py-28 text-slate-900"
     >
       <DesktopOnly><BackgroundPaths /></DesktopOnly>
       <div className="relative mx-auto max-w-6xl px-6">
@@ -681,7 +669,7 @@ function Verdad() {
             La verdad sobre{" "}
             <span className="v2-shimmer">duplicar o triplicar ventas</span>
           </h2>
-          <p className="mt-5 text-lg text-slate-400">
+          <p className="mt-5 text-lg text-slate-500">
             Nuestra metodología es ingeniería, no magia. Responde estas cuatro
             preguntas y te decimos si es posible.
           </p>
@@ -696,8 +684,8 @@ function Verdad() {
               className={`v2-glass v2-tilt rounded-2xl p-5 ${r[i] === true ? "ring-1 ring-emerald-400/60" : r[i] === false ? "ring-1 ring-rose-400/60" : ""}`}
             >
               <div className="flex items-start justify-between gap-4">
-                <p className="font-semibold text-slate-100">
-                  <span className="mr-2 text-cyan-300">{i + 1}.</span>
+                <p className="font-semibold text-slate-800">
+                  <span className="mr-2 text-blue-600">{i + 1}.</span>
                   {q}
                 </p>
                 <div className="flex shrink-0 gap-2">
@@ -708,7 +696,7 @@ function Verdad() {
                       onClick={() =>
                         setR((p) => p.map((x, k) => (k === i ? v : x)))
                       }
-                      className={`rounded-lg px-3 py-1.5 text-sm font-semibold transition ${r[i] === v ? (v ? "bg-emerald-400 text-slate-950" : "bg-rose-400 text-slate-950") : "bg-white/10 text-slate-300 hover:bg-white/20"}`}
+                      className={`rounded-lg px-3 py-1.5 text-sm font-semibold transition ${r[i] === v ? (v ? "bg-emerald-400 text-slate-950" : "bg-rose-400 text-slate-950") : "bg-slate-100 text-slate-600 hover:bg-slate-200"}`}
                     >
                       {v ? "Sí" : "No"}
                     </button>
@@ -721,22 +709,22 @@ function Verdad() {
 
         <motion.div
           layout
-          className="mt-6 overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-r from-blue-600/20 to-violet-600/20 p-6 text-center"
+          className="mt-6 overflow-hidden rounded-2xl border border-slate-200 bg-gradient-to-r from-blue-50 to-violet-50 p-6 text-center"
         >
           {!done ? (
-            <p className="text-slate-300">
+            <p className="text-slate-600">
               Responde las cuatro para ver el resultado.
             </p>
           ) : yes >= 3 ? (
             <p className="text-lg">
-              <CheckCircle2 className="mr-2 inline h-5 w-5 text-emerald-400" />
+              <CheckCircle2 className="mr-2 inline h-5 w-5 text-emerald-600" />
               <strong>Sí es posible duplicar o triplicar.</strong> Lo primero es
               medir tu costo de adquisición por campaña y escalar lo que
               funciona.
             </p>
           ) : (
             <p className="text-lg">
-              <XCircle className="mr-2 inline h-5 w-5 text-rose-400" />
+              <XCircle className="mr-2 inline h-5 w-5 text-rose-600" />
               <strong>Hoy no es el momento de prometer x3.</strong> Primero
               ordenamos margen, operación y medición; después escalamos.
             </p>
@@ -749,13 +737,13 @@ function Verdad() {
             className="rounded-2xl border border-emerald-400/20 bg-emerald-400/5 p-7"
           >
             <h3 className="mb-4 flex items-center gap-2 text-xl font-bold">
-              <CheckCircle2 className="h-5 w-5 text-emerald-400" /> Cuándo SÍ es
+              <CheckCircle2 className="h-5 w-5 text-emerald-600" /> Cuándo SÍ es
               posible duplicar o triplicar
             </h3>
-            <ul className="space-y-2.5 text-slate-300">
+            <ul className="space-y-2.5 text-slate-600">
               {VERDAD.si.map((x) => (
                 <li key={x} className="flex gap-2">
-                  <CheckCircle2 className="mt-1 h-4 w-4 shrink-0 text-emerald-400" />
+                  <CheckCircle2 className="mt-1 h-4 w-4 shrink-0 text-emerald-600" />
                   {x}
                 </li>
               ))}
@@ -766,20 +754,20 @@ function Verdad() {
             className="rounded-2xl border border-rose-400/20 bg-rose-400/5 p-7"
           >
             <h3 className="mb-4 flex items-center gap-2 text-xl font-bold">
-              <XCircle className="h-5 w-5 text-rose-400" /> Cuándo NO es posible
+              <XCircle className="h-5 w-5 text-rose-600" /> Cuándo NO es posible
             </h3>
-            <ul className="space-y-2.5 text-slate-300">
+            <ul className="space-y-2.5 text-slate-600">
               {VERDAD.no.map((x) => (
                 <li key={x} className="flex gap-2">
-                  <XCircle className="mt-1 h-4 w-4 shrink-0 text-rose-400" />
+                  <XCircle className="mt-1 h-4 w-4 shrink-0 text-rose-600" />
                   {x}
                 </li>
               ))}
             </ul>
           </motion.div>
         </div>
-        <p className="mt-8 text-center text-slate-400">
-          <strong className="text-cyan-300">
+        <p className="mt-8 text-center text-slate-500">
+          <strong className="text-blue-600">
             En M&amp;P no hacemos promesas vacías.
           </strong>{" "}
           Te decimos la verdad desde el día 1: qué esperar, cuándo esperarlo, y
@@ -796,7 +784,7 @@ function Areas() {
     <section
       id="areas"
       aria-labelledby="areas-t"
-      className="relative overflow-hidden bg-[#070b1a] py-28 text-white"
+      className="relative overflow-hidden bg-slate-50 py-28 text-slate-900"
     >
       <div className="mx-auto grid max-w-7xl items-center gap-16 px-6 lg:grid-cols-2">
         <motion.div {...fade}>
@@ -809,7 +797,7 @@ function Areas() {
             <br />
             <span className="v2-shimmer">Un solo número.</span>
           </h2>
-          <p className="mt-5 max-w-lg text-lg text-slate-400">
+          <p className="mt-5 max-w-lg text-lg text-slate-500">
             No somos solo campañas. Cada cliente tiene un equipo de tres áreas
             que trabaja en orden, sobre una capa de agentes IA y medición
             conectada a tu CRM.
@@ -826,7 +814,7 @@ function Areas() {
                   <h3 className="font-bold">
                     {a.n} · {a.t}
                   </h3>
-                  <p className="text-sm text-slate-400">{a.d}</p>
+                  <p className="text-sm text-slate-500">{a.d}</p>
                   <p className="mt-1 text-xs text-slate-500">
                     {a.e.join(" · ")}
                   </p>
@@ -839,7 +827,7 @@ function Areas() {
               </div>
               <div>
                 <h3 className="font-bold">{BASE_LAYER.t}</h3>
-                <p className="text-sm text-slate-400">{BASE_LAYER.d}</p>
+                <p className="text-sm text-slate-500">{BASE_LAYER.d}</p>
               </div>
             </div>
           </div>
@@ -872,13 +860,13 @@ function Areas() {
             ].map((l, i) => (
               <div
                 key={l.t}
-                className={`absolute inset-0 flex items-end justify-start rounded-3xl border border-white/20 bg-gradient-to-br ${l.c} p-5 shadow-[0_30px_60px_-20px_rgba(0,0,0,0.8)] transition-transform duration-700`}
+                className={`absolute inset-0 flex items-end justify-start rounded-3xl border border-slate-200 bg-gradient-to-br ${l.c} p-5 shadow-[0_30px_60px_-20px_rgba(0,0,0,0.8)] transition-transform duration-700`}
                 style={{
                   transform: `translateZ(${i * (hover ? 90 : 46)}px)`,
                   opacity: 0.92,
                 }}
               >
-                <span className="flex items-center gap-2 rounded-lg bg-slate-950/70 px-3 py-1.5 text-sm font-bold text-white">
+                <span className="flex items-center gap-2 rounded-lg bg-slate-900/80 px-3 py-1.5 text-sm font-bold text-white">
                   <l.icon className="h-4 w-4" />
                   {l.t}
                 </span>
@@ -899,7 +887,7 @@ function Arbol() {
   return (
     <section
       aria-labelledby="arbol-t"
-      className="relative bg-slate-950 py-28 text-white"
+      className="relative bg-white py-28 text-slate-900"
     >
       <div className="mx-auto max-w-6xl px-6">
         <motion.div {...fade} className="text-center">
@@ -911,7 +899,7 @@ function Arbol() {
             El árbol de decisión de{" "}
             <span className="v2-shimmer">tus campañas</span>
           </h2>
-          <p className="mx-auto mt-5 max-w-2xl text-lg text-slate-400">
+          <p className="mx-auto mt-5 max-w-2xl text-lg text-slate-500">
             Antes de invertir, cada campaña pasa por estas preguntas. Cada rama
             define campaña, audiencia, mensaje, KPI y porcentaje de la pauta.
           </p>
@@ -925,20 +913,20 @@ function Arbol() {
               {...fade}
               transition={{ ...fade.transition, delay: k * 0.1 }}
               onClick={() => setI(k)}
-              className={`v2-glass rounded-2xl p-6 text-left transition ${i === k ? "ring-2 ring-cyan-400" : "hover:ring-1 hover:ring-white/20"}`}
+              className={`v2-glass rounded-2xl p-6 text-left transition ${i === k ? "ring-2 ring-blue-500" : "hover:ring-1 hover:ring-slate-200"}`}
             >
-              <span className="text-xs font-semibold text-cyan-300">
+              <span className="text-xs font-semibold text-blue-600">
                 Pregunta {k + 1}
               </span>
               <h3 className="mt-2 text-lg font-bold">{n.q}</h3>
               <div className="mt-5 space-y-3 text-sm">
                 <div className="rounded-xl bg-emerald-400/10 p-3">
-                  <strong className="text-emerald-300">Sí →</strong>{" "}
-                  <span className="text-slate-300">{n.si}</span>
+                  <strong className="text-emerald-600">Sí →</strong>{" "}
+                  <span className="text-slate-600">{n.si}</span>
                 </div>
                 <div className="rounded-xl bg-violet-400/10 p-3">
-                  <strong className="text-violet-300">No →</strong>{" "}
-                  <span className="text-slate-300">{n.no}</span>
+                  <strong className="text-violet-600">No →</strong>{" "}
+                  <span className="text-slate-600">{n.no}</span>
                 </div>
               </div>
             </motion.button>
@@ -947,19 +935,19 @@ function Arbol() {
 
         <motion.div
           {...fade}
-          className="mt-12 overflow-hidden rounded-2xl border border-white/10"
+          className="mt-12 overflow-hidden rounded-2xl border border-slate-200"
         >
-          <div className="grid grid-cols-2 bg-white/5 px-6 py-3 text-xs font-semibold uppercase tracking-wider text-slate-400">
+          <div className="grid grid-cols-2 bg-slate-50 px-6 py-3 text-xs font-semibold uppercase tracking-wider text-slate-500">
             <span>Si pasa esto</span>
             <span>Hacemos esto</span>
           </div>
           {REGLAS.map(([a, b]) => (
             <div
               key={a}
-              className="grid grid-cols-2 gap-4 border-t border-white/5 px-6 py-4 text-sm"
+              className="grid grid-cols-2 gap-4 border-t border-slate-100 px-6 py-4 text-sm"
             >
-              <span className="text-slate-200">{a}</span>
-              <span className="text-slate-400">{b}</span>
+              <span className="text-slate-700">{a}</span>
+              <span className="text-slate-500">{b}</span>
             </div>
           ))}
         </motion.div>
@@ -972,11 +960,11 @@ function Agentes() {
   return (
     <section
       aria-labelledby="agentes-t"
-      className="relative overflow-hidden bg-[#070b1a] py-28 text-white"
+      className="relative overflow-hidden bg-slate-50 py-28 text-slate-900"
     >
       <div className="mx-auto grid max-w-7xl items-center gap-14 px-6 lg:grid-cols-[1fr_1.1fr]">
         <div className="relative order-2 h-[460px] lg:order-1 lg:h-[600px]">
-          <div className="absolute inset-0 m-auto h-72 w-72 rounded-full bg-gradient-to-br from-cyan-400/30 via-blue-600/30 to-violet-600/30 blur-3xl" aria-hidden="true" />
+          <div className="absolute inset-0 m-auto h-72 w-72 rounded-full bg-gradient-to-br from-blue-200/60 via-indigo-200/50 to-violet-200/50 blur-3xl" aria-hidden="true" />
           <div className="absolute inset-0 flex items-center justify-center lg:hidden"><div className="w-[min(420px,90vw)]"><DesktopOnly><Globe /></DesktopOnly></div></div>
           <div className="absolute inset-0 hidden lg:block">
             <SplineScene scene="https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode" className="h-full w-full" />
@@ -991,7 +979,7 @@ function Agentes() {
             27 agentes trabajando.{" "}
             <span className="v2-shimmer">Con evidencia.</span>
           </h2>
-          <p className="mt-5 text-lg text-slate-400">
+          <p className="mt-5 text-lg text-slate-500">
             Que te encuentren en Google ya no basta: hoy también hay que
             aparecer cuando alguien le pregunta a ChatGPT o Gemini. Eso es GEO,
             y lo medimos todas las semanas.
@@ -999,15 +987,15 @@ function Agentes() {
           <div className="mt-8 grid gap-3 sm:grid-cols-2">
             {AGENTES.map((a) => (
               <div key={a.t} className="v2-glass v2-tilt rounded-xl p-4">
-                <a.icon className="mb-2 h-5 w-5 text-cyan-300" />
+                <a.icon className="mb-2 h-5 w-5 text-blue-600" />
                 <h3 className="font-bold">{a.t}</h3>
-                <p className="text-sm text-slate-400">{a.d}</p>
+                <p className="text-sm text-slate-500">{a.d}</p>
               </div>
             ))}
           </div>
           <Link
             href="/agentes-ia"
-            className="mt-6 inline-flex items-center gap-2 font-semibold text-cyan-300 hover:text-cyan-200"
+            className="mt-6 inline-flex items-center gap-2 font-semibold text-blue-600 hover:text-blue-700"
           >
             Ver los 27 agentes y su evidencia <ArrowRight className="h-4 w-4" />
           </Link>
@@ -1025,9 +1013,9 @@ function Agentes() {
               {...fade}
               className="v2-glass v2-tilt rounded-2xl p-7"
             >
-              <p className="text-sm text-slate-400">{c.rubro}</p>
-              <p className="my-3 text-4xl font-black text-white">{c.dato}</p>
-              <p className="text-slate-300">{c.det}</p>
+              <p className="text-sm text-slate-500">{c.rubro}</p>
+              <p className="my-3 text-4xl font-black text-slate-900">{c.dato}</p>
+              <p className="text-slate-600">{c.det}</p>
               <p className="mt-4 text-xs text-slate-500">{c.fecha}</p>
             </motion.div>
           ))}
@@ -1036,7 +1024,7 @@ function Agentes() {
             className="flex flex-col justify-between rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-600 p-7"
           >
             <div>
-              <Search className="mb-3 h-6 w-6" />
+              <Search className="mb-3 h-6 w-6 text-white" />
               <p className="text-2xl font-black">¿Te recomienda ChatGPT?</p>
               <p className="mt-2 text-blue-50">
                 Te hacemos la prueba gratis con las preguntas que harían tus
@@ -1045,7 +1033,7 @@ function Agentes() {
             </div>
             <a
               href="#contacto"
-              className="mt-6 inline-flex w-fit items-center gap-2 rounded-xl bg-white px-5 py-3 font-semibold text-slate-900"
+              className="mt-6 inline-flex w-fit items-center gap-2 rounded-xl bg-white px-5 py-3 font-semibold text-blue-700"
             >
               Quiero la prueba <ArrowRight className="h-4 w-4" />
             </a>
@@ -1065,7 +1053,7 @@ function Videos() {
   return (
     <section
       aria-labelledby="videos-t"
-      className="relative overflow-hidden bg-slate-950 py-28 text-white"
+      className="relative overflow-hidden bg-white py-28 text-slate-900"
     >
       <div className="mx-auto max-w-7xl px-6">
         <motion.div
@@ -1081,7 +1069,7 @@ function Videos() {
               Grabamos, editamos{" "}
               <span className="v2-shimmer">y creamos con IA</span>
             </h2>
-            <p className="mt-4 max-w-xl text-lg text-slate-400">
+            <p className="mt-4 max-w-xl text-lg text-slate-500">
               Cápsulas, reels, comerciales e influencers virtuales. Todo hecho
               por el equipo de diseño y audiovisual de M&amp;P.
             </p>
@@ -1090,17 +1078,17 @@ function Videos() {
             href="https://www.youtube.com/channel/UCgzocZZQLNnthZ82oEyblrA"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-xl border border-white/15 px-5 py-3 font-semibold hover:bg-white/10"
+            className="inline-flex items-center gap-2 rounded-xl border border-slate-200 px-5 py-3 font-semibold hover:bg-slate-100"
           >
-            <Play className="h-4 w-4 text-rose-400" /> Ver canal de YouTube
+            <Play className="h-4 w-4 text-rose-600" /> Ver canal de YouTube
           </a>
         </motion.div>
         <div className="hidden lg:block"><DesktopOnly><Marquee3D images={imgs} /></DesktopOnly></div>
         <div className="flex snap-x gap-4 overflow-x-auto pb-2 lg:hidden">
           {imgs.map((im) => (
-            <a key={im.href} href={im.href} target="_blank" rel="noopener noreferrer" className="w-64 shrink-0 snap-start overflow-hidden rounded-xl ring-1 ring-white/10">
+            <a key={im.href} href={im.href} target="_blank" rel="noopener noreferrer" className="w-64 shrink-0 snap-start overflow-hidden rounded-xl ring-1 ring-slate-200">
               <Image src={im.src} alt={im.alt} width={480} height={270} sizes="256px" className="aspect-video w-full object-cover" />
-              <p className="p-2 text-xs text-slate-300">{im.alt}</p>
+              <p className="p-2 text-xs text-slate-600">{im.alt}</p>
             </a>
           ))}
         </div>
@@ -1108,7 +1096,7 @@ function Videos() {
           {CAPSULAS.slice(13).map(([id, t]) => (
             <div
               key={id}
-              className="overflow-hidden rounded-2xl border border-white/10 bg-white/5"
+              className="overflow-hidden rounded-2xl border border-slate-200 bg-slate-50"
             >
               <div className="aspect-video">
                 <YouTubeLite
@@ -1117,7 +1105,7 @@ function Videos() {
                   thumbnailQuality="hqdefault"
                 />
               </div>
-              <p className="p-4 text-sm font-semibold text-slate-300">{t}</p>
+              <p className="p-4 text-sm font-semibold text-slate-600">{t}</p>
             </div>
           ))}
         </div>
@@ -1177,10 +1165,10 @@ function Planes() {
     <section
       id="planes"
       aria-labelledby="planes-precios"
-      className="relative overflow-hidden bg-slate-950 py-28 text-white"
+      className="relative overflow-hidden bg-white py-28 text-slate-900"
     >
       <div
-        className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,rgba(124,58,237,0.25),transparent_60%)]"
+        className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,rgba(124,58,237,0.07),transparent_60%)]"
         aria-hidden="true"
       />
       <div className="relative mx-auto max-w-6xl px-6">
@@ -1192,7 +1180,7 @@ function Planes() {
           >
             Nuestros planes
           </h2>
-          <p className="mt-4 text-lg text-slate-400">
+          <p className="mt-4 text-lg text-slate-500">
             Valores mensuales + IVA. Todos con las tres áreas y reportería.
           </p>
         </motion.div>
@@ -1202,33 +1190,33 @@ function Planes() {
               key={p.n}
               {...fade}
               transition={{ ...fade.transition, delay: k * 0.1 }}
-              className={`v2-tilt relative rounded-3xl p-7 ${p.dest ? "bg-gradient-to-b from-blue-600 to-violet-700 shadow-[0_30px_80px_-20px_rgba(99,102,241,0.7)] md:-translate-y-4" : "v2-glass"}`}
+              className={`v2-tilt relative rounded-3xl p-7 ${p.dest ? "bg-white ring-2 ring-blue-600 shadow-[0_30px_80px_-30px_rgba(37,99,235,0.45)] md:-translate-y-4" : "v2-glass"}`}
             >
               {p.dest && (
-                <span className="absolute -top-3 left-7 rounded-full bg-cyan-300 px-3 py-1 text-xs font-bold text-slate-950">
+                <span className="absolute -top-3 left-7 rounded-full bg-blue-600 px-3 py-1 text-xs font-bold text-white">
                   Más elegido
                 </span>
               )}
               <h3 className="text-2xl font-black">{p.n}</h3>
               <p className="mt-3">
                 <span className="text-4xl font-black">{p.p}</span>
-                <span className="text-sm text-slate-300"> + IVA / mes</span>
+                <span className="text-sm text-slate-600"> + IVA / mes</span>
               </p>
               <ul className="mt-6 space-y-2.5 text-sm">
                 {p.f.map((x) => (
                   <li key={x} className="flex gap-2">
-                    <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-cyan-300" />
+                    <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-blue-600" />
                     {x}
                   </li>
                 ))}
                 <li className="flex gap-2 font-semibold">
-                  <Bot className="mt-0.5 h-4 w-4 shrink-0 text-cyan-300" />
+                  <Bot className="mt-0.5 h-4 w-4 shrink-0 text-blue-600" />
                   {p.seo}
                 </li>
               </ul>
               <a
                 href="#contacto"
-                className={`mt-8 block rounded-xl py-3 text-center font-semibold ${p.dest ? "bg-white text-slate-900" : "bg-white/10 hover:bg-white/20"}`}
+                className={`mt-8 block rounded-xl py-3 text-center font-semibold ${p.dest ? "bg-blue-600 text-white hover:bg-blue-700" : "bg-slate-100 hover:bg-slate-200"}`}
               >
                 Cotizar {p.n}
               </a>
@@ -1319,12 +1307,12 @@ function Contacto() {
     }
   };
   const field =
-    "w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3.5 text-white placeholder-slate-500 outline-none focus:border-cyan-400";
+    "w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3.5 text-slate-900 placeholder-slate-400 outline-none focus:border-blue-500";
   return (
     <section
       id="contacto"
       aria-labelledby="formulario-contacto"
-      className="relative overflow-hidden bg-slate-950 py-28 text-white"
+      className="relative overflow-hidden bg-white py-28 text-slate-900"
     >
       <Spotlight className="-top-40 right-0" fill="#a78bfa" />
       <div className="relative mx-auto grid max-w-6xl gap-14 px-6 lg:grid-cols-2">
@@ -1337,18 +1325,18 @@ function Contacto() {
             ¿Listo para trabajar con{" "}
             <span className="v2-shimmer">datos reales?</span>
           </h2>
-          <p className="mt-5 text-lg text-slate-400">
+          <p className="mt-5 text-lg text-slate-500">
             Agenda una reunión y te mostramos cómo funciona nuestra metodología,
             con tu árbol de decisión y tu costo de adquisición objetivo.
           </p>
-          <div className="mt-8 space-y-3 text-slate-300">
+          <div className="mt-8 space-y-3 text-slate-600">
             <p>📍 Badajoz 100, oficina 523, Las Condes, Santiago</p>
             <p>✉️ contacto@mulleryperez.cl</p>
             <a
               href={WA}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 font-semibold text-emerald-400"
+              className="inline-flex items-center gap-2 font-semibold text-emerald-600"
             >
               <MessageSquare className="h-4 w-4" /> +56 9 9225 8137
             </a>
@@ -1403,7 +1391,7 @@ function Contacto() {
           />
           <button
             disabled={f.enviando}
-            className="v2-btn w-full rounded-xl bg-white py-4 font-semibold text-slate-900 disabled:opacity-60"
+            className="v2-btn w-full rounded-xl bg-blue-600 py-4 font-semibold text-white disabled:opacity-60"
           >
             {f.enviando ? "Enviando…" : "Agendar reunión"}
           </button>
@@ -1417,45 +1405,45 @@ function Contacto() {
 
 function Cac() {
   return (
-    <section aria-labelledby="cac-t" className="relative overflow-hidden bg-[#070b1a] py-28 text-white">
+    <section aria-labelledby="cac-t" className="relative overflow-hidden bg-slate-50 py-28 text-slate-900">
       <div className="mx-auto grid max-w-7xl items-center gap-14 px-6 lg:grid-cols-2">
         <motion.div {...fade}>
           <Eyebrow>Para el dueño / CEO</Eyebrow>
           <h2 id="cac-t" className="text-4xl font-black tracking-tight md:text-6xl">¿Cuánto te cuesta <span className="v2-shimmer">conseguir un cliente?</span></h2>
-          <p className="mt-5 text-lg text-slate-400">Si no tienes ese número, estás invirtiendo a ciegas.</p>
-          <ul className="mt-6 space-y-3 text-slate-300">
-            <li><strong className="text-white">Proyección de ventas confiable:</strong> con CAC definido puedes proyectar cuántos clientes obtendrás con X presupuesto.</li>
-            <li><strong className="text-white">ROI predecible:</strong> sabes cuánto invertir para crecer de forma sostenible.</li>
-            <li><strong className="text-white">Decisiones basadas en datos:</strong> no en corazonadas o &quot;feeling&quot;.</li>
+          <p className="mt-5 text-lg text-slate-500">Si no tienes ese número, estás invirtiendo a ciegas.</p>
+          <ul className="mt-6 space-y-3 text-slate-600">
+            <li><strong className="text-slate-900">Proyección de ventas confiable:</strong> con CAC definido puedes proyectar cuántos clientes obtendrás con X presupuesto.</li>
+            <li><strong className="text-slate-900">ROI predecible:</strong> sabes cuánto invertir para crecer de forma sostenible.</li>
+            <li><strong className="text-slate-900">Decisiones basadas en datos:</strong> no en corazonadas o &quot;feeling&quot;.</li>
           </ul>
           <div className="mt-12">
             <Eyebrow>Para el gerente comercial</Eyebrow>
             <h2 className="text-3xl font-black tracking-tight md:text-5xl">Con estas tablas <span className="v2-shimmer">proyectas ventas</span></h2>
-            <p className="mt-4 text-slate-400">Sabes exactamente cuántos leads necesitas para cerrar X ventas, y cuánto cuesta generarlos.</p>
-            <ul className="mt-4 space-y-2 text-sm text-slate-300">
-              <li><strong className="text-white">Proyección de pipeline:</strong> &quot;Si invierto $5M en Google Search, obtengo ~96 leads, cierro ~24 ventas&quot;.</li>
-              <li><strong className="text-white">Optimización de presupuesto:</strong> asignas más a canales con mejor CAC.</li>
-              <li><strong className="text-white">Corrección rápida:</strong> si el CAC sube, detectas el problema en días, no en meses.</li>
+            <p className="mt-4 text-slate-500">Sabes exactamente cuántos leads necesitas para cerrar X ventas, y cuánto cuesta generarlos.</p>
+            <ul className="mt-4 space-y-2 text-sm text-slate-600">
+              <li><strong className="text-slate-900">Proyección de pipeline:</strong> &quot;Si invierto $5M en Google Search, obtengo ~96 leads, cierro ~24 ventas&quot;.</li>
+              <li><strong className="text-slate-900">Optimización de presupuesto:</strong> asignas más a canales con mejor CAC.</li>
+              <li><strong className="text-slate-900">Corrección rápida:</strong> si el CAC sube, detectas el problema en días, no en meses.</li>
             </ul>
           </div>
         </motion.div>
         <div className="[perspective:1400px]">
           <motion.div initial={{ opacity: 0, rotateY: -25, rotateX: 10 }} whileInView={{ opacity: 1, rotateY: -12, rotateX: 6 }} viewport={{ once: true }} transition={{ duration: 1 }}
-            className="v2-glass rounded-3xl p-6 shadow-[0_40px_100px_-30px_rgba(34,211,238,0.35)]">
+            className="v2-glass rounded-3xl p-6 shadow-[0_40px_100px_-30px_rgba(37,99,235,0.18)]">
             <div className="mb-5 flex items-center justify-between">
               <p className="font-bold">Dashboard Comercial M&amp;P</p>
-              <span className="rounded-full bg-white/10 px-3 py-1 text-xs text-slate-400">Ejemplo ilustrativo</span>
+              <span className="rounded-full bg-slate-100 px-3 py-1 text-xs text-slate-500">Ejemplo ilustrativo</span>
             </div>
             <div className="grid grid-cols-2 gap-3">
-              <div className="rounded-2xl bg-white/5 p-4"><p className="text-xs text-slate-400">CAC promedio</p><p className="text-3xl font-black">$47.200</p><p className="text-xs text-emerald-400">↓ 18% vs mes anterior</p></div>
-              <div className="rounded-2xl bg-white/5 p-4"><p className="text-xs text-slate-400">Clientes proyectados (próximo mes)</p><p className="text-3xl font-black">127</p><p className="text-xs text-slate-400">Con presupuesto actual</p></div>
+              <div className="rounded-2xl bg-slate-50 p-4"><p className="text-xs text-slate-500">CAC promedio</p><p className="text-3xl font-black">$47.200</p><p className="text-xs text-emerald-600">↓ 18% vs mes anterior</p></div>
+              <div className="rounded-2xl bg-slate-50 p-4"><p className="text-xs text-slate-500">Clientes proyectados (próximo mes)</p><p className="text-3xl font-black">127</p><p className="text-xs text-slate-500">Con presupuesto actual</p></div>
             </div>
             <table className="mt-5 w-full text-sm">
-              <caption className="mb-2 text-left text-xs text-slate-400">Tabla CAC por tipo de campaña</caption>
+              <caption className="mb-2 text-left text-xs text-slate-500">Tabla CAC por tipo de campaña</caption>
               <thead><tr className="text-left text-xs text-slate-500"><th className="py-2">Tipo de campaña</th><th>CAC</th><th>Conv. %</th></tr></thead>
               <tbody>
-                {CAC_TABLA.map(([a, b, c]) => <tr key={a} className="border-t border-white/5"><td className="py-2.5 text-slate-200">{a}</td><td>{b}</td><td className="text-cyan-300">{c}</td></tr>)}
-                <tr className="border-t border-white/10 font-bold"><td className="py-2.5">CAC ponderado</td><td>$47.200</td><td /></tr>
+                {CAC_TABLA.map(([a, b, c]) => <tr key={a} className="border-t border-slate-100"><td className="py-2.5 text-slate-700">{a}</td><td>{b}</td><td className="text-blue-600">{c}</td></tr>)}
+                <tr className="border-t border-slate-200 font-bold"><td className="py-2.5">CAC ponderado</td><td>$47.200</td><td /></tr>
               </tbody>
             </table>
           </motion.div>
@@ -1467,7 +1455,7 @@ function Cac() {
 
 function Metodologia() {
   return (
-    <section aria-labelledby="metodologia" className="relative bg-slate-950 py-28 text-white">
+    <section aria-labelledby="metodologia" className="relative bg-white py-28 text-slate-900">
       <div className="mx-auto max-w-6xl px-6">
         <motion.div {...fade} className="text-center">
           <Eyebrow>Metodología</Eyebrow>
@@ -1479,10 +1467,10 @@ function Metodologia() {
           <ol className="grid gap-6 md:grid-cols-5">
             {METODOLOGIA.map(([sem, t, d], k) => (
               <motion.li key={sem} {...fade} transition={{ ...fade.transition, delay: 0.2 + k * 0.15 }} className="relative">
-                <div className="relative z-10 mb-5 flex h-12 w-12 items-center justify-center rounded-full border border-cyan-300/40 bg-slate-950 text-sm font-black text-cyan-300 shadow-[0_0_30px_rgba(34,211,238,0.35)]">{k + 1}</div>
+                <div className="relative z-10 mb-5 flex h-12 w-12 items-center justify-center rounded-full border border-blue-300 bg-white text-sm font-black text-blue-600 shadow-[0_0_30px_rgba(37,99,235,0.18)]">{k + 1}</div>
                 <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">{sem}</p>
                 <h3 className="mt-1 text-lg font-bold">{t}</h3>
-                <p className="mt-1 text-sm text-slate-400">{d}</p>
+                <p className="mt-1 text-sm text-slate-500">{d}</p>
               </motion.li>
             ))}
           </ol>
@@ -1493,14 +1481,14 @@ function Metodologia() {
 }
 
 function Reporte() {
-  const acc: Record<string, string> = { incrementar: 'bg-emerald-400/15 text-emerald-300', mantener: 'bg-amber-400/15 text-amber-300', pausar: 'bg-rose-400/15 text-rose-300', optimizar: 'bg-sky-400/15 text-sky-300', modificar: 'bg-sky-400/15 text-sky-300' }
+  const acc: Record<string, string> = { incrementar: 'bg-emerald-400/15 text-emerald-600', mantener: 'bg-amber-400/15 text-amber-600', pausar: 'bg-rose-400/15 text-rose-600', optimizar: 'bg-sky-400/15 text-sky-700', modificar: 'bg-sky-400/15 text-sky-700' }
   return (
-    <section aria-labelledby="reporte-ejecutivo" className="relative overflow-hidden bg-[#070b1a] py-28 text-white">
+    <section aria-labelledby="reporte-ejecutivo" className="relative overflow-hidden bg-slate-50 py-28 text-slate-900">
       <div className="mx-auto max-w-7xl px-6">
         <motion.div {...fade} className="text-center">
           <Eyebrow>Reporte ejecutivo</Eyebrow>
           <h2 id="reporte-ejecutivo" className="text-4xl font-black tracking-tight md:text-6xl">Esto es lo que ningún cliente de M&amp;P <span className="v2-shimmer">deja de ver</span></h2>
-          <p className="mx-auto mt-5 max-w-3xl text-lg text-slate-400">Este tipo de cuadro es lo que separa el &quot;me gusta tu post&quot; de <strong className="text-white">saber si realmente estás ganando clientes</strong> con tu inversión.</p>
+          <p className="mx-auto mt-5 max-w-3xl text-lg text-slate-500">Este tipo de cuadro es lo que separa el &quot;me gusta tu post&quot; de <strong className="text-slate-900">saber si realmente estás ganando clientes</strong> con tu inversión.</p>
         </motion.div>
         <motion.div {...fade} className="v2-glass mt-12 overflow-x-auto rounded-3xl p-2">
           <table className="w-full min-w-[900px] text-sm">
@@ -1508,10 +1496,10 @@ function Reporte() {
             <thead><tr className="text-left text-xs uppercase tracking-wider text-slate-500">{['Plataforma', 'Inversión', 'Leads', 'Costo/lead', 'Venta #', 'Venta $', 'Costo/cliente', 'Proyección', 'Acción'].map((h) => <th key={h} className="px-4 py-3">{h}</th>)}</tr></thead>
             <tbody>
               {REPORTE.map((r) => (
-                <tr key={r.plataforma} className="border-t border-white/5 transition hover:bg-white/5">
+                <tr key={r.plataforma} className="border-t border-slate-100 transition hover:bg-slate-50">
                   <td className="px-4 py-3 font-semibold">{r.plataforma}</td><td className="px-4">{r.inversion}</td><td className="px-4">{r.leads}</td><td className="px-4">{r.costoLead}</td>
-                  <td className="px-4">{r.ventasNum}</td><td className="px-4">{r.ventasMonto}</td><td className="px-4 text-cyan-300">{r.costoCliente}</td><td className="px-4 text-emerald-300">{r.proyeccion}</td>
-                  <td className="px-4"><span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${acc[r.accion] || 'bg-white/10'}`}>{r.accion}</span></td>
+                  <td className="px-4">{r.ventasNum}</td><td className="px-4">{r.ventasMonto}</td><td className="px-4 text-blue-600">{r.costoCliente}</td><td className="px-4 text-emerald-600">{r.proyeccion}</td>
+                  <td className="px-4"><span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${acc[r.accion] || 'bg-slate-100'}`}>{r.accion}</span></td>
                 </tr>
               ))}
             </tbody>
@@ -1525,26 +1513,26 @@ function Reporte() {
 
 function Herramientas() {
   return (
-    <section aria-labelledby="tools-t" className="relative bg-slate-950 py-28 text-white">
+    <section aria-labelledby="tools-t" className="relative bg-white py-28 text-slate-900">
       <div className="mx-auto max-w-7xl px-6">
         <motion.div {...fade} className="text-center">
           <Eyebrow>Herramientas gratuitas</Eyebrow>
           <h2 id="tools-t" className="text-4xl font-black tracking-tight md:text-6xl">Herramientas profesionales <span className="v2-shimmer">100% gratis</span></h2>
-          <p className="mx-auto mt-5 max-w-2xl text-lg text-slate-400">Potencia tu estrategia de marketing con nuestras herramientas basadas en datos reales de campañas en Chile.</p>
+          <p className="mx-auto mt-5 max-w-2xl text-lg text-slate-500">Potencia tu estrategia de marketing con nuestras herramientas basadas en datos reales de campañas en Chile.</p>
         </motion.div>
         <div className="mt-14 grid gap-4 md:grid-cols-3">
           {HERRAMIENTAS.map((h, k) => (
             <motion.div key={h.href} {...fade} transition={{ ...fade.transition, delay: k * 0.06 }} className={k === 0 ? 'md:col-span-2' : ''}>
               <Link href={h.href} className="v2-glass v2-tilt group block h-full rounded-2xl p-7">
-                <span className="rounded-full bg-cyan-400/10 px-3 py-1 text-xs font-semibold text-cyan-300">{h.tag}</span>
+                <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-600">{h.tag}</span>
                 <h3 className="mt-4 text-xl font-bold">{h.t}</h3>
-                <p className="mt-2 text-sm text-slate-400">{h.d}</p>
-                <span className="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-white">Usar gratis <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" /></span>
+                <p className="mt-2 text-sm text-slate-500">{h.d}</p>
+                <span className="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-slate-900">Usar gratis <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" /></span>
               </Link>
             </motion.div>
           ))}
         </div>
-        <div className="mt-8 text-center"><Link href="/labs" className="font-semibold text-cyan-300 hover:text-cyan-200">Ver todas las herramientas →</Link></div>
+        <div className="mt-8 text-center"><Link href="/labs" className="font-semibold text-blue-600 hover:text-blue-700">Ver todas las herramientas →</Link></div>
       </div>
     </section>
   )
@@ -1552,16 +1540,16 @@ function Herramientas() {
 
 function Nosotros() {
   return (
-    <section id="nosotros" aria-labelledby="nosotros-t" className="relative overflow-hidden bg-[#070b1a] py-28 text-white">
+    <section id="nosotros" aria-labelledby="nosotros-t" className="relative overflow-hidden bg-slate-50 py-28 text-slate-900">
       <div className="mx-auto grid max-w-7xl gap-14 px-6 lg:grid-cols-2">
         <motion.div {...fade}>
           <Eyebrow>Quiénes somos</Eyebrow>
           <h2 id="nosotros-t" className="text-4xl font-black tracking-tight md:text-6xl">M&amp;P = <span className="v2-shimmer">Marketing &amp; Performance</span></h2>
-          <p className="mt-5 text-lg text-slate-400">20+ años de experiencia en empresas que viven de números, no de likes.</p>
+          <p className="mt-5 text-lg text-slate-500">20+ años de experiencia en empresas que viven de números, no de likes.</p>
           <div className="v2-glass mt-8 rounded-2xl p-6">
             <h3 className="text-xl font-bold">Christopher Müller</h3>
-            <p className="text-sm text-cyan-300">Fundador y Director de Estrategia</p>
-            <ul className="mt-4 space-y-1.5 text-sm text-slate-300">
+            <p className="text-sm text-blue-600">Fundador y Director de Estrategia</p>
+            <ul className="mt-4 space-y-1.5 text-sm text-slate-600">
               <li>Ingeniero Civil Industrial, Universidad de Chile</li>
               <li>MBA + experto en marketing digital y herramientas de IA</li>
               <li>Ex Cencosud, Transbank, Banco Internacional y Hibu (empresa inglesa líder en marketing digital)</li>
@@ -1572,7 +1560,7 @@ function Nosotros() {
         <div className="grid grid-cols-2 content-center gap-4">
           {[['3', 'Áreas especializadas: Paid Media, Publicista, Diseñador'], ['+20', 'Profesionales en equipo; cada cliente recibe 3 asignados'], ['7', 'Años en el mercado'], ['+$800M', 'Gestionados en inversión publicitaria']].map(([v, l], k) => (
             <motion.div key={l} {...fade} transition={{ ...fade.transition, delay: k * 0.1 }} className="v2-glass v2-tilt rounded-2xl p-6">
-              <p className="text-4xl font-black">{v}</p><p className="mt-2 text-sm text-slate-400">{l}</p>
+              <p className="text-4xl font-black">{v}</p><p className="mt-2 text-sm text-slate-500">{l}</p>
             </motion.div>
           ))}
         </div>
@@ -1583,7 +1571,7 @@ function Nosotros() {
 
 function FairPlay() {
   return (
-    <section aria-labelledby="fair-t" className="bg-slate-950 py-28 text-white">
+    <section aria-labelledby="fair-t" className="bg-white py-28 text-slate-900">
       <div className="mx-auto max-w-6xl px-6">
         <motion.div {...fade} className="text-center">
           <Eyebrow>Así trabajamos contigo</Eyebrow>
@@ -1592,17 +1580,17 @@ function FairPlay() {
         <div className="mt-14 grid gap-6 md:grid-cols-2">
           <motion.div {...fade} className="v2-glass v2-tilt rounded-3xl p-8">
             <h3 className="text-2xl font-bold">Todo tiene orden</h3>
-            <ul className="mt-5 space-y-3 text-slate-300">
-              {['Reuniones semanales o quincenales según el plan', 'Grupo de WhatsApp para consultas rápidas', 'Acceso a CRM para ver el estado de tus leads en tiempo real', 'Reportes ejecutivos semanales y mensuales automáticos'].map((x) => <li key={x} className="flex gap-2"><CheckCircle2 className="mt-1 h-4 w-4 shrink-0 text-cyan-300" />{x}</li>)}
+            <ul className="mt-5 space-y-3 text-slate-600">
+              {['Reuniones semanales o quincenales según el plan', 'Grupo de WhatsApp para consultas rápidas', 'Acceso a CRM para ver el estado de tus leads en tiempo real', 'Reportes ejecutivos semanales y mensuales automáticos'].map((x) => <li key={x} className="flex gap-2"><CheckCircle2 className="mt-1 h-4 w-4 shrink-0 text-blue-600" />{x}</li>)}
             </ul>
           </motion.div>
           <motion.div {...fade} className="v2-glass v2-tilt rounded-3xl p-8">
             <h3 className="text-2xl font-bold">Fair Play en cobros</h3>
-            <p className="mt-5 text-slate-300"><strong className="text-white">Trabajos adicionales fuera del plan: se cobran aparte.</strong> Ej: diseñar menú para restaurant, folleto para evento, video institucional.</p>
-            <ul className="mt-4 space-y-3 text-slate-300">
-              {['Siempre avisamos antes de hacer trabajos extra', 'Presupuestos claros y anticipados'].map((x) => <li key={x} className="flex gap-2"><CheckCircle2 className="mt-1 h-4 w-4 shrink-0 text-cyan-300" />{x}</li>)}
+            <p className="mt-5 text-slate-600"><strong className="text-slate-900">Trabajos adicionales fuera del plan: se cobran aparte.</strong> Ej: diseñar menú para restaurant, folleto para evento, video institucional.</p>
+            <ul className="mt-4 space-y-3 text-slate-600">
+              {['Siempre avisamos antes de hacer trabajos extra', 'Presupuestos claros y anticipados'].map((x) => <li key={x} className="flex gap-2"><CheckCircle2 className="mt-1 h-4 w-4 shrink-0 text-blue-600" />{x}</li>)}
             </ul>
-            <p className="mt-5 text-slate-400"><strong className="text-white">Transparencia total.</strong> Sabes qué estás pagando, qué incluye, y qué queda fuera.</p>
+            <p className="mt-5 text-slate-500"><strong className="text-slate-900">Transparencia total.</strong> Sabes qué estás pagando, qué incluye, y qué queda fuera.</p>
           </motion.div>
         </div>
       </div>
@@ -1612,7 +1600,7 @@ function FairPlay() {
 
 export default function HomeV2() {
   return (
-    <div className="bg-slate-950 antialiased">
+    <div className="bg-white antialiased">
       {[businessSchema, organizationSchema, faqSchema, serviceSchema].map(
         (s, i) => (
           <script

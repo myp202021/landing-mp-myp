@@ -10,10 +10,10 @@ export default function Marquee3D({ images }: { images: { src: string; alt: stri
         {rows.map((row, r) => {
           const loop = [...row, ...row, ...row]
           return (
-            <div key={r} className={`flex w-max gap-6 ${r % 2 ? 'animate-scroll-right' : 'animate-scroll-left'}`} style={{ animationDuration: `${50 + r * 12}s` }}>
+            <div key={r} className={`flex w-max gap-6 ${r % 2 ? 'animate-scroll-right' : 'animate-scroll-left'}`} style={{ animationDuration: `${90 + r * 20}s` }}>
               {loop.map((img, i) => (
                 <a key={i} href={img.href} target="_blank" rel="noopener noreferrer"
-                  className="group relative block w-[340px] shrink-0 overflow-hidden rounded-2xl ring-1 ring-white/15 transition-transform duration-300 hover:-translate-y-2 hover:ring-cyan-300/60 max-sm:w-[220px]">
+                  className="group relative block w-[340px] shrink-0 overflow-hidden rounded-2xl ring-1 ring-slate-200 transition-transform duration-300 hover:-translate-y-2 hover:ring-cyan-300/60 max-sm:w-[220px]">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={img.src} alt={img.alt} loading="lazy" width={480} height={270} className="aspect-video w-full object-cover" />
                   <span className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-3 text-sm font-semibold text-white opacity-0 transition group-hover:opacity-100">{img.alt}</span>
