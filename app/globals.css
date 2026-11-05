@@ -69,7 +69,8 @@
 .v2-grid{background-image:linear-gradient(rgba(148,163,184,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(148,163,184,.07) 1px,transparent 1px);background-size:64px 64px;mask-image:radial-gradient(ellipse 80% 60% at 50% 30%,#000 30%,transparent 80%)}
 .v2-shimmer{background:linear-gradient(90deg,#22d3ee,#60a5fa,#a78bfa,#f0abfc,#22d3ee);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shimmer 7s linear infinite}
 .v2-h1{animation:rise 1s cubic-bezier(.2,.7,.2,1) both}
-.v2-glass{background:rgba(255,255,255,.04);border:1px solid rgba(148,163,184,.14);backdrop-filter:blur(10px)}
+.v2-glass{background:rgba(255,255,255,.05);border:1px solid rgba(148,163,184,.14)}
+@media (min-width:1024px){.v2-glass{backdrop-filter:blur(10px)}}
 .v2-tilt{transition:transform .35s cubic-bezier(.2,.7,.2,1),box-shadow .35s}
 .v2-tilt:hover{transform:perspective(900px) rotateX(4deg) rotateY(-6deg) translateY(-4px);box-shadow:0 25px 50px -20px rgba(34,211,238,.35)}
 .v2-btn{position:relative;isolation:isolate}

@@ -4,9 +4,9 @@ import { motion } from 'framer-motion'
 
 /** Líneas que fluyen (patrón "Background Paths" de 21st.dev). Decorativo. */
 function Paths({ position }: { position: number }) {
-  const paths = Array.from({ length: 30 }, (_, i) => ({
+  const paths = Array.from({ length: 14 }, (_, i) => ({
     id: i,
-    d: `M-${380 - i * 5 * position} -${189 + i * 6}C-${380 - i * 5 * position} -${189 + i * 6} -${312 - i * 5 * position} ${216 - i * 6} ${152 - i * 5 * position} ${343 - i * 6}C${616 - i * 5 * position} ${470 - i * 6} ${684 - i * 5 * position} ${875 - i * 6} ${684 - i * 5 * position} ${875 - i * 6}`,
+    d: `M-${380 - i * 10 * position} -${189 + i * 12}C-${380 - i * 10 * position} -${189 + i * 12} -${312 - i * 10 * position} ${216 - i * 12} ${152 - i * 10 * position} ${343 - i * 12}C${616 - i * 10 * position} ${470 - i * 12} ${684 - i * 10 * position} ${875 - i * 12} ${684 - i * 10 * position} ${875 - i * 12}`,
     w: 0.5 + i * 0.03,
   }))
   return (
@@ -17,7 +17,7 @@ function Paths({ position }: { position: number }) {
           d={p.d}
           stroke="currentColor"
           strokeWidth={p.w}
-          strokeOpacity={0.06 + p.id * 0.012}
+          strokeOpacity={0.08 + p.id * 0.025}
           initial={{ pathLength: 0.3, opacity: 0.6 }}
           animate={{ pathLength: 1, opacity: [0.3, 0.6, 0.3], pathOffset: [0, 1, 0] }}
           transition={{ duration: 20 + (p.id % 10), repeat: Infinity, ease: 'linear' }}

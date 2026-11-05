@@ -42,6 +42,10 @@ import {
 } from "@/lib/home-schemas";
 import Spotlight from "@/components/home-v2/Spotlight";
 import CountUp from "@/components/home/CountUp";
+import HomeFooter from "@/components/home-v2/HomeFooter";
+import Testimonios from "@/components/home-v2/Testimonios";
+import DesktopOnly from "@/components/home-v2/DesktopOnly";
+import Image from "next/image";
 
 const SplineScene = dynamic(() => import("@/components/home-v2/SplineScene"), {
   ssr: false,
@@ -309,6 +313,137 @@ const PLANES = [
   },
 ];
 
+const REPORTE = [
+  {
+    plataforma: 'Google Search',
+    inversion: '$1.609.500',
+    leads: 87,
+    costoLead: '$18.500',
+    ventasNum: 42,
+    ventasMonto: '$6.762.000',
+    costoCliente: '$38.320',
+    proyeccion: '+15%',
+    accion: 'incrementar',
+    color: 'blue'
+  },
+  {
+    plataforma: 'Google PMax',
+    inversion: '$2.124.800',
+    leads: 134,
+    costoLead: '$15.860',
+    ventasNum: 67,
+    ventasMonto: '$10.454.000',
+    costoCliente: '$31.700',
+    proyeccion: '+22%',
+    accion: 'incrementar',
+    color: 'blue'
+  },
+  {
+    plataforma: 'Google Remarketing',
+    inversion: '$892.300',
+    leads: 56,
+    costoLead: '$15.930',
+    ventasNum: 34,
+    ventasMonto: '$5.168.000',
+    costoCliente: '$26.240',
+    proyeccion: '+8%',
+    accion: 'modificar',
+    color: 'blue'
+  },
+  {
+    plataforma: 'Meta Formularios',
+    inversion: '$1.456.200',
+    leads: 203,
+    costoLead: '$7.170',
+    ventasNum: 89,
+    ventasMonto: '$13.568.000',
+    costoCliente: '$16.360',
+    proyeccion: '+18%',
+    accion: 'incrementar',
+    color: 'purple'
+  },
+  {
+    plataforma: 'Meta WhatsApp',
+    inversion: '$1.817.600',
+    leads: 312,
+    costoLead: '$5.820',
+    ventasNum: 142,
+    ventasMonto: '$21.624.000',
+    costoCliente: '$12.800',
+    proyeccion: '+25%',
+    accion: 'incrementar',
+    color: 'purple'
+  },
+  {
+    plataforma: 'Meta Remarketing',
+    inversion: '$1.103.400',
+    leads: 178,
+    costoLead: '$6.200',
+    ventasNum: 98,
+    ventasMonto: '$14.896.000',
+    costoCliente: '$11.260',
+    proyeccion: '+12%',
+    accion: 'incrementar',
+    color: 'purple'
+  },
+  {
+    plataforma: 'LinkedIn Ads',
+    inversion: '$1.041.900',
+    leads: 23,
+    costoLead: '$45.300',
+    ventasNum: 12,
+    ventasMonto: '$4.896.000',
+    costoCliente: '$86.820',
+    proyeccion: '-5%',
+    accion: 'pausar',
+    color: 'cyan'
+  },
+  {
+    plataforma: 'TikTok Ads',
+    inversion: '$2.558.400',
+    leads: 312,
+    costoLead: '$8.200',
+    ventasNum: 124,
+    ventasMonto: '$18.848.000',
+    costoCliente: '$20.630',
+    proyeccion: '+30%',
+    accion: 'incrementar',
+    color: 'pink'
+  }
+]
+
+const CAC_TABLA = [
+  ['Google Search - Marca', '$28.400', '8.2%'],
+  ['Google Search - Genérico', '$52.100', '4.1%'],
+  ['Meta - Retargeting', '$31.800', '6.5%'],
+  ['Meta - Prospecting', '$89.200', '2.3%'],
+]
+
+const METODOLOGIA = [
+  ['Día 1', 'Plan de Trabajo', 'Roles claros, entregables definidos, expectativas alineadas.'],
+  ['Semana 1', 'Benchmark + Setup', 'Análisis de mercado, competencia y configuración inicial de campañas.'],
+  ['Semana 2', 'Lanzamiento', 'Campañas activas, testeo de mensajes y creatividades.'],
+  ['Semana 3', 'Optimización', 'Ajustes según ciclo de venta y comparativa con competencia.'],
+  ['Semana 4', 'Reporte 360°', 'Visión completa del negocio con métricas ejecutivas.'],
+]
+
+const HERRAMIENTAS = [
+  { href: '/labs/mp-intelligence', t: 'M&P Intelligence', d: 'Benchmarks en tiempo real de Google Ads, Meta Ads y LinkedIn. Compara tu performance con la industria.', tag: '15 industrias' },
+  { href: '/labs/buyer-gen', t: 'Buyer Gen', d: 'Genera buyer personas completas con IA en 4 pasos. Incluye estrategia de contenido y KPIs validados.', tag: 'IA generativa' },
+  { href: '/labs/predictor', t: 'Predictor + Diagnóstico', d: 'Analiza tu negocio y descubre si Google, Meta o LinkedIn es mejor para ti. Proyección y alertas de viabilidad.', tag: 'Nuevo v2' },
+  { href: '/utilidades/calculadora-cac', t: 'Calculadora CAC', d: 'Calcula el costo de adquisición de cliente y compara entre Google Ads, Meta y LinkedIn.', tag: '3 canales' },
+  { href: '/utilidades/calculadora-ltv', t: 'Calculadora LTV', d: 'Calcula el valor de vida del cliente y optimiza tu inversión en marketing digital.', tag: 'LTV/CAC' },
+  { href: '/labs/simulador-inversion', t: 'Simulador de inversión', d: 'Evalúa si tu negocio está listo para invertir en marketing digital. Anti-humo.', tag: 'Score M&P' },
+]
+
+const MENU_MAS = [
+  ['Servicios', [['/servicios', 'Todos los servicios'], ['/servicios/performance-marketing', 'Performance marketing'], ['/servicios/google-ads-chile', 'Google Ads'], ['/servicios/meta-ads-chile', 'Meta Ads'], ['/servicios/seo-chile', 'SEO']]],
+  ['M&P Labs', [['/labs', 'Todas las herramientas'], ['/labs/predictor', 'Predictor'], ['/labs/buyer-gen', 'Buyer Gen'], ['/labs/radar-industrias', 'Radar de industrias'], ['/tecnologia', 'Tecnología']]],
+  ['Utilidades', [['/utilidades', 'Todas'], ['/utilidades/calculadora-cac', 'Calculadora CAC'], ['/utilidades/comparador-web', 'Comparador web'], ['/utilidades/generador-funnels', 'Generador de funnels'], ['/utilidades/juega-aprende', 'Juega y aprende']]],
+  ['Recursos', [['/benchmarks', 'Benchmarks'], ['/indicadores', 'Indicadores'], ['/investigacion', 'Investigación'], ['/mejores-agencias-marketing-digital-chile', 'Mejores agencias de Chile'], ['/mejores-agencias-performance-marketing-chile', 'Mejores agencias performance'], ['/brochure', 'Brochure']]],
+  ['Nosotros', [['/nosotros', 'Quiénes somos'], ['/equipo', 'Equipo'], ['/casos-de-exito', 'Casos de éxito'], ['/copilot/login', 'Acceso Copilot'], ['/crm/login', 'Acceso clientes CRM']]],
+] as const
+
 /* ---------------- Componentes de sección ---------------- */
 
 function Nav() {
@@ -353,6 +488,21 @@ function Nav() {
           <Link href="/blog" className="hover:text-white">
             Blog
           </Link>
+          <div className="group relative">
+            <button type="button" className="hover:text-white">Más ▾</button>
+            <div className="invisible absolute right-0 top-full z-50 mt-3 grid w-[760px] grid-cols-5 gap-4 rounded-2xl border border-white/10 bg-slate-950/95 p-5 opacity-0 shadow-2xl backdrop-blur-xl transition group-hover:visible group-hover:opacity-100">
+              {MENU_MAS.map(([titulo, links]) => (
+                <div key={titulo}>
+                  <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-cyan-300">{titulo}</p>
+                  <ul className="space-y-1.5">
+                    {links.map(([href, t]) => (
+                      <li key={href}><Link href={href} className="text-xs text-slate-400 hover:text-white">{t}</Link></li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
         <a
           href="#contacto"
@@ -374,7 +524,7 @@ function Hero() {
       aria-label="Sección principal"
       className="relative min-h-[100svh] overflow-hidden bg-slate-950 pt-32 text-white"
     >
-      <video
+      <DesktopOnly><video
         src="/hero-bg.mp4"
         autoPlay
         muted
@@ -383,7 +533,7 @@ function Hero() {
         preload="metadata"
         aria-hidden="true"
         className="absolute inset-0 h-full w-full object-cover opacity-[0.10]"
-      />
+      /></DesktopOnly>
       <div
         className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(37,99,235,0.35),transparent_60%)]"
         aria-hidden="true"
@@ -396,38 +546,24 @@ function Hero() {
 
       <div className="relative z-10 mx-auto grid max-w-7xl items-center gap-6 px-6 lg:grid-cols-[1.1fr_1fr]">
         <motion.div style={{ y, opacity: op }}>
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
+          <div className="hero-fade">
             <Eyebrow>
               Performance marketing con datos reales · desde 2020
             </Eyebrow>
-          </motion.div>
+          </div>
           <h1 className="v2-h1 text-[2.6rem] font-black uppercase leading-[0.95] tracking-tight sm:text-6xl xl:text-7xl">
             Agencia de Marketing Digital que vincula Marketing{" "}
             <span className="v2-shimmer">con Comercial</span>
           </h1>
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.35, duration: 0.8 }}
-            className="mt-7 max-w-xl text-lg text-slate-300 md:text-xl"
-          >
+          <p className="mt-7 max-w-xl text-lg text-slate-300 md:text-xl">
             Convertimos tu inversión publicitaria en clientes. El primer paso es
             tener un número:{" "}
             <strong className="text-white">
               el costo de adquisición por tipo de campaña.
             </strong>{" "}
             Con ese dato puedes proyectar ventas y corregir errores.
-          </motion.p>
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5, duration: 0.6 }}
-            className="mt-10 flex flex-col gap-4 sm:flex-row"
-          >
+          </p>
+          <div className="hero-fade mt-10 flex flex-col gap-4 [--d:200ms] sm:flex-row">
             <a
               href="#contacto"
               className="v2-btn group inline-flex items-center justify-center gap-2 rounded-2xl bg-white px-7 py-4 font-semibold text-slate-900"
@@ -447,12 +583,13 @@ function Hero() {
               <MessageSquare className="h-5 w-5 text-emerald-400" /> Conversemos
               por WhatsApp
             </a>
-          </motion.div>
+          </div>
         </motion.div>
 
         <div className="relative h-[420px] [perspective:1200px] lg:h-[640px]" aria-hidden="true">
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="w-[min(600px,92vw)]"><Globe /></div>
+            <div className="absolute h-72 w-72 rounded-full bg-gradient-to-br from-cyan-400/25 via-blue-600/30 to-violet-600/25 blur-3xl lg:hidden" />
+            <div className="w-[min(600px,92vw)]"><DesktopOnly><Globe /></DesktopOnly></div>
           </div>
           {CHIPS.map((c, k) => (
             <motion.div key={c.t} className={`v2-glass absolute rounded-2xl px-4 py-3 shadow-2xl ${c.pos}`}
@@ -489,22 +626,33 @@ function Hero() {
 
 function Logos() {
   const row = [...clients, ...clients];
+  const clientesSchema = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "Muller y Pérez",
+    url: "https://www.mulleryperez.cl",
+    description: "Agencia de Performance Marketing en Chile con más de 50 clientes activos en diversas industrias",
+    knowsAbout: ["Performance Marketing", "Google Ads", "Meta Ads", "Marketing Digital Chile"],
+    member: clients.map((c) => ({ "@type": "Organization", name: c.name, description: `Cliente de Muller y Pérez en el sector ${c.industry}`, ...(c.url ? { url: c.url } : {}) })),
+  };
   return (
     <section
       aria-label="Clientes"
       className="relative overflow-hidden border-y border-white/5 bg-slate-950 py-10"
     >
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(clientesSchema) }} />
       <p className="mb-6 text-center text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
         Empresas que confían en M&amp;P
       </p>
       <div className="v2-mask flex w-max animate-scroll-left gap-12">
         {row.map((c, i) => (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
+          <Image
             key={i}
             src={c.logo}
             alt={`${c.name}, ${c.industry}`}
-            loading="lazy"
+            width={120}
+            height={40}
+            sizes="120px"
             className="h-10 w-auto rounded bg-white/90 px-3 py-1.5 opacity-70 grayscale transition hover:opacity-100 hover:grayscale-0"
           />
         ))}
@@ -522,7 +670,7 @@ function Verdad() {
       aria-labelledby="verdad"
       className="relative overflow-hidden bg-slate-950 py-28 text-white"
     >
-      <BackgroundPaths />
+      <DesktopOnly><BackgroundPaths /></DesktopOnly>
       <div className="relative mx-auto max-w-6xl px-6">
         <motion.div {...fade} className="mx-auto max-w-3xl text-center">
           <Eyebrow>Árbol de decisión</Eyebrow>
@@ -829,7 +977,7 @@ function Agentes() {
       <div className="mx-auto grid max-w-7xl items-center gap-14 px-6 lg:grid-cols-[1fr_1.1fr]">
         <div className="relative order-2 h-[460px] lg:order-1 lg:h-[600px]">
           <div className="absolute inset-0 m-auto h-72 w-72 rounded-full bg-gradient-to-br from-cyan-400/30 via-blue-600/30 to-violet-600/30 blur-3xl" aria-hidden="true" />
-          <div className="absolute inset-0 flex items-center justify-center lg:hidden"><div className="w-[min(420px,90vw)]"><Globe /></div></div>
+          <div className="absolute inset-0 flex items-center justify-center lg:hidden"><div className="w-[min(420px,90vw)]"><DesktopOnly><Globe /></DesktopOnly></div></div>
           <div className="absolute inset-0 hidden lg:block">
             <SplineScene scene="https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode" className="h-full w-full" />
           </div>
@@ -947,7 +1095,15 @@ function Videos() {
             <Play className="h-4 w-4 text-rose-400" /> Ver canal de YouTube
           </a>
         </motion.div>
-        <Marquee3D images={imgs} />
+        <div className="hidden lg:block"><DesktopOnly><Marquee3D images={imgs} /></DesktopOnly></div>
+        <div className="flex snap-x gap-4 overflow-x-auto pb-2 lg:hidden">
+          {imgs.map((im) => (
+            <a key={im.href} href={im.href} target="_blank" rel="noopener noreferrer" className="w-64 shrink-0 snap-start overflow-hidden rounded-xl ring-1 ring-white/10">
+              <Image src={im.src} alt={im.alt} width={480} height={270} sizes="256px" className="aspect-video w-full object-cover" />
+              <p className="p-2 text-xs text-slate-300">{im.alt}</p>
+            </a>
+          ))}
+        </div>
         <div className="mt-10 grid gap-5 md:grid-cols-3">
           {CAPSULAS.slice(13).map(([id, t]) => (
             <div
@@ -1257,40 +1413,201 @@ function Contacto() {
   );
 }
 
-function Footer() {
+
+
+function Cac() {
   return (
-    <footer
-      role="contentinfo"
-      className="border-t border-white/5 bg-slate-950 py-12 text-sm text-slate-500"
-    >
-      <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-6 px-6 md:flex-row">
-        <p>
-          © {new Date().getFullYear()} Muller y Pérez · Agencia de marketing
-          digital en Chile desde 2020
-        </p>
-        <nav aria-label="Enlaces del pie" className="flex flex-wrap gap-5">
-          <Link href="/agentes-ia" className="hover:text-white">
-            Agentes IA
-          </Link>
-          <Link href="/copilot" className="hover:text-white">
-            Boost SEO + IA
-          </Link>
-          <Link href="/blog" className="hover:text-white">
-            Blog
-          </Link>
-          <Link href="/labs/mp-intelligence" className="hover:text-white">
-            M&amp;P Labs
-          </Link>
-          <Link href="/equipo" className="hover:text-white">
-            Equipo
-          </Link>
-          <Link href="/casos-de-exito" className="hover:text-white">
-            Casos de éxito
-          </Link>
-        </nav>
+    <section aria-labelledby="cac-t" className="relative overflow-hidden bg-[#070b1a] py-28 text-white">
+      <div className="mx-auto grid max-w-7xl items-center gap-14 px-6 lg:grid-cols-2">
+        <motion.div {...fade}>
+          <Eyebrow>Para el dueño / CEO</Eyebrow>
+          <h2 id="cac-t" className="text-4xl font-black tracking-tight md:text-6xl">¿Cuánto te cuesta <span className="v2-shimmer">conseguir un cliente?</span></h2>
+          <p className="mt-5 text-lg text-slate-400">Si no tienes ese número, estás invirtiendo a ciegas.</p>
+          <ul className="mt-6 space-y-3 text-slate-300">
+            <li><strong className="text-white">Proyección de ventas confiable:</strong> con CAC definido puedes proyectar cuántos clientes obtendrás con X presupuesto.</li>
+            <li><strong className="text-white">ROI predecible:</strong> sabes cuánto invertir para crecer de forma sostenible.</li>
+            <li><strong className="text-white">Decisiones basadas en datos:</strong> no en corazonadas o &quot;feeling&quot;.</li>
+          </ul>
+          <div className="mt-12">
+            <Eyebrow>Para el gerente comercial</Eyebrow>
+            <h2 className="text-3xl font-black tracking-tight md:text-5xl">Con estas tablas <span className="v2-shimmer">proyectas ventas</span></h2>
+            <p className="mt-4 text-slate-400">Sabes exactamente cuántos leads necesitas para cerrar X ventas, y cuánto cuesta generarlos.</p>
+            <ul className="mt-4 space-y-2 text-sm text-slate-300">
+              <li><strong className="text-white">Proyección de pipeline:</strong> &quot;Si invierto $5M en Google Search, obtengo ~96 leads, cierro ~24 ventas&quot;.</li>
+              <li><strong className="text-white">Optimización de presupuesto:</strong> asignas más a canales con mejor CAC.</li>
+              <li><strong className="text-white">Corrección rápida:</strong> si el CAC sube, detectas el problema en días, no en meses.</li>
+            </ul>
+          </div>
+        </motion.div>
+        <div className="[perspective:1400px]">
+          <motion.div initial={{ opacity: 0, rotateY: -25, rotateX: 10 }} whileInView={{ opacity: 1, rotateY: -12, rotateX: 6 }} viewport={{ once: true }} transition={{ duration: 1 }}
+            className="v2-glass rounded-3xl p-6 shadow-[0_40px_100px_-30px_rgba(34,211,238,0.35)]">
+            <div className="mb-5 flex items-center justify-between">
+              <p className="font-bold">Dashboard Comercial M&amp;P</p>
+              <span className="rounded-full bg-white/10 px-3 py-1 text-xs text-slate-400">Ejemplo ilustrativo</span>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="rounded-2xl bg-white/5 p-4"><p className="text-xs text-slate-400">CAC promedio</p><p className="text-3xl font-black">$47.200</p><p className="text-xs text-emerald-400">↓ 18% vs mes anterior</p></div>
+              <div className="rounded-2xl bg-white/5 p-4"><p className="text-xs text-slate-400">Clientes proyectados (próximo mes)</p><p className="text-3xl font-black">127</p><p className="text-xs text-slate-400">Con presupuesto actual</p></div>
+            </div>
+            <table className="mt-5 w-full text-sm">
+              <caption className="mb-2 text-left text-xs text-slate-400">Tabla CAC por tipo de campaña</caption>
+              <thead><tr className="text-left text-xs text-slate-500"><th className="py-2">Tipo de campaña</th><th>CAC</th><th>Conv. %</th></tr></thead>
+              <tbody>
+                {CAC_TABLA.map(([a, b, c]) => <tr key={a} className="border-t border-white/5"><td className="py-2.5 text-slate-200">{a}</td><td>{b}</td><td className="text-cyan-300">{c}</td></tr>)}
+                <tr className="border-t border-white/10 font-bold"><td className="py-2.5">CAC ponderado</td><td>$47.200</td><td /></tr>
+              </tbody>
+            </table>
+          </motion.div>
+        </div>
       </div>
-    </footer>
-  );
+    </section>
+  )
+}
+
+function Metodologia() {
+  return (
+    <section aria-labelledby="metodologia" className="relative bg-slate-950 py-28 text-white">
+      <div className="mx-auto max-w-6xl px-6">
+        <motion.div {...fade} className="text-center">
+          <Eyebrow>Metodología</Eyebrow>
+          <h2 id="metodologia" className="text-4xl font-black tracking-tight md:text-6xl">Metodología ordenada <span className="v2-shimmer">por semanas</span></h2>
+        </motion.div>
+        <div className="relative mt-16">
+          <motion.div className="absolute left-0 right-0 top-6 hidden h-px origin-left bg-gradient-to-r from-cyan-400 via-violet-400 to-fuchsia-400 md:block"
+            initial={{ scaleX: 0 }} whileInView={{ scaleX: 1 }} viewport={{ once: true }} transition={{ duration: 1.4, ease: 'easeInOut' }} aria-hidden="true" />
+          <ol className="grid gap-6 md:grid-cols-5">
+            {METODOLOGIA.map(([sem, t, d], k) => (
+              <motion.li key={sem} {...fade} transition={{ ...fade.transition, delay: 0.2 + k * 0.15 }} className="relative">
+                <div className="relative z-10 mb-5 flex h-12 w-12 items-center justify-center rounded-full border border-cyan-300/40 bg-slate-950 text-sm font-black text-cyan-300 shadow-[0_0_30px_rgba(34,211,238,0.35)]">{k + 1}</div>
+                <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">{sem}</p>
+                <h3 className="mt-1 text-lg font-bold">{t}</h3>
+                <p className="mt-1 text-sm text-slate-400">{d}</p>
+              </motion.li>
+            ))}
+          </ol>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function Reporte() {
+  const acc: Record<string, string> = { incrementar: 'bg-emerald-400/15 text-emerald-300', mantener: 'bg-amber-400/15 text-amber-300', pausar: 'bg-rose-400/15 text-rose-300', optimizar: 'bg-sky-400/15 text-sky-300', modificar: 'bg-sky-400/15 text-sky-300' }
+  return (
+    <section aria-labelledby="reporte-ejecutivo" className="relative overflow-hidden bg-[#070b1a] py-28 text-white">
+      <div className="mx-auto max-w-7xl px-6">
+        <motion.div {...fade} className="text-center">
+          <Eyebrow>Reporte ejecutivo</Eyebrow>
+          <h2 id="reporte-ejecutivo" className="text-4xl font-black tracking-tight md:text-6xl">Esto es lo que ningún cliente de M&amp;P <span className="v2-shimmer">deja de ver</span></h2>
+          <p className="mx-auto mt-5 max-w-3xl text-lg text-slate-400">Este tipo de cuadro es lo que separa el &quot;me gusta tu post&quot; de <strong className="text-white">saber si realmente estás ganando clientes</strong> con tu inversión.</p>
+        </motion.div>
+        <motion.div {...fade} className="v2-glass mt-12 overflow-x-auto rounded-3xl p-2">
+          <table className="w-full min-w-[900px] text-sm">
+            <caption className="p-3 text-right text-xs text-slate-500">Ejemplo ilustrativo</caption>
+            <thead><tr className="text-left text-xs uppercase tracking-wider text-slate-500">{['Plataforma', 'Inversión', 'Leads', 'Costo/lead', 'Venta #', 'Venta $', 'Costo/cliente', 'Proyección', 'Acción'].map((h) => <th key={h} className="px-4 py-3">{h}</th>)}</tr></thead>
+            <tbody>
+              {REPORTE.map((r) => (
+                <tr key={r.plataforma} className="border-t border-white/5 transition hover:bg-white/5">
+                  <td className="px-4 py-3 font-semibold">{r.plataforma}</td><td className="px-4">{r.inversion}</td><td className="px-4">{r.leads}</td><td className="px-4">{r.costoLead}</td>
+                  <td className="px-4">{r.ventasNum}</td><td className="px-4">{r.ventasMonto}</td><td className="px-4 text-cyan-300">{r.costoCliente}</td><td className="px-4 text-emerald-300">{r.proyeccion}</td>
+                  <td className="px-4"><span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${acc[r.accion] || 'bg-white/10'}`}>{r.accion}</span></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </motion.div>
+        <p className="mt-6 text-center text-xs text-slate-500">CPL = costo por lead · Venta # = número de ventas cerradas · Venta $ = monto total de ventas · Costo/cliente = costo de adquisición por cliente · Proyección = crecimiento proyectado del mes siguiente</p>
+      </div>
+    </section>
+  )
+}
+
+function Herramientas() {
+  return (
+    <section aria-labelledby="tools-t" className="relative bg-slate-950 py-28 text-white">
+      <div className="mx-auto max-w-7xl px-6">
+        <motion.div {...fade} className="text-center">
+          <Eyebrow>Herramientas gratuitas</Eyebrow>
+          <h2 id="tools-t" className="text-4xl font-black tracking-tight md:text-6xl">Herramientas profesionales <span className="v2-shimmer">100% gratis</span></h2>
+          <p className="mx-auto mt-5 max-w-2xl text-lg text-slate-400">Potencia tu estrategia de marketing con nuestras herramientas basadas en datos reales de campañas en Chile.</p>
+        </motion.div>
+        <div className="mt-14 grid gap-4 md:grid-cols-3">
+          {HERRAMIENTAS.map((h, k) => (
+            <motion.div key={h.href} {...fade} transition={{ ...fade.transition, delay: k * 0.06 }} className={k === 0 ? 'md:col-span-2' : ''}>
+              <Link href={h.href} className="v2-glass v2-tilt group block h-full rounded-2xl p-7">
+                <span className="rounded-full bg-cyan-400/10 px-3 py-1 text-xs font-semibold text-cyan-300">{h.tag}</span>
+                <h3 className="mt-4 text-xl font-bold">{h.t}</h3>
+                <p className="mt-2 text-sm text-slate-400">{h.d}</p>
+                <span className="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-white">Usar gratis <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" /></span>
+              </Link>
+            </motion.div>
+          ))}
+        </div>
+        <div className="mt-8 text-center"><Link href="/labs" className="font-semibold text-cyan-300 hover:text-cyan-200">Ver todas las herramientas →</Link></div>
+      </div>
+    </section>
+  )
+}
+
+function Nosotros() {
+  return (
+    <section id="nosotros" aria-labelledby="nosotros-t" className="relative overflow-hidden bg-[#070b1a] py-28 text-white">
+      <div className="mx-auto grid max-w-7xl gap-14 px-6 lg:grid-cols-2">
+        <motion.div {...fade}>
+          <Eyebrow>Quiénes somos</Eyebrow>
+          <h2 id="nosotros-t" className="text-4xl font-black tracking-tight md:text-6xl">M&amp;P = <span className="v2-shimmer">Marketing &amp; Performance</span></h2>
+          <p className="mt-5 text-lg text-slate-400">20+ años de experiencia en empresas que viven de números, no de likes.</p>
+          <div className="v2-glass mt-8 rounded-2xl p-6">
+            <h3 className="text-xl font-bold">Christopher Müller</h3>
+            <p className="text-sm text-cyan-300">Fundador y Director de Estrategia</p>
+            <ul className="mt-4 space-y-1.5 text-sm text-slate-300">
+              <li>Ingeniero Civil Industrial, Universidad de Chile</li>
+              <li>MBA + experto en marketing digital y herramientas de IA</li>
+              <li>Ex Cencosud, Transbank, Banco Internacional y Hibu (empresa inglesa líder en marketing digital)</li>
+              <li>Marketing con foco en performance, ROI y metodología de ingeniería</li>
+            </ul>
+          </div>
+        </motion.div>
+        <div className="grid grid-cols-2 content-center gap-4">
+          {[['3', 'Áreas especializadas: Paid Media, Publicista, Diseñador'], ['+20', 'Profesionales en equipo; cada cliente recibe 3 asignados'], ['7', 'Años en el mercado'], ['+$800M', 'Gestionados en inversión publicitaria']].map(([v, l], k) => (
+            <motion.div key={l} {...fade} transition={{ ...fade.transition, delay: k * 0.1 }} className="v2-glass v2-tilt rounded-2xl p-6">
+              <p className="text-4xl font-black">{v}</p><p className="mt-2 text-sm text-slate-400">{l}</p>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function FairPlay() {
+  return (
+    <section aria-labelledby="fair-t" className="bg-slate-950 py-28 text-white">
+      <div className="mx-auto max-w-6xl px-6">
+        <motion.div {...fade} className="text-center">
+          <Eyebrow>Así trabajamos contigo</Eyebrow>
+          <h2 id="fair-t" className="text-4xl font-black tracking-tight md:text-6xl">Fair Play &amp; <span className="v2-shimmer">Orden</span></h2>
+        </motion.div>
+        <div className="mt-14 grid gap-6 md:grid-cols-2">
+          <motion.div {...fade} className="v2-glass v2-tilt rounded-3xl p-8">
+            <h3 className="text-2xl font-bold">Todo tiene orden</h3>
+            <ul className="mt-5 space-y-3 text-slate-300">
+              {['Reuniones semanales o quincenales según el plan', 'Grupo de WhatsApp para consultas rápidas', 'Acceso a CRM para ver el estado de tus leads en tiempo real', 'Reportes ejecutivos semanales y mensuales automáticos'].map((x) => <li key={x} className="flex gap-2"><CheckCircle2 className="mt-1 h-4 w-4 shrink-0 text-cyan-300" />{x}</li>)}
+            </ul>
+          </motion.div>
+          <motion.div {...fade} className="v2-glass v2-tilt rounded-3xl p-8">
+            <h3 className="text-2xl font-bold">Fair Play en cobros</h3>
+            <p className="mt-5 text-slate-300"><strong className="text-white">Trabajos adicionales fuera del plan: se cobran aparte.</strong> Ej: diseñar menú para restaurant, folleto para evento, video institucional.</p>
+            <ul className="mt-4 space-y-3 text-slate-300">
+              {['Siempre avisamos antes de hacer trabajos extra', 'Presupuestos claros y anticipados'].map((x) => <li key={x} className="flex gap-2"><CheckCircle2 className="mt-1 h-4 w-4 shrink-0 text-cyan-300" />{x}</li>)}
+            </ul>
+            <p className="mt-5 text-slate-400"><strong className="text-white">Transparencia total.</strong> Sabes qué estás pagando, qué incluye, y qué queda fuera.</p>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  )
 }
 
 export default function HomeV2() {
@@ -1310,16 +1627,23 @@ export default function HomeV2() {
         <Hero />
         <Logos />
         <Verdad />
+        <Cac />
         <Areas />
         <Arbol />
+        <Metodologia />
+        <Reporte />
         <Agentes />
+        <Herramientas />
         <Videos />
+        <Nosotros />
+        <FairPlay />
         <Casos />
+        <Testimonios />
         <Planes />
         <Faq />
         <Contacto />
       </main>
-      <Footer />
+      <HomeFooter />
     </div>
   );
 }
