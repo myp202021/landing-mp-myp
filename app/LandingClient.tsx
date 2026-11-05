@@ -31,6 +31,9 @@ import {
 import dynamic from 'next/dynamic'
 import YouTubeLite from '@/components/YouTubeLite'
 import { ClientLogosGrid } from '@/components/ClientLogos'
+import MotionLayer from '@/components/home/MotionLayer'
+import CountUp from '@/components/home/CountUp'
+const HeroGlobe = dynamic(() => import('@/components/home/HeroGlobe'), { ssr: false })
 
 const PortfolioBrochure = dynamic(() => import('@/components/PortfolioBrochure'), {
   ssr: false,
@@ -522,7 +525,8 @@ export default function LandingClient() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div id="home-root" className="min-h-screen bg-white">
+      <MotionLayer />
       {/* SEO: JSON-LD Structured Data */}
       <script
         type="application/ld+json"
@@ -788,15 +792,14 @@ export default function LandingClient() {
       </header>
 
       {/* Hero */}
-      <section className="pt-36 pb-28 px-6 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-white relative overflow-hidden" role="main" aria-label="Sección principal">
-        <video
-          src="/ads-video-1.mp4"
-          className="absolute inset-0 w-full h-full object-cover opacity-30"
-          autoPlay muted loop playsInline
-          aria-hidden="true"
-        />
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-900/70 via-blue-900/50 to-slate-900/70" aria-hidden="true"></div>
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent" aria-hidden="true"></div>
+      <section className="pt-36 pb-28 px-6 bg-slate-950 text-white relative overflow-hidden" data-spotlight role="main" aria-label="Sección principal">
+        <div className="hero-aurora" aria-hidden="true" />
+        <div className="hero-grid" aria-hidden="true" />
+        <div className="hero-spot" aria-hidden="true" />
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-70 md:opacity-90" aria-hidden="true">
+          <div className="w-[760px] h-[760px] max-w-[120vw] max-h-[120vw]"><HeroGlobe /></div>
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/30 to-transparent" aria-hidden="true"></div>
 
         <div className="max-w-6xl mx-auto relative z-10">
           <div className="text-center mb-16">
@@ -805,14 +808,14 @@ export default function LandingClient() {
               <span className="text-blue-200 text-sm font-medium">Performance Marketing con Datos Reales</span>
             </div>
 
-            <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-[1.1] tracking-tight text-white uppercase">
+            <h1 className="hero-title text-4xl md:text-6xl font-bold mb-6 leading-[1.05] tracking-tight text-white uppercase">
               Agencia de Marketing Digital<br />que vincula Marketing<br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400">
+              <span className="text-shimmer">
                 con Comercial
               </span>
             </h1>
 
-            <p className="text-lg md:text-xl text-blue-200 max-w-3xl mx-auto mb-6 font-medium">
+            <p className="hero-fade [--d:120ms] text-lg md:text-xl text-blue-200 max-w-3xl mx-auto mb-6 font-medium">
               Performance marketing con datos reales: convertimos tu inversión publicitaria en clientes
             </p>
 
@@ -821,10 +824,10 @@ export default function LandingClient() {
               <br />Con ese dato puedes proyectar ventas y corregir errores.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-5 justify-center items-center">
+            <div className="hero-fade [--d:240ms] flex flex-col sm:flex-row gap-5 justify-center items-center">
               <button
                 onClick={() => document.getElementById('contacto')?.scrollIntoView({ behavior: 'smooth' })}
-                className="inline-flex items-center gap-2.5 bg-white text-gray-900 hover:bg-blue-50 font-semibold text-base px-8 py-6 rounded-xl shadow-2xl shadow-blue-500/20 hover:shadow-blue-500/40 transform hover:scale-[1.02] transition-all duration-300"
+                className="btn-glow inline-flex items-center gap-2.5 bg-white text-gray-900 hover:bg-blue-50 font-semibold text-base px-8 py-6 rounded-xl shadow-2xl shadow-blue-500/20 hover:shadow-blue-500/40 transform hover:scale-[1.02] transition-all duration-300"
                 aria-label="Agendar reunión para conocer servicios de marketing digital"
               >
                 <Calendar className="w-5 h-5" aria-hidden="true" />
@@ -855,8 +858,8 @@ export default function LandingClient() {
               { value: '50+', label: 'Clientes activos' },
               { value: '5.0★', label: '115 reseñas en Google' }
             ].map((stat, idx) => (
-              <div key={idx} className="text-center">
-                <div className="text-3xl md:text-4xl font-bold text-blue-400 mb-2">{stat.value}</div>
+              <div key={idx} data-tilt className="glass-card text-center rounded-2xl px-3 py-5">
+                <div className="text-3xl md:text-4xl font-bold text-cyan-300 mb-2 tabular-nums"><CountUp value={stat.value} /></div>
                 <div className="text-xs md:text-sm text-blue-200/80 font-medium">{stat.label}</div>
               </div>
             ))}
@@ -1875,7 +1878,7 @@ export default function LandingClient() {
 
           <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
             {/* Plan Silver */}
-            <div className="bg-white rounded-2xl p-6 border-2 border-gray-200 hover:border-blue-400 hover:shadow-xl transition-all duration-300">
+            <div data-tilt className="tilt-card bg-white rounded-2xl p-6 border-2 border-gray-200 hover:border-blue-400 hover:shadow-xl transition-all duration-300">
               <h3 className="text-2xl font-bold text-gray-900 mb-6">Silver</h3>
               <ul className="space-y-3 mb-8">
                 <li className="flex items-start gap-2 text-sm text-gray-700">
@@ -1912,7 +1915,7 @@ export default function LandingClient() {
             </div>
 
             {/* Plan Gold - Destacado */}
-            <div className="relative bg-gradient-to-br from-blue-600 to-blue-700 rounded-2xl p-6 shadow-2xl border-2 border-blue-400 transform md:scale-105">
+            <div data-tilt className="tilt-card plan-glow relative bg-gradient-to-br from-blue-600 to-blue-700 rounded-2xl p-6 shadow-2xl border-2 border-blue-400 md:scale-105">
               <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1.5 bg-emerald-500 rounded-full shadow-lg">
                 <span className="text-white font-bold text-xs">POPULAR</span>
               </div>
@@ -1952,7 +1955,7 @@ export default function LandingClient() {
             </div>
 
             {/* Plan Platinum */}
-            <div className="bg-white rounded-2xl p-6 border-2 border-gray-200 hover:border-blue-400 hover:shadow-xl transition-all duration-300">
+            <div data-tilt className="tilt-card bg-white rounded-2xl p-6 border-2 border-gray-200 hover:border-blue-400 hover:shadow-xl transition-all duration-300">
               <h3 className="text-2xl font-bold text-gray-900 mb-6">Platinum</h3>
               <ul className="space-y-3 mb-8">
                 <li className="flex items-start gap-2 text-sm text-gray-700">
