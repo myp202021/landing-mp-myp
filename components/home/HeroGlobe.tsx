@@ -86,9 +86,9 @@ export default function HeroGlobe({ className = '' }: { className?: string }) {
 
       for (const p of pts) {
         const q = project(p)
-        const a = q.z < 0 ? 0.85 : 0.15
-        ctx.fillStyle = `rgba(147,197,253,${a * q.f * 0.9})`
-        ctx.fillRect(q.x, q.y, 1.4 * q.f, 1.4 * q.f)
+        const a = q.z < 0 ? 1 : 0.22
+        ctx.fillStyle = `rgba(165,210,255,${Math.min(1, a * q.f * 1.15)})`
+        ctx.fillRect(q.x, q.y, 1.8 * q.f, 1.8 * q.f)
       }
       for (const n of nodes) {
         const q = project(n)
@@ -110,8 +110,8 @@ export default function HeroGlobe({ className = '' }: { className?: string }) {
           const q = project(slerp(arc.a, arc.b, t))
           i === 0 || t <= Math.max(0, arc.p - 0.45) + 1 / steps ? ctx.moveTo(q.x, q.y) : ctx.lineTo(q.x, q.y)
         }
-        ctx.strokeStyle = 'rgba(96,165,250,0.55)'
-        ctx.lineWidth = 1.2
+        ctx.strokeStyle = 'rgba(103,232,249,0.8)'
+        ctx.lineWidth = 1.6
         ctx.stroke()
       }
     }

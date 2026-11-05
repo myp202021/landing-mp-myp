@@ -796,7 +796,7 @@ export default function LandingClient() {
         <div className="hero-aurora" aria-hidden="true" />
         <div className="hero-grid" aria-hidden="true" />
         <div className="hero-spot" aria-hidden="true" />
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-70 md:opacity-90" aria-hidden="true">
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-80 md:opacity-100" aria-hidden="true">
           <div className="w-[760px] h-[760px] max-w-[120vw] max-h-[120vw]"><HeroGlobe /></div>
         </div>
         <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/30 to-transparent" aria-hidden="true"></div>
