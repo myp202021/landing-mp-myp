@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 
-const clients = [
+export const clients = [
   { name: 'Dezar', industry: 'Rent a Car', logo: '/clientes/dezar.png' },
   { name: 'Antartic', industry: 'Refrigeración Industrial', logo: '/clientes/antartic.png' },
   { name: 'Charriot', industry: 'Automotriz', logo: '/clientes/charriot.png' },

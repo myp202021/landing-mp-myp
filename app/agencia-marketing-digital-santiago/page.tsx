@@ -614,20 +614,7 @@ export default function AgenciaMarketingDigitalSantiagoPage() {
         </section>
 
         {/* Footer simple */}
-        <footer className="bg-gray-900 text-white py-12">
-          <div className="container mx-auto px-6 text-center">
-            <p className="text-gray-400 mb-4">
-              © 2025 Muller y Pérez - Agencia de Marketing Digital Santiago | Oficinas en Las Condes
-            </p>
-            <div className="flex flex-wrap justify-center gap-4 text-sm text-gray-400">
-              <Link href="/" className="hover:text-white transition">Inicio</Link>
-              <Link href="/servicios" className="hover:text-white transition">Servicios</Link>
-              <Link href="/industrias" className="hover:text-white transition">Industrias</Link>
-              <Link href="/cotizador" className="hover:text-white transition">Cotizador</Link>
-              <Link href="/labs/predictor" className="hover:text-white transition">Predictor</Link>
-            </div>
-          </div>
-        </footer>
+        
       </div>
     </>
   )

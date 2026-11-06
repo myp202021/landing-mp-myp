@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { ArrowLeft, Brain, Sparkles, Zap, Target, CheckCircle, AlertTriangle, Lightbulb, BarChart3 } from 'lucide-react'
+import SiteHeader from '@/components/SiteHeader'
 
 export const metadata: Metadata = {
   title: 'IA Generativa para Google Ads Chile 2026: Guía Completa para Optimizar Campañas',
@@ -67,14 +68,7 @@ export default function ArticlePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
       />
 
-      <header className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-xl border-b border-gray-100 z-50">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 py-5 flex items-center justify-between">
-          <Link href="/"><img src="/logo-color.png" alt="Muller y Pérez" className="h-11 w-auto" /></Link>
-          <Link href="/blog" className="text-sm font-semibold text-gray-700 hover:text-blue-600 transition-all flex items-center gap-2">
-            <ArrowLeft className="w-4 h-4" /> Blog
-          </Link>
-        </div>
-      </header>
+      <SiteHeader />
 
       <article className="pt-32 pb-24 px-6">
         <div className="max-w-4xl mx-auto">
@@ -347,16 +341,7 @@ export default function ArticlePage() {
         </div>
       </section>
 
-      <footer className="border-t border-gray-200 py-8 px-6 bg-white">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-gray-500 text-sm">© 2026 Muller y Pérez</p>
-          <div className="flex gap-6 text-sm">
-            <Link href="/blog" className="text-gray-500 hover:text-blue-600 transition-colors">Blog</Link>
-            <Link href="/labs" className="text-gray-500 hover:text-blue-600 transition-colors">M&P Labs</Link>
-            <Link href="/" className="text-gray-500 hover:text-blue-600 transition-colors">Inicio</Link>
-          </div>
-        </div>
-      </footer>
+      
     </div>
   )
 }

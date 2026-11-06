@@ -1,120 +1,650 @@
 {
-  "generado": "2026-11-02T19:14:32.553Z",
+  "generado": "2026-11-06T01:31:35.520Z",
   "ventana_dias": 30,
   "agentes": {
     "blog-diario": {
-      "tipo": "error"
+      "tipo": "workflow",
+      "ejecuciones_30d": 58,
+      "exitosas_30d": 50,
+      "ultima_exitosa": "2026-11-05T10:15:05Z",
+      "dias": {
+        "2026-11-05": "ok",
+        "2026-11-04": "fallo",
+        "2026-11-03": "ok",
+        "2026-11-02": "fallo",
+        "2026-11-01": "ok",
+        "2026-10-31": "ok",
+        "2026-10-30": "ok",
+        "2026-10-29": "ok",
+        "2026-10-28": "ok",
+        "2026-10-27": "ok",
+        "2026-10-26": "ok",
+        "2026-10-25": "fallo",
+        "2026-10-24": "fallo",
+        "2026-10-23": "fallo",
+        "2026-10-22": "ok",
+        "2026-10-21": "ok",
+        "2026-10-20": "ok",
+        "2026-10-19": "ok",
+        "2026-10-18": "ok",
+        "2026-10-17": "ok",
+        "2026-10-16": "ok",
+        "2026-10-15": "ok",
+        "2026-10-14": "ok",
+        "2026-10-13": "ok",
+        "2026-10-12": "ok",
+        "2026-10-11": "ok",
+        "2026-10-10": "ok",
+        "2026-10-09": "ok",
+        "2026-10-08": "ok",
+        "2026-10-07": "ok"
+      }
     },
     "blog-geo": {
-      "tipo": "error"
+      "tipo": "workflow",
+      "ejecuciones_30d": 26,
+      "exitosas_30d": 22,
+      "ultima_exitosa": "2026-10-21T17:34:00Z",
+      "dias": {
+        "2026-10-23": "fallo",
+        "2026-10-22": "fallo",
+        "2026-10-21": "ok",
+        "2026-10-20": "ok",
+        "2026-10-19": "ok",
+        "2026-10-16": "ok",
+        "2026-10-15": "ok",
+        "2026-10-14": "ok",
+        "2026-10-13": "ok",
+        "2026-10-12": "ok",
+        "2026-10-09": "ok",
+        "2026-10-08": "ok",
+        "2026-10-07": "ok"
+      }
     },
     "ranking-semanal": {
-      "tipo": "error"
+      "tipo": "workflow",
+      "ejecuciones_30d": 5,
+      "exitosas_30d": 3,
+      "ultima_exitosa": "2026-10-29T17:25:23Z",
+      "dias": {
+        "2026-11-05": "fallo",
+        "2026-10-29": "ok",
+        "2026-10-22": "fallo",
+        "2026-10-15": "ok",
+        "2026-10-08": "ok"
+      }
     },
     "ranking-verificado": {
-      "tipo": "error"
+      "tipo": "workflow",
+      "ejecuciones_30d": 1,
+      "exitosas_30d": 1,
+      "ultima_exitosa": "2026-11-01T17:36:42Z",
+      "dias": {
+        "2026-11-01": "ok"
+      }
     },
     "columna": {
-      "tipo": "error"
+      "tipo": "workflow",
+      "ejecuciones_30d": 2,
+      "exitosas_30d": 0,
+      "ultima_exitosa": null,
+      "dias": {
+        "2026-10-19": "fallo",
+        "2026-10-12": "fallo"
+      }
     },
     "termometro": {
-      "tipo": "error"
+      "tipo": "workflow",
+      "ejecuciones_30d": 4,
+      "exitosas_30d": 4,
+      "ultima_exitosa": "2026-10-31T16:15:02Z",
+      "dias": {
+        "2026-10-31": "ok",
+        "2026-10-24": "ok",
+        "2026-10-17": "ok",
+        "2026-10-10": "ok"
+      }
     },
     "revisor-editorial": {
-      "tipo": "error"
+      "tipo": "workflow",
+      "ejecuciones_30d": 58,
+      "exitosas_30d": 50,
+      "ultima_exitosa": "2026-11-05T10:15:05Z",
+      "dias": {
+        "2026-11-05": "ok",
+        "2026-11-04": "fallo",
+        "2026-11-03": "ok",
+        "2026-11-02": "fallo",
+        "2026-11-01": "ok",
+        "2026-10-31": "ok",
+        "2026-10-30": "ok",
+        "2026-10-29": "ok",
+        "2026-10-28": "ok",
+        "2026-10-27": "ok",
+        "2026-10-26": "ok",
+        "2026-10-25": "fallo",
+        "2026-10-24": "fallo",
+        "2026-10-23": "fallo",
+        "2026-10-22": "ok",
+        "2026-10-21": "ok",
+        "2026-10-20": "ok",
+        "2026-10-19": "ok",
+        "2026-10-18": "ok",
+        "2026-10-17": "ok",
+        "2026-10-16": "ok",
+        "2026-10-15": "ok",
+        "2026-10-14": "ok",
+        "2026-10-13": "ok",
+        "2026-10-12": "ok",
+        "2026-10-11": "ok",
+        "2026-10-10": "ok",
+        "2026-10-09": "ok",
+        "2026-10-08": "ok",
+        "2026-10-07": "ok"
+      }
     },
     "verificador-fuentes": {
-      "tipo": "error"
+      "tipo": "workflow",
+      "ejecuciones_30d": 1,
+      "exitosas_30d": 1,
+      "ultima_exitosa": "2026-11-01T17:36:42Z",
+      "dias": {
+        "2026-11-01": "ok"
+      }
     },
     "revisor-grillas": {
-      "tipo": "error"
+      "tipo": "workflow",
+      "ejecuciones_30d": 0,
+      "exitosas_30d": 0,
+      "ultima_exitosa": null,
+      "dias": {}
     },
     "auditoria-seo-geo": {
       "tipo": "sin_workflow"
     },
     "blog-wms": {
-      "tipo": "error"
+      "tipo": "workflow",
+      "ejecuciones_30d": 0,
+      "exitosas_30d": 0,
+      "ultima_exitosa": null,
+      "dias": {}
     },
     "ranking-wms": {
-      "tipo": "error"
-    },
-    "blog-importadora": {
-      "tipo": "error"
+      "tipo": "workflow",
+      "ejecuciones_30d": 0,
+      "exitosas_30d": 0,
+      "ultima_exitosa": null,
+      "dias": {}
     },
     "blog-industrial": {
-      "tipo": "error"
+      "tipo": "workflow",
+      "ejecuciones_30d": 47,
+      "exitosas_30d": 14,
+      "ultima_exitosa": "2026-11-03T12:01:55Z",
+      "dias": {
+        "2026-11-03": "ok",
+        "2026-11-02": "ok",
+        "2026-10-30": "ok",
+        "2026-10-27": "ok",
+        "2026-10-26": "ok",
+        "2026-10-23": "fallo",
+        "2026-10-22": "fallo",
+        "2026-10-21": "fallo",
+        "2026-10-20": "ok",
+        "2026-10-19": "ok",
+        "2026-10-16": "ok",
+        "2026-10-15": "ok",
+        "2026-10-14": "ok",
+        "2026-10-13": "fallo",
+        "2026-10-12": "fallo",
+        "2026-10-09": "fallo",
+        "2026-10-08": "ok",
+        "2026-10-07": "fallo"
+      }
     },
     "blog-outplacement": {
-      "tipo": "error"
+      "tipo": "workflow",
+      "ejecuciones_30d": 24,
+      "exitosas_30d": 20,
+      "ultima_exitosa": "2026-11-05T10:40:56Z",
+      "dias": {
+        "2026-11-05": "ok",
+        "2026-11-04": "ok",
+        "2026-11-03": "ok",
+        "2026-11-02": "ok",
+        "2026-10-30": "fallo",
+        "2026-10-29": "fallo",
+        "2026-10-28": "ok",
+        "2026-10-27": "ok",
+        "2026-10-26": "ok",
+        "2026-10-23": "fallo",
+        "2026-10-22": "fallo",
+        "2026-10-21": "ok",
+        "2026-10-20": "ok",
+        "2026-10-19": "ok",
+        "2026-10-16": "ok",
+        "2026-10-15": "ok",
+        "2026-10-14": "ok",
+        "2026-10-13": "ok",
+        "2026-10-12": "ok",
+        "2026-10-09": "ok",
+        "2026-10-08": "ok",
+        "2026-10-07": "ok"
+      }
     },
     "ranking-outplacement": {
-      "tipo": "error"
+      "tipo": "workflow",
+      "ejecuciones_30d": 8,
+      "exitosas_30d": 2,
+      "ultima_exitosa": "2026-11-03T18:19:45Z",
+      "dias": {
+        "2026-11-03": "ok",
+        "2026-11-02": "ok",
+        "2026-10-30": "fallo",
+        "2026-10-23": "fallo",
+        "2026-10-16": "fallo",
+        "2026-10-09": "fallo"
+      }
     },
     "blog-legal": {
-      "tipo": "error"
+      "tipo": "workflow",
+      "ejecuciones_30d": 28,
+      "exitosas_30d": 23,
+      "ultima_exitosa": "2026-11-05T10:40:55Z",
+      "dias": {
+        "2026-11-05": "ok",
+        "2026-11-04": "ok",
+        "2026-11-03": "ok",
+        "2026-11-02": "ok",
+        "2026-10-30": "ok",
+        "2026-10-29": "ok",
+        "2026-10-28": "ok",
+        "2026-10-27": "ok",
+        "2026-10-26": "ok",
+        "2026-10-23": "fallo",
+        "2026-10-22": "fallo",
+        "2026-10-21": "ok",
+        "2026-10-20": "ok",
+        "2026-10-19": "ok",
+        "2026-10-16": "fallo",
+        "2026-10-15": "ok",
+        "2026-10-14": "ok",
+        "2026-10-13": "ok",
+        "2026-10-12": "ok",
+        "2026-10-09": "ok",
+        "2026-10-08": "ok",
+        "2026-10-07": "ok"
+      }
     },
     "ranking-legal": {
-      "tipo": "error"
+      "tipo": "workflow",
+      "ejecuciones_30d": 16,
+      "exitosas_30d": 12,
+      "ultima_exitosa": "2026-11-04T17:05:21Z",
+      "dias": {
+        "2026-11-04": "ok",
+        "2026-11-03": "ok",
+        "2026-11-02": "ok",
+        "2026-10-23": "fallo",
+        "2026-10-16": "ok",
+        "2026-10-09": "ok"
+      }
     },
     "blog-energia": {
-      "tipo": "error"
+      "tipo": "workflow",
+      "ejecuciones_30d": 25,
+      "exitosas_30d": 20,
+      "ultima_exitosa": "2026-11-05T10:40:37Z",
+      "dias": {
+        "2026-11-05": "ok",
+        "2026-11-04": "ok",
+        "2026-11-03": "ok",
+        "2026-11-02": "ok",
+        "2026-10-30": "ok",
+        "2026-10-29": "ok",
+        "2026-10-28": "ok",
+        "2026-10-27": "ok",
+        "2026-10-26": "ok",
+        "2026-10-23": "fallo",
+        "2026-10-22": "fallo",
+        "2026-10-21": "ok",
+        "2026-10-20": "ok",
+        "2026-10-19": "ok",
+        "2026-10-16": "ok",
+        "2026-10-15": "ok",
+        "2026-10-14": "ok",
+        "2026-10-13": "ok",
+        "2026-10-12": "ok",
+        "2026-10-09": "ok",
+        "2026-10-08": "ok",
+        "2026-10-07": "ok"
+      }
     },
     "ranking-energia": {
-      "tipo": "error"
+      "tipo": "workflow",
+      "ejecuciones_30d": 4,
+      "exitosas_30d": 4,
+      "ultima_exitosa": "2026-10-30T16:57:45Z",
+      "dias": {
+        "2026-10-30": "ok",
+        "2026-10-23": "ok",
+        "2026-10-16": "ok",
+        "2026-10-09": "ok"
+      }
     },
     "blog-finanzas": {
-      "tipo": "error"
+      "tipo": "workflow",
+      "ejecuciones_30d": 25,
+      "exitosas_30d": 23,
+      "ultima_exitosa": "2026-11-05T10:40:42Z",
+      "dias": {
+        "2026-11-05": "ok",
+        "2026-11-04": "ok",
+        "2026-11-03": "ok",
+        "2026-11-02": "ok",
+        "2026-10-30": "ok",
+        "2026-10-29": "ok",
+        "2026-10-28": "ok",
+        "2026-10-27": "ok",
+        "2026-10-26": "ok",
+        "2026-10-23": "fallo",
+        "2026-10-22": "fallo",
+        "2026-10-21": "ok",
+        "2026-10-20": "ok",
+        "2026-10-19": "ok",
+        "2026-10-16": "ok",
+        "2026-10-15": "ok",
+        "2026-10-14": "ok",
+        "2026-10-13": "ok",
+        "2026-10-12": "ok",
+        "2026-10-09": "ok",
+        "2026-10-08": "ok",
+        "2026-10-07": "ok"
+      }
     },
     "ranking-finanzas": {
-      "tipo": "error"
+      "tipo": "workflow",
+      "ejecuciones_30d": 16,
+      "exitosas_30d": 15,
+      "ultima_exitosa": "2026-11-04T16:40:19Z",
+      "dias": {
+        "2026-11-04": "ok",
+        "2026-11-03": "ok",
+        "2026-11-02": "ok",
+        "2026-10-30": "ok",
+        "2026-10-23": "ok",
+        "2026-10-16": "ok",
+        "2026-10-09": "ok"
+      }
     },
     "copilot": {
-      "tipo": "error"
+      "tipo": "workflow",
+      "ejecuciones_30d": 0,
+      "exitosas_30d": 0,
+      "ultima_exitosa": null,
+      "dias": {}
     },
     "radar-competencia": {
-      "tipo": "error"
+      "tipo": "workflow",
+      "ejecuciones_30d": 0,
+      "exitosas_30d": 0,
+      "ultima_exitosa": null,
+      "dias": {}
     },
     "competencia-transporte": {
-      "tipo": "error"
+      "tipo": "workflow",
+      "ejecuciones_30d": 24,
+      "exitosas_30d": 24,
+      "ultima_exitosa": "2026-11-05T09:12:50Z",
+      "dias": {
+        "2026-11-05": "ok",
+        "2026-11-04": "ok",
+        "2026-11-03": "ok",
+        "2026-11-02": "ok",
+        "2026-10-30": "ok",
+        "2026-10-29": "ok",
+        "2026-10-28": "ok",
+        "2026-10-27": "ok",
+        "2026-10-26": "ok",
+        "2026-10-23": "ok",
+        "2026-10-22": "ok",
+        "2026-10-21": "ok",
+        "2026-10-20": "ok",
+        "2026-10-19": "ok",
+        "2026-10-16": "ok",
+        "2026-10-15": "ok",
+        "2026-10-14": "ok",
+        "2026-10-13": "ok",
+        "2026-10-12": "ok",
+        "2026-10-09": "ok",
+        "2026-10-08": "ok",
+        "2026-10-07": "ok"
+      }
     },
     "clipping-prensa": {
-      "tipo": "error"
+      "tipo": "workflow",
+      "ejecuciones_30d": 210,
+      "exitosas_30d": 210,
+      "ultima_exitosa": "2026-11-05T19:15:53Z",
+      "dias": {
+        "2026-11-05": "ok",
+        "2026-11-04": "ok",
+        "2026-11-03": "ok",
+        "2026-11-02": "ok",
+        "2026-11-01": "ok",
+        "2026-10-31": "ok",
+        "2026-10-30": "ok",
+        "2026-10-29": "ok",
+        "2026-10-28": "ok",
+        "2026-10-27": "ok",
+        "2026-10-26": "ok",
+        "2026-10-25": "ok",
+        "2026-10-24": "ok",
+        "2026-10-23": "ok",
+        "2026-10-22": "ok",
+        "2026-10-21": "ok",
+        "2026-10-20": "ok",
+        "2026-10-19": "ok",
+        "2026-10-18": "ok",
+        "2026-10-17": "ok",
+        "2026-10-16": "ok",
+        "2026-10-15": "ok",
+        "2026-10-14": "ok",
+        "2026-10-13": "ok",
+        "2026-10-12": "ok",
+        "2026-10-11": "ok",
+        "2026-10-10": "ok",
+        "2026-10-09": "ok",
+        "2026-10-08": "ok",
+        "2026-10-07": "ok"
+      }
     },
     "clipping-artistas": {
-      "tipo": "error"
+      "tipo": "workflow",
+      "ejecuciones_30d": 19,
+      "exitosas_30d": 19,
+      "ultima_exitosa": "2026-10-25T14:05:45Z",
+      "dias": {
+        "2026-10-25": "ok",
+        "2026-10-24": "ok",
+        "2026-10-23": "ok",
+        "2026-10-22": "ok",
+        "2026-10-21": "ok",
+        "2026-10-20": "ok",
+        "2026-10-19": "ok",
+        "2026-10-18": "ok",
+        "2026-10-17": "ok",
+        "2026-10-16": "ok",
+        "2026-10-15": "ok",
+        "2026-10-14": "ok",
+        "2026-10-13": "ok",
+        "2026-10-12": "ok",
+        "2026-10-11": "ok",
+        "2026-10-10": "ok",
+        "2026-10-09": "ok",
+        "2026-10-08": "ok",
+        "2026-10-07": "ok"
+      }
     },
     "radar-clipping": {
-      "tipo": "error"
+      "tipo": "workflow",
+      "ejecuciones_30d": 0,
+      "exitosas_30d": 0,
+      "ultima_exitosa": null,
+      "dias": {}
     },
     "grillas": {
-      "tipo": "error"
+      "tipo": "workflow",
+      "ejecuciones_30d": 0,
+      "exitosas_30d": 0,
+      "ultima_exitosa": null,
+      "dias": {}
     },
     "grilla-cliente": {
-      "tipo": "error"
+      "tipo": "workflow",
+      "ejecuciones_30d": 0,
+      "exitosas_30d": 0,
+      "ultima_exitosa": null,
+      "dias": {}
     },
     "prospeccion": {
-      "tipo": "error"
+      "tipo": "workflow",
+      "ejecuciones_30d": 0,
+      "exitosas_30d": 0,
+      "ultima_exitosa": null,
+      "dias": {}
     },
     "informe-seo": {
-      "tipo": "error"
+      "tipo": "workflow",
+      "ejecuciones_30d": 23,
+      "exitosas_30d": 19,
+      "ultima_exitosa": "2026-11-05T18:33:15Z",
+      "dias": {
+        "2026-11-05": "ok",
+        "2026-11-04": "ok",
+        "2026-11-03": "ok",
+        "2026-11-02": "ok",
+        "2026-10-26": "ok",
+        "2026-10-19": "ok",
+        "2026-10-16": "ok",
+        "2026-10-13": "ok",
+        "2026-10-12": "ok"
+      }
     },
     "reportes-mensuales": {
-      "tipo": "error"
+      "tipo": "workflow",
+      "ejecuciones_30d": 0,
+      "exitosas_30d": 0,
+      "ultima_exitosa": null,
+      "dias": {}
     },
     "reporte-diario": {
-      "tipo": "error"
+      "tipo": "workflow",
+      "ejecuciones_30d": 96,
+      "exitosas_30d": 84,
+      "ultima_exitosa": "2026-10-30T15:11:46Z",
+      "dias": {
+        "2026-11-05": "fallo",
+        "2026-11-04": "fallo",
+        "2026-11-03": "fallo",
+        "2026-11-02": "fallo",
+        "2026-10-30": "ok",
+        "2026-10-29": "ok",
+        "2026-10-28": "ok",
+        "2026-10-27": "ok",
+        "2026-10-26": "ok",
+        "2026-10-23": "ok",
+        "2026-10-22": "ok",
+        "2026-10-21": "ok",
+        "2026-10-20": "ok",
+        "2026-10-19": "ok",
+        "2026-10-18": "ok",
+        "2026-10-17": "ok",
+        "2026-10-16": "ok",
+        "2026-10-15": "ok",
+        "2026-10-14": "ok",
+        "2026-10-13": "ok",
+        "2026-10-12": "ok",
+        "2026-10-09": "ok",
+        "2026-10-08": "ok",
+        "2026-10-07": "ok"
+      }
     },
     "dashboard-cliente": {
-      "tipo": "error"
+      "tipo": "workflow",
+      "ejecuciones_30d": 20,
+      "exitosas_30d": 20,
+      "ultima_exitosa": "2026-10-26T14:48:50Z",
+      "dias": {
+        "2026-10-26": "ok",
+        "2026-10-25": "ok",
+        "2026-10-24": "ok",
+        "2026-10-23": "ok",
+        "2026-10-22": "ok",
+        "2026-10-21": "ok",
+        "2026-10-20": "ok",
+        "2026-10-19": "ok",
+        "2026-10-18": "ok",
+        "2026-10-17": "ok",
+        "2026-10-16": "ok",
+        "2026-10-15": "ok",
+        "2026-10-14": "ok",
+        "2026-10-13": "ok",
+        "2026-10-12": "ok",
+        "2026-10-11": "ok",
+        "2026-10-10": "ok",
+        "2026-10-09": "ok",
+        "2026-10-08": "ok",
+        "2026-10-07": "ok"
+      }
     },
     "fiscalizacion-whatsapp": {
-      "tipo": "error"
+      "tipo": "workflow",
+      "ejecuciones_30d": 0,
+      "exitosas_30d": 0,
+      "ultima_exitosa": null,
+      "dias": {}
     },
     "whatsapp-agente": {
       "tipo": "sin_workflow"
     },
     "radar-inmobiliario": {
-      "tipo": "error"
+      "tipo": "workflow",
+      "ejecuciones_30d": 30,
+      "exitosas_30d": 3,
+      "ultima_exitosa": "2026-10-26T15:38:44Z",
+      "dias": {
+        "2026-11-05": "fallo",
+        "2026-11-04": "fallo",
+        "2026-11-03": "fallo",
+        "2026-11-02": "fallo",
+        "2026-11-01": "fallo",
+        "2026-10-31": "fallo",
+        "2026-10-30": "fallo",
+        "2026-10-29": "fallo",
+        "2026-10-28": "fallo",
+        "2026-10-27": "fallo",
+        "2026-10-26": "ok",
+        "2026-10-25": "ok",
+        "2026-10-24": "ok",
+        "2026-10-23": "fallo",
+        "2026-10-22": "fallo",
+        "2026-10-21": "fallo",
+        "2026-10-20": "fallo",
+        "2026-10-19": "fallo",
+        "2026-10-18": "fallo",
+        "2026-10-17": "fallo",
+        "2026-10-16": "fallo",
+        "2026-10-15": "fallo",
+        "2026-10-14": "fallo",
+        "2026-10-13": "fallo",
+        "2026-10-12": "fallo",
+        "2026-10-11": "fallo",
+        "2026-10-10": "fallo",
+        "2026-10-09": "fallo",
+        "2026-10-08": "fallo",
+        "2026-10-07": "fallo"
+      }
     },
     "cobros": {
       "tipo": "sin_workflow"

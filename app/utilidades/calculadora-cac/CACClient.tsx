@@ -182,16 +182,7 @@ export default function CalculadoraCAC() {
       />
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
         {/* Header */}
-      <header className="border-b border-white/10 backdrop-blur-xl bg-white/5">
-        <div className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
-            <Image src="/logo-blanco.png" alt="M&P Logo" width={120} height={32} className="h-8 w-auto" />
-          </Link>
-          <Link href="/utilidades" className="text-white font-semibold text-sm hover:text-emerald-300 transition-colors">
-            ← Volver
-          </Link>
-        </div>
-      </header>
+      
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-6 py-12">
@@ -387,11 +378,7 @@ export default function CalculadoraCAC() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-white/10 py-8 px-6 mt-12">
-        <div className="max-w-7xl mx-auto text-center text-purple-300 text-sm">
-          <p>© 2024 Muller y Pérez · Hecho con datos reales</p>
-        </div>
-      </footer>
+      
       </div>
     </>
   )

@@ -2441,29 +2441,7 @@ Generado en: https://www.mulleryperez.cl/labs/predictor
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-gray-200 bg-white">
-        <div className="max-w-5xl mx-auto px-6 py-8">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-gray-600">
-            <div className="flex items-center gap-2">
-              <Badge className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white">v2.1</Badge>
-              <span>Motor Consultivo M&P 2025</span>
-            </div>
-            <div className="flex items-center gap-4">
-              <a href="/labs" className="hover:text-indigo-600 transition-colors">
-                M&P Labs
-              </a>
-              <span className="text-gray-300">|</span>
-              <a href="/" className="hover:text-indigo-600 transition-colors">
-                Inicio
-              </a>
-              <span className="text-gray-300">|</span>
-              <a href="https://wa.me/56992258137" className="hover:text-indigo-600 transition-colors">
-                Contacto
-              </a>
-            </div>
-          </div>
-        </div>
-      </footer>
+      
     </div>
   )
 }

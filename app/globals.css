@@ -33,3 +33,59 @@
 /* CTA que los agentes insertaban dentro del artículo (div con gradiente): duplicaba el CTA "Conversemos"
    que ya trae la plantilla del blog. Se oculta en los posts existentes; los agentes ya no lo generan. */
 .prose [class*="bg-gradient"] { display: none; }
+
+/* ===== Home 3D / animaciones (nov 2026) ===== */
+.hero-aurora{position:absolute;inset:-20%;background:
+  radial-gradient(40% 35% at 20% 30%,rgba(59,130,246,.35),transparent 70%),
+  radial-gradient(35% 30% at 80% 20%,rgba(34,211,238,.25),transparent 70%),
+  radial-gradient(45% 40% at 60% 85%,rgba(139,92,246,.25),transparent 70%);
+  filter:blur(40px);animation:aurora 18s ease-in-out infinite alternate}
+@keyframes aurora{0%{transform:translate3d(0,0,0) rotate(0)}100%{transform:translate3d(-4%,3%,0) rotate(8deg)}}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(148,163,184,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(148,163,184,.08) 1px,transparent 1px);
+  background-size:56px 56px;mask-image:radial-gradient(ellipse 70% 60% at 50% 40%,#000 30%,transparent 75%);
+  transform:perspective(900px) rotateX(55deg) translateY(28%) scale(1.6);transform-origin:center bottom}
+.hero-spot{position:absolute;inset:0;pointer-events:none;background:radial-gradient(500px circle at var(--sx,50%) var(--sy,30%),rgba(56,189,248,.12),transparent 60%)}
+.text-shimmer{background:linear-gradient(90deg,#22d3ee,#60a5fa,#a78bfa,#22d3ee);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shimmer 6s linear infinite}
+@keyframes shimmer{to{background-position:300% 0}}
+.hero-title{animation:rise .9s cubic-bezier(.2,.7,.2,1) both}
+.hero-fade{animation:rise .9s cubic-bezier(.2,.7,.2,1) both;animation-delay:var(--d,0ms)}
+@keyframes rise{from{opacity:0;transform:translateY(18px);filter:blur(6px)}to{opacity:1;transform:none;filter:none}}
+.glass-card{background:rgba(255,255,255,.04);border:1px solid rgba(148,163,184,.15);backdrop-filter:blur(8px);transition:transform .25s ease,border-color .3s;position:relative;overflow:hidden}
+.glass-card:hover{border-color:rgba(34,211,238,.45)}
+.tilt-card{transition:transform .25s ease,box-shadow .3s,border-color .3s;transform-style:preserve-3d;will-change:transform;position:relative}
+.tilt-card::after,.glass-card::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .3s;
+  background:radial-gradient(300px circle at var(--mx,50%) var(--my,50%),rgba(96,165,250,.18),transparent 60%)}
+.tilt-card:hover::after,.glass-card:hover::after{opacity:1}
+.plan-glow{box-shadow:0 0 0 1px rgba(96,165,250,.4),0 25px 60px -15px rgba(37,99,235,.6)}
+.btn-glow{position:relative;isolation:isolate}
+.btn-glow::before{content:"";position:absolute;inset:-3px;border-radius:inherit;z-index:-1;background:conic-gradient(from var(--a,0deg),#22d3ee,#6366f1,#a78bfa,#22d3ee);filter:blur(10px);opacity:.7;animation:spin-a 4s linear infinite}
+@property --a{syntax:'<angle>';inherits:false;initial-value:0deg}
+@keyframes spin-a{to{--a:360deg}}
+.motion-ok .reveal{opacity:0;transform:translateY(28px) scale(.98);transition:opacity .8s cubic-bezier(.2,.7,.2,1) var(--d,0ms),transform .8s cubic-bezier(.2,.7,.2,1) var(--d,0ms)}
+.motion-ok .reveal.is-in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.hero-aurora,.text-shimmer,.hero-title,.hero-fade,.btn-glow::before{animation:none}}
+
+/* ===== Home v4 (rediseño nov 2026) ===== */
+.v2-grid{background-image:linear-gradient(rgba(148,163,184,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(148,163,184,.07) 1px,transparent 1px);background-size:64px 64px;mask-image:radial-gradient(ellipse 80% 60% at 50% 30%,#000 30%,transparent 80%)}
+.v2-shimmer{background:linear-gradient(90deg,#38bdf8,#818cf8,#c084fc);-webkit-background-clip:text;background-clip:text;color:transparent}
+
+.v2-glass{background:rgba(255,255,255,.06);border:1px solid rgba(147,197,253,.18)}
+@media (min-width:1024px){.v2-glass{backdrop-filter:blur(10px)}}
+.v2-tilt{transition:transform .35s cubic-bezier(.2,.7,.2,1),box-shadow .35s}
+.v2-tilt:hover{transform:translateY(-4px);box-shadow:0 25px 50px -20px rgba(96,165,250,.45)}
+.v2-btn{position:relative;isolation:isolate}
+.v2-btn{box-shadow:0 12px 40px -10px rgba(96,165,250,.6)}
+.v2-mask{mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent)}
+.spotlight{display:none}
+@keyframes spotlight{0%{opacity:0;transform:translate(-72%,-62%) scale(.5)}100%{opacity:1;transform:translate(-50%,-40%) scale(1)}}
+@media (prefers-reduced-motion:reduce){.v2-shimmer,.v2-h1,.v2-btn::before,.spotlight{animation:none}.spotlight{opacity:1}}
+/* Herramientas 3D (estático; solo reacciona al pasar el mouse) */
+.tool3d-card{transform:rotateX(8deg) rotateY(-6deg);transform-style:preserve-3d;transition:transform .45s cubic-bezier(.2,.7,.2,1),box-shadow .45s}
+.tool3d-screen{transform:translateZ(40px) rotateX(6deg);transition:transform .45s cubic-bezier(.2,.7,.2,1)}
+.tool3d-icon{transform:translateZ(60px)}
+.tool3d:hover .tool3d-card{transform:rotateX(0) rotateY(0) translateY(-6px);box-shadow:0 40px 80px -30px rgba(59,130,246,.55)}
+.tool3d:hover .tool3d-screen{transform:translateZ(60px) rotateX(0)}
+@media (max-width:1023px){.tool3d-card,.tool3d-screen,.tool3d-icon{transform:none}}
+
+/* Menú único: páginas que ya reservan espacio arriba (usaban el header fijo) no llevan espaciador */
+body:has([data-nav-overlay]) .site-nav-spacer { display: none; }

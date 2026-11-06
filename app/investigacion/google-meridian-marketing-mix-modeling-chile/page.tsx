@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { ArrowLeft, TrendingUp, BarChart2, Target, CheckCircle2, AlertCircle, Info, Layers, GitBranch, Zap } from 'lucide-react'
+import SiteHeader from '@/components/SiteHeader'
 
 export const metadata: Metadata = {
   title: 'Google Meridian en Chile: Marketing Mix Modeling',
@@ -221,16 +222,7 @@ export default function MeridianPage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       {/* Header */}
-      <header className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-xl border-b border-gray-100 z-50">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 py-5 flex items-center justify-between">
-          <Link href="/" aria-label="Ir a inicio">
-            <img src="/logo-color.png" alt="Muller y Pérez" className="h-11 w-auto" />
-          </Link>
-          <Link href="/investigacion" className="text-sm font-semibold text-gray-700 hover:text-blue-600 transition-all flex items-center gap-2">
-            <ArrowLeft className="w-4 h-4" /> Investigación
-          </Link>
-        </div>
-      </header>
+      <SiteHeader />
 
       <article className="pt-32 pb-24 px-6">
         <div className="max-w-4xl mx-auto">
@@ -607,17 +599,7 @@ export default function MeridianPage() {
       </article>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12 px-6">
-        <div className="max-w-4xl mx-auto text-center">
-          <Link href="/">
-            <img src="/logo-color.png" alt="Muller y Pérez" className="h-10 w-auto mx-auto mb-4 opacity-80" />
-          </Link>
-          <p className="text-gray-400 text-sm">
-            © 2026 Muller y Pérez — Marketing & Performance<br />
-            <Link href="/investigacion" className="text-blue-400 hover:text-blue-300">← Volver a Investigación</Link>
-          </p>
-        </div>
-      </footer>
+      
     </div>
   )
 }

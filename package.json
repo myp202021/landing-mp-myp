@@ -11,10 +11,13 @@
   "dependencies": {
     "@portabletext/react": "^4.0.3",
     "@sanity/client": "^6.24.1",
+    "@splinetool/react-spline": "^4.2.0",
+    "@splinetool/runtime": "^2.0.143",
     "@supabase/ssr": "0.8.0",
     "@supabase/supabase-js": "^2.76.1",
     "@vercel/speed-insights": "^1.2.0",
     "bcryptjs": "^3.0.3",
+    "cobe": "^2.0.1",
     "destack": "^3.0.8",
     "exceljs": "^4.4.0",
     "framer-motion": "^12.43.0",

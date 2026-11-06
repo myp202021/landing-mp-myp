@@ -213,22 +213,7 @@ export default function MPLabs() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-gray-200 py-8 px-6 bg-white">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-gray-500 text-sm">© 2025 Muller y Pérez · M&P Labs</p>
-          <div className="flex gap-6 text-sm">
-            <Link href="/utilidades" className="text-gray-500 hover:text-blue-600 transition-colors">
-              Utilidades
-            </Link>
-            <Link href="/blog" className="text-gray-500 hover:text-blue-600 transition-colors">
-              Blog
-            </Link>
-            <Link href="/" className="text-gray-500 hover:text-blue-600 transition-colors">
-              Inicio
-            </Link>
-          </div>
-        </div>
-      </footer>
+      
     </div>
   )
 }

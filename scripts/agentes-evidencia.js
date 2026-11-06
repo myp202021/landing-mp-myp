@@ -59,14 +59,24 @@ async function main() {
           runs = runs.concat(d.workflow_runs || []);
           if (!d.workflow_runs || d.workflow_runs.length < 100) break;
         }
-        var exitosas = runs.filter(function (r) { return r.conclusion === "success" });
+        var exitosas = runs.filter(function (r) {
+          return r.conclusion === "success";
+        });
         // Última exitosa = la más reciente por fecha (no confiar en el orden de la API)
-        var ultima = exitosas.map(function (r) { return r.updated_at }).sort().pop() || null;
+        var ultima =
+          exitosas
+            .map(function (r) {
+              return r.updated_at;
+            })
+            .sort()
+            .pop() || null;
         // Registro por día (hora de Chile): "ok" si hubo al menos una ejecución exitosa, "fallo" si solo fallas
         var dias = {};
         runs.forEach(function (r) {
           if (!r.conclusion) return;
-          var d = new Date(r.created_at).toLocaleDateString("sv-SE", { timeZone: "America/Santiago" });
+          var d = new Date(r.created_at).toLocaleDateString("sv-SE", {
+            timeZone: "America/Santiago",
+          });
           if (r.conclusion === "success") dias[d] = "ok";
           else if (!dias[d]) dias[d] = "fallo";
         });
@@ -90,6 +100,21 @@ async function main() {
       console.log(a.id + ": ERROR " + e.message);
       out.agentes[a.id] = { tipo: "error" };
     }
+  }
+  // Si falla la mayoría (p. ej. token vencido → 401), no pisar la evidencia anterior:
+  // la página /agentes-ia mostraría "0 agentes". Se corta con error para que el run quede en rojo.
+  var ids = Object.keys(out.agentes);
+  var errores = ids.filter(function (k) {
+    return out.agentes[k].tipo === "error";
+  }).length;
+  if (errores > ids.length / 2) {
+    throw new Error(
+      "Fallaron " +
+        errores +
+        " de " +
+        ids.length +
+        " agentes (¿GH_PAT vencido?). No se actualiza la evidencia.",
+    );
   }
   fs.writeFileSync(
     path.join(RAIZ, "agentes-evidencia.json"),

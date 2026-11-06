@@ -238,14 +238,7 @@ export default async function IndicadoresPage() {
       <div className="min-h-screen text-white" style={{ background: 'linear-gradient(160deg, #0a1628 0%, #0d1f5c 45%, #0a1628 100%)' }}>
 
         {/* Header */}
-        <header className="border-b border-white/10 backdrop-blur-xl sticky top-0 z-50" style={{ background: 'rgba(10,22,40,0.9)' }}>
-          <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-            <Link href="/"><img src="/logo-color.png" alt="Muller y Pérez" className="h-9 w-auto" /></Link>
-            <Link href="/" className="text-white/50 hover:text-white text-sm flex items-center gap-1 transition-colors">
-              <ArrowLeft className="w-4 h-4" /> Inicio
-            </Link>
-          </div>
-        </header>
+        
 
         <main className="max-w-6xl mx-auto px-6 py-14">
 
@@ -448,13 +441,7 @@ export default async function IndicadoresPage() {
           )}
         </main>
 
-        <footer className="border-t border-white/10 py-8 px-6 text-center mt-6">
-          <Link href="/"><img src="/logo-color.png" alt="Muller y Pérez" className="h-8 w-auto mx-auto mb-3 opacity-30" /></Link>
-          <p className="text-white/20 text-xs">
-            © {new Date().getFullYear()} Muller y Pérez — Marketing &amp; Performance · Santiago, Chile ·{' '}
-            <Link href="/" className="hover:text-white/40 transition-colors">mulleryperez.cl</Link>
-          </p>
-        </footer>
+        
       </div>
     </>
   )

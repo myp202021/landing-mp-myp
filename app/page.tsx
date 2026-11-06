@@ -1,16 +1,13 @@
 /**
- * M&P Landing Page v3 - Server Component with Metadata
- * Landing de alta conversión - Performance Marketing con datos reales
- * SEO Optimizado - Nivel Mundial
+ * Home M&P (rediseño nov 2026). Metadata centralizada en /lib/metadata.ts.
+ * La versión anterior queda en ./LandingClient.tsx para volver atrás si hace falta.
  */
 
 import { defaultMetadata } from '@/lib/metadata'
-import LandingClient from './LandingClient'
+import HomeV2 from './HomeV2'
 
-// Usa el metadata centralizado de /lib/metadata.ts
-// Incluye: 55+ keywords, og:image JPG, Schema.org completo
 export const metadata = { ...defaultMetadata, alternates: { canonical: '/' } }
 
 export default function LandingPage() {
-  return <LandingClient />
+  return <HomeV2 />
 }

@@ -7,6 +7,8 @@ import ThirdPartyScripts from "@/components/ThirdPartyScripts";
 import ResourceHints from "@/components/ResourceHints";
 import ChatBotWrapper from "@/components/ChatBot/ChatBotWrapper";
 import ExitIntentWrapper from "@/components/ExitIntentWrapper";
+import SiteNav from "@/components/site/SiteNav";
+import SiteFooter from "@/components/site/SiteFooter";
 import "./globals.css";
 
 export const metadata: Metadata = defaultMetadata;
@@ -81,8 +83,10 @@ export default function RootLayout({
         </Script>
       </head>
       <body>
+        <SiteNav />
         <Breadcrumbs />
         {children}
+        <SiteFooter />
         <ChatBotWrapper />
         <ExitIntentWrapper />
         <ThirdPartyScripts />

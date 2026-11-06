@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { CheckCircle2, XCircle, ArrowRight, Users, Target, BarChart3, Award } from 'lucide-react'
+import SiteHeader from '@/components/SiteHeader'
 
 export const metadata: Metadata = {
   title: 'Muller y Pérez vs otras agencias de marketing 2026',
@@ -51,16 +52,7 @@ export default function ComparativaPage() {
 
       <div className="min-h-screen bg-white">
         {/* Header */}
-        <header className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-xl border-b border-gray-100 z-50">
-          <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-            <Link href="/">
-              <img src="/logo-color.png" alt="Muller y Pérez" className="h-10 w-auto" />
-            </Link>
-            <Link href="/cotizador" className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg font-semibold text-sm transition-all">
-              Cotizar Ahora
-            </Link>
-          </div>
-        </header>
+        <SiteHeader />
 
         {/* Hero */}
         <section className="pt-28 pb-16 px-6 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-white">
@@ -290,13 +282,7 @@ export default function ComparativaPage() {
         </section>
 
         {/* Footer simple */}
-        <footer className="bg-slate-900 text-white py-8 px-6">
-          <div className="max-w-7xl mx-auto text-center">
-            <p className="text-blue-200 text-sm">
-              © {new Date().getFullYear()} Muller y Pérez. Agencia de Marketing Digital y Performance.
-            </p>
-          </div>
-        </footer>
+        
       </div>
     </>
   )

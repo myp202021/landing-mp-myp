@@ -1039,25 +1039,7 @@ export default function MarketingDigitalPymesChilePage() {
         </section>
 
         {/* Footer */}
-        <footer className="bg-gray-900 text-white py-12">
-          <div className="container mx-auto px-6 text-center">
-            <p className="text-gray-400 mb-4">
-              © 2025 Muller y Pérez - Marketing Digital para PYMEs Chile | Todos los derechos reservados
-            </p>
-            <div className="flex justify-center gap-6 text-sm text-gray-400 mb-6">
-              <Link href="/" className="hover:text-white transition">Inicio</Link>
-              <Link href="/#pricing" className="hover:text-white transition">Planes</Link>
-              <Link href="/#contact" className="hover:text-white transition">Contacto</Link>
-              <Link href="/agencia-marketing-digital-chile" className="hover:text-white transition">
-                Agencia Marketing Digital
-              </Link>
-            </div>
-            <p className="text-gray-500 text-sm">
-              Especialistas en marketing digital para pequeñas y medianas empresas en Chile.<br />
-              Presupuestos accesibles, sin contratos largos, resultados medibles.
-            </p>
-          </div>
-        </footer>
+        
       </div>
     </>
   )

@@ -1082,56 +1082,7 @@ export default function EmpresaMarketingDigitalChilePage() {
         </article>
 
         {/* Footer Corporativo */}
-        <footer className="bg-gray-900 text-white py-16">
-          <div className="container mx-auto px-6 max-w-6xl">
-            <div className="grid md:grid-cols-4 gap-8 mb-8">
-              <div>
-                <h3 className="text-xl font-bold mb-4">Muller y Pérez</h3>
-                <p className="text-gray-400 text-sm leading-relaxed">
-                  Empresa de marketing digital establecida en Chile desde 2020. Equipo profesional, infraestructura propia
-                  y resultados medibles.
-                </p>
-              </div>
-              <div>
-                <h4 className="font-semibold mb-4">Servicios</h4>
-                <ul className="space-y-2 text-sm text-gray-400">
-                  <li><Link href="/#services" className="hover:text-white transition">Google Ads</Link></li>
-                  <li><Link href="/#services" className="hover:text-white transition">Meta Ads</Link></li>
-                  <li><Link href="/#services" className="hover:text-white transition">LinkedIn Ads</Link></li>
-                  <li><Link href="/#services" className="hover:text-white transition">Analytics</Link></li>
-                </ul>
-              </div>
-              <div>
-                <h4 className="font-semibold mb-4">Empresa</h4>
-                <ul className="space-y-2 text-sm text-gray-400">
-                  <li><Link href="/#about" className="hover:text-white transition">Nosotros</Link></li>
-                  <li><Link href="/#pricing" className="hover:text-white transition">Planes</Link></li>
-                  <li><Link href="/#contact" className="hover:text-white transition">Contacto</Link></li>
-                  <li><Link href="/agencia-marketing-digital-chile" className="hover:text-white transition">Agencia</Link></li>
-                </ul>
-              </div>
-              <div>
-                <h4 className="font-semibold mb-4">Contacto</h4>
-                <ul className="space-y-2 text-sm text-gray-400">
-                  <li>Santiago, Chile</li>
-                  <li>Lunes a Viernes 9:00-18:00</li>
-                  <li><a href="/#contact" className="hover:text-white transition">Solicitar Reunión</a></li>
-                </ul>
-              </div>
-            </div>
-            <div className="border-t border-gray-800 pt-8 text-center">
-              <p className="text-gray-400 text-sm mb-4">
-                © 2025 Muller y Pérez - Empresa de Marketing Digital Chile | Todos los derechos reservados
-              </p>
-              <div className="flex justify-center gap-6 text-sm text-gray-400">
-                <Link href="/" className="hover:text-white transition">Inicio</Link>
-                <Link href="/#pricing" className="hover:text-white transition">Planes Corporativos</Link>
-                <Link href="/#contact" className="hover:text-white transition">Solicitar Propuesta</Link>
-                <Link href="/agencia-marketing-digital-chile" className="hover:text-white transition">Agencia</Link>
-              </div>
-            </div>
-          </div>
-        </footer>
+        
       </div>
     </>
   )

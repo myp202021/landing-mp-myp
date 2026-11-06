@@ -370,13 +370,7 @@ export default function NosotrosPage() {
         </section>
 
         {/* Footer */}
-        <footer className="bg-slate-900 text-white py-8 px-6">
-          <div className="max-w-7xl mx-auto text-center">
-            <p className="text-blue-200 text-sm">
-              © {new Date().getFullYear()} Muller y Pérez. Agencia de Marketing Digital y Performance.
-            </p>
-          </div>
-        </footer>
+        
       </div>
     </>
   )
