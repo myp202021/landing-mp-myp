@@ -17,6 +17,7 @@ export const metadata: Metadata = {
     canonical: 'https://www.mulleryperez.cl/comparativa/muller-perez-vs-agencias-chile'
   },
   openGraph: {
+    images: [{ url: 'https://www.mulleryperez.cl/og-image.jpg', width: 1200, height: 630, alt: 'Muller y Pérez' }],
     title: 'Muller y Pérez vs Otras Agencias de Marketing Digital Chile 2025',
     description: 'Comparativa objetiva: metodología, precios, resultados y enfoque de las principales agencias.',
     type: 'article',

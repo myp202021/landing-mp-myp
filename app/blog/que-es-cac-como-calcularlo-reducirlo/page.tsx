@@ -11,6 +11,7 @@ export const metadata: Metadata = {
     canonical: 'https://www.mulleryperez.cl/blog/que-es-cac-como-calcularlo-reducirlo'
   },
   openGraph: {
+    images: [{ url: 'https://www.mulleryperez.cl/og-image.jpg', width: 1200, height: 630, alt: 'Muller y Pérez' }],
     title: 'Qué es CAC: Cómo Calcularlo y Reducirlo en 2025 (Fórmulas + Ejemplos)',
     description: 'Guía completa con ejemplos reales y datos de Chile 2025.',
     type: 'article',

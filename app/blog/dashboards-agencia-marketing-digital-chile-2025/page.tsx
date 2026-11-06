@@ -11,6 +11,7 @@ export const metadata: Metadata = {
     canonical: 'https://www.mulleryperez.cl/blog/dashboards-agencia-marketing-digital-chile-2025'
   },
   openGraph: {
+    images: [{ url: 'https://www.mulleryperez.cl/og-image.jpg', width: 1200, height: 630, alt: 'Muller y Pérez' }],
     title: 'Dashboards de Marketing en Chile 2026: Cómo una Agencia de Marketing Digital Convierte Datos en Decisiones',
     description: 'Descubre cómo una agencia de marketing digital en Chile 2026 diseña dashboards con KPIs financieros para transformar datos en decisiones estratégicas.',
     type: 'article',

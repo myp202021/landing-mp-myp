@@ -191,9 +191,9 @@ export default function PortfolioGrid() {
             <p className="text-sm font-bold text-blue-400 uppercase tracking-widest mb-3">
               Portfolio
             </p>
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+            <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">
               Portfolio de marketing digital y diseño en Chile
-            </h2>
+            </h1>
             <p className="text-lg text-blue-200/70 max-w-2xl mx-auto mb-4">
               Diseño de campañas, anuncios y contenido para más de 20 industrias. Cada pieza está pensada para convertir, no solo para verse bien.
             </p>

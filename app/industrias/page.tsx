@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   description: 'Estrategias de marketing digital por industria en Chile: e-commerce, B2B, SaaS, inmobiliario, salud y educación, con benchmarks por sector.',
   keywords: 'marketing digital por industria chile, marketing especializado, marketing ecommerce, marketing b2b, marketing saas, marketing inmobiliario, marketing salud, marketing educacion',
   openGraph: {
+    images: [{ url: 'https://www.mulleryperez.cl/og-image.jpg', width: 1200, height: 630, alt: 'Muller y Pérez' }],
     title: 'Marketing Digital por Industria | M&P',
     description: 'Soluciones de marketing especializadas para cada sector. Conocemos los benchmarks y mejores prácticas de tu industria.',
     url: 'https://www.mulleryperez.cl/industrias',

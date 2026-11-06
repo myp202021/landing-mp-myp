@@ -11,6 +11,7 @@ export const metadata: Metadata = {
     canonical: 'https://www.mulleryperez.cl/blog/marketing-construccion-industria-agencia-marketing-digital-chile-2025'
   },
   openGraph: {
+    images: [{ url: 'https://www.mulleryperez.cl/og-image.jpg', width: 1200, height: 630, alt: 'Muller y Pérez' }],
     title: 'Marketing en Construcción e Industria en Chile 2026: Cómo una Agencia de Marketing Digital Genera Leads B2B de Alto Valor',
     description: 'Descubre cómo una agencia de marketing digital en Chile 2026 genera leads B2B de alto valor en construcción e industria con estrategias multicanal y reportería ROI.',
     type: 'article',

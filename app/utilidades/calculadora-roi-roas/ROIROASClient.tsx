@@ -147,9 +147,9 @@ export default function CalculadoraROIROAS() {
             <Calculator className="w-4 h-4 text-emerald-400" />
             <span className="text-emerald-200 text-sm font-semibold">Herramienta Gratuita</span>
           </div>
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
             ¿Cuánto estás ganando<br />realmente con tus campañas?
-          </h2>
+          </h1>
           <p className="text-xl text-purple-100 max-w-2xl mx-auto">
             Calcula tu ROI y ROAS en segundos y descubre si tus campañas son rentables
           </p>

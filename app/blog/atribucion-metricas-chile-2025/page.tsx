@@ -11,6 +11,7 @@ export const metadata: Metadata = {
     canonical: 'https://www.mulleryperez.cl/blog/atribucion-metricas-chile-2025'
   },
   openGraph: {
+    images: [{ url: 'https://www.mulleryperez.cl/og-image.jpg', width: 1200, height: 630, alt: 'Muller y Pérez' }],
     title: 'Atribución y Métricas en Chile 2026: del CAC y LTV al Payback con Dashboards en Tiempo Real',
     description: 'Aprende cómo medir CAC, LTV y Payback en Chile 2026 con dashboards en tiempo real y modelos de atribución data-driven. Casos reales y benchmarks locales.',
     type: 'article',

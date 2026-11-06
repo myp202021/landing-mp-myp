@@ -11,6 +11,7 @@ export const metadata: Metadata = {
     canonical: 'https://www.mulleryperez.cl/blog/tendencias-busqueda-marketing-digital-chile-2025'
   },
   openGraph: {
+    images: [{ url: 'https://www.mulleryperez.cl/og-image.jpg', width: 1200, height: 630, alt: 'Muller y Pérez' }],
     title: 'Tendencias de Búsqueda en Marketing Digital en Chile 2026: Agencias vs. Equipos Internos',
     description: 'Descubre cómo en Chile 2026 crecen las búsquedas sobre agencias, equipos internos e híbridos en marketing digital, y cuál modelo conviene más.',
     type: 'article',

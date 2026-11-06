@@ -11,6 +11,7 @@ export const metadata: Metadata = {
     canonical: 'https://www.mulleryperez.cl/blog/kpis-marketing-digital-chile'
   },
   openGraph: {
+    images: [{ url: 'https://www.mulleryperez.cl/og-image.jpg', width: 1200, height: 630, alt: 'Muller y Pérez' }],
     title: 'KPIs de Marketing Digital que SÍ Importan en 2025 (No Vanity Metrics)',
     description: 'CAC, LTV, ROAS, CPL, CPA: métricas reales de negocio. Benchmarks Chile 2025 por industria + plantilla Google Sheets gratis.',
     type: 'article',

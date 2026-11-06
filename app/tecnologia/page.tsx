@@ -17,6 +17,7 @@ export const metadata: Metadata = {
     canonical: 'https://www.mulleryperez.cl/tecnologia',
   },
   openGraph: {
+    images: [{ url: 'https://www.mulleryperez.cl/og-image.jpg', width: 1200, height: 630, alt: 'Muller y Pérez' }],
     title: 'Tecnología Propia para Marketing Digital | Muller y Pérez',
     description:
       'CRM propio, agentes de IA, predictor de campañas, monitor de competencia. Desarrollo propio que conecta marketing con ventas reales.',

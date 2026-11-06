@@ -11,6 +11,7 @@ export const metadata: Metadata = {
     canonical: 'https://www.mulleryperez.cl/blog/marketing-sin-cookies-chile-2025'
   },
   openGraph: {
+    images: [{ url: 'https://www.mulleryperez.cl/og-image.jpg', width: 1200, height: 630, alt: 'Muller y Pérez' }],
     title: 'Marketing sin Cookies Chile 2026: Guía para el Mundo Cookieless',
     description: 'Prepara tu estrategia de marketing digital para un mundo sin cookies de terceros.',
     type: 'article',

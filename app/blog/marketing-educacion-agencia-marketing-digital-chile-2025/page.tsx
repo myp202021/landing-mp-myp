@@ -11,6 +11,7 @@ export const metadata: Metadata = {
     canonical: 'https://www.mulleryperez.cl/blog/marketing-educacion-agencia-marketing-digital-chile-2025'
   },
   openGraph: {
+    images: [{ url: 'https://www.mulleryperez.cl/og-image.jpg', width: 1200, height: 630, alt: 'Muller y Pérez' }],
     title: 'Marketing en Educación en Chile 2026: Cómo una Agencia de Marketing Digital Atrae Alumnos y Optimiza CAC',
     description: 'Descubre cómo una agencia de marketing digital en Chile 2026 atrae alumnos para colegios, universidades y e-learning con estrategias multicanal y reportería CAC.',
     type: 'article',

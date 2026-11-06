@@ -11,6 +11,7 @@ export const metadata: Metadata = {
     canonical: 'https://www.mulleryperez.cl/blog/marketing-de-datos-no-es-un-juego'
   },
   openGraph: {
+    images: [{ url: 'https://www.mulleryperez.cl/og-image.jpg', width: 1200, height: 630, alt: 'Muller y Pérez' }],
     title: 'Marketing de Datos: No es un Juego, es Ingeniería',
     description: 'El marketing de datos no es azar: requiere ingeniería, modelos de decisión y métricas claras para lograr resultados sostenibles en Chile.',
     type: 'article',

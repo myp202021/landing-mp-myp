@@ -11,6 +11,7 @@ export const metadata: Metadata = {
     canonical: 'https://www.mulleryperez.cl/blog/tiktok-ads-vs-instagram-reels-chile-2025'
   },
   openGraph: {
+    images: [{ url: 'https://www.mulleryperez.cl/og-image.jpg', width: 1200, height: 630, alt: 'Muller y Pérez' }],
     title: 'TikTok Ads vs Instagram Reels Chile 2026: ¿Cuál Elegir?',
     description: 'Comparativa completa entre TikTok Ads e Instagram Reels para el mercado chileno.',
     type: 'article',

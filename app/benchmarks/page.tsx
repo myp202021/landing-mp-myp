@@ -10,6 +10,7 @@ export const metadata: Metadata = {
     canonical: 'https://www.mulleryperez.cl/benchmarks'
   },
   openGraph: {
+    images: [{ url: 'https://www.mulleryperez.cl/og-image.jpg', width: 1200, height: 630, alt: 'Muller y Pérez' }],
     title: 'Benchmarks Marketing Digital Chile 2026',
     description: 'CPC, CPL, CPA, ROAS por industria. Datos reales +200 campañas. PDF gratis.',
     type: 'website',

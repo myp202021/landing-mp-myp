@@ -11,6 +11,7 @@ export const metadata: Metadata = {
     canonical: 'https://www.mulleryperez.cl/blog/publicidad-digital-chile-2025-costos-industria-region'
   },
   openGraph: {
+    images: [{ url: 'https://www.mulleryperez.cl/og-image.jpg', width: 1200, height: 630, alt: 'Muller y Pérez' }],
     title: 'Publicidad Digital en Chile 2026: Costos Reales por Industria y Región (Google & Meta)',
     description: 'Descubre los costos reales de la publicidad digital en Chile 2026. Benchmarks de Google y Meta Ads por industria y región, con ejemplos locales y proyecciones.',
     type: 'article',

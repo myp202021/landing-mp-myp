@@ -17,6 +17,7 @@ export const metadata: Metadata = {
     canonical: 'https://www.mulleryperez.cl/nosotros'
   },
   openGraph: {
+    images: [{ url: 'https://www.mulleryperez.cl/og-image.jpg', width: 1200, height: 630, alt: 'Muller y Pérez' }],
     title: 'Quiénes Somos | Muller y Pérez',
     description: 'Conoce al equipo de Muller y Pérez. Agencia de performance marketing en Chile con más de 6 años y 50+ clientes activos.',
     type: 'website',

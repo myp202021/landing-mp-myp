@@ -11,6 +11,7 @@ export const metadata: Metadata = {
     canonical: 'https://www.mulleryperez.cl/blog/linkedin-ads-b2b-chile-2025'
   },
   openGraph: {
+    images: [{ url: 'https://www.mulleryperez.cl/og-image.jpg', width: 1200, height: 630, alt: 'Muller y Pérez' }],
     title: 'LinkedIn Ads para B2B de Alto Ticket en Chile: Segmentaciones, Costos y Playbooks',
     description: 'Aprende a usar LinkedIn Ads en Chile 2026 para negocios B2B de alto ticket. Segmentaciones, costos reales y playbooks de campañas exitosas.',
     type: 'article',

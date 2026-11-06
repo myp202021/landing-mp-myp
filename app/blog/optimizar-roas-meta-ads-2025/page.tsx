@@ -11,6 +11,7 @@ export const metadata: Metadata = {
     canonical: 'https://www.mulleryperez.cl/blog/optimizar-roas-meta-ads-2025'
   },
   openGraph: {
+    images: [{ url: 'https://www.mulleryperez.cl/og-image.jpg', width: 1200, height: 630, alt: 'Muller y Pérez' }],
     title: 'Cómo Optimizar ROAS en Meta Ads 2026: 7 Estrategias Probadas',
     description: 'Aumenta tu ROAS en Meta Ads con 7 estrategias validadas. Casos reales: ROAS 6.8x en e-commerce, 4.2x en B2B Chile 2026.',
     type: 'article',

@@ -229,7 +229,7 @@ function ReelCard({ src, client, onOpen }: { src: string; client: string; onOpen
           src={`/brochure/${src}`}
           poster={posterFor(src)}
           className="w-full h-full object-cover"
-          muted loop playsInline
+          muted loop playsInline preload="none"
           onMouseEnter={(e) => e.currentTarget.play().catch(() => {})}
           onMouseLeave={(e) => { e.currentTarget.pause(); e.currentTarget.currentTime = 0 }}
         />
@@ -265,7 +265,7 @@ function FeaturedReelCard({ reel, onOpen }: { reel: typeof featuredReels[0]; onO
           src={`/brochure/${reel.src}`}
           poster={posterFor(reel.src)}
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-          muted loop playsInline
+          muted loop playsInline preload="none"
           onMouseEnter={(e) => e.currentTarget.play().catch(() => {})}
           onMouseLeave={(e) => { e.currentTarget.pause(); e.currentTarget.currentTime = 0 }}
         />

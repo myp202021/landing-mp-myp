@@ -192,9 +192,9 @@ export default function CalculadoraCAC() {
             <Calculator className="w-4 h-4 text-emerald-400" />
             <span className="text-emerald-200 text-sm font-semibold">Herramienta Gratuita</span>
           </div>
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
             ¿Estás aprovechando bien<br />tu inversión en campañas?
-          </h2>
+          </h1>
           <p className="text-xl text-purple-100 max-w-2xl mx-auto">
             Descubre en segundos si tus campañas digitales están rindiendo lo que deberían
           </p>

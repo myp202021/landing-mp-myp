@@ -11,6 +11,7 @@ export const metadata: Metadata = {
     canonical: 'https://www.mulleryperez.cl/blog/whatsapp-business-ia-chile-2025'
   },
   openGraph: {
+    images: [{ url: 'https://www.mulleryperez.cl/og-image.jpg', width: 1200, height: 630, alt: 'Muller y Pérez' }],
     title: 'WhatsApp Business + IA en Chile 2026: Cómo Reducir el CAC con Flujos de Lead Scoring y Nurturing Automatizado',
     description: 'Aprende cómo usar WhatsApp Business + IA en Chile 2026 para reducir CAC con flujos de lead scoring y nurturing automatizado. Casos y playbook.',
     type: 'article',

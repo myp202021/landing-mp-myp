@@ -11,6 +11,7 @@ export const metadata: Metadata = {
     canonical: 'https://www.mulleryperez.cl/blog/correlaciones-inesperadas-marketing-digital'
   },
   openGraph: {
+    images: [{ url: 'https://www.mulleryperez.cl/og-image.jpg', width: 1200, height: 630, alt: 'Muller y Pérez' }],
     title: '15 Correlaciones Inesperadas en Marketing Digital que Desafían la Intuición',
     description: 'Descubre 15 correlaciones inesperadas en marketing digital que contradicen la intuición y pueden transformar tu CAC, ROI y resultados.',
     type: 'article',

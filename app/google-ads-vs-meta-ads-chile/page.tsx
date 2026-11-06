@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   description: 'Comparativa detallada entre Google Ads y Meta Ads para empresas en Chile. Cuál elegir según tu industria, presupuesto y objetivos. CPL, ROAS y casos de uso reales.',
   keywords: 'google ads vs meta ads, google ads o facebook ads, cual es mejor google o facebook ads, comparacion google ads meta ads chile, publicidad google vs facebook',
   openGraph: {
+    images: [{ url: 'https://www.mulleryperez.cl/og-image.jpg', width: 1200, height: 630, alt: 'Muller y Pérez' }],
     title: 'Google Ads vs Meta Ads en Chile 2025-2026 | Comparativa Completa',
     description: 'Guía definitiva para elegir entre Google Ads y Meta Ads según tu negocio en Chile.',
     url: 'https://www.mulleryperez.cl/google-ads-vs-meta-ads-chile',

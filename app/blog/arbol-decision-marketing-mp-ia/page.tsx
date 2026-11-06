@@ -11,6 +11,7 @@ export const metadata: Metadata = {
     canonical: 'https://www.mulleryperez.cl/blog/arbol-decision-marketing-mp-ia'
   },
   openGraph: {
+    images: [{ url: 'https://www.mulleryperez.cl/og-image.jpg', width: 1200, height: 630, alt: 'Muller y Pérez' }],
     title: 'El Árbol de Decisión de Marketing de M&P: Implementación Práctica con IA (Paso a Paso)',
     description: 'Descubre cómo funciona el Árbol de Decisión de M&P para marketing digital en Chile 2025. Variables, pasos de implementación e integración con IA.',
     type: 'article',

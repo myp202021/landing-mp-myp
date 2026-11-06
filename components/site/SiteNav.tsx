@@ -32,10 +32,10 @@ export default function SiteNav() {
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/logo-blanco.png"
+              src="/logo-blanco-144.png"
               alt="Muller y Pérez"
-              width={120}
-              height={40}
+              width={36}
+              height={36}
               className="h-9 w-auto"
             />
           </Link>

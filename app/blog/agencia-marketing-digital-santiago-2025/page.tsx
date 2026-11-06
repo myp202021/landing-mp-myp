@@ -16,6 +16,7 @@ export const metadata: Metadata = {
     canonical: 'https://www.mulleryperez.cl/blog/agencia-marketing-digital-santiago-2025'
   },
   openGraph: {
+    images: [{ url: 'https://www.mulleryperez.cl/og-image.jpg', width: 1200, height: 630, alt: 'Muller y Pérez' }],
     title: 'Agencia Marketing Digital Santiago 2026: Guía Completa',
     description: 'Guía completa para contratar agencia marketing digital en Santiago 2026. Comparativa de servicios, precios ($950k-$2M), métricas reales (ROI +380%) y checklist de selección.',
     type: 'article',

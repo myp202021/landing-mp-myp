@@ -11,6 +11,7 @@ export const metadata: Metadata = {
     canonical: 'https://www.mulleryperez.cl/blog/google-performance-max-agencia-marketing-digital-chile-2025'
   },
   openGraph: {
+    images: [{ url: 'https://www.mulleryperez.cl/og-image.jpg', width: 1200, height: 630, alt: 'Muller y Pérez' }],
     title: 'Google Performance Max en Chile 2026: Cómo una Agencia de Marketing Digital Convierte Automatización en Resultados',
     description: 'Descubre cómo una agencia de marketing digital en Chile 2026 usa Google Performance Max para automatización inteligente y resultados medibles. Costos y estrategias.',
     type: 'article',

@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   keywords: 'monitoreo competencia redes sociales chile, clipping digital chile, social media monitoring chile, brand monitoring chile, herramientas monitoreo redes sociales, radar competencia instagram',
   alternates: { canonical: 'https://www.mulleryperez.cl/blog/monitoreo-competencia-redes-sociales-chile' },
   openGraph: {
+    images: [{ url: 'https://www.mulleryperez.cl/og-image.jpg', width: 1200, height: 630, alt: 'Muller y Pérez' }],
     title: 'Monitoreo de Competencia en Redes Sociales Chile 2026',
     description: 'Guia completa: cuanto cuesta, que herramientas usar, y como elegir la mejor opcion para tu empresa.',
     url: 'https://www.mulleryperez.cl/blog/monitoreo-competencia-redes-sociales-chile',

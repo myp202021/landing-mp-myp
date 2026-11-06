@@ -11,6 +11,7 @@ export const metadata: Metadata = {
     canonical: 'https://www.mulleryperez.cl/blog/inbound-marketing-agencia-marketing-digital-chile-2025'
   },
   openGraph: {
+    images: [{ url: 'https://www.mulleryperez.cl/og-image.jpg', width: 1200, height: 630, alt: 'Muller y Pérez' }],
     title: 'Inbound Marketing en Chile 2026: Cómo una Agencia de Marketing Digital Convierte Contenido en Clientes',
     description: 'Descubre cómo una agencia de marketing digital en Chile 2026 convierte contenido en clientes con estrategias de Inbound Marketing. Casos y costos reales.',
     type: 'article',

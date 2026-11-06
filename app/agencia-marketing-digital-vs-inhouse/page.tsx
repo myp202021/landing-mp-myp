@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   description: 'Comparativa entre contratar una agencia de marketing digital o un equipo interno en Chile. Costos reales, ventajas, desventajas y cuándo elegir cada opción.',
   keywords: 'agencia marketing digital vs inhouse, contratar agencia o equipo interno, equipo marketing interno vs externo, agencia vs freelance, outsourcing marketing digital',
   openGraph: {
+    images: [{ url: 'https://www.mulleryperez.cl/og-image.jpg', width: 1200, height: 630, alt: 'Muller y Pérez' }],
     title: 'Agencia vs In-House: ¿Qué conviene más en Chile?',
     description: 'Análisis de costos y beneficios para elegir entre agencia externa o equipo interno de marketing.',
     url: 'https://www.mulleryperez.cl/agencia-marketing-digital-vs-inhouse',

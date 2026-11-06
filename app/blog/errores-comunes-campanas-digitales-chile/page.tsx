@@ -11,6 +11,7 @@ export const metadata: Metadata = {
     canonical: 'https://www.mulleryperez.cl/blog/errores-comunes-campanas-digitales-chile'
   },
   openGraph: {
+    images: [{ url: 'https://www.mulleryperez.cl/og-image.jpg', width: 1200, height: 630, alt: 'Muller y Pérez' }],
     title: '10 Errores Comunes en Campañas Digitales en Chile (y Cómo Evitarlos)',
     description: 'Los 10 errores más comunes que cometen empresas chilenas en Google Ads y Meta Ads, y cómo evitarlos. Datos reales, ejemplos y soluciones prácticas.',
     type: 'article',

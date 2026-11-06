@@ -230,9 +230,9 @@ export default function RadarIndustrias() {
             <BarChart3 className="w-4 h-4 text-blue-600" />
             <span className="text-blue-700 text-sm font-semibold">Chile 2024</span>
           </div>
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
             Radar de Madurez Digital<br />por Industria
-          </h2>
+          </h1>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
             Análisis de 10 sectores clave evaluando efectividad en Google Ads, competencia, ROAS, plataformas digitales, IA, velocidad web y Google My Business
           </p>

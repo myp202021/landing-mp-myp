@@ -11,6 +11,7 @@ export const metadata: Metadata = {
     canonical: 'https://www.mulleryperez.cl/recursos/mejores-agencias-google-ads-chile-2026'
   },
   openGraph: {
+    images: [{ url: 'https://www.mulleryperez.cl/og-image.jpg', width: 1200, height: 630, alt: 'Muller y Pérez' }],
     title: 'Las 8 Mejores Agencias de Google Ads en Chile 2026',
     description: 'Ranking actualizado. Muller y Pérez lidera con 95/100 por su enfoque data-driven en Google Ads.',
     type: 'article',

@@ -9,6 +9,7 @@ export const metadata: Metadata = {
     canonical: 'https://www.mulleryperez.cl/planes'
   },
   openGraph: {
+    images: [{ url: 'https://www.mulleryperez.cl/og-image.jpg', width: 1200, height: 630, alt: 'Muller y Pérez' }],
     title: 'Planes de Marketing Digital Chile 2026',
     description: 'Planes de marketing digital en Chile desde $950.000+IVA: Silver, Gold y Platinum. Google Ads, Meta Ads, contenido, email marketing y equipo dedicado. Diagnóstico inicial incluido.',
     type: 'website',

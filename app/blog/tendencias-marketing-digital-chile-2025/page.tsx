@@ -11,6 +11,7 @@ export const metadata: Metadata = {
     canonical: 'https://www.mulleryperez.cl/blog/tendencias-marketing-digital-chile-2025'
   },
   openGraph: {
+    images: [{ url: 'https://www.mulleryperez.cl/og-image.jpg', width: 1200, height: 630, alt: 'Muller y Pérez' }],
     title: 'Tendencias del Marketing Digital en Chile 2026: Paid Media, IA y Performance',
     description: 'Conoce las principales tendencias del marketing digital en Chile 2026: paid media, inteligencia artificial, personalización y métricas de performance.',
     type: 'article',

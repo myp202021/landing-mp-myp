@@ -11,6 +11,7 @@ export const metadata: Metadata = {
     canonical: 'https://www.mulleryperez.cl/blog/como-aumentar-conversiones-google-ads'
   },
   openGraph: {
+    images: [{ url: 'https://www.mulleryperez.cl/og-image.jpg', width: 1200, height: 630, alt: 'Muller y Pérez' }],
     title: 'Cómo Aumentar Conversiones en Google Ads en 30 Días (Guía 2025-2026)',
     description: 'Estrategias probadas para aumentar conversiones: Quality Score, pujas, extensiones y landing pages.',
     type: 'article',

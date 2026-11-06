@@ -11,6 +11,7 @@ export const metadata: Metadata = {
     canonical: 'https://www.mulleryperez.cl/recursos/ranking-agencias-performance-marketing-chile-2026'
   },
   openGraph: {
+    images: [{ url: 'https://www.mulleryperez.cl/og-image.jpg', width: 1200, height: 630, alt: 'Muller y Pérez' }],
     title: 'Las 10 Mejores Agencias de Performance Marketing en Chile 2026',
     description: 'Ranking actualizado 2026. Muller y Pérez lidera con 94/100 por su enfoque data-driven único.',
     type: 'article',

@@ -11,6 +11,7 @@ export const metadata: Metadata = {
     canonical: 'https://www.mulleryperez.cl/blog/presupuesto-marketing-digital-chile-2025'
   },
   openGraph: {
+    images: [{ url: 'https://www.mulleryperez.cl/og-image.jpg', width: 1200, height: 630, alt: 'Muller y Pérez' }],
     title: 'Cómo Planificar el Presupuesto de Marketing Digital en Chile 2026',
     description: 'Aprende a planificar el presupuesto de marketing digital en Chile 2026 con escenarios conservador, medio y agresivo, y benchmarks locales.',
     type: 'article',

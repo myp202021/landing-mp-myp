@@ -106,9 +106,9 @@ export default function ComparadorWeb() {
             <Gauge className="w-4 h-4 text-blue-400" />
             <span className="text-blue-200 text-sm font-semibold">Análisis en Tiempo Real</span>
           </div>
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
             Compara la velocidad de tu sitio<br />contra la competencia
-          </h2>
+          </h1>
           <p className="text-xl text-purple-100 max-w-2xl mx-auto">
             Usa Google PageSpeed Insights para comparar métricas Core Web Vitals
           </p>

@@ -11,6 +11,7 @@ export const metadata: Metadata = {
     canonical: 'https://www.mulleryperez.cl/blog/marketing-saas-agencia-marketing-digital-chile-2025'
   },
   openGraph: {
+    images: [{ url: 'https://www.mulleryperez.cl/og-image.jpg', width: 1200, height: 630, alt: 'Muller y Pérez' }],
     title: 'Marketing para SaaS en Chile 2026: Cómo una Agencia de Marketing Digital Escala Suscripciones con Performance',
     description: 'Descubre cómo una agencia de marketing digital en Chile 2026 escala suscripciones SaaS con estrategias de performance, nurturing y reportería financiera.',
     type: 'article',

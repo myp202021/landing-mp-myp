@@ -11,6 +11,7 @@ export const metadata: Metadata = {
     canonical: 'https://www.mulleryperez.cl/blog/marketing-turismo-hotel-agencia-marketing-digital-chile-2025'
   },
   openGraph: {
+    images: [{ url: 'https://www.mulleryperez.cl/og-image.jpg', width: 1200, height: 630, alt: 'Muller y Pérez' }],
     title: 'Marketing en Turismo y Hotelería en Chile 2026: Cómo una Agencia de Marketing Digital Llena Habitaciones y Tours',
     description: 'Descubre cómo una agencia de marketing digital en Chile 2026 llena habitaciones y tours con estrategias multicanal, reservas directas y reportería ROI.',
     type: 'article',

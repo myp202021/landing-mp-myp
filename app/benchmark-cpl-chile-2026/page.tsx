@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   description: 'Estudio completo de CPL (Costo por Lead), CAC, ROAS y tasas de conversión en Chile 2026. Datos reales de +200 campañas activas en Google Ads y Meta Ads por industria.',
   keywords: 'benchmark cpl chile, costo por lead chile, cpl por industria, benchmark google ads chile, benchmark meta ads chile, cac chile 2026, roas promedio chile',
   openGraph: {
+    images: [{ url: 'https://www.mulleryperez.cl/og-image.jpg', width: 1200, height: 630, alt: 'Muller y Pérez' }],
     title: 'Benchmark CPL Chile 2026 | Estudio Muller y Pérez',
     description: 'CPL, CAC y ROAS por industria en Chile. Datos de +200 campañas reales.',
     url: 'https://www.mulleryperez.cl/benchmark-cpl-chile-2026',

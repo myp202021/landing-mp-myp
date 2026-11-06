@@ -276,9 +276,9 @@ export default function GeneradorFunnels() {
             <Workflow className="w-4 h-4 text-purple-400" />
             <span className="text-purple-200 text-sm font-semibold">Configurador Inteligente</span>
           </div>
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
             Crea tu funnel de ventas<br />perfecto para CRM
-          </h2>
+          </h1>
           <p className="text-xl text-purple-100 max-w-2xl mx-auto">
             Responde 4 preguntas y obtén un funnel personalizado con todas las etapas y campos necesarios
           </p>

@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   description: 'Recursos gratuitos de marketing digital para Chile: rankings de agencias, guías de precios, comparativas de plataformas y estadísticas del mercado.',
   keywords: 'recursos marketing digital chile, guias marketing digital, ranking agencias chile, precios agencias marketing, comparativas google ads meta ads, estadisticas marketing chile',
   openGraph: {
+    images: [{ url: 'https://www.mulleryperez.cl/og-image.jpg', width: 1200, height: 630, alt: 'Muller y Pérez' }],
     title: 'Recursos de Marketing Digital Chile | M&P',
     description: 'Guías, rankings, comparativas y estadísticas del marketing digital en Chile.',
     url: 'https://www.mulleryperez.cl/recursos',

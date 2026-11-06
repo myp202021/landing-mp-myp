@@ -7,15 +7,6 @@
 export default function ResourceHints() {
   return (
     <>
-      {/* Preload critical logo image */}
-      <link
-        rel="preload"
-        href="/logo-color.png"
-        as="image"
-        type="image/png"
-        fetchPriority="high"
-      />
-
       {/* Preconnect to critical origins with crossorigin */}
       <link rel="preconnect" href="https://www.googletagmanager.com" crossOrigin="anonymous" />
       <link rel="preconnect" href="https://www.google-analytics.com" crossOrigin="anonymous" />

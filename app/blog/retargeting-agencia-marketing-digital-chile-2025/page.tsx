@@ -11,6 +11,7 @@ export const metadata: Metadata = {
     canonical: 'https://www.mulleryperez.cl/blog/retargeting-agencia-marketing-digital-chile-2025'
   },
   openGraph: {
+    images: [{ url: 'https://www.mulleryperez.cl/og-image.jpg', width: 1200, height: 630, alt: 'Muller y Pérez' }],
     title: 'Estrategias de Retargeting en Chile 2026: Cómo una Agencia de Marketing Digital Maximiza Conversiones',
     description: 'Descubre cómo una agencia de marketing digital en Chile 2026 usa estrategias de retargeting para maximizar conversiones. Casos, costos y checklist práctico.',
     type: 'article',

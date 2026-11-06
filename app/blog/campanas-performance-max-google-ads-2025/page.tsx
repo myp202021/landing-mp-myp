@@ -11,6 +11,7 @@ export const metadata: Metadata = {
     canonical: 'https://www.mulleryperez.cl/blog/campanas-performance-max-google-ads-2025'
   },
   openGraph: {
+    images: [{ url: 'https://www.mulleryperez.cl/og-image.jpg', width: 1200, height: 630, alt: 'Muller y Pérez' }],
     title: 'Campañas Performance Max: Guía Completa Chile 2026',
     description: 'Guía completa de Performance Max: configuración, estrategias y casos reales Chile.',
     type: 'article',

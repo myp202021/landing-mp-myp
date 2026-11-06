@@ -10,6 +10,7 @@ export const metadata: Metadata = {
     canonical: 'https://www.mulleryperez.cl/investigacion'
   },
   openGraph: {
+    images: [{ url: 'https://www.mulleryperez.cl/og-image.jpg', width: 1200, height: 630, alt: 'Muller y Pérez' }],
     title: 'Investigación y Estudios — Muller y Pérez',
     description: 'Estudios originales de performance marketing en Chile basados en +200 campañas reales.',
     url: 'https://www.mulleryperez.cl/investigacion',

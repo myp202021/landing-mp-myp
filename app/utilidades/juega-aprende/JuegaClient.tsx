@@ -525,9 +525,9 @@ export default function JuegaAprende() {
             <Gamepad2 className="w-4 h-4 text-indigo-400" />
             <span className="text-indigo-200 text-sm font-semibold">Juego Educativo</span>
           </div>
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
             Crea tu estrategia digital<br />con $1.000.000
-          </h2>
+          </h1>
           <p className="text-xl text-purple-100 max-w-2xl mx-auto">
             Explora estrategias de marketing digital, selecciona las que más te interesen y descubre qué combinación genera mejores resultados
           </p>

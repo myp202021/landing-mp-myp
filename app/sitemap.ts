@@ -39,6 +39,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // Slugs de blog que tienen redirect en next.config.js — NO incluir en sitemap
   const redirectedBlogSlugs = new Set([
+    // Canonical apunta a la versión 2026: no listar la 2025 (auditoría 6 nov 2026)
+    'cuanto-invertir-publicidad-digital-chile-2025',
+    'google-ads-vs-seo-chile-2025',
+    'guia-marketing-digital-pymes-chile-2025',
     'tiktok-ads-agencia-marketing-digital-chile-2025-2',
     'cuanto-cuesta-agencia-marketing-digital-chile-2025',
     'estudio-performance-marketing-chile-2026',
@@ -559,13 +563,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'monthly',
       priority: 0.9,
     },
-    // Páginas de Conversión
-    {
-      url: `${baseUrl}/cotizador`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly',
-      priority: 0.95,
-    },
+    // /cotizador es herramienta interna (noindex): fuera del sitemap
     {
       url: `${baseUrl}/benchmarks`,
       lastModified: currentDate,

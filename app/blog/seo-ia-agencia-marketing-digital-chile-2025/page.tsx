@@ -11,6 +11,7 @@ export const metadata: Metadata = {
     canonical: 'https://www.mulleryperez.cl/blog/seo-ia-agencia-marketing-digital-chile-2025'
   },
   openGraph: {
+    images: [{ url: 'https://www.mulleryperez.cl/og-image.jpg', width: 1200, height: 630, alt: 'Muller y Pérez' }],
     title: 'SEO + IA en Chile 2026: Cómo una Agencia de Marketing Digital Logra Posicionar en Google y en Plataformas de Inteligencia Artificial',
     description: 'Descubre cómo una agencia de marketing digital en Chile 2026 logra posicionar en Google y en plataformas de inteligencia artificial con SEO técnico y de contenidos.',
     type: 'article',

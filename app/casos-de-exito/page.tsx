@@ -17,6 +17,7 @@ export const metadata: Metadata = {
     canonical: 'https://www.mulleryperez.cl/casos-de-exito',
   },
   openGraph: {
+    images: [{ url: 'https://www.mulleryperez.cl/og-image.jpg', width: 1200, height: 630, alt: 'Muller y Pérez' }],
     title: 'Casos de Éxito Marketing Digital Chile 2026 | Muller y Pérez',
     description:
       'Resultados reales de clientes de Muller y Pérez. 5 casos de éxito: CPL -65%, CPA -95%, SEO #1, dashboards en tiempo real y automatización IA.',

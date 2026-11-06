@@ -11,6 +11,7 @@ export const metadata: Metadata = {
     canonical: 'https://www.mulleryperez.cl/blog/google-ads-vs-meta-ads-cual-elegir-chile-2025'
   },
   openGraph: {
+    images: [{ url: 'https://www.mulleryperez.cl/og-image.jpg', width: 1200, height: 630, alt: 'Muller y Pérez' }],
     title: 'Google Ads vs Meta Ads: Cuál Elegir en Chile 2026 (Comparativa Completa)',
     description: 'Comparativa completa Google Ads vs Meta Ads en Chile 2026. CPL, ROAS, industrias ideales y cuándo usar cada plataforma. Datos reales de +200 campañas.',
     type: 'article',

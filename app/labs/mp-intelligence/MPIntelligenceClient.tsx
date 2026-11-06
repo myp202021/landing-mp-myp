@@ -407,12 +407,12 @@ export default function MPIntelligenceClient() {
               <Database className="w-4 h-4 text-emerald-400" />
               <span className="text-emerald-200 text-sm font-semibold">🌐 Red Colaborativa · 100% Anónimo</span>
             </div>
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 leading-tight">
+            <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 leading-tight">
               La primera red colaborativa de<br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">
                 benchmarks de marketing en Chile
               </span>
-            </h2>
+            </h1>
             <p className="text-xl text-purple-100 max-w-3xl mx-auto mb-4 leading-relaxed">
               <strong>¿Estás invirtiendo bien en publicidad?</strong> Descúbrelo comparando tus métricas con las de tu industria.<br />
               Comparte tus datos anónimamente y accede a benchmarks reales que nadie más publica.
