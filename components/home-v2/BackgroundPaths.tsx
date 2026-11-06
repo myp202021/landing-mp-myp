@@ -10,17 +10,17 @@ function Paths({ position }: { position: number }) {
     w: 0.5 + i * 0.03,
   }))
   return (
-    <svg className="h-full w-full text-blue-500" viewBox="0 0 696 316" fill="none" aria-hidden="true">
+    <svg className="h-full w-full text-cyan-300" viewBox="0 0 696 316" fill="none" aria-hidden="true">
       {paths.map((p) => (
         <motion.path
           key={p.id}
           d={p.d}
           stroke="currentColor"
           strokeWidth={p.w}
-          strokeOpacity={0.04 + p.id * 0.012}
+          strokeOpacity={0.08 + p.id * 0.025}
           initial={{ pathLength: 0.3, opacity: 0.6 }}
           animate={{ pathLength: 1, opacity: [0.3, 0.6, 0.3], pathOffset: [0, 1, 0] }}
-          transition={{ duration: 40 + (p.id % 10), repeat: Infinity, ease: 'linear' }}
+          transition={{ duration: 20 + (p.id % 10), repeat: Infinity, ease: 'linear' }}
         />
       ))}
     </svg>
