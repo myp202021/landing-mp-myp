@@ -86,3 +86,6 @@
 .tool3d:hover .tool3d-card{transform:rotateX(0) rotateY(0) translateY(-6px);box-shadow:0 40px 80px -30px rgba(59,130,246,.55)}
 .tool3d:hover .tool3d-screen{transform:translateZ(60px) rotateX(0)}
 @media (max-width:1023px){.tool3d-card,.tool3d-screen,.tool3d-icon{transform:none}}
+
+/* Menú único: páginas que ya reservan espacio arriba (usaban el header fijo) no llevan espaciador */
+body:has([data-nav-overlay]) .site-nav-spacer { display: none; }

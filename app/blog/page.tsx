@@ -604,17 +604,7 @@ export default async function BlogPage() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-gray-200 py-12 px-6">
-        <div className="max-w-7xl mx-auto text-center text-gray-600">
-          <p className="mb-4">© 2026 Muller y Pérez - Agencia de Marketing Digital y Performance</p>
-          <div className="flex justify-center gap-6">
-            <Link href="/" className="hover:text-blue-600 transition-colors">Inicio</Link>
-            <Link href="/labs" className="hover:text-blue-600 transition-colors">M&P Labs</Link>
-            <Link href="/utilidades" className="hover:text-blue-600 transition-colors">Utilidades</Link>
-            <Link href="/mejores-agencias-marketing-digital-chile" className="hover:text-blue-600 transition-colors">Mejores agencias de marketing digital en Chile</Link>
-          </div>
-        </div>
-      </footer>
+      
     </div>
   )
 }

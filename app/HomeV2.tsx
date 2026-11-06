@@ -41,7 +41,7 @@ import {
 } from "@/lib/home-schemas";
 import Spotlight from "@/components/home-v2/Spotlight";
 import CountUp from "@/components/home/CountUp";
-import HomeFooter from "@/components/home-v2/HomeFooter";
+import SiteHeader from '@/components/SiteHeader'
 import Testimonios from "@/components/home-v2/Testimonios";
 import DesktopOnly from "@/components/home-v2/DesktopOnly";
 import SmartRobot from "@/components/home-v2/SmartRobot";
@@ -421,84 +421,8 @@ const HERRAMIENTAS = [
   { href: '/labs/simulador-inversion', t: 'Simulador de inversión', d: 'Evalúa si tu negocio está listo para invertir en marketing digital. Anti-humo.', tag: 'Score M&P' },
 ]
 
-const MENU_MAS = [
-  ['Servicios', [['/servicios', 'Todos los servicios'], ['/servicios/performance-marketing', 'Performance marketing'], ['/servicios/google-ads-chile', 'Google Ads'], ['/servicios/meta-ads-chile', 'Meta Ads'], ['/servicios/seo-chile', 'SEO']]],
-  ['M&P Labs', [['/labs', 'Todas las herramientas'], ['/labs/predictor', 'Predictor'], ['/labs/buyer-gen', 'Buyer Gen'], ['/labs/radar-industrias', 'Radar de industrias'], ['/tecnologia', 'Tecnología']]],
-  ['Utilidades', [['/utilidades', 'Todas'], ['/utilidades/calculadora-cac', 'Calculadora CAC'], ['/utilidades/comparador-web', 'Comparador web'], ['/utilidades/generador-funnels', 'Generador de funnels'], ['/utilidades/juega-aprende', 'Juega y aprende']]],
-  ['Recursos', [['/benchmarks', 'Benchmarks'], ['/indicadores', 'Indicadores'], ['/investigacion', 'Investigación'], ['/mejores-agencias-marketing-digital-chile', 'Mejores agencias de Chile'], ['/mejores-agencias-performance-marketing-chile', 'Mejores agencias performance'], ['/brochure', 'Brochure']]],
-  ['Nosotros', [['/nosotros', 'Quiénes somos'], ['/equipo', 'Equipo'], ['/casos-de-exito', 'Casos de éxito'], ['/copilot/login', 'Acceso Copilot'], ['/crm/login', 'Acceso clientes CRM']]],
-] as const
 
 /* ---------------- Componentes de sección ---------------- */
-
-function Nav() {
-  return (
-    <header className="fixed inset-x-0 top-4 z-50 px-4">
-      <nav
-        aria-label="Navegación principal"
-        className="mx-auto flex max-w-6xl items-center justify-between rounded-2xl border border-white/10 bg-[#081030]/70 px-4 py-2.5 backdrop-blur-xl"
-      >
-        <Link
-          href="/"
-          className="flex items-center gap-2"
-          aria-label="Muller y Pérez, inicio"
-        >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/logo-blanco.png"
-            alt="Muller y Pérez"
-            className="h-8 w-auto"
-            onError={(e) => {
-              (e.target as HTMLImageElement).style.display = "none";
-            }}
-          />
-          <span className="font-bold tracking-tight text-white">M&amp;P</span>
-        </Link>
-        <div className="hidden items-center gap-6 text-sm text-slate-300 md:flex">
-          <a href="#areas" className="hover:text-white">
-            Cómo trabajamos
-          </a>
-          <Link href="/agentes-ia" className="hover:text-white">
-            Agentes IA
-          </Link>
-          <Link href="/copilot" className="hover:text-white">
-            Boost SEO + IA
-          </Link>
-          <a href="#planes" className="hover:text-white">
-            Planes
-          </a>
-          <a href="#casos" className="hover:text-white">
-            Casos
-          </a>
-          <Link href="/blog" className="hover:text-white">
-            Blog
-          </Link>
-          <div className="group relative">
-            <button type="button" className="hover:text-white">Más ▾</button>
-            <div className="invisible absolute right-0 top-full z-50 mt-3 grid w-[760px] grid-cols-5 gap-4 rounded-2xl border border-white/10 bg-[#0b1640] p-5 opacity-0 shadow-2xl backdrop-blur-xl transition group-hover:visible group-hover:opacity-100">
-              {MENU_MAS.map(([titulo, links]) => (
-                <div key={titulo}>
-                  <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-cyan-300">{titulo}</p>
-                  <ul className="space-y-1.5">
-                    {links.map(([href, t]) => (
-                      <li key={href}><Link href={href} className="text-xs text-slate-400 hover:text-white">{t}</Link></li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-        <a
-          href="#contacto"
-          className="rounded-xl bg-white px-4 py-2 text-sm font-semibold text-slate-900 hover:bg-cyan-100"
-        >
-          Agendar reunión
-        </a>
-      </nav>
-    </header>
-  );
-}
 
 function Hero() {
   return (
@@ -1639,7 +1563,7 @@ export default function HomeV2() {
           />
         ),
       )}
-      <Nav />
+      <SiteHeader />
       <main>
         <Hero />
         <Logos />
@@ -1661,7 +1585,6 @@ export default function HomeV2() {
         <Faq />
         <Contacto />
       </main>
-      <HomeFooter />
     </div>
   );
 }

@@ -96,19 +96,7 @@ export default function EbookMarketingDatos2025() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
       {/* Header */}
-      <header className="bg-white/80 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <Link href="/" className="flex items-center gap-3">
-            <Image
-              src="/logo-myp.png"
-              alt="Muller y Pérez"
-              width={150}
-              height={40}
-              className="h-10 w-auto"
-            />
-          </Link>
-        </div>
-      </header>
+      
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -280,13 +268,7 @@ export default function EbookMarketingDatos2025() {
       </div>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-8 mt-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-gray-400">
-            © 2025 Muller y Pérez. Agencia de Marketing Digital en Chile.
-          </p>
-        </div>
-      </footer>
+      
     </div>
   );
 }

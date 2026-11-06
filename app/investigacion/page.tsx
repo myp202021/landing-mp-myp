@@ -66,12 +66,7 @@ export default function InvestigacionPage() {
         </div>
       </main>
 
-      <footer className="bg-gray-900 text-white py-10 px-6 text-center">
-        <Link href="/">
-          <img src="/logo-color.png" alt="Muller y Pérez" className="h-9 w-auto mx-auto mb-3 opacity-80" />
-        </Link>
-        <p className="text-gray-400 text-sm">© 2026 Muller y Pérez — Marketing & Performance</p>
-      </footer>
+      
     </div>
   )
 }

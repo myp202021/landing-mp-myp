@@ -184,11 +184,7 @@ export default function ChristopherMullerPage() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-gray-100 py-8 px-6 text-center text-sm text-gray-400">
-        <Link href="/" className="hover:text-blue-600 transition-all">mulleryperez.cl</Link>
-        {' · '}
-        <Link href="/blog" className="hover:text-blue-600 transition-all">Blog</Link>
-      </footer>
+      
     </div>
   )
 }

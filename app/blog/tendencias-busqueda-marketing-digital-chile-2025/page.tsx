@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { ArrowLeft, TrendingUp, Building2, Users, Target, CheckCircle } from 'lucide-react'
+import SiteHeader from '@/components/SiteHeader'
 
 export const metadata: Metadata = {
   title: 'Tendencias de Búsqueda en Marketing Digital en Chile 2026: Agencias vs. Equipos Internos',
@@ -70,14 +71,7 @@ export default function ArticlePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
       />
 
-      <header className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-xl border-b border-gray-100 z-50">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 py-5 flex items-center justify-between">
-          <Link href="/"><img src="/logo-color.png" alt="Muller y Pérez" className="h-11 w-auto" /></Link>
-          <Link href="/blog" className="text-sm font-semibold text-gray-700 hover:text-blue-600 transition-all flex items-center gap-2">
-            <ArrowLeft className="w-4 h-4" /> Blog
-          </Link>
-        </div>
-      </header>
+      <SiteHeader />
 
       <article className="pt-32 pb-24 px-6">
         <div className="max-w-4xl mx-auto">
@@ -285,12 +279,7 @@ export default function ArticlePage() {
         </div>
       </article>
 
-      <footer className="bg-gray-900 text-white py-12 px-6">
-        <div className="max-w-7xl mx-auto text-center">
-          <Link href="/"><img src="/logo-blanco.png" alt="Muller y Pérez" className="h-10 w-auto mx-auto mb-6" /></Link>
-          <p className="text-gray-400">© 2026 Muller y Pérez. Marketing Digital Basado en Datos.</p>
-        </div>
-      </footer>
+      
     </div>
   )
 }

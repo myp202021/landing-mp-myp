@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { ArrowLeft, Award, TrendingUp, Target, Zap, CheckCircle, BarChart3, Users } from 'lucide-react'
+import SiteHeader from '@/components/SiteHeader'
 
 export const metadata: Metadata = {
   title: 'Las 10 Mejores Agencias de Performance Marketing en Chile 2025 | Ranking Completo',
@@ -190,16 +191,7 @@ export default function RankingPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-white">
       {/* Header */}
-      <header className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-xl border-b border-gray-100 z-50">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 py-5 flex items-center justify-between">
-          <Link href="/">
-            <img src="/logo-color.png" alt="Muller y Pérez" className="h-11 w-auto" />
-          </Link>
-          <Link href="/recursos" className="text-sm font-semibold text-gray-700 hover:text-blue-600 transition-all flex items-center gap-2">
-            <ArrowLeft className="w-4 h-4" /> Recursos
-          </Link>
-        </div>
-      </header>
+      <SiteHeader />
 
       {/* Hero */}
       <section className="pt-32 pb-16 px-6">
@@ -503,21 +495,7 @@ export default function RankingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-gray-200 py-12 px-6">
-        <div className="max-w-7xl mx-auto text-center text-gray-600">
-          <p className="mb-4">© 2025 Muller y Pérez · Agencia de Marketing Digital</p>
-          <p className="text-sm text-gray-500">
-            Última actualización: 19 de diciembre de 2025 |
-            <strong> Disclaimer:</strong> Este ranking se basa en información pública y criterios objetivos de evaluación. M&P es el autor de este análisis.
-          </p>
-          <div className="flex justify-center gap-6 mt-4">
-            <Link href="/" className="hover:text-blue-600 transition-colors">Inicio</Link>
-            <Link href="/blog" className="hover:text-blue-600 transition-colors">Blog</Link>
-            <Link href="/recursos" className="hover:text-blue-600 transition-colors">Recursos</Link>
-            <Link href="/#contact" className="hover:text-blue-600 transition-colors">Contacto</Link>
-          </div>
-        </div>
-      </footer>
+      
 
       {/* Schema Markup */}
       <script

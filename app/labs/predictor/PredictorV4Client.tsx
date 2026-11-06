@@ -203,15 +203,7 @@ export default function PredictorV4Client() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/20">
       {/* Header */}
-      <header className="bg-white/80 backdrop-blur-xl border-b border-gray-200/60 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between">
-          <a href="/" className="flex items-center gap-3"><img src="/logo-color.png" alt="M&P" className="h-7" /></a>
-          <div className="flex items-center gap-4">
-            <span className="text-xs font-semibold text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full">Predictor</span>
-            <a href="/labs" className="text-sm text-gray-500 hover:text-indigo-600 transition">Labs</a>
-          </div>
-        </div>
-      </header>
+      
 
       <main className="max-w-7xl mx-auto px-6 py-8">
         {/* Hero */}
@@ -526,12 +518,7 @@ export default function PredictorV4Client() {
         </div>
       </main>
 
-      <footer className="border-t border-gray-100 bg-white/50 mt-12">
-        <div className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between text-xs text-gray-400">
-          <span>Predictor M&P · Benchmarks 2026 · M&P Labs</span>
-          <a href="/labs" className="hover:text-indigo-600 transition">Labs</a>
-        </div>
-      </footer>
+      
     </div>
   )
 }

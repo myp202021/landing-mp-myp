@@ -365,9 +365,7 @@ export default function AgentesClient() {
         </a>
       </div>
 
-      <footer style={{ textAlign: 'center', padding: 32, fontSize: 13, color: 'rgba(255,255,255,0.2)', borderTop: '1px solid rgba(255,255,255,0.05)', background: '#07061A' }}>
-        <strong style={{ color: 'rgba(255,255,255,0.4)' }}>Muller y Pérez · Performance Marketing</strong> · contacto@mulleryperez.cl
-      </footer>
+      
     </>
   )
 }

@@ -851,18 +851,7 @@ export default function AgenciaPublicidadDigitalChilePage() {
         </article>
 
         {/* Footer simple */}
-        <footer className="bg-gray-900 text-white py-12">
-          <div className="container mx-auto px-6 text-center">
-            <p className="text-gray-400 mb-4">
-              © 2025 Muller y Pérez - Agencia de Publicidad Digital Chile | Todos los derechos reservados
-            </p>
-            <div className="flex justify-center gap-6 text-sm text-gray-400">
-              <Link href="/" className="hover:text-white transition">Inicio</Link>
-              <Link href="/#pricing" className="hover:text-white transition">Planes</Link>
-              <Link href="/#contact" className="hover:text-white transition">Contacto</Link>
-            </div>
-          </div>
-        </footer>
+        
       </div>
     </>
   )

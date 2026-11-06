@@ -131,20 +131,7 @@ export default function RadarSemanalPage() {
     <div className="min-h-screen bg-gray-950 text-white">
 
       {/* Header */}
-      <header className="border-b border-gray-800 bg-gray-950/95 backdrop-blur-xl sticky top-0 z-50">
-        <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Link href="/">
-              <img src="/logo-color.png" alt="Muller y Pérez" className="h-9 w-auto" />
-            </Link>
-            <span className="text-gray-600">|</span>
-            <span className="text-sm font-bold text-blue-400">Radar Semanal</span>
-          </div>
-          <Link href="/labs" className="text-gray-400 hover:text-white text-sm flex items-center gap-1 transition-colors">
-            <ArrowLeft className="w-4 h-4" /> M&P Labs
-          </Link>
-        </div>
-      </header>
+      
 
       <main className="max-w-6xl mx-auto px-6 py-12">
 
@@ -309,12 +296,7 @@ export default function RadarSemanalPage() {
 
       </main>
 
-      <footer className="border-t border-gray-800 py-8 px-6 text-center mt-12">
-        <Link href="/">
-          <img src="/logo-color.png" alt="Muller y Pérez" className="h-8 w-auto mx-auto mb-3 opacity-60" />
-        </Link>
-        <p className="text-gray-600 text-sm">© 2026 Muller y Pérez — Marketing & Performance</p>
-      </footer>
+      
     </div>
   )
 }

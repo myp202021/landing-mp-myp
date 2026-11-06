@@ -114,13 +114,7 @@ export default function AgenciaPerformanceMarketingLasCondes() {
       />
 
       {/* Header */}
-      <header className="bg-white/80 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-50">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <Link href="/" className="text-blue-600 hover:text-blue-700 font-medium">
-            ← Volver a Muller y Pérez
-          </Link>
-        </div>
-      </header>
+      
 
       {/* Hero */}
       <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -629,18 +623,7 @@ export default function AgenciaPerformanceMarketingLasCondes() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-white/80 backdrop-blur-sm border-t border-gray-200 mt-12 py-8">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-gray-600">
-          <p className="mb-2">© 2025 Muller y Pérez - Performance Marketing Especializado</p>
-          <p className="text-sm">
-            <Link href="/" className="text-blue-600 hover:text-blue-700">Inicio</Link>
-            {' • '}
-            <Link href="/blog" className="text-blue-600 hover:text-blue-700">Blog</Link>
-            {' • '}
-            <Link href="/labs" className="text-blue-600 hover:text-blue-700">M&P Labs</Link>
-          </p>
-        </div>
-      </footer>
+      
     </div>
   )
 }

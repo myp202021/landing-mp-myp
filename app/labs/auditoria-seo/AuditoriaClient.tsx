@@ -272,16 +272,7 @@ export default function AuditoriaClient() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
       {/* Header */}
-      <header className="bg-white border-b border-gray-200">
-        <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-          <Link href="/labs" className="text-sm text-gray-600 hover:text-blue-600">
-            ← Volver a Labs
-          </Link>
-          <Link href="/" className="text-sm font-medium text-blue-600">
-            mulleryperez.cl
-          </Link>
-        </div>
-      </header>
+      
 
       {/* Hero */}
       <section className="py-16 px-4">
@@ -566,7 +557,7 @@ export default function AuditoriaClient() {
       )}
 
       {/* Footer */}
-      <footer className="border-t border-gray-200 py-8">
+      <div className="border-t border-gray-200 py-8">
         <div className="max-w-6xl mx-auto px-4 text-center text-gray-600 text-sm">
           <p>
             Herramienta gratuita de{' '}
@@ -580,7 +571,7 @@ export default function AuditoriaClient() {
             .
           </p>
         </div>
-      </footer>
+      </div>
     </div>
   )
 }

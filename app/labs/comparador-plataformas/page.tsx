@@ -24,6 +24,7 @@ import {
   Check,
   Minus
 } from 'lucide-react'
+import SiteHeader from '@/components/SiteHeader'
 
 const PLATAFORMAS_POR_INDUSTRIA: Record<string, {
   google: { cpc: number, ctr: number, cvr: number, score: number, pros: string[], contras: string[] },
@@ -204,16 +205,7 @@ export default function ComparadorPlataformas() {
   return (
     <div className="min-h-screen bg-white">
       {/* Header */}
-      <header className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-xl border-b border-gray-100 z-50">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 py-5 flex items-center justify-between">
-          <Link href="/" className="hover:opacity-80 transition-opacity">
-            <Image src="/logo-color.png" alt="Muller y Pérez" width={140} height={45} className="h-11 w-auto" priority />
-          </Link>
-          <Link href="/labs" className="text-sm font-semibold text-gray-600 hover:text-blue-600 transition-colors">
-            ← Volver a Labs
-          </Link>
-        </div>
-      </header>
+      <SiteHeader />
 
       {/* Hero */}
       <section className="pt-32 pb-12 px-6 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-white">
@@ -406,15 +398,7 @@ export default function ComparadorPlataformas() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-gray-200 py-8 px-6 bg-white">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-gray-500 text-sm">© 2025 Muller y Pérez · M&P Labs</p>
-          <div className="flex gap-6 text-sm">
-            <Link href="/labs" className="text-gray-500 hover:text-blue-600 transition-colors">Labs</Link>
-            <Link href="/" className="text-gray-500 hover:text-blue-600 transition-colors">Inicio</Link>
-          </div>
-        </div>
-      </footer>
+      
 
       {/* Lead Modal */}
       {showLeadModal && (

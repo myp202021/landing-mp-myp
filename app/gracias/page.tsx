@@ -29,19 +29,7 @@ export default function GraciasPage() {
 
     <main className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
       {/* Header simple */}
-      <header className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-6 py-4">
-          <Link href="/">
-            <Image
-              src="/logo-color.png"
-              alt="Muller y Pérez"
-              width={140}
-              height={45}
-              className="h-10 w-auto"
-            />
-          </Link>
-        </div>
-      </header>
+      
 
       {/* Contenido principal */}
       <div className="max-w-3xl mx-auto px-6 py-20">
@@ -184,13 +172,7 @@ export default function GraciasPage() {
       </div>
 
       {/* Footer simple */}
-      <footer className="bg-slate-900 text-white py-8 px-6 mt-auto">
-        <div className="max-w-7xl mx-auto text-center">
-          <p className="text-blue-200 text-sm">
-            © {new Date().getFullYear()} Muller y Pérez. Agencia de Marketing Digital y Performance.
-          </p>
-        </div>
-      </footer>
+      
     </main>
     </>
   )

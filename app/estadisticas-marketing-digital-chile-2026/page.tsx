@@ -330,14 +330,7 @@ export default function EstadisticasMarketingChilePage() {
           </section>
         </article>
 
-        <footer className="bg-gray-900 text-white py-12">
-          <div className="container mx-auto px-6 text-center">
-            <p className="text-gray-400 mb-2">© 2026 Muller y Pérez | Estadísticas Marketing Digital Chile</p>
-            <p className="text-gray-500 text-sm">
-              Datos compilados de IAB Chile, plataformas publicitarias y campañas propias.
-            </p>
-          </div>
-        </footer>
+        
       </div>
     </>
   )
