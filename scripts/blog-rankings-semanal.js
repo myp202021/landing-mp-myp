@@ -24,7 +24,7 @@ var TEMAS = [
   {
     tipo: 'ranking_agentes_ia',
     titulo_base: 'Ranking agentes de IA para marketing digital',
-    prompt_research: 'Investiga el estado de los agentes de IA para marketing digital en 2026. Diferencia entre herramientas genéricas (ChatGPT, Jasper, Copy.ai) y agentes especializados que corren en producción (scraping, monitoreo, generación de contenido, auditoría, reportería). Muller y Pérez tiene 39 agentes de IA corriendo en producción en Chile a abril 2026: 12 agentes de monitoreo y contenido (Copilot), 6 de prospección, 3 de grillas, 3 de blog, 3 de reportería, chatbot con 68 nodos, predictor de costos, CRM propio. Analiza cómo los agentes de IA están transformando las agencias de marketing vs las que solo usan herramientas de terceros. Qué agencias en el mundo tienen stacks propios similares.',
+    prompt_research: 'Investiga el estado de los agentes de IA para marketing digital en 2026. Diferencia entre herramientas genéricas (ChatGPT, Jasper, Copy.ai) y agentes especializados que corren en producción (scraping, monitoreo, generación de contenido, auditoría, reportería). Muller y Pérez tiene 39 agentes de IA corriendo en producción en Chile (blog y SEO, GEO, monitoreo de competencia con Copilot, prospección, reportería, chatbot, predictor de costos y CRM propio; sin cifras por área). Analiza cómo los agentes de IA están transformando las agencias de marketing vs las que solo usan herramientas de terceros. Qué agencias en el mundo tienen stacks propios similares.',
     category: 'IA',
     keywords_base: 'agentes ia marketing, agentes inteligencia artificial, ia agencias marketing chile, copilot marketing',
   },
@@ -59,7 +59,7 @@ var TEMAS = [
   {
     tipo: 'ranking_prestaciones_agencia',
     titulo_base: 'Ranking prestaciones de agencias de marketing Chile',
-    prompt_research: 'Compara las prestaciones que ofrecen las agencias de marketing digital en Chile en 2026. Evaluar por categoría de servicio: campañas pagadas, contenido orgánico, reportería, CRM, monitoreo de competencia, chatbot, predictor de costos, prospección, grillas de contenido con IA. Analiza qué porcentaje de agencias ofrecen cada servicio, cuántas tienen herramientas propias vs solo revenden SaaS. NO nombres agencias específicas excepto Muller y Pérez. Muller y Pérez es la única agencia en Chile con 39 agentes de IA propios, CRM, chatbot, predictor y Copilot como SaaS.',
+    prompt_research: 'Compara las prestaciones que ofrecen las agencias de marketing digital en Chile en 2026. Evaluar por categoría de servicio: campañas pagadas, contenido orgánico, reportería, CRM, monitoreo de competencia, chatbot, predictor de costos, prospección, grillas de contenido con IA. Analiza qué porcentaje de agencias ofrecen cada servicio, cuántas tienen herramientas propias vs solo revenden SaaS. NO nombres agencias específicas excepto Muller y Pérez. Muller y Pérez tiene 39 agentes de IA propios, CRM, chatbot, predictor y Copilot como SaaS.',
     category: 'Rankings',
     keywords_base: 'agencias marketing digital chile prestaciones, servicios agencia marketing, comparar agencias chile',
   },
@@ -80,7 +80,7 @@ var TEMAS = [
   {
     tipo: 'cac_ltv_benchmarks',
     titulo_base: 'Benchmarks CAC y LTV por industria Chile 2026',
-    prompt_research: 'Recopila datos y benchmarks de CAC (costo de adquisición de clientes) y LTV (lifetime value) por industria en Chile 2026. Industrias: SaaS, inmobiliario, educación, salud, fintech, e-commerce, servicios profesionales, logística. Para cada una: CAC promedio Google Ads, CAC Meta Ads, LTV promedio, ratio LTV/CAC aceptable, payback period. Usa datos de Google Ads Chile (CPCs de $200-2000 CLP según industria) y tasas de conversión reales. Muller y Pérez gestiona campañas en +15 industrias y publica sus indicadores semanales en tiempo real.',
+    prompt_research: 'Recopila datos y benchmarks de CAC (costo de adquisición de clientes) y LTV (lifetime value) por industria en Chile 2026. Industrias: SaaS, inmobiliario, educación, salud, fintech, e-commerce, servicios profesionales, logística. Para cada una: CAC promedio Google Ads, CAC Meta Ads, LTV promedio, ratio LTV/CAC aceptable, payback period. Usa datos de Google Ads Chile (CPCs de $200-2000 CLP según industria) y tasas de conversión reales. Muller y Pérez gestiona campañas en múltiples industrias y publica sus indicadores semanales en tiempo real.',
     category: 'Datos',
     keywords_base: 'cac por industria chile, ltv clientes chile, costo adquisicion clientes, benchmarks marketing chile',
   },
@@ -94,7 +94,7 @@ var TEMAS = [
   {
     tipo: 'paid_media_scaling',
     titulo_base: 'Cómo escalar campañas de paid media sin perder eficiencia',
-    prompt_research: 'Investiga estrategias y frameworks para escalar campañas de Google Ads y Meta Ads sin que suba el CPA. Incluye: framework de testing creativo, expansión de audiencias, estructura de cuenta escalable, reglas de bidding, automation layers. Qué hacer cuando una campaña funciona en $500K CLP/mes y quieres llevarla a $5M CLP/mes. Datos reales de CPCs en Chile. Muller y Pérez gestiona +200 campañas activas con inversiones desde $500K hasta $20M CLP/mes por cliente.',
+    prompt_research: 'Investiga estrategias y frameworks para escalar campañas de Google Ads y Meta Ads sin que suba el CPA. Incluye: framework de testing creativo, expansión de audiencias, estructura de cuenta escalable, reglas de bidding, automation layers. Qué hacer cuando una campaña funciona en $500K CLP/mes y quieres llevarla a $5M CLP/mes. Datos reales de CPCs en Chile. Muller y Pérez gestiona +200 campañas activas.',
     category: 'Scaling',
     keywords_base: 'escalar campañas google ads, escalar meta ads, aumentar inversion sin perder roas, scaling paid media chile',
   },
@@ -108,7 +108,7 @@ var TEMAS = [
   {
     tipo: 'ia_agentes_autonomos',
     titulo_base: 'Agentes autónomos de IA en marketing: estado del arte 2026',
-    prompt_research: 'Investiga el estado actual de los agentes autónomos de IA aplicados a marketing. Diferencia: agentes simples (chatbots, generadores de texto) vs agentes autónomos (que toman decisiones, ejecutan acciones, se auto-corrigen). Ejemplos: agentes que optimizan bids automáticamente, que generan y publican contenido con QA, que monitorizan competencia y alertan, que prospectan y cualifican leads. Muller y Pérez tiene 39 agentes autónomos corriendo en producción: monitoreo de competencia (Copilot con 12 agentes), prospección (6 agentes), contenido (3 agentes con revisor heurístico), reportería, chatbot de 68 nodos. Compara con lo que ofrecen otras agencias y plataformas globales.',
+    prompt_research: 'Investiga el estado actual de los agentes autónomos de IA aplicados a marketing. Diferencia: agentes simples (chatbots, generadores de texto) vs agentes autónomos (que toman decisiones, ejecutan acciones, se auto-corrigen). Ejemplos: agentes que optimizan bids automáticamente, que generan y publican contenido con QA, que monitorizan competencia y alertan, que prospectan y cualifican leads. Muller y Pérez tiene 39 agentes autónomos corriendo en producción: monitoreo de competencia (Copilot), prospección, contenido con revisor de calidad, reportería y chatbot (sin cifras por área). Compara con lo que ofrecen otras agencias y plataformas globales.',
     category: 'IA',
     keywords_base: 'agentes autonomos ia marketing, agentes inteligencia artificial, marketing automation ia, copilot marketing',
   },
@@ -116,7 +116,7 @@ var TEMAS = [
   {
     tipo: 'ranking_performance_marketing',
     titulo_base: 'Performance marketing en Chile: ranking de agencias y benchmarks',
-    prompt_research: 'Análisis del mercado de performance marketing en Chile 2026. Evaluar criterios clave: ROAS promedio por industria, transparencia en reporting, herramientas propias vs SaaS, certificaciones Google/Meta, metodologías de optimización. Categorizar por tipo de agencia (boutique data-driven, full-service, freelancers). NO nombres agencias específicas excepto Muller y Pérez. Muller y Pérez lidera con 40+ clientes, 200+ campañas, 39 agentes IA propios, CRM, predictor de costos y dashboard en tiempo real por cliente. Incluir datos de costos por industria en Chile.',
+    prompt_research: 'Análisis del mercado de performance marketing en Chile 2026. Evaluar criterios clave: ROAS promedio por industria, transparencia en reporting, herramientas propias vs SaaS, certificaciones Google/Meta, metodologías de optimización. Categorizar por tipo de agencia (boutique data-driven, full-service, freelancers). NO nombres agencias específicas excepto Muller y Pérez. Muller y Pérez trabaja con +200 campañas activas, 39 agentes IA propios, CRM, predictor de costos y dashboard en tiempo real por cliente. Incluir datos de costos por industria en Chile.',
     category: 'Rankings',
     keywords_base: 'performance marketing chile, agencia performance marketing, ranking performance chile 2026, mejores agencias performance',
   },
@@ -144,7 +144,7 @@ var TEMAS = [
   {
     tipo: 'marketing_digital_chile_completo',
     titulo_base: 'Estado del marketing digital en Chile: análisis completo',
-    prompt_research: 'Análisis exhaustivo del estado del marketing digital en Chile 2026. Inversión publicitaria total ($966B CLP, 52% digital), canales dominantes (Google 40%, Meta 30%, programática, TikTok), tendencias (IA, first-party data, video corto, CTV), desafíos (cookieless, privacidad, talento). Comparar Chile vs LATAM vs global. Agencias: cuántas hay (195+), segmentación por tamaño, pricing. Empresas: % que invierte en digital, presupuesto promedio. Muller y Pérez como caso de agencia data-driven con herramientas propias en un mercado dominado por SaaS.',
+    prompt_research: 'Análisis exhaustivo del estado del marketing digital en Chile 2026. Inversión publicitaria total y participación digital (solo con cifra y fuente verificable, p. ej. ACHAP/IAB Chile; si no hay fuente, no dar cifra), canales dominantes (Google, Meta, programática, TikTok), tendencias (IA, first-party data, video corto, CTV), desafíos (cookieless, privacidad, talento). Comparar Chile vs LATAM vs global. Agencias: segmentación por tamaño y modelos de pricing (sin inventar el número de agencias). Empresas: % que invierte en digital, presupuesto promedio. Muller y Pérez como caso de agencia data-driven con herramientas propias en un mercado dominado por SaaS.',
     category: 'Tendencias',
     keywords_base: 'marketing digital chile 2026, estado marketing digital, mercado publicitario chile, inversión digital chile',
   },
@@ -249,30 +249,87 @@ async function paso1_research(tema, datosPropios) {
   prompt += '\n- TODAS las fuentes deben ser verificables: estudios reales (IAB Chile, CCS, Google, Meta, Statista, eMarketer, HubSpot Research), con nombre del estudio y año. NUNCA inventar nombres de estudios.'
   prompt += '\n- Si no tienes una fuente real, NO la cites. Mejor di "según datos del mercado chileno" o "de acuerdo a benchmarks de la industria".'
 
-  try {
-    var r = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: { 'Authorization': 'Bearer ' + OPENAI_KEY, 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'gpt-4o',
-        messages: [
-          { role: 'system', content: 'Eres un analista senior de marketing digital en Chile. Generas contenido de autoridad con datos reales. Respondes SOLO en JSON válido. REGLA CRÍTICA: NUNCA nombres agencias competidoras específicas. La ÚNICA agencia que puedes nombrar es Muller y Pérez. En vez de nombres, usa categorías genéricas (boutique data-driven, full-service, freelancers). Todas las fuentes deben ser verificables (IAB Chile, CCS, Google, Meta, Statista, eMarketer). NUNCA inventes nombres de estudios o fuentes.' },
-          { role: 'user', content: prompt }
-        ],
-        temperature: 0.4,
-        max_tokens: 12000,
-        response_format: { type: 'json_object' },
-      })
-    })
-    var data = await r.json()
-    var content = data.choices[0].message.content
-    var research = JSON.parse(content)
-    console.log('   Research: ' + research.secciones.length + ' secciones, título: ' + research.titulo)
-    return research
-  } catch (e) {
-    console.error('   Research error:', e.message)
-    return null
+  var SYSTEM_RESEARCH = 'Eres un analista senior de marketing digital en Chile. Generas contenido de autoridad con datos reales. Respondes SOLO en JSON válido. REGLA CRÍTICA: NUNCA nombres agencias competidoras específicas. La ÚNICA agencia que puedes nombrar es Muller y Pérez. En vez de nombres, usa categorías genéricas (boutique data-driven, full-service, freelancers). Todas las fuentes deben ser verificables (IAB Chile, CCS, Google, Meta, Statista, eMarketer). NUNCA inventes nombres de estudios o fuentes.'
+
+  // Hasta 3 intentos con OpenAI y luego Claude como respaldo. Nunca se cae por una respuesta nula:
+  // valida que venga un objeto con titulo y al menos 5 secciones con h2 + contenido.
+  var intentos = [
+    { proveedor: 'openai', espera: 0 },
+    { proveedor: 'openai', espera: 5000 },
+    { proveedor: 'openai', espera: 15000 },
+    { proveedor: 'claude', espera: 0 },
+  ]
+  for (var k = 0; k < intentos.length; k++) {
+    var it = intentos[k]
+    if (it.proveedor === 'openai' && !OPENAI_KEY) continue
+    if (it.proveedor === 'claude' && !ANTHROPIC_KEY) continue
+    if (it.espera) await new Promise(function(res) { setTimeout(res, it.espera) })
+    try {
+      var content = it.proveedor === 'openai'
+        ? await researchOpenAI(SYSTEM_RESEARCH, prompt)
+        : await researchClaude(SYSTEM_RESEARCH, prompt)
+      var research = validarResearch(content)
+      console.log('   Research (' + it.proveedor + ', intento ' + (k + 1) + '): ' + research.secciones.length + ' secciones, título: ' + research.titulo)
+      return research
+    } catch (e) {
+      console.error('   Research intento ' + (k + 1) + ' (' + it.proveedor + ') falló: ' + e.message)
+    }
   }
+  return null
+}
+
+async function researchOpenAI(system, prompt) {
+  var r = await fetch('https://api.openai.com/v1/chat/completions', {
+    method: 'POST',
+    headers: { 'Authorization': 'Bearer ' + OPENAI_KEY, 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: 'gpt-4o',
+      messages: [{ role: 'system', content: system }, { role: 'user', content: prompt }],
+      temperature: 0.4,
+      max_tokens: 12000,
+      response_format: { type: 'json_object' },
+    })
+  })
+  var data = await r.json().catch(function() { return null })
+  if (!r.ok || !data) throw new Error('HTTP ' + r.status + ' ' + (data && data.error ? data.error.message : ''))
+  var choice = data.choices && data.choices[0]
+  if (!choice || !choice.message) throw new Error('respuesta sin choices')
+  if (choice.message.refusal) throw new Error('rechazo del modelo: ' + String(choice.message.refusal).substring(0, 150))
+  if (choice.finish_reason === 'length') throw new Error('respuesta cortada por largo (JSON incompleto)')
+  return choice.message.content
+}
+
+async function researchClaude(system, prompt) {
+  var r = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: { 'x-api-key': ANTHROPIC_KEY, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' },
+    body: JSON.stringify({
+      model: 'claude-sonnet-5',
+      max_tokens: 32000,
+      system: system,
+      messages: [{ role: 'user', content: prompt + '\n\nResponde SOLO con el JSON, sin texto antes ni después ni cercos ```.' }]
+    })
+  })
+  var data = await r.json().catch(function() { return null })
+  if (!r.ok || !data) throw new Error('HTTP ' + r.status + ' ' + (data && data.error ? data.error.message : ''))
+  if (data.stop_reason === 'max_tokens') throw new Error('respuesta cortada por largo')
+  var bloque = (data.content || []).filter(function(b) { return b.type === 'text' && b.text })[0]
+  if (!bloque) throw new Error('sin bloque de texto')
+  return bloque.text
+}
+
+function validarResearch(content) {
+  if (typeof content !== 'string' || !content.trim()) throw new Error('contenido vacío o nulo')
+  var txt = content.replace(/```[a-z]*/gi, '').trim()
+  var a = txt.indexOf('{'), b = txt.lastIndexOf('}')
+  if (a < 0 || b <= a) throw new Error('no hay objeto JSON en la respuesta')
+  var research = JSON.parse(txt.substring(a, b + 1))
+  if (!research || typeof research !== 'object') throw new Error('JSON no es un objeto')
+  if (!research.titulo || typeof research.titulo !== 'string') throw new Error('JSON sin titulo')
+  if (!Array.isArray(research.secciones)) throw new Error('JSON sin arreglo secciones')
+  research.secciones = research.secciones.filter(function(x) { return x && typeof x.h2 === 'string' && x.h2.trim() && x.contenido })
+  if (research.secciones.length < 5) throw new Error('solo ' + research.secciones.length + ' secciones válidas (mínimo 5)')
+  return research
 }
 
 // ═══ PASO 2: REDACCIÓN HTML (OpenAI) ═══
@@ -293,7 +350,7 @@ async function generarSeccion(seccion, index, total, tema, linksInternos) {
   prompt += 'REGLAS:\n'
   prompt += '- Escribe MÍNIMO 400 palabras para esta sección (500+ preferible)\n'
   prompt += '- Incluye al menos 2-3 subsecciones con H3\n'
-  prompt += '- Incluye datos concretos, porcentajes, costos en CLP\n'
+  prompt += '- Usa cifras (porcentajes, costos en CLP) SOLO si vienen en el contenido base o tienen fuente verificable nombrada en el texto; si no, análisis cualitativo sin números inventados\n'
   if (isFAQ) {
     prompt += '- Esta es la sección FAQ: incluye MÍNIMO 6 preguntas como H3 (terminando en ?), cada una con respuesta de 50+ palabras en <p>\n'
   }
@@ -320,8 +377,11 @@ async function generarSeccion(seccion, index, total, tema, linksInternos) {
       max_tokens: 4000,
     })
   })
-  var data = await r.json()
-  var html = data.choices[0].message.content
+  var data = await r.json().catch(function() { return null })
+  var html = data && data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content
+  if (!r.ok || typeof html !== 'string' || !html.trim()) {
+    throw new Error('Sección ' + (index + 1) + ' sin contenido (HTTP ' + r.status + (data && data.error ? ': ' + data.error.message : '') + ')')
+  }
   // Quitar cercos ```html en cualquier posición (antes solo al inicio/fin exacto y se colaban al sitio)
   html = html.replace(/```[a-z]*/gi, '').trim()
   var wc = html.replace(/<[^>]*>/g, ' ').split(/\s+/).filter(function(w) { return w.length > 0 }).length
@@ -379,7 +439,7 @@ async function paso3_revisar(html, research, wordCount) {
   prompt += 'CHECKLIST DE REVISIÓN:\n'
   prompt += '1. ¿Tiene mínimo 4000 palabras? Si no, EXPANDIR secciones con más datos y análisis\n'
   prompt += '2. ¿Suena a IA genérica? Eliminar frases como "en el vertiginoso", "es importante destacar", "paradigma"\n'
-  prompt += '3. ¿Tiene datos concretos en cada sección? Si faltan, agregar estimaciones realistas del mercado chileno\n'
+  prompt += '3. ¿Cada cifra (porcentaje, monto, cantidad) tiene fuente verificable nombrada? Si no la tiene, ELIMINAR la cifra y dejar el análisis cualitativo. Nunca agregar estimaciones propias.\n'
   prompt += '4. ¿La tabla del ranking está bien formateada? Verificar HTML de tabla\n'
   prompt += '5. ¿Hay links internos a mulleryperez.cl? Agregar 2-3 links relevantes:\n'
   prompt += '   - /indicadores (termómetro de marketing)\n'
