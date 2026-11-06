@@ -31,7 +31,8 @@ import {
   Star,
 } from "lucide-react";
 import YouTubeLite from "@/components/YouTubeLite";
-import { clients } from "@/components/ClientLogos";
+import { clients, logoSize } from "@/components/ClientLogos";
+import { aniosMyP } from "@/lib/anios-myp";
 import { trackLead, trackWhatsAppClick } from "@/lib/meta-pixel";
 import {
   businessSchema,
@@ -74,7 +75,7 @@ function Eyebrow({ children }: { children: React.ReactNode }) {
 /* ---------------- Datos ---------------- */
 
 const STATS = [
-  { v: "7", l: "años en el mercado" },
+  { v: String(aniosMyP()), l: "años en el mercado" },
   { v: "50+", l: "clientes activos" },
   { v: "+200", l: "campañas activas" },
   { v: "27", l: "agentes IA en producción" },
@@ -217,7 +218,7 @@ const CASOS_GEO = [
   {
     rubro: "Industrial B2B · grúas horquilla",
     dato: "#1 en ChatGPT",
-    det: "Recomendado primero en arriendo de grúas eléctricas en Santiago, y 21 de 46 búsquedas propias en primera página de Google.",
+    det: "Recomendado primero en arriendo de grúas eléctricas en Santiago, con contenido SEO hecho por nuestros agentes.",
     fecha: "Medición propia, octubre 2026",
   },
   {
@@ -526,17 +527,17 @@ function Logos() {
       <p className="mb-6 text-center text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
         Empresas que confían en M&amp;P
       </p>
-      <div className="v2-mask flex w-max animate-scroll-left gap-12">
+      <div className="v2-mask flex w-max animate-scroll-left gap-4">
         {row.map((c, i) => (
-          <Image
-            key={i}
-            src={c.logo}
-            alt={`${c.name}, ${c.industry}`}
-            width={120}
-            height={40}
-            sizes="120px"
-            className="h-12 w-auto rounded-lg bg-white px-3 py-2"
-          />
+          <div key={i} className="flex h-16 w-44 shrink-0 items-center justify-center rounded-xl bg-white px-4">
+            <Image
+              src={c.logo}
+              alt={`${c.name}, ${c.industry}`}
+              {...logoSize(c.ar)}
+              sizes="150px"
+              className="object-contain"
+            />
+          </div>
         ))}
       </div>
     </section>

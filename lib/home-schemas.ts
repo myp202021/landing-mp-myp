@@ -1,3 +1,4 @@
+import { aniosMyP } from '@/lib/anios-myp'
 /* Schemas JSON-LD del home (extraídos de LandingClient, nov 2026) */
 export const businessSchema = {
   '@context': 'https://schema.org',
@@ -87,7 +88,7 @@ export const organizationSchema = {
   name: 'Muller y Pérez',
   url: 'https://www.mulleryperez.cl',
   logo: 'https://www.mulleryperez.cl/logo-color.png',
-  description: 'Agencia de marketing digital y performance marketing con más de 7 años de experiencia en Chile',
+  description: `Agencia de marketing digital y performance marketing con ${aniosMyP()} años de experiencia en Chile (desde 2020)`,
   foundingDate: '2020',
   address: {
     '@type': 'PostalAddress',

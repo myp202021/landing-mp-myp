@@ -4,47 +4,70 @@ import Link from 'next/link'
 import Image from 'next/image'
 
 export const clients = [
-  { name: 'Dezar', industry: 'Rent a Car', logo: '/clientes/dezar.png' },
-  { name: 'Antartic', industry: 'Refrigeración Industrial', logo: '/clientes/antartic.png' },
-  { name: 'Charriot', industry: 'Automotriz', logo: '/clientes/charriot.png' },
-  { name: 'Adimac', industry: 'Maquinaria Industrial', logo: '/clientes/adimac.png' },
-  { name: 'Sistemáticos', industry: 'Protección contra Incendios', logo: '/clientes/sistematios.png' },
-  { name: 'Zero Water', industry: 'Purificación de Agua', logo: '/clientes/zero-water.png' },
-  { name: 'Granarolo', industry: 'Alimentos', logo: '/clientes/granarolo.png' },
-  { name: 'Fundación Pro Acogida', industry: 'ONG', logo: '/clientes/pro-acogida.png' },
-  { name: 'Elitsoft', industry: 'Software', logo: '/clientes/elitsoft.png' },
-  { name: 'invasWMS', industry: 'Logística', logo: '/clientes/invaswms.png' },
-  { name: 'First Pack', industry: 'Packaging', logo: '/clientes/first-pack.png' },
-  { name: 'Power Energy', industry: 'Iluminación LED', logo: '/clientes/power-energy.png' },
-  { name: 'Buses Hualpén', industry: 'Transporte', logo: '/clientes/hualpen.png' },
-  { name: 'Stocks', industry: 'Propiedades', logo: '/clientes/stocks.png' },
-  { name: 'Vemos tu Auto', industry: 'Automotriz', logo: '/clientes/vemos-tu-auto.png', url: 'https://vemostuauto.cl/' },
-  { name: 'Clínica Mateos López', industry: 'Salud', logo: '/clientes/lopez-mateo.png' },
-  { name: 'Pregiata', industry: 'Retail', logo: '/clientes/pregiata.png' },
-  { name: 'Genera', industry: 'Recursos Humanos', logo: '/clientes/genera.png' },
-  { name: 'JP Procesos', industry: 'Agroindustria', logo: '/clientes/jp-procesos.png' },
-  { name: 'Forcmin', industry: 'Minería', logo: '/clientes/logo-forcmin-c.png' },
-  { name: 'Pineapple Store', industry: 'Accesorios Apple', logo: '/clientes/pineapple-store.png' },
-  { name: 'Byte Store', industry: 'Tecnología Refurbished', logo: '/clientes/byte-store.png' },
-  { name: 'Rilay', industry: 'Inmobiliaria', logo: '/clientes/rilay.png' },
-  { name: 'Fuxion Logistics', industry: 'Logística', logo: '/clientes/fuxion-logistics.png' },
-  { name: 'HL Soluciones', industry: 'SaaS', logo: '/clientes/hl-soluciones.png' },
-  { name: 'ALD Automotora', industry: 'Automotriz', logo: '/clientes/ald.png' },
-  { name: 'Swing', industry: 'Producción de Eventos', logo: '/clientes/swing.png' },
-  { name: 'Atacama Experience', industry: 'Turismo', logo: '/clientes/atacama-experience.png' },
-  { name: 'Homar', industry: 'Importadora', logo: '/clientes/homar.png' },
-  { name: 'Faretto', industry: 'Iluminación', logo: '/clientes/faretto.png' },
-  { name: 'Halterlift', industry: 'Grúas Horquilla', logo: '/clientes/halterlift.webp' },
-  { name: 'Premios Increíbles', industry: 'Sorteos Online', logo: '/clientes/premios-increibles.png' },
-  { name: 'CyM Propiedades', industry: 'Corretaje Inmobiliario', logo: '/clientes/cym.png' },
-  { name: 'INACAP', industry: 'Educación Continua', logo: '/clientes/inacap.png' },
-  { name: 'DevuelveMiPie', industry: 'Legal Inmobiliario', logo: '/clientes/dmp.png' },
-  { name: 'SGO', industry: 'Libro de Obras Digital', logo: '/clientes/sgo.png' },
-  { name: 'Voxa', industry: 'Tecnología', logo: '/clientes/voxa.png' },
+  { name: 'BHI Hair Institute', industry: 'Salud Capilar', logo: '/clientes/n/bhi.png', ar: 3.56, url: 'https://bhi.cl/' },
+  { name: 'Codify', industry: 'Analítica de Datos', logo: '/clientes/n/codify.png', ar: 3.75 },
+  { name: 'Wiseplan', industry: 'Software de RR.HH.', logo: '/clientes/n/wiseplan.png', ar: 2.73 },
+  { name: 'Tritec Energy', industry: 'Energía Solar', logo: '/clientes/n/tritec.png', ar: 1.98 },
+  { name: 'LabLab', industry: 'Outplacement', logo: '/clientes/n/lablab.png', ar: 1.05 },
+  { name: 'Metcorp', industry: 'Construcción con Paneles SIP', logo: '/clientes/n/metcorp.png', ar: 6.08 },
+  { name: 'Dezar', industry: 'Rent a Car', logo: '/clientes/n/dezar.png', ar: 6.03 },
+  { name: 'Antartic', industry: 'Refrigeración Industrial', logo: '/clientes/n/antartic.png', ar: 3.49 },
+  { name: 'Charriot', industry: 'Automotriz', logo: '/clientes/n/charriot.png', ar: 5.93 },
+  { name: 'Adimac', industry: 'Maquinaria Industrial', logo: '/clientes/n/adimac.png', ar: 3.65 },
+  { name: 'Sistemáticos', industry: 'Protección contra Incendios', logo: '/clientes/n/sistematios.png', ar: 4.19 },
+  { name: 'Zero Water', industry: 'Purificación de Agua', logo: '/clientes/n/zero-water.png', ar: 2.83 },
+  { name: 'Granarolo', industry: 'Alimentos', logo: '/clientes/n/granarolo.png', ar: 2.37 },
+  { name: 'Fundación Pro Acogida', industry: 'ONG', logo: '/clientes/n/pro-acogida.png', ar: 3.4 },
+  { name: 'Elitsoft', industry: 'Software', logo: '/clientes/n/elitsoft.png', ar: 3.85 },
+  { name: 'invasWMS', industry: 'Logística', logo: '/clientes/n/invaswms.png', ar: 1.89 },
+  { name: 'Horizontes Nature Experiences', industry: 'Turismo de Naturaleza', logo: '/clientes/n/horizontes.png', ar: 1.73 },
+  { name: 'Merlin Comunicaciones', industry: 'Comunicaciones', logo: '/clientes/n/merlin.png', ar: 2.18, url: 'https://merlincomunicaciones.com/' },
+  { name: 'Irurzun', industry: 'Mercado Mayorista', logo: '/clientes/n/irurzun.png', ar: 3.21 },
+  { name: 'Tecnoinver', industry: 'Cloud y Hosting', logo: '/clientes/n/tecnoinver.png', ar: 4.67 },
+  { name: 'Onewaite', industry: 'Desarrollo Inmobiliario', logo: '/clientes/n/onewaite.png', ar: 6.87 },
+  { name: 'Vikö', industry: 'Agua Purificada', logo: '/clientes/n/viko.png', ar: 1.8 },
+  { name: 'First Pack', industry: 'Packaging', logo: '/clientes/n/first-pack.png', ar: 2.62 },
+  { name: 'Power Energy', industry: 'Iluminación LED', logo: '/clientes/n/power-energy.png', ar: 4.18 },
+  { name: 'Buses Hualpén', industry: 'Transporte', logo: '/clientes/n/hualpen.png', ar: 4.02 },
+  { name: 'Stocks', industry: 'Propiedades', logo: '/clientes/n/stocks.png', ar: 3.73 },
+  { name: 'Vemos tu Auto', industry: 'Automotriz', logo: '/clientes/n/vemos-tu-auto.png', ar: 2.57, url: 'https://vemostuauto.cl/' },
+  { name: 'Clínica Mateos López', industry: 'Salud', logo: '/clientes/n/lopez-mateo.png', ar: 2.7 },
+  { name: 'Pregiata', industry: 'Retail', logo: '/clientes/n/pregiata.png', ar: 1.1 },
+  { name: 'Genera', industry: 'Recursos Humanos', logo: '/clientes/n/genera.png', ar: 4.53 },
+  { name: 'JP Procesos', industry: 'Agroindustria', logo: '/clientes/n/jp-procesos.png', ar: 1.84 },
+  { name: 'Forcmin', industry: 'Minería', logo: '/clientes/n/logo-forcmin-c.png', ar: 4.61 },
+  { name: 'Pineapple Store', industry: 'Accesorios Apple', logo: '/clientes/n/pineapple-store.png', ar: 5.84 },
+  { name: 'Byte Store', industry: 'Tecnología Refurbished', logo: '/clientes/n/byte-store.png', ar: 4.78 },
+  { name: 'Rilay', industry: 'Inmobiliaria', logo: '/clientes/n/rilay.png', ar: 3.01 },
+  { name: 'Fuxion Logistics', industry: 'Logística', logo: '/clientes/n/fuxion-logistics.png', ar: 3.12 },
+  { name: 'HL Soluciones', industry: 'SaaS', logo: '/clientes/n/hl-soluciones.png', ar: 2.52 },
+  { name: 'ALD Automotora', industry: 'Automotriz', logo: '/clientes/n/ald.png', ar: 1.6 },
+  { name: 'Swing', industry: 'Producción de Eventos', logo: '/clientes/n/swing.png', ar: 2.79 },
+  { name: 'Atacama Experience', industry: 'Turismo', logo: '/clientes/n/atacama-experience.png', ar: 1.4 },
+  { name: 'Homar', industry: 'Importadora', logo: '/clientes/n/homar.png', ar: 2.44 },
+  { name: 'Faretto', industry: 'Iluminación', logo: '/clientes/n/faretto.png', ar: 5.44 },
+  { name: 'Halterlift', industry: 'Grúas Horquilla', logo: '/clientes/n/halterlift.png', ar: 4.52 },
+  { name: 'Premios Increíbles', industry: 'Sorteos Online', logo: '/clientes/n/premios-increibles.png', ar: 1.0 },
+  { name: 'CyM Propiedades', industry: 'Corretaje Inmobiliario', logo: '/clientes/n/cym.png', ar: 1.73 },
+  { name: 'INACAP', industry: 'Educación Continua', logo: '/clientes/n/inacap.png', ar: 6.07 },
+  { name: 'DevuelveMiPie', industry: 'Legal Inmobiliario', logo: '/clientes/n/dmp.png', ar: 3.77 },
+  { name: 'SGO', industry: 'Libro de Obras Digital', logo: '/clientes/n/sgo.png', ar: 0.8 },
+  { name: 'Voxa', industry: 'Tecnología', logo: '/clientes/n/voxa.png', ar: 1.12 },
 ]
 
-const row1 = clients.slice(0, 19)
-const row2 = clients.slice(19)
+
+
+/** Tamaño de despliegue con peso visual parejo: logos anchos más bajos, cuadrados más altos. */
+export function logoSize(ar: number, maxH = 44, maxW = 136) {
+  const area = maxH * maxH * 2.2
+  let h = Math.min(maxH, Math.sqrt(area / ar))
+  let w = h * ar
+  if (w > maxW) { w = maxW; h = w / ar }
+  return { width: Math.round(w), height: Math.round(h) }
+}
+
+const row1 = clients.slice(0, 25)
+const row2 = clients.slice(25)
 
 function ClientCard({ client }: { client: typeof clients[0] }) {
   return (
@@ -55,9 +78,8 @@ function ClientCard({ client }: { client: typeof clients[0] }) {
       <Image
         src={client.logo}
         alt={`Logo ${client.name} — cliente de Muller y Pérez`}
-        width={160}
-        height={64}
-        className="object-contain max-h-14 w-auto"
+        {...logoSize(client.ar, 48, 150)}
+        className="object-contain"
         loading="lazy"
       />
     </div>
