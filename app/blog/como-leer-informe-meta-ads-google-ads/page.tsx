@@ -590,9 +590,8 @@ export default function ComoLeerInformePage() {
                 mensuales en total, unos $1,45 millones por cliente al mes.
               </p>
               <p>
-                El retorno sobre la inversión en medios, medido solo con el primer mes de facturación, es de 5,8 veces. Si los
-                clientes se quedan 6 meses, cada peso invertido en pauta en octubre se transforma en cerca de 35 pesos de
-                facturación. Ese es el número que justifica, o no, la pauta. Y es el número que ningún informe de Meta o
+                El retorno sobre la inversión en medios, medido solo con el primer mes de facturación, es de 5,8 veces: cada peso
+                invertido en pauta en octubre trajo 5,8 pesos de facturación en el primer mes. Ese es el número que justifica, o no, la pauta. Y es el número que ningún informe de Meta o
                 Google puede mostrar por sí solo.
               </p>
             </Caso>
