@@ -39,6 +39,15 @@ export const metadata: Metadata = {
 
 const articles = [
   {
+    slug: 'como-leer-informe-meta-ads-google-ads',
+    title: 'Cómo leer un informe de Meta Ads y Google Ads: CPA, CTR, frecuencia y CAC',
+    excerpt: 'Guía técnica con un caso real: cómo se relacionan CPM, CTR, CPC y CPA, cuándo una frecuencia sobre 5 es mala, estacionalidad, cuota de impresiones y CAC medido en el CRM.',
+    date: '2026-11-09',
+    category: 'Paid Media',
+    readTime: '20 min',
+    tag: 'Métricas'
+  },
+  {
     slug: 'chatgpt-ads-chile-guia-agencia',
     title: 'ChatGPT Ads en Chile: guía completa para anunciar y compararlo con Google Ads',
     excerpt: 'Guía con fuentes oficiales de OpenAI: quién puede anunciar en Chile, paso a paso, rubros prohibidos, comparación con Google Ads y metodología de prueba de 4 semanas.',
