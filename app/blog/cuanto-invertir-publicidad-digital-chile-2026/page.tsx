@@ -36,9 +36,10 @@ export default function ArticlePage() {
     description: 'Guia completa de presupuestos de publicidad digital Chile 2026. Distribucion por canal, tamano de empresa e industria con data real.',
     image: 'https://www.mulleryperez.cl/og-image.jpg',
     author: {
-      '@type': 'Organization',
-      name: 'Muller y Perez',
-      url: 'https://www.mulleryperez.cl'
+      '@type': 'Person',
+      name: 'Christopher Müller',
+      url: 'https://www.mulleryperez.cl/equipo/christopher-muller',
+      sameAs: ['https://www.linkedin.com/in/christophermullerm/']
     },
     publisher: {
       '@type': 'Organization',

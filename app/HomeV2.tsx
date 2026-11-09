@@ -1501,7 +1501,7 @@ function Nosotros() {
           <h2 id="nosotros-t" className="text-4xl font-black tracking-tight md:text-6xl">M&amp;P = <span className="v2-shimmer">Marketing &amp; Performance</span></h2>
           <p className="mt-5 text-lg text-slate-400">20+ años de experiencia en empresas que viven de números, no de likes.</p>
           <div className="v2-glass mt-8 rounded-2xl p-6">
-            <h3 className="text-xl font-bold">Christopher Müller</h3>
+            <h3 className="text-xl font-bold"><Link href="/equipo/christopher-muller" className="hover:underline">Christopher Müller</Link></h3>
             <p className="text-sm text-cyan-300">Fundador y Director de Estrategia</p>
             <ul className="mt-4 space-y-1.5 text-sm text-slate-300">
               <li>Ingeniero Civil Industrial, Universidad de Chile</li>

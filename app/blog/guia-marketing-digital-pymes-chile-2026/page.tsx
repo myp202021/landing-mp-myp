@@ -36,9 +36,10 @@ export default function ArticlePage() {
     description: 'Guia completa de marketing digital para pymes en Chile 2026. 7 pasos concretos con presupuestos desde $300K/mes.',
     image: 'https://www.mulleryperez.cl/og-image.jpg',
     author: {
-      '@type': 'Organization',
-      name: 'Muller y Perez',
-      url: 'https://www.mulleryperez.cl'
+      '@type': 'Person',
+      name: 'Christopher Müller',
+      url: 'https://www.mulleryperez.cl/equipo/christopher-muller',
+      sameAs: ['https://www.linkedin.com/in/christophermullerm/']
     },
     publisher: {
       '@type': 'Organization',

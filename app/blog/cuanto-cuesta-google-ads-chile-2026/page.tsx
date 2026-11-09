@@ -36,9 +36,10 @@ export default function ArticlePage() {
     description: 'Guia completa de costos Google Ads Chile 2026: CPC $300-$3.000, CPL $6.500-$72.000. Data real de +250 campanas activas por industria.',
     image: 'https://www.mulleryperez.cl/og-image.jpg',
     author: {
-      '@type': 'Organization',
-      name: 'Muller y Perez',
-      url: 'https://www.mulleryperez.cl'
+      '@type': 'Person',
+      name: 'Christopher Müller',
+      url: 'https://www.mulleryperez.cl/equipo/christopher-muller',
+      sameAs: ['https://www.linkedin.com/in/christophermullerm/']
     },
     publisher: {
       '@type': 'Organization',

@@ -36,9 +36,10 @@ export default function ArticlePage() {
     description: 'Comparativa detallada Google Ads vs Meta Ads en Chile 2026. CPC, CPL, ROAS, Performance Max vs Advantage+.',
     image: 'https://www.mulleryperez.cl/og-image.jpg',
     author: {
-      '@type': 'Organization',
-      name: 'Muller y Perez',
-      url: 'https://www.mulleryperez.cl'
+      '@type': 'Person',
+      name: 'Christopher Müller',
+      url: 'https://www.mulleryperez.cl/equipo/christopher-muller',
+      sameAs: ['https://www.linkedin.com/in/christophermullerm/']
     },
     publisher: {
       '@type': 'Organization',
