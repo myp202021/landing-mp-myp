@@ -1512,7 +1512,7 @@ function Nosotros() {
           </div>
         </div>
         <div className="grid grid-cols-2 content-center gap-4">
-          {[['3', 'Áreas especializadas: Paid Media, Publicista, Diseñador'], ['+20', 'Profesionales en equipo; cada cliente recibe 3 asignados'], ['7', 'Años en el mercado'], ['+$800M', 'Gestionados en inversión publicitaria']].map(([v, l], k) => (
+          {[['3', 'Áreas especializadas: Paid Media, Publicista, Diseñador'], ['+20', 'Profesionales en equipo; cada cliente recibe 3 asignados'], [String(aniosMyP()), 'Años en el mercado'], ['+$800M', 'Gestionados en inversión publicitaria']].map(([v, l], k) => (
             <div key={l} className="v2-glass v2-tilt rounded-2xl p-6">
               <p className="text-4xl font-black">{v}</p><p className="mt-2 text-sm text-slate-400">{l}</p>
             </div>

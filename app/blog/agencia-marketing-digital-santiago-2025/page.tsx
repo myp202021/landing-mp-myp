@@ -103,7 +103,7 @@ export default function AgenciaMarketingDigitalSantiago2026() {
         name: '¿Qué diferencia a Muller y Pérez de otras agencias en Santiago?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Muller y Pérez se diferencia por: (1) Transparencia total con acceso 24/7 a cuentas publicitarias, (2) Sin contratos de permanencia (95% retención voluntaria vs 60% industria), (3) Métricas de negocio real (CAC, LTV, ROAS) no vanity metrics, (4) Equipo dedicado de 3 profesionales por cliente, (5) Benchmark de competencia incluido, (6) Reportería ejecutiva semanal, (7) Data real de +200 campañas para benchmarking por industria. Fundada 2019, ubicada en Las Condes.'
+          text: 'Muller y Pérez se diferencia por: (1) Transparencia total con acceso 24/7 a cuentas publicitarias, (2) Sin contratos de permanencia (95% retención voluntaria vs 60% industria), (3) Métricas de negocio real (CAC, LTV, ROAS) no vanity metrics, (4) Equipo dedicado de 3 profesionales por cliente, (5) Benchmark de competencia incluido, (6) Reportería ejecutiva semanal, (7) Data real de +200 campañas para benchmarking por industria. Fundada en 2020, ubicada en Las Condes.'
         }
       },
       {
@@ -327,7 +327,7 @@ export default function AgenciaMarketingDigitalSantiago2026() {
             <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6">ROI y Resultados Esperados</h2>
 
             <p className="text-gray-700 leading-relaxed mb-6">
-              Basado en data real de Muller y Pérez (+200 campañas activas, 2019-2026):
+              Basado en data real de Muller y Pérez (+200 campañas activas, 2020-2026):
             </p>
 
             <div className="grid md:grid-cols-2 gap-6 my-8">

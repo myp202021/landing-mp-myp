@@ -20,7 +20,7 @@ export const metadata: Metadata = {
 
 // Trayectoria tomada del perfil de LinkedIn de Christopher (revisado 9 nov 2026). No agregar cifras sin fuente.
 const trayectoria = [
-  { empresa: 'Muller y Pérez', cargo: 'Fundador', periodo: '2019 – hoy', texto: 'Agencia de marketing digital y performance que opera como el departamento de marketing de sus clientes B2B y B2C: paid media, contenido y diseño, con medición, CRM y agentes de IA propios.' },
+  { empresa: 'Muller y Pérez', cargo: 'Fundador', periodo: '2020 – hoy', texto: 'Agencia de marketing digital y performance que opera como el departamento de marketing de sus clientes B2B y B2C: paid media, contenido y diseño, con medición, CRM y agentes de IA propios.' },
   { empresa: 'Genera HR Digital', cargo: 'Director', periodo: '2021 – 2022', texto: 'Director en una empresa con más de 35 años en soluciones de gestión de personas.' },
   { empresa: 'Guru Soluciones (páginas amarillas y startups digitales, 11 países)', cargo: 'Gerente Comercial Chile', periodo: '2016 – 2018', texto: 'Lideró comercial y marketing en Chile. Primer país del grupo en volver a crecer en ventas y clientes (+15% en 2017) con EBITDA positivo, revirtiendo más de 10 años de caída de la industria; incremento comercial de +120%.' },
   { empresa: 'Hibu (Reino Unido)', cargo: 'Gerente de Marketing', periodo: '2014 – 2016', texto: 'Marketing y business intelligence, pricing y mix de productos y canales. La renovación de clientes de primer año subió de 20% a 40%; los nuevos servicios generaron USD 1 millón entre 2015 y 2018.' },
