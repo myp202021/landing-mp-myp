@@ -82,7 +82,7 @@ function P({ children }: { children: ReactNode }) {
 }
 
 function Int({ href, children }: { href: string; children: ReactNode }) {
-  return <Link href={href} className="text-blue-700 underline">{children}</Link>
+  return <Link href={href} className="text-blue-700 font-semibold underline decoration-2 underline-offset-2 hover:text-blue-900">{children}</Link>
 }
 
 function Lista({ items }: { items: ReactNode[] }) {
@@ -122,9 +122,9 @@ function Tabla({ cabecera, filas }: { cabecera: string[]; filas: ReactNode[][] }
 
 function Caso({ children }: { children: ReactNode }) {
   return (
-    <div className="bg-blue-50 border-l-4 border-blue-600 p-6 rounded-r-xl mb-8">
-      <p className="text-sm font-bold uppercase tracking-wide text-blue-800 mb-2">Caso real · octubre 2026</p>
-      <div className="text-lg text-gray-800 leading-relaxed space-y-3">{children}</div>
+    <div className="bg-blue-100 border-l-[6px] border-blue-700 p-6 rounded-r-xl mb-8 shadow-sm not-prose">
+      <p className="text-sm font-bold uppercase tracking-wide text-blue-900 mb-3">Caso real · octubre 2026</p>
+      <div className="text-lg text-gray-900 leading-relaxed space-y-3">{children}</div>
     </div>
   )
 }
@@ -192,14 +192,7 @@ export default function ComoLeerInformePage() {
 
       <article className="min-h-screen bg-white">
         <header className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white py-16">
-          <div className="container mx-auto px-6 max-w-4xl">
-            <nav className="text-slate-400 text-sm mb-6">
-              <Link href="/" className="hover:text-white transition-colors">Inicio</Link>
-              <span className="mx-2">/</span>
-              <Link href="/blog" className="hover:text-white transition-colors">Blog</Link>
-              <span className="mx-2">/</span>
-              <span className="text-white">Cómo leer un informe de Meta y Google Ads</span>
-            </nav>
+          <div className="container mx-auto px-6 max-w-5xl">
             <div className="inline-block px-3 py-1 bg-blue-500/20 rounded-full text-blue-300 text-sm mb-4">
               Guía técnica &middot; Paid Media
             </div>
@@ -221,10 +214,10 @@ export default function ComoLeerInformePage() {
           </div>
         </header>
 
-        <div className="container mx-auto px-6 max-w-4xl py-12">
+        <div className="container mx-auto px-6 max-w-5xl py-12">
           <div className="prose prose-lg max-w-none">
 
-            <div className="bg-slate-50 border-l-4 border-slate-600 p-6 rounded-r-xl mb-8">
+            <div className="bg-amber-50 border-l-[6px] border-amber-500 not-prose p-6 rounded-r-xl mb-8">
               <p className="text-lg font-bold text-gray-900 mb-3">En resumen</p>
               <ul className="list-disc pl-6 space-y-2 text-gray-700">
                 <li><strong>La fórmula base:</strong> CPA = CPM ÷ (1.000 × CTR × tasa de conversión). Todo cambio en el CPA viene de una de esas tres piezas.</li>
@@ -246,7 +239,8 @@ export default function ComoLeerInformePage() {
             <P>
               Para que esta guía no quede en teoría, vamos a usar los datos reales de octubre de 2026 de una empresa B2B de
               servicios en Chile, sin identificarla. Tiene una gracia poco común: además del informe de Meta
-              y de Google Ads, tenemos su CRM completo, con cada lead, su estado comercial y las ventas cerradas con su monto.
+              y de Google Ads, tenemos su CRM completo, con cada lead, su estado comercial y las ventas cerradas con su monto. Si todavía no tienes claro qué canal te conviene, parte por{' '}
+              <Int href="/blog/google-ads-vs-meta-ads-chile-2026">Google Ads vs Meta Ads en Chile</Int>.
               Eso permite hacer lo que casi ningún informe hace: seguir el peso invertido hasta el cliente que pagó.
             </P>
             <Tabla
@@ -301,7 +295,7 @@ export default function ComoLeerInformePage() {
             <Formula>
               CPC = CPM ÷ (1.000 × CTR)<br />
               CPA = CPC ÷ CVR<br />
-              <span className="text-blue-300">CPA = CPM ÷ (1.000 × CTR × CVR)</span>
+              <span className="text-yellow-300 font-bold">CPA = CPM ÷ (1.000 × CTR × CVR)</span>
             </Formula>
             <P>
               No es una regla empírica: es contabilidad. Si el CPA sube, sí o sí es porque subió el CPM, bajó el CTR o bajó
@@ -361,7 +355,7 @@ export default function ComoLeerInformePage() {
             </P>
             <Caso>
               <p>
-                En Google Ads el caso muestra otra combinación. De septiembre a octubre la inversión subió 26% ($455.482 a
+                En <Int href="/servicios/google-ads-chile">Google Ads</Int> el caso muestra otra combinación. De septiembre a octubre la inversión subió 26% ($455.482 a
                 $574.366), los clics bajaron de 1.220 a 997 y el CPC subió de $373 a $576. Las conversiones pasaron de 20 a
                 23 y el CPA de $22.774 a $24.972.
               </p>
@@ -395,7 +389,7 @@ export default function ComoLeerInformePage() {
                 ['Meta · mensajes o leads con audiencia chica (B2B local)', '2 a 4', 'Sobre 4 y las conversaciones dejan de crecer'],
                 ['Google Display y YouTube', 'Se controla con topes de frecuencia por campaña', 'Sin tope en remarketing: la frecuencia se dispara'],
                 ['Google Búsqueda', 'No aplica de la misma forma', 'La impresión responde a una búsqueda activa; repetir no fatiga igual'],
-                ['Performance Max', 'No se informa por canal', 'Mirar CTR y conversiones por grupo de recursos'],
+                [<Int key="pm" href="/blog/campanas-performance-max-google-ads-2025">Performance Max</Int>, 'No se informa por canal', 'Mirar CTR y conversiones por grupo de recursos'],
               ]}
             />
             <P>
@@ -458,7 +452,8 @@ export default function ComoLeerInformePage() {
 
             <H2 id="presupuesto">Presupuesto y fase de aprendizaje</H2>
             <P>
-              El presupuesto no es una perilla lineal. Duplicar la inversión casi nunca duplica las conversiones, por dos
+              El presupuesto no es una perilla lineal (cuánto invertir según rubro está en la guía de{' '}
+              <Int href="/blog/cuanto-cuesta-google-ads-chile-2026">cuánto cuesta Google Ads en Chile</Int>). Duplicar la inversión casi nunca duplica las conversiones, por dos
               razones: la plataforma compra primero las impresiones más baratas y con más probabilidad de conversión, así que
               cada peso adicional compra impresiones marginales peores; y los cambios grandes reinician el aprendizaje.
             </P>
@@ -492,7 +487,8 @@ export default function ComoLeerInformePage() {
 
             <H2 id="competencia">Competencia: cuota de impresiones y subasta</H2>
             <P>
-              El grado de competencia no se adivina: Google Ads lo muestra. Las columnas que hay que agregar al informe son
+              El grado de competencia no se adivina: Google Ads lo muestra (para comparar costos por rubro, ver el{' '}
+              <Int href="/benchmark-cpl-chile-2026">benchmark de CPL en Chile 2026</Int>). Las columnas que hay que agregar al informe son
               la cuota de impresiones de búsqueda, la cuota perdida por presupuesto y la cuota perdida por ranking. El informe
               de Estadísticas de subastas (Auction Insights) suma con quién se compite, cuánto se superpone cada competidor y
               quién aparece más arriba.
@@ -581,6 +577,12 @@ export default function ComoLeerInformePage() {
               CAC de medios = inversión publicitaria ÷ clientes nuevos<br />
               CAC completo = (medios + fee de agencia + herramientas + costo comercial) ÷ clientes nuevos
             </Formula>
+            <P>
+              El detalle de cómo calcularlo y bajarlo está en{' '}
+              <Int href="/blog/que-es-cac-como-calcularlo-reducirlo">qué es el CAC y cómo reducirlo</Int>, y la diferencia
+              entre retorno sobre medios y sobre negocio en{' '}
+              <Int href="/blog/roi-roas-agencia-marketing-digital-chile-2025">ROI y ROAS</Int>.
+            </P>
             <Caso>
               <p>
                 Con los datos del mes: $996.814 de inversión en medios y 4 clientes nuevos dan un{' '}
@@ -599,8 +601,8 @@ export default function ComoLeerInformePage() {
             </P>
             <Lista items={[
               <><strong>El rezago.</strong> En B2B el lead de octubre puede cerrar en diciembre. Medir CAC mensual sin considerar el ciclo de venta castiga los meses de siembra. Lo ideal es mirar CAC en ventanas de 3 meses o por cohorte de leads.</>,
-              <><strong>El cuello de botella comercial.</strong> En el caso, 51 de los 110 leads quedaron como “no contesta”. La tasa de lead a cliente fue 3,6%. Antes de culpar a la pauta, hay que revisar tiempo de respuesta e intentos de contacto: un lead llamado en los primeros minutos convierte bastante más que uno llamado al día siguiente.</>,
-              <><strong>El CAC por canal.</strong> El CAC promedio esconde que algunos canales traen clientes y otros solo traen leads. El costo por cliente de la campaña de formulario de Meta, en octubre, fue infinito: $307.492 y ninguna venta.</>,
+              <><strong>El cuello de botella comercial.</strong> En el caso, 51 de los 110 leads quedaron como “no contesta”. La tasa de lead a cliente fue 3,6%. Antes de culpar a la pauta (ver también <Int href="/blog/como-aumentar-conversiones-google-ads">cómo aumentar conversiones</Int>), hay que revisar tiempo de respuesta e intentos de contacto: un lead llamado en los primeros minutos convierte bastante más que uno llamado al día siguiente.</>,
+              <><strong>El CAC por canal.</strong> El CAC promedio esconde que algunos canales traen clientes y otros solo traen leads. El costo por cliente de la campaña de formulario de <Int href="/servicios/meta-ads-chile">Meta Ads</Int>, en octubre, fue infinito: $307.492 y ninguna venta.</>,
             ]} />
             <P>
               Una forma útil de cerrar el informe mensual es poner al lado el CPL de cada canal y su costo por cotización o por
@@ -668,7 +670,7 @@ export default function ComoLeerInformePage() {
           </div>
         </div>
 
-        <div className="container mx-auto px-6 max-w-4xl pb-16">
+        <div className="container mx-auto px-6 max-w-5xl pb-16">
           <InternalLinksMesh currentPath={`/blog/${SLUG}`} showEditorial={false} />
         </div>
       </article>
