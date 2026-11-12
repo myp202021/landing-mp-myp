@@ -15,6 +15,7 @@ import {
 } from "@/lib/metadata";
 import inventario from "@/data/agentes-ia.json";
 import evidencia from "@/data/agentes-evidencia.json";
+import { agenteFunciona } from "@/lib/agentes-activos";
 
 export const metadata: Metadata = createMetadata({
   title: "Agentes de IA en producción y su registro de ejecuciones",
@@ -52,11 +53,7 @@ const EV = evidencia as unknown as {
   agentes: Record<string, Evidencia>;
 };
 
-function funciona(e?: Evidencia) {
-  if (!e || e.tipo !== "workflow" || !e.exitosas_30d || !e.ejecuciones_30d)
-    return false;
-  return e.exitosas_30d / e.ejecuciones_30d >= 0.7;
-}
+const funciona = (e?: Evidencia) => agenteFunciona(e);
 
 const activos = (inventario as Agente[]).filter((a) =>
   funciona(EV.agentes[a.id]),

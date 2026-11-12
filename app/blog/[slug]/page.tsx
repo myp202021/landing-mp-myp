@@ -202,7 +202,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
 
           <div
             className="prose prose-lg max-w-none"
-            dangerouslySetInnerHTML={{ __html: post.content_html }}
+            dangerouslySetInnerHTML={{ __html: (post.content_html || '').replace(/<h1(\s|>)/gi, '<h2$1').replace(/<\/h1>/gi, '</h2>') }}
           />
 
           {/* CTA */}

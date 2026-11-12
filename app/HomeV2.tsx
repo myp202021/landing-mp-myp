@@ -47,6 +47,7 @@ import Testimonios from "@/components/home-v2/Testimonios";
 import DesktopOnly from "@/components/home-v2/DesktopOnly";
 import SmartRobot from "@/components/home-v2/SmartRobot";
 import Image from "next/image";
+import { AGENTES_ACTIVOS } from "@/lib/agentes-activos";
 
 const PortfolioBrochure = dynamic(() => import("@/components/PortfolioBrochure"));
 const Marquee3D = dynamic(() => import("@/components/home-v2/Marquee3D"), {
@@ -57,7 +58,7 @@ const CHIPS = [
   { t: 'Costo por lead', v: 'Medido por campaña', c: 'text-cyan-300', pos: 'left-0 top-10 lg:left-4' },
   { t: 'ChatGPT y Gemini', v: '¿Te recomiendan?', c: 'text-violet-300', pos: 'right-0 top-24' },
   { t: 'CRM conectado', v: 'Hasta la venta', c: 'text-emerald-300', pos: 'left-6 bottom-16' },
-  { t: 'Agentes IA', v: '27 en producción', c: 'text-amber-300', pos: 'right-6 bottom-6' },
+  { t: 'Agentes IA', v: `${AGENTES_ACTIVOS} en producción`, c: 'text-amber-300', pos: 'right-6 bottom-6' },
 ]
 
 const WA =
@@ -78,7 +79,7 @@ const STATS = [
   { v: String(aniosMyP()), l: "años en el mercado" },
   { v: "50+", l: "clientes activos" },
   { v: "+200", l: "campañas activas" },
-  { v: "27", l: "agentes IA en producción" },
+  { v: String(AGENTES_ACTIVOS), l: "agentes IA en producción" },
   { v: "5.0★", l: "115 reseñas en Google" },
 ];
 
@@ -879,7 +880,7 @@ function Agentes() {
             id="agentes-t"
             className="text-4xl font-black tracking-tight md:text-6xl"
           >
-            27 agentes trabajando.{" "}
+            {AGENTES_ACTIVOS} agentes trabajando.{" "}
             <span className="v2-shimmer">Con evidencia.</span>
           </h2>
           <p className="mt-5 text-lg text-slate-400">
@@ -900,7 +901,7 @@ function Agentes() {
             href="/agentes-ia"
             className="mt-6 inline-flex items-center gap-2 font-semibold text-cyan-300 hover:text-cyan-200"
           >
-            Ver los 27 agentes y su evidencia <ArrowRight className="h-4 w-4" />
+            Ver los {AGENTES_ACTIVOS} agentes y su evidencia <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
       </div>

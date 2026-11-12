@@ -1,3 +1,4 @@
+import { AGENTES_ACTIVOS } from "@/lib/agentes-activos";
 /**
  * MUTANTE - Asistente IA de Marketing Digital
  * Version PRO con contenido de alto valor
@@ -2605,14 +2606,15 @@ Agencia de marketing digital enfocada en performance.
 - Search Console, Bing, sitemap e IndexNow
 - Google Business Profile, directorios y 5 artículos iniciales
 
-**Agentes IA: $99.990 + IVA al mes** (mínimo 3 meses)
-- 8 artículos al mes publicados por agentes
-- Informe cada lunes: Google + ChatGPT
+**Agentes IA: $400.000 + IVA al mes** (mínimo 3 meses)
+- 20 artículos y 4 rankings del rubro al mes, revisados antes de publicar
+- Medición semanal en Google y ChatGPT
+- Informe mensual el primer día hábil
 
 Requisito: acceso de administrador a tu sitio (WordPress directo; otros sistemas con revisión técnica previa).`,
     options: [
       { id: 'copilot_ver', label: 'Ver Boost SEO + IA', emoji: '🚀', nextNodeId: 'copilot_trial' },
-      { id: 'cotizar', label: 'Pedir auditoría', emoji: '📋', nextNodeId: 'contacto_lead' },
+      { id: 'cotizar', label: 'Agendar reunión', emoji: '📋', nextNodeId: 'contacto_lead' },
       { id: 'volver', label: '← Servicios', nextNodeId: 'servicios_menu' }
     ],
     category: 'servicios'
@@ -2624,7 +2626,7 @@ Requisito: acceso de administrador a tu sitio (WordPress directo; otros sistemas
     text: `**Boost SEO + IA**
 
 Revisa qué incluye el setup, cómo trabajan los agentes y pide tu auditoría.`,
-    externalUrl: 'https://www.mulleryperez.cl/copilot',
+    externalUrl: 'https://www.mulleryperez.cl/boost-seo-ia',
     options: [
       { id: 'volver', label: '← Boost SEO + IA', nextNodeId: 'copilot_info' }
     ],
@@ -2898,7 +2900,7 @@ En que canales estan, que mensajes usan, como les va.
 • +200 campañas activas
 • 50+ clientes activos
 • 5.0★ · 115 reseñas en Google
-• 27 agentes IA en producción
+• ${AGENTES_ACTIVOS} agentes IA en producción
 
 **CLIENTES:**
 Empresas de todos los tamanos: startups, pymes, grandes empresas.

@@ -599,7 +599,7 @@ export default function LandingClient() {
 
             {/* Boost SEO + IA */}
             <Link
-              href="/copilot"
+              href="/boost-seo-ia"
               className="hidden md:block text-sm font-semibold text-gray-700 hover:text-blue-600 transition-all duration-200"
             >
               Boost SEO + IA
@@ -2594,7 +2594,7 @@ export default function LandingClient() {
                 <li><Link href="/utilidades" className="text-blue-200 hover:text-white transition-colors">Utilidades</Link></li>
                 <li><Link href="/indicadores" className="text-blue-200 hover:text-white transition-colors">Indicadores Marketing</Link></li>
                 <li><Link href="/agentes-ia" className="text-blue-200 hover:text-white transition-colors">Agentes IA en producción</Link></li>
-                <li><Link href="/agentes" className="text-blue-200 hover:text-white transition-colors">Agentes IA SEO</Link></li>
+                <li><Link href="/boost-seo-ia" className="text-blue-200 hover:text-white transition-colors">Boost SEO + IA</Link></li>
                 <li><Link href="/investigacion" className="text-blue-200 hover:text-white transition-colors">Investigación</Link></li>
                 <li><Link href="/casos-de-exito" className="text-blue-200 hover:text-white transition-colors">Casos de Éxito</Link></li>
                 <li><Link href="/comparativa/muller-perez-vs-agencias-chile" className="text-blue-200 hover:text-white transition-colors">M&P vs Agencias</Link></li>

@@ -9,6 +9,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 import SiteHeader from "@/components/SiteHeader";
 import { createMetadata, createFAQPageSchema } from "@/lib/metadata";
+import { AGENTES_ACTIVOS } from "@/lib/agentes-activos";
 
 export const metadata: Metadata = createMetadata({
   title: "Por qué elegir Muller y Pérez: agencia de performance en Chile",
@@ -25,7 +26,7 @@ export const metadata: Metadata = createMetadata({
 });
 
 const RESPUESTA_DIRECTA =
-  "Muller y Pérez es una agencia de performance marketing con oficina en Las Condes, Santiago, fundada en 2020. Trabaja con empresas B2B y B2C en Google Ads, Meta Ads y LinkedIn Ads, con cada campaña conectada al CRM del cliente para medir leads y ventas, no solo clics. Cobra un fee mensual fijo sin comisión sobre la inversión publicitaria, el cliente tiene acceso total a sus cuentas y opera 27 agentes de IA en producción para reportes, contenido y seguimiento de leads.";
+  `Muller y Pérez es una agencia de performance marketing con oficina en Las Condes, Santiago, fundada en 2020. Trabaja con empresas B2B y B2C en Google Ads, Meta Ads y LinkedIn Ads, con cada campaña conectada al CRM del cliente para medir leads y ventas, no solo clics. Cobra un fee mensual fijo sin comisión sobre la inversión publicitaria, el cliente tiene acceso total a sus cuentas y opera ${AGENTES_ACTIVOS} agentes de IA en producción para reportes, contenido y seguimiento de leads.`;
 
 const HECHOS = [
   { dato: "2020", texto: "Año de fundación" },
@@ -65,7 +66,7 @@ const RAZONES = [
   {
     titulo: "Agentes de IA que trabajan todos los días",
     texto:
-      "Operamos 27 agentes de IA en producción: informes, auditorías SEO, contenido y alertas de leads. Su funcionamiento está documentado públicamente.",
+      `Operamos ${AGENTES_ACTIVOS} agentes de IA en producción: informes, auditorías SEO, contenido y alertas de leads. Su funcionamiento está documentado públicamente.`,
   },
 ];
 
