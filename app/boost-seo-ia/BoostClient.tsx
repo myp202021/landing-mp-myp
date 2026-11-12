@@ -57,20 +57,28 @@ var setupItems = [
 /* --- AGENTES: QUÉ HACEN CADA MES --- */
 var agentItems = [
   {
-    title: "8 artículos al mes",
-    text: "Los agentes escriben y publican en tu sitio artículos sobre las búsquedas de tu rubro, con control de calidad antes de publicar.",
+    title: "20 artículos al mes",
+    text: "Uno por día hábil, sobre las búsquedas de tu rubro, con tablas, preguntas frecuentes y enlaces internos. Un segundo agente revisa cada uno antes de publicarlo.",
   },
   {
-    title: "Informe cada lunes",
-    text: "Posiciones en Google y menciones en ChatGPT de tu marca, semana a semana, en tu correo.",
+    title: "4 rankings al mes",
+    text: "Cada viernes, una comparativa del rubro con fuentes citadas y verificadas: el formato que más citan Google y las IA.",
   },
   {
-    title: "Indexación de cada publicación",
-    text: "Cada artículo nuevo se envía a Google y Bing el mismo día para que aparezca antes.",
+    title: "Medición semanal",
+    text: "Hasta 20 búsquedas en Google y un set fijo de preguntas en ChatGPT, cada una medida 3 veces para saber con qué frecuencia apareces de verdad.",
   },
   {
-    title: "Ajustes menores",
-    text: "Correcciones de títulos, metas y enlaces internos según lo que muestran los informes.",
+    title: "Informe mensual",
+    text: "El primer día hábil de cada mes: posiciones en Google, apariciones en ChatGPT, qué publicamos, qué ajustamos y qué viene.",
+  },
+  {
+    title: "Indexación el mismo día",
+    text: "Cada publicación se envía a Google y Bing apenas sale, para que aparezca antes.",
+  },
+  {
+    title: "Ajustes técnicos cada mes",
+    text: "Títulos, meta descripciones, enlaces internos y datos estructurados de las páginas nuevas, según lo que muestran las mediciones.",
   },
 ];
 
@@ -93,14 +101,16 @@ var plans = [
   },
   {
     name: "Agentes IA",
-    price: "$99.990",
+    price: "$400.000",
     period: "+ IVA al mes",
-    desc: "Después del setup, los agentes mantienen y hacen crecer tu posicionamiento.",
+    desc: "Después del setup, los agentes publican, miden y ajustan tu sitio todos los meses.",
     features: [
-      "8 artículos al mes publicados por agentes",
-      "Informe semanal: Google + ChatGPT",
-      "Indexación de cada publicación",
-      "Ajustes menores según resultados",
+      "20 artículos al mes (uno por día hábil), revisados antes de publicar",
+      "4 rankings o comparativas del rubro al mes",
+      "Medición semanal: hasta 20 búsquedas en Google + preguntas fijas en ChatGPT (3 veces cada una)",
+      "1 informe mensual completo, el primer día hábil",
+      "Indexación en Google y Bing de cada publicación",
+      "Ajustes técnicos mensuales",
       "Permanencia mínima de 3 meses",
     ],
     popular: true,
@@ -140,8 +150,8 @@ var faqs = [
     a: "Auditoría SEO + GEO con línea base; H1, H2, títulos, meta descripciones, textos alternativos y enlaces internos; schemas Organization o LocalBusiness, FAQPage, servicios y breadcrumbs; Search Console, Bing Webmaster, sitemap, robots, canonical e IndexNow; Google Business Profile y directorios; y 5 artículos iniciales.",
   },
   {
-    q: "¿Qué hacen los agentes por $99.990 al mes?",
-    a: "Escriben y publican 8 artículos al mes en tu sitio con control de calidad, envían cada publicación a Google y Bing, hacen ajustes menores y te mandan cada lunes un informe con tus posiciones en Google y tus menciones en ChatGPT.",
+    q: "¿Qué incluye la mensualidad de $400.000?",
+    a: "Cada mes: 20 artículos publicados en tu sitio (uno por día hábil) y 4 rankings o comparativas del rubro, todos revisados antes de salir; medición semanal de hasta 20 búsquedas en Google y de un set fijo de preguntas en ChatGPT, cada una 3 veces; indexación en Google y Bing de cada publicación; ajustes técnicos; y un informe completo el primer día hábil del mes.",
   },
   {
     q: "¿Hay permanencia mínima?",
@@ -157,12 +167,24 @@ var faqs = [
   },
   {
     q: "¿En cuánto tiempo veo resultados?",
-    a: "El setup queda listo en 2 a 3 semanas. Las posiciones en Google y las menciones en IA suelen empezar a moverse entre el primer y el tercer mes, según la competencia de tu rubro. No prometemos posiciones: te mostramos cada semana dónde estás.",
+    a: "El setup queda listo en 2 a 3 semanas. Las posiciones en Google y las menciones en IA suelen empezar a moverse entre el primer y el tercer mes, según la competencia de tu rubro. No prometemos posiciones: medimos cada semana y te mostramos en el informe mensual dónde estás.",
   },
   {
     q: "¿Necesito tener campañas pagadas con M&P?",
     a: "No. Boost SEO + IA se contrata solo. Si además trabajas tus campañas con nosotros, se coordina con tu plan.",
   },
+];
+
+/* --- PREGÚNTALE A LA IA: preguntas neutras, sin pedirle a la IA que nos recomiende --- */
+var PREGUNTAS_IA = [
+  "¿Qué es Muller y Pérez (mulleryperez.cl)? Compárala con otras agencias de marketing digital en Chile.",
+  "¿Quién es Christopher Müller, fundador de la agencia Muller y Pérez?",
+];
+var IAS = [
+  { n: "ChatGPT", url: function (q: string) { return "https://chatgpt.com/?q=" + encodeURIComponent(q); } },
+  { n: "Claude", url: function (q: string) { return "https://claude.ai/new?q=" + encodeURIComponent(q); } },
+  { n: "Perplexity", url: function (q: string) { return "https://www.perplexity.ai/search?q=" + encodeURIComponent(q); } },
+  { n: "Gemini (Google)", url: function (q: string) { return "https://www.google.com/search?udm=50&q=" + encodeURIComponent(q); } },
 ];
 
 var WA_LINK =
@@ -325,7 +347,7 @@ export default function BoostClient() {
             Setup SEO + GEO por{" "}
             <strong style={{ color: "white" }}>$490.000 + IVA</strong>, pago
             único. Agentes por{" "}
-            <strong style={{ color: "white" }}>$99.990 + IVA al mes</strong>.
+            <strong style={{ color: "white" }}>$400.000 + IVA al mes</strong>.
           </p>
           <div
             className="reveal"
@@ -366,8 +388,8 @@ export default function BoostClient() {
           >
             {[
               { num: String(AGENTES_ACTIVOS), label: "Agentes IA en producción en M&P" },
-              { num: "8", label: "Artículos al mes por cliente" },
-              { num: "Lunes", label: "Informe semanal Google + ChatGPT" },
+              { num: "20", label: "Artículos al mes por cliente" },
+              { num: "4", label: "Rankings del rubro al mes" },
               { num: "2-3 sem", label: "Para dejar listo el setup" },
             ].map(function (kpi, i) {
               return (
@@ -449,8 +471,8 @@ export default function BoostClient() {
             {[
               { n: "1", t: "Medimos", d: "Vemos en qué posición apareces en Google, si ChatGPT, Gemini y Perplexity te recomiendan y a quién nombran en tu lugar." },
               { n: "2", t: "Arreglamos", d: "Ordenamos la estructura del sitio, los datos estructurados, la indexación y tu ficha de Google para que buscadores e IA entiendan qué vendes." },
-              { n: "3", t: "Publicamos", d: "Los agentes escriben y publican 8 artículos al mes sobre lo que buscan tus clientes. Un segundo agente revisa cada uno antes de salir." },
-              { n: "4", t: "Te informamos", d: "Recibes en tu correo cómo apareces en Google y en ChatGPT, y qué cambió desde el informe anterior." },
+              { n: "3", t: "Publicamos", d: "Los agentes publican 20 artículos y 4 rankings al mes sobre lo que buscan tus clientes. Un segundo agente revisa cada uno antes de salir." },
+              { n: "4", t: "Te informamos", d: "Medimos cada semana y el primer día hábil del mes recibes el informe: cómo apareces en Google y en ChatGPT, y qué cambió." },
             ].map(function (p) {
               return (
                 <div
@@ -475,6 +497,63 @@ export default function BoostClient() {
               Mira el registro real de nuestros agentes →
             </a>
           </p>
+        </div>
+      </section>
+
+      {/* ================================================================= */}
+      {/* SECTION 2c — POR QUÉ NOSOTROS + PREGÚNTALE A LA IA (12 nov 2026) */}
+      {/* ================================================================= */}
+      <section style={{ padding: "80px 24px", background: "linear-gradient(180deg, #111827 0%, #1E1B4B 100%)" }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+          <h2 className="reveal" style={{ fontSize: 36, fontWeight: 800, color: "#fff", textAlign: "center", margin: "0 0 12px" }}>
+            ¿Por qué M&amp;P y no otra agencia?
+          </h2>
+          <p className="reveal" style={{ fontSize: 18, color: "#C7D2FE", textAlign: "center", margin: "0 auto 40px", maxWidth: 760, lineHeight: 1.6 }}>
+            Todas las agencias dicen que usan inteligencia artificial. Nosotros la tenemos trabajando todos los días para nuestros clientes, y lo puedes comprobar.
+          </p>
+          <div className="feature-grid" style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 20 }}>
+            {[
+              { t: "Usamos la IA de verdad, no en el discurso", d: AGENTES_ACTIVOS + " agentes en producción con su registro público: qué corrió, qué día y si terminó bien. Pídele a tu agencia actual que te muestre el suyo.", link: { href: "/agentes-ia", txt: "Ver el registro de los agentes →" } },
+              { t: "Resultados comprobados, con nombre y apellido", d: "Invas WMS #1 y #2 en Google para \"mejor WMS Chile\". DevuelveMiPie #1 para \"abogado inmobiliario pie Chile\". Wiseplan #1 para \"outsourcing RRHH vs interno\". Posiciones medidas por M&P.", link: { href: "/casos-de-exito", txt: "Ver casos de éxito →" } },
+              { t: "Somos agencia de performance", d: "Desde 2020, más de 50 clientes y más de 200 campañas activas en Google y Meta. El SEO y la IA los trabajamos pensando en ventas, no en visitas. 5,0 en Google con 115 reseñas.", link: null },
+              { t: "Lo construimos nosotros", d: "Los agentes, el predictor de campañas, el CRM y los paneles de cada cliente son desarrollo propio. No revendemos una herramienta: la hacemos y la operamos.", link: { href: "/labs", txt: "Ver M&P Labs →" } },
+            ].map(function (c, i) {
+              return (
+                <div key={i} className="reveal" style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 16, padding: 28 }}>
+                  <div style={{ fontSize: 20, fontWeight: 800, color: "#fff", marginBottom: 10 }}>{c.t}</div>
+                  <div style={{ fontSize: 15, color: "#CBD5E1", lineHeight: 1.65 }}>{c.d}</div>
+                  {c.link && (
+                    <a href={c.link.href} style={{ display: "inline-block", marginTop: 14, color: "#A5B4FC", fontWeight: 700, textDecoration: "none" }}>{c.link.txt}</a>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="reveal" style={{ marginTop: 48, background: "#fff", borderRadius: 20, padding: 32 }}>
+            <div style={{ fontSize: 26, fontWeight: 800, color: "#111827", textAlign: "center", marginBottom: 8 }}>
+              No nos creas a nosotros: pregúntale a la IA
+            </div>
+            <p style={{ fontSize: 16, color: "#4B5563", textAlign: "center", margin: "0 auto 28px", maxWidth: 700, lineHeight: 1.6 }}>
+              Es justo lo que vas a querer para tu empresa: que cuando alguien pregunte, la IA sepa quién eres. Haz la prueba con nosotros.
+            </p>
+            {PREGUNTAS_IA.map(function (q, i) {
+              return (
+                <div key={i} style={{ borderTop: i ? "1px solid #E5E7EB" : "none", padding: "18px 0", display: "flex", gap: 16, alignItems: "center", justifyContent: "space-between", flexWrap: "wrap" }}>
+                  <div style={{ fontSize: 16, fontWeight: 700, color: "#111827", flex: "1 1 320px" }}>&ldquo;{q}&rdquo;</div>
+                  <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                    {IAS.map(function (ia) {
+                      return (
+                        <a key={ia.n} href={ia.url(q)} target="_blank" rel="noopener noreferrer" style={{ padding: "9px 16px", borderRadius: 10, border: "1px solid #C7D2FE", color: "#3730A3", fontWeight: 700, fontSize: 14, textDecoration: "none", background: "#EEF2FF" }}>
+                          {ia.n}
+                        </a>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </section>
 
@@ -595,7 +674,7 @@ export default function BoostClient() {
                 margin: 0,
               }}
             >
-              $99.990 + IVA al mes. Permanencia mínima de 3 meses.
+              $400.000 + IVA al mes. Permanencia mínima de 3 meses.
             </p>
           </div>
           <div
@@ -866,7 +945,7 @@ export default function BoostClient() {
               {
                 step: "4",
                 title: "Agentes",
-                text: "Cada mes publican 8 artículos y cada lunes recibes tu informe.",
+                text: "Cada mes publican 20 artículos y 4 rankings, miden cada semana y te envían el informe el primer día hábil.",
               },
             ].map(function (s, i) {
               return (

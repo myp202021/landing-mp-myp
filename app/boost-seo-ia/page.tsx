@@ -5,7 +5,7 @@ import { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Boost SEO + IA: aparece en Google y en ChatGPT",
   description:
-    "Setup SEO + GEO por $490.000 + IVA (H1, H2, schemas, FAQ, indexación, Google Business) y agentes IA por $99.990 + IVA al mes con 8 artículos e informe semanal.",
+    "Setup SEO + GEO por $490.000 + IVA (H1, H2, schemas, FAQ, indexación, Google Business) y agentes IA por $400.000 + IVA al mes con 20 artículos y 4 rankings al mes, medición semanal e informe mensual de Google y ChatGPT.",
   keywords: [
     "seo y geo chile",
     "posicionamiento en chatgpt",
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Boost SEO + IA — Que Google y ChatGPT recomienden tu empresa",
     description:
-      "Setup SEO + GEO por $490.000 + IVA y agentes IA por $99.990 + IVA al mes: 8 artículos e informe semanal de Google y ChatGPT.",
+      "Setup SEO + GEO por $490.000 + IVA y agentes IA por $400.000 + IVA al mes con 20 artículos y 4 rankings al mes, medición semanal e informe mensual de Google y ChatGPT.",
     url: "https://www.mulleryperez.cl/boost-seo-ia",
     siteName: "Muller y Pérez",
     type: "website",
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Boost SEO + IA — Muller y Pérez",
     description:
-      "Setup SEO + GEO por $490.000 + IVA y agentes IA por $99.990 + IVA al mes.",
+      "Setup SEO + GEO por $490.000 + IVA y agentes IA por $400.000 + IVA al mes.",
     images: ["https://www.mulleryperez.cl/og-image.jpg"],
   },
   robots: {
@@ -77,10 +77,10 @@ var faqLd = {
     },
     {
       "@type": "Question",
-      name: "¿Qué hacen los agentes por $99.990 al mes?",
+      name: "¿Qué incluye la mensualidad de $400.000?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Escriben y publican 8 artículos al mes con control de calidad, envían cada publicación a Google y Bing, hacen ajustes menores y envían cada lunes un informe con las posiciones en Google y las menciones en ChatGPT.",
+        text: "Cada mes: 20 artículos (uno por día hábil) y 4 rankings del rubro publicados en tu sitio y revisados antes de salir; medición semanal de hasta 20 búsquedas en Google y de preguntas fijas en ChatGPT, 3 veces cada una; indexación en Google y Bing; ajustes técnicos; e informe completo el primer día hábil del mes.",
       },
     },
     {
@@ -116,7 +116,7 @@ var serviceLd = {
   "@type": "Service",
   name: "Boost SEO + IA",
   description:
-    "Setup SEO + GEO para aparecer en Google y en las respuestas de ChatGPT, Gemini y Perplexity, más agentes IA que publican 8 artículos al mes y entregan un informe semanal.",
+    "Setup SEO + GEO para aparecer en Google y en las respuestas de ChatGPT, Gemini y Perplexity, más agentes IA que publican 20 artículos y 4 rankings al mes, miden cada semana y entregan un informe mensual.",
   provider: {
     "@type": "Organization",
     name: "Muller y Pérez",
@@ -137,10 +137,10 @@ var serviceLd = {
     {
       "@type": "Offer",
       name: "Agentes IA",
-      price: "99990",
+      price: "400000",
       priceCurrency: "CLP",
       description:
-        "Mensual más IVA, permanencia mínima 3 meses. 8 artículos al mes, indexación e informe semanal de Google y ChatGPT.",
+        "Mensual más IVA, permanencia mínima 3 meses. 20 artículos y 4 rankings al mes, medición semanal, indexación e informe mensual de Google y ChatGPT.",
     },
   ],
 };

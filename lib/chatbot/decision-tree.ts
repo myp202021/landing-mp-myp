@@ -2605,14 +2605,15 @@ Agencia de marketing digital enfocada en performance.
 - Search Console, Bing, sitemap e IndexNow
 - Google Business Profile, directorios y 5 artículos iniciales
 
-**Agentes IA: $99.990 + IVA al mes** (mínimo 3 meses)
-- 8 artículos al mes publicados por agentes
-- Informe cada lunes: Google + ChatGPT
+**Agentes IA: $400.000 + IVA al mes** (mínimo 3 meses)
+- 20 artículos y 4 rankings del rubro al mes, revisados antes de publicar
+- Medición semanal en Google y ChatGPT
+- Informe mensual el primer día hábil
 
 Requisito: acceso de administrador a tu sitio (WordPress directo; otros sistemas con revisión técnica previa).`,
     options: [
       { id: 'copilot_ver', label: 'Ver Boost SEO + IA', emoji: '🚀', nextNodeId: 'copilot_trial' },
-      { id: 'cotizar', label: 'Pedir auditoría', emoji: '📋', nextNodeId: 'contacto_lead' },
+      { id: 'cotizar', label: 'Agendar reunión', emoji: '📋', nextNodeId: 'contacto_lead' },
       { id: 'volver', label: '← Servicios', nextNodeId: 'servicios_menu' }
     ],
     category: 'servicios'
