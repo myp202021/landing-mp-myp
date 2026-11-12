@@ -47,6 +47,7 @@ export default function Breadcrumbs() {
     'benchmarks': 'Benchmarks 2025',
     'planes': 'Planes',
     'agentes-ia': 'Agentes de IA',
+    'boost-seo-ia': 'Boost SEO + IA',
     'servicios': 'Servicios',
     'geo-chile': 'GEO Chile',
     'seo-chile': 'SEO Chile'

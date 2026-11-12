@@ -1,5 +1,6 @@
 import SiteHeader from "@/components/SiteHeader";
 import BoostClient from "./BoostClient";
+import { FAQS } from "./faqs";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -55,59 +56,14 @@ export const metadata: Metadata = {
 };
 
 // Schema FAQPage
-var faqLd = {
+const faqLd = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
-  mainEntity: [
-    {
-      "@type": "Question",
-      name: "¿Qué es GEO?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "GEO (Generative Engine Optimization) es lograr que las inteligencias artificiales como ChatGPT, Gemini o Perplexity mencionen y recomienden tu empresa cuando alguien pregunta por tu rubro. Se trabaja con contenido propio, datos estructurados y presencia coherente en directorios y medios.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "¿Qué incluye el setup de $490.000?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Auditoría SEO + GEO con línea base; H1, H2, títulos, meta descripciones, textos alternativos y enlaces internos; schemas Organization o LocalBusiness, FAQPage, servicios y breadcrumbs; Search Console, Bing Webmaster, sitemap, robots, canonical e IndexNow; Google Business Profile y directorios; y 5 artículos iniciales.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "¿Qué incluye la mensualidad de $400.000?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Cada mes: 20 artículos (uno por día hábil) y 4 rankings del rubro publicados en tu sitio y revisados antes de salir; medición semanal de hasta 20 búsquedas en Google y de preguntas fijas en ChatGPT, 3 veces cada una; indexación en Google y Bing; ajustes técnicos; e informe completo el primer día hábil del mes.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "¿Hay permanencia mínima?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Sí, 3 meses para los agentes. El setup es un pago único.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "¿Qué necesito para empezar?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Acceso de administrador a tu sitio. En WordPress funciona directo. Otros sistemas quedan sujetos a una revisión técnica previa y, si el servidor bloquea las cargas, se coordina con tu desarrollador.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "¿Necesito tener campañas pagadas con M&P?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "No. Boost SEO + IA se contrata solo.",
-      },
-    },
-  ],
+  mainEntity: FAQS.map((f) => ({
+    "@type": "Question",
+    name: f.q,
+    acceptedAnswer: { "@type": "Answer", text: f.a },
+  })),
 };
 
 // Schema Service
@@ -146,24 +102,6 @@ var serviceLd = {
 };
 
 // BreadcrumbList
-var breadcrumbLd = {
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  itemListElement: [
-    {
-      "@type": "ListItem",
-      position: 1,
-      name: "Muller y Pérez",
-      item: "https://www.mulleryperez.cl",
-    },
-    {
-      "@type": "ListItem",
-      position: 2,
-      name: "Boost SEO + IA",
-      item: "https://www.mulleryperez.cl/boost-seo-ia",
-    },
-  ],
-};
 
 export default function CopilotPage() {
   return (
@@ -175,10 +113,6 @@ export default function CopilotPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceLd) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
       />
       <SiteHeader />
       <BoostClient />
