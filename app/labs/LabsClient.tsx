@@ -90,7 +90,7 @@ export default function MPLabs() {
     },
     {
       nombre: 'Auditoría SEO',
-      descripcion: 'Analiza cualquier sitio web gratis. Revisa meta tags, headings, imágenes, velocidad y schema markup.',
+      descripcion: 'Revisa tu sitio: meta tags, headings, imágenes, velocidad y schema markup.',
       icono: Search,
       url: '/labs/auditoria-seo',
       tag: 'Nuevo',
@@ -200,7 +200,7 @@ export default function MPLabs() {
               href="/#contacto"
               className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-lg shadow-blue-600/20 transition-all duration-300"
             >
-              Agendar reunión gratis
+              Agendar reunión
             </Link>
             <Link
               href="/utilidades"

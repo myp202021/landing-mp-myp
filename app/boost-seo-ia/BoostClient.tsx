@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { AGENTES_ACTIVOS } from "@/lib/agentes-activos";
 
 function useScrollReveal() {
   useEffect(function () {
@@ -168,7 +169,7 @@ var WA_LINK =
   "https://wa.me/56992258137?text=Hola%20Christopher,%20me%20interesa%20Boost%20SEO%20%2B%20IA";
 
 /* --- COMPONENT --- */
-export default function CopilotClient() {
+export default function BoostClient() {
   var [faqOpen, setFaqOpen] = useState(-1);
   var [formData, setFormData] = useState({
     nombre: "",
@@ -342,7 +343,7 @@ export default function CopilotClient() {
                 scrollTo("contacto");
               }}
             >
-              Quiero mi auditoría
+              Quiero el Boost
             </button>
             <button
               className="btn-secondary"
@@ -364,7 +365,7 @@ export default function CopilotClient() {
             }}
           >
             {[
-              { num: "27", label: "Agentes IA en producción en M&P" },
+              { num: String(AGENTES_ACTIVOS), label: "Agentes IA en producción en M&P" },
               { num: "8", label: "Artículos al mes por cliente" },
               { num: "Lunes", label: "Informe semanal Google + ChatGPT" },
               { num: "2-3 sem", label: "Para dejar listo el setup" },
@@ -432,6 +433,47 @@ export default function CopilotClient() {
             estructurado, no publica contenido útil y no aparece en directorios,
             no existes en esa respuesta. Boost SEO + IA trabaja las dos cosas a
             la vez: Google y las IA.
+          </p>
+        </div>
+      </section>
+
+      {/* ================================================================= */}
+      {/* SECTION 2b — QUÉ HACEMOS, EN 4 PASOS (12 nov 2026) */}
+      {/* ================================================================= */}
+      <section style={{ padding: "0 24px 80px", background: "#FFFFFF" }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+          <div
+            className="feature-grid"
+            style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 20 }}
+          >
+            {[
+              { n: "1", t: "Medimos", d: "Vemos en qué posición apareces en Google, si ChatGPT, Gemini y Perplexity te recomiendan y a quién nombran en tu lugar." },
+              { n: "2", t: "Arreglamos", d: "Ordenamos la estructura del sitio, los datos estructurados, la indexación y tu ficha de Google para que buscadores e IA entiendan qué vendes." },
+              { n: "3", t: "Publicamos", d: "Los agentes escriben y publican 8 artículos al mes sobre lo que buscan tus clientes. Un segundo agente revisa cada uno antes de salir." },
+              { n: "4", t: "Te informamos", d: "Recibes en tu correo cómo apareces en Google y en ChatGPT, y qué cambió desde el informe anterior." },
+            ].map(function (p) {
+              return (
+                <div
+                  key={p.n}
+                  className="reveal"
+                  style={{ background: "#FAFAFA", border: "1px solid #E5E7EB", borderRadius: 16, padding: 24, textAlign: "left" }}
+                >
+                  <div style={{ width: 36, height: 36, borderRadius: 10, background: "linear-gradient(135deg, #2563EB, #7C3AED)", color: "#fff", fontWeight: 800, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 14 }}>
+                    {p.n}
+                  </div>
+                  <div style={{ fontSize: 18, fontWeight: 800, color: "#111827", marginBottom: 8 }}>{p.t}</div>
+                  <div style={{ fontSize: 15, color: "#4B5563", lineHeight: 1.6 }}>{p.d}</div>
+                </div>
+              );
+            })}
+          </div>
+          <p className="reveal" style={{ textAlign: "center", fontSize: 20, fontWeight: 700, color: "#111827", margin: "40px auto 8px", maxWidth: 760, lineHeight: 1.5 }}>
+            Una herramienta te dice dónde estás. Nosotros hacemos el trabajo para que Google y la IA te recomienden.
+          </p>
+          <p className="reveal" style={{ textAlign: "center", margin: 0 }}>
+            <a href="/agentes-ia" style={{ color: "#4F46E5", fontWeight: 700, textDecoration: "none" }}>
+              Mira el registro real de nuestros agentes →
+            </a>
           </p>
         </div>
       </section>
@@ -736,7 +778,7 @@ export default function CopilotClient() {
                       scrollTo("contacto");
                     }}
                   >
-                    Quiero mi auditoría
+                    Quiero el Boost
                   </button>
                 </div>
               );
@@ -1047,13 +1089,13 @@ export default function CopilotClient() {
                 margin: "0 0 16px",
               }}
             >
-              Pide tu auditoría
+              Agenda una reunión
             </h2>
             <p
               className="reveal"
               style={{ fontSize: 18, color: "#6B7280", margin: 0 }}
             >
-              Déjanos tu sitio y te contactamos para revisar cómo apareces hoy
+              Déjanos tu sitio y te contactamos para conversar cómo apareces hoy
               en Google y en las IA.
             </p>
           </div>
@@ -1148,7 +1190,7 @@ export default function CopilotClient() {
                     className="btn-primary"
                     disabled={enviando}
                   >
-                    {enviando ? "Enviando..." : "Quiero mi auditoría"}
+                    {enviando ? "Enviando..." : "Quiero el Boost"}
                   </button>
                 </form>
               )}

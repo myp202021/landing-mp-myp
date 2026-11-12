@@ -1,5 +1,5 @@
 import SiteHeader from "@/components/SiteHeader";
-import CopilotClient from "./CopilotClient";
+import BoostClient from "./BoostClient";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -16,12 +16,12 @@ export const metadata: Metadata = {
     "auditoría seo geo",
     "blog automatizado con ia",
   ],
-  alternates: { canonical: "https://www.mulleryperez.cl/copilot" },
+  alternates: { canonical: "https://www.mulleryperez.cl/boost-seo-ia" },
   openGraph: {
     title: "Boost SEO + IA — Que Google y ChatGPT recomienden tu empresa",
     description:
       "Setup SEO + GEO por $490.000 + IVA y agentes IA por $99.990 + IVA al mes: 8 artículos e informe semanal de Google y ChatGPT.",
-    url: "https://www.mulleryperez.cl/copilot",
+    url: "https://www.mulleryperez.cl/boost-seo-ia",
     siteName: "Muller y Pérez",
     type: "website",
     locale: "es_CL",
@@ -122,7 +122,7 @@ var serviceLd = {
     name: "Muller y Pérez",
     url: "https://www.mulleryperez.cl",
   },
-  url: "https://www.mulleryperez.cl/copilot",
+  url: "https://www.mulleryperez.cl/boost-seo-ia",
   areaServed: { "@type": "Country", name: "Chile" },
   serviceType: "SEO y GEO con inteligencia artificial",
   offers: [
@@ -160,7 +160,7 @@ var breadcrumbLd = {
       "@type": "ListItem",
       position: 2,
       name: "Boost SEO + IA",
-      item: "https://www.mulleryperez.cl/copilot",
+      item: "https://www.mulleryperez.cl/boost-seo-ia",
     },
   ],
 };
@@ -181,7 +181,7 @@ export default function CopilotPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
       />
       <SiteHeader />
-      <CopilotClient />
+      <BoostClient />
     </>
   );
 }

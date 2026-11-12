@@ -1,9 +1,9 @@
 /** Enlaces del menú del sitio. Reúne los del header anterior y los del home nuevo, para no perder enlazado interno. */
 export const NAV_PRINCIPAL = [
   { href: '/#areas', t: 'Cómo trabajamos' },
-  { href: '/agentes-ia', t: 'Agentes IA' },
-  { href: '/copilot', t: 'Boost SEO + IA' },
   { href: '/#planes', t: 'Planes' },
+  { href: '/boost-seo-ia', t: 'Boost SEO + IA' },
+  { href: '/labs', t: 'Labs' },
   { href: '/casos-de-exito', t: 'Casos' },
   { href: '/blog', t: 'Blog' },
 ] as const
@@ -19,16 +19,6 @@ export const NAV_MAS = [
       ['/servicios/seo-chile', 'SEO'],
       ['/servicios/geo-chile', 'GEO (IA)'],
       ['/#planes', 'Planes Silver · Gold · Platinum'],
-    ],
-  },
-  {
-    titulo: 'M&P Labs',
-    links: [
-      ['/labs', 'Todas las herramientas'],
-      ['/labs/predictor', 'Predictor + diagnóstico'],
-      ['/labs/buyer-gen', 'Buyer Gen'],
-      ['/labs/radar-industrias', 'Copilot Industrias'],
-      ['/tecnologia', 'Tecnología'],
     ],
   },
   {
@@ -56,6 +46,8 @@ export const NAV_MAS = [
     titulo: 'Nosotros',
     links: [
       ['/nosotros', 'Quiénes somos'],
+      ['/agentes-ia', 'Nuestros agentes IA'],
+      ['/tecnologia', 'Tecnología'],
       ['/equipo/christopher-muller', 'Equipo'],
       ['/casos-de-exito', 'Casos de éxito'],
       ['/#clientes', 'Clientes'],

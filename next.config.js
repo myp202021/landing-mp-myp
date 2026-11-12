@@ -108,6 +108,8 @@ const nextConfig = {
   async redirects() {
     return [
       // Pilar antiguo del ranking (datos sin verificar) → pilar nuevo con datos verificados mensualmente
+      // 12 nov 2026: Boost SEO + IA se mudó de /copilot (nombre del producto antiguo). /copilot/login y el panel siguen en /copilot/*
+      { source: '/copilot', destination: '/boost-seo-ia', permanent: true },
       { source: '/ranking-agencias-marketing-digital-chile', destination: '/mejores-agencias-marketing-digital-chile', permanent: true },
       // ========================================
       // Query param redirects moved to middleware.ts

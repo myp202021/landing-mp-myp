@@ -599,7 +599,7 @@ export default function LandingClient() {
 
             {/* Boost SEO + IA */}
             <Link
-              href="/copilot"
+              href="/boost-seo-ia"
               className="hidden md:block text-sm font-semibold text-gray-700 hover:text-blue-600 transition-all duration-200"
             >
               Boost SEO + IA

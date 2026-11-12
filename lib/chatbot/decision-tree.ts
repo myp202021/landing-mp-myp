@@ -2624,7 +2624,7 @@ Requisito: acceso de administrador a tu sitio (WordPress directo; otros sistemas
     text: `**Boost SEO + IA**
 
 Revisa qué incluye el setup, cómo trabajan los agentes y pide tu auditoría.`,
-    externalUrl: 'https://www.mulleryperez.cl/copilot',
+    externalUrl: 'https://www.mulleryperez.cl/boost-seo-ia',
     options: [
       { id: 'volver', label: '← Boost SEO + IA', nextNodeId: 'copilot_info' }
     ],
