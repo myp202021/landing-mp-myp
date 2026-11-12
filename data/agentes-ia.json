@@ -331,10 +331,10 @@
   },
   {
     "id": "informe-seo",
-    "nombre": "Informe semanal SEO y GEO a clientes",
+    "nombre": "Informe SEO y GEO a clientes",
     "area": "Informes SEO y GEO",
-    "que_hace": "Envía a cada cliente sus avances SEO y GEO de la semana; no envía si no hay datos o detecta errores.",
-    "frecuencia": "Lunes",
+    "que_hace": "Envía a cada cliente su informe mensual: posiciones en Google, apariciones en ChatGPT y lo publicado; no envía si no hay datos o detecta errores.",
+    "frecuencia": "Primer día hábil del mes",
     "repo": "myp202021/myp-daily-agent",
     "workflow": "informe-semanal-clientes.yml",
     "url_publica": null,

@@ -15,6 +15,7 @@ import {
   createServiceSchema,
   createFAQPageSchema,
 } from "@/lib/metadata";
+import { AGENTES_ACTIVOS } from "@/lib/agentes-activos";
 
 export const metadata: Metadata = createMetadata({
   title: "Agencia GEO en Chile: aparece en ChatGPT, Gemini y Claude",
@@ -517,7 +518,7 @@ export default function GEOChilePage() {
                 href="/agentes-ia"
                 className="text-center px-6 py-3.5 border border-white/30 rounded-xl font-semibold hover:bg-white/10"
               >
-                Ver los 27 agentes trabajando
+                Ver los {AGENTES_ACTIVOS} agentes trabajando
               </Link>
             </div>
           </div>

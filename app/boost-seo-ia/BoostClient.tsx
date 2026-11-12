@@ -1,146 +1,182 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { AGENTES_ACTIVOS } from "@/lib/agentes-activos";
+/**
+ * Boost SEO + IA — rediseño 12 nov 2026 con el lenguaje visual del home (v2-glass, v2-shimmer, v2-grid).
+ * Precio: setup $490.000 + mensualidad $400.000 + IVA. Cifra y glosario de agentes desde lib/agentes-activos.
+ */
 
-function useScrollReveal() {
-  useEffect(function () {
-    var els = document.querySelectorAll(".reveal");
-    var observer = new IntersectionObserver(
-      function (entries) {
-        entries.forEach(function (entry) {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("revealed");
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.12 },
-    );
-    els.forEach(function (el) {
-      observer.observe(el);
-    });
-    return function () {
-      observer.disconnect();
-    };
-  }, []);
-}
+import React, { useState } from "react";
+import {
+  ArrowRight,
+  Calendar,
+  MessageSquare,
+  Search,
+  Wrench,
+  PenTool,
+  FileText,
+  Bot,
+  Trophy,
+  LineChart,
+  Code2,
+  CheckCircle2,
+  Sparkles,
+  Plus,
+  Minus,
+} from "lucide-react";
+import { trackLead, trackWhatsAppClick } from "@/lib/meta-pixel";
+import {
+  AGENTES_ACTIVOS,
+  AGENTES_LISTA,
+  AGENTES_EJECUCIONES_30D,
+} from "@/lib/agentes-activos";
 
-/* --- SETUP: QUÉ INCLUYE --- */
-var setupItems = [
+/* ---------------- Datos ---------------- */
+
+const WA =
+  "https://wa.me/56992258137?text=Hola%20Christopher,%20me%20interesa%20Boost%20SEO%20%2B%20IA";
+
+const PASOS = [
   {
-    title: "Auditoría SEO + GEO inicial",
-    text: "Línea base de cómo aparece hoy tu empresa en Google, ChatGPT, Gemini y Perplexity, y qué fuentes citan esas IA sobre tu rubro.",
+    i: Search,
+    t: "Medimos",
+    d: "En qué posición apareces en Google, si ChatGPT, Gemini y Perplexity te recomiendan y a quién nombran en tu lugar.",
   },
   {
-    title: "H1, H2 y estructura on-page",
-    text: "Un H1 por página, H2 ordenados, títulos y meta descripciones, textos alternativos en imágenes y enlaces internos entre tus páginas.",
+    i: Wrench,
+    t: "Arreglamos",
+    d: "Estructura del sitio, datos estructurados, indexación y ficha de Google, para que buscadores e IA entiendan qué vendes.",
   },
   {
-    title: "Datos estructurados (schemas)",
-    text: "Organization o LocalBusiness, FAQPage, servicios o productos y breadcrumbs, para que Google y las IA entiendan quién eres y qué vendes.",
+    i: PenTool,
+    t: "Publicamos",
+    d: "20 artículos y 4 rankings al mes sobre lo que buscan tus clientes. Un segundo agente revisa cada uno antes de salir.",
   },
   {
-    title: "Indexación",
-    text: "Google Search Console, Bing Webmaster, sitemap, robots, canonical, IndexNow y corrección de errores y redirecciones.",
-  },
-  {
-    title: "GEO: visibilidad en IA",
-    text: "Google Business Profile, perfiles en directorios y listados, y datos de la empresa coherentes en todas partes, que es lo que leen las IA.",
-  },
-  {
-    title: "Contenido inicial",
-    text: "5 artículos base escritos para las búsquedas que importan en tu rubro, con preguntas frecuentes y datos estructurados.",
+    i: FileText,
+    t: "Te informamos",
+    d: "Medimos cada semana y el primer día hábil del mes recibes el informe: dónde estás y qué cambió.",
   },
 ];
 
-/* --- AGENTES: QUÉ HACEN CADA MES --- */
-var agentItems = [
+const SETUP = [
+  "Auditoría SEO + GEO con línea base en Google, ChatGPT, Gemini y Perplexity",
+  "H1, H2, títulos, meta descripciones, textos alternativos y enlaces internos",
+  "Schemas: Organization o LocalBusiness, FAQPage, servicios y breadcrumbs",
+  "Search Console, Bing Webmaster, sitemap, robots, canonical e IndexNow",
+  "Google Business Profile, directorios y datos de la empresa coherentes",
+  "5 artículos iniciales con preguntas frecuentes",
+];
+
+const MENSUAL = [
   {
-    title: "20 artículos al mes",
-    text: "Uno por día hábil, sobre las búsquedas de tu rubro, con tablas, preguntas frecuentes y enlaces internos. Un segundo agente revisa cada uno antes de publicarlo.",
+    n: "20",
+    t: "artículos al mes",
+    d: "Uno por día hábil, con tablas, preguntas frecuentes y enlaces internos, revisados antes de publicar.",
   },
   {
-    title: "4 rankings al mes",
-    text: "Cada viernes, una comparativa del rubro con fuentes citadas y verificadas: el formato que más citan Google y las IA.",
+    n: "4",
+    t: "rankings al mes",
+    d: "Cada viernes, una comparativa del rubro con fuentes citadas y verificadas.",
   },
   {
-    title: "Medición semanal",
-    text: "Hasta 20 búsquedas en Google y un set fijo de preguntas en ChatGPT, cada una medida 3 veces para saber con qué frecuencia apareces de verdad.",
+    n: "20",
+    t: "búsquedas medidas cada semana",
+    d: "En Google, más un set fijo de preguntas en ChatGPT, cada una medida 3 veces.",
   },
   {
-    title: "Informe mensual",
-    text: "El primer día hábil de cada mes: posiciones en Google, apariciones en ChatGPT, qué publicamos, qué ajustamos y qué viene.",
+    n: "1",
+    t: "informe mensual",
+    d: "El primer día hábil: posiciones, apariciones en IA, lo publicado, lo ajustado y lo que viene.",
   },
   {
-    title: "Indexación el mismo día",
-    text: "Cada publicación se envía a Google y Bing apenas sale, para que aparezca antes.",
+    n: "100%",
+    t: "de lo publicado indexado",
+    d: "Cada artículo se envía a Google y Bing el mismo día.",
   },
   {
-    title: "Ajustes técnicos cada mes",
-    text: "Títulos, meta descripciones, enlaces internos y datos estructurados de las páginas nuevas, según lo que muestran las mediciones.",
+    n: "1",
+    t: "revisión técnica al mes",
+    d: "Títulos, metas, enlaces internos y datos estructurados según lo que muestran las mediciones.",
   },
 ];
 
-/* --- PLANES --- */
-var plans = [
+const POR_QUE = [
   {
-    name: "Setup SEO + GEO",
-    price: "$490.000",
-    period: "+ IVA, pago único",
-    desc: "Dejamos tu sitio listo para Google y para las IA en 2 a 3 semanas.",
-    features: [
-      "Auditoría SEO + GEO con línea base",
-      "H1, H2, títulos y meta descripciones",
-      "Schemas: Organization, FAQPage, servicios, breadcrumbs",
-      "Search Console, Bing, sitemap, IndexNow",
-      "Google Business Profile y directorios",
-      "5 artículos iniciales",
-    ],
-    popular: false,
+    i: Bot,
+    t: "Usamos la IA de verdad, no en el discurso",
+    d: `${AGENTES_ACTIVOS} agentes en producción y ${AGENTES_EJECUCIONES_30D} ejecuciones exitosas en los últimos 30 días, con registro público. Pídele a tu agencia actual que te muestre el suyo.`,
+    href: "/agentes-ia",
+    cta: "Ver el registro",
   },
   {
-    name: "Agentes IA",
-    price: "$400.000",
-    period: "+ IVA al mes",
-    desc: "Después del setup, los agentes publican, miden y ajustan tu sitio todos los meses.",
-    features: [
-      "20 artículos al mes (uno por día hábil), revisados antes de publicar",
-      "4 rankings o comparativas del rubro al mes",
-      "Medición semanal: hasta 20 búsquedas en Google + preguntas fijas en ChatGPT (3 veces cada una)",
-      "1 informe mensual completo, el primer día hábil",
-      "Indexación en Google y Bing de cada publicación",
-      "Ajustes técnicos mensuales",
-      "Permanencia mínima de 3 meses",
-    ],
-    popular: true,
+    i: Trophy,
+    t: "Resultados con nombre y apellido",
+    d: 'Invas WMS #1 y #2 en Google para "mejor WMS Chile". DevuelveMiPie #1 para "abogado inmobiliario pie Chile". Wiseplan #1 para "outsourcing RRHH vs interno".',
+    href: "/casos-de-exito",
+    cta: "Ver casos",
+  },
+  {
+    i: LineChart,
+    t: "Somos agencia de performance",
+    d: "Desde 2020, más de 50 clientes y más de 200 campañas activas en Google y Meta. Trabajamos el SEO y la IA pensando en ventas, no en visitas. 5,0 en Google con 115 reseñas.",
+    href: null,
+    cta: "",
+  },
+  {
+    i: Code2,
+    t: "Lo construimos nosotros",
+    d: "Agentes, predictor de campañas, CRM y paneles por cliente son desarrollo propio. No revendemos una herramienta: la hacemos y la operamos.",
+    href: "/labs",
+    cta: "Ver M&P Labs",
   },
 ];
 
-/* --- CASOS (posiciones medidas por M&P en septiembre de 2026) --- */
-var cases = [
+const PREGUNTAS_IA = [
+  "¿Qué es Muller y Pérez (mulleryperez.cl)? Compárala con otras agencias de marketing digital en Chile.",
+  "¿Quién es Christopher Müller, fundador de la agencia Muller y Pérez?",
+];
+const IAS: { n: string; url: (q: string) => string }[] = [
   {
-    client: "Invas WMS",
-    result: '#1 y #2 en Google para "mejor WMS Chile"',
-    detail:
-      "Software de bodegas. Además aparece en las respuestas de las IA consultadas.",
+    n: "ChatGPT",
+    url: (q) => "https://chatgpt.com/?q=" + encodeURIComponent(q),
   },
   {
-    client: "DevuelveMiPie",
-    result: '#1 en Google para "abogado inmobiliario pie Chile"',
-    detail:
-      "Estudio jurídico. Blog automatizado con agentes desde agosto de 2026.",
+    n: "Claude",
+    url: (q) => "https://claude.ai/new?q=" + encodeURIComponent(q),
   },
   {
-    client: "Wiseplan",
-    result: '#1 en Google para "outsourcing RRHH vs interno"',
-    detail:
-      "Consultora de recursos humanos. Agentes de blog y ranking semanal.",
+    n: "Perplexity",
+    url: (q) => "https://www.perplexity.ai/search?q=" + encodeURIComponent(q),
+  },
+  {
+    n: "Gemini",
+    url: (q) =>
+      "https://www.google.com/search?udm=50&q=" + encodeURIComponent(q),
   },
 ];
 
-/* --- FAQ --- */
-var faqs = [
+const CASOS = [
+  {
+    c: "Invas WMS",
+    r: "#1 y #2 en Google",
+    k: '"mejor WMS Chile"',
+    d: "Software de bodegas. Además aparece en las respuestas de las IA consultadas.",
+  },
+  {
+    c: "DevuelveMiPie",
+    r: "#1 en Google",
+    k: '"abogado inmobiliario pie Chile"',
+    d: "Estudio jurídico. Blog con agentes desde agosto de 2026.",
+  },
+  {
+    c: "Wiseplan",
+    r: "#1 en Google",
+    k: '"outsourcing RRHH vs interno"',
+    d: "Consultora de recursos humanos. Agentes de blog y ranking semanal.",
+  },
+];
+
+const FAQS = [
   {
     q: "¿Qué es GEO?",
     a: "GEO (Generative Engine Optimization) es lograr que las inteligencias artificiales como ChatGPT, Gemini o Perplexity mencionen y recomienden tu empresa cuando alguien pregunta por tu rubro. Se trabaja con contenido propio, datos estructurados y presencia coherente en directorios y medios.",
@@ -163,7 +199,7 @@ var faqs = [
   },
   {
     q: "¿Los artículos los escribe una IA?",
-    a: "Sí, con IA supervisada. Cada artículo pasa por un control de calidad automático y reglas propias de tu empresa (datos, tono, lo que se puede y no se puede decir) antes de publicarse.",
+    a: "Sí, con IA supervisada. Cada artículo pasa por un revisor editorial y un verificador de fuentes, con reglas propias de tu empresa (datos, tono, lo que se puede y no se puede decir), antes de publicarse.",
   },
   {
     q: "¿En cuánto tiempo veo resultados?",
@@ -175,1145 +211,538 @@ var faqs = [
   },
 ];
 
-/* --- PREGÚNTALE A LA IA: preguntas neutras, sin pedirle a la IA que nos recomiende --- */
-var PREGUNTAS_IA = [
-  "¿Qué es Muller y Pérez (mulleryperez.cl)? Compárala con otras agencias de marketing digital en Chile.",
-  "¿Quién es Christopher Müller, fundador de la agencia Muller y Pérez?",
-];
-var IAS = [
-  { n: "ChatGPT", url: function (q: string) { return "https://chatgpt.com/?q=" + encodeURIComponent(q); } },
-  { n: "Claude", url: function (q: string) { return "https://claude.ai/new?q=" + encodeURIComponent(q); } },
-  { n: "Perplexity", url: function (q: string) { return "https://www.perplexity.ai/search?q=" + encodeURIComponent(q); } },
-  { n: "Gemini (Google)", url: function (q: string) { return "https://www.google.com/search?udm=50&q=" + encodeURIComponent(q); } },
-];
+/* ---------------- Piezas ---------------- */
 
-var WA_LINK =
-  "https://wa.me/56992258137?text=Hola%20Christopher,%20me%20interesa%20Boost%20SEO%20%2B%20IA";
+function Eyebrow({
+  children,
+  light = false,
+}: {
+  children: React.ReactNode;
+  light?: boolean;
+}) {
+  return (
+    <div
+      className={
+        light
+          ? "mb-5 inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-blue-700"
+          : "mb-5 inline-flex items-center gap-2 rounded-full border border-cyan-400/25 bg-cyan-400/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-cyan-300"
+      }
+    >
+      <span
+        className={
+          light
+            ? "h-1.5 w-1.5 rounded-full bg-blue-600"
+            : "h-1.5 w-1.5 rounded-full bg-cyan-300"
+        }
+      />{" "}
+      {children}
+    </div>
+  );
+}
 
-/* --- COMPONENT --- */
+const DARK =
+  "relative overflow-hidden bg-[radial-gradient(120%_80%_at_70%_0%,#1e3a8a_0%,#0b1640_45%,#081030_100%)] text-white";
+
+/* ---------------- Página ---------------- */
+
 export default function BoostClient() {
-  var [faqOpen, setFaqOpen] = useState(-1);
-  var [formData, setFormData] = useState({
+  const [faq, setFaq] = useState(-1);
+  const [form, setForm] = useState({
     nombre: "",
     email: "",
     telefono: "",
     sitio: "",
   });
-  var [enviando, setEnviando] = useState(false);
-  var [enviado, setEnviado] = useState(false);
+  const [enviando, setEnviando] = useState(false);
+  const [enviado, setEnviado] = useState(false);
+  const [error, setError] = useState("");
 
-  useScrollReveal();
+  const areas = Array.from(new Set(AGENTES_LISTA.map((a) => a.area)));
 
-  function scrollTo(id: string) {
-    var el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: "smooth" });
-  }
-
-  async function handleSubmit(e: React.FormEvent) {
+  async function enviar(e: React.FormEvent) {
     e.preventDefault();
     setEnviando(true);
+    setError("");
     try {
-      var res = await fetch("/api/contact", {
+      const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          nombre: formData.nombre,
-          email: formData.email,
-          telefono: formData.telefono,
-          solicitud: "Boost SEO + IA\n\nSitio web: " + formData.sitio,
+          nombre: form.nombre,
+          email: form.email,
+          telefono: form.telefono,
+          solicitud: "Boost SEO + IA\n\nSitio web: " + form.sitio,
           destinatario: "contacto@mulleryperez.cl",
           fuente: "landing-boost-seo-ia",
         }),
       });
       if (res.ok) {
         setEnviado(true);
-      } else {
-        alert("Error al enviar. Escríbenos por WhatsApp.");
-      }
+        trackLead({ nombre: form.nombre, email: form.email, telefono: form.telefono, servicio: "boost-seo-ia", fuente: "landing-boost-seo-ia" });
+      } else setError("No se pudo enviar. Escríbenos por WhatsApp.");
     } catch {
-      alert("Error al enviar. Escríbenos por WhatsApp.");
+      setError("No se pudo enviar. Escríbenos por WhatsApp.");
     }
     setEnviando(false);
   }
 
   return (
-    <div style={{ fontFamily: "Inter, system-ui, sans-serif" }}>
-      {/* --- GLOBAL STYLES --- */}
-      <style
-        dangerouslySetInnerHTML={{
-          __html: `
-        .reveal { opacity: 0; transform: translateY(32px); transition: opacity 0.7s ease, transform 0.7s ease; }
-        .revealed { opacity: 1; transform: none; }
-        .gradient-text { background: linear-gradient(135deg, #4338CA, #7C3AED); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-        .btn-primary { background: linear-gradient(135deg, #4338CA, #7C3AED); color: white; border: none; padding: 14px 32px; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.3s; display: inline-block; text-decoration: none; }
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(99,102,241,0.35); }
-        .btn-secondary { background: white; color: #4338CA; border: 2px solid #E0E7FF; padding: 12px 30px; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.3s; display: inline-block; text-decoration: none; }
-        .btn-secondary:hover { border-color: #7C3AED; background: #F5F3FF; }
-        .card-hover { transition: all 0.3s; }
-        .card-hover:hover { transform: translateY(-6px); box-shadow: 0 20px 60px rgba(0,0,0,0.08); }
-        .plan-card { border: 2px solid #E5E7EB; border-radius: 20px; padding: 40px 32px; background: white; transition: all 0.3s; }
-        .plan-card.popular { border-color: #7C3AED; box-shadow: 0 8px 40px rgba(124,58,237,0.15); position: relative; }
-        .input-field { width: 100%; padding: 14px 18px; border: 2px solid #E5E7EB; border-radius: 12px; font-size: 15px; font-family: Inter, sans-serif; transition: border-color 0.3s; outline: none; box-sizing: border-box; }
-        .input-field:focus { border-color: #7C3AED; }
-        @media (max-width: 768px) {
-          .feature-grid { grid-template-columns: 1fr !important; }
-          .plans-grid { grid-template-columns: 1fr !important; }
-          .steps-grid { grid-template-columns: 1fr !important; }
-          .kpi-grid { grid-template-columns: repeat(2, 1fr) !important; }
-          .contact-grid { grid-template-columns: 1fr !important; }
-          .hero-h1 { font-size: 34px !important; }
-        }
-      `,
-        }}
-      />
-
-      {/* ================================================================= */}
-      {/* SECTION 1 — HERO */}
-      {/* ================================================================= */}
-      <section
-        style={{
-          background:
-            "linear-gradient(180deg, #0F0A2E 0%, #1a1145 50%, #0F0A2E 100%)",
-          padding: "120px 24px 80px",
-          color: "white",
-        }}
-      >
-        <div style={{ maxWidth: 1100, margin: "0 auto", textAlign: "center" }}>
-          <div
-            className="reveal"
-            style={{
-              display: "inline-block",
-              background: "rgba(124,58,237,0.2)",
-              border: "1px solid rgba(167,139,250,0.4)",
-              color: "#C4B5FD",
-              padding: "8px 18px",
-              borderRadius: 999,
-              fontSize: 14,
-              fontWeight: 600,
-              marginBottom: 24,
-            }}
-          >
-            Boost SEO + IA
-          </div>
-          <h1
-            className="reveal hero-h1"
-            style={{
-              fontSize: 48,
-              fontWeight: 800,
-              lineHeight: 1.1,
-              margin: "0 0 24px",
-              color: "white",
-              maxWidth: 820,
-              marginLeft: "auto",
-              marginRight: "auto",
-            }}
-          >
-            Que Google y ChatGPT{" "}
-            <span
-              style={{
-                background: "linear-gradient(135deg, #A78BFA, #60A5FA)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-              }}
-            >
-              recomienden tu empresa
-            </span>
+    <main className="font-sans">
+      {/* HERO */}
+      <section aria-label="Boost SEO + IA" className={`${DARK} pt-32`}>
+        <div className="v2-grid absolute inset-0" aria-hidden="true" />
+        <div className="relative z-10 mx-auto max-w-7xl px-6 pb-16">
+          <Eyebrow>Boost SEO + IA · Google + ChatGPT + Gemini</Eyebrow>
+          <h1 className="max-w-4xl text-[2.4rem] font-black uppercase leading-[0.98] tracking-tight sm:text-5xl xl:text-6xl">
+            Que Google y la IA{" "}
+            <span className="v2-shimmer">recomienden tu empresa</span>
           </h1>
-          <p
-            className="reveal"
-            style={{
-              fontSize: 20,
-              color: "rgba(255,255,255,0.8)",
-              maxWidth: 720,
-              margin: "0 auto 16px",
-              lineHeight: 1.6,
-            }}
-          >
+          <p className="mt-7 max-w-2xl text-lg text-blue-100/80 md:text-xl">
             Dejamos tu sitio listo para Google y para las inteligencias
-            artificiales, y después nuestros agentes publican y miden por ti
-            cada semana.
+            artificiales. Después, nuestros agentes publican, miden y ajustan
+            todos los meses.{" "}
+            <strong className="text-white">
+              Una herramienta te dice dónde estás; nosotros hacemos el trabajo.
+            </strong>
           </p>
-          <p
-            className="reveal"
-            style={{
-              fontSize: 16,
-              color: "rgba(255,255,255,0.6)",
-              maxWidth: 720,
-              margin: "0 auto 36px",
-              lineHeight: 1.6,
-            }}
-          >
-            Setup SEO + GEO por{" "}
-            <strong style={{ color: "white" }}>$490.000 + IVA</strong>, pago
-            único. Agentes por{" "}
-            <strong style={{ color: "white" }}>$400.000 + IVA al mes</strong>.
-          </p>
-          <div
-            className="reveal"
-            style={{
-              display: "flex",
-              gap: 16,
-              justifyContent: "center",
-              flexWrap: "wrap",
-              marginBottom: 56,
-            }}
-          >
-            <button
-              className="btn-primary"
-              onClick={function () {
-                scrollTo("contacto");
-              }}
+          <div className="mt-10 flex flex-col gap-4 sm:flex-row">
+            <a
+              href="#contacto"
+              className="v2-btn group inline-flex items-center justify-center gap-2 rounded-2xl bg-white px-7 py-4 font-semibold text-slate-900 hover:bg-blue-50"
             >
-              Quiero el Boost
-            </button>
-            <button
-              className="btn-secondary"
-              onClick={function () {
-                scrollTo("precios");
-              }}
-            >
-              Ver qué incluye
-            </button>
-          </div>
-          <div
-            className="reveal kpi-grid"
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(4, 1fr)",
-              gap: 16,
-              maxWidth: 900,
-              margin: "0 auto",
-            }}
-          >
-            {[
-              { num: String(AGENTES_ACTIVOS), label: "Agentes IA en producción en M&P" },
-              { num: "20", label: "Artículos al mes por cliente" },
-              { num: "4", label: "Rankings del rubro al mes" },
-              { num: "2-3 sem", label: "Para dejar listo el setup" },
-            ].map(function (kpi, i) {
-              return (
-                <div
-                  key={i}
-                  style={{
-                    background: "rgba(255,255,255,0.06)",
-                    border: "1px solid rgba(255,255,255,0.1)",
-                    borderRadius: 16,
-                    padding: "20px 12px",
-                  }}
-                >
-                  <div
-                    style={{ fontSize: 30, fontWeight: 800, color: "white" }}
-                  >
-                    {kpi.num}
-                  </div>
-                  <div
-                    style={{
-                      fontSize: 13,
-                      color: "rgba(255,255,255,0.6)",
-                      marginTop: 4,
-                    }}
-                  >
-                    {kpi.label}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* ================================================================= */}
-      {/* SECTION 2 — EL PROBLEMA */}
-      {/* ================================================================= */}
-      <section style={{ padding: "80px 24px", background: "#FFFFFF" }}>
-        <div style={{ maxWidth: 900, margin: "0 auto", textAlign: "center" }}>
-          <h2
-            className="reveal"
-            style={{
-              fontSize: 36,
-              fontWeight: 800,
-              color: "#111827",
-              margin: "0 0 16px",
-            }}
-          >
-            Tus clientes ya no solo buscan en Google:{" "}
-            <span className="gradient-text">le preguntan a la IA</span>
-          </h2>
-          <p
-            className="reveal"
-            style={{
-              fontSize: 18,
-              color: "#6B7280",
-              lineHeight: 1.7,
-              margin: 0,
-            }}
-          >
-            Cuando alguien le pide a ChatGPT o a Gemini que le recomiende un
-            proveedor de tu rubro, la respuesta sale de lo que esas IA
-            encuentran publicado y citado en la web. Si tu sitio no está bien
-            estructurado, no publica contenido útil y no aparece en directorios,
-            no existes en esa respuesta. Boost SEO + IA trabaja las dos cosas a
-            la vez: Google y las IA.
-          </p>
-        </div>
-      </section>
-
-      {/* ================================================================= */}
-      {/* SECTION 2b — QUÉ HACEMOS, EN 4 PASOS (12 nov 2026) */}
-      {/* ================================================================= */}
-      <section style={{ padding: "0 24px 80px", background: "#FFFFFF" }}>
-        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
-          <div
-            className="feature-grid"
-            style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 20 }}
-          >
-            {[
-              { n: "1", t: "Medimos", d: "Vemos en qué posición apareces en Google, si ChatGPT, Gemini y Perplexity te recomiendan y a quién nombran en tu lugar." },
-              { n: "2", t: "Arreglamos", d: "Ordenamos la estructura del sitio, los datos estructurados, la indexación y tu ficha de Google para que buscadores e IA entiendan qué vendes." },
-              { n: "3", t: "Publicamos", d: "Los agentes publican 20 artículos y 4 rankings al mes sobre lo que buscan tus clientes. Un segundo agente revisa cada uno antes de salir." },
-              { n: "4", t: "Te informamos", d: "Medimos cada semana y el primer día hábil del mes recibes el informe: cómo apareces en Google y en ChatGPT, y qué cambió." },
-            ].map(function (p) {
-              return (
-                <div
-                  key={p.n}
-                  className="reveal"
-                  style={{ background: "#FAFAFA", border: "1px solid #E5E7EB", borderRadius: 16, padding: 24, textAlign: "left" }}
-                >
-                  <div style={{ width: 36, height: 36, borderRadius: 10, background: "linear-gradient(135deg, #2563EB, #7C3AED)", color: "#fff", fontWeight: 800, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 14 }}>
-                    {p.n}
-                  </div>
-                  <div style={{ fontSize: 18, fontWeight: 800, color: "#111827", marginBottom: 8 }}>{p.t}</div>
-                  <div style={{ fontSize: 15, color: "#4B5563", lineHeight: 1.6 }}>{p.d}</div>
-                </div>
-              );
-            })}
-          </div>
-          <p className="reveal" style={{ textAlign: "center", fontSize: 20, fontWeight: 700, color: "#111827", margin: "40px auto 8px", maxWidth: 760, lineHeight: 1.5 }}>
-            Una herramienta te dice dónde estás. Nosotros hacemos el trabajo para que Google y la IA te recomienden.
-          </p>
-          <p className="reveal" style={{ textAlign: "center", margin: 0 }}>
-            <a href="/agentes-ia" style={{ color: "#4F46E5", fontWeight: 700, textDecoration: "none" }}>
-              Mira el registro real de nuestros agentes →
+              <Calendar className="h-5 w-5" /> Agenda una reunión
+              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
             </a>
-          </p>
-        </div>
-      </section>
-
-      {/* ================================================================= */}
-      {/* SECTION 2c — POR QUÉ NOSOTROS + PREGÚNTALE A LA IA (12 nov 2026) */}
-      {/* ================================================================= */}
-      <section style={{ padding: "80px 24px", background: "linear-gradient(180deg, #111827 0%, #1E1B4B 100%)" }}>
-        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
-          <h2 className="reveal" style={{ fontSize: 36, fontWeight: 800, color: "#fff", textAlign: "center", margin: "0 0 12px" }}>
-            ¿Por qué M&amp;P y no otra agencia?
-          </h2>
-          <p className="reveal" style={{ fontSize: 18, color: "#C7D2FE", textAlign: "center", margin: "0 auto 40px", maxWidth: 760, lineHeight: 1.6 }}>
-            Todas las agencias dicen que usan inteligencia artificial. Nosotros la tenemos trabajando todos los días para nuestros clientes, y lo puedes comprobar.
-          </p>
-          <div className="feature-grid" style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 20 }}>
+            <a
+              href={WA}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() =>
+                trackWhatsAppClick({
+                  page: "boost-seo-ia",
+                  servicio: "boost-seo-ia",
+                })
+              }
+              className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/20 bg-white/5 px-7 py-4 font-semibold hover:bg-white/10"
+            >
+              <MessageSquare className="h-5 w-5 text-emerald-400" /> Conversemos
+              por WhatsApp
+            </a>
+          </div>
+          <div className="mt-14 grid grid-cols-2 gap-3 md:grid-cols-4">
             {[
-              { t: "Usamos la IA de verdad, no en el discurso", d: AGENTES_ACTIVOS + " agentes en producción con su registro público: qué corrió, qué día y si terminó bien. Pídele a tu agencia actual que te muestre el suyo.", link: { href: "/agentes-ia", txt: "Ver el registro de los agentes →" } },
-              { t: "Resultados comprobados, con nombre y apellido", d: "Invas WMS #1 y #2 en Google para \"mejor WMS Chile\". DevuelveMiPie #1 para \"abogado inmobiliario pie Chile\". Wiseplan #1 para \"outsourcing RRHH vs interno\". Posiciones medidas por M&P.", link: { href: "/casos-de-exito", txt: "Ver casos de éxito →" } },
-              { t: "Somos agencia de performance", d: "Desde 2020, más de 50 clientes y más de 200 campañas activas en Google y Meta. El SEO y la IA los trabajamos pensando en ventas, no en visitas. 5,0 en Google con 115 reseñas.", link: null },
-              { t: "Lo construimos nosotros", d: "Los agentes, el predictor de campañas, el CRM y los paneles de cada cliente son desarrollo propio. No revendemos una herramienta: la hacemos y la operamos.", link: { href: "/labs", txt: "Ver M&P Labs →" } },
-            ].map(function (c, i) {
-              return (
-                <div key={i} className="reveal" style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 16, padding: 28 }}>
-                  <div style={{ fontSize: 20, fontWeight: 800, color: "#fff", marginBottom: 10 }}>{c.t}</div>
-                  <div style={{ fontSize: 15, color: "#CBD5E1", lineHeight: 1.65 }}>{c.d}</div>
-                  {c.link && (
-                    <a href={c.link.href} style={{ display: "inline-block", marginTop: 14, color: "#A5B4FC", fontWeight: 700, textDecoration: "none" }}>{c.link.txt}</a>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-
-          <div className="reveal" style={{ marginTop: 48, background: "#fff", borderRadius: 20, padding: 32 }}>
-            <div style={{ fontSize: 26, fontWeight: 800, color: "#111827", textAlign: "center", marginBottom: 8 }}>
-              No nos creas a nosotros: pregúntale a la IA
-            </div>
-            <p style={{ fontSize: 16, color: "#4B5563", textAlign: "center", margin: "0 auto 28px", maxWidth: 700, lineHeight: 1.6 }}>
-              Es justo lo que vas a querer para tu empresa: que cuando alguien pregunte, la IA sepa quién eres. Haz la prueba con nosotros.
-            </p>
-            {PREGUNTAS_IA.map(function (q, i) {
-              return (
-                <div key={i} style={{ borderTop: i ? "1px solid #E5E7EB" : "none", padding: "18px 0", display: "flex", gap: 16, alignItems: "center", justifyContent: "space-between", flexWrap: "wrap" }}>
-                  <div style={{ fontSize: 16, fontWeight: 700, color: "#111827", flex: "1 1 320px" }}>&ldquo;{q}&rdquo;</div>
-                  <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                    {IAS.map(function (ia) {
-                      return (
-                        <a key={ia.n} href={ia.url(q)} target="_blank" rel="noopener noreferrer" style={{ padding: "9px 16px", borderRadius: 10, border: "1px solid #C7D2FE", color: "#3730A3", fontWeight: 700, fontSize: 14, textDecoration: "none", background: "#EEF2FF" }}>
-                          {ia.n}
-                        </a>
-                      );
-                    })}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* ================================================================= */}
-      {/* SECTION 3 — SETUP */}
-      {/* ================================================================= */}
-      <section style={{ padding: "80px 24px", background: "#FAFAFA" }}>
-        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
-          <div style={{ textAlign: "center", marginBottom: 48 }}>
-            <h2
-              className="reveal"
-              style={{
-                fontSize: 36,
-                fontWeight: 800,
-                color: "#111827",
-                margin: "0 0 16px",
-              }}
-            >
-              Setup SEO + GEO: qué incluye
-            </h2>
-            <p
-              className="reveal"
-              style={{ fontSize: 18, color: "#6B7280", margin: 0 }}
-            >
-              $490.000 + IVA, pago único. Listo en 2 a 3 semanas.
-            </p>
-          </div>
-          <div
-            className="feature-grid"
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(3, 1fr)",
-              gap: 20,
-            }}
-          >
-            {setupItems.map(function (item, i) {
-              return (
-                <div
-                  key={i}
-                  className="reveal card-hover"
-                  style={{
-                    background: "white",
-                    border: "1px solid #E5E7EB",
-                    borderRadius: 16,
-                    padding: 28,
-                  }}
-                >
-                  <div
-                    style={{
-                      width: 36,
-                      height: 36,
-                      borderRadius: 10,
-                      background: "linear-gradient(135deg, #4338CA, #7C3AED)",
-                      color: "white",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      fontWeight: 800,
-                      marginBottom: 16,
-                    }}
-                  >
-                    {i + 1}
-                  </div>
-                  <h3
-                    style={{
-                      fontSize: 18,
-                      fontWeight: 700,
-                      color: "#111827",
-                      margin: "0 0 8px",
-                    }}
-                  >
-                    {item.title}
-                  </h3>
-                  <p
-                    style={{
-                      fontSize: 15,
-                      color: "#6B7280",
-                      lineHeight: 1.6,
-                      margin: 0,
-                    }}
-                  >
-                    {item.text}
-                  </p>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* ================================================================= */}
-      {/* SECTION 4 — AGENTES */}
-      {/* ================================================================= */}
-      <section
-        style={{
-          padding: "80px 24px",
-          background: "linear-gradient(180deg, #111827 0%, #1E1B4B 100%)",
-        }}
-      >
-        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
-          <div style={{ textAlign: "center", marginBottom: 48 }}>
-            <h2
-              className="reveal"
-              style={{
-                fontSize: 36,
-                fontWeight: 800,
-                color: "#FFFFFF",
-                margin: "0 0 16px",
-              }}
-            >
-              Después, los agentes trabajan cada semana
-            </h2>
-            <p
-              className="reveal"
-              style={{
-                fontSize: 18,
-                color: "rgba(255,255,255,0.7)",
-                margin: 0,
-              }}
-            >
-              $400.000 + IVA al mes. Permanencia mínima de 3 meses.
-            </p>
-          </div>
-          <div
-            className="feature-grid"
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(4, 1fr)",
-              gap: 20,
-            }}
-          >
-            {agentItems.map(function (item, i) {
-              return (
-                <div
-                  key={i}
-                  className="reveal"
-                  style={{
-                    background: "rgba(255,255,255,0.05)",
-                    border: "1px solid rgba(255,255,255,0.1)",
-                    borderRadius: 16,
-                    padding: 24,
-                  }}
-                >
-                  <h3
-                    style={{
-                      fontSize: 17,
-                      fontWeight: 700,
-                      color: "white",
-                      margin: "0 0 8px",
-                    }}
-                  >
-                    {item.title}
-                  </h3>
-                  <p
-                    style={{
-                      fontSize: 14,
-                      color: "rgba(255,255,255,0.65)",
-                      lineHeight: 1.6,
-                      margin: 0,
-                    }}
-                  >
-                    {item.text}
-                  </p>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* ================================================================= */}
-      {/* SECTION 5 — PRECIOS */}
-      {/* ================================================================= */}
-      <section
-        id="precios"
-        style={{ padding: "80px 24px", background: "#FAFAFA" }}
-      >
-        <div style={{ maxWidth: 900, margin: "0 auto" }}>
-          <div style={{ textAlign: "center", marginBottom: 48 }}>
-            <h2
-              className="reveal"
-              style={{
-                fontSize: 36,
-                fontWeight: 800,
-                color: "#111827",
-                margin: "0 0 16px",
-              }}
-            >
-              Precios
-            </h2>
-            <p
-              className="reveal"
-              style={{ fontSize: 18, color: "#6B7280", margin: 0 }}
-            >
-              Un pago único para dejar tu sitio listo y una mensualidad para que
-              siga creciendo.
-            </p>
-          </div>
-          <div
-            className="plans-grid"
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(2, 1fr)",
-              gap: 24,
-            }}
-          >
-            {plans.map(function (plan, i) {
-              return (
-                <div
-                  key={i}
-                  className={
-                    "reveal plan-card" + (plan.popular ? " popular" : "")
-                  }
-                >
-                  {plan.popular && (
-                    <div
-                      style={{
-                        position: "absolute",
-                        top: -14,
-                        left: "50%",
-                        transform: "translateX(-50%)",
-                        background: "linear-gradient(135deg, #4338CA, #7C3AED)",
-                        color: "white",
-                        padding: "6px 16px",
-                        borderRadius: 999,
-                        fontSize: 13,
-                        fontWeight: 600,
-                        whiteSpace: "nowrap",
-                      }}
-                    >
-                      Mes a mes, después del setup
-                    </div>
-                  )}
-                  <h3
-                    style={{
-                      fontSize: 24,
-                      fontWeight: 800,
-                      color: "#111827",
-                      margin: "0 0 8px",
-                    }}
-                  >
-                    {plan.name}
-                  </h3>
-                  <p
-                    style={{
-                      fontSize: 14,
-                      color: "#9CA3AF",
-                      margin: "0 0 20px",
-                    }}
-                  >
-                    {plan.desc}
-                  </p>
-                  <div style={{ marginBottom: 24 }}>
-                    <span
-                      style={{
-                        fontSize: 38,
-                        fontWeight: 800,
-                        color: "#111827",
-                      }}
-                    >
-                      {plan.price}
-                    </span>
-                    <span
-                      style={{ fontSize: 15, color: "#9CA3AF", marginLeft: 6 }}
-                    >
-                      {plan.period}
-                    </span>
-                  </div>
-                  <ul
-                    style={{
-                      listStyle: "none",
-                      padding: 0,
-                      margin: "0 0 28px",
-                    }}
-                  >
-                    {plan.features.map(function (f, fi) {
-                      return (
-                        <li
-                          key={fi}
-                          style={{
-                            display: "flex",
-                            gap: 10,
-                            padding: "8px 0",
-                            fontSize: 15,
-                            color: "#374151",
-                            borderBottom: "1px solid #F3F4F6",
-                          }}
-                        >
-                          <span style={{ color: "#10B981", fontWeight: 800 }}>
-                            ✓
-                          </span>
-                          {f}
-                        </li>
-                      );
-                    })}
-                  </ul>
-                  <button
-                    className={plan.popular ? "btn-primary" : "btn-secondary"}
-                    style={{ width: "100%" }}
-                    onClick={function () {
-                      scrollTo("contacto");
-                    }}
-                  >
-                    Quiero el Boost
-                  </button>
-                </div>
-              );
-            })}
-          </div>
-          <div
-            className="reveal"
-            style={{
-              marginTop: 28,
-              background: "#FFFBEB",
-              border: "1px solid #FDE68A",
-              borderRadius: 16,
-              padding: "20px 24px",
-            }}
-          >
-            <h3
-              style={{
-                fontSize: 16,
-                fontWeight: 700,
-                color: "#92400E",
-                margin: "0 0 6px",
-              }}
-            >
-              Requisito técnico
-            </h3>
-            <p
-              style={{
-                fontSize: 15,
-                color: "#78350F",
-                lineHeight: 1.6,
-                margin: 0,
-              }}
-            >
-              Necesitamos acceso de administrador a tu sitio. En WordPress
-              funciona directo. Otros sistemas (Shopify, Wix, sitios a medida)
-              quedan sujetos a una revisión técnica previa: si el servidor
-              bloquea las cargas o no hay forma de publicar, lo coordinamos con
-              tu desarrollador antes de partir.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* ================================================================= */}
-      {/* SECTION 6 — CÓMO FUNCIONA */}
-      {/* ================================================================= */}
-      <section style={{ padding: "80px 24px", background: "#FFFFFF" }}>
-        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
-          <h2
-            className="reveal"
-            style={{
-              fontSize: 36,
-              fontWeight: 800,
-              color: "#111827",
-              margin: "0 0 48px",
-              textAlign: "center",
-            }}
-          >
-            Cómo funciona
-          </h2>
-          <div
-            className="steps-grid"
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(4, 1fr)",
-              gap: 20,
-            }}
-          >
-            {[
-              {
-                step: "1",
-                title: "Reunión y accesos",
-                text: "Definimos contigo las búsquedas que importan y recibimos el acceso de administrador a tu sitio.",
-              },
-              {
-                step: "2",
-                title: "Auditoría",
-                text: "Medimos tu línea base en Google, ChatGPT, Gemini y Perplexity.",
-              },
-              {
-                step: "3",
-                title: "Setup",
-                text: "En 2 a 3 semanas dejamos lista la estructura, los schemas, la indexación, tu ficha de Google y los primeros artículos.",
-              },
-              {
-                step: "4",
-                title: "Agentes",
-                text: "Cada mes publican 20 artículos y 4 rankings, miden cada semana y te envían el informe el primer día hábil.",
-              },
-            ].map(function (s, i) {
-              return (
-                <div
-                  key={i}
-                  className="reveal"
-                  style={{ textAlign: "center", padding: 12 }}
-                >
-                  <div
-                    style={{
-                      width: 48,
-                      height: 48,
-                      borderRadius: 14,
-                      background: "linear-gradient(135deg, #4338CA, #7C3AED)",
-                      color: "white",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      fontWeight: 800,
-                      fontSize: 20,
-                      margin: "0 auto 16px",
-                    }}
-                  >
-                    {s.step}
-                  </div>
-                  <h3
-                    style={{
-                      fontSize: 18,
-                      fontWeight: 700,
-                      color: "#111827",
-                      margin: "0 0 8px",
-                    }}
-                  >
-                    {s.title}
-                  </h3>
-                  <p
-                    style={{
-                      fontSize: 15,
-                      color: "#6B7280",
-                      lineHeight: 1.6,
-                      margin: 0,
-                    }}
-                  >
-                    {s.text}
-                  </p>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* ================================================================= */}
-      {/* SECTION 7 — RESULTADOS */}
-      {/* ================================================================= */}
-      <section style={{ padding: "80px 24px", background: "#F5F3FF" }}>
-        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
-          <div style={{ textAlign: "center", marginBottom: 48 }}>
-            <h2
-              className="reveal"
-              style={{
-                fontSize: 36,
-                fontWeight: 800,
-                color: "#111827",
-                margin: "0 0 16px",
-              }}
-            >
-              Resultados de clientes con agentes
-            </h2>
-            <p
-              className="reveal"
-              style={{ fontSize: 16, color: "#6B7280", margin: 0 }}
-            >
-              Posiciones medidas por M&amp;P en septiembre de 2026.
-            </p>
-          </div>
-          <div
-            className="feature-grid"
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(3, 1fr)",
-              gap: 20,
-            }}
-          >
-            {cases.map(function (c, i) {
-              return (
-                <div
-                  key={i}
-                  className="reveal card-hover"
-                  style={{
-                    background: "white",
-                    borderRadius: 16,
-                    padding: 28,
-                    border: "1px solid #E9D5FF",
-                  }}
-                >
-                  <div
-                    style={{
-                      fontSize: 14,
-                      fontWeight: 700,
-                      color: "#7C3AED",
-                      marginBottom: 8,
-                    }}
-                  >
-                    {c.client}
-                  </div>
-                  <div
-                    style={{
-                      fontSize: 20,
-                      fontWeight: 800,
-                      color: "#111827",
-                      marginBottom: 10,
-                      lineHeight: 1.3,
-                    }}
-                  >
-                    {c.result}
-                  </div>
-                  <p
-                    style={{
-                      fontSize: 15,
-                      color: "#6B7280",
-                      lineHeight: 1.6,
-                      margin: 0,
-                    }}
-                  >
-                    {c.detail}
-                  </p>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* ================================================================= */}
-      {/* SECTION 8 — FAQ */}
-      {/* ================================================================= */}
-      <section style={{ padding: "80px 24px", background: "#FFFFFF" }}>
-        <div style={{ maxWidth: 800, margin: "0 auto" }}>
-          <h2
-            className="reveal"
-            style={{
-              fontSize: 36,
-              fontWeight: 800,
-              color: "#111827",
-              margin: "0 0 40px",
-              textAlign: "center",
-            }}
-          >
-            Preguntas frecuentes
-          </h2>
-          {faqs.map(function (f, i) {
-            var open = faqOpen === i;
-            return (
+              { v: String(AGENTES_ACTIVOS), l: "agentes IA en producción" },
+              { v: "20", l: "artículos al mes por cliente" },
+              { v: "4", l: "rankings del rubro al mes" },
+              { v: "2–3 sem", l: "para dejar listo el setup" },
+            ].map((s) => (
               <div
-                key={i}
-                className="reveal"
-                style={{ borderBottom: "1px solid #E5E7EB" }}
+                key={s.l}
+                className="v2-glass rounded-2xl px-4 py-5 text-center"
               >
-                <button
-                  onClick={function () {
-                    setFaqOpen(open ? -1 : i);
-                  }}
-                  style={{
-                    width: "100%",
-                    textAlign: "left",
-                    background: "none",
-                    border: "none",
-                    padding: "20px 0",
-                    fontSize: 17,
-                    fontWeight: 600,
-                    color: "#111827",
-                    cursor: "pointer",
-                    display: "flex",
-                    justifyContent: "space-between",
-                    gap: 16,
-                  }}
-                >
-                  <span>{f.q}</span>
-                  <span style={{ color: "#7C3AED", fontSize: 22 }}>
-                    {open ? "−" : "+"}
+                <div className="text-3xl font-black tabular-nums md:text-4xl">
+                  {s.v}
+                </div>
+                <div className="mt-1 text-xs font-medium text-slate-400 md:text-sm">
+                  {s.l}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* PROBLEMA + 4 PASOS */}
+      <section className="bg-white py-28">
+        <div className="mx-auto max-w-7xl px-6">
+          <div className="max-w-3xl">
+            <Eyebrow light>Qué hacemos</Eyebrow>
+            <h2 className="text-4xl font-black tracking-tight text-slate-900 md:text-5xl">
+              Tus clientes ya no solo buscan en Google:{" "}
+              <span className="text-blue-600">le preguntan a la IA</span>
+            </h2>
+            <p className="mt-6 text-lg leading-relaxed text-slate-600">
+              Cuando alguien le pide a ChatGPT o a Gemini que le recomiende un
+              proveedor de tu rubro, la respuesta sale de lo que esas IA
+              encuentran publicado y citado en la web. Si tu sitio no está bien
+              armado, no publica contenido útil y no aparece en directorios, no
+              existes en esa respuesta. Trabajamos las dos cosas a la vez, en
+              cuatro pasos.
+            </p>
+          </div>
+          <div className="mt-14 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+            {PASOS.map((p, i) => (
+              <div
+                key={p.t}
+                className="v2-tilt rounded-2xl border border-slate-200 bg-slate-50 p-7"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-violet-600 text-white shadow-lg">
+                    <p.i className="h-6 w-6" />
+                  </div>
+                  <span className="text-5xl font-black text-slate-200">
+                    0{i + 1}
                   </span>
-                </button>
-                {open && (
-                  <p
-                    style={{
-                      fontSize: 16,
-                      color: "#6B7280",
-                      lineHeight: 1.7,
-                      margin: "0 0 20px",
-                    }}
+                </div>
+                <h3 className="mt-6 text-xl font-black text-slate-900">
+                  {p.t}
+                </h3>
+                <p className="mt-2 leading-relaxed text-slate-600">{p.d}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* POR QUÉ NOSOTROS */}
+      <section
+        aria-labelledby="porque-t"
+        className="relative overflow-hidden bg-[#0b1640] py-28 text-white"
+      >
+        <div className="v2-grid absolute inset-0" aria-hidden="true" />
+        <div className="relative z-10 mx-auto max-w-7xl px-6">
+          <Eyebrow>Por qué M&amp;P</Eyebrow>
+          <h2
+            id="porque-t"
+            className="max-w-4xl text-4xl font-black tracking-tight md:text-6xl"
+          >
+            Todas dicen que usan IA.{" "}
+            <span className="v2-shimmer">Nosotros lo demostramos.</span>
+          </h2>
+          <div className="mt-14 grid gap-5 md:grid-cols-2">
+            {POR_QUE.map((p) => (
+              <div key={p.t} className="v2-glass v2-tilt rounded-2xl p-8">
+                <p.i className="h-8 w-8 text-cyan-300" />
+                <h3 className="mt-5 text-2xl font-black">{p.t}</h3>
+                <p className="mt-3 leading-relaxed text-blue-100/75">{p.d}</p>
+                {p.href && (
+                  <a
+                    href={p.href}
+                    className="mt-5 inline-flex items-center gap-2 font-semibold text-cyan-300 hover:text-cyan-200"
                   >
-                    {f.a}
-                  </p>
+                    {p.cta} <ArrowRight className="h-4 w-4" />
+                  </a>
                 )}
               </div>
-            );
-          })}
+            ))}
+          </div>
+
+          {/* Pregúntale a la IA */}
+          <div className="mt-16 rounded-3xl border border-white/10 bg-gradient-to-r from-blue-600/25 to-violet-600/25 p-8 md:p-12">
+            <div className="flex items-center gap-3">
+              <Sparkles className="h-7 w-7 text-amber-300" />
+              <h3 className="text-3xl font-black md:text-4xl">
+                No nos creas a nosotros: pregúntale a la IA
+              </h3>
+            </div>
+            <p className="mt-4 max-w-3xl text-lg text-blue-100/80">
+              Es lo mismo que vas a querer para tu empresa: que cuando alguien
+              pregunte, la IA sepa quién eres. Haz la prueba con nosotros.
+            </p>
+            <div className="mt-8 divide-y divide-white/10">
+              {PREGUNTAS_IA.map((q) => (
+                <div
+                  key={q}
+                  className="flex flex-col gap-4 py-5 lg:flex-row lg:items-center lg:justify-between"
+                >
+                  <p className="text-lg font-semibold lg:max-w-xl">
+                    &ldquo;{q}&rdquo;
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {IAS.map((ia) => (
+                      <a
+                        key={ia.n}
+                        href={ia.url(q)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="rounded-xl border border-white/20 bg-white/10 px-4 py-2.5 text-sm font-bold hover:bg-white hover:text-slate-900"
+                      >
+                        {ia.n}
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* ================================================================= */}
-      {/* SECTION 9 — CONTACTO */}
-      {/* ================================================================= */}
-      <section
-        id="contacto"
-        style={{
-          padding: "80px 24px",
-          background: "linear-gradient(180deg, #FFFFFF 0%, #F5F3FF 100%)",
-        }}
-      >
-        <div style={{ maxWidth: 1000, margin: "0 auto" }}>
-          <div style={{ textAlign: "center", marginBottom: 40 }}>
-            <h2
-              className="reveal"
-              style={{
-                fontSize: 36,
-                fontWeight: 800,
-                color: "#111827",
-                margin: "0 0 16px",
-              }}
-            >
-              Agenda una reunión
-            </h2>
-            <p
-              className="reveal"
-              style={{ fontSize: 18, color: "#6B7280", margin: 0 }}
-            >
-              Déjanos tu sitio y te contactamos para conversar cómo apareces hoy
-              en Google y en las IA.
-            </p>
-          </div>
-          <div
-            className="contact-grid"
-            style={{
-              display: "grid",
-              gridTemplateColumns: "3fr 2fr",
-              gap: 32,
-              alignItems: "start",
-            }}
+      {/* GLOSARIO DE AGENTES */}
+      <section aria-labelledby="agentes-t" className="bg-white py-28">
+        <div className="mx-auto max-w-7xl px-6">
+          <Eyebrow light>Los agentes</Eyebrow>
+          <h2
+            id="agentes-t"
+            className="max-w-4xl text-4xl font-black tracking-tight text-slate-900 md:text-5xl"
           >
-            <div
-              className="reveal"
-              style={{
-                background: "white",
-                borderRadius: 20,
-                padding: 32,
-                border: "1px solid #E5E7EB",
-              }}
-            >
-              {enviado ? (
-                <div style={{ textAlign: "center", padding: "24px 0" }}>
-                  <div style={{ fontSize: 40, marginBottom: 12 }}>✓</div>
-                  <h3
-                    style={{
-                      fontSize: 22,
-                      fontWeight: 700,
-                      color: "#111827",
-                      margin: "0 0 8px",
-                    }}
-                  >
-                    ¡Recibido!
-                  </h3>
-                  <p style={{ fontSize: 16, color: "#6B7280", margin: 0 }}>
-                    Te contactamos dentro de las próximas 24 horas hábiles.
-                  </p>
+            {AGENTES_ACTIVOS} agentes trabajando hoy.{" "}
+            <span className="text-blue-600">Esto hace cada uno.</span>
+          </h2>
+          <p className="mt-5 max-w-3xl text-lg text-slate-600">
+            Solo contamos los que terminaron bien al menos el 70% de sus
+            ejecuciones en los últimos 30 días. Los que trabajan para clientes
+            aparecen por rubro.
+          </p>
+          <div className="mt-12 grid gap-10 lg:grid-cols-2">
+            {areas.map((area) => (
+              <div key={area}>
+                <h3 className="mb-3 text-sm font-bold uppercase tracking-[0.18em] text-blue-600">
+                  {area}
+                </h3>
+                <div className="divide-y divide-slate-200 rounded-2xl border border-slate-200">
+                  {AGENTES_LISTA.filter((a) => a.area === area).map((a) => (
+                    <div key={a.id} className="p-5">
+                      <div className="flex items-start justify-between gap-4">
+                        <p className="font-bold text-slate-900">{a.nombre}</p>
+                        <span className="shrink-0 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700">
+                          {a.exitosas30} OK en 30 días
+                        </span>
+                      </div>
+                      <p className="mt-1.5 text-sm leading-relaxed text-slate-600">
+                        {a.que_hace}
+                      </p>
+                      <p className="mt-1.5 text-xs font-medium text-slate-400">
+                        {a.frecuencia}
+                      </p>
+                    </div>
+                  ))}
                 </div>
-              ) : (
-                <form
-                  onSubmit={handleSubmit}
-                  style={{ display: "flex", flexDirection: "column", gap: 16 }}
-                >
-                  <input
-                    className="input-field"
-                    required
-                    placeholder="Nombre"
-                    value={formData.nombre}
-                    onChange={function (e) {
-                      setFormData(
-                        Object.assign({}, formData, { nombre: e.target.value }),
-                      );
-                    }}
-                  />
-                  <input
-                    className="input-field"
-                    required
-                    type="email"
-                    placeholder="Correo"
-                    value={formData.email}
-                    onChange={function (e) {
-                      setFormData(
-                        Object.assign({}, formData, { email: e.target.value }),
-                      );
-                    }}
-                  />
-                  <input
-                    className="input-field"
-                    placeholder="Teléfono"
-                    value={formData.telefono}
-                    onChange={function (e) {
-                      setFormData(
-                        Object.assign({}, formData, {
-                          telefono: e.target.value,
-                        }),
-                      );
-                    }}
-                  />
-                  <input
-                    className="input-field"
-                    required
-                    placeholder="Sitio web (ej: www.tuempresa.cl)"
-                    value={formData.sitio}
-                    onChange={function (e) {
-                      setFormData(
-                        Object.assign({}, formData, { sitio: e.target.value }),
-                      );
-                    }}
-                  />
-                  <button
-                    type="submit"
-                    className="btn-primary"
-                    disabled={enviando}
-                  >
-                    {enviando ? "Enviando..." : "Quiero el Boost"}
-                  </button>
-                </form>
-              )}
-            </div>
-            <div
-              className="reveal"
-              style={{
-                background: "#0F0A2E",
-                borderRadius: 20,
-                padding: 32,
-                color: "white",
-              }}
-            >
-              <h3 style={{ fontSize: 20, fontWeight: 700, margin: "0 0 12px" }}>
-                ¿Prefieres conversarlo?
-              </h3>
-              <p
-                style={{
-                  fontSize: 15,
-                  color: "rgba(255,255,255,0.7)",
-                  lineHeight: 1.6,
-                  margin: "0 0 24px",
-                }}
-              >
-                Escríbenos por WhatsApp y te mostramos cómo responde hoy ChatGPT
-                cuando alguien pregunta por tu rubro.
+              </div>
+            ))}
+          </div>
+          <a
+            href="/agentes-ia"
+            className="mt-10 inline-flex items-center gap-2 font-semibold text-blue-600 hover:text-blue-700"
+          >
+            Ver el registro día por día <ArrowRight className="h-4 w-4" />
+          </a>
+        </div>
+      </section>
+
+      {/* PRECIOS */}
+      <section
+        id="precios"
+        aria-labelledby="precios-t"
+        className={`${DARK} py-28`}
+      >
+        <div className="v2-grid absolute inset-0" aria-hidden="true" />
+        <div className="relative z-10 mx-auto max-w-7xl px-6">
+          <Eyebrow>Precios</Eyebrow>
+          <h2
+            id="precios-t"
+            className="text-4xl font-black tracking-tight md:text-6xl"
+          >
+            Un setup y <span className="v2-shimmer">una mensualidad</span>
+          </h2>
+          <div className="mt-14 grid gap-6 lg:grid-cols-[1fr_1.4fr]">
+            <div className="v2-glass rounded-3xl p-8">
+              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-blue-200/70">
+                Setup SEO + GEO
               </p>
+              <p className="mt-4 text-5xl font-black">$490.000</p>
+              <p className="mt-1 text-slate-400">
+                + IVA, pago único · listo en 2 a 3 semanas
+              </p>
+              <ul className="mt-8 space-y-3">
+                {SETUP.map((s) => (
+                  <li key={s} className="flex gap-3 text-blue-100/85">
+                    <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-400" />{" "}
+                    {s}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="rounded-3xl bg-gradient-to-br from-blue-600 to-violet-700 p-8 shadow-[0_40px_100px_-30px_rgba(99,102,241,0.7)]">
+              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-blue-100">
+                Agentes IA · todos los meses
+              </p>
+              <p className="mt-4 text-5xl font-black">$400.000</p>
+              <p className="mt-1 text-blue-100/80">
+                + IVA al mes · permanencia mínima de 3 meses
+              </p>
+              <div className="mt-8 grid gap-3 sm:grid-cols-2">
+                {MENSUAL.map((m) => (
+                  <div key={m.t} className="rounded-2xl bg-white/10 p-5">
+                    <p className="text-3xl font-black">
+                      {m.n} <span className="text-base font-bold">{m.t}</span>
+                    </p>
+                    <p className="mt-1.5 text-sm leading-relaxed text-blue-50/85">
+                      {m.d}
+                    </p>
+                  </div>
+                ))}
+              </div>
               <a
-                href={WA_LINK}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-primary"
-                style={{
-                  width: "100%",
-                  textAlign: "center",
-                  boxSizing: "border-box",
-                }}
+                href="#contacto"
+                className="v2-btn mt-8 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-white px-7 py-4 font-semibold text-slate-900 hover:bg-blue-50"
               >
-                Escribir por WhatsApp
+                Quiero el Boost <ArrowRight className="h-4 w-4" />
               </a>
             </div>
           </div>
+          <p className="mt-8 max-w-4xl text-sm text-slate-400">
+            Requisito técnico: acceso de administrador a tu sitio. En WordPress
+            funciona directo; Shopify, Wix y sitios a medida pasan por una
+            revisión técnica previa con tu desarrollador.
+          </p>
         </div>
       </section>
-    </div>
+
+      {/* CASOS */}
+      <section aria-labelledby="casos-t" className="bg-white py-28">
+        <div className="mx-auto max-w-7xl px-6">
+          <Eyebrow light>Resultados</Eyebrow>
+          <h2
+            id="casos-t"
+            className="text-4xl font-black tracking-tight text-slate-900 md:text-5xl"
+          >
+            Clientes con agentes,{" "}
+            <span className="text-blue-600">posiciones medidas</span>
+          </h2>
+          <div className="mt-12 grid gap-6 md:grid-cols-3">
+            {CASOS.map((c) => (
+              <div
+                key={c.c}
+                className="v2-tilt rounded-2xl bg-slate-50 p-8 shadow-xl ring-1 ring-slate-200"
+              >
+                <p className="text-sm font-bold uppercase tracking-[0.18em] text-slate-400">
+                  {c.c}
+                </p>
+                <p className="mt-3 text-4xl font-black text-blue-600">{c.r}</p>
+                <p className="mt-1 font-semibold text-slate-900">{c.k}</p>
+                <p className="mt-4 text-slate-600">{c.d}</p>
+              </div>
+            ))}
+          </div>
+          <p className="mt-6 text-sm text-slate-400">
+            Posiciones medidas por M&amp;P en septiembre de 2026.
+          </p>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section aria-labelledby="faq-t" className="bg-slate-50 py-28">
+        <div className="mx-auto max-w-4xl px-6">
+          <h2
+            id="faq-t"
+            className="text-4xl font-black tracking-tight text-slate-900 md:text-5xl"
+          >
+            Preguntas frecuentes
+          </h2>
+          <div className="mt-10 divide-y divide-slate-200 rounded-2xl border border-slate-200 bg-white">
+            {FAQS.map((f, i) => (
+              <div key={f.q}>
+                <button
+                  onClick={() => setFaq(faq === i ? -1 : i)}
+                  className="flex w-full items-center justify-between gap-4 px-6 py-5 text-left font-bold text-slate-900"
+                  aria-expanded={faq === i}
+                >
+                  {f.q}
+                  {faq === i ? (
+                    <Minus className="h-5 w-5 shrink-0 text-blue-600" />
+                  ) : (
+                    <Plus className="h-5 w-5 shrink-0 text-blue-600" />
+                  )}
+                </button>
+                <p
+                  className={
+                    faq === i
+                      ? "px-6 pb-6 leading-relaxed text-slate-600"
+                      : "sr-only"
+                  }
+                >
+                  {f.a}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CONTACTO */}
+      <section
+        id="contacto"
+        aria-labelledby="contacto-t"
+        className={`${DARK} py-28`}
+      >
+        <div className="v2-grid absolute inset-0" aria-hidden="true" />
+        <div className="relative z-10 mx-auto grid max-w-7xl gap-12 px-6 lg:grid-cols-2">
+          <div>
+            <Eyebrow>Contacto</Eyebrow>
+            <h2
+              id="contacto-t"
+              className="text-4xl font-black tracking-tight md:text-6xl"
+            >
+              Agenda una <span className="v2-shimmer">reunión</span>
+            </h2>
+            <p className="mt-6 max-w-lg text-lg text-blue-100/80">
+              Déjanos tu sitio y te contactamos para conversar cómo apareces hoy
+              en Google y en las IA, y qué haríamos en tu caso.
+            </p>
+            <a
+              href={WA}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() =>
+                trackWhatsAppClick({
+                  page: "boost-seo-ia-contacto",
+                  servicio: "boost-seo-ia",
+                })
+              }
+              className="mt-8 inline-flex items-center gap-2 rounded-2xl border border-white/20 bg-white/5 px-6 py-3.5 font-semibold hover:bg-white/10"
+            >
+              <MessageSquare className="h-5 w-5 text-emerald-400" /> O
+              escríbenos por WhatsApp
+            </a>
+          </div>
+          <div className="v2-glass rounded-3xl p-8">
+            {enviado ? (
+              <div className="py-10 text-center">
+                <CheckCircle2 className="mx-auto h-12 w-12 text-emerald-400" />
+                <p className="mt-4 text-2xl font-black">Recibimos tus datos</p>
+                <p className="mt-2 text-blue-100/80">
+                  Te contactamos dentro del día hábil.
+                </p>
+              </div>
+            ) : (
+              <form onSubmit={enviar} className="space-y-4">
+                {[
+                  { k: "nombre", p: "Nombre", t: "text" },
+                  { k: "email", p: "Correo", t: "email" },
+                  { k: "telefono", p: "Teléfono", t: "tel" },
+                  {
+                    k: "sitio",
+                    p: "Sitio web (ej: www.tuempresa.cl)",
+                    t: "text",
+                  },
+                ].map((c) => (
+                  <input
+                    key={c.k}
+                    required={c.k !== "telefono"}
+                    type={c.t}
+                    placeholder={c.p}
+                    value={form[c.k as keyof typeof form]}
+                    onChange={(e) =>
+                      setForm({ ...form, [c.k]: e.target.value })
+                    }
+                    className="w-full rounded-xl border border-white/15 bg-white/10 px-4 py-3.5 text-white placeholder:text-blue-100/50 focus:border-cyan-300 focus:outline-none"
+                  />
+                ))}
+                {error && <p className="text-sm text-rose-300">{error}</p>}
+                <button
+                  type="submit"
+                  disabled={enviando}
+                  className="v2-btn inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-white px-7 py-4 font-semibold text-slate-900 hover:bg-blue-50 disabled:opacity-60"
+                >
+                  {enviando ? "Enviando..." : "Quiero el Boost"}{" "}
+                  <ArrowRight className="h-4 w-4" />
+                </button>
+              </form>
+            )}
+          </div>
+        </div>
+      </section>
+    </main>
   );
 }

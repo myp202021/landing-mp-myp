@@ -166,13 +166,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.85,
     },
     // Agentes IA SEO
-    {
-      url: `${baseUrl}/agentes`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly',
-      priority: 0.9,
-    },
-    // Investigación Hub
+        // Investigación Hub
     {
       url: `${baseUrl}/investigacion`,
       lastModified: currentDate,

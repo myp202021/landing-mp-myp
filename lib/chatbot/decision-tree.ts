@@ -1,3 +1,4 @@
+import { AGENTES_ACTIVOS } from "@/lib/agentes-activos";
 /**
  * MUTANTE - Asistente IA de Marketing Digital
  * Version PRO con contenido de alto valor
@@ -2899,7 +2900,7 @@ En que canales estan, que mensajes usan, como les va.
 • +200 campañas activas
 • 50+ clientes activos
 • 5.0★ · 115 reseñas en Google
-• 27 agentes IA en producción
+• ${AGENTES_ACTIVOS} agentes IA en producción
 
 **CLIENTES:**
 Empresas de todos los tamanos: startups, pymes, grandes empresas.

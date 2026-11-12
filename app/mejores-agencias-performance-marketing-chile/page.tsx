@@ -25,6 +25,7 @@ import DifferentiatorShowcase from '@/components/rankings/DifferentiatorShowcase
 import InternalLinksMesh from '@/components/rankings/InternalLinksMesh'
 import { SpeakableContent } from '@/components/AEOSchemas'
 import { scoresPerformance, criteriosPerformance } from '@/lib/data/ranking-criteria'
+import { AGENTES_ACTIVOS } from "@/lib/agentes-activos";
 
 export const metadata: Metadata = createMetadata({
   title: 'Mejores Agencias Performance Marketing Chile 2026 | Guía + Ranking Top 10',
@@ -232,7 +233,7 @@ export default function PerformanceMarketingChilePage() {
               agencia={scoresPerformance[0]}
               diferenciadores={[
                 'Predictor de Campañas: estima CPC y CPA por industria antes de invertir',
-                '+200 campañas activas y 27 agentes IA en producción',
+                `+200 campañas activas y ${AGENTES_ACTIVOS} agentes IA en producción`,
                 '+50 clientes activos en +20 industrias distintas',
                 'Dashboards ejecutivos en tiempo real para cada cliente',
                 'Fee fijo $950.000-$2.500.000/mes + IVA, sin comisión sobre pauta',

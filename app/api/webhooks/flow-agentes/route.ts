@@ -179,7 +179,7 @@ async function enviarEmailCliente(email: string, nombre: string) {
           + '<div style="text-align:center;margin:24px 0;">'
           + '<a href="https://wa.me/56962470533" style="display:inline-block;background:#059669;color:white;padding:14px 32px;border-radius:10px;font-weight:700;font-size:15px;text-decoration:none;">Contactar por WhatsApp</a>'
           + '</div>'
-          + '<p style="font-size:13px;color:#6b7280;">Plan: Blog IA Mensual — $99.990 + IVA/mes — 24 articulos/mes</p>'
+          + '<p style="font-size:13px;color:#6b7280;">Plan: Boost SEO + IA — $400.000 + IVA/mes — 20 artículos y 4 rankings al mes</p>'
           + '</div>'
           + '<div style="padding:16px 28px;background:#064E3B;border-radius:0 0 16px 16px;text-align:center;">'
           + '<p style="margin:0;font-size:12px;color:rgba(255,255,255,0.7);">M&P Agentes IA by Muller y Perez</p>'

@@ -97,7 +97,7 @@ export default function AgentesAdminPage() {
         <div className="flex items-center justify-between mb-6">
           <div>
             <h1 className="text-2xl font-bold text-gray-900">Agentes Blog IA — Suscriptores</h1>
-            <p className="text-sm text-gray-500 mt-1">Gestiona suscriptores del producto Agente de Blog IA ($99.990 + IVA/mes)</p>
+            <p className="text-sm text-gray-500 mt-1">Gestiona suscriptores del producto Agente de Blog IA ($400.000 + IVA/mes)</p>
           </div>
           <div className="flex gap-3">
             <button onClick={loadData} className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-semibold hover:bg-gray-200">
@@ -207,7 +207,7 @@ export default function AgentesAdminPage() {
                   <h2 className="text-lg font-bold text-gray-900">Suscribir nuevo cliente — Agente Blog IA</h2>
                   <button onClick={function() { setShowModal(false) }} className="text-gray-400 hover:text-gray-600 text-xl">&times;</button>
                 </div>
-                <p className="text-sm text-gray-500 mt-1">Plan BLOG-IA-MENSUAL — $99.990 + IVA/mes</p>
+                <p className="text-sm text-gray-500 mt-1">Plan Boost SEO + IA — $400.000 + IVA/mes</p>
               </div>
               <form onSubmit={handleSubmit} className="p-6 space-y-4">
                 <div>
