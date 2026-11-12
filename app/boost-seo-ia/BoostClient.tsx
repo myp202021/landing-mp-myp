@@ -20,13 +20,15 @@ import {
   Code2,
   CheckCircle2,
   Sparkles,
+  ClipboardCheck,
+  FileSearch,
+  MapPin,
   Plus,
   Minus,
 } from "lucide-react";
 import { trackLead, trackWhatsAppClick } from "@/lib/meta-pixel";
 import {
   AGENTES_ACTIVOS,
-  AGENTES_LISTA,
   AGENTES_EJECUCIONES_30D,
 } from "@/lib/agentes-activos";
 
@@ -128,6 +130,58 @@ const POR_QUE = [
     d: "Agentes, predictor de campañas, CRM y paneles por cliente son desarrollo propio. No revendemos una herramienta: la hacemos y la operamos.",
     href: "/labs",
     cta: "Ver M&P Labs",
+  },
+];
+
+/* Equipo de agentes por cliente, por categoría. Texto en primera persona (cómo se presenta cada agente). */
+const EQUIPO = [
+  {
+    c: "Auditoría",
+    i: ClipboardCheck,
+    agentes: [
+      { n: "Auditor SEO + GEO", f: "Al partir", d: "Reviso tu sitio completo: estructura, títulos, datos estructurados, velocidad e indexación, y qué dicen hoy las IA de tu rubro. Con eso dejo la línea base." },
+    ],
+  },
+  {
+    c: "Contenido",
+    i: PenTool,
+    agentes: [
+      { n: "Blog diario", f: "Lunes a viernes", d: "Escribo y publico un artículo por día hábil sobre lo que buscan tus clientes, con tablas, preguntas frecuentes y enlaces internos." },
+      { n: "Ranking semanal", f: "Viernes", d: "Cada semana publico una comparativa de tu rubro: el formato que más citan Google y las IA." },
+      { n: "Ranking de nicho", f: "Mensual", d: "Armo rankings de tu nicho específico con fuentes que verifico una por una, para posicionarte donde está tu cliente ideal." },
+      { n: "Revisor editorial", f: "Cada publicación", d: "Leo todo antes de que salga: repeticiones, relleno, cifras, ortografía, tildes y lo que tu empresa no quiere que se diga." },
+      { n: "Verificador de fuentes", f: "Cada publicación", d: "Compruebo que cada enlace citado funcione y que cada cita exista en la página de origen." },
+    ],
+  },
+  {
+    c: "Indexación",
+    i: FileSearch,
+    agentes: [
+      { n: "Agente de indexación", f: "Cada publicación", d: "Apenas sale un artículo lo envío a Google y Bing, actualizo el sitemap y reviso en Search Console qué páginas quedaron fuera para corregirlas." },
+    ],
+  },
+  {
+    c: "Google Business Profile",
+    i: MapPin,
+    agentes: [
+      { n: "Gestor de ficha de Google", f: "Mensual", d: "Mantengo tu ficha de Google coherente con tu sitio y los directorios: datos, categorías, servicios y publicaciones. Es una de las fuentes que más leen las IA." },
+    ],
+  },
+  {
+    c: "GEO: visibilidad en IA",
+    i: Sparkles,
+    agentes: [
+      { n: "Agente que consulta a las IA", f: "Semanal", d: "Le pregunto a ChatGPT lo mismo que preguntaría tu cliente, 3 veces cada pregunta, y anoto si te nombra, en qué lugar y a quién recomienda en tu lugar." },
+      { n: "Medidor de Google", f: "Semanal", d: "Mido tu posición en hasta 20 búsquedas de tu rubro, sin personalización, para comparar semana a semana con la misma vara." },
+    ],
+  },
+  {
+    c: "Reportes y control",
+    i: FileText,
+    agentes: [
+      { n: "Agente que reporta", f: "Primer día hábil del mes", d: "Te envío el informe: posiciones en Google, apariciones en IA, lo publicado, lo ajustado y lo que viene. Si un dato falla, no lo mando." },
+      { n: "Agente supervisor", f: "Todos los días", d: "Reviso cada mañana que todos los agentes hayan corrido; si alguno falla, lo relanzo y aviso al equipo de M&P." },
+    ],
   },
 ];
 
@@ -257,7 +311,6 @@ export default function BoostClient() {
   const [enviado, setEnviado] = useState(false);
   const [error, setError] = useState("");
 
-  const areas = Array.from(new Set(AGENTES_LISTA.map((a) => a.area)));
 
   async function enviar(e: React.FormEvent) {
     e.preventDefault();
@@ -468,54 +521,42 @@ export default function BoostClient() {
         </div>
       </section>
 
-      {/* GLOSARIO DE AGENTES */}
+      {/* TU EQUIPO DE AGENTES (por categoría, unificado para el cliente) */}
       <section aria-labelledby="agentes-t" className="bg-white py-28">
         <div className="mx-auto max-w-7xl px-6">
-          <Eyebrow light>Los agentes</Eyebrow>
-          <h2
-            id="agentes-t"
-            className="max-w-4xl text-4xl font-black tracking-tight text-slate-900 md:text-5xl"
-          >
-            {AGENTES_ACTIVOS} agentes trabajando hoy.{" "}
-            <span className="text-blue-600">Esto hace cada uno.</span>
+          <Eyebrow light>Tu equipo de agentes</Eyebrow>
+          <h2 id="agentes-t" className="max-w-4xl text-4xl font-black tracking-tight text-slate-900 md:text-5xl">
+            Un equipo completo trabajando en tu sitio. <span className="text-blue-600">Así lo explica cada agente.</span>
           </h2>
           <p className="mt-5 max-w-3xl text-lg text-slate-600">
-            Solo contamos los que terminaron bien al menos el 70% de sus
-            ejecuciones en los últimos 30 días. Los que trabajan para clientes
-            aparecen por rubro.
+            No contratas un blog automático: contratas un equipo de agentes coordinado, que audita, escribe, indexa, pregunta a las IA y
+            te reporta. Todo en un solo servicio.
           </p>
-          <div className="mt-12 grid gap-10 lg:grid-cols-2">
-            {areas.map((area) => (
-              <div key={area}>
-                <h3 className="mb-3 text-sm font-bold uppercase tracking-[0.18em] text-blue-600">
-                  {area}
-                </h3>
-                <div className="divide-y divide-slate-200 rounded-2xl border border-slate-200">
-                  {AGENTES_LISTA.filter((a) => a.area === area).map((a) => (
-                    <div key={a.id} className="p-5">
-                      <div className="flex items-start justify-between gap-4">
-                        <p className="font-bold text-slate-900">{a.nombre}</p>
-                        <span className="shrink-0 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700">
-                          {a.exitosas30} OK en 30 días
-                        </span>
+          <div className="mt-14 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+            {EQUIPO.map((cat) => (
+              <div key={cat.c} className="v2-tilt flex flex-col rounded-3xl border border-slate-200 bg-slate-50 p-7">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-violet-600 text-white shadow-lg">
+                    <cat.i className="h-5 w-5" />
+                  </div>
+                  <h3 className="text-xl font-black text-slate-900">{cat.c}</h3>
+                </div>
+                <div className="mt-6 space-y-5">
+                  {cat.agentes.map((a) => (
+                    <div key={a.n}>
+                      <div className="flex items-baseline justify-between gap-3">
+                        <p className="font-bold text-slate-900">{a.n}</p>
+                        <span className="shrink-0 text-xs font-semibold uppercase tracking-wider text-blue-600">{a.f}</span>
                       </div>
-                      <p className="mt-1.5 text-sm leading-relaxed text-slate-600">
-                        {a.que_hace}
-                      </p>
-                      <p className="mt-1.5 text-xs font-medium text-slate-400">
-                        {a.frecuencia}
-                      </p>
+                      <p className="mt-1 text-[15px] leading-relaxed text-slate-600">&ldquo;{a.d}&rdquo;</p>
                     </div>
                   ))}
                 </div>
               </div>
             ))}
           </div>
-          <a
-            href="/agentes-ia"
-            className="mt-10 inline-flex items-center gap-2 font-semibold text-blue-600 hover:text-blue-700"
-          >
-            Ver el registro día por día <ArrowRight className="h-4 w-4" />
+          <a href="/agentes-ia" className="mt-10 inline-flex items-center gap-2 font-semibold text-blue-600 hover:text-blue-700">
+            Ver el registro público de ejecuciones de nuestros {AGENTES_ACTIVOS} agentes <ArrowRight className="h-4 w-4" />
           </a>
         </div>
       </section>
