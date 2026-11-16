@@ -173,7 +173,8 @@ var TEMAS = [
 ]
 
 // Cifra oficial de agentes: se reemplaza en todos los prompts (antes estaba hardcodeado 39)
-TEMAS.forEach(function(t) { t.prompt_research = t.prompt_research.replace(/\b39 agentes/g, focus.FACTS.agentes_ia + ' agentes') })
+// 16 nov 2026: sin número fijo de agentes (la cifra viva está en /agentes-ia)
+TEMAS.forEach(function(t) { t.prompt_research = t.prompt_research.replace(/\b39 agentes/g, 'agentes') })
 
 // Cada tema empuja a las páginas de dinero de su cluster de keywords
 var CLUSTER_POR_CATEGORIA = { Rankings: 'performance', Performance: 'performance', Scaling: 'paid_media', Datos: 'paid_media', IA: 'ia_agentes', SEO: 'geo_seo', Growth: 'growth', Revenue: 'growth', Tendencias: 'marketing_digital' }

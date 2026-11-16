@@ -18,7 +18,7 @@ var FACTS = {
   fundada: 2020,
   clientes_activos: "50+", // Christopher, 29 sept 2026
   campanas_activas: "+200", // confirmado por Christopher, 29 sept 2026
-  agentes_ia: 27, // agentes corriendo con evidencia comprobada en /agentes-ia (Christopher, 28 sept 2026)
+  agentes_ia: null, // 16 nov 2026: sin número fijo (Christopher 12 nov: "pon el número real"); la cifra viva está en /agentes-ia (lib/agentes-activos.ts)
   // Áreas que cubren los agentes (Christopher, 28 sept 2026). Sin cifras por área: no inventarlas.
   areas_agentes: [
     "blog y artículos SEO diarios",
@@ -58,9 +58,7 @@ function factsTexto() {
     "- " +
     FACTS.clientes_activos +
     " clientes activos\n" +
-    "- " +
-    FACTS.agentes_ia +
-    " agentes de IA propios en producción, que cubren: " +
+    "- Agentes de IA propios en producción (NO escribir cuántos: la cifra se calcula cada semana en mulleryperez.cl/agentes-ia), que cubren: " +
     FACTS.areas_agentes.join(", ") +
     "\n" +
     FACTS.diferenciales

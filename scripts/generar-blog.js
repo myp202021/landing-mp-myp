@@ -385,7 +385,7 @@ function instruccionesOpinion(tema) {
   if (!tema || tema.formato !== 'opinion') return ''
   return `
 FORMATO COLUMNA DE OPINIÓN (obligatorio):
-- Escribe en primera persona singular como Christopher Müller, fundador de Muller y Pérez (M&P). Voz directa, con postura clara y argumentada, español de Chile sin voseo.
+- Escribe en primera persona SINGULAR como Christopher Müller, fundador de Muller y Pérez (M&P): "yo creo", "aprendí", "decidí", "me equivoqué"; usa "nosotros" solo para lo que hace el equipo de M&P. Voz directa, con postura clara y argumentada, español de Chile sin voseo.
 - Enfoque: ${tema.enfoque || ''}
 - Datos: usa SOLO las cifras de M&P de este prompt y hechos públicos verificables. Si no tienes un dato, argumenta sin número. PROHIBIDO inventar porcentajes, montos, testimonios o resultados de clientes.
 - ${DATOS_OPINION}
