@@ -16,6 +16,24 @@ const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SER
 // Temas organizados por categoría — se rotan automáticamente
 const TEMAS = [
 
+  // Columnas de opinión de Christopher Müller (16 nov 2026, pedido de Christopher: posicionarlo como referente en Chile y LatAm).
+  // formato 'opinion' = primera persona, firma Christopher Müller, solo datos reales (FACTS + campo datos). Tienen prioridad.
+  { categoria: 'Opinión', tag: 'Opinión', formato: 'opinion', tema: 'Lo que aprendí poniendo agentes de IA a trabajar en una agencia de marketing', enfoque: 'Columna en primera persona: qué tareas tomaron los agentes en M&P (blog diario, indexación en Search Console, fiscalización de leads por WhatsApp, paneles por cliente, informes SEO mensuales), qué falló al principio (temas que se agotan, procesos que se cortan por tiempo) y por qué la supervisión humana sigue siendo obligatoria' },
+  { categoria: 'Opinión', tag: 'Opinión', formato: 'opinion', tema: 'Por qué dejé de vender horas y empecé a vender agentes de IA', enfoque: 'Opinión sobre el modelo de agencia: del equipo que hace tareas repetitivas a agentes que corren solos y personas que deciden; qué cambia en el servicio al cliente y en el equipo' },
+  { categoria: 'Opinión', tag: 'Opinión', formato: 'opinion', tema: 'Boost SEO + IA: por qué creamos un servicio para aparecer en Google y en ChatGPT a la vez', enfoque: 'Explicar en primera persona el servicio Boost SEO + IA de M&P: artículos diarios, schema, FAQ, llms.txt, Search Console y Bing, indexación; por qué el SEO clásico ya no basta' },
+  { categoria: 'Opinión', tag: 'Opinión', formato: 'opinion', tema: 'AI Overviews en Chile: qué le pasa al clic cuando Google responde primero', enfoque: 'Opinión sobre el impacto de AI Overviews en el tráfico orgánico de empresas chilenas; qué contenido sigue recibiendo clics y qué hacer: respuestas citables, datos propios, marca' },
+  { categoria: 'Opinión', tag: 'Opinión', formato: 'opinion', tema: 'ChatGPT ya es un buscador: lo que veo cuando les pregunto por mis clientes', enfoque: 'Columna: cómo M&P mide si sus clientes aparecen en ChatGPT y Gemini con preguntas reales del rubro (por ejemplo, una corredora del sector oriente que aparece en Gemini al preguntar por La Dehesa), qué mueve la aguja y qué no; sin nombrar clientes' },
+  { categoria: 'Opinión', tag: 'Opinión', formato: 'opinion', tema: 'Publicidad en ChatGPT: qué espero y qué me preocupa como agencia', enfoque: 'Opinión sobre los anuncios en ChatGPT: oportunidad, riesgos de confianza, cómo prepararse (contenido, medición, presupuesto de prueba); separar lo anunciado oficialmente de la especulación' },
+  { categoria: 'Opinión', tag: 'Opinión', formato: 'opinion', tema: 'Meta Ads en 2026: menos segmentación manual, más creatividad y datos propios', enfoque: 'Opinión: el algoritmo de Meta decide la audiencia; la ventaja está en creatividades, API de Conversiones y calidad del lead medida en el CRM; experiencia de M&P con formularios vs WhatsApp sin cifras inventadas' },
+  { categoria: 'Opinión', tag: 'Opinión', formato: 'opinion', tema: 'Google Ads con IA: dónde confío en la automatización y dónde no', enfoque: 'Columna: PMax, ofertas automáticas, recursos generados por IA; dónde M&P deja decidir al algoritmo y dónde pone límites (negativas, conversiones reales, revisión semanal de términos)' },
+  { categoria: 'Opinión', tag: 'Opinión', formato: 'opinion', tema: 'El informe mensual de marketing ya no lo arma una persona', enfoque: 'Opinión sobre la reportería automatizada: paneles por cliente e informes SEO que salen solos el primer día hábil del mes; qué gana el cliente y qué sigue requiriendo criterio humano' },
+  { categoria: 'Opinión', tag: 'Opinión', formato: 'opinion', tema: 'La agencia de marketing que viene en Latinoamérica: menos operadores, más criterio', enfoque: 'Visión de Christopher Müller sobre el futuro de las agencias en Chile y LatAm con IA: perfiles que se necesitan, cómo cambia el precio y qué deben exigir las empresas' },
+  { categoria: 'Opinión', tag: 'Opinión', formato: 'opinion', tema: 'Automatizar sin perder el control: dónde pongo la línea entre agente y persona', enfoque: 'Columna práctica en primera persona: tareas concretas que M&P automatizó para sí misma y para clientes (respuestas, seguimiento de leads, contenidos, indexación) y límites reales' },
+  { categoria: 'Opinión', tag: 'Opinión', formato: 'opinion', tema: 'Mis reglas para que un agente escriba artículos que Google y ChatGPT citen', enfoque: 'Opinión con las reglas reales de los agentes de blog de M&P: mínimo 3.000 palabras, verificador de enlaces rotos, preguntas como títulos para que las IA citen, sin cifras inventadas, revisión de duplicados' },
+  { categoria: 'Opinión', tag: 'Opinión', formato: 'opinion', tema: 'Bing importa más de lo que crees: ChatGPT y Copilot leen desde ahí', enfoque: 'Columna: por qué M&P conectó Bing Webmaster Tools e IndexNow en los sitios de sus clientes de Boost SEO + IA y qué cambia para la visibilidad en IA' },
+  { categoria: 'Opinión', tag: 'Opinión', formato: 'opinion', tema: 'Medir leads de verdad: por qué fiscalizamos cada conversación de WhatsApp', enfoque: 'Opinión: el costo por lead no sirve si nadie revisa qué pasó con el contacto; cómo M&P fiscaliza los leads de WhatsApp de un cliente inmobiliario con un agente, sin nombrarlo' },
+  { categoria: 'Opinión', tag: 'Opinión', formato: 'opinion', tema: 'Search Console no es opcional: lo que encontré revisando la indexación de nuestros clientes', enfoque: 'Columna: páginas descubiertas y no indexadas, sitemaps rotos, cuota diaria de solicitudes; cómo M&P montó un agente de indexación y qué aprendió' },
+
   // IA y educación (prioridad desde 30 sept 2026, pedido de Christopher: menos rankings de agencias, más IA y contenido educativo)
   { categoria: 'IA y educación', tag: 'Inteligencia Artificial', tema: 'Curso práctico de Claude para equipos de marketing: de cero a tu primer agente' },
   { categoria: 'IA y educación', tag: 'Inteligencia Artificial', tema: 'Cómo usar Claude para analizar campañas de Google Ads: guía paso a paso con prompts' },
@@ -300,7 +318,9 @@ async function elegirTemaBase() {
 
   if (disponibles.length > 0) {
     // Primero IA y educación; luego el resto
-    var prioritarios = disponibles.filter(t => t.categoria === 'IA y educación')
+    var opinion = disponibles.filter(t => t.formato === 'opinion')
+    var prioritarios = opinion.length ? opinion : disponibles.filter(t => t.categoria === 'IA y educación')
+    if (disponibles.length <= 5) console.log('⚠️ TEMAS POR ACABARSE: quedan ' + disponibles.length + ' temas predefinidos. Agregar temas nuevos a TEMAS en scripts/generar-blog.js')
     var pool = prioritarios.length ? prioritarios : disponibles
     return pool[Math.floor(Math.random() * pool.length)]
   }
@@ -358,6 +378,22 @@ Responde SOLO con un JSON (nada más):
   }
 }
 
+
+// Columnas de opinión (16 nov 2026): primera persona de Christopher Müller, solo datos verificables
+const DATOS_OPINION = "M&P tiene agentes de IA propios en producción, con evidencia pública de ejecuciones en mulleryperez.cl/agentes-ia (no escribir un número de agentes: varía semana a semana)"
+function instruccionesOpinion(tema) {
+  if (!tema || tema.formato !== 'opinion') return ''
+  return `
+FORMATO COLUMNA DE OPINIÓN (obligatorio):
+- Escribe en primera persona singular como Christopher Müller, fundador de Muller y Pérez (M&P). Voz directa, con postura clara y argumentada, español de Chile sin voseo.
+- Enfoque: ${tema.enfoque || ''}
+- Datos: usa SOLO las cifras de M&P de este prompt y hechos públicos verificables. Si no tienes un dato, argumenta sin número. PROHIBIDO inventar porcentajes, montos, testimonios o resultados de clientes.
+- ${DATOS_OPINION}
+- No nombres clientes; descríbelos por rubro (por ejemplo, "una corredora de propiedades", "una consultora de RR.HH.").
+- Los H2 pueden ser preguntas o afirmaciones de opinión; la primera oración de cada sección igual responde o resume en máximo 40 palabras.
+- La tabla HTML es opcional: inclúyela solo si se arma con datos reales (por ejemplo, qué hace un agente vs qué hace una persona), nunca con benchmarks inventados.
+- Cierra con una sección de conclusión personal antes de "Preguntas frecuentes".`
+}
 // ============================================================================
 // STEP 1: Generar outline con 8-10 secciones H2
 // ============================================================================
@@ -372,6 +408,7 @@ CATEGORÍA: ${tema.categoria}
 FECHA: ${hoy}
 ${tema.cluster ? focus.instruccionesCluster(tema.cluster, tema.keyword) : focus.factsTexto()}
 
+${instruccionesOpinion(tema)}
 INSTRUCCIONES:
 - Genera entre 8 y 10 secciones H2
 - Cada sección debe tener 3-5 puntos clave a desarrollar
@@ -479,6 +516,8 @@ ${tema.cluster ? focus.instruccionesCluster(tema.cluster, tema.keyword, 'seccion
 
 OUTLINE COMPLETO DEL ARTÍCULO (para contexto):
 ${outlineResumen}
+
+${instruccionesOpinion(tema)}
 
 SECCIÓN ACTUAL (${index + 1} de ${total}): ${seccion.h2}
 PUNTOS A DESARROLLAR:

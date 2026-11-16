@@ -138,6 +138,23 @@ const TEMAS = [
   { categoria: 'Estrategia', tag: 'Estrategia', pregunta: '¿Qué preguntas hacerle a una agencia de marketing digital antes de contratarla?', enfoque: 'Lista de preguntas, señales de alerta, qué pedir por escrito' },
   { categoria: 'Google Ads', tag: 'Google Ads', pregunta: '¿Qué es Performance Max y por qué muchas cuentas pierden dinero con ella?', enfoque: 'Canibalización de marca, falta de control, cómo configurarla bien' },
   { categoria: 'Analytics', tag: 'Analytics', pregunta: '¿Cómo medir leads que se cierran por WhatsApp o teléfono?', enfoque: 'Números de seguimiento, UTM, CRM, conversiones offline' },
+  // Tanda 16 nov 2026 (temas predefinidos agotados; revisadas contra lo publicado)
+  { categoria: 'Google Ads', tag: 'Google Ads', pregunta: '¿Qué son las conversiones mejoradas de Google Ads y cuándo activarlas?', enfoque: 'Definición simple, qué datos se envían (hash), requisitos, impacto en la medición, pasos de activación' },
+  { categoria: 'IA y educación', tag: 'Inteligencia Artificial', pregunta: '¿Cómo sé si mi empresa aparece cuando alguien pregunta en ChatGPT?', enfoque: 'Cómo medir con preguntas reales del rubro, frecuencia, qué anotar, qué hacer si no aparece' },
+  { categoria: 'SEO', tag: 'SEO', pregunta: '¿Qué es el archivo llms.txt y lo necesita mi sitio web?', enfoque: 'Qué contiene, dónde va, ejemplo mínimo, qué no reemplaza (sitemap, schema), estado de adopción' },
+  { categoria: 'Local', tag: 'Local', pregunta: '¿Cuántas reseñas de Google necesita un negocio local para destacar?', enfoque: 'Cantidad vs recencia vs respuesta, cómo pedirlas, qué no hacer (incentivos), ejemplo de flujo' },
+  { categoria: 'Analytics', tag: 'Analytics', pregunta: '¿Cómo se mide un clic a WhatsApp como conversión?', enfoque: 'Evento en Tag Manager, GA4, importación a Google Ads y Meta, diferencia entre clic y conversación real' },
+  { categoria: 'Meta Ads', tag: 'Meta Ads', pregunta: '¿Qué es la API de Conversiones de Meta y en qué se diferencia del píxel?', enfoque: 'Servidor vs navegador, bloqueadores, deduplicación, cuándo es obligatoria en la práctica' },
+  { categoria: 'Meta Ads', tag: 'Meta Ads', pregunta: '¿Cada cuánto hay que cambiar los anuncios en Meta?', enfoque: 'Señales de fatiga (frecuencia, CTR, costo), rotación por presupuesto, cuántas variantes tener activas' },
+  { categoria: 'Google Ads', tag: 'Google Ads', pregunta: '¿Qué es Demand Gen en Google Ads y para quién sirve?', enfoque: 'Dónde aparece (YouTube, Discover, Gmail), diferencias con Display y PMax, casos de uso' },
+  { categoria: 'Conceptos', tag: 'Glosario', pregunta: '¿En qué se diferencia un término de búsqueda de una palabra clave?', enfoque: 'Definiciones, tipos de concordancia, cómo usar el informe para sumar negativas' },
+  { categoria: 'Conceptos', tag: 'Glosario', pregunta: '¿Qué es el costo por lead y cómo se calcula bien?', enfoque: 'Fórmula, costo por lead calificado vs bruto, cruce con CRM, errores comunes' },
+  { categoria: 'Comparativas', tag: 'Comparativas', pregunta: '¿Conviene un formulario instantáneo de Meta o una landing propia?', enfoque: 'Volumen vs calidad, filtros, medición, cuándo usar cada uno, combinación' },
+  { categoria: 'SEO', tag: 'SEO', pregunta: '¿Sirve todavía el schema FAQPage para SEO y para la IA?', enfoque: 'Cambios de Google en resultados enriquecidos, valor para IA y comprensión, buenas prácticas' },
+  { categoria: 'SEO', tag: 'SEO', pregunta: '¿Cómo se verifica un sitio en Bing Webmaster Tools?', enfoque: 'Métodos (importar desde Search Console, DNS, archivo), envío de sitemap, por qué importa para Copilot y ChatGPT' },
+  { categoria: 'SEO', tag: 'SEO', pregunta: '¿Qué es IndexNow y cómo avisa a los buscadores de cambios en mi sitio?', enfoque: 'Cómo funciona la clave, qué buscadores lo usan, cuándo enviar, límites' },
+  { categoria: 'Local', tag: 'Local', pregunta: '¿Cómo se responde una reseña negativa en Google?', enfoque: 'Estructura de respuesta, tiempos, qué no decir, cuándo pedir eliminación' },
+  { categoria: 'Local', tag: 'Local', pregunta: '¿Cómo se verifica una ficha de Perfil de Empresa de Google?', enfoque: 'Métodos (video, llamada, correo), requisitos, errores que bloquean la verificación' },
 ]
 
 // ============================================================================
@@ -243,6 +260,7 @@ async function elegirTemaBase() {
   const titulosExistentes = (existentes || []).map(p => p.title)
   const disponibles = TEMAS.filter(t => !slugsExistentes.has(slugify(t.pregunta)) && !temaPublicado(t.pregunta, titulosExistentes))
 
+  if (disponibles.length <= 5) console.log('⚠️ TEMAS POR ACABARSE: quedan ' + disponibles.length + ' preguntas predefinidas. Agregar en TEMAS de scripts/blog-geo-diario.js')
   if (disponibles.length > 0) {
     // Rotar por día para ser predecible y no repetir
     const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0)) / 86400000)
@@ -254,7 +272,7 @@ async function elegirTemaBase() {
   }
 
   // Todos usados — generar con IA
-  console.log('🤖 60 temas predefinidos agotados. Generando pregunta del cluster de keywords del día...')
+  console.log('🤖 Temas predefinidos agotados. Generando pregunta del cluster de keywords del día...')
   try {
     // offset 3: el GEO toma otro cluster distinto al del blog diario el mismo día
     const t = await focus.temaNuevo({ formato: 'pregunta', offset: 3, recientes: (existentes || []).map(p => p.title), openaiKey: OPENAI_API_KEY })
