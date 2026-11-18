@@ -110,7 +110,8 @@ export const organizationSchema = {
     'https://www.instagram.com/mulleryperez',
     'https://www.youtube.com/channel/UCgzocZZQLNnthZ82oEyblrA',
     'https://www.facebook.com/mulleryperez',
-    'https://www.wikidata.org/wiki/Q142207578'
+    'https://www.wikidata.org/wiki/Q142207578',
+    'https://www.crunchbase.com/organization/muller-y-p%C3%A9rez'
   ]
 }
 
