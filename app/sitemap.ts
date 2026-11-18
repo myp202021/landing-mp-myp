@@ -2,6 +2,7 @@ import { MetadataRoute } from 'next'
 import fs from 'fs'
 import path from 'path'
 import { createClient } from '@supabase/supabase-js'
+import blogConsolidados from '@/lib/blog-consolidados.json'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://www.mulleryperez.cl'
@@ -78,6 +79,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     'como-muller-y-perez-lidera-la-transformacion-del-marketing-en-chile-con-intelige',
     'como-elegir-la-mejor-agencia-de-marketing-digital-en-chile',
   ])
+
+  // Consolidados posteriores (lib/blog-consolidados.json, misma lista que oculta el listado del blog)
+  for (const slug of blogConsolidados as string[]) redirectedBlogSlugs.add(slug)
 
   // Combinar slugs de blog (estáticos + Supabase, sin duplicados, sin redirects)
   const allBlogSlugs = new Set([

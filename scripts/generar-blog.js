@@ -59,7 +59,6 @@ const TEMAS = [
   { categoria: 'Google Ads', tag: 'Google Ads', tema: 'Cómo reducir el CPC en Google Ads en Chile: técnicas avanzadas de Quality Score y estructura de campañas' },
   { categoria: 'Google Ads', tag: 'Google Ads', tema: 'Google Ads para empresas B2B en Chile: estrategia de keywords, landing pages y ciclos de venta largos' },
   { categoria: 'Google Ads', tag: 'Google Ads', tema: 'Remarketing en Google Ads: cómo reimpactar visitantes sin quemar presupuesto' },
-  { categoria: 'Google Ads', tag: 'Google Ads', tema: 'Performance Max vs Search: cuándo usar cada tipo de campaña en Google Ads Chile' },
   { categoria: 'Google Ads', tag: 'Google Ads', tema: 'Extensiones de anuncios en Google Ads: cuáles usar y cómo impactan el CTR en Chile' },
 
   // Meta Ads
@@ -106,7 +105,6 @@ const TEMAS = [
 
   // Growth & Conversión
   { categoria: 'Growth', tag: 'Growth', tema: 'Growth marketing para empresas B2B en Chile: playbook completo de adquisición y retención' },
-  { categoria: 'Growth', tag: 'Growth', tema: 'Cómo reducir el CAC un 40%: tácticas probadas de growth para PYMES chilenas' },
   { categoria: 'Growth', tag: 'Growth', tema: 'Product-led growth vs sales-led growth: cuál funciona mejor en Latinoamérica' },
   { categoria: 'Growth', tag: 'Growth', tema: 'Loops de crecimiento: cómo crear sistemas de adquisición que se auto-alimentan' },
   { categoria: 'Growth', tag: 'CRO', tema: 'CRO para Chile: cómo optimizar la tasa de conversión sin aumentar el presupuesto publicitario' },
@@ -159,33 +157,24 @@ const TEMAS = [
 
   // Performance Marketing — posicionamiento directo
   { categoria: 'Performance', tag: 'Performance', tema: 'Performance marketing en Chile 2026: qué es, cómo funciona y por qué las empresas lo prefieren' },
-  { categoria: 'Performance', tag: 'Performance', tema: 'Las mejores agencias de performance marketing en Chile: ranking y comparativa 2026' },
   { categoria: 'Performance', tag: 'Performance', tema: 'Performance marketing vs marketing digital tradicional: diferencias, ventajas y cuándo usar cada uno' },
   { categoria: 'Performance', tag: 'Performance', tema: 'Cómo contratar una agencia de performance marketing en Chile: guía paso a paso' },
-  { categoria: 'Performance', tag: 'Performance', tema: 'Caso de estudio: cómo el performance marketing reduce el CAC un 50% en empresas chilenas' },
 
   // Growth Marketing
   { categoria: 'Growth', tag: 'Growth', tema: 'Growth marketing en Chile 2026: qué es, frameworks y cómo implementarlo en tu empresa' },
-  { categoria: 'Growth', tag: 'Growth', tema: 'Las mejores agencias de growth marketing en Chile: quién hace growth de verdad' },
   { categoria: 'Growth', tag: 'Growth', tema: 'Growth hacking vs growth marketing: diferencias reales y qué funciona en Latinoamérica' },
   { categoria: 'Growth', tag: 'Growth', tema: 'Métricas de growth marketing que todo CEO chileno debería monitorear semanalmente' },
   { categoria: 'Growth', tag: 'Growth', tema: 'North Star Metric: cómo elegir la métrica que guía el crecimiento de tu empresa' },
 
-  // Agencias IA — diferenciador M&P
-  { categoria: 'IA', tag: 'IA', tema: 'Agencias de inteligencia artificial en Chile 2026: quiénes usan IA de verdad y quiénes solo la mencionan' },
+  // Agencias IA — 18 nov 2026: fuera los temas que eran autopromoción o rankings de agencias hechos por una agencia (el ranking verificado tiene su propio agente)
   { categoria: 'IA', tag: 'IA', tema: 'Cómo la inteligencia artificial está transformando las agencias de marketing en Chile' },
   { categoria: 'IA', tag: 'IA', tema: 'Agentes de IA para empresas: qué son, cómo funcionan y por qué van a reemplazar al SaaS tradicional' },
   { categoria: 'IA', tag: 'IA', tema: 'Empresas de inteligencia artificial en Chile: mapa del ecosistema IA chileno en 2026' },
   { categoria: 'IA', tag: 'IA', tema: 'Agentes de IA vs chatbots: por qué los agentes autónomos son el futuro del marketing digital' },
   { categoria: 'IA', tag: 'IA', tema: 'IA para marketing en Chile: 10 herramientas que toda empresa debería conocer en 2026' },
-  { categoria: 'IA', tag: 'IA', tema: 'Cómo construir agentes de IA propios para tu agencia de marketing: la ventaja competitiva definitiva' },
-  { categoria: 'IA', tag: 'IA', tema: 'El futuro de las agencias de marketing es la IA: por qué las agencias sin tecnología propia van a desaparecer' },
 
   // Agencias Chile — long tail
-  { categoria: 'Agencias', tag: 'Agencias', tema: 'Agencia de marketing digital en Santiago: cómo elegir la mejor para tu empresa en 2026' },
   { categoria: 'Agencias', tag: 'Agencias', tema: 'Agencia de publicidad digital en Chile: servicios, precios y qué esperar en 2026' },
-  { categoria: 'Agencias', tag: 'Agencias', tema: 'Las agencias de marketing digital más innovadoras de Chile en 2026' },
-  { categoria: 'Agencias', tag: 'Agencias', tema: 'Agencia de marketing digital para pymes en Chile: planes desde $500.000 mensuales' },
   { categoria: 'Agencias', tag: 'Agencias', tema: 'Consultora de marketing digital vs agencia: diferencias y cuál necesita tu empresa' },
   // Ampliación 30 sept 2026: temas dirigidos a búsquedas comerciales donde M&P aún no está en el top 10
   { categoria: 'Google Ads', tag: 'Google Ads', tema: 'Performance Max en Chile: cuándo sirve, cuándo quema presupuesto y cómo auditarla' },
@@ -265,40 +254,30 @@ async function generarImagen(titulo, categoria) {
   }
 }
 
-// ═══ ANTI-DUPLICADOS (30 sept 2026) ═══
-// GPT reescribe los títulos ("Liderazgo en crisis..." → "Liderazgo Crisis Chile 2026: Retener Talento"), así que comparar
-// títulos exactos o slugs deja pasar el mismo tema. Se compara por raíces (5 letras) de las palabras relevantes:
-// si un título publicado contiene 2/3 o más de las raíces del tema (mínimo 2), el tema ya está cubierto.
-var VACIAS_DUP = 'para como cual cuales guia completa clave claves chile 2026 2025 2024 2023 tus sus los las del con que mejores mejor top ranking todo debes saber paso'.split(' ')
-// En el blog de una agencia estas palabras están en casi todos los títulos: no sirven para distinguir temas
-VACIAS_DUP = VACIAS_DUP.concat('marketing digital agencia agencias publicidad empresa empresas negocio negocios campana campanas google meta chilenas chilenos chileno chilena estrategia estrategias'.split(' '))
-function raicesTema(t) {
-  return String(t || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9 ]/g, ' ').split(/\s+/)
-    .filter(function(w) { return w.length > 3 && !/^\d+$/.test(w) && VACIAS_DUP.indexOf(w) === -1 })
-    .map(function(w) { return w.substring(0, 5) })
-    .filter(function(w, i, a) { return a.indexOf(w) === i })
+// ═══ ANTI-DUPLICADOS Y TÍTULOS SIN AUTOPROMOCIÓN ═══
+// 30 sept 2026: comparación por raíces. 18 nov 2026: pasa a scripts/lib/myp-seo-focus.js (temaDuplicado + tituloAutopromocional),
+// que también ignora la marca y el relleno («Cómo M&P revoluciona…»), compara slug y fecha y detecta mismo producto (Performance Max, MCP…).
+// existentes: [{ title, slug, date_published }]
+function temaPublicado(texto, existentes) {
+  var d = focus.temaDuplicado(texto, existentes)
+  return d ? d.titulo + ' — ' + d.motivo : null
 }
-function temaPublicado(texto, titulosExistentes) {
-  var r = raicesTema(texto)
-  if (r.length < 2) return null
-  for (var i = 0; i < titulosExistentes.length; i++) {
-    var e = raicesTema(titulosExistentes[i])
-    var comunes = r.filter(function(w) { return e.indexOf(w) !== -1 }).length
-    // Cubierto si el existente contiene 2/3 del tema, o si el tema contiene 2/3 de un existente de 3+ raíces
-    if (comunes >= 2 && (comunes / r.length >= 0.66 || (e.length >= 3 && comunes / e.length >= 0.66))) return titulosExistentes[i]
-  }
-  return null
+function temaRechazado(texto, existentes) {
+  var a = focus.tituloAutopromocional(texto)
+  if (a) return 'título autopromocional: ' + a
+  var d = temaPublicado(texto, existentes)
+  return d ? 'ya publicado: ' + d : null
 }
 
 // Envoltorio anti-duplicados: el tema elegido (predefinido o generado por IA) no puede repetir uno publicado
 async function elegirTema() {
-  const { data: pubs } = await supabase.from('blog_posts').select('title')
-  const titulos = (pubs || []).map(p => p.title)
+  const { data: pubs } = await supabase.from('blog_posts').select('title, slug, date_published')
+  const existentes = pubs || []
   for (let intento = 0; intento < 4; intento++) {
     const t = await elegirTemaBase()
-    const repetido = temaPublicado(t.tema, titulos)
-    if (!repetido) return t
-    console.log('⚠️ Tema ya publicado ("' + t.tema + '" ≈ "' + repetido + '"). Probando otro...')
+    const rechazo = temaRechazado(t.tema, existentes)
+    if (!rechazo) return t
+    console.log('⚠️ Tema rechazado ("' + t.tema + '"): ' + rechazo + '. Probando otro...')
   }
   throw new Error('No se encontró tema nuevo tras 4 intentos: no se publica para evitar duplicados')
 }
@@ -307,14 +286,13 @@ async function elegirTemaBase() {
   // Obtener slugs ya publicados
   const { data: existentes } = await supabase
     .from('blog_posts')
-    .select('slug, title')
+    .select('slug, title, date_published')
     .order('date_published', { ascending: false })
 
   const slugsExistentes = new Set((existentes || []).map(p => p.slug))
 
   // Filtrar temas no usados
-  const titulosExistentes = (existentes || []).map(p => p.title)
-  const disponibles = TEMAS.filter(t => !slugsExistentes.has(slugify(t.tema)) && !temaPublicado(t.tema, titulosExistentes))
+  const disponibles = TEMAS.filter(t => !slugsExistentes.has(slugify(t.tema)) && !temaRechazado(t.tema, existentes || []))
 
   if (disponibles.length > 0) {
     // Primero IA y educación; luego el resto
@@ -328,7 +306,7 @@ async function elegirTemaBase() {
   // Todos los temas predefinidos ya se usaron — tema nuevo dentro del cluster de keywords del día
   console.log('🤖 Temas predefinidos agotados. Generando tema del cluster de keywords del día...')
   try {
-    const t = await focus.temaNuevo({ formato: 'guia', recientes: (existentes || []).map(p => p.title), openaiKey: OPENAI_API_KEY })
+    const t = await focus.temaNuevo({ formato: 'guia', recientes: (existentes || []).map(p => p.title), openaiKey: OPENAI_API_KEY, existentes: existentes || [] })
     return { categoria: CATEGORIA_CLUSTER[t.cluster.id], tag: CATEGORIA_CLUSTER[t.cluster.id], tema: t.titulo, enfoque: t.enfoque, cluster: t.cluster, keyword: t.keyword }
   } catch (e) {
     console.log('⚠️ temaNuevo falló (' + e.message + '), uso generador anterior')
@@ -414,7 +392,7 @@ INSTRUCCIONES:
 - Cada sección debe tener 3-5 puntos clave a desarrollar
 - Incluye datos reales de Chile, benchmarks, ejemplos prácticos
 - Tono profesional pero directo, sin relleno
-- Mencionar a Muller y Pérez naturalmente 1-2 veces como referencia
+- Mencionar a Muller y Pérez naturalmente 1-2 veces como ejemplo o fuente de datos, sin autoelogio (nada de «la mejor agencia», «líder», «referente», «de vanguardia»); ningún H2 se trata de M&P
 - AL MENOS 1 sección debe incluir una tabla HTML con datos reales de Chile (benchmarks CPC, CPL, ROAS, costos por industria)
 - La ÚLTIMA sección SIEMPRE debe ser "Preguntas frecuentes" con mínimo 6 preguntas (cada una como H3 terminando en ?)
 - FORMATO PREGUNTA-RESPUESTA (regla M&P nov 2026, para que ChatGPT y Gemini puedan citar): cada H2, salvo Preguntas frecuentes, es una pregunta real que haría el lector, completa y con el tema dentro
@@ -640,8 +618,8 @@ CATEGORÍA: ${tema.categoria}
 
 Genera un JSON con estos campos exactos (solo el JSON, nada más):
 {
-  "title": "título SEO optimizado (max 60 chars)",
-  "description": "meta description SEO (max 155 chars, con keyword principal)",
+  "title": "título SEO optimizado (max 60 chars). ${focus.REGLA_TITULOS}",
+  "description": "meta description SEO (max 155 chars, con keyword principal, sin autoelogio de la agencia)",
   "keywords": "5-8 keywords separadas por coma, relevantes para Chile",
   "excerpt": "resumen de 1-2 frases para la tarjeta del blog (max 200 chars)",
   "readTime": "X min"
@@ -680,6 +658,11 @@ Genera un JSON con estos campos exactos (solo el JSON, nada más):
   // Generate featured image
   const imageUrl = await generarImagen(tema.tema, tema.categoria)
 
+  if (focus.tituloAutopromocional(meta.title)) {
+    console.log('⚠️ seo_title autopromocional ("' + meta.title + '"): se usa el título del tema')
+    meta.title = tema.tema.substring(0, 60)
+  }
+
   return {
     slug,
     title: tema.tema,
@@ -703,6 +686,9 @@ async function guardarEnSupabase(articulo) {
   // M&P 19 oct 2026, regla para TODOS los agentes de blog: mínimo 3.000 palabras; si falta, se escribe por secciones y se une (lib/largo.js).
   articulo.content_html = await largo.asegurarLargo(articulo.content_html, { tema: articulo.title, sistema: 'Escribes para Muller y Pérez, agencia de performance marketing en Chile, en la voz de Christopher Müller.' })
   largo.exigirLargo(articulo.content_html)
+  // 18 nov 2026: control editorial final (título sin autopromoción, slug nuevo, tema no duplicado). Si falla, no se publica.
+  const { data: existentes } = await supabase.from('blog_posts').select('title, slug, date_published')
+  focus.controlPublicacion(articulo, existentes || [])
   const { data, error } = await supabase
     .from('blog_posts')
     .upsert(articulo, { onConflict: 'slug' })
@@ -764,6 +750,18 @@ CREATE POLICY "Service role can manage blog posts" ON blog_posts FOR ALL USING (
   console.log(`⏱️  Lectura: ${articulo.read_time}`)
 }
 
+// Prueba sin publicar (18 nov 2026): node scripts/<este>.js --dry-run → elige tema y corre el control editorial, sin generar ni guardar
+async function dryRun() {
+  const tema = await elegirTema()
+  const titulo = tema.tema
+  const { data: existentes } = await supabase.from('blog_posts').select('title, slug, date_published')
+  focus.controlPublicacion({ title: titulo, seo_title: titulo.substring(0, 60), slug: slugify(titulo) }, existentes || [])
+  console.log('DRY RUN OK — tema que se publicaría: ' + titulo + ' (' + tema.categoria + ')')
+}
+
+module.exports = { TEMAS, temaRechazado }
+if (require.main !== module) return
+if (process.argv.includes('--dry-run')) { dryRun().catch(err => { console.error('❌ DRY RUN:', err.message); process.exit(1) }); return }
 main().catch(err => {
   console.error('❌ Error:', err.message)
   process.exit(1)

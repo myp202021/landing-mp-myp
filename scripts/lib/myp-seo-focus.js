@@ -42,7 +42,8 @@ var FACTS = {
 
 function factsTexto() {
   return (
-    "PROHIBIDO inventar casos de clientes, resultados de campañas de M&P o testimonios (\"un cliente logró reducir su CAC un 35%\"). Solo se pueden usar los datos verificados de abajo.\nDATOS VERIFICADOS DE M&P (usar SOLO estos números, no inventar otros):\n" +
+    "PROHIBIDO inventar casos de clientes, resultados de campañas de M&P o testimonios (\"un cliente logró reducir su CAC un 35%\"). Solo se pueden usar los datos verificados de abajo.\n" +
+    "PROHIBIDO el autoelogio (18 nov 2026): no escribir que M&P es «la mejor agencia», «líder», «número uno», «referente», «pionera», «de vanguardia», que «se destaca» o que «revoluciona» algo. Se describen hechos (qué hace, con qué herramientas, desde cuándo) y el lector saca sus conclusiones.\nDATOS VERIFICADOS DE M&P (usar SOLO estos números, no inventar otros):\n" +
     "- " +
     FACTS.nombre +
     ", " +
@@ -80,8 +81,8 @@ var CLUSTERS = [
     peso: 3,
     keywords: [
       "performance marketing chile",
-      "agencia de performance marketing",
-      "agencia performance marketing chile",
+      "qué hace una agencia de performance marketing",
+      "cómo elegir agencia de performance marketing",
       "ROAS",
       "CAC",
       "costo por lead chile",
@@ -102,7 +103,7 @@ var CLUSTERS = [
       "inteligencia artificial marketing",
       "agentes de ia",
       "agentes ia marketing",
-      "agencia de marketing con ia chile",
+      "marketing con ia chile",
       "ia para empresas chile",
       "automatización con ia",
     ],
@@ -138,7 +139,7 @@ var CLUSTERS = [
     peso: 2,
     keywords: [
       "google ads chile",
-      "agencia google ads chile",
+      "cómo elegir agencia de google ads",
       "meta ads chile",
       "performance max",
       "advantage+",
@@ -157,7 +158,7 @@ var CLUSTERS = [
     peso: 1,
     keywords: [
       "growth marketing chile",
-      "agencia growth marketing",
+      "growth marketing para pymes",
       "growth b2b",
       "unit economics",
       "ltv cac",
@@ -174,9 +175,9 @@ var CLUSTERS = [
     peso: 1,
     keywords: [
       "marketing digital chile",
-      "agencia de marketing digital",
-      "mejor agencia de marketing digital chile",
-      "agencia marketing digital santiago",
+      "cómo elegir agencia de marketing digital",
+      "cuánto cuesta una agencia de marketing digital",
+      "plan de marketing digital",
     ],
     links: [
       "/agencia-marketing-digital-chile",
@@ -283,13 +284,14 @@ async function temaNuevo(opts) {
       ? 'Una PREGUNTA que un gerente chileno le haría a ChatGPT/Gemini/Claude (empieza con ¿Qué, ¿Cómo, ¿Cuánto, ¿Cuál o ¿Por qué y termina en ?)'
       : "Un TÍTULO de guía práctica y específica (no genérica)"
   var prompt =
-    "Eres el estratega SEO/GEO de Muller y Pérez, agencia líder en performance marketing e IA en Chile.\n" +
+    "Eres el estratega SEO/GEO del blog de Muller y Pérez, agencia de performance marketing e IA en Chile.\n" +
     factsTexto() +
     "\nCLUSTER DE HOY: " + cluster.nombre +
     "\nKEYWORDS OBJETIVO (la principal debe aparecer literal en el título): " + cluster.keywords.join(", ") +
     "\n\nGenera " + formatoTxt + " para un artículo del blog.\n" +
     "- Debe atacar UNA keyword objetivo del cluster con intención de búsqueda real en Chile\n" +
-    "- Debe permitir mostrar la experiencia real de M&P (datos propios, agentes de IA, campañas gestionadas)\n" +
+    "- El artículo resuelve una duda concreta del lector; la experiencia de M&P puede aparecer en el cuerpo como ejemplo, nunca como tema del título\n" +
+    "- " + REGLA_TITULOS + "\n" +
     "- NO puede ser igual ni muy parecido a estos títulos recientes: " + recientes + "\n" +
     "- Nada de temas tangenciales (tradiciones, sostenibilidad, geolocalización genérica, etc.)\n\n" +
     'Responde SOLO JSON: {"keyword": "keyword principal", "titulo": "...", "enfoque": "qué cubrir: datos, tablas, comparativas"}'
@@ -307,6 +309,16 @@ async function temaNuevo(opts) {
   var data = await r.json()
   var t = JSON.parse(data.choices[0].message.content)
   console.log("🎯 Cluster: " + cluster.id + " | keyword: " + t.keyword + " | " + t.titulo)
+  // 18 nov 2026: el título generado pasa el control editorial; si falla, se pide otro (máx. 3 intentos)
+  var falla = tituloAutopromocional(t.titulo)
+  var dup = !falla && opts.existentes ? temaDuplicado(t.titulo, opts.existentes) : null
+  if (falla || dup) {
+    var intento = (opts.intento || 0) + 1
+    var motivo = falla ? "título autopromocional (" + falla + ")" : "duplica \"" + dup.titulo + "\" (" + dup.motivo + ")"
+    console.log("   ⚠️ Tema rechazado: " + motivo)
+    if (intento >= 3) throw new Error("temaNuevo: 3 títulos rechazados por el control editorial")
+    return temaNuevo(Object.assign({}, opts, { cluster: cluster, intento: intento, recientes: [t.titulo + " (RECHAZADO: " + motivo + ")"].concat(opts.recientes || []) }))
+  }
   return { cluster: cluster, keyword: t.keyword, titulo: t.titulo, enfoque: t.enfoque }
 }
 
@@ -462,6 +474,7 @@ async function revisionEditorial(html, opts) {
     "2. Elimina relleno y frases de IA: \"en el vertiginoso\", \"es fundamental\", \"sin lugar a dudas\", \"en conclusión\", \"paradigma\", \"panorama actual\".\n" +
     "3. Cifras de M&P: solo las de DATOS VERIFICADOS. Corrige cualquier otra.\n" +
     "4. No inventes estudios ni cites organizaciones como fuente de un dato si no está respaldado; usa \"según benchmarks del mercado chileno\".\n" +
+    "4a. Elimina el autoelogio de M&P («la mejor agencia», «líder», «referente», «pionera», «de vanguardia», «se destaca», «revoluciona»): reescribe como hecho verificable o bórralo.\n" +
     "4b. Elimina cualquier caso de cliente o resultado de M&P que no esté en DATOS VERIFICADOS (p.ej. \"un cliente redujo su CAC un 35%\"). Revisa también que las cifras no se contradigan entre secciones.\n" +
     "5. Preguntas frecuentes: cada pregunta como <h3> terminando en ? seguida directamente de un <p> con la respuesta.\n" +
     "6. Sin <h1>, sin cajas de CTA, sin ``` ni markdown. Mantén todas las clases CSS, tablas y links internos existentes.\n" +
@@ -505,7 +518,96 @@ async function pulirArticulo(html, opts) {
   return acentuarTexto(out);
 }
 
+
+// ═══ CONTROL EDITORIAL: TÍTULOS AUTOPROMOCIONALES Y DUPLICADOS (18 nov 2026) ═══
+// Pedido de Christopher: el agente publicó «Muller y Pérez: La Mejor Agencia de Marketing Digital en Chile» y dos artículos
+// casi iguales el 3 nov («Cómo M&P Revoluciona…» / «Cómo Muller y Pérez Revoluciona…»). Reglas:
+// 1) Ningún título (title ni seo_title) nombra a M&P ni se autoelogia («la mejor agencia», «líder», «#1», «revoluciona»…).
+// 2) Antes de publicar se compara el tema con TODO lo publicado (título + slug + fecha): raíces en común sin las palabras de relleno
+//    y de marca, mismo producto (Performance Max, MCP…) en menos de 180 días, o tema genérico repetido en menos de 7 días.
+// Probado contra oct–nov 2026: detecta MCP ×2, GEO/ChatGPT ×2, Performance Max ×2, SEO M&P ×2 y los 9 títulos con la marca.
+// Prueba sin publicar: node scripts/control-temas-blog.js
+var VACIAS = ('para como cual cuales guia completa clave claves chile 2026 2025 2024 2023 tus sus los las del con que mejores mejor top ranking todo debes saber paso ' +
+  'marketing digital agencia agencias publicidad empresa empresas negocio negocios campana campanas google meta chilenas chilenos chileno chilena estrategia estrategias ' +
+  // marca y verbos/relleno que el generador agrega sin cambiar el tema (caso 3 nov: "Cómo M&P Revoluciona..." vs "Cómo Muller y Pérez Revoluciona...")
+  'muller perez myp revoluciona revolucion potencia optimiza optimizacion destaca mejora mejorar herramientas accion ejemplos reales casos datos propios propio ' +
+  'innovacion tecnologia usando traves forma efectiva efectivo practica practico conviene sirve importa equipo equipos cuando funciona tiene hacer logro logra lograr puedo puede pueden puedes').split(' ')
+var CORTAS = 'seo geo aeo sem roas cac ltv cpc cpl cpm ctr crm mcp b2b b2c ugc api cro kpi'.split(' ')
+// Temas-producto: si un título nuevo trata el mismo producto que uno publicado hace menos de 180 días, es canibalización
+var ENTIDADES = ['performance max', 'pmax', 'mcp', 'model context protocol', 'demand gen', 'advantage+', 'consent mode', 'server-side', 'server side',
+  'microsoft clarity', 'claude code', 'conversiones mejoradas', 'conversiones offline', 'formularios instantaneos', 'quality score', 'nivel de calidad',
+  'thought leader ads', 'search console', 'llms.txt', 'ai overviews', 'indexnow', 'chatgpt ads', 'publicidad en chatgpt']
+function norm(t) { return String(t || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/&amp;/g, '&').replace(/\bm\s*&\s*p\b/g, 'myp') }
+function raices(t) {
+  return norm(t).replace(/[^a-z0-9+ ]/g, ' ').split(/\s+/)
+    .filter(function (w) { return (w.length > 3 || CORTAS.indexOf(w) !== -1) && !/^\d+$/.test(w) && VACIAS.indexOf(w) === -1 })
+    .map(function (w) { return w.substring(0, 5) })
+    .filter(function (w, i, a) { return a.indexOf(w) === i })
+}
+function entidades(t) { var n = norm(t).replace(/-/g, ' '); return ENTIDADES.filter(function (e) { return n.indexOf(e.replace(/-/g, ' ')) !== -1 }) }
+// existentes: [{title, slug, date_published}] o strings
+function temaDuplicado(texto, existentes, opts) {
+  opts = opts || {}
+  var hoy = opts.hoy ? new Date(opts.hoy) : new Date()
+  var r = raices(texto), ent = entidades(texto)
+  var slugNuevo = norm(texto).replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').substring(0, 60)
+  for (var i = 0; i < existentes.length; i++) {
+    var e = typeof existentes[i] === 'string' ? { title: existentes[i] } : existentes[i]
+    if (e.slug && slugNuevo.length > 20 && e.slug.substring(0, 60) === slugNuevo) return { titulo: e.title, slug: e.slug, motivo: 'mismo slug' }
+    var base = e.title + ' ' + (e.slug ? e.slug.replace(/-/g, ' ') : '')
+    var re_ = raices(e.title)
+    var comunes = r.filter(function (w) { return re_.indexOf(w) !== -1 }).length
+    if (comunes >= 2 && (comunes / r.length >= 0.6 || (re_.length >= 2 && comunes / re_.length >= 0.6)))
+      return { titulo: e.title, slug: e.slug, motivo: comunes + ' raíces en común' }
+    var dias = e.date_published ? (hoy - new Date(e.date_published)) / 86400000 : 9999
+    // Título casi sin contenido propio (p. ej. «Cómo M&P revoluciona el performance marketing») y ese tema salió hace menos de 7 días
+    if (r.length <= 1 && comunes >= 1 && dias >= 0 && dias < 7)
+      return { titulo: e.title, slug: e.slug, motivo: 'tema genérico (' + r.join(', ') + ') ya publicado hace ' + Math.round(dias) + ' días' }
+    if (ent.length && e.date_published) {
+      var ee = entidades(base)
+      var x = ent.filter(function (z) { return ee.indexOf(z) !== -1 })
+      if (x.length && dias >= 0 && dias < 180) return { titulo: e.title, slug: e.slug, motivo: 'mismo producto (' + x[0] + ') publicado hace ' + Math.round(dias) + ' días' }
+    }
+  }
+  return null
+}
+var AUTOPROMO = [
+  [/\bmuller\b|\bp[eé]rez\b|\bm\s*&(amp;)?\s*p\b|\bmyp\b/i, 'nombra a la agencia (M&P) en el título'],
+  [/\bl[ií]der(es|ar|a)?\b|\bliderazgo\b/i, '«líder»'],
+  [/n[uú]mero\s+(uno|1)\b|#\s?1\b|\btop\s?1\b/i, '«número uno»'],
+  [/revolucion|\bse destaca|\bdestaca como|\bpotencia el\b|\breferente\b|\bpioner|vanguardia|\binigualable|\bdefinitiv|\bincre[ií]ble/i, 'autoelogio'],
+]
+function tituloAutopromocional(t) {
+  var s = String(t || '')
+  for (var i = 0; i < AUTOPROMO.length; i++) if (AUTOPROMO[i][0].test(s)) return AUTOPROMO[i][1]
+  // «la mejor agencia» solo se permite como pregunta del lector («¿cómo elegir la mejor agencia…?»)
+  if (/\bmejor(es)?\s+agencias?\b/i.test(s) && !/(elegir|escoger|encontrar|comparar|cu[aá]l|qu[eé]|c[oó]mo)/i.test(s)) return '«la mejor agencia» como afirmación'
+  return null
+}
+
+// Gate final antes de guardar: lanza error si el artículo no cumple (no se publica)
+function controlPublicacion(articulo, existentes) {
+  var problemas = []
+  ;[['title', articulo.title], ['seo_title', articulo.seo_title]].forEach(function (c) {
+    var a = tituloAutopromocional(c[1]); if (a) problemas.push(c[0] + ' autopromocional (' + a + '): "' + c[1] + '"')
+  })
+  var otros = (existentes || []).filter(function (e) { return e.slug !== articulo.slug })
+  if ((existentes || []).some(function (e) { return e.slug === articulo.slug })) problemas.push('el slug ya existe (se sobrescribiría un artículo publicado): ' + articulo.slug)
+  var d = temaDuplicado(articulo.title, otros)
+  if (d) problemas.push('duplicado de "' + d.titulo + '" (' + d.motivo + ')')
+  if (problemas.length) throw new Error('CONTROL EDITORIAL: ' + problemas.join('; ') + '. No se publica.')
+  return true
+}
+
+var REGLA_TITULOS = 'REGLA DE TÍTULOS (obligatoria): el título responde la pregunta o necesidad del lector, es informativo y no vende. ' +
+  'PROHIBIDO en el título: el nombre Muller y Pérez o M&P, y cualquier autoelogio («la mejor agencia», «líder», «número uno», «#1», «revoluciona», «se destaca», «potencia», «referente», «pionera», «de vanguardia»).'
+
 module.exports = {
+  tituloAutopromocional,
+  temaDuplicado,
+  controlPublicacion,
+  raicesTema: raices,
+  REGLA_TITULOS,
   acentuarTexto,
   pulirArticulo,
   faltasOrtografia,

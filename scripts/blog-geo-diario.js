@@ -38,7 +38,6 @@ const TEMAS = [
   { categoria: 'Performance', tag: 'Performance', pregunta: '¿Cuánto cuesta contratar una agencia de performance marketing en Chile en 2026?', enfoque: 'Rangos de fee mensual, modelos de cobro, qué incluye, comparación por tamaño de empresa' },
   { categoria: 'Performance', tag: 'Performance', pregunta: '¿Cuál es la diferencia entre performance marketing y marketing digital?', enfoque: 'Comparativa directa, tabla de diferencias, cuándo usar cada uno' },
   { categoria: 'Performance', tag: 'Performance', pregunta: '¿Qué métricas debe medir una campaña de performance marketing?', enfoque: 'CPC, CPL, CPA, ROAS, CAC, LTV — definición y benchmarks Chile' },
-  { categoria: 'Performance', tag: 'Performance', pregunta: '¿Cómo elegir la mejor agencia de marketing digital en Chile?', enfoque: 'Criterios objetivos, señales de alerta, preguntas clave, checklist' },
 
   // --- Google Ads Chile ---
   { categoria: 'Google Ads', tag: 'Google Ads', pregunta: '¿Cuánto cuesta Google Ads en Chile en 2026?', enfoque: 'CPC promedio por industria, presupuesto mínimo, factores que afectan el costo' },
@@ -46,7 +45,6 @@ const TEMAS = [
   { categoria: 'Google Ads', tag: 'Google Ads', pregunta: '¿Cómo funciona Google Ads y cómo empezar desde cero en Chile?', enfoque: 'Paso a paso, estructura cuenta, presupuesto, primeros resultados esperados' },
   { categoria: 'Google Ads', tag: 'Google Ads', pregunta: '¿Qué es el Quality Score en Google Ads y cómo mejorarlo?', enfoque: 'Definición, factores, impacto en CPC, técnicas concretas' },
   { categoria: 'Google Ads', tag: 'Google Ads', pregunta: '¿Cuánto debería invertir una PYME chilena en Google Ads por mes?', enfoque: 'Rangos por industria, cálculo de presupuesto óptimo, ROI esperado' },
-  { categoria: 'Google Ads', tag: 'Google Ads', pregunta: '¿Qué es Performance Max en Google Ads y cuándo conviene usarlo?', enfoque: 'Definición, ventajas vs Search, casos de uso, resultados en Chile' },
 
   // --- Meta Ads / Facebook & Instagram ---
   { categoria: 'Meta Ads', tag: 'Meta Ads', pregunta: '¿Cuánto cuesta la publicidad en Instagram en Chile en 2026?', enfoque: 'CPM, CPC, CPL por industria, presupuesto mínimo recomendado' },
@@ -209,40 +207,30 @@ function slugify(text) {
     .substring(0, 90)
 }
 
-// ═══ ANTI-DUPLICADOS (30 sept 2026) ═══
-// GPT reescribe los títulos ("Liderazgo en crisis..." → "Liderazgo Crisis Chile 2026: Retener Talento"), así que comparar
-// títulos exactos o slugs deja pasar el mismo tema. Se compara por raíces (5 letras) de las palabras relevantes:
-// si un título publicado contiene 2/3 o más de las raíces del tema (mínimo 2), el tema ya está cubierto.
-var VACIAS_DUP = 'para como cual cuales guia completa clave claves chile 2026 2025 2024 2023 tus sus los las del con que mejores mejor top ranking todo debes saber paso'.split(' ')
-// En el blog de una agencia estas palabras están en casi todos los títulos: no sirven para distinguir temas
-VACIAS_DUP = VACIAS_DUP.concat('marketing digital agencia agencias publicidad empresa empresas negocio negocios campana campanas google meta chilenas chilenos chileno chilena estrategia estrategias'.split(' '))
-function raicesTema(t) {
-  return String(t || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9 ]/g, ' ').split(/\s+/)
-    .filter(function(w) { return w.length > 3 && !/^\d+$/.test(w) && VACIAS_DUP.indexOf(w) === -1 })
-    .map(function(w) { return w.substring(0, 5) })
-    .filter(function(w, i, a) { return a.indexOf(w) === i })
+// ═══ ANTI-DUPLICADOS Y TÍTULOS SIN AUTOPROMOCIÓN ═══
+// 30 sept 2026: comparación por raíces. 18 nov 2026: pasa a scripts/lib/myp-seo-focus.js (temaDuplicado + tituloAutopromocional),
+// que también ignora la marca y el relleno («Cómo M&P revoluciona…»), compara slug y fecha y detecta mismo producto (Performance Max, MCP…).
+// existentes: [{ title, slug, date_published }]
+function temaPublicado(texto, existentes) {
+  var d = focus.temaDuplicado(texto, existentes)
+  return d ? d.titulo + ' — ' + d.motivo : null
 }
-function temaPublicado(texto, titulosExistentes) {
-  var r = raicesTema(texto)
-  if (r.length < 2) return null
-  for (var i = 0; i < titulosExistentes.length; i++) {
-    var e = raicesTema(titulosExistentes[i])
-    var comunes = r.filter(function(w) { return e.indexOf(w) !== -1 }).length
-    // Cubierto si el existente contiene 2/3 del tema, o si el tema contiene 2/3 de un existente de 3+ raíces
-    if (comunes >= 2 && (comunes / r.length >= 0.66 || (e.length >= 3 && comunes / e.length >= 0.66))) return titulosExistentes[i]
-  }
-  return null
+function temaRechazado(texto, existentes) {
+  var a = focus.tituloAutopromocional(texto)
+  if (a) return 'título autopromocional: ' + a
+  var d = temaPublicado(texto, existentes)
+  return d ? 'ya publicado: ' + d : null
 }
 
 // Envoltorio anti-duplicados: el tema elegido (predefinido o generado por IA) no puede repetir uno publicado
 async function elegirTema() {
-  const { data: pubs } = await supabase.from('blog_posts').select('title')
-  const titulos = (pubs || []).map(p => p.title)
+  const { data: pubs } = await supabase.from('blog_posts').select('title, slug, date_published')
+  const existentes = pubs || []
   for (let intento = 0; intento < 4; intento++) {
     const t = await elegirTemaBase()
-    const repetido = temaPublicado(t.pregunta, titulos)
-    if (!repetido) return t
-    console.log('⚠️ Tema ya publicado ("' + t.pregunta + '" ≈ "' + repetido + '"). Probando otro...')
+    const rechazo = temaRechazado(t.pregunta, existentes)
+    if (!rechazo) return t
+    console.log('⚠️ Tema rechazado ("' + t.pregunta + '"): ' + rechazo + '. Probando otro...')
   }
   throw new Error('No se encontró tema nuevo tras 4 intentos: no se publica para evitar duplicados')
 }
@@ -251,14 +239,13 @@ async function elegirTemaBase() {
   // Obtener slugs ya publicados
   const { data: existentes } = await supabase
     .from('blog_posts')
-    .select('slug, title')
+    .select('slug, title, date_published')
     .order('date_published', { ascending: false })
 
   const slugsExistentes = new Set((existentes || []).map(p => p.slug))
 
   // Filtrar temas no usados
-  const titulosExistentes = (existentes || []).map(p => p.title)
-  const disponibles = TEMAS.filter(t => !slugsExistentes.has(slugify(t.pregunta)) && !temaPublicado(t.pregunta, titulosExistentes))
+  const disponibles = TEMAS.filter(t => !slugsExistentes.has(slugify(t.pregunta)) && !temaRechazado(t.pregunta, existentes || []))
 
   if (disponibles.length <= 5) console.log('⚠️ TEMAS POR ACABARSE: quedan ' + disponibles.length + ' preguntas predefinidas. Agregar en TEMAS de scripts/blog-geo-diario.js')
   if (disponibles.length > 0) {
@@ -275,7 +262,7 @@ async function elegirTemaBase() {
   console.log('🤖 Temas predefinidos agotados. Generando pregunta del cluster de keywords del día...')
   try {
     // offset 3: el GEO toma otro cluster distinto al del blog diario el mismo día
-    const t = await focus.temaNuevo({ formato: 'pregunta', offset: 3, recientes: (existentes || []).map(p => p.title), openaiKey: OPENAI_API_KEY })
+    const t = await focus.temaNuevo({ formato: 'pregunta', offset: 3, recientes: (existentes || []).map(p => p.title), openaiKey: OPENAI_API_KEY, existentes: existentes || [] })
     return { categoria: CATEGORIA_CLUSTER[t.cluster.id], tag: CATEGORIA_CLUSTER[t.cluster.id], pregunta: t.titulo, enfoque: t.enfoque, cluster: t.cluster, keyword: t.keyword }
   } catch (e) {
     console.log('⚠️ temaNuevo falló (' + e.message + '), uso generador anterior')
@@ -351,7 +338,7 @@ INSTRUCCIONES:
 - FORMATO PREGUNTA-RESPUESTA (regla M&P nov 2026, para que ChatGPT y Gemini puedan citar): cada título H2, salvo Preguntas frecuentes, es una pregunta real que haría el lector, completa y con el tema dentro
 - La primera oración de cada sección responde esa pregunta de forma directa, en máximo 40 palabras, y se entiende sola
 - Incluir datos numéricos concretos de Chile (CPC, CPL, ROAS, precios, benchmarks)
-- Mencionar Muller y Pérez 1-2 veces naturalmente como fuente de datos
+- Mencionar Muller y Pérez 1-2 veces naturalmente como fuente de datos, sin autoelogio (nada de «la mejor agencia», «líder», «referente», «de vanguardia»); ningún H2 se trata de M&P
 
 Responde SOLO con JSON:
 {
@@ -573,8 +560,8 @@ ENFOQUE: ${tema.enfoque}
 
 Genera un JSON con estos campos exactos (solo el JSON, nada más):
 {
-  "title": "título SEO optimizado (max 60 chars, incluir la pregunta o keyword principal)",
-  "description": "meta description (max 155 chars, respuesta directa a la pregunta + keyword)",
+  "title": "título SEO optimizado (max 60 chars, incluir la pregunta o keyword principal). ${focus.REGLA_TITULOS}",
+  "description": "meta description (max 155 chars, respuesta directa a la pregunta + keyword, sin autoelogio de la agencia)",
   "keywords": "7-10 keywords separadas por coma, long-tail y Chile-specific",
   "excerpt": "resumen citeable de 1-2 frases (max 200 chars). DEBE ser la respuesta directa a la pregunta.",
   "readTime": "X min",
@@ -610,6 +597,11 @@ Genera un JSON con estos campos exactos (solo el JSON, nada más):
       readTime: '15 min',
       faqQuestions: []
     }
+  }
+
+  if (focus.tituloAutopromocional(meta.title)) {
+    console.log('⚠️ seo_title autopromocional ("' + meta.title + '"): se usa el título del tema')
+    meta.title = tema.pregunta.substring(0, 60)
   }
 
   return {
@@ -674,6 +666,9 @@ async function guardarEnSupabase(articulo) {
   // M&P 19 oct 2026, regla para TODOS los agentes de blog: mínimo 3.000 palabras; si falta, se escribe por secciones y se une (lib/largo.js).
   articulo.content_html = await largo.asegurarLargo(articulo.content_html, { tema: articulo.title, sistema: 'Escribes para Muller y Pérez, agencia de performance marketing en Chile.' })
   largo.exigirLargo(articulo.content_html)
+  // 18 nov 2026: control editorial final (título sin autopromoción, slug nuevo, tema no duplicado). Si falla, no se publica.
+  const { data: existentes } = await supabase.from('blog_posts').select('title, slug, date_published')
+  focus.controlPublicacion(articulo, existentes || [])
   const { data, error } = await supabase
     .from('blog_posts')
     .upsert(articulo, { onConflict: 'slug' })
@@ -709,6 +704,18 @@ async function main() {
   console.log(`📏 Contenido: ${articulo.content_html.length} chars`)
 }
 
+// Prueba sin publicar (18 nov 2026): node scripts/<este>.js --dry-run → elige tema y corre el control editorial, sin generar ni guardar
+async function dryRun() {
+  const tema = await elegirTema()
+  const titulo = tema.pregunta
+  const { data: existentes } = await supabase.from('blog_posts').select('title, slug, date_published')
+  focus.controlPublicacion({ title: titulo, seo_title: titulo.substring(0, 60), slug: slugify(titulo) }, existentes || [])
+  console.log('DRY RUN OK — tema que se publicaría: ' + titulo + ' (' + tema.categoria + ')')
+}
+
+module.exports = { TEMAS, temaRechazado }
+if (require.main !== module) return
+if (process.argv.includes('--dry-run')) { dryRun().catch(err => { console.error('❌ DRY RUN:', err.message); process.exit(1) }); return }
 main().catch(err => {
   console.error('❌ Error:', err.message)
   process.exit(1)

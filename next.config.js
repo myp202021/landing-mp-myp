@@ -388,6 +388,16 @@ const nextConfig = {
         destination: '/blog/agencia-de-marketing-digital-en-santiago-como-elegir-la-mejor-para-tu-empresa-en',
         permanent: true,
       },
+      // 18 nov 2026: artículos duplicados o autopromocionales de los agentes de blog (oct–nov) → 301 al que queda
+      { source: '/blog/que-es-mcp-y-como-conecta-la-ia-con-mis-herramientas-de-marketing', destination: '/blog/que-es-mcp-model-context-protocol-y-por-que-importa-a-los-equipos-de-marketing', statusCode: 301 },
+      { source: '/blog/que-es-performance-max-y-por-que-muchas-cuentas-pierden-dinero-con-ella', destination: '/blog/performance-max-en-chile-cuando-sirve-cuando-quema-presupuesto-y-como-auditarla', statusCode: 301 },
+      { source: '/blog/que-es-geo-y-como-logro-que-chatgpt-recomiende-mi-empresa', destination: '/blog/como-aparecer-en-las-respuestas-de-chatgpt-y-gemini-guia-geo-para-empresas-chile', statusCode: 301 },
+      { source: '/blog/como-m-p-revoluciona-el-performance-marketing-en-chile-casos-y-herramientas-de-i', destination: '/blog/optimizacion-de-performance-marketing-en-chile-estrategias-y-herramientas-de-ia-', statusCode: 301 },
+      { source: '/blog/como-muller-y-perez-revoluciona-el-performance-marketing-en-chile-con-ia-y-datos', destination: '/blog/optimizacion-de-performance-marketing-en-chile-estrategias-y-herramientas-de-ia-', statusCode: 301 },
+      { source: '/blog/como-muller-y-perez-potencia-el-seo-en-chile-con-agentes-de-ia-estrategias-y-eje', destination: '/blog/como-muller-y-perez-optimiza-el-seo-en-chile-usando-agentes-de-ia-propios', statusCode: 301 },
+      { source: '/blog/como-muller-y-perez-potencia-el-growth-marketing-en-chile-estrategias-y-herramie', destination: '/blog/ecosistema-de-growth-marketing-en-chile-2026-analisis-y-tendencias', statusCode: 301 },
+      { source: '/blog/como-elegir-la-mejor-agencia-google-ads-en-chile-comparativa-basada-en-datos-y-e', destination: '/blog/como-elegir-agencia-google-ads-chile', statusCode: 301 },
+      { source: '/blog/como-muller-y-perez-se-destaca-como-la-mejor-agencia-de-marketing-digital-en-chi', destination: '/mejores-agencias-marketing-digital-chile', statusCode: 301 },
       {
         source: '/equipo',
         destination: '/nosotros',
