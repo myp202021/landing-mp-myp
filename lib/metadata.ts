@@ -330,6 +330,7 @@ export function createOrganizationSchema() {
       'https://www.linkedin.com/company/m%C3%BCller-y-p%C3%A9rez/',
       'https://www.youtube.com/channel/UCgzocZZQLNnthZ82oEyblrA',
       'https://www.facebook.com/mulleryperez',
+      'https://www.wikidata.org/wiki/Q142207578',
       siteConfig.links.whatsapp
     ],
 
