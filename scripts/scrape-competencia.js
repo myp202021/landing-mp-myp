@@ -420,18 +420,26 @@ async function main() {
 
 // ─── Generación de PDF con wkhtmltopdf ──────────────────────────────────────
 function generarPDF(html) {
-  try {
-    const tmpHtml = '/tmp/reporte-hualpen.html'
-    const tmpPdf  = '/tmp/reporte-hualpen.pdf'
-    fs.writeFileSync(tmpHtml, html, 'utf8')
-    execSync(`wkhtmltopdf --quiet --page-size A4 --margin-top 10 --margin-bottom 10 --margin-left 10 --margin-right 10 --enable-local-file-access --enable-external-links "${tmpHtml}" "${tmpPdf}"`)
-    const buffer = fs.readFileSync(tmpPdf)
-    console.log(`✅ PDF generado (${Math.round(buffer.length / 1024)} KB)`)
-    return buffer
-  } catch (err) {
-    console.warn('⚠️ wkhtmltopdf falló:', err.message)
-    return null
+  const tmpHtml = '/tmp/reporte-hualpen.html'
+  const tmpPdf  = '/tmp/reporte-hualpen.pdf'
+  fs.writeFileSync(tmpHtml, html, 'utf8')
+  // 1) wkhtmltopdf  2) Chrome headless (viene instalado en los runners de GitHub). Nunca se adjunta HTML:
+  //    el correo de Hualpén bloquea adjuntos .html (18–19 nov 2026 no le llegó a Felipe por eso).
+  const intentos = [
+    ['wkhtmltopdf', `wkhtmltopdf --quiet --page-size A4 --margin-top 10 --margin-bottom 10 --margin-left 10 --margin-right 10 --enable-local-file-access --enable-external-links "${tmpHtml}" "${tmpPdf}"`],
+    ['chrome', `(google-chrome || google-chrome-stable || chromium || chromium-browser) >/dev/null 2>&1; for b in google-chrome google-chrome-stable chromium chromium-browser; do command -v $b >/dev/null && $b --headless=new --no-sandbox --disable-gpu --no-pdf-header-footer --print-to-pdf="${tmpPdf}" "file://${tmpHtml}" && break; done`],
+  ]
+  for (const [nombre, cmd] of intentos) {
+    try {
+      try { fs.unlinkSync(tmpPdf) } catch (e) {}
+      execSync(cmd, { stdio: 'ignore', shell: '/bin/bash', timeout: 120000 })
+      const buffer = fs.readFileSync(tmpPdf)
+      if (buffer.length > 5000) { console.log(`✅ PDF generado con ${nombre} (${Math.round(buffer.length / 1024)} KB)`); return buffer }
+    } catch (err) {
+      console.warn(`⚠️ PDF con ${nombre} falló: ${err.message.split('\n')[0]}`)
+    }
   }
+  return null
 }
 
 // ─── Scraping LinkedIn ───────────────────────────────────────────────────────
@@ -876,9 +884,10 @@ async function enviarEmail({ hoy, postsIG, competidoresConPost, sinActividad, po
     payload.attachments = [{ filename: `Competencia-Hualpen-${hoy}.pdf`, content: pdfBuffer.toString('base64') }]
     console.log(`📎 Email con PDF adjunto`)
   } else {
-    // Fallback: HTML adjunto si wkhtmltopdf no está disponible
-    payload.attachments = [{ filename: `Competencia-Hualpen-${hoy}.html`, content: Buffer.from(reporteHtml).toString('base64') }]
-    console.log(`📄 Email con HTML adjunto (fallback)`)
+    // Sin PDF: NUNCA adjuntar HTML (Hualpén lo bloquea). Va el reporte completo en el cuerpo y el workflow queda en rojo para alertar.
+    payload.html = reporteHtml
+    process.exitCode = 1
+    console.error('❌ No se pudo generar el PDF: se envía el reporte en el cuerpo del correo, sin adjunto')
   }
 
   await require('./lib/correo').enviarGmail(payload) // si falla, lanza error → el workflow queda en rojo y alerta
