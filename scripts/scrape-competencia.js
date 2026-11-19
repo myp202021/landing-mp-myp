@@ -672,7 +672,9 @@ function generarHtmlReporte({ hoy, postsIG, competidoresConPost, sinActividad, p
                      (typeof p.commentary === 'string' ? p.commentary : '') || ''
     const texto = textoRaw.substring(0, 220)
     // engagement.reactions o reactions count
-    const likes = p.engagement?.reactions || p.engagement?.likes || p.likesCount || p.totalReactionCount || 0
+    // engagement.reactions puede venir como lista [{type, count}] → sumar; si no, usar el número que venga
+    const num = (x) => Array.isArray(x) ? x.reduce((a, r) => a + (Number(r?.count) || 0), 0) : (typeof x === 'object' && x ? Number(x.count) || 0 : Number(x) || 0)
+    const likes = num(p.engagement?.likes) || num(p.engagement?.reactions) || num(p.likesCount) || num(p.totalReactionCount) || 0
     const comentarios = p.engagement?.comments || p.commentsCount || 0
     // Hora desde postedAt.date
     const postedDate = p.postedAt?.date ? new Date(p.postedAt.date) : null
