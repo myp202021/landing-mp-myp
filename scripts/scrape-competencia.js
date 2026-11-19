@@ -824,11 +824,8 @@ function generarHtmlReporte({ hoy, postsIG, competidoresConPost, sinActividad, p
 
 // ─── Envío de email con PDF adjunto ─────────────────────────────────────────
 async function enviarEmail({ hoy, postsIG, competidoresConPost, sinActividad, postsLinkedin, postsFacebook, storiesIG }) {
-  const RESEND_API_KEY = process.env.RESEND || process.env.RESEND_API_KEY
-  if (!RESEND_API_KEY) {
-    console.warn('⚠️  RESEND_API_KEY no definida — email no enviado.')
-    return
-  }
+  // Envío SOLO por Gmail desde christopher@ (secretos GMAIL_USER / GMAIL_APP_PASSWORD). Nunca Resend.
+  if (!process.env.GMAIL_USER || !process.env.GMAIL_APP_PASSWORD) throw new Error('Faltan GMAIL_USER / GMAIL_APP_PASSWORD: email no enviado')
 
   // Convertir imágenes de stories a base64 para que no expiren en el PDF
   console.log('🖼️  Descargando imágenes de stories para el PDF...')
@@ -884,18 +881,8 @@ async function enviarEmail({ hoy, postsIG, competidoresConPost, sinActividad, po
     console.log(`📄 Email con HTML adjunto (fallback)`)
   }
 
-  const res = await fetch('https://api.resend.com/emails', {
-    method: 'POST',
-    headers: { 'Authorization': `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload),
-  })
-
-  if (res.ok) {
-    console.log(`✉️  Email enviado a ${TEST_MODE ? TEST_EMAIL : 'felipe.munoz@buseshualpen.cl y contacto@mulleryperez.cl'}`)
-  } else {
-    const err = await res.text()
-    console.error('❌ Error enviando email:', err)
-  }
+  await require('./lib/correo').enviarGmail(payload) // si falla, lanza error → el workflow queda en rojo y alerta
+  console.log(`✉️  Email enviado por Gmail a ${TEST_MODE ? TEST_EMAIL : 'felipe.munoz@buseshualpen.cl y christopher@mulleryperez.cl'}`)
 }
 
 main().catch(err => {

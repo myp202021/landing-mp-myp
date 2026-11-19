@@ -173,22 +173,14 @@ async function enviarEmail({ hoy, postsIG }) {
   </div>
   `
 
-  const resp = await fetch('https://api.resend.com/emails', {
-    method: 'POST',
-    headers: { 'Authorization': `Bearer ${process.env.RESEND}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      from: 'Christopher Müller <christopher@mulleryperez.cl>',
-      to: ['felipe.munoz@buseshualpen.cl', 'christopher@mulleryperez.cl'],
-      subject: `📰 Clipping Prensa Hualpen — ${hoy}`,
-      html: bodyHtml,
-    }),
+  // Envío SOLO por Gmail desde christopher@. Si falla, lanza error → workflow en rojo y alerta.
+  await require('./lib/correo').enviarGmail({
+    from: 'Christopher Müller <christopher@mulleryperez.cl>',
+    to: ['felipe.munoz@buseshualpen.cl', 'christopher@mulleryperez.cl'],
+    subject: `📰 Clipping Prensa Hualpen — ${hoy}`,
+    html: bodyHtml,
   })
-  const data = await resp.json()
-  if (!resp.ok) {
-    console.error('❌ Error Resend:', data)
-    throw new Error(`Resend: ${resp.status}`)
-  }
-  console.log(`✉️  Email enviado: ${data.id}`)
+  console.log('✉️  Email enviado por Gmail')
 }
 
 main().catch(err => { console.error(err); process.exit(1) })
