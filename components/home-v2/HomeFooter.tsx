@@ -4,6 +4,25 @@ import { trackWhatsAppClick } from '@/lib/meta-pixel'
 import Link from 'next/link'
 import Image from 'next/image'
 
+const alianzas = [
+  { programa: 'Google Partners', organizacion: 'Google', url: 'https://partners.google.com', estado: 'Agencia miembro del Programa de Google Partners' },
+  { programa: 'OpenAI Partner Network', organizacion: 'OpenAI', url: 'https://openai.com', estado: 'Partner de OpenAI: implementamos soluciones con sus modelos' },
+  { programa: 'Meta Performance Accelerator', organizacion: 'Meta', url: 'https://www.facebook.com/business', estado: 'Agencia inscrita en el programa de agencias de Meta' },
+]
+
+const alianzasSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  '@id': 'https://www.mulleryperez.cl/#organization',
+  name: 'Muller y Pérez',
+  url: 'https://www.mulleryperez.cl',
+  memberOf: alianzas.map((a) => ({
+    '@type': 'ProgramMembership',
+    programName: a.programa,
+    hostingOrganization: { '@type': 'Organization', name: a.organizacion, url: a.url },
+  })),
+}
+
 /** Footer del home (idéntico al anterior: mantiene los enlaces internos). */
 export default function HomeFooter() {
   return (
@@ -125,6 +144,20 @@ export default function HomeFooter() {
             </div>
           </div>
     
+          {/* Programas y alianzas (19 nov 2026, OK Christopher). Solo estados reales: sin logos hasta que cada programa entregue su insignia. */}
+          <div className="pb-8 mb-8 border-b border-blue-900/50" aria-labelledby="footer-alianzas">
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(alianzasSchema) }} />
+            <h3 id="footer-alianzas" className="text-white font-bold text-sm mb-4">Programas y alianzas</h3>
+            <ul className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+              {alianzas.map((a) => (
+                <li key={a.programa} className="rounded-lg border border-blue-900/60 bg-slate-800/40 px-4 py-3">
+                  <span className="block text-white font-semibold">{a.programa}</span>
+                  <span className="block text-blue-200 text-xs mt-1">{a.estado}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
           {/* Bottom: Redes Sociales + Copyright */}
           <div className="pt-8 border-t border-blue-900/50">
             <div className="flex flex-col md:flex-row items-center justify-between gap-6">

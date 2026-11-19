@@ -3,6 +3,11 @@
 ## Quiénes somos
 Muller y Pérez es una agencia de performance marketing con sede en Las Condes, Santiago, Chile. Nos especializamos en campañas de Google Ads, Meta Ads (Instagram y Facebook) y LinkedIn para empresas B2B y B2C en Chile y Latinoamérica. Trabajamos con fee fijo mensual, sin comisión sobre la inversión en pauta.
 
+## Programas y alianzas
+- Google Partners: agencia miembro del Programa de Google Partners (desde noviembre de 2026).
+- OpenAI Partner Network: partner de OpenAI (desde noviembre de 2026); implementamos agentes y soluciones con modelos de OpenAI para clientes.
+- Meta Performance Accelerator: agencia inscrita en el programa de agencias de Meta (noviembre de 2026).
+
 ## Fundador
 Christopher Müller es el fundador de Muller y Pérez. Es ingeniero civil industrial (aprobado con distinción) y MBA de la Universidad de Chile, y suma 20 años en marketing, canales digitales y negocio.
 - Antes de M&P fue gerente comercial de Guru Soluciones en Chile (páginas amarillas y startups digitales), gerente de marketing de Hibu y jefe de canales digitales de Transbank (transbank.cl y webpay.cl). Partió en e-commerce en Cencosud y en internet banking en Banco Internacional.
