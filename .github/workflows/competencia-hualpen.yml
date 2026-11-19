@@ -8,6 +8,11 @@ on:
     # - cron: '30 9 * * 1-5'    # 06:30 AM Chile — respaldo
     - cron: '0 0 1 1 *'        # dummy: 1 enero para que GH no desactive el workflow
   workflow_dispatch:
+    inputs:
+      prueba:
+        description: 'Prueba: envía solo a christopher@ y no guarda nada (ignora si ya corrió hoy)'
+        type: boolean
+        default: false
 
 env:
   GMAIL_USER: ${{ secrets.GMAIL_USER }}
@@ -21,6 +26,7 @@ jobs:
       - name: Verificar si ya corrió hoy
         id: check
         run: |
+          if [ "${{ inputs.prueba }}" = "true" ]; then echo "already_ran=false" >> $GITHUB_OUTPUT; echo "Modo prueba"; exit 0; fi
           TODAY=$(date -u +%Y-%m-%d)
           RESULT=$(curl -s -H "Authorization: Bearer ${{ secrets.SUPABASE_SERVICE_KEY }}" \
             "${{ secrets.SUPABASE_URL }}/rest/v1/reportes_competencia?fecha_reporte=eq.${TODAY}&select=id&limit=1" \
@@ -33,8 +39,7 @@ jobs:
             echo "🔄 No hay reporte para $TODAY — ejecutando"
           fi
 
-      - uses: actions/checkout@v4
-        if: steps.check.outputs.already_ran == 'false'
+      - uses: actions/checkout@v4  # siempre: el watchdog usa scripts/alerta-gmail.js
 
       - uses: actions/setup-node@v4
         if: steps.check.outputs.already_ran == 'false'
@@ -59,10 +64,10 @@ jobs:
         id: scraper
         run: node scripts/scrape-competencia.js
         env:
+          TEST_MODE: ${{ inputs.prueba && 'true' || 'false' }}
           APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
-          RESEND: ${{ secrets.RESEND }}
 
       - name: Subir PDF como artifact
         if: steps.check.outputs.already_ran == 'false'
@@ -76,19 +81,8 @@ jobs:
       - name: Alerta si falla
         if: failure() && steps.check.outputs.already_ran == 'false'
         run: |
-          node -e "
-          const fetch = require('node-fetch');
-          fetch('https://api.resend.com/emails', {
-            method: 'POST',
-            headers: { 'Authorization': 'Bearer ${{ secrets.RESEND }}', 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              from: 'contacto@mulleryperez.cl',
-              to: 'contacto@mulleryperez.cl',
-              subject: '⚠️ FALLO Reporte Hualpén — $(date -u +%Y-%m-%d)',
-              html: '<h2>El reporte diario de Competencia Hualpén falló</h2><p>Revisa el workflow en <a href=\"https://github.com/myp202021/landing-mp-myp/actions\">GitHub Actions</a></p>'
-            })
-          }).then(r => r.json()).then(d => console.log('Alerta enviada:', d.id)).catch(e => console.error('Error enviando alerta:', e));
-          "
+          npm i --no-save nodemailer@6 >/dev/null 2>&1 || true
+          ASUNTO="FALLO Reporte competencia Hualpén $(date -u +%Y-%m-%d)" HTML="<h2>El reporte diario de competencia Hualpén falló</h2><p><a href='https://github.com/myp202021/landing-mp-myp/actions/workflows/competencia-hualpen.yml'>Ver en GitHub Actions</a></p>" node scripts/alerta-gmail.js
 
       # ════════════════════════════════════════════════════════════
       # WATCHDOG: verificar y disparar otros workflows que no corrieron
@@ -98,7 +92,6 @@ jobs:
         if: always()
         env:
           GH_TOKEN: ${{ secrets.GH_PAT }}
-          RESEND_KEY: ${{ secrets.RESEND }}
         run: |
           TODAY=$(date -u +%Y-%m-%d)
           HOUR_UTC=$(date -u +%H)
@@ -152,10 +145,8 @@ jobs:
 
           if [ -n "$TRIGGERED" ]; then
             echo "Enviando alerta..."
-            curl -s -X POST "https://api.resend.com/emails" \
-              -H "Authorization: Bearer $RESEND_KEY" -H "Content-Type: application/json" \
-              -d "{\"from\":\"Watchdog <contacto@mulleryperez.cl>\",\"to\":\"contacto@mulleryperez.cl\",\"subject\":\"Watchdog $TODAY\",\"html\":\"<h2>Watchdog $TODAY</h2><ul>$TRIGGERED</ul>\"}" \
-              | python3 -c "import json,sys; print('Email:', json.load(sys.stdin).get('id','ERR'))" 2>/dev/null
+            npm i --no-save nodemailer@6 >/dev/null 2>&1 || true
+            ASUNTO="Watchdog $TODAY" HTML="<h2>Watchdog $TODAY</h2><ul>$TRIGGERED</ul>" node scripts/alerta-gmail.js
           else
             echo "Todos OK"
           fi

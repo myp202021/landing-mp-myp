@@ -38,23 +38,12 @@ async function disparar(workflow: string) {
 }
 
 async function alertar(asunto: string, lineas: string[]) {
-  await fetch("https://api.resend.com/emails", {
+  // Sin Resend: dispara el workflow alerta-gmail.yml, que envía desde christopher@ por Gmail.
+  const html = "<h2>" + asunto + "</h2><ul>" + lineas.map((l) => "<li>" + l + "</li>").join("") + "</ul>";
+  await fetch(`${GH}alerta-gmail.yml/dispatches`, {
     method: "POST",
-    headers: {
-      Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      from: "Watchdog <contacto@mulleryperez.cl>",
-      to: "christopher@mulleryperez.cl",
-      subject: asunto,
-      html:
-        "<h2>" +
-        asunto +
-        "</h2><ul>" +
-        lineas.map((l) => "<li>" + l + "</li>").join("") +
-        "</ul>",
-    }),
+    headers: ghHeaders(),
+    body: JSON.stringify({ ref: "main", inputs: { asunto, html } }),
   });
 }
 

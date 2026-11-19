@@ -1,0 +1,21 @@
+name: Alerta por Gmail (desde christopher@)
+# La dispara el guardián de Vercel (/api/cron/hualpen-guard) para no depender de Resend.
+on:
+  workflow_dispatch:
+    inputs:
+      asunto: { description: 'Asunto', required: true, type: string }
+      html: { description: 'Cuerpo HTML', required: true, type: string }
+jobs:
+  enviar:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '22' }
+      - run: npm i --no-save nodemailer@6 >/dev/null 2>&1
+      - run: node scripts/alerta-gmail.js
+        env:
+          GMAIL_USER: ${{ secrets.GMAIL_USER }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+          ASUNTO: ${{ inputs.asunto }}
+          HTML: ${{ inputs.html }}

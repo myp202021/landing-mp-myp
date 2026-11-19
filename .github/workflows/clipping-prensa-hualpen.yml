@@ -56,21 +56,9 @@ jobs:
           APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
-          RESEND: ${{ secrets.RESEND }}
 
       - name: Alerta si falla
         if: failure() && steps.check.outputs.already_ran == 'false'
         run: |
-          node -e "
-          const fetch = require('node-fetch');
-          fetch('https://api.resend.com/emails', {
-            method: 'POST',
-            headers: { 'Authorization': 'Bearer ${{ secrets.RESEND }}', 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              from: 'contacto@mulleryperez.cl',
-              to: 'contacto@mulleryperez.cl',
-              subject: '⚠️ FALLO Clipping Prensa Hualpén — $(date -u +%Y-%m-%d)',
-              html: '<h2>El clipping de prensa falló</h2><p>Revisa el workflow en <a href=\"https://github.com/myp202021/landing-mp-myp/actions\">GitHub Actions</a></p>'
-            })
-          }).then(r => r.json()).then(d => console.log('Alerta:', d.id)).catch(e => console.error(e));
-          "
+          npm i --no-save nodemailer@6 >/dev/null 2>&1 || true
+          ASUNTO="FALLO Clipping prensa Hualpén $(date -u +%Y-%m-%d)" HTML="<h2>El clipping de prensa Hualpén falló</h2><p><a href='https://github.com/myp202021/landing-mp-myp/actions/workflows/clipping-prensa-hualpen.yml'>Ver en GitHub Actions</a></p>" node scripts/alerta-gmail.js
