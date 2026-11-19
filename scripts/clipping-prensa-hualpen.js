@@ -2,7 +2,7 @@ require('./lib/correo') // correos por Gmail (ver scripts/lib/correo.js)
 // clipping-prensa-hualpen.js
 // Corre L-V 06:00 AM Chile via GitHub Actions
 // Scrapea Instagram de medios chilenos, filtra posts sobre transporte y envía links.
-// Piloto: email solo a contacto@mulleryperez.cl (antes de sumar a Felipe).
+// Envío: a Felipe + christopher@, siempre DESDE christopher@ por Gmail (Christopher, 19 nov 2026).
 
 const fetch = globalThis.fetch || require('node-fetch')
 const { createClient } = require('@supabase/supabase-js')
@@ -177,8 +177,8 @@ async function enviarEmail({ hoy, postsIG }) {
     method: 'POST',
     headers: { 'Authorization': `Bearer ${process.env.RESEND}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      from: 'contacto@mulleryperez.cl',
-      to: ['felipe.munoz@buseshualpen.cl', 'contacto@mulleryperez.cl'],
+      from: 'Christopher Müller <christopher@mulleryperez.cl>',
+      to: ['felipe.munoz@buseshualpen.cl', 'christopher@mulleryperez.cl'],
       subject: `📰 Clipping Prensa Hualpen — ${hoy}`,
       html: bodyHtml,
     }),

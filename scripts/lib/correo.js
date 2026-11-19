@@ -6,7 +6,7 @@
 // (cuenta christopher@mulleryperez.cl, contraseña de aplicación en los secretos GMAIL_USER / GMAIL_APP_PASSWORD).
 //
 // Modos (variable CORREO_MODO):
-//   gmail  (por defecto) → Gmail; si Gmail falla, cae a Resend. Ningún correo se pierde.
+//   gmail  (por defecto) → solo Gmail desde christopher@. Si Gmail falla, devuelve error y el proceso termina en rojo (alerta del workflow). Nunca Resend.
 //   ambos               → Resend como siempre Y además Gmail (Hualpén, hasta que Christopher confirme que llegan los dos).
 // Sin credenciales de Gmail, todo sigue por Resend sin cambios.
 
@@ -76,8 +76,10 @@ function envolver(fetchOriginal) {
       for (var q of lote ? cuerpo : [cuerpo]) ids.push('gmail:' + (await enviarGmail(q)).messageId)
       return respuesta(lote ? { data: ids.map(function (id) { return { id: id } }) } : { id: ids[0] })
     } catch (e) {
-      console.error('   Gmail falló, se envía por Resend: ' + e.message)
-      return fetchOriginal(url, opts)
+      // Nunca Resend (regla Christopher): si Gmail falla, el script falla y salta la alerta del workflow.
+      console.error('   Gmail falló: ' + e.message)
+      process.exitCode = 1 // el workflow queda en rojo y salta su alerta, sin cortar el resto del script
+      return { ok: false, status: 502, json: async function () { return { error: e.message } }, text: async function () { return e.message } }
     }
   }
   envuelto.__correoGmail = true

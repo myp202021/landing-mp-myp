@@ -853,7 +853,7 @@ async function enviarEmail({ hoy, postsIG, competidoresConPost, sinActividad, po
     .filter(p => esOfertaLaboral(getTexto(p))).length
 
   const payload = {
-    from: 'Muller y Perez <contacto@mulleryperez.cl>',
+    from: 'Christopher Müller <christopher@mulleryperez.cl>',
     to: TEST_MODE ? [TEST_EMAIL] : ['felipe.munoz@buseshualpen.cl', 'christopher@mulleryperez.cl'],
     subject: `🚌 Competencia Hualpén — ${fecha}${totalOfertas > 0 ? ` · ⚠️ ${totalOfertas} oferta${totalOfertas > 1 ? 's' : ''} laboral${totalOfertas > 1 ? 'es' : ''}` : ''} (${totalPosts} posts)`,
     html: `<div style="font-family:'Segoe UI',sans-serif;max-width:500px;margin:0 auto;padding:32px 16px;color:#1E293B;">
