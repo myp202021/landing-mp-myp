@@ -152,7 +152,7 @@ export default async function ReporteCliente({ params, searchParams }: { params:
           <div><b>{g ? num(g.impresiones) : '—'}</b><span>apariciones en Google</span></div>
           <div><b>{g ? num(g.posicion, 1) : '—'}</b><span>posición promedio</span></div>
           <div><b>{seg ? `${segTop10}/${seg.busquedas.length}` : '—'}</b><span>búsquedas en el top 10</span></div>
-          <div><b>{segGptMedidas ? `${segGpt}/${segGptMedidas}` : '—'}</b><span>ChatGPT nos recomienda</span></div>
+          <div><b>{segGptMedidas ? `${segGpt}/${segGptMedidas}` : '—'}</b><span>ChatGPT nos recomienda{segGptMedidas && seg?.medicion ? ` · medido el ${fechaLarga(seg.medicion)}` : ''}</span></div>
           <div><b>{bit.length || '—'}</b><span>acciones en el sitio</span></div>
         </div>
       </header>
@@ -247,7 +247,7 @@ export default async function ReporteCliente({ params, searchParams }: { params:
                   </tr>))}</tbody>
               </table>
             </div>
-            <p className="src">Google: posición promedio del mes en Search Console (#3 o mejor en verde, top 10 en morado). ChatGPT y Gemini: lugar en que recomiendan a {info.nombre} en {mesNombre}{seg.medicion ? `, medición del ${fechaLarga(seg.medicion)}` : ''}, preguntando en chatgpt.com y gemini.google.com igual que una persona en Chile (chat temporal, sin historial ni preferencias). Las IA cambian sus respuestas: es una foto del día de la medición. «se mide desde diciembre» = esa IA todavía no se midió para esta búsqueda (la medición oficial parte con el informe de diciembre). «solo Google» = búsqueda que no preguntamos a las IA.</p>
+            <p className="src">Google: posición promedio del mes en Search Console (#3 o mejor en verde, top 10 en morado). ChatGPT y Gemini: lugar en que recomiendan a {info.nombre} en {mesNombre}{seg.medicion ? `, medición del ${fechaLarga(seg.medicion)}` : ''}, preguntando en chatgpt.com y gemini.google.com igual que una persona en Chile (chat temporal, sin historial ni preferencias). Las IA cambian sus respuestas: es una foto del día de la medición. «se mide desde diciembre» = esa IA todavía no se midió para esta búsqueda. «solo Google» = búsqueda que no preguntamos a las IA.</p>
           </>)}
         </Seccion>
 
