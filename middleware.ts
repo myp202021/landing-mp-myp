@@ -1,11 +1,20 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import { sesionReportes } from '@/lib/reportes/middleware'
+import { esRutaReportes } from '@/lib/reportes/areas'
 
 // WordPress/LinkedIn legacy query params that cause redirect loops
 const STRIP_PARAMS = ['page_id', 'trk', 'p', 'm', 'cat', 's', 'attachment_id', 'layout_sidebar']
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const { pathname, searchParams } = request.nextUrl
+
+  // ═══ REPORTES SEO Y GEO: /clientes/* con login (Supabase Auth), noindex ═══
+  // Ojo: /clientes/*.png|webp|svg son logos públicos del home (public/clientes): esos NO pasan por el login
+  // Áreas de clientes en la raíz (/<slug> de la lista cerrada en lib/reportes/areas.ts) e índice /admin-reportes
+  if (esRutaReportes(pathname) && !/\.[a-z0-9]+$/i.test(pathname)) {
+    return sesionReportes(request)
+  }
 
   // ═══ COPILOT AUTH: helper para verificar sesión + ownership ═══
   function verifyCopilotSession(request: NextRequest, pathname: string, prefix: string): NextResponse | null {

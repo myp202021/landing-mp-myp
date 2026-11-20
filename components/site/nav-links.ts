@@ -1,3 +1,5 @@
+import { esRutaReportes } from '@/lib/reportes/areas'
+
 /** Enlaces del menú del sitio. Reúne los del header anterior y los del home nuevo, para no perder enlazado interno. */
 export const NAV_PRINCIPAL = [
   { href: '/#areas', t: 'Cómo trabajamos' },
@@ -65,9 +67,10 @@ export const NAV_MAS = [
 ] as const
 
 /** Rutas de aplicación (paneles, logins, landings de clientes) que no llevan el menú ni el pie del sitio. */
-const EXCLUIDAS = ['/crm', '/cliente', '/login', '/ads', '/l/', '/grilla', '/propiedades', '/noticias', '/predictor', '/predictor-v2', '/copilot/', '/admin', '/api']
+const EXCLUIDAS = ['/crm', '/cliente', '/clientes', '/login', '/ads', '/l/', '/grilla', '/propiedades', '/noticias', '/predictor', '/predictor-v2', '/copilot/', '/admin', '/api']
 
 export function sinCromo(pathname: string | null): boolean {
   if (!pathname) return false
+  if (esRutaReportes(pathname)) return true
   return EXCLUIDAS.some((p) => pathname === p || pathname.startsWith(p.endsWith('/') ? p : p + '/') || (p.endsWith('/') && pathname.startsWith(p)))
 }

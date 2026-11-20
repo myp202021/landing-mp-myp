@@ -8,6 +8,7 @@
 
 import { usePathname } from 'next/navigation'
 import dynamic from 'next/dynamic'
+import { esRutaReportes } from '@/lib/reportes/areas'
 
 const ChatBot = dynamic(() => import('./ChatBot'), {
   ssr: false,
@@ -26,7 +27,7 @@ export default function ChatBotWrapper() {
   const pathname = usePathname()
 
   // Verificar si la ruta actual está excluida
-  const isExcluded = EXCLUDED_PATHS.some(path => pathname?.startsWith(path))
+  const isExcluded = esRutaReportes(pathname) || EXCLUDED_PATHS.some(path => pathname?.startsWith(path))
 
   if (isExcluded) {
     return null
