@@ -154,7 +154,9 @@ export default async function ReporteCliente({ params, searchParams }: { params:
           <div><b>{g ? num(g.impresiones) : '—'}</b><span>apariciones en Google</span></div>
           <div><b>{g ? num(g.posicion, 1) : '—'}</b><span>posición promedio</span></div>
           <div><b>{seg ? `${segTop10}/${seg.busquedas.length}` : '—'}</b><span>búsquedas en el top 10</span></div>
-          <div><b>{segGptMedidas ? `${segGpt}/${segGptMedidas}` : '—'}</b><span>ChatGPT nos recomienda{segGptMedidas && seg?.medicion ? ` · medido el ${fechaLarga(seg.medicion)}` : ''}</span></div>
+          {segGptMedidas || !segGemMedidas
+            ? <div><b>{segGptMedidas ? `${segGpt}/${segGptMedidas}` : '—'}</b><span>ChatGPT nos recomienda{segGptMedidas && seg?.medicion ? ` · medido el ${fechaLarga(seg.medicion)}` : ''}</span></div>
+            : <div><b>{`${segGem}/${segGemMedidas}`}</b><span>Gemini nos recomienda{seg?.medicion ? ` · medido el ${fechaLarga(seg.medicion)}` : ''}</span></div>}
           <div><b>{bit.length || '—'}</b><span>acciones en el sitio</span></div>
         </div>
       </header>
