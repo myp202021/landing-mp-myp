@@ -1,7 +1,7 @@
 // Formato que escribe myp-daily-agent/scripts/reportes-seo/recolectar.mjs (null = sin datos)
 export type IndiceReportes = {
   actualizado: string
-  clientes: Record<string, { nombre: string; sitio: string; logo?: string | null; meses: string[] }>
+  clientes: Record<string, { nombre: string; sitio: string; logo?: string | null; meses: string[]; falta?: string | null; fuentes?: { gsc: boolean; ga4: boolean }; actualizado?: string }>
 }
 
 export type ReporteMes = {

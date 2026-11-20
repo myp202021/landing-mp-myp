@@ -8,6 +8,7 @@
 import Link from 'next/link'
 import { ChevronRight, Home } from 'lucide-react'
 import { usePathname } from 'next/navigation'
+import { esRutaReportes } from '@/lib/reportes/areas'
 
 interface BreadcrumbItem {
   label: string
@@ -20,7 +21,7 @@ export default function Breadcrumbs() {
   // No mostrar breadcrumbs en homepage ni en Copilot (tiene su propio header)
   if (!pathname || pathname === '/' || pathname === '/home-nuevo') return null
   if (pathname.startsWith('/copilot/dashboard/') || pathname.startsWith('/copilot/configurar/')) return null
-  if (pathname === '/clientes' || pathname.startsWith('/clientes/')) return null
+  if (esRutaReportes(pathname)) return null
 
   // Generar breadcrumbs desde la URL
   const segments = pathname.split('/').filter(Boolean)

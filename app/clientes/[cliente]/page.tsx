@@ -2,7 +2,7 @@ import { notFound, redirect } from 'next/navigation'
 import { LayoutDashboard, ExternalLink, Activity, Bot, CalendarDays, FileText, Gauge, Globe2, ListChecks, MousePointerClick, Search, Sparkles, Target, TrendingUp, Wrench, Eye, Newspaper, Layers } from 'lucide-react'
 import { accesoActual, leerIndice, leerMes, puedeVer } from '@/lib/reportes/servidor'
 import { Barra } from '@/lib/reportes/Barra'
-import { AREAS, urlPanel } from '@/lib/reportes/areas'
+import { AREAS, esSlug, urlPanel } from '@/lib/reportes/areas'
 import { cap, fechaLarga, mesCorto, nombreMes, num, variacion } from '@/lib/reportes/formato'
 import { Anillo, AreaDiaria, BarrasLinea, Horizontales } from '@/lib/reportes/graficos'
 import type { Medida, ReporteMes } from '@/lib/reportes/tipos'
@@ -10,7 +10,7 @@ import type { Medida, ReporteMes } from '@/lib/reportes/tipos'
 export const dynamic = 'force-dynamic'
 
 const SIN = <span className="rp-pill no">sin datos</span>
-const TIPOS: Record<string, string> = { marca: 'Marca', servicio: 'Servicio', ciudad: 'Servicio + ciudad', 'pregunta-ia': 'Pregunta tipo IA' }
+const TIPOS: Record<string, string> = { marca: 'Marca', servicio: 'Servicio', ciudad: 'Servicio + ciudad', 'pregunta-ia': 'Pregunta tipo IA', contenido: 'Contenido (trae visitas)' }
 const TIPO_ACCION: Record<string, string> = { 'técnico': 'tec', contenido: 'con', GEO: 'geo', 'indexación': 'idx' }
 
 function Seccion({ icono: I, titulo, sub, children, id }: { icono: React.ElementType; titulo: string; sub?: string; children: React.ReactNode; id?: string }) {
@@ -43,11 +43,9 @@ function IA({ v, veces, mencion }: { v: Medida; veces: string | null; mencion: b
 
 export default async function ReporteCliente({ params, searchParams }: { params: { cliente: string }; searchParams: { mes?: string; vista?: string } }) {
   const acceso = await accesoActual()
-  if (!acceso) redirect('/clientes/login')
-  if (!puedeVer(acceso, params.cliente)) {
-    if (acceso.cliente) redirect('/clientes/' + acceso.cliente)
-    redirect('/clientes')
-  }
+  if (!acceso) redirect('/' + params.cliente)
+  if (!esSlug(params.cliente)) notFound()
+  if (!puedeVer(acceso, params.cliente)) return <OtraArea email={acceso.email} propia={acceso.cliente} />
   const indice = await leerIndice()
   const info0 = indice?.clientes[params.cliente]
   const area = AREAS[params.cliente] || null
@@ -55,11 +53,12 @@ export default async function ReporteCliente({ params, searchParams }: { params:
   if (!todos.length && !area) notFound()
   const nombreCliente = info0?.nombre || area!.nombre
   // Pestañas del área: Reporte SEO y GEO + paneles del cliente
-  const vista = searchParams.vista && /^panel-\d+$/.test(searchParams.vista) && area?.paneles[+searchParams.vista.slice(6)] ? searchParams.vista : 'reporte'
-  const pestanas = area?.paneles.length ? (
+  const conReporte = area?.reporte !== false
+  const vista = searchParams.vista && /^panel-\d+$/.test(searchParams.vista) && area?.paneles[+searchParams.vista.slice(6)] ? searchParams.vista : conReporte ? 'reporte' : 'panel-0'
+  const pestanas = area && (area.paneles.length > 1 || (conReporte && area.paneles.length)) ? (
     <nav className="rp-area-tabs" aria-label="Secciones del área de cliente">
-      <a href={`/clientes/${params.cliente}`} className={vista === 'reporte' ? 'on' : ''}><Search size={16} /> Reporte SEO y GEO</a>
-      {area.paneles.map((p, i) => <a key={i} href={`/clientes/${params.cliente}?vista=panel-${i}`} className={vista === 'panel-' + i ? 'on' : ''}><LayoutDashboard size={16} /> {p.nombre}</a>)}
+      {conReporte && <a href={`/${params.cliente}`} className={vista === 'reporte' ? 'on' : ''}><Search size={16} /> Reporte SEO y GEO</a>}
+      {area.paneles.map((p, i) => <a key={i} href={`/${params.cliente}?vista=panel-${i}`} className={vista === 'panel-' + i ? 'on' : ''}><LayoutDashboard size={16} /> {p.nombre}</a>)}
     </nav>
   ) : null
   if (vista !== 'reporte' || !todos.length) {
@@ -67,18 +66,19 @@ export default async function ReporteCliente({ params, searchParams }: { params:
     const src = panel ? urlPanel(panel) : null
     return (
       <div className="rp-wrap">
-        <Barra email={acceso.email} volver={acceso.admin} />
+        <Barra email={acceso.email} volver={acceso.admin} area={params.cliente} />
         <header className="rp-hero3 compacto">
           <div className="rp-brands3">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/logo-blanco.png" alt="Muller y Pérez" className="myp" />
+            {area?.logo && params.cliente !== 'mulleryperez' && <><span className="x">×</span>{/* eslint-disable-next-line @next/next/no-img-element */}<span className="cli"><img src={area.logo} alt={nombreCliente} /></span></>}
           </div>
           <div className="rp-pill3"><span className="dot" />Área de clientes</div>
           <h1><em>{nombreCliente}</em></h1>
         </header>
         {pestanas}
         {!panel ? (
-          <div className="rp-sheet"><div className="rp-callout info"><h4>Reporte SEO y GEO en preparación</h4><p>El primer reporte mensual de {nombreCliente} se publica aquí a partir del 1 de diciembre de 2026.</p></div></div>
+          <div className="rp-sheet"><div className="rp-callout info"><h4>Reporte SEO y GEO en preparación</h4><p>El primer reporte mensual de {nombreCliente} se publica aquí a partir del 1 de diciembre de 2026.{info0?.falta ? ' Falta: ' + info0.falta + '.' : ''}</p></div></div>
         ) : !src ? (
           <div className="rp-sheet"><div className="rp-callout warn"><h4>{panel.nombre}</h4><p>Este panel todavía no está disponible desde el área de clientes. {panel.nota || ''}</p></div></div>
         ) : panel.embebible ? (
@@ -113,12 +113,12 @@ export default async function ReporteCliente({ params, searchParams }: { params:
   const bit = r.bitacora || []
   const conteo = bit.reduce((o, x) => { o[x.tipo] = (o[x.tipo] || 0) + 1; return o }, {} as Record<string, number>)
   const etiquetas = todos.map(x => cap(mesCorto(x.mes)) + (x.periodo.parcial ? '*' : ''))
-  const logoCliente = info.logo && info.logo !== '/logo-color.png' ? info.logo : null
+  const logoCliente = params.cliente !== 'mulleryperez' ? (area?.logo || info.logo || null) : null
   const esMyP = params.cliente === 'mulleryperez'
 
   return (
     <div className="rp-wrap">
-      <Barra email={acceso.email} volver={acceso.admin} />
+      <Barra email={acceso.email} volver={acceso.admin} area={params.cliente} />
 
       {/* ── Portada (estilo Presentación de Agencia M&P 2026 / home: azul marino, robot, tarjetas de vidrio) ── */}
       <header className="rp-hero3">
@@ -162,7 +162,7 @@ export default async function ReporteCliente({ params, searchParams }: { params:
         <CalendarDays size={16} className="cal" />
         {disponibles.map(m => {
           const x = todos.find(t => t.mes === m)!
-          return <a key={m} href={`/clientes/${params.cliente}?mes=${m}`} className={'rp-tab' + (m === mes ? ' on' : '')}>{cap(nombreMes(m))}{x.periodo.parcial && <small>en curso</small>}</a>
+          return <a key={m} href={`/${params.cliente}?mes=${m}`} className={'rp-tab' + (m === mes ? ' on' : '')}>{cap(nombreMes(m))}{x.periodo.parcial && <small>en curso</small>}</a>
         })}
         <div className="rp-index">
           <a href="#nota">Nota</a><a href="#busquedas">Búsquedas</a><a href="#bitacora">Bitácora</a>
@@ -247,7 +247,7 @@ export default async function ReporteCliente({ params, searchParams }: { params:
                   </tr>))}</tbody>
               </table>
             </div>
-            <p className="src">Google: posición promedio del mes en Search Console (#3 o mejor en verde, top 10 en morado). ChatGPT y Gemini: lugar en que recomiendan a {info.nombre} en {mesNombre}{seg.medicion ? `, medición del ${fechaLarga(seg.medicion)}` : ''}; repetimos cada búsqueda 3 veces y contamos solo lo que aparece en la mayoría. «sin medir aún» = esa IA todavía no se midió para esta búsqueda. «solo Google» = búsqueda que no preguntamos a las IA.</p>
+            <p className="src">Google: posición promedio del mes en Search Console (#3 o mejor en verde, top 10 en morado). ChatGPT y Gemini: lugar en que recomiendan a {info.nombre} en {mesNombre}{seg.medicion ? `, medición del ${fechaLarga(seg.medicion)}` : ''}, preguntando en chatgpt.com y gemini.google.com igual que una persona en Chile (chat temporal, sin historial ni preferencias). Las IA cambian sus respuestas: es una foto del día de la medición. «sin medir aún» = esa IA todavía no se midió para esta búsqueda. «solo Google» = búsqueda que no preguntamos a las IA.</p>
           </>)}
         </Seccion>
 
@@ -310,6 +310,17 @@ export default async function ReporteCliente({ params, searchParams }: { params:
           <div><strong>Muller y Pérez</strong> · mulleryperez.cl · contacto@mulleryperez.cl<br />Reporte privado de {info.nombre}</div>
         </div>
       </div>
+    </div>
+  )
+}
+
+// Sesión de otro cliente: no se muestra nada del área pedida
+function OtraArea({ email, propia }: { email: string; propia: string | null }) {
+  return (
+    <div className="rp-wrap">
+      <Barra email={email} />
+      <div className="rp-sheet"><div className="rp-callout warn"><h4>Esta área no corresponde a tu usuario</h4>
+        <p>{propia && AREAS[propia] ? <>Tu área es <a href={'/' + propia}>mulleryperez.cl/{propia}</a>. </> : null}Si necesitas entrar con otro usuario, cierra sesión arriba a la derecha.</p></div></div>
     </div>
   )
 }
