@@ -154,7 +154,6 @@ export const AREAS: Record<string, Area> = {
         url: "https://myp-ops.vercel.app/paid/tecnoinver",
         embebible: true,
         tokenEnv: "PANEL_TOKEN_TECNOINVER",
-        nota: "Lo dejamos listo en los próximos días.",
       },
     ],
   },
