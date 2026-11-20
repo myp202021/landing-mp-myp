@@ -1,7 +1,8 @@
 import { notFound, redirect } from 'next/navigation'
-import { Activity, Bot, CalendarDays, FileText, Gauge, Globe2, ListChecks, MousePointerClick, Search, Sparkles, Target, TrendingUp, Wrench, Eye, Newspaper, Layers } from 'lucide-react'
+import { LayoutDashboard, ExternalLink, Activity, Bot, CalendarDays, FileText, Gauge, Globe2, ListChecks, MousePointerClick, Search, Sparkles, Target, TrendingUp, Wrench, Eye, Newspaper, Layers } from 'lucide-react'
 import { accesoActual, leerIndice, leerMes, puedeVer } from '@/lib/reportes/servidor'
 import { Barra } from '@/lib/reportes/Barra'
+import { AREAS, urlPanel } from '@/lib/reportes/areas'
 import { cap, fechaLarga, mesCorto, nombreMes, num, variacion } from '@/lib/reportes/formato'
 import { Anillo, AreaDiaria, BarrasLinea, Horizontales } from '@/lib/reportes/graficos'
 import type { Medida, ReporteMes } from '@/lib/reportes/tipos'
@@ -40,7 +41,7 @@ function IA({ v, veces, mencion }: { v: Medida; veces: string | null; mencion: b
   return <span className="rp-pill no">no aparece</span>
 }
 
-export default async function ReporteCliente({ params, searchParams }: { params: { cliente: string }; searchParams: { mes?: string } }) {
+export default async function ReporteCliente({ params, searchParams }: { params: { cliente: string }; searchParams: { mes?: string; vista?: string } }) {
   const acceso = await accesoActual()
   if (!acceso) redirect('/clientes/login')
   if (!puedeVer(acceso, params.cliente)) {
@@ -48,11 +49,50 @@ export default async function ReporteCliente({ params, searchParams }: { params:
     redirect('/clientes')
   }
   const indice = await leerIndice()
-  const info = indice?.clientes[params.cliente]
-  if (!info || !info.meses.length) notFound()
-
-  const todos = (await Promise.all(info.meses.map(m => leerMes(params.cliente, m)))).filter(Boolean) as ReporteMes[]
-  if (!todos.length) notFound()
+  const info0 = indice?.clientes[params.cliente]
+  const area = AREAS[params.cliente] || null
+  const todos = info0 ? (await Promise.all(info0.meses.map(m => leerMes(params.cliente, m)))).filter(Boolean) as ReporteMes[] : []
+  if (!todos.length && !area) notFound()
+  const nombreCliente = info0?.nombre || area!.nombre
+  // Pestañas del área: Reporte SEO y GEO + paneles del cliente
+  const vista = searchParams.vista && /^panel-\d+$/.test(searchParams.vista) && area?.paneles[+searchParams.vista.slice(6)] ? searchParams.vista : 'reporte'
+  const pestanas = area?.paneles.length ? (
+    <nav className="rp-area-tabs" aria-label="Secciones del área de cliente">
+      <a href={`/clientes/${params.cliente}`} className={vista === 'reporte' ? 'on' : ''}><Search size={16} /> Reporte SEO y GEO</a>
+      {area.paneles.map((p, i) => <a key={i} href={`/clientes/${params.cliente}?vista=panel-${i}`} className={vista === 'panel-' + i ? 'on' : ''}><LayoutDashboard size={16} /> {p.nombre}</a>)}
+    </nav>
+  ) : null
+  if (vista !== 'reporte' || !todos.length) {
+    const panel = vista !== 'reporte' ? area!.paneles[+vista.slice(6)] : null
+    const src = panel ? urlPanel(panel) : null
+    return (
+      <div className="rp-wrap">
+        <Barra email={acceso.email} volver={acceso.admin} />
+        <header className="rp-hero3 compacto">
+          <div className="rp-brands3">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/logo-blanco.png" alt="Muller y Pérez" className="myp" />
+          </div>
+          <div className="rp-pill3"><span className="dot" />Área de clientes</div>
+          <h1><em>{nombreCliente}</em></h1>
+        </header>
+        {pestanas}
+        {!panel ? (
+          <div className="rp-sheet"><div className="rp-callout info"><h4>Reporte SEO y GEO en preparación</h4><p>El primer reporte mensual de {nombreCliente} se publica aquí a partir del 1 de diciembre de 2026.</p></div></div>
+        ) : !src ? (
+          <div className="rp-sheet"><div className="rp-callout warn"><h4>{panel.nombre}</h4><p>Este panel todavía no está disponible desde el área de clientes. {panel.nota || ''}</p></div></div>
+        ) : panel.embebible ? (
+          <div className="rp-panel">
+            <div className="bar"><span>{panel.nombre}</span><a href={src} target="_blank" rel="noopener noreferrer"><ExternalLink size={14} /> Abrir en otra pestaña</a></div>
+            <iframe src={src} title={panel.nombre} loading="lazy" referrerPolicy="no-referrer" />
+          </div>
+        ) : (
+          <div className="rp-sheet"><div className="rp-callout dark"><h4>{panel.nombre}</h4><p>Este panel se abre en una pestaña aparte.</p><p style={{ marginTop: 10 }}><a className="rp-open" href={src} target="_blank" rel="noopener noreferrer">Abrir panel</a></p></div></div>
+        )}
+      </div>
+    )
+  }
+  const info = info0!
   const disponibles = todos.map(r => r.mes)
   const mes = searchParams.mes && disponibles.includes(searchParams.mes) ? searchParams.mes : disponibles[disponibles.length - 1]
   const idx = disponibles.indexOf(mes)
@@ -80,43 +120,44 @@ export default async function ReporteCliente({ params, searchParams }: { params:
     <div className="rp-wrap">
       <Barra email={acceso.email} volver={acceso.admin} />
 
-      {/* ── Portada ── */}
-      <header className="rp-hero">
-        <div className="rp-hero-top">
-          <div className="rp-brands">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            {logoCliente && !esMyP && <div className="logo-cli"><img src={logoCliente} alt={info.nombre} /></div>}
-            <div className="by">
-              <span>{esMyP ? 'Reporte de' : 'Preparado por'}</span>
+      {/* ── Portada (estilo Presentación de Agencia M&P 2026 / home: azul marino, robot, tarjetas de vidrio) ── */}
+      <header className="rp-hero3">
+        <div className="rp-hero3-grid">
+          <div className="rp-hero3-txt">
+            <div className="rp-brands3">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/logo-blanco.png" alt="Muller y Pérez" className="logo-myp" />
+              <img src="/logo-blanco.png" alt="Muller y Pérez" className="myp" />
+              {logoCliente && !esMyP && <><span className="x">×</span>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <span className="cli"><img src={logoCliente} alt={info.nombre} /></span></>}
             </div>
-          </div>
-          <div className="rp-hero-site"><Globe2 size={15} /> <a href={info.sitio} target="_blank" rel="noopener noreferrer">{dominio}</a></div>
-        </div>
-        <div className="rp-hero-main">
-          <div>
-            <div className="rp-eyebrow">Reporte SEO y GEO · {nombreMes(mes)}{r.periodo.parcial ? ' · mes en curso' : ''}</div>
-            <h1>{info.nombre}</h1>
+            <div className="rp-pill3"><span className="dot" />Reporte SEO y GEO · {nombreMes(mes)}{r.periodo.parcial ? ' · en curso' : ''}</div>
+            <h1>{(() => { const w = info.nombre.split(' '); return w.length > 1 ? <>{w.slice(0, -1).join(' ')} <em>{w[w.length - 1]}</em></> : <em>{info.nombre}</em> })()}</h1>
             <p className="lead">
-              {g ? <>Este mes el sitio sumó <b>{num(g.clics)} visitas desde Google</b>{a ? <> y <b>{num(a.ia)} desde asistentes de IA</b></> : ''}, y apareció {num(g.impresiones)} veces en los resultados de búsqueda.</> : 'Search Console no entregó datos para este mes.'}
-              {r.periodo.parcial ? ` Datos del ${fechaLarga(r.periodo.desde)} al ${fechaLarga(r.periodo.hasta)}; Google publica los días con unos 3 días de atraso.` : ''}
+              {g ? <>En {mesNombre} el sitio sumó <b>{num(g.clics)} visitas desde Google</b>{a ? <> y <b>{num(a.ia)} desde asistentes de IA</b></> : ''}, y apareció {num(g.impresiones)} veces en los resultados de búsqueda.</> : 'Search Console no entregó datos para este mes.'}
+              {r.periodo.parcial ? ` Datos del ${fechaLarga(r.periodo.desde)} al ${fechaLarga(r.periodo.hasta)}; Google publica con unos 3 días de atraso.` : ''}
             </p>
-            <div className="rp-hero-stats">
-              <div><b>{g ? num(g.clics) : '—'}</b><span>clics desde Google</span></div>
-              <div><b>{a ? num(a.ia) : '—'}</b><span>visitas desde IA</span></div>
-              <div><b>{seg ? `${segTop10}/${seg.busquedas.length}` : '—'}</b><span>búsquedas en top 10</span></div>
-              <div><b>{bit.length || '—'}</b><span>acciones en el sitio</span></div>
-            </div>
+            <div className="rp-foot3"><Globe2 size={14} /> <a href={info.sitio} target="_blank" rel="noopener noreferrer">{dominio}</a> · {esMyP ? 'Reporte interno de M&P' : 'Preparado por Muller y Pérez'}</div>
           </div>
-          <div className="rp-hero-nota">
-            <Anillo valor={nota?.nota ?? null} tam={168} claro />
-            <span>Nota SEO y GEO del sitio</span>
-            {nota && <small>auditoría del {fechaLarga(nota.fecha)}</small>}
+          <div className="rp-robot" aria-hidden="true">
+            <div className="glow" />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/home/robot.png" alt="" />
+            <div className="chip c1"><p>Clics desde Google</p><b className="cyan">{g ? num(g.clics) : 'sin datos'}</b></div>
+            <div className="chip c2"><p>Visitas desde IA</p><b className="violet">{a ? num(a.ia) : 'sin datos'}</b></div>
+            <div className="chip c3"><p>Nota SEO y GEO</p><b className="green">{nota?.nota != null ? `${nota.nota} / 100` : 'sin auditoría'}</b></div>
           </div>
+        </div>
+        <div className="rp-stats3">
+          <div><b>{g ? num(g.impresiones) : '—'}</b><span>apariciones en Google</span></div>
+          <div><b>{g ? num(g.posicion, 1) : '—'}</b><span>posición promedio</span></div>
+          <div><b>{seg ? `${segTop10}/${seg.busquedas.length}` : '—'}</b><span>búsquedas en el top 10</span></div>
+          <div><b>{segGptMedidas ? `${segGpt}/${segGptMedidas}` : '—'}</b><span>ChatGPT nos recomienda</span></div>
+          <div><b>{bit.length || '—'}</b><span>acciones en el sitio</span></div>
         </div>
       </header>
 
+      {pestanas}
       <nav className="rp-tabs" aria-label="Meses">
         <CalendarDays size={16} className="cal" />
         {disponibles.map(m => {

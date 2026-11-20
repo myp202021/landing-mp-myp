@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation'
 import { accesoActual, leerIndice } from '@/lib/reportes/servidor'
 import { nombreMes } from '@/lib/reportes/formato'
 import { Barra } from '@/lib/reportes/Barra'
+import { AREAS } from '@/lib/reportes/areas'
 
 export const dynamic = 'force-dynamic'
 
@@ -13,7 +14,9 @@ export default async function InicioReportes() {
     return <SinAcceso email={acceso.email} />
   }
   const indice = await leerIndice()
-  const clientes = Object.entries(indice?.clientes || {})
+  const conReporte = indice?.clientes || {}
+  const ids = Array.from(new Set([...Object.keys(conReporte), ...Object.keys(AREAS)]))
+  const clientes = ids.map(id => [id, { nombre: conReporte[id]?.nombre || AREAS[id].nombre, sitio: conReporte[id]?.sitio || '', meses: conReporte[id]?.meses || [], paneles: AREAS[id]?.paneles.length || 0 }] as const)
   return (
     <div className="rp-wrap">
       <Barra email={acceso.email} />
@@ -28,8 +31,8 @@ export default async function InicioReportes() {
             {clientes.map(([id, c]) => (
               <a key={id} className="rp-card" href={'/clientes/' + id}>
                 <div className="t">{c.nombre}</div>
-                <div className="s">{c.sitio.replace(/^https?:\/\/(www\.)?/, '')}</div>
-                <div className="s">{c.meses.length} meses · último: {nombreMes(c.meses[c.meses.length - 1])}</div>
+                {c.sitio && <div className="s">{c.sitio.replace(/^https?:\/\/(www\.)?/, '')}</div>}
+                <div className="s">{c.meses.length ? `Reporte: ${c.meses.length} meses · último ${nombreMes(c.meses[c.meses.length - 1])}` : 'Reporte en preparación'}{c.paneles ? ` · ${c.paneles} panel${c.paneles > 1 ? 'es' : ''}` : ''}</div>
               </a>
             ))}
           </div>
