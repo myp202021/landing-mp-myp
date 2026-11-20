@@ -12,6 +12,7 @@ export type Panel = {
 export type Area = {
   nombre: string;
   logo?: string;
+  logoOscuro?: boolean; // logo blanco: va sobre fondo oscuro
   reporte: boolean;
   paneles: Panel[];
 };
@@ -152,7 +153,7 @@ export const AREAS: Record<string, Area> = {
         url: "https://myp-ops.vercel.app/paid/tecnoinver",
         embebible: true,
         tokenEnv: "PANEL_TOKEN_TECNOINVER",
-        nota: "Necesita su token de acceso.",
+        nota: "Lo dejamos listo en los próximos días.",
       },
     ],
   },

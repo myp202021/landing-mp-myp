@@ -35,7 +35,7 @@ function Kpi({ icono: I, valor, lbl, delta, dec = 0 }: { icono: React.ElementTyp
 
 function IA({ v, veces, mencion }: { v: Medida; veces: string | null; mencion: boolean }) {
   if (v === 'no aplica') return <span className="rp-pill no">solo Google</span>
-  if (v === 'sin medir') return <span className="rp-pill no">sin medir aún</span>
+  if (v === 'sin medir') return <span className="rp-pill no">se mide desde diciembre</span>
   if (v != null) return <span className={'rp-pill ' + (v <= 3 ? 'good' : 'mix')}>#{v}{veces ? ` · ${veces}` : ''}</span>
   if (mencion) return <span className="rp-pill warn">lo cita como fuente</span>
   return <span className="rp-pill no">no aparece</span>
@@ -71,7 +71,7 @@ export default async function ReporteCliente({ params, searchParams }: { params:
           <div className="rp-brands3">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/logo-blanco.png" alt="Muller y Pérez" className="myp" />
-            {area?.logo && params.cliente !== 'mulleryperez' && <><span className="x">×</span>{/* eslint-disable-next-line @next/next/no-img-element */}<span className="cli"><img src={area.logo} alt={nombreCliente} /></span></>}
+            {area?.logo && params.cliente !== 'mulleryperez' && <><span className="x">×</span>{/* eslint-disable-next-line @next/next/no-img-element */}<span className={"cli" + (area.logoOscuro ? " oscuro" : "")}><img src={area.logo} alt={nombreCliente} /></span></>}
           </div>
           <div className="rp-pill3"><span className="dot" />Área de clientes</div>
           <h1><em>{nombreCliente}</em></h1>
@@ -129,7 +129,7 @@ export default async function ReporteCliente({ params, searchParams }: { params:
               <img src="/logo-blanco.png" alt="Muller y Pérez" className="myp" />
               {logoCliente && !esMyP && <><span className="x">×</span>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <span className="cli"><img src={logoCliente} alt={info.nombre} /></span></>}
+                <span className={"cli" + (area?.logoOscuro ? " oscuro" : "")}><img src={logoCliente} alt={info.nombre} /></span></>}
             </div>
             <div className="rp-pill3"><span className="dot" />Reporte SEO y GEO · {nombreMes(mes)}{r.periodo.parcial ? ' · en curso' : ''}</div>
             <h1>{(() => { const w = info.nombre.split(' '); return w.length > 1 ? <>{w.slice(0, -1).join(' ')} <em>{w[w.length - 1]}</em></> : <em>{info.nombre}</em> })()}</h1>
@@ -227,8 +227,8 @@ export default async function ReporteCliente({ params, searchParams }: { params:
           {!seg ? <p className="rp-empty">Este cliente todavía no tiene su set de búsquedas.</p> : (<>
             <div className="rp-grid-3">
               <div className="rp-mini"><div className="ic g"><Search size={18} /></div><b>{segGoogle} / {seg.busquedas.length}</b><span>aparecen en Google · {segTop10} en el top 10</span></div>
-              <div className="rp-mini"><div className="ic c"><Sparkles size={18} /></div><b>{segGptMedidas ? `${segGpt} / ${segGptMedidas}` : 'sin medir'}</b><span>ChatGPT nos recomienda{segGptMedidas ? ' (búsquedas medidas)' : ''}</span></div>
-              <div className="rp-mini"><div className="ic m"><Bot size={18} /></div><b>{segGemMedidas ? `${segGem} / ${segGemMedidas}` : 'sin medir aún'}</b><span>Gemini nos recomienda</span></div>
+              <div className="rp-mini"><div className="ic c"><Sparkles size={18} /></div><b>{segGptMedidas ? `${segGpt} / ${segGptMedidas}` : 'desde diciembre'}</b><span>ChatGPT nos recomienda{segGptMedidas ? ' (búsquedas medidas)' : ''}</span></div>
+              <div className="rp-mini"><div className="ic m"><Bot size={18} /></div><b>{segGemMedidas ? `${segGem} / ${segGemMedidas}` : 'desde diciembre'}</b><span>Gemini nos recomienda</span></div>
             </div>
             <div className="rp-table-wrap" style={{ marginTop: 14 }}>
               <table>
@@ -247,7 +247,7 @@ export default async function ReporteCliente({ params, searchParams }: { params:
                   </tr>))}</tbody>
               </table>
             </div>
-            <p className="src">Google: posición promedio del mes en Search Console (#3 o mejor en verde, top 10 en morado). ChatGPT y Gemini: lugar en que recomiendan a {info.nombre} en {mesNombre}{seg.medicion ? `, medición del ${fechaLarga(seg.medicion)}` : ''}, preguntando en chatgpt.com y gemini.google.com igual que una persona en Chile (chat temporal, sin historial ni preferencias). Las IA cambian sus respuestas: es una foto del día de la medición. «sin medir aún» = esa IA todavía no se midió para esta búsqueda. «solo Google» = búsqueda que no preguntamos a las IA.</p>
+            <p className="src">Google: posición promedio del mes en Search Console (#3 o mejor en verde, top 10 en morado). ChatGPT y Gemini: lugar en que recomiendan a {info.nombre} en {mesNombre}{seg.medicion ? `, medición del ${fechaLarga(seg.medicion)}` : ''}, preguntando en chatgpt.com y gemini.google.com igual que una persona en Chile (chat temporal, sin historial ni preferencias). Las IA cambian sus respuestas: es una foto del día de la medición. «se mide desde diciembre» = esa IA todavía no se midió para esta búsqueda (la medición oficial parte con el informe de diciembre). «solo Google» = búsqueda que no preguntamos a las IA.</p>
           </>)}
         </Seccion>
 
@@ -272,6 +272,20 @@ export default async function ReporteCliente({ params, searchParams }: { params:
         </Seccion>
 
         {/* ── Estado del sitio ── */}
+        {r.pendientes && r.pendientes.cliente.length > 0 && (
+          <Seccion id="pendientes" icono={ListChecks} titulo="Pendientes para avanzar" sub={`Al ${fechaLarga(r.pendientes.actualizado)}.`}>
+            <div className="rp-pend">
+              <div className="rp-pend-col">
+                <h4>Lo que necesitamos de {info.nombre}</h4>
+                <ul>{r.pendientes.cliente.map((p, i) => <li key={i}>{p.texto}</li>)}</ul>
+              </div>
+              <div className="rp-pend-col">
+                <h4>Lo que estamos haciendo nosotros</h4>
+                <ul>{r.pendientes.nosotros.map((p, i) => <li key={i}><span className={'rp-pill ' + (p.estado === 'hecho' ? 'good' : p.estado === 'en curso' ? 'mix' : 'warn')}>{p.estado}</span> {p.texto}</li>)}</ul>
+              </div>
+            </div>
+          </Seccion>
+        )}
         <Seccion icono={Layers} titulo="Estado del sitio en Google">
           <div className={'rp-callout ' + (r.indexacion ? (r.indexacion.pendientes.length ? 'warn' : 'good') : 'info')}>
             <h4>Páginas en el índice de Google</h4>

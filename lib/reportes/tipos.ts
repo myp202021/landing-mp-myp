@@ -42,6 +42,7 @@ export type ReporteMes = {
   }
   bitacora?: null | { fecha: string; accion: string; url: string | null; tipo: 'técnico' | 'contenido' | 'GEO' | 'indexación' | string; fuente: string; enlaces?: { titulo: string; url: string }[] }[]
   notaSeo?: null | NotaSeo
+  pendientes?: null | { actualizado: string; cliente: { texto: string }[]; nosotros: { texto: string; estado: string }[] }
   indexacion: null | { fecha: string; total: number; grupos: Record<string, number>; pendientes: string[] }
 }
 
