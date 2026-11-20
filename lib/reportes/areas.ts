@@ -128,6 +128,7 @@ export const AREAS: Record<string, Area> = {
   },
   power: {
     nombre: "Power Energy",
+    logo: "/reportes/logos/power.png",
 
     reporte: false,
     paneles: [
