@@ -1,7 +1,7 @@
 // Formato que escribe myp-daily-agent/scripts/reportes-seo/recolectar.mjs (null = sin datos)
 export type IndiceReportes = {
   actualizado: string
-  clientes: Record<string, { nombre: string; sitio: string; meses: string[] }>
+  clientes: Record<string, { nombre: string; sitio: string; logo?: string | null; meses: string[] }>
 }
 
 export type ReporteMes = {
@@ -29,5 +29,28 @@ export type ReporteMes = {
     fecha: string
     busquedas: { busqueda: string; google: number | null; googleUrl: string | null; chatgpt: number | null | 'sin medir'; chatgptVeces: string | null; chatgptMencion: boolean; competidores: string[] }[]
   }
+  seguimiento?: null | {
+    medicion: string | null; metodo: string | null
+    busquedas: {
+      q: string; tipo: 'marca' | 'servicio' | 'ciudad' | 'pregunta-ia' | string; ia: boolean
+      gsc: null | { posicion: number; clics: number; impresiones: number }
+      google: Medida; googleUrl: string | null
+      chatgpt: Medida; chatgptVeces: string | null; chatgptMencion: boolean
+      gemini: Medida; geminiVeces: string | null; geminiMencion: boolean; geminiNota: string | null
+      competidores: string[]
+    }[]
+  }
+  bitacora?: null | { fecha: string; accion: string; url: string | null; tipo: 'técnico' | 'contenido' | 'GEO' | 'indexación' | string; fuente: string; enlaces?: { titulo: string; url: string }[] }[]
+  notaSeo?: null | NotaSeo
   indexacion: null | { fecha: string; total: number; grupos: Record<string, number>; pendientes: string[] }
+}
+
+// número = posición; null = medido y no aparece; 'sin medir' = no se midió; 'no aplica' = búsqueda solo de Google
+export type Medida = number | null | 'sin medir' | 'no aplica'
+
+export type NotaSeo = {
+  fecha: string; version: string; nota: number | null; muestra: number; urlsSitemap: number; noMide: string
+  categorias: { id: string; nombre: string; puntos: number | null; max: number; sinMedir: string[] }[]
+  problemas: { categoria: string; problema: string; pierde: number; detalle: string }[]
+  criterios: { cat: string; categoria: string; nombre: string; max: number; pts: number | null; detalle: string }[]
 }

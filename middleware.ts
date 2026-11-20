@@ -9,7 +9,8 @@ export async function middleware(request: NextRequest) {
   const { pathname, searchParams } = request.nextUrl
 
   // ═══ REPORTES SEO Y GEO: /clientes/* con login (Supabase Auth), noindex ═══
-  if (pathname === '/clientes' || pathname.startsWith('/clientes/')) {
+  // Ojo: /clientes/*.png|webp|svg son logos públicos del home (public/clientes): esos NO pasan por el login
+  if ((pathname === '/clientes' || pathname.startsWith('/clientes/')) && !/\.[a-z0-9]+$/i.test(pathname)) {
     return sesionReportes(request)
   }
 
