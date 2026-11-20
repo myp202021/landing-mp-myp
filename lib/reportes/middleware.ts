@@ -78,7 +78,7 @@ export async function sesionReportes(request: NextRequest) {
       response.cookies.getAll().forEach((c) => r.cookies.set(c));
       return marcar(r);
     }
-    if (limpio !== "/clientes/login" && limpio !== "/clientes/salir") {
+    if (limpio !== "/clientes/login" && limpio !== "/clientes/salir" && limpio !== "/clientes/acceso") {
       const u = request.nextUrl.clone();
       u.pathname = "/clientes/login";
       u.search = "";
