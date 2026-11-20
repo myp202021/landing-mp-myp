@@ -37,7 +37,7 @@ function IA({ v, veces, mencion }: { v: Medida; veces: string | null; mencion: b
   if (v === 'no aplica') return <span className="rp-pill no">solo Google</span>
   if (v === 'sin medir') return <span className="rp-pill no">se mide desde diciembre</span>
   if (v != null) return <span className={'rp-pill ' + (v <= 3 ? 'good' : 'mix')}>#{v}{veces ? ` · ${veces}` : ''}</span>
-  if (mencion) return <span className="rp-pill warn">lo cita como fuente</span>
+  if (mencion) return <span className="rp-pill warn">lo nombra sin lugar</span>
   return <span className="rp-pill no">no aparece</span>
 }
 
@@ -106,10 +106,12 @@ export default async function ReporteCliente({ params, searchParams }: { params:
   const segGoogle = seg ? seg.busquedas.filter(b => b.gsc).length : 0
   const segTop10 = seg ? seg.busquedas.filter(b => b.gsc && b.gsc.posicion <= 10).length : 0
   const medida = (v: Medida) => v !== 'sin medir' && v !== 'no aplica'
-  const segGptMedidas = seg ? seg.busquedas.filter(b => medida(b.chatgpt)).length : 0
-  const segGpt = seg ? seg.busquedas.filter(b => typeof b.chatgpt === 'number').length : 0
-  const segGemMedidas = seg ? seg.busquedas.filter(b => medida(b.gemini)).length : 0
-  const segGem = seg ? seg.busquedas.filter(b => typeof b.gemini === 'number').length : 0
+  const preg = seg?.preguntasIA?.length ? seg.preguntasIA : null
+  const iaFilas: { chatgpt: Medida; gemini: Medida }[] = preg || seg?.busquedas || []
+  const segGptMedidas = iaFilas.filter(b => medida(b.chatgpt)).length
+  const segGpt = iaFilas.filter(b => typeof b.chatgpt === 'number').length
+  const segGemMedidas = iaFilas.filter(b => medida(b.gemini)).length
+  const segGem = iaFilas.filter(b => typeof b.gemini === 'number').length
   const bit = r.bitacora || []
   const conteo = bit.reduce((o, x) => { o[x.tipo] = (o[x.tipo] || 0) + 1; return o }, {} as Record<string, number>)
   const etiquetas = todos.map(x => cap(mesCorto(x.mes)) + (x.periodo.parcial ? '*' : ''))
@@ -227,12 +229,12 @@ export default async function ReporteCliente({ params, searchParams }: { params:
           {!seg ? <p className="rp-empty">Este cliente todavía no tiene su set de búsquedas.</p> : (<>
             <div className="rp-grid-3">
               <div className="rp-mini"><div className="ic g"><Search size={18} /></div><b>{segGoogle} / {seg.busquedas.length}</b><span>aparecen en Google · {segTop10} en el top 10</span></div>
-              <div className="rp-mini"><div className="ic c"><Sparkles size={18} /></div><b>{segGptMedidas ? `${segGpt} / ${segGptMedidas}` : 'desde diciembre'}</b><span>ChatGPT nos recomienda{segGptMedidas ? ' (búsquedas medidas)' : ''}</span></div>
+              <div className="rp-mini"><div className="ic c"><Sparkles size={18} /></div><b>{segGptMedidas ? `${segGpt} / ${segGptMedidas}` : 'desde diciembre'}</b><span>ChatGPT nos recomienda{segGptMedidas ? (preg ? ' (preguntas medidas)' : ' (búsquedas medidas)') : ''}</span></div>
               <div className="rp-mini"><div className="ic m"><Bot size={18} /></div><b>{segGemMedidas ? `${segGem} / ${segGemMedidas}` : 'desde diciembre'}</b><span>Gemini nos recomienda</span></div>
             </div>
             <div className="rp-table-wrap" style={{ marginTop: 14 }}>
               <table>
-                <thead><tr><th>Búsqueda</th><th>Tipo</th>{disponibles.map(m => <th key={m} className="c">Google · {mesCorto(m)}</th>)}<th className="c">ChatGPT</th><th className="c">Gemini</th><th>Quién más aparece en ChatGPT</th></tr></thead>
+                <thead><tr><th>Búsqueda</th><th>Tipo</th>{disponibles.map(m => <th key={m} className="c">Google · {mesCorto(m)}</th>)}{!preg && <><th className="c">ChatGPT</th><th className="c">Gemini</th><th>Quién más aparece en ChatGPT</th></>}</tr></thead>
                 <tbody>{seg.busquedas.map(b => (
                   <tr key={b.q}>
                     <td className="ink">{b.q}</td>
@@ -241,15 +243,33 @@ export default async function ReporteCliente({ params, searchParams }: { params:
                       const s2 = x.seguimiento?.busquedas.find(y => y.q === b.q)
                       return <td key={x.mes} className={'c' + (x.mes === mes ? ' sel' : '')}>{!x.seguimiento ? SIN : s2?.gsc ? <span className={'rp-pill ' + (s2.gsc.posicion <= 3 ? 'good' : s2.gsc.posicion <= 10 ? 'mix' : 'no')} title={`${num(s2.gsc.clics)} clics · ${num(s2.gsc.impresiones)} apariciones`}>#{num(s2.gsc.posicion, 1)}</span> : <span className="rp-pill no">no aparece</span>}</td>
                     })}
-                    <td className="c"><IA v={b.chatgpt} veces={b.chatgptVeces} mencion={b.chatgptMencion} /></td>
+                    {!preg && <><td className="c"><IA v={b.chatgpt} veces={b.chatgptVeces} mencion={b.chatgptMencion} /></td>
                     <td className="c"><IA v={b.gemini} veces={b.geminiVeces} mencion={b.geminiMencion} /></td>
+                    <td style={{ fontSize: 13 }}>{b.competidores.length ? b.competidores.join(', ') : '—'}</td></>}
+                  </tr>))}</tbody>
+              </table>
+            </div>
+            {preg ? <p className="src">Google: posición promedio del mes en Search Console (#3 o mejor en verde, top 10 en morado). ChatGPT y Gemini se miden con preguntas de recomendación (sección siguiente).</p> : <p className="src">Google: posición promedio del mes en Search Console (#3 o mejor en verde, top 10 en morado). ChatGPT y Gemini: lugar en que recomiendan a {info.nombre} en {mesNombre}{seg.medicion ? `, medición del ${fechaLarga(seg.medicion)}` : ''}, preguntando en chatgpt.com y gemini.google.com igual que una persona en Chile (chat temporal, sin historial ni preferencias). Las IA cambian sus respuestas: es una foto del día de la medición. «se mide desde diciembre» = esa IA todavía no se midió para esta búsqueda. «solo Google» = búsqueda que no preguntamos a las IA.</p>}
+          </>)}
+        </Seccion>
+
+        {preg && (
+          <Seccion id="preguntas-ia" icono={Bot} titulo="Preguntas a asistentes de IA" sub={`${preg.length} preguntas de recomendación, como las haría un cliente: ¿a quién nos recomiendan ChatGPT y Gemini?${seg?.medicion ? ` Medido el ${fechaLarga(seg.medicion)}.` : ''}`}>
+            <div className="rp-table-wrap">
+              <table>
+                <thead><tr><th>Pregunta</th><th className="c">ChatGPT</th><th className="c">Gemini</th><th>A quién más recomiendan</th></tr></thead>
+                <tbody>{preg.map(b => (
+                  <tr key={b.q}>
+                    <td className="ink">{b.q}</td>
+                    <td className="c"><IA v={b.chatgpt} veces={null} mencion={b.chatgptMencion} /></td>
+                    <td className="c"><IA v={b.gemini} veces={null} mencion={b.geminiMencion} /></td>
                     <td style={{ fontSize: 13 }}>{b.competidores.length ? b.competidores.join(', ') : '—'}</td>
                   </tr>))}</tbody>
               </table>
             </div>
-            <p className="src">Google: posición promedio del mes en Search Console (#3 o mejor en verde, top 10 en morado). ChatGPT y Gemini: lugar en que recomiendan a {info.nombre} en {mesNombre}{seg.medicion ? `, medición del ${fechaLarga(seg.medicion)}` : ''}, preguntando en chatgpt.com y gemini.google.com igual que una persona en Chile (chat temporal, sin historial ni preferencias). Las IA cambian sus respuestas: es una foto del día de la medición. «se mide desde diciembre» = esa IA todavía no se midió para esta búsqueda. «solo Google» = búsqueda que no preguntamos a las IA.</p>
-          </>)}
-        </Seccion>
+            <p className="src">Lugar en que ChatGPT (chatgpt.com) y Gemini (app, sesión con ubicación Chile) recomiendan a {info.nombre}, preguntando como una persona en Chile en chat temporal, sin historial, con un chat nuevo por pregunta. «lo nombra sin lugar» = aparece en la respuesta pero no en la lista ordenada. Las IA cambian sus respuestas: es una foto del día de la medición. «se mide desde diciembre» = esa IA todavía no se midió para esta pregunta.</p>
+          </Seccion>
+        )}
 
         {/* ── Bitácora ── */}
         <Seccion id="bitacora" icono={ListChecks} titulo={`Bitácora: lo que hicimos en el sitio en ${mesNombre}`} sub="Cada cambio con su fecha, la página afectada y de dónde sale el registro.">

@@ -39,6 +39,7 @@ export type ReporteMes = {
       gemini: Medida; geminiVeces: string | null; geminiMencion: boolean; geminiNota: string | null
       competidores: string[]
     }[]
+    preguntasIA?: { q: string; chatgpt: Medida; chatgptMencion: boolean; gemini: Medida; geminiMencion: boolean; competidores: string[] }[]
   }
   bitacora?: null | { fecha: string; accion: string; url: string | null; tipo: 'técnico' | 'contenido' | 'GEO' | 'indexación' | string; fuente: string; enlaces?: { titulo: string; url: string }[] }[]
   notaSeo?: null | NotaSeo
