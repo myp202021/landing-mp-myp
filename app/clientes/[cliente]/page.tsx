@@ -148,7 +148,7 @@ export default async function ReporteCliente({ params, searchParams }: { params:
           <div className="rp-callout dark">
             <h4>Visibilidad en Google y ChatGPT</h4>
             {r.visibilidad ? <>
-              <p>De las <b style={{ color: '#fff' }}>{vis.length} búsquedas</b> que seguimos, el sitio aparece en el top 10 de Google en <b style={{ color: '#fff' }}>{enGoogle}</b> y ChatGPT lo recomienda en <b style={{ color: '#fff' }}>{enGpt}</b>{citaGpt ? <>; en otras {citaGpt} lo cita como fuente</> : ''}.</p>
+              <p>De las <b style={{ color: '#fff' }}>{vis.length} búsquedas</b> que seguimos, el sitio aparece en el top 10 de Google en <b style={{ color: '#fff' }}>{enGoogle}</b> y ChatGPT lo recomienda en <b style={{ color: '#fff' }}>{enGpt}</b>{citaGpt ? <>, y en {citaGpt === 1 ? 'otra' : 'otras ' + citaGpt} lo cita como fuente</> : ''}.</p>
               <p style={{ marginTop: 6, fontSize: 13 }}>Medición del {fechaLarga(r.visibilidad.fecha)}. En ChatGPT repetimos cada búsqueda 3 veces y contamos solo lo que aparece en la mayoría.</p>
             </> : <p>Sin medición de visibilidad este mes.</p>}
           </div>
