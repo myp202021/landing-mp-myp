@@ -65,7 +65,7 @@ export const NAV_MAS = [
 ] as const
 
 /** Rutas de aplicación (paneles, logins, landings de clientes) que no llevan el menú ni el pie del sitio. */
-const EXCLUIDAS = ['/crm', '/cliente', '/login', '/ads', '/l/', '/grilla', '/propiedades', '/noticias', '/predictor', '/predictor-v2', '/copilot/', '/admin', '/api']
+const EXCLUIDAS = ['/crm', '/cliente', '/clientes', '/login', '/ads', '/l/', '/grilla', '/propiedades', '/noticias', '/predictor', '/predictor-v2', '/copilot/', '/admin', '/api']
 
 export function sinCromo(pathname: string | null): boolean {
   if (!pathname) return false

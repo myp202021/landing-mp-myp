@@ -1,11 +1,17 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import { sesionReportes } from '@/lib/reportes/middleware'
 
 // WordPress/LinkedIn legacy query params that cause redirect loops
 const STRIP_PARAMS = ['page_id', 'trk', 'p', 'm', 'cat', 's', 'attachment_id', 'layout_sidebar']
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const { pathname, searchParams } = request.nextUrl
+
+  // ═══ REPORTES SEO Y GEO: /clientes/* con login (Supabase Auth), noindex ═══
+  if (pathname === '/clientes' || pathname.startsWith('/clientes/')) {
+    return sesionReportes(request)
+  }
 
   // ═══ COPILOT AUTH: helper para verificar sesión + ownership ═══
   function verifyCopilotSession(request: NextRequest, pathname: string, prefix: string): NextResponse | null {
