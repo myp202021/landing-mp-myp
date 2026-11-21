@@ -1,4 +1,4 @@
-// Bitácora financiera de M&P: www.mulleryperez.cl/admin-finanzas (el middleware la reescribe aquí). SOLO superadmin.
+// Bitácora financiera de M&P: www.mulleryperez.cl/admin-finanzas (el middleware la reescribe aquí). SOLO Christopher (superadmin + app_metadata.reportes.finanzas = true).
 // Datos: bucket privado «reportes-seo», archivo _finanzas/facturas.json, generado desde la hoja «Facturas»
 // de «Planilla números M&P» con ~/bin/finanzas/sync.sh (exportar.mjs + procesar.py). Nunca va al navegador sin sesión superadmin.
 import { redirect } from "next/navigation";
@@ -16,7 +16,7 @@ export const metadata = {
 export default async function PaginaFinanzas() {
   const acceso = await accesoActual();
   if (!acceso) redirect("/admin-finanzas");
-  if (!acceso.admin) redirect("/admin-reportes");
+  if (!acceso.finanzas) redirect("/admin-reportes");
   const datos = await leerFinanzas();
   return (
     <div className="rp-wrap">

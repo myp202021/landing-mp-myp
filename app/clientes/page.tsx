@@ -44,9 +44,11 @@ export default async function InicioReportes() {
               {filas.filter((f) => f.d?.meses?.length).length} con reporte
               cargado
             </div>
-            <div className="rp-sub">
-              <a href="/admin-finanzas">Bitácora financiera →</a>
-            </div>
+            {acceso.finanzas && (
+              <div className="rp-sub">
+                <a href="/admin-finanzas">Bitácora financiera →</a>
+              </div>
+            )}
           </div>
         </div>
         <div className="rp-table-wrap">

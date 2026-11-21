@@ -22,15 +22,16 @@ export function supabaseServidor() {
   })
 }
 
-export type Acceso = { email: string; admin: boolean; cliente: string | null }
+export type Acceso = { email: string; admin: boolean; cliente: string | null; finanzas: boolean }
 
 export async function accesoActual(): Promise<Acceso | null> {
   const { data: { user } } = await supabaseServidor().auth.getUser()
   if (!user) return null
-  const meta = (user.app_metadata?.reportes || {}) as { rol?: string; cliente?: string }
+  const meta = (user.app_metadata?.reportes || {}) as { rol?: string; cliente?: string; finanzas?: boolean }
   const email = (user.email || '').toLowerCase()
   const admin = meta.rol === 'superadmin' || meta.rol === 'admin'
-  return { email, admin, cliente: meta.cliente || null }
+  // finanzas: SOLO Christopher (app_metadata.reportes.finanzas === true, además de superadmin). Nunca a otros superadmin.
+  return { email, admin, cliente: meta.cliente || null, finanzas: admin && meta.finanzas === true }
 }
 
 export function puedeVer(a: Acceso, cliente: string) {
