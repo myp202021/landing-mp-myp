@@ -52,3 +52,8 @@ async function leerJson<T>(ruta: string): Promise<T | null> {
 export const leerIndice = () => leerJson<IndiceReportes>('_clientes.json')
 export const leerMes = (cliente: string, mes: string) =>
   /^[a-z0-9-]+$/.test(cliente) && /^\d{4}-\d{2}$/.test(mes) ? leerJson<ReporteMes>(`${cliente}/${mes}.json`) : Promise.resolve(null)
+
+// Bitácora financiera (solo superadmin): una fila por factura de la hoja «Facturas».
+// e: cobrado | pendiente | por_facturar | demanda | perdido · t: Fee | Publicidad | Web y otros · m: AAAA-MM · n: neto · tot: con IVA
+export type FilaFactura = { c: string; t: string; m: string; n: number; tot: number; fac: string; e: string; eo: string; obs: string }
+export const leerFinanzas = () => leerJson<{ generado: string; filas: FilaFactura[] }>('_finanzas/facturas.json')
