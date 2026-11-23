@@ -176,6 +176,21 @@ AREAS.merlin = {
   ],
 };
 
+// ZeroWater (23 nov 2026): Reporte SEO y GEO + auditoría con plan de acción (HTML privado en Storage «reportes-seo/zerowater/auditoria.json»).
+AREAS.zerowater = {
+  nombre: "ZeroWater",
+  logo: "/reportes/logos/zerowater.png",
+  reporte: true,
+  paneles: [
+    {
+      nombre: "Auditoría SEO y GEO y plan de acción",
+      url: "/clientes/panel/auditoria/zerowater",
+      embebible: true,
+      completo: true,
+    },
+  ],
+};
+
 export const SLUGS = Object.keys(AREAS);
 // Índice del superadmin (ve todas las áreas)
 export const RUTA_ADMIN = "/admin-reportes";
