@@ -162,7 +162,7 @@ export const AREAS: Record<string, Area> = {
 // Merlin: panel propio (Ticketplus + Meta) servido por /clientes/panel/merlin con la misma sesión; datos en Storage «reportes-seo/merlin/panel.json».
 AREAS.merlin = {
   nombre: "Merlin Comunicaciones",
-  logo: "/reportes/logos/merlin.png",
+  logo: "/reportes/logos/merlin.png?v=2",
   logoOscuro: true,
   reporte: false,
   paneles: [
