@@ -7,6 +7,7 @@ export type Panel = {
   url: string;
   embebible: boolean;
   tokenEnv?: string;
+  completo?: boolean; // panel propio del sitio que se abre a pantalla completa (sin iframe ni cabecera fija)
   nota?: string;
 };
 export type Area = {
@@ -170,6 +171,7 @@ AREAS.merlin = {
       nombre: "Panel de ventas, ahorro y predicción",
       url: "/clientes/panel/merlin",
       embebible: true,
+      completo: true,
     },
   ],
 };

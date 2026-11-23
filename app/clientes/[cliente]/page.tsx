@@ -63,6 +63,7 @@ export default async function ReporteCliente({ params, searchParams }: { params:
   ) : null
   if (vista !== 'reporte' || !todos.length) {
     const panel = vista !== 'reporte' ? area!.paneles[+vista.slice(6)] : null
+    if (panel?.completo) redirect(panel.url)
     const src = panel ? urlPanel(panel) : null
     return (
       <div className="rp-wrap">
