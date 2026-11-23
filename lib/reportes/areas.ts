@@ -179,7 +179,7 @@ AREAS.merlin = {
 // ZeroWater (23 nov 2026): Reporte SEO y GEO + auditoría con plan de acción (HTML privado en Storage «reportes-seo/zerowater/auditoria.json»).
 AREAS.zerowater = {
   nombre: "ZeroWater",
-  logo: "/reportes/logos/zerowater.png",
+  logo: "/reportes/logos/zerowater.png?v=1",
   reporte: true,
   paneles: [
     {
