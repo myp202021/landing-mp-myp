@@ -159,6 +159,21 @@ export const AREAS: Record<string, Area> = {
   },
 };
 
+// Merlin: panel propio (Ticketplus + Meta) servido por /clientes/panel/merlin con la misma sesión; datos en Storage «reportes-seo/merlin/panel.json».
+AREAS.merlin = {
+  nombre: "Merlin Comunicaciones",
+  logo: "/reportes/logos/merlin.png",
+  logoOscuro: true,
+  reporte: false,
+  paneles: [
+    {
+      nombre: "Panel de ventas, ahorro y predicción",
+      url: "/clientes/panel/merlin",
+      embebible: true,
+    },
+  ],
+};
+
 export const SLUGS = Object.keys(AREAS);
 // Índice del superadmin (ve todas las áreas)
 export const RUTA_ADMIN = "/admin-reportes";

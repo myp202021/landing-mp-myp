@@ -58,3 +58,6 @@ export const leerMes = (cliente: string, mes: string) =>
 // e: cobrado | pendiente | por_facturar | demanda | perdido · t: Fee | Publicidad | Web y otros · m: AAAA-MM · n: neto · tot: con IVA
 export type FilaFactura = { c: string; t: string; m: string; n: number; tot: number; fac: string; e: string; eo: string; obs: string }
 export const leerFinanzas = () => leerJson<{ generado: string; filas: FilaFactura[] }>('_finanzas/facturas.json')
+
+// Panel Merlin (Ticketplus + Meta): JSON generado por ~/Desktop/Clientes 2026/Merlin/panel/analizar.py
+export const leerPanelMerlin = () => leerJson<Record<string, unknown>>('merlin/panel.json')
