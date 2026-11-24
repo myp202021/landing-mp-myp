@@ -6,7 +6,6 @@ import Image from 'next/image'
 
 const alianzas = [
   { programa: 'Google Partners', organizacion: 'Google', url: 'https://partners.google.com', estado: 'Agencia miembro del Programa de Google Partners' },
-  { programa: 'OpenAI Partner Network', organizacion: 'OpenAI', url: 'https://openai.com', estado: 'Services Partner de OpenAI: implementamos soluciones usando modelos de OpenAI' },
   { programa: 'Meta Performance Accelerator', organizacion: 'Meta', url: 'https://www.facebook.com/business', estado: 'Agencia inscrita en el programa de agencias de Meta' },
 ]
 
