@@ -5,7 +5,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 
 const alianzas = [
-  { programa: 'Google Partners', organizacion: 'Google', url: 'https://partners.google.com', estado: 'Agencia miembro del Programa de Google Partners' },
+  { programa: 'Google Partners', organizacion: 'Google', url: 'https://www.google.com/partners/agency?id=3957160071', estado: 'Socio de Google (Google Partner) desde noviembre de 2026' },
   { programa: 'OpenAI Partner Network', organizacion: 'OpenAI', url: 'https://openai.com', estado: 'Services Partner de OpenAI: implementamos soluciones usando modelos de OpenAI' },
   { programa: 'Meta Performance Accelerator', organizacion: 'Meta', url: 'https://www.facebook.com/business', estado: 'Agencia inscrita en el programa de agencias de Meta' },
 ]
@@ -144,7 +144,8 @@ export default function HomeFooter() {
             </div>
           </div>
     
-          {/* Programas y alianzas (19 nov 2026, OK Christopher). Solo estados reales: sin logos hasta que cada programa entregue su insignia. */}
+          {/* Programas y alianzas (19 nov 2026, OK Christopher). Solo estados reales: sin logos hasta que cada programa entregue su insignia.
+              24 nov 2026: Google entregó la insignia de Socio; va con el fragmento oficial (dominio autorizado: www.mulleryperez.cl). */}
           <div className="pb-8 mb-8 border-b border-blue-900/50" aria-labelledby="footer-alianzas">
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(alianzasSchema) }} />
             <h3 id="footer-alianzas" className="text-white font-bold text-sm mb-4">Programas y alianzas</h3>
@@ -153,6 +154,12 @@ export default function HomeFooter() {
                 <li key={a.programa} className="rounded-lg border border-blue-900/60 bg-slate-800/40 px-4 py-3">
                   <span className="block text-white font-semibold">{a.programa}</span>
                   <span className="block text-blue-200 text-xs mt-1">{a.estado}</span>
+                  {a.programa === 'Google Partners' && (
+                    <a href="https://www.google.com/partners/agency?id=3957160071" target="_blank" rel="noopener" className="inline-block mt-3 bg-white rounded p-1">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src="https://www.gstatic.com/partners/badge/images/2026/PartnerBadgeClickable.svg" alt="Socio de Google (Google Partner)" width={120} height={114} />
+                    </a>
+                  )}
                 </li>
               ))}
             </ul>
