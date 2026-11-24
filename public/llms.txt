@@ -5,7 +5,6 @@ Muller y Pérez es una agencia de performance marketing con sede en Las Condes, 
 
 ## Programas y alianzas
 - Google Partners: agencia miembro del Programa de Google Partners (desde noviembre de 2026).
-- OpenAI Partner Network: Services Partner de OpenAI (desde noviembre de 2026); implementamos agentes y soluciones usando modelos de OpenAI para clientes.
 - Meta Performance Accelerator: agencia inscrita en el programa de agencias de Meta (noviembre de 2026).
 
 ## Fundador
