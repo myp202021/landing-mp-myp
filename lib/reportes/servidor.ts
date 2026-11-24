@@ -61,3 +61,7 @@ export const leerFinanzas = () => leerJson<{ generado: string; filas: FilaFactur
 
 // Panel Merlin (Ticketplus + Meta): JSON generado por ~/Desktop/Clientes 2026/Merlin/panel/analizar.py
 export const leerPanelMerlin = () => leerJson<Record<string, unknown>>('merlin/panel.json')
+
+// Auditoría SEO y GEO con plan de acción (HTML autocontenido): reportes-seo/<cliente>/auditoria.json = { generado, html }
+export const leerAuditoria = (cliente: string) =>
+  /^[a-z0-9-]+$/.test(cliente) ? leerJson<{ generado: string; html: string }>(`${cliente}/auditoria.json`) : Promise.resolve(null)
