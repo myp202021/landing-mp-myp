@@ -65,3 +65,7 @@ export const leerPanelMerlin = () => leerJson<Record<string, unknown>>('merlin/p
 // Auditoría SEO y GEO con plan de acción (HTML autocontenido): reportes-seo/<cliente>/auditoria.json = { generado, html }
 export const leerAuditoria = (cliente: string) =>
   /^[a-z0-9-]+$/.test(cliente) ? leerJson<{ generado: string; html: string }>(`${cliente}/auditoria.json`) : Promise.resolve(null)
+
+// Panel de campañas y ventas del sitio (HTML autocontenido): reportes-seo/<cliente>/campanas.json = { generado, html }
+export const leerCampanas = (cliente: string) =>
+  /^[a-z0-9-]+$/.test(cliente) ? leerJson<{ generado: string; html: string }>(`${cliente}/campanas.json`) : Promise.resolve(null)

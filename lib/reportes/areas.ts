@@ -188,6 +188,12 @@ AREAS.zerowater = {
       embebible: true,
       completo: true,
     },
+    {
+      nombre: "Campañas y ventas del sitio",
+      url: "/clientes/panel/campanas/zerowater",
+      embebible: true,
+      completo: true,
+    },
   ],
 };
 
