@@ -148,7 +148,7 @@ export default async function ReporteCliente({ params, searchParams }: { params:
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <span className={"cli" + (area?.logoOscuro ? " oscuro" : "")}><img src={logoCliente} alt={info.nombre} /></span></>}
             </div>
-            <div className="rp-pill3"><span className="dot" />Reporte SEO y GEO · {nombreMes(mes)}{r.periodo.parcial ? ' · en curso' : ''}</div>
+            <div className="rp-pill3"><span className="dot" />Reporte SEO y GEO · {nombreMes(mes)}{r.periodo.parcial ? ' · parcial' : ''}</div>
             <h1>{(() => { const w = info.nombre.split(' '); return w.length > 1 ? <>{w.slice(0, -1).join(' ')} <em>{w[w.length - 1]}</em></> : <em>{info.nombre}</em> })()}</h1>
             <p className="lead">
               {g ? <>En {mesNombre} el sitio sumó <b>{num(g.clics)} visitas desde Google</b>{a ? <> y <b>{num(a.ia)} desde asistentes de IA</b></> : ''}, y apareció {num(g.impresiones)} veces en los resultados de búsqueda.</> : 'Search Console no entregó datos para este mes.'}
@@ -181,7 +181,7 @@ export default async function ReporteCliente({ params, searchParams }: { params:
         <CalendarDays size={16} className="cal" />
         {disponibles.map(m => {
           const x = todos.find(t => t.mes === m)!
-          return <a key={m} href={`/${params.cliente}?mes=${m}`} className={'rp-tab' + (m === mes ? ' on' : '')}>{cap(nombreMes(m))}{x.periodo.parcial && <small>en curso</small>}</a>
+          return <a key={m} href={`/${params.cliente}?mes=${m}`} className={'rp-tab' + (m === mes ? ' on' : '')}>{cap(nombreMes(m))}{x.periodo.parcial && <small>parcial</small>}</a>
         })}
         <div className="rp-index">
           <a href="#nota">Nota</a><a href="#busquedas">Búsquedas</a><a href="#bitacora">Bitácora</a>{ix && <a href="#indexacion">Indexación</a>}
@@ -190,7 +190,7 @@ export default async function ReporteCliente({ params, searchParams }: { params:
 
       <div className="rp-sheet">
         {/* ── KPIs ── */}
-        <Seccion icono={Activity} titulo="Indicadores del mes" sub={comparar ? `Comparado con ${nombreMes(comparar.mes)}.` : r.periodo.parcial && ant ? `Mes en curso: no lo comparamos con ${nombreMes(ant.mes)} hasta que esté completo.` : undefined}>
+        <Seccion icono={Activity} titulo="Indicadores del mes" sub={comparar ? `Comparado con ${nombreMes(comparar.mes)}.` : r.periodo.parcial && ant ? `Mes parcial: no lo comparamos con ${nombreMes(ant.mes)} hasta que esté completo.` : undefined}>
           <div className="rp-grid-4">
             <Kpi icono={MousePointerClick} valor={g?.clics} lbl="Clics desde Google" delta={comparar && variacion(g?.clics, comparar.gsc?.clics)} />
             <Kpi icono={Eye} valor={g?.impresiones} lbl="Veces que apareció en Google" delta={comparar && variacion(g?.impresiones, comparar.gsc?.impresiones)} />
@@ -204,7 +204,7 @@ export default async function ReporteCliente({ params, searchParams }: { params:
         </Seccion>
 
         {/* ── Evolución ── */}
-        <Seccion icono={TrendingUp} titulo="Evolución mes a mes" sub={todos.some(x => x.periodo.parcial) ? '* Mes en curso, todavía incompleto.' : undefined}>
+        <Seccion icono={TrendingUp} titulo="Evolución mes a mes" sub={todos.some(x => x.periodo.parcial) ? '* Mes parcial, todavía incompleto.' : undefined}>
           <div className="rp-grid-2">
             <div className="rp-card2"><h4>Clics desde Google y visitas desde IA</h4>
               <BarrasLinea meses={etiquetas} barras={todos.map(x => x.gsc?.clics ?? null)} linea={todos.map(x => x.ga4?.ia ?? null)} nombreBarras="Clics desde Google" nombreLinea="Visitas desde IA" sel={idx} /></div>
