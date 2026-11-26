@@ -118,6 +118,8 @@ export default async function ReporteCliente({ params, searchParams }: { params:
   const etiquetas = todos.map(x => cap(mesCorto(x.mes)) + (x.periodo.parcial ? '*' : ''))
   const logoCliente = params.cliente !== 'mulleryperez' ? (area?.logo || info.logo || null) : null
   const esMyP = params.cliente === 'mulleryperez'
+  // Indexación: solo el formato con «indexadas» (el anterior, por grupos, ya no se muestra)
+  const ix = r.indexacion && typeof r.indexacion.indexadas === 'number' && r.indexacion.total > 0 ? r.indexacion : null
 
   return (
     <div className="rp-wrap">
@@ -170,7 +172,7 @@ export default async function ReporteCliente({ params, searchParams }: { params:
           return <a key={m} href={`/${params.cliente}?mes=${m}`} className={'rp-tab' + (m === mes ? ' on' : '')}>{cap(nombreMes(m))}{x.periodo.parcial && <small>en curso</small>}</a>
         })}
         <div className="rp-index">
-          <a href="#nota">Nota</a><a href="#busquedas">Búsquedas</a><a href="#bitacora">Bitácora</a>
+          <a href="#nota">Nota</a><a href="#busquedas">Búsquedas</a><a href="#bitacora">Bitácora</a>{ix && <a href="#indexacion">Indexación</a>}
         </div>
       </nav>
 
@@ -309,15 +311,30 @@ export default async function ReporteCliente({ params, searchParams }: { params:
             </div>
           </Seccion>
         )}
-        <Seccion icono={Layers} titulo="Estado del sitio en Google">
-          <div className={'rp-callout ' + (r.indexacion ? (r.indexacion.pendientes.length ? 'warn' : 'good') : 'info')}>
-            <h4>Páginas en el índice de Google</h4>
-            {r.indexacion ? <>
-              <p><b>{num(r.indexacion.grupos.indexada || 0)} de {num(r.indexacion.total)}</b> páginas del sitio están en el índice de Google (revisión del {fechaLarga(r.indexacion.fecha)}).</p>
-              {r.indexacion.pendientes.length > 0 && <><p style={{ marginTop: 6 }}>Pendientes, ya pedidas a Google:</p><ul>{r.indexacion.pendientes.map(u => <li key={u}>{u.replace(info.sitio.replace(/\/$/, ''), '') || '/'}</li>)}</ul></>}
-            </> : <p>Sin revisión de indexación guardada para este mes (se guarda desde noviembre de 2026).</p>}
-          </div>
-        </Seccion>
+        {/* ── Indexación en Google (Search Console, foto del día de la medición) ── */}
+        {ix && (
+          <Seccion id="indexacion" icono={Layers} titulo="Indexación en Google" sub={`Cuántas páginas del sitio ya están en Google y pueden aparecer en sus resultados. Revisión del ${fechaLarga(ix.fecha)}, página por página, en Google Search Console.`}>
+            <div className="rp-idx">
+              <div className="rp-idx-top"><b>{num(ix.indexadas)} de {num(ix.total)}</b><span>páginas indexadas · {Math.round(ix.indexadas / ix.total * 100)} %</span></div>
+              <div className="rp-idx-track" role="img" aria-label={`${ix.indexadas} de ${ix.total} páginas indexadas`}><div className="rp-bar" style={{ width: `${ix.indexadas / ix.total * 100}%` }} /></div>
+            </div>
+            <div className="rp-table-wrap" style={{ marginTop: 14 }}><table>
+              <thead><tr><th>Estado en Google</th><th className="r">Páginas</th><th className="r">%</th></tr></thead>
+              <tbody>{Object.entries(ix.porEstado).sort((x, y) => (y[0] === 'Indexada' ? 1 : 0) - (x[0] === 'Indexada' ? 1 : 0) || y[1] - x[1]).map(([e, n]) => (
+                <tr key={e}><td className="ink"><span className={'rp-pill ' + (e === 'Indexada' ? 'good' : /aún sin indexar|no la conoce/.test(e) ? 'warn' : 'no')}>{e}</span></td><td className="r">{num(n)}</td><td className="r">{Math.round(n / ix.total * 100)} %</td></tr>
+              ))}</tbody>
+            </table></div>
+            {ix.noIndexadas.length > 0 && (
+              <details className="rp-det"><summary>Ver las {num(ix.noIndexadas.length)} páginas que aún no están indexadas</summary>
+                <div className="rp-table-wrap"><table>
+                  <thead><tr><th>Página</th><th>Estado</th></tr></thead>
+                  <tbody>{ix.noIndexadas.map(p => <tr key={p.url}><td style={{ fontSize: 13, wordBreak: 'break-all' }}><a href={p.url} target="_blank" rel="noopener noreferrer">{p.url.replace(/^https?:\/\/[^/]+/, '') || '/'}</a></td><td style={{ whiteSpace: 'nowrap' }}>{p.estado}</td></tr>)}</tbody>
+                </table></div>
+              </details>
+            )}
+            <p className="src">«Descubierta, aún sin indexar»: Google sabe que la página existe pero todavía no la visita. «Rastreada, aún sin indexar»: Google la visitó y aún no decide incluirla. «Google aún no la conoce»: todavía no la encuentra. Las redirecciones, las páginas excluidas a propósito y las duplicadas no necesitan estar en Google. Las páginas nuevas suelen tardar días o semanas en entrar.</p>
+          </Seccion>
+        )}
 
         {/* ── Tráfico ── */}
         <div className="rp-grid-2">
