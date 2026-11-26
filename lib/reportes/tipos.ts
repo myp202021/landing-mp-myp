@@ -43,7 +43,7 @@ export type ReporteMes = {
   }
   bitacora?: null | { fecha: string; accion: string; url: string | null; tipo: 'técnico' | 'contenido' | 'GEO' | 'indexación' | string; fuente: string; enlaces?: { titulo: string; url: string }[] }[]
   notaSeo?: null | NotaSeo
-  pendientes?: null | { actualizado: string; cliente: { texto: string }[]; nosotros: { texto: string; estado: string }[] }
+  pendientes?: null | { actualizado: string; cliente: { texto: string }[]; nosotros: { texto: string; estado: string; plazo?: string | null }[] }
   // Indexación en Google (URL Inspection de Search Console, todas las URL del sitemap; solo el mes en curso)
   indexacion: null | { fecha: string; total: number; indexadas: number; noIndexadas: { url: string; estado: string }[]; porEstado: Record<string, number>; sinRevisar?: number }
 }

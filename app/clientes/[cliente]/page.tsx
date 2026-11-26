@@ -41,6 +41,17 @@ function IA({ v, veces, mencion }: { v: Medida; veces: string | null; mencion: b
   return <span className="rp-pill no">no aparece</span>
 }
 
+// Estados permitidos al cliente: solo «terminado», «pendiente» o «atrasado» (nunca «en curso»).
+// «atrasado» solo si el registro trae fecha comprometida (plazo) y ya venció.
+function estadoNosotros(p: { estado: string; plazo?: string | null }): 'terminado' | 'pendiente' | 'atrasado' {
+  const e = (p.estado || '').toLowerCase().trim()
+  if (e === 'hecho' || e === 'terminado' || e === 'listo') return 'terminado'
+  if (e === 'atrasado') return 'atrasado'
+  const hoy = new Date().toLocaleDateString('en-CA', { timeZone: 'America/Santiago' })
+  if (p.plazo && /^\d{4}-\d{2}-\d{2}/.test(p.plazo) && p.plazo.slice(0, 10) < hoy) return 'atrasado'
+  return 'pendiente'
+}
+
 export default async function ReporteCliente({ params, searchParams }: { params: { cliente: string }; searchParams: { mes?: string; vista?: string } }) {
   const acceso = await accesoActual()
   if (!acceso) redirect('/' + params.cliente)
@@ -113,7 +124,8 @@ export default async function ReporteCliente({ params, searchParams }: { params:
   const segGpt = iaFilas.filter(b => typeof b.chatgpt === 'number').length
   const segGemMedidas = iaFilas.filter(b => medida(b.gemini)).length
   const segGem = iaFilas.filter(b => typeof b.gemini === 'number').length
-  const bit = r.bitacora || []
+  // Bitácora: de la más reciente a la más antigua (el cliente ve arriba lo último)
+  const bit = [...(r.bitacora || [])].sort((a, b) => b.fecha.localeCompare(a.fecha))
   const conteo = bit.reduce((o, x) => { o[x.tipo] = (o[x.tipo] || 0) + 1; return o }, {} as Record<string, number>)
   const etiquetas = todos.map(x => cap(mesCorto(x.mes)) + (x.periodo.parcial ? '*' : ''))
   const logoCliente = params.cliente !== 'mulleryperez' ? (area?.logo || info.logo || null) : null
@@ -306,7 +318,7 @@ export default async function ReporteCliente({ params, searchParams }: { params:
               </div>
               <div className="rp-pend-col">
                 <h4>Lo que estamos haciendo nosotros</h4>
-                <ul>{r.pendientes.nosotros.map((p, i) => <li key={i}><span className={'rp-pill ' + (p.estado === 'hecho' ? 'good' : p.estado === 'en curso' ? 'mix' : 'warn')}>{p.estado}</span> {p.texto}</li>)}</ul>
+                <ul>{r.pendientes.nosotros.map((p, i) => { const e = estadoNosotros(p); return <li key={i}><span className={'rp-pill ' + (e === 'terminado' ? 'good' : e === 'atrasado' ? 'bad' : 'warn')}>{e}</span> {p.texto}</li> })}</ul>
               </div>
             </div>
           </Seccion>

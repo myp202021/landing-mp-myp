@@ -97,6 +97,7 @@
 .rp-pill { display: inline-block; font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 6px; white-space: nowrap; }
 .rp-pill.good { color: #065F46; background: var(--good-bg); }
 .rp-pill.warn { color: #92400E; background: var(--warn-bg); }
+.rp-pill.bad { color: #991B1B; background: var(--bad-bg); }
 .rp-pill.no { color: var(--ink-400); background: var(--soft); }
 .rp-pill.mix { color: var(--indigo-500); background: var(--tint); }
 .rp-bar { height: 8px; border-radius: 4px; background: var(--grad); min-width: 2px; }
