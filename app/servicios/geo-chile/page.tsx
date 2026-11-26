@@ -475,6 +475,16 @@ export default function GEOChilePage() {
               : las búsquedas pagadas nos dicen qué preguntas hace tu cliente, y
               esas son las que optimizamos para las IA.
             </p>
+            <p className="text-slate-600 mt-4">
+              Si estás comparando proveedores, revisa la{" "}
+              <Link
+                href="/agencias-seo-geo-chile"
+                className="font-semibold text-[#4F46E5] hover:underline"
+              >
+                comparativa 2026 de agencias de SEO y GEO en Chile
+              </Link>
+              , con lo que ofrece cada una y qué preguntarles.
+            </p>
           </div>
         </section>
 

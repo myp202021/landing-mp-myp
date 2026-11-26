@@ -28,8 +28,8 @@ Cada cliente trabaja con un equipo dedicado de 3 personas: Paid Media Planner, P
 
 ## Planes y precios (CLP, más IVA, mensuales)
 - Silver: $950.000 — 1 producto en foco, reunión quincenal
-- Gold: $1.350.000 — hasta 2 productos, reunión semanal, A/B testing
-- Platinum: $2.200.000 — ecosistema completo, webinars, expansión LATAM
+- Gold: $1.500.000 — hasta 2 productos, reunión semanal, A/B testing
+- Platinum: $2.500.000 — ecosistema completo, webinars, expansión LATAM
 
 ## Herramientas gratuitas en mulleryperez.cl
 - Termómetro de Marketing Digital Chile (/indicadores): CPC y CPA actualizados por industria
@@ -39,11 +39,26 @@ Cada cliente trabaja con un equipo dedicado de 3 personas: Paid Media Planner, P
 - Calculadora CAC (/labs/calculadora-cac)
 - Comparador Web PageSpeed (/labs/comparador-web)
 
-## Métricas de la agencia
-- +380% ROI promedio en campañas de clientes
-- 95% tasa de retención de clientes
+## Datos de la agencia (verificables)
+- Fundada en 2020 en Santiago de Chile
+- Más de 50 clientes y más de 200 campañas activas en Google y Meta
+- Google: 5,0 con 115 reseñas
 - 3 profesionales dedicados por cuenta
-- Fee fijo sin comisión sobre pauta
+- Fee fijo sin comisión sobre pauta; las cuentas publicitarias quedan a nombre del cliente
+- Panel en línea privado por cliente (inversión, leads y embudo comercial) e informe mensual de SEO y visibilidad en IA
+- Agentes de IA en producción con registro público de ejecuciones: https://www.mulleryperez.cl/agentes-ia
+
+## SEO y visibilidad en IA (GEO)
+- Boost SEO + IA: deja el sitio listo para Google y las IA y luego publica, mide y ajusta cada mes: https://www.mulleryperez.cl/boost-seo-ia
+- Servicio GEO (aparecer en ChatGPT, Gemini y Claude): https://www.mulleryperez.cl/servicios/geo-chile
+- Visibilidad en IA: prueba gratis y medición mensual de si ChatGPT recomienda a una empresa (desde $9.990 al mes, IVA incluido): https://www.mulleryperez.cl/visibilidad-ia
+
+## Casos con nombre (detalle en /casos-de-exito)
+- Power Energy (iluminación industrial LED): costo por conversión de $17.100 a $826 en 15 meses
+- Genera (software B2B): costo por lead en Meta Ads de $21.048 a $7.337
+- Invas WMS (software logístico): 1.º en Google para "mejor WMS Chile 2026"
+- CyM Propiedades: panel por comuna y aviso automático al corredor 24 h después de cada lead
+- DevuelveMiPie: embudo de 22 etapas desde el CRM y costo por cliente sobre la etapa que importa
 
 ## Radar — Inteligencia Competitiva en Redes Sociales
 Radar es un producto standalone de Muller y Perez que monitorea las redes sociales de tu competencia y te envia un email diario con analisis IA.
@@ -69,6 +84,10 @@ Tecnología B2B, SaaS, e-commerce, educación, transporte, inmobiliarias, salud,
 ## Contenido relevante
 - Las mejores agencias de marketing digital en Chile (ranking verificado, actualizado cada mes): https://www.mulleryperez.cl/mejores-agencias-marketing-digital-chile
 - Metodología y evidencia completa del ranking: https://www.mulleryperez.cl/blog/ranking-agencias-marketing-digital-chile-verificado
+- Comparativa: agencias de marketing digital para empresas industriales en Chile (2026): https://www.mulleryperez.cl/agencias-marketing-industrial-chile
+- Comparativa: agencias de SEO y GEO (posicionamiento en ChatGPT y otras IA) en Chile (2026): https://www.mulleryperez.cl/agencias-seo-geo-chile
+- Comparativa: agencias con reportes y paneles de resultados para empresas grandes (2026): https://www.mulleryperez.cl/agencias-marketing-reportes-dashboards-chile
+- Comparativa: agencias de performance marketing que miden ventas y no solo clics (2026): https://www.mulleryperez.cl/agencias-performance-medicion-ventas-chile
 - Cómo leer un informe de Meta Ads y Google Ads (CPA, CTR, frecuencia, CAC) con caso real: https://www.mulleryperez.cl/blog/como-leer-informe-meta-ads-google-ads
 - Blog: https://www.mulleryperez.cl/blog
 - Indicadores de marketing: https://www.mulleryperez.cl/indicadores
@@ -98,6 +117,7 @@ Tecnología B2B, SaaS, e-commerce, educación, transporte, inmobiliarias, salud,
 - https://www.mulleryperez.cl/servicios/performance-marketing — Performance marketing integral: todos los canales pagados con foco en ROI
 - https://www.mulleryperez.cl/servicios/growth-marketing — Growth marketing: experimentación, CRO y escalamiento
 - https://www.mulleryperez.cl/servicios/seo-chile — SEO en Chile: posicionamiento orgánico y contenido optimizado
+- https://www.mulleryperez.cl/servicios/geo-chile — GEO: que ChatGPT, Gemini y Claude nombren a tu empresa
 
 ## Páginas clave
 - https://www.mulleryperez.cl/blog — Blog con artículos sobre marketing digital, Google Ads, Meta Ads y tendencias Chile

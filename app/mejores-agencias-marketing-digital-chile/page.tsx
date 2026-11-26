@@ -950,6 +950,26 @@ export default async function MejoresAgenciasPage() {
                   Guía para elegir agencia de marketing
                 </Link>
               </li>
+              <li>
+                <Link href="/agencias-marketing-industrial-chile" className="text-indigo-700 underline">
+                  Agencias para empresas industriales (comparativa 2026)
+                </Link>
+              </li>
+              <li>
+                <Link href="/agencias-seo-geo-chile" className="text-indigo-700 underline">
+                  Agencias de SEO y posicionamiento en ChatGPT e IA (comparativa 2026)
+                </Link>
+              </li>
+              <li>
+                <Link href="/agencias-marketing-reportes-dashboards-chile" className="text-indigo-700 underline">
+                  Agencias con reportes y paneles para empresas grandes (comparativa 2026)
+                </Link>
+              </li>
+              <li>
+                <Link href="/agencias-performance-medicion-ventas-chile" className="text-indigo-700 underline">
+                  Agencias de performance que miden ventas y no solo clics (comparativa 2026)
+                </Link>
+              </li>
             </ul>
           </div>
         </article>

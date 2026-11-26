@@ -336,6 +336,30 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
     // Páginas GEO - Rankings y Estadísticas
     {
+      url: `${baseUrl}/agencias-marketing-industrial-chile`,
+      lastModified: '2026-11-26',
+      changeFrequency: 'monthly',
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/agencias-seo-geo-chile`,
+      lastModified: '2026-11-26',
+      changeFrequency: 'monthly',
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/agencias-marketing-reportes-dashboards-chile`,
+      lastModified: '2026-11-26',
+      changeFrequency: 'monthly',
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/agencias-performance-medicion-ventas-chile`,
+      lastModified: '2026-11-26',
+      changeFrequency: 'monthly',
+      priority: 0.9,
+    },
+    {
       url: `${baseUrl}/mejores-agencias-marketing-digital-chile`,
       lastModified: currentDate,
       changeFrequency: 'monthly',

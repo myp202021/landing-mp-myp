@@ -385,6 +385,13 @@ export default function MarketingManufacturaPage() {
         {/* Industrias Relacionadas */}
         <section className="py-16 bg-gray-50">
           <div className="container mx-auto px-4 max-w-5xl">
+            <p className="text-center text-gray-700 mb-8">
+              ¿Comparando agencias? Revisa la{' '}
+              <Link href="/agencias-marketing-industrial-chile" className="font-semibold text-indigo-700 underline">
+                comparativa 2026 de agencias de marketing para empresas industriales en Chile
+              </Link>
+              , con fuentes y qué preguntar a cada una.
+            </p>
             <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">Industrias Relacionadas</h2>
             <div className="grid md:grid-cols-3 gap-6">
               <Link href="/marketing-digital-b2b-chile" className="group block bg-slate-50 hover:bg-slate-100 rounded-xl p-6 transition-all border border-slate-100">
