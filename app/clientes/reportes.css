@@ -387,3 +387,11 @@
 .rp-pend-col ul{margin:0;padding-left:18px;display:grid;gap:8px;font-size:14px;line-height:1.45}
 .rp-pend-col .rp-pill{font-size:11px;margin-right:4px}
 @media (max-width:760px){.rp-pend{grid-template-columns:1fr}}
+
+/* Indexación en Google */
+.rp-idx { border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; }
+.rp-idx-top { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
+.rp-idx-top b { font-size: 26px; font-weight: 800; color: var(--ink-950); letter-spacing: -0.4px; }
+.rp-idx-top span { font-size: 13px; color: var(--ink-500); }
+.rp-idx-track { height: 12px; border-radius: 6px; background: var(--soft); overflow: hidden; }
+.rp-idx-track .rp-bar { height: 12px; border-radius: 6px; }
