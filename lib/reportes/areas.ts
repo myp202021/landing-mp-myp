@@ -165,7 +165,7 @@ AREAS.merlin = {
   nombre: "Merlin Comunicaciones",
   logo: "/reportes/logos/merlin.png?v=2",
   logoOscuro: true,
-  reporte: false,
+  reporte: true,
   paneles: [
     {
       nombre: "Panel de ventas, ahorro y predicción",
