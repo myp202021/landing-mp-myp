@@ -208,3 +208,8 @@
 .r26-pers td { color: #94a3b8; }
 .r26-x { margin-left: 12px; font-size: 12px; border: 1px solid var(--line); border-radius: 8px; padding: 2px 8px; background: #fff; cursor: pointer; }
 .r26-chk { display: flex; gap: 6px; align-items: center; font-size: 13px; text-transform: none; font-weight: 400; letter-spacing: 0; }
+.r26-cob-castigar td { background: #fee2e2; }
+.r26-cob-riesgo td { background: #fef3c7; }
+.r26-cob-vencida td { background: #fff7ed; }
+.fz-kpi.r26-neg .fz-kv { color: #b91c1c; }
+.r26-nota { font-size: 13px; color: #475569; margin: 6px 0 10px; }

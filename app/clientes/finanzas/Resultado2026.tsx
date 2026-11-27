@@ -15,6 +15,17 @@ type Mov = {
   q: string;
 };
 type CC = { f: string; d: string; c: number; a: number };
+type Cob = {
+  cli: string;
+  mes: string;
+  fac: string;
+  est: string;
+  neto: number;
+  tot: number;
+  dias: number;
+  riesgo: string;
+  nota: string;
+};
 export type Resumen2026 = {
   generado: string;
   meses: string[];
@@ -23,6 +34,7 @@ export type Resumen2026 = {
   impuestos: Linea[];
   movimientos: Mov[];
   ctacte: CC[];
+  cobranza?: Cob[];
 };
 
 const N = 11; // ene-nov
@@ -353,6 +365,7 @@ export default function Resultado2026({ d }: { d: Resumen2026 }) {
         </table>
       </div>
 
+      {d.cobranza && <Cobranza c={d.cobranza} />}
       <CtaCte cc={d.ctacte} meses={d.meses} />
     </div>
   );
@@ -454,5 +467,83 @@ function K({ t, v, s, c }: { t: string; v: string; s?: string; c?: string }) {
       <div className="fz-kv">{v}</div>
       {s && <div className="fz-ks">{s}</div>}
     </div>
+  );
+}
+
+const RIESGO: Record<string, string> = {
+  castigar: "Castigar (incobrable)",
+  riesgo: "En riesgo",
+  vencida: "Vencida +60 días",
+  "al día": "Al día",
+  demanda: "En demanda",
+  perdido: "Perdida (años anteriores)",
+};
+function Cobranza({ c }: { c: Cob[] }) {
+  const [todo, setTodo] = useState(false);
+  const grupos = Object.keys(RIESGO).map((k) => {
+    const xs = c.filter((x) => x.riesgo === k);
+    return { k, n: xs.length, tot: xs.reduce((a, x) => a + x.tot, 0) };
+  });
+  const lista = c.filter(
+    (x) => todo || !["demanda", "perdido"].includes(x.riesgo),
+  );
+  return (
+    <>
+      <h3 className="fz-h">Cobranza y caja · facturas abiertas (IVA incluido)</h3>
+      <div className="fz-kpis">
+        {grupos
+          .filter((g) => g.n)
+          .map((g) => (
+            <K
+              key={g.k}
+              t={RIESGO[g.k]}
+              v={M(g.tot)}
+              s={g.n + " facturas"}
+              c={g.k === "castigar" || g.k === "riesgo" ? "r26-neg" : ""}
+            />
+          ))}
+      </div>
+      <p className="r26-nota">
+        ALD: mandar a castigo, no paga. Atacama: peligra (pidió pausa y
+        plazos), posible incobrable. Si se castigan, Aline debe confirmar que
+        cumplen los requisitos de deuda incobrable para rebajarlas como gasto.
+      </p>
+      <label className="r26-chk">
+        <input
+          type="checkbox"
+          checked={todo}
+          onChange={(e) => setTodo(e.target.checked)}
+        />{" "}
+        Mostrar también demandas y deudas antiguas
+      </label>
+      <div className="r26-scroll">
+        <table className="r26-tab">
+          <thead>
+            <tr>
+              <th>Cliente</th>
+              <th>Mes</th>
+              <th>Factura</th>
+              <th>Días</th>
+              <th>Estado</th>
+              <th>Total</th>
+              <th>Nota</th>
+            </tr>
+          </thead>
+          <tbody>
+            {lista.map((x, i) => (
+              <tr key={i} className={"r26-cob-" + x.riesgo.replace(" ", "")}>
+                <td>{x.cli}</td>
+                <td>{x.mes}</td>
+                <td>{x.fac}</td>
+                <td className="r26-v">{x.dias}</td>
+                <td>{RIESGO[x.riesgo] || x.riesgo}</td>
+                <td className="r26-v">{$(x.tot)}</td>
+                <td>{x.nota}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </>
   );
 }
