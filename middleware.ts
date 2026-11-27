@@ -12,6 +12,10 @@ export async function middleware(request: NextRequest) {
   // ═══ REPORTES SEO Y GEO: /clientes/* con login (Supabase Auth), noindex ═══
   // Ojo: /clientes/*.png|webp|svg son logos públicos del home (public/clientes): esos NO pasan por el login
   // Áreas de clientes en la raíz (/<slug> de la lista cerrada en lib/reportes/areas.ts) e índice /admin-reportes
+  // Índices internos fuera de la web (Christopher, 27 nov 2026): no existen para nadie, ni con sesión
+  if (/^\/(admin-reportes|admin-finanzas|clientes|clientes\/finanzas)\/?$/.test(pathname)) {
+    return new NextResponse('Not found', { status: 404, headers: { 'X-Robots-Tag': 'noindex, nofollow, noarchive' } })
+  }
   if (esRutaReportes(pathname) && !/\.[a-z0-9]+$/i.test(pathname)) {
     return sesionReportes(request)
   }
