@@ -26,6 +26,7 @@ import InternalLinksMesh from '@/components/rankings/InternalLinksMesh'
 import { SpeakableContent } from '@/components/AEOSchemas'
 import { scoresPerformance, criteriosPerformance } from '@/lib/data/ranking-criteria'
 import { AGENTES_ACTIVOS } from "@/lib/agentes-activos";
+import ComparativasRelacionadas from '@/components/comparativas/ComparativasRelacionadas'
 
 export const metadata: Metadata = createMetadata({
   title: 'Mejores Agencias Performance Marketing Chile 2026 | Guía + Ranking Top 10',
@@ -353,6 +354,8 @@ export default function PerformanceMarketingChilePage() {
               </div>
             </div>
           </section>
+
+          <ComparativasRelacionadas claves={['ventas', 'reportes', 'seoGeo', 'industrial']} className="mb-16" />
 
           {/* FAQs */}
           <SpeakableContent>

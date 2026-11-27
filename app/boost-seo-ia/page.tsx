@@ -1,5 +1,6 @@
 import SiteHeader from "@/components/SiteHeader";
 import BoostClient from "./BoostClient";
+import ComparativasRelacionadas from "@/components/comparativas/ComparativasRelacionadas";
 import { FAQS } from "./faqs";
 import { Metadata } from "next";
 
@@ -116,6 +117,7 @@ export default function CopilotPage() {
       />
       <SiteHeader />
       <BoostClient />
+      <ComparativasRelacionadas claves={['seoGeo', 'reportes']} className="py-16 bg-slate-50" />
     </>
   );
 }

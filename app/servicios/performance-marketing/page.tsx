@@ -6,6 +6,7 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { createMetadata } from '@/lib/metadata'
+import ComparativasRelacionadas from '@/components/comparativas/ComparativasRelacionadas'
 
 export const metadata: Metadata = createMetadata({
   title: 'Performance Marketing Chile | Agencia Estrategia Multicanal Data-Driven',
@@ -706,6 +707,8 @@ export default function PerformanceMarketingPage() {
           </div>
         </div>
       </section>
+
+      <ComparativasRelacionadas claves={['ventas', 'reportes']} className="py-16" />
 
       {/* FAQs */}
       <section className="container mx-auto px-6 max-w-4xl py-16">

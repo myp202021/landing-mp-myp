@@ -11,6 +11,7 @@ import {
   createFAQPageSchema,
   createBreadcrumbSchema
 } from '@/lib/metadata'
+import ComparativasRelacionadas from '@/components/comparativas/ComparativasRelacionadas'
 
 export const metadata: Metadata = createMetadata({
   title: 'Agencia SEO Chile | Posicionamiento Web y SEO Técnico en Santiago',
@@ -727,6 +728,8 @@ export default function SEOChilePage() {
               </Link>
             </div>
           </section>
+
+          <ComparativasRelacionadas claves={['seoGeo', 'reportes']} className="mb-16" />
 
           {/* FAQs */}
           <section className="mb-16">

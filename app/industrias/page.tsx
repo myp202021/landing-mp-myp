@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { ArrowRight, ShoppingCart, Building2, Cloud, Home, Heart, GraduationCap, CreditCard, Briefcase, Scale, Shield, Plane, Factory } from 'lucide-react'
+import ComparativasRelacionadas from '@/components/comparativas/ComparativasRelacionadas'
 
 export const metadata: Metadata = {
   title: 'Marketing Digital por Industria en Chile',
@@ -223,6 +224,8 @@ export default function IndustriasPage() {
           </div>
         </div>
       </section>
+
+      <ComparativasRelacionadas claves={['industrial', 'ventas']} className="py-20" />
 
       {/* CTA */}
       <section className="py-20 bg-gradient-to-br from-blue-900 to-gray-900 text-white">

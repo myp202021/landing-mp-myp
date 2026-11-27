@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { ArrowRight, Building2, Users, Target, BarChart3, Linkedin, CheckCircle, TrendingUp, Mail, Phone } from 'lucide-react'
+import ComparativasRelacionadas from '@/components/comparativas/ComparativasRelacionadas'
 
 export const metadata: Metadata = {
   title: 'Marketing Digital B2B en Chile | Generación de Leads Empresariales',
@@ -588,6 +589,8 @@ export default function MarketingB2BPage() {
             </div>
           </div>
         </section>
+
+        <ComparativasRelacionadas claves={['industrial', 'reportes', 'ventas']} className="py-16 bg-white" />
 
         {/* CTA */}
         <section className="py-20 bg-gradient-to-br from-slate-900 to-blue-900 text-white">
