@@ -22,16 +22,15 @@ export function supabaseServidor() {
   })
 }
 
-export type Acceso = { email: string; admin: boolean; cliente: string | null; finanzas: boolean }
+export type Acceso = { email: string; admin: boolean; cliente: string | null; }
 
 export async function accesoActual(): Promise<Acceso | null> {
   const { data: { user } } = await supabaseServidor().auth.getUser()
   if (!user) return null
-  const meta = (user.app_metadata?.reportes || {}) as { rol?: string; cliente?: string; finanzas?: boolean }
+  const meta = (user.app_metadata?.reportes || {}) as { rol?: string; cliente?: string }
   const email = (user.email || '').toLowerCase()
   const admin = meta.rol === 'superadmin' || meta.rol === 'admin'
-  // finanzas: SOLO Christopher (app_metadata.reportes.finanzas === true, además de superadmin). Nunca a otros superadmin.
-  return { email, admin, cliente: meta.cliente || null, finanzas: admin && meta.finanzas === true }
+  return { email, admin, cliente: meta.cliente || null }
 }
 
 export function puedeVer(a: Acceso, cliente: string) {
@@ -53,14 +52,6 @@ async function leerJson<T>(ruta: string): Promise<T | null> {
 export const leerIndice = () => leerJson<IndiceReportes>('_clientes.json')
 export const leerMes = (cliente: string, mes: string) =>
   /^[a-z0-9-]+$/.test(cliente) && /^\d{4}-\d{2}$/.test(mes) ? leerJson<ReporteMes>(`${cliente}/${mes}.json`) : Promise.resolve(null)
-
-// Bitácora financiera (solo superadmin): una fila por factura de la hoja «Facturas».
-// e: cobrado | pendiente | por_facturar | demanda | perdido · t: Fee | Publicidad | Web y otros · m: AAAA-MM · n: neto · tot: con IVA
-export type FilaFactura = { c: string; t: string; m: string; n: number; tot: number; fac: string; e: string; eo: string; obs: string }
-export const leerFinanzas = () => leerJson<{ generado: string; filas: FilaFactura[] }>('_finanzas/facturas.json')
-
-// Ingresos y gastos 2026 línea por línea (tarjetas, cta cte, SII, planilla): ~/facturas-myp/consolidado/resumen2026.py → _finanzas/resumen2026.json
-export const leerResumen2026 = () => leerJson<Record<string, unknown>>('_finanzas/resumen2026.json')
 
 // Panel Merlin (Ticketplus + Meta): JSON generado por ~/Desktop/Clientes 2026/Merlin/panel/analizar.py
 export const leerPanelMerlin = () => leerJson<Record<string, unknown>>('merlin/panel.json')

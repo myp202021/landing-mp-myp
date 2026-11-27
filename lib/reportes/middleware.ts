@@ -5,7 +5,7 @@
 // El permiso real (quién ve qué) se valida en el servidor con app_metadata (lib/reportes/servidor.ts).
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
-import { RUTA_ADMIN, RUTA_FINANZAS, esSlug } from "./areas";
+import { RUTA_ADMIN, esSlug } from "./areas";
 
 function marcar(r: NextResponse) {
   r.headers.set("X-Robots-Tag", "noindex, nofollow, noarchive");
@@ -39,9 +39,6 @@ export async function sesionReportes(request: NextRequest) {
   } else if (limpio === RUTA_ADMIN) {
     destino = request.nextUrl.clone();
     destino.pathname = "/clientes";
-  } else if (limpio === RUTA_FINANZAS) {
-    destino = request.nextUrl.clone();
-    destino.pathname = "/clientes/finanzas";
   }
 
   const siguiente = () =>
@@ -72,7 +69,7 @@ export async function sesionReportes(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    if (slug || limpio === RUTA_ADMIN || limpio === RUTA_FINANZAS) {
+    if (slug || limpio === RUTA_ADMIN) {
       // Login en la misma URL del cliente, con su logo
       const login = request.nextUrl.clone();
       login.pathname = "/clientes/login";

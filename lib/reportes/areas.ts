@@ -200,7 +200,6 @@ AREAS.zerowater = {
 export const SLUGS = Object.keys(AREAS);
 // Índice del superadmin (ve todas las áreas)
 export const RUTA_ADMIN = "/admin-reportes";
-export const RUTA_FINANZAS = "/admin-finanzas"; // bitácora financiera, solo superadmin
 export const esSlug = (s: string) =>
   Object.prototype.hasOwnProperty.call(AREAS, s);
 // ¿Es una ruta privada de reportes? (para ocultar menú, pie, migas, popups y chat del sitio)
@@ -209,8 +208,7 @@ export function esRutaReportes(pathname: string | null | undefined) {
   if (
     pathname === "/clientes" ||
     pathname.startsWith("/clientes/") ||
-    pathname === RUTA_ADMIN ||
-    pathname === RUTA_FINANZAS
+    pathname === RUTA_ADMIN
   )
     return true;
   return esSlug(pathname.replace(/^\/|\/$/g, ""));
