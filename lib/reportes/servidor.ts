@@ -59,6 +59,9 @@ export const leerMes = (cliente: string, mes: string) =>
 export type FilaFactura = { c: string; t: string; m: string; n: number; tot: number; fac: string; e: string; eo: string; obs: string }
 export const leerFinanzas = () => leerJson<{ generado: string; filas: FilaFactura[] }>('_finanzas/facturas.json')
 
+// Ingresos y gastos 2026 línea por línea (tarjetas, cta cte, SII, planilla): ~/facturas-myp/consolidado/resumen2026.py → _finanzas/resumen2026.json
+export const leerResumen2026 = () => leerJson<Record<string, unknown>>('_finanzas/resumen2026.json')
+
 // Panel Merlin (Ticketplus + Meta): JSON generado por ~/Desktop/Clientes 2026/Merlin/panel/analizar.py
 export const leerPanelMerlin = () => leerJson<Record<string, unknown>>('merlin/panel.json')
 

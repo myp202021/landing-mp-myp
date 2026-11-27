@@ -6,6 +6,7 @@
 //  - Tamaño = fee neto mensual promedio del cliente en toda su historia.
 //  - Atraso = días desde el fin del mes facturado hasta hoy, solo facturas abiertas (pendientes, por facturar, en demanda).
 import { useEffect, useMemo, useState } from "react";
+import Resultado2026, { type Resumen2026 } from "./Resultado2026";
 import {
   Bar,
   BarChart,
@@ -89,9 +90,11 @@ type InfoCliente = {
 export default function Finanzas({
   filas,
   generado,
+  resumen,
 }: {
   filas: Fila[];
   generado: string;
+  resumen?: Resumen2026 | null;
 }) {
   // Solo en el navegador: los formatos de número/fecha difieren entre servidor y navegador
   const [listo, setListo] = useState(false);
@@ -683,6 +686,7 @@ export default function Finanzas({
       <div className="rp-tabs">
         {[
           ["resumen", "Resumen"],
+          ["r2026", "Ingresos y gastos 2026"],
           ["bitacora", "Bitácora año × mes"],
           ["clientes", "Clientes"],
           ["tamano", "Tamaño y permanencia"],
@@ -828,6 +832,13 @@ export default function Finanzas({
           </div>
         </>
       )}
+
+      {tab === "r2026" &&
+        (resumen ? (
+          <Resultado2026 d={resumen} />
+        ) : (
+          <p className="fz-nota">Falta cargar _finanzas/resumen2026.json (correr ~/facturas-myp/consolidado/resumen2026.py y subirlo).</p>
+        ))}
 
       {tab === "bitacora" && (
         <>

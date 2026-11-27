@@ -2,7 +2,8 @@
 // Datos: bucket privado «reportes-seo», archivo _finanzas/facturas.json, generado desde la hoja «Facturas»
 // de «Planilla números M&P» con ~/bin/finanzas/sync.sh (exportar.mjs + procesar.py). Nunca va al navegador sin sesión superadmin.
 import { redirect } from "next/navigation";
-import { accesoActual, leerFinanzas } from "@/lib/reportes/servidor";
+import { accesoActual, leerFinanzas, leerResumen2026 } from "@/lib/reportes/servidor";
+import type { Resumen2026 } from "./Resultado2026";
 import { Barra } from "@/lib/reportes/Barra";
 import Finanzas from "./Finanzas";
 import "./finanzas.css";
@@ -17,12 +18,12 @@ export default async function PaginaFinanzas() {
   const acceso = await accesoActual();
   if (!acceso) redirect("/admin-finanzas");
   if (!acceso.finanzas) redirect("/admin-reportes");
-  const datos = await leerFinanzas();
+  const [datos, resumen] = await Promise.all([leerFinanzas(), leerResumen2026()]);
   return (
     <div className="rp-wrap">
       <Barra email={acceso.email} volver />
       {datos ? (
-        <Finanzas filas={datos.filas} generado={datos.generado} />
+        <Finanzas filas={datos.filas} generado={datos.generado} resumen={resumen as Resumen2026 | null} />
       ) : (
         <div className="rp-sheet">
           <div className="rp-callout warn">
